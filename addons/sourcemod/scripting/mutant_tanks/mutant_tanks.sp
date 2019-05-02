@@ -515,7 +515,7 @@ public void OnPluginStart()
 	char sSMPath[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks");
 	CreateDirectory(sSMPath, 511);
-	BuildPath(Path_SM, g_sSavePath, sizeof(g_sSavePath), "%s/mutant_tanks.cfg", sSMPath);
+	Format(g_sSavePath, sizeof(g_sSavePath), "%s/mutant_tanks.cfg", sSMPath);
 	vLoadConfigs(g_sSavePath, true);
 	g_iFileTimeOld[0] = GetFileTime(g_sSavePath, FileTime_LastChange);
 
@@ -2042,7 +2042,16 @@ static void vLoadConfigs(const char[] savepath, bool main = false)
 	smcLoader.OnKeyValue = SMCKeyValues;
 	smcLoader.OnLeaveSection = SMCEndSection;
 	smcLoader.OnEnd = SMCParseEnd;
-	smcLoader.ParseFile(savepath);
+	SMCError smcError = smcLoader.ParseFile(savepath);
+	if (smcError != SMCError_Okay)
+	{
+		char sSmcError[64];
+		smcLoader.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
+
+		PrintToServer("Error while parsing \"%s\" file. Error Message: %s.", savepath, sSmcError);
+		LogError("Error while parsing \"%s\" file. Error Message: %s.", savepath, sSmcError);
+	}
+
 	delete smcLoader;
 }
 
@@ -3124,6 +3133,31 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		{
 			g_iTankWave = 0;
 		}
+		else if (StrEqual(name, "player_now_it"))
+		{
+			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+
+			if (bIsTank(iTank))
+			{
+				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
+				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
+			}
+		}
+		else if (StrEqual(name, "player_no_longer_it"))
+		{
+			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+
+			if (bIsTank(iTank))
+			{
+				int iGlowColor[3];
+				for (int iPos = 0; iPos < 3; iPos++)
+				{
+					iGlowColor[iPos] = g_iGlowColor2[iTank][iPos];
+				}
+				SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
+				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
+			}
+		}
 
 		Call_StartForward(g_hEventFiredForward);
 		Call_PushCell(event);
@@ -3171,7 +3205,8 @@ static void vFindInstalledAbilities(ArrayList list, const char[] directory, bool
 		if (StrContains(sFilename, ".smx", false) == -1 && !StrEqual(sFilename, "disabled", false) && !StrEqual(sFilename, ".") && !StrEqual(sFilename, ".."))
 		{
 			Format(sFilename, sizeof(sFilename), "%s/%s", directory, sFilename);
-			vFindInstalledAbilities(list, sFilename, true);
+			if(DirExists(sFilename))
+				vFindInstalledAbilities(list, sFilename, true);
 		}
 		else
 		{
@@ -3249,6 +3284,8 @@ static void vHookEvents(bool hook)
 		HookEvent("player_death", vEventHandler);
 		HookEvent("player_incapacitated", vEventHandler);
 		HookEvent("player_spawn", vEventHandler);
+		HookEvent("player_now_it", vEventHandler);
+		HookEvent("player_no_longer_it", vEventHandler);
 
 		vHookEventForward(true);
 	}
@@ -3266,6 +3303,8 @@ static void vHookEvents(bool hook)
 		UnhookEvent("player_death", vEventHandler);
 		UnhookEvent("player_incapacitated", vEventHandler);
 		UnhookEvent("player_spawn", vEventHandler);
+		UnhookEvent("player_now_it", vEventHandler);
+		UnhookEvent("player_no_longer_it", vEventHandler);
 
 		vHookEventForward(false);
 	}
@@ -3587,10 +3626,10 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 					TeleportEntity(g_iOzTank[tank][iOzTank], flOrigin, NULL_VECTOR, flAngles2);
 					DispatchSpawn(g_iOzTank[tank][iOzTank]);
-					
+
 					SDKHook(g_iOzTank[tank][iOzTank], SDKHook_SetTransmit, SetTransmit);
 					g_iOzTank[tank][iOzTank] = EntIndexToEntRef(g_iOzTank[tank][iOzTank]);
-					
+
 					if (g_iFlame[tank][iOzTank] == INVALID_ENT_REFERENCE && GetRandomFloat(0.1, 100.0) <= flPropsChance[3] && ((g_iPropsAttached2[tank] == 0 && (g_iPropsAttached[g_iTankType[tank]] & MT_PROP_FLAME)) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && (g_iPropsAttached2[tank] & MT_PROP_FLAME))))
 					{
 						g_iFlame[tank][iOzTank] = CreateEntityByName("env_steam");
@@ -3624,7 +3663,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 						}
 					}
 
-					
+
 				}
 			}
 			else if (bIsValidEntRef(g_iOzTank[tank][iOzTank]))
@@ -4307,7 +4346,7 @@ static bool bIsTankAllowed(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|
 	return true;
 }
 
-static bool bIsTypeAvailable(int type, int tank = -1)
+static bool bIsTypeAvailable(int type, int tank = 0)
 {
 	if (g_iDetectPlugins == 0 && g_iDetectPlugins2[type] == 0 && g_iDetectPlugins3[tank] == 0)
 	{
