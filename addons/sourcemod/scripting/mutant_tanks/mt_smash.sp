@@ -453,12 +453,12 @@ static void vSmash(int survivor, int tank)
 
 	if (bIsValidGame())
 	{
-		EmitSoundToAll(SOUND_SMASH, tank);
+		EmitSoundToAll(SOUND_SMASH, survivor);
 		EmitSoundToAll(SOUND_GROWL, tank);
 	}
 	else
 	{
-		EmitSoundToAll(SOUND_SMASH_L4D1, tank);
+		EmitSoundToAll(SOUND_SMASH_L4D1, survivor);
 		EmitSoundToAll(SOUND_GROWL_L4D1, tank);
 	}
 	vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
