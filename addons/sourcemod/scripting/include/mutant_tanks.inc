@@ -901,6 +901,20 @@ stock void vSpecialAttack(int tank, float pos[3], float offset, const char[] mod
 	}
 }
 
+stock void vStopSound(client, const char[] sound)
+{
+	StopSound(client, SNDCHAN_REPLACE, sound);
+	StopSound(client, SNDCHAN_AUTO, sound);
+	StopSound(client, SNDCHAN_WEAPON, sound);
+	StopSound(client, SNDCHAN_VOICE, sound);
+	StopSound(client, SNDCHAN_ITEM, sound);
+	StopSound(client, SNDCHAN_BODY, sound);
+	StopSound(client, SNDCHAN_STREAM, sound);
+	StopSound(client, SNDCHAN_STATIC, sound);
+	StopSound(client, SNDCHAN_VOICE_BASE, sound);
+	StopSound(client, SNDCHAN_USER_BASE, sound);
+}
+
 // Chat
 stock void MT_PrintToChat(int client, char[] message, any ...)
 {
