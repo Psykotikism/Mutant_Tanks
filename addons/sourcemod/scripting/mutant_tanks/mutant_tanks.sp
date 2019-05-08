@@ -3106,7 +3106,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
  			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
 			{
 				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
-				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
 			}
 		}
 		else if (StrEqual(name, "player_no_longer_it"))
@@ -3121,7 +3120,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 
 				SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
-				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
 			}
 		}
 		else if (StrEqual(name, "player_spawn"))
