@@ -532,7 +532,7 @@ static void vSlowHit(int survivor, int tank, float chance, int enabled, int mess
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowHuman", g_iSlowCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
 				}
 
-				SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", g_flSlowSpeed[MT_GetTankType(tank)]);
+				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", g_flSlowSpeed[MT_GetTankType(tank)]);
 
 				DataPack dpStopSlow;
 				CreateDataTimer(g_flSlowDuration[MT_GetTankType(tank)], tTimerStopSlow, dpStopSlow, TIMER_FLAG_NO_MAPCHANGE);

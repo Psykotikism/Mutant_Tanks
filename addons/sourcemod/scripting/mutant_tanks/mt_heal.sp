@@ -411,7 +411,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			SetEntProp(iSurvivor, Prop_Send, "m_currentReviveCount", 0);
 			SetEntProp(iSurvivor, Prop_Send, "m_isGoingToDie", 0);
 
-			StopSound(iSurvivor, SNDCHAN_AUTO, SOUND_HEARTBEAT);
+			vStopSound(iSurvivor, SOUND_HEARTBEAT);
 		}
 	}
 	else if (StrEqual(name, "player_death"))
@@ -419,7 +419,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iUserId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iUserId);
 		if (bIsSurvivor(iPlayer))
 		{
-			StopSound(iPlayer, SNDCHAN_AUTO, SOUND_HEARTBEAT);
+			vStopSound(iPlayer, SOUND_HEARTBEAT);
 		}
 		else if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
 		{
@@ -744,6 +744,9 @@ static void vReset2(int tank)
 
 static void vResetGlow(int tank)
 {
+	if (!bIsValidGame())
+		return;
+
 	switch (MT_IsGlowEnabled(tank))
 	{
 		case true:

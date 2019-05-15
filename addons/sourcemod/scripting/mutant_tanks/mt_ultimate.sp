@@ -49,9 +49,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 
 #define SOUND_ELECTRICITY "items/suitchargeok1.wav"
-#define SOUND_EXPLOSION "ambient/explosions/exp2.wav"
-#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav"
-#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav"
+#define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
+#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav" //Only exists on L4D2
+#define SOUND_GROWL_L4D1 "player/tank/voice/growl/hulk_growl_1.wav" //Only exists on L4D1
+#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav" //Only exists on L4D2
+#define SOUND_SMASH_L4D1 "player/tank/hit/hulk_punch_1.wav"
 
 #define MT_MENU_ULTIMATE "Ultimate Ability"
 
@@ -109,8 +111,16 @@ public void OnMapStart()
 
 	PrecacheSound(SOUND_ELECTRICITY, true);
 	PrecacheSound(SOUND_EXPLOSION, true);
-	PrecacheSound(SOUND_GROWL, true);
-	PrecacheSound(SOUND_SMASH, true);
+	if (bIsValidGame())
+	{
+		PrecacheSound(SOUND_GROWL, true);
+		PrecacheSound(SOUND_SMASH, true);
+	}
+	else
+	{
+		PrecacheSound(SOUND_GROWL_L4D1, true);
+		PrecacheSound(SOUND_SMASH_L4D1, true);
+	}
 
 	vReset();
 }
@@ -473,8 +483,16 @@ static void vUltimateAbility(int tank)
 			vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 			EmitSoundToAll(SOUND_ELECTRICITY, tank);
 			EmitSoundToAll(SOUND_EXPLOSION, tank);
-			EmitSoundToAll(SOUND_GROWL, tank);
-			EmitSoundToAll(SOUND_SMASH, tank);
+			if (bIsValidGame())
+			{
+				EmitSoundToAll(SOUND_SMASH, tank);
+				EmitSoundToAll(SOUND_GROWL, tank);
+			}
+			else
+			{
+				EmitSoundToAll(SOUND_SMASH_L4D1, tank);
+				EmitSoundToAll(SOUND_GROWL_L4D1, tank);
+			}
 
 			SetEntityHealth(tank, RoundToNearest(g_iUltimateHealth[tank] * g_flUltimateHealthPortion[MT_GetTankType(tank)]));
 
