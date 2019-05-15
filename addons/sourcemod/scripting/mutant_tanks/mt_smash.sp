@@ -48,10 +48,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define PARTICLE_BLOOD "boomer_explode_D"
 
-#define SOUND_GROWL "player/tank/voice/growl/tank_climb_01.wav" //Only exists on L4D2
-#define SOUND_GROWL_L4D1 "player/tank/voice/growl/hulk_growl_1.wav" //Only exists on L4D1
-#define SOUND_SMASH "player/charger/hit/charger_smash_02.wav" //Only exists on L4D2
-#define SOUND_SMASH_L4D1 "player/tank/hit/hulk_punch_1.wav"
+#define SOUND_GROWL2 "player/tank/voice/growl/tank_climb_01.wav" //Only exists on L4D2
+#define SOUND_GROWL1 "player/tank/voice/growl/hulk_growl_1.wav" //Only exists on L4D1
+#define SOUND_SMASH2 "player/charger/hit/charger_smash_02.wav" //Only exists on L4D2
+#define SOUND_SMASH1 "player/tank/hit/hulk_punch_1.wav"
 
 #define MT_MENU_SMASH "Smash Ability"
 
@@ -109,13 +109,13 @@ public void OnMapStart()
 
 	if (bIsValidGame())
 	{
-		PrecacheSound(SOUND_GROWL, true);
-		PrecacheSound(SOUND_SMASH, true);
+		PrecacheSound(SOUND_GROWL2, true);
+		PrecacheSound(SOUND_SMASH2, true);
 	}
 	else
 	{
-		PrecacheSound(SOUND_GROWL_L4D1, true);
-		PrecacheSound(SOUND_SMASH_L4D1, true);
+		PrecacheSound(SOUND_GROWL1, true);
+		PrecacheSound(SOUND_SMASH1, true);
 	}
 
 	vReset();
@@ -453,14 +453,15 @@ static void vSmash(int survivor, int tank)
 
 	if (bIsValidGame())
 	{
-		EmitSoundToAll(SOUND_SMASH, survivor);
-		EmitSoundToAll(SOUND_GROWL, tank);
+		EmitSoundToAll(SOUND_SMASH2, survivor);
+		EmitSoundToAll(SOUND_GROWL2, tank);
 	}
 	else
 	{
-		EmitSoundToAll(SOUND_SMASH_L4D1, survivor);
-		EmitSoundToAll(SOUND_GROWL_L4D1, tank);
+		EmitSoundToAll(SOUND_SMASH1, survivor);
+		EmitSoundToAll(SOUND_GROWL1, tank);
 	}
+
 	vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
 }
 

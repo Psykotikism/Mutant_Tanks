@@ -17,7 +17,7 @@
 #include <sdktools>
 
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
-#define MT_VERSION "8.61"
+#define MT_VERSION "8.62"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define MT_TAG "[MT]"
@@ -901,7 +901,7 @@ stock void vSpecialAttack(int tank, float pos[3], float offset, const char[] mod
 	}
 }
 
-stock void vStopSound(client, const char[] sound)
+stock void vStopSound(int client, const char[] sound)
 {
 	StopSound(client, SNDCHAN_REPLACE, sound);
 	StopSound(client, SNDCHAN_AUTO, sound);

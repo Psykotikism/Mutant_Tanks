@@ -135,7 +135,7 @@ enum ConfigState
 ArrayList g_alAdmins;
 
 bool g_bAbilityFound[MT_MAXTYPES + 1][MT_MAX_ABILITIES + 1], g_bAbilityPlugin[MT_MAX_ABILITIES + 1], g_bAdminMenu[MAXPLAYERS + 1], g_bBlood[MAXPLAYERS + 1], g_bBlur[MAXPLAYERS + 1], g_bBoss[MAXPLAYERS + 1], g_bChanged[MAXPLAYERS + 1], g_bCloneInstalled, g_bDying[MAXPLAYERS + 1], g_bElectric[MAXPLAYERS + 1], g_bFire[MAXPLAYERS + 1],
-	g_bFound[MT_MAX_ABILITIES + 1], g_bIce[MAXPLAYERS + 1], g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSettingsFound, g_bSmoke[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1], g_bUsedParser[MAXPLAYERS + 1];
+	g_bFound[MT_MAX_ABILITIES + 1], g_bIce[MAXPLAYERS + 1], g_bMeteor[MAXPLAYERS + 1], g_bNeedHealth[MAXPLAYERS + 1], g_bPluginEnabled, g_bRandomized[MAXPLAYERS + 1], g_bSmoke[MAXPLAYERS + 1], g_bSpit[MAXPLAYERS + 1], g_bThirdPerson[MAXPLAYERS + 1], g_bTransformed[MAXPLAYERS + 1];
 
 char g_sPluginFilenames[][] =
 {
@@ -143,16 +143,14 @@ char g_sPluginFilenames[][] =
 	"mt_god.smx", "mt_gravity.smx", "mt_heal.smx", "mt_hit.smx", "mt_hurt.smx", "mt_hypno.smx", "mt_ice.smx", "mt_idle.smx", "mt_invert.smx", "mt_item.smx", "mt_jump.smx", "mt_kamikaze.smx", "mt_lag.smx", "mt_leech.smx", "mt_medic.smx", "mt_meteor.smx", "mt_minion.smx", "mt_necro.smx", "mt_nullify.smx", "mt_omni.smx", "mt_panic.smx",
 	"mt_pimp.smx", "mt_puke.smx", "mt_pyro.smx", "mt_quiet.smx", "mt_recoil.smx", "mt_regen.smx", "mt_respawn.smx", "mt_restart.smx", "mt_rock.smx", "mt_rocket.smx", "mt_shake.smx", "mt_shield.smx", "mt_shove.smx", "mt_slow.smx", "mt_smash.smx", "mt_smite.smx", "mt_spam.smx", "mt_splash.smx", "mt_throw.smx", "mt_track.smx", "mt_ultimate.smx",
 	"mt_undead.smx", "mt_vampire.smx", "mt_vision.smx", "mt_warp.smx", "mt_whirl.smx", "mt_witch.smx", "mt_xiphos.smx", "mt_yell.smx", "mt_zombie.smx"
-}, g_sCurrentSection[128], g_sCurrentSubSection[128], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sHealthCharacters[4], g_sHealthCharacters2[MT_MAXTYPES + 1][4], g_sHealthCharacters3[MAXPLAYERS + 1][4], g_sSavePath[PLATFORM_MAX_PATH], g_sSection[MAXPLAYERS + 1][128], g_sTankName[MT_MAXTYPES + 1][33], g_sTankName2[MAXPLAYERS + 1][33],
-	g_sUsedPath[PLATFORM_MAX_PATH];
+}, g_sCurrentSection[128], g_sCurrentSubSection[128], g_sDisabledGameModes[513], g_sEnabledGameModes[513], g_sHealthCharacters[4], g_sHealthCharacters2[MT_MAXTYPES + 1][4], g_sHealthCharacters3[MAXPLAYERS + 1][4], g_sSavePath[PLATFORM_MAX_PATH], g_sTankName[MT_MAXTYPES + 1][33], g_sTankName2[MAXPLAYERS + 1][33], g_sUsedPath[PLATFORM_MAX_PATH];
 
-ConfigState g_csState, g_csState2[MAXPLAYERS + 1];
+ConfigState g_csState;
 
 ConVar g_cvMTDifficulty, g_cvMTGameMode, g_cvMTGameTypes, g_cvMTMaxPlayerZombies;
 
 float g_flClawDamage[MT_MAXTYPES + 1], g_flClawDamage2[MAXPLAYERS + 1], g_flPropsChance[MT_MAXTYPES + 1][6], g_flPropsChance2[MAXPLAYERS + 1][6], g_flRandomInterval[MT_MAXTYPES + 1], g_flRandomInterval2[MAXPLAYERS + 1], g_flRegularInterval, g_flRockDamage[MT_MAXTYPES + 1], g_flRockDamage2[MAXPLAYERS + 1], g_flRunSpeed[MT_MAXTYPES + 1],
-	g_flRunSpeed2[MAXPLAYERS + 1],
-	g_flTankChance[MT_MAXTYPES + 1], g_flThrowInterval[MT_MAXTYPES + 1], g_flThrowInterval2[MAXPLAYERS + 1], g_flTransformDelay[MT_MAXTYPES + 1], g_flTransformDelay2[MAXPLAYERS + 1], g_flTransformDuration[MT_MAXTYPES + 1], g_flTransformDuration2[MAXPLAYERS + 1];
+	g_flRunSpeed2[MAXPLAYERS + 1], g_flTankChance[MT_MAXTYPES + 1], g_flThrowInterval[MT_MAXTYPES + 1], g_flThrowInterval2[MAXPLAYERS + 1], g_flTransformDelay[MT_MAXTYPES + 1], g_flTransformDelay2[MAXPLAYERS + 1], g_flTransformDuration[MT_MAXTYPES + 1], g_flTransformDuration2[MAXPLAYERS + 1];
 
 Handle g_hAbilityActivatedForward, g_hButtonPressedForward, g_hButtonReleasedForward, g_hChangeTypeForward, g_hConfigsLoadForward, g_hConfigsLoadedForward, g_hDisplayMenuForward, g_hEventFiredForward, g_hHookEventForward, g_hMenuItemSelectedForward, g_hPluginEndForward, g_hPostTankSpawnForward, g_hRockBreakForward, g_hRockThrowForward;
 
@@ -161,12 +159,12 @@ int g_iAccessFlags, g_iAccessFlags2[MT_MAXTYPES + 1], g_iAccessFlags3[MAXPLAYERS
 	g_iBulletImmunity[MT_MAXTYPES + 1], g_iBulletImmunity2[MAXPLAYERS + 1], g_iConfigCreate, g_iConfigEnable, g_iConfigExecute, g_iConfigMode, g_iCooldown[MAXPLAYERS + 1], g_iDeathRevert, g_iDeathRevert2[MT_MAXTYPES + 1], g_iDeathRevert3[MAXPLAYERS + 1], g_iDetectPlugins, g_iDetectPlugins2[MT_MAXTYPES + 1], g_iDetectPlugins3[MAXPLAYERS + 1],
 	g_iDisplayHealth, g_iDisplayHealth2[MT_MAXTYPES + 1], g_iDisplayHealth3[MAXPLAYERS + 1], g_iDisplayHealthType, g_iDisplayHealthType2[MT_MAXTYPES + 1], g_iDisplayHealthType3[MAXPLAYERS + 1], g_iExplosiveImmunity[MT_MAXTYPES + 1], g_iExplosiveImmunity2[MAXPLAYERS + 1], g_iExtraHealth[MT_MAXTYPES + 1], g_iExtraHealth2[MAXPLAYERS + 1],
 	g_iFavoriteType[MAXPLAYERS + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinaleTank[MT_MAXTYPES + 1], g_iFinaleType[4], g_iFinaleWave[4], g_iFireImmunity[MT_MAXTYPES + 1], g_iFireImmunity2[MAXPLAYERS + 1], g_iFlame[MAXPLAYERS + 1][3], g_iFlameColor[MT_MAXTYPES + 1][4], g_iFlameColor2[MAXPLAYERS + 1][4], g_iGameModeTypes,
-	g_iGlowEnabled[MT_MAXTYPES + 1], g_iGlowEnabled2[MAXPLAYERS + 1], g_iGlowColor[MT_MAXTYPES + 1][3], g_iGlowColor2[MAXPLAYERS + 1][3], g_iHumanCooldown, g_iHumanSupport[MT_MAXTYPES + 1], g_iIgnoreLevel, g_iIgnoreLevel2[MAXPLAYERS + 1], g_iImmunityFlags, g_iImmunityFlags2[MT_MAXTYPES + 1], g_iImmunityFlags3[MAXPLAYERS + 1],
-	g_iImmunityFlags4[MT_MAXTYPES + 1][MAXPLAYERS + 1], g_iLastButtons[MAXPLAYERS + 1], g_iLight[MAXPLAYERS + 1][4], g_iLightColor[MT_MAXTYPES + 1][4], g_iLightColor2[MAXPLAYERS + 1][4], g_iMasterControl, g_iMaxType, g_iMeleeImmunity[MT_MAXTYPES + 1], g_iMeleeImmunity2[MAXPLAYERS + 1], g_iMenuEnabled[MT_MAXTYPES + 1], g_iMinType,
-	g_iMultiHealth, g_iMultiHealth2[MT_MAXTYPES + 1], g_iMultiHealth3[MAXPLAYERS + 1], g_iOzTank[MAXPLAYERS + 1][3], g_iOzTankColor[MT_MAXTYPES + 1][4], g_iOzTankColor2[MAXPLAYERS + 1][4], g_iPlayerCount[2], g_iPluginEnabled, g_iPropsAttached[MT_MAXTYPES + 1], g_iPropsAttached2[MAXPLAYERS + 1], g_iRandomTank[MT_MAXTYPES + 1],
-	g_iRandomTank2[MAXPLAYERS + 1], g_iRegularAmount, g_iRegularMode, g_iRegularType, g_iRegularWave, g_iRockEffects[MT_MAXTYPES + 1], g_iRockEffects2[MAXPLAYERS + 1], g_iRock[MAXPLAYERS + 1][17], g_iRockColor[MT_MAXTYPES + 1][4], g_iRockColor2[MAXPLAYERS + 1][4], g_iSection[MAXPLAYERS + 1], g_iSkinColor[MT_MAXTYPES + 1][4],
-	g_iSkinColor2[MAXPLAYERS + 1][4], g_iSpawnEnabled[MT_MAXTYPES + 1], g_iSpawnMode[MT_MAXTYPES + 1], g_iMTMode, g_iTankEnabled[MT_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankModel[MAXPLAYERS + 1], g_iTankNote[MT_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iTire[MAXPLAYERS + 1][3], g_iTireColor[MT_MAXTYPES + 1][4],
-	g_iTireColor2[MAXPLAYERS + 1][4], g_iTransformType[MT_MAXTYPES + 1][10], g_iTransformType2[MAXPLAYERS + 1][10], g_iType, g_iTypeLimit[MT_MAXTYPES + 1];
+	g_iGlowEnabled[MT_MAXTYPES + 1], g_iGlowEnabled2[MAXPLAYERS + 1], g_iGlowColor[MT_MAXTYPES + 1][3], g_iGlowColor2[MAXPLAYERS + 1][3], g_iHumanCooldown, g_iHumanSupport[MT_MAXTYPES + 1], g_iIgnoreLevel, g_iImmunityFlags, g_iImmunityFlags2[MT_MAXTYPES + 1], g_iImmunityFlags3[MAXPLAYERS + 1], g_iImmunityFlags4[MT_MAXTYPES + 1][MAXPLAYERS + 1],
+	g_iIncapTime[MAXPLAYERS + 1], g_iLastButtons[MAXPLAYERS + 1], g_iLight[MAXPLAYERS + 1][4], g_iLightColor[MT_MAXTYPES + 1][4], g_iLightColor2[MAXPLAYERS + 1][4], g_iMasterControl, g_iMaxType, g_iMeleeImmunity[MT_MAXTYPES + 1], g_iMeleeImmunity2[MAXPLAYERS + 1], g_iMenuEnabled[MT_MAXTYPES + 1], g_iMinType, g_iMultiHealth,
+	g_iMultiHealth2[MT_MAXTYPES + 1], g_iMultiHealth3[MAXPLAYERS + 1], g_iOzTank[MAXPLAYERS + 1][3], g_iOzTankColor[MT_MAXTYPES + 1][4], g_iOzTankColor2[MAXPLAYERS + 1][4], g_iPlayerCount[2], g_iPluginEnabled, g_iPropsAttached[MT_MAXTYPES + 1], g_iPropsAttached2[MAXPLAYERS + 1], g_iRandomTank[MT_MAXTYPES + 1], g_iRandomTank2[MAXPLAYERS + 1],
+	g_iRegularAmount, g_iRegularMode, g_iRegularType, g_iRegularWave, g_iRockEffects[MT_MAXTYPES + 1], g_iRockEffects2[MAXPLAYERS + 1], g_iRock[MAXPLAYERS + 1][17], g_iRockColor[MT_MAXTYPES + 1][4], g_iRockColor2[MAXPLAYERS + 1][4], g_iSkinColor[MT_MAXTYPES + 1][4], g_iSkinColor2[MAXPLAYERS + 1][4], g_iSpawnEnabled[MT_MAXTYPES + 1],
+	g_iSpawnMode[MT_MAXTYPES + 1], g_iMTMode, g_iTankEnabled[MT_MAXTYPES + 1], g_iTankHealth[MAXPLAYERS + 1], g_iTankModel[MAXPLAYERS + 1], g_iTankNote[MT_MAXTYPES + 1], g_iTankType[MAXPLAYERS + 1], g_iTankWave, g_iTire[MAXPLAYERS + 1][3], g_iTireColor[MT_MAXTYPES + 1][4], g_iTireColor2[MAXPLAYERS + 1][4], g_iTransformType[MT_MAXTYPES + 1][10],
+	g_iTransformType2[MAXPLAYERS + 1][10], g_iType, g_iTypeLimit[MT_MAXTYPES + 1];
 
 TopMenu g_tmMTMenu;
 
@@ -489,7 +487,6 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
-	RegConsoleCmd("sm_mt_config", cmdMTConfig, "View a section of the config file.");
 	RegConsoleCmd("sm_mt_info", cmdMTInfo, "View information about Mutant Tanks.");
 	RegConsoleCmd("sm_mt_list", cmdMTList, "View a list of installed abilities.");
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Mutant Tank.");
@@ -564,6 +561,7 @@ public void OnClientPutInServer(int client)
 
 	g_bAdminMenu[client] = false;
 	g_bThirdPerson[client] = false;
+	g_iIncapTime[client] = 0;
 	g_iPlayerCount[0] = iGetPlayerCount();
 	g_iTankType[client] = 0;
 
@@ -580,7 +578,11 @@ public void OnClientPostAdminCheck(int client)
 
 public void OnClientDisconnect_Post(int client)
 {
+	g_bAdminMenu[client] = false;
+	g_bThirdPerson[client] = false;
+	g_iIncapTime[client] = 0;
 	g_iLastButtons[client] = 0;
+	g_iTankType[client] = 0;
 }
 
 public void OnConfigsExecuted()
@@ -815,7 +817,6 @@ public void OnAdminMenuReady(Handle topmenu)
 	if (mt_commands != INVALID_TOPMENUOBJECT)
 	{
 		g_tmMTMenu.AddItem("sm_tank", vMutantTanksMenu, mt_commands, "sm_tank", ADMFLAG_ROOT);
-		g_tmMTMenu.AddItem("sm_mt_config", vMTConfigMenu, mt_commands, "sm_mt_config", ADMFLAG_ROOT);
 		g_tmMTMenu.AddItem("sm_mt_info", vMTInfoMenu, mt_commands, "sm_mt_info", ADMFLAG_GENERIC);
 	}
 }
@@ -844,20 +845,6 @@ public void vMutantTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObjec
 	}
 }
 
-public void vMTConfigMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
-{
-	switch (action)
-	{
-		case TopMenuAction_DisplayOption: Format(buffer, maxlength, "%T", "MTConfigMenu", param);
-		case TopMenuAction_SelectOption:
-		{
-			g_bAdminMenu[param] = true;
-
-			vConfigMenu(param, 0);
-		}
-	}
-}
-
 public void vMTInfoMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
 {
 	switch (action)
@@ -870,340 +857,6 @@ public void vMTInfoMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject obj
 			vInfoMenu(param, 0);
 		}
 	}
-}
-
-public Action cmdMTConfig(int client, int args)
-{
-	if (g_bUsedParser[client])
-	{
-		ReplyToCommand(client, "%s The plugin is still parsing the config file.", MT_TAG2);
-
-		return Plugin_Handled;
-	}
-
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
-	{
-		ReplyToCommand(client, "%s This command is to be used only in-game.", MT_TAG);
-
-		return Plugin_Handled;
-	}
-
-	if (args < 1)
-	{
-		switch (IsVoteInProgress())
-		{
-			case true: ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-			case false: vConfigMenu(client, 0);
-		}
-
-		return Plugin_Handled;
-	}
-
-	GetCmdArg(1, g_sSection[client], sizeof(g_sSection[]));
-	if (IsCharNumeric(g_sSection[client][0]))
-	{
-		g_iSection[client] = StringToInt(g_sSection[client]);
-	}
-
-	vParseConfig(client);
-
-	return Plugin_Handled;
-}
-
-static void vParseConfig(int client)
-{
-	g_bUsedParser[client] = true;
-
-	SMCParser smcParser = new SMCParser();
-	smcParser.OnStart = SMCParseStart2;
-	smcParser.OnEnterSection = SMCNewSection2;
-	smcParser.OnKeyValue = SMCKeyValues2;
-	smcParser.OnLeaveSection = SMCEndSection2;
-	smcParser.OnEnd = SMCParseEnd2;
-	smcParser.ParseFile(g_sUsedPath);
-	delete smcParser;
-}
-
-public void SMCParseStart2(SMCParser smc)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (g_bUsedParser[iPlayer] && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
-		{
-			g_csState2[iPlayer] = ConfigState_None;
-			g_iIgnoreLevel2[iPlayer] = 0;
-
-			MT_PrintToChat(iPlayer, "%s Parsing the config file...", MT_TAG2);
-		}
-	}
-}
-
-public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quotes)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (g_bUsedParser[iPlayer] && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
-		{
-			if (g_iIgnoreLevel2[iPlayer])
-			{
-				g_iIgnoreLevel2[iPlayer]++;
-
-				return SMCParse_Continue;
-			}
-
-			if (g_csState2[iPlayer] == ConfigState_None)
-			{
-				if (StrEqual(name, "MutantTanks", false) || StrEqual(name, "Mutant Tanks", false) || StrEqual(name, "Mutant_Tanks", false) || StrEqual(name, "MT", false))
-				{
-					g_csState2[iPlayer] = ConfigState_Start;
-
-					MT_PrintToChat(iPlayer, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
-				}
-				else
-				{
-					g_iIgnoreLevel2[iPlayer]++;
-				}
-			}
-			else if (g_csState2[iPlayer] == ConfigState_Start)
-			{
-				if ((StrEqual(g_sSection[iPlayer], "PluginSettings", false) || StrEqual(g_sSection[iPlayer], "Plugin Settings", false) || StrEqual(g_sSection[iPlayer], "Plugin_Settings", false) || StrEqual(g_sSection[iPlayer], "settings", false)) && StrEqual(name, g_sSection[iPlayer], false))
-				{
-					g_csState2[iPlayer] = ConfigState_Settings;
-
-					MT_PrintToChat(iPlayer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-				}
-				else if (g_iSection[iPlayer] > 0 && (StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#' || IsCharNumeric(name[0])))
-				{
-					char sTankName[8][33];
-					Format(sTankName[0], sizeof(sTankName[]), "Tank#%i", g_iSection[iPlayer]);
-					Format(sTankName[1], sizeof(sTankName[]), "Tank #%i", g_iSection[iPlayer]);
-					Format(sTankName[2], sizeof(sTankName[]), "Tank_#%i", g_iSection[iPlayer]);
-					Format(sTankName[3], sizeof(sTankName[]), "Tank%i", g_iSection[iPlayer]);
-					Format(sTankName[4], sizeof(sTankName[]), "Tank %i", g_iSection[iPlayer]);
-					Format(sTankName[5], sizeof(sTankName[]), "Tank_%i", g_iSection[iPlayer]);
-					Format(sTankName[6], sizeof(sTankName[]), "#%i", g_iSection[iPlayer]);
-					Format(sTankName[7], sizeof(sTankName[]), "%i", g_iSection[iPlayer]);
-
-					for (int iType = 0; iType < 8; iType++)
-					{
-						if (StrEqual(name, sTankName[iType], false))
-						{
-							g_csState2[iPlayer] = ConfigState_Type;
-
-							MT_PrintToChat(iPlayer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-
-							break;
-						}
-					}
-				}
-				else if (StrEqual(name, g_sSection[iPlayer], false) && (StrContains(name, "STEAM_", false) == 0 || strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']')))
-				{
-					g_csState2[iPlayer] = ConfigState_Admin;
-
-					MT_PrintToChat(iPlayer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-				}
-				else
-				{
-					g_iIgnoreLevel2[iPlayer]++;
-				}
-			}
-			else if (g_csState2[iPlayer] == ConfigState_Settings || g_csState2[iPlayer] == ConfigState_Type || g_csState2[iPlayer] == ConfigState_Admin)
-			{
-				g_csState2[iPlayer] = ConfigState_Specific;
-
-				MT_PrintToChat(iPlayer, (opt_quotes) ? ("%20s \"%s\"\n%20s {") : ("%20s %s\n%20s {"), "", name, "");
-			}
-			else
-			{
-				g_iIgnoreLevel2[iPlayer]++;
-			}
-		}
-	}
-
-	return SMCParse_Continue;
-}
-
-public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (g_bUsedParser[iPlayer] && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
-		{
-			if (g_iIgnoreLevel2[iPlayer])
-			{
-				return SMCParse_Continue;
-			}
-
-			if (g_csState2[iPlayer] == ConfigState_Specific)
-			{
-				char sKey[64], sValue[384];
-				Format(sKey, sizeof(sKey), ((key_quotes) ? ("\"%s\"") : ("%s")), key);
-				Format(sValue, sizeof(sValue), ((value_quotes) ? ("\"%s\"") : ("%s")), value);
-				MT_PrintToChat(iPlayer, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
-			}
-		}
-	}
-
-	return SMCParse_Continue;
-}
-
-public SMCResult SMCEndSection2(SMCParser smc)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (g_bUsedParser[iPlayer] && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
-		{
-			if (g_iIgnoreLevel2[iPlayer])
-			{
-				g_iIgnoreLevel2[iPlayer]--;
-
-				return SMCParse_Continue;
-			}
-
-			if (g_csState2[iPlayer] == ConfigState_Specific)
-			{
-				if (StrEqual(g_sSection[iPlayer], "PluginSettings", false) || StrEqual(g_sSection[iPlayer], "Plugin Settings", false) || StrEqual(g_sSection[iPlayer], "Plugin_Settings", false) || StrEqual(g_sSection[iPlayer], "settings", false))
-				{
-					g_csState2[iPlayer] = ConfigState_Settings;
-
-					MT_PrintToChat(iPlayer, "%20s }", "");
-				}
-				else if (g_iSection[iPlayer] > 0 && (StrContains(g_sSection[iPlayer], "Tank#", false) != -1 || StrContains(g_sSection[iPlayer], "Tank #", false) != -1 || StrContains(g_sSection[iPlayer], "Tank_#", false) != -1 || StrContains(g_sSection[iPlayer], "Tank", false) != -1 || g_sSection[iPlayer][0] == '#' || IsCharNumeric(g_sSection[iPlayer][0])))
-				{
-					g_csState2[iPlayer] = ConfigState_Type;
-
-					MT_PrintToChat(iPlayer, "%20s }", "");
-				}
-				else if (StrContains(g_sSection[iPlayer], "STEAM_", false) == 0 || strncmp("0:", g_sSection[iPlayer], 2) == 0 || strncmp("1:", g_sSection[iPlayer], 2) == 0 || (!strncmp(g_sSection[iPlayer], "[U:", 3) && g_sSection[iPlayer][strlen(g_sSection[iPlayer]) - 1] == ']'))
-				{
-					g_csState2[iPlayer] = ConfigState_Admin;
-
-					MT_PrintToChat(iPlayer, "%20s }", "");
-				}
-			}
-			else if (g_csState2[iPlayer] == ConfigState_Settings || g_csState2[iPlayer] == ConfigState_Type || g_csState2[iPlayer] == ConfigState_Admin)
-			{
-				g_csState2[iPlayer] = ConfigState_Start;
-
-				MT_PrintToChat(iPlayer, "%10s }", "");
-			}
-			else if (g_csState2[iPlayer] == ConfigState_Start)
-			{
-				g_csState2[iPlayer] = ConfigState_None;
-
-				MT_PrintToChat(iPlayer, "}");
-			}
-		}
-	}
-
-	return SMCParse_Continue;
-}
-
-public void SMCParseEnd2(SMCParser smc, bool halted, bool failed)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (g_bUsedParser[iPlayer] && bIsValidClient(iPlayer))
-		{
-			g_bUsedParser[iPlayer] = false;
-			g_csState2[iPlayer] = ConfigState_None;
-			g_iIgnoreLevel2[iPlayer] = 0;
-			g_iSection[iPlayer] = 0;
-			g_sSection[iPlayer][0] = '\0';
-
-			MT_PrintToChat(iPlayer, "%s Parsing complete...", MT_TAG2);
-			MT_PrintToChat(iPlayer, "%s See console for full output.\n\n\n\n\n\n", MT_TAG2);
-		}
-	}
-}
-
-static void vConfigMenu(int admin, int item)
-{
-	Menu mConfigMenu = new Menu(iConfigMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
-	mConfigMenu.SetTitle("Config Parser Menu");
-
-	if (g_bSettingsFound)
-	{
-		mConfigMenu.AddItem("Plugin Settings", "Plugin Settings");
-	}
-
-	for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
-	{
-		char sMenuItem[46];
-		Format(sMenuItem, sizeof(sMenuItem), "%s (Tank #%i)", g_sTankName[iIndex], iIndex);
-		mConfigMenu.AddItem(g_sTankName[iIndex], sMenuItem);
-	}
-
-	if (GetArraySize(g_alAdmins) > 0)
-	{
-		for (int iPos = 0; iPos < GetArraySize(g_alAdmins); iPos++)
-		{
-			char sAdmins[32];
-			g_alAdmins.GetString(iPos, sAdmins, sizeof(sAdmins));
-			mConfigMenu.AddItem(sAdmins, sAdmins);
-		}
-	}
-
-	mConfigMenu.ExitBackButton = g_bAdminMenu[admin];
-	mConfigMenu.DisplayAt(admin, item, MENU_TIME_FOREVER);
-}
-
-public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int param2)
-{
-	switch (action)
-	{
-		case MenuAction_End: delete menu;
-		case MenuAction_Cancel:
-		{
-			if (g_bAdminMenu[param1])
-			{
-				g_bAdminMenu[param1] = false;
-
-				if (param2 == MenuCancel_ExitBack && g_tmMTMenu != null)
-				{
-					g_tmMTMenu.Display(param1, TopMenuPosition_LastCategory);
-				}
-			}
-		}
-		case MenuAction_Select:
-		{
-			char sInfo[33];
-			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			if (StrContains(sInfo, "Plugin", false) != -1 || StrContains(sInfo, "settings", false) != -1 || StrContains(sInfo, "STEAM_", false) == 0 || (!strncmp(sInfo, "[U:", 3) && sInfo[strlen(sInfo) - 1] == ']'))
-			{
-				strcopy(g_sSection[param1], sizeof(g_sSection[]), sInfo);
-			}
-			else
-			{
-				for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
-				{
-					if (StrEqual(sInfo, g_sTankName[iIndex], false))
-					{
-						IntToString(iIndex, g_sSection[param1], sizeof(g_sSection[]));
-						g_iSection[param1] = iIndex;
-
-						break;
-					}
-				}
-			}
-
-			vParseConfig(param1);
-
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
-			{
-				vConfigMenu(param1, menu.Selection);
-			}
-		}
-		case MenuAction_Display:
-		{
-			char sMenuTitle[255];
-			Panel panel = view_as<Panel>(param2);
-			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "MTConfigMenu", param1);
-			panel.SetTitle(sMenuTitle);
-		}
-	}
-
-	return 0;
 }
 
 public Action cmdMTInfo(int client, int args)
@@ -2032,8 +1685,6 @@ public Action SetTransmit(int entity, int client)
 static void vLoadConfigs(const char[] savepath, int mode)
 {
 	g_iConfigMode = mode;
-	g_bSettingsFound = false;
-
 	strcopy(g_sUsedPath, sizeof(g_sUsedPath), savepath);
 
 	SMCParser smcLoader = new SMCParser();
@@ -2283,12 +1934,11 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 	{
 		if (StrEqual(name, "PluginSettings", false) || StrEqual(name, "Plugin Settings", false) || StrEqual(name, "Plugin_Settings", false) || StrEqual(name, "settings", false))
 		{
-			g_bSettingsFound = true;
 			g_csState = ConfigState_Settings;
 
 			strcopy(g_sCurrentSection, sizeof(g_sCurrentSection), name);
 		}
-		else if (StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#' || IsCharNumeric(name[0]))
+		else if (StrContains(name, "Tank#", false) == 0 || StrContains(name, "Tank #", false) == 0 || StrContains(name, "Tank_#", false) == 0 || StrContains(name, "Tank", false) == 0 || name[0] == '#' || IsCharNumeric(name[0]))
 		{
 			for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 			{
@@ -2480,7 +2130,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			Call_PushCell(-1);
 			Call_Finish();
 		}
-		else if (g_iConfigMode < 3 && (StrContains(g_sCurrentSection, "Tank#", false) != -1 || StrContains(g_sCurrentSection, "Tank #", false) != -1 || StrContains(g_sCurrentSection, "Tank_#", false) != -1 || StrContains(g_sCurrentSection, "Tank", false) != -1 || g_sCurrentSection[0] == '#' || IsCharNumeric(g_sCurrentSection[0])))
+		else if (g_iConfigMode < 3 && (StrContains(g_sCurrentSection, "Tank#", false) == 0 || StrContains(g_sCurrentSection, "Tank #", false) == 0 || StrContains(g_sCurrentSection, "Tank_#", false) == 0 || StrContains(g_sCurrentSection, "Tank", false) == 0 || g_sCurrentSection[0] == '#' || IsCharNumeric(g_sCurrentSection[0])))
 		{
 			for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 			{
@@ -2907,7 +2557,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 							}
 
-							if (StrContains(g_sCurrentSubSection, "Tank#", false) != -1 || StrContains(g_sCurrentSubSection, "Tank #", false) != -1 || StrContains(g_sCurrentSubSection, "Tank_#", false) != -1 || StrContains(g_sCurrentSubSection, "Tank", false) != -1 || g_sCurrentSubSection[0] == '#' || IsCharNumeric(g_sCurrentSubSection[0]))
+							if (StrContains(g_sCurrentSubSection, "Tank#", false) == 0 || StrContains(g_sCurrentSubSection, "Tank #", false) == 0 || StrContains(g_sCurrentSubSection, "Tank_#", false) == 0 || StrContains(g_sCurrentSubSection, "Tank", false) == 0 || g_sCurrentSubSection[0] == '#' || IsCharNumeric(g_sCurrentSubSection[0]))
 							{
 								for (int iIndex = g_iMinType; iIndex <= g_iMaxType; iIndex++)
 								{
@@ -2972,7 +2622,7 @@ public SMCResult SMCEndSection(SMCParser smc)
 		{
 			g_csState = ConfigState_Settings;
 		}
-		else if (StrContains(g_sCurrentSection, "Tank#", false) != -1 || StrContains(g_sCurrentSection, "Tank #", false) != -1 || StrContains(g_sCurrentSection, "Tank_#", false) != -1 || StrContains(g_sCurrentSection, "Tank", false) != -1 || g_sCurrentSection[0] == '#' || IsCharNumeric(g_sCurrentSection[0]))
+		else if (StrContains(g_sCurrentSection, "Tank#", false) == 0 || StrContains(g_sCurrentSection, "Tank #", false) == 0 || StrContains(g_sCurrentSection, "Tank_#", false) == 0 || StrContains(g_sCurrentSection, "Tank", false) == 0 || g_sCurrentSection[0] == '#' || IsCharNumeric(g_sCurrentSection[0]))
 		{
 			g_csState = ConfigState_Type;
 		}
@@ -3096,8 +2746,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
 			{
 				g_bDying[iTank] = true;
+				g_iIncapTime[iTank] = 0;
 
-				CreateTimer(0.5, tTimerKillStuckTank, iTankId, TIMER_FLAG_NO_MAPCHANGE);
+				CreateTimer(1.0, tTimerKillStuckTank, iTankId, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			}
 		}
 		else if (StrEqual(name, "player_now_it"))
@@ -3106,6 +2757,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
  			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
 			{
 				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
+				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
 			}
 		}
 		else if (StrEqual(name, "player_no_longer_it"))
@@ -3120,6 +2772,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 
 				SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
+				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
 			}
 		}
 		else if (StrEqual(name, "player_spawn"))
@@ -3288,12 +2941,13 @@ static void vHookEvents(bool hook)
 		HookEvent("player_bot_replace", vEventHandler);
 		HookEvent("player_death", vEventHandler);
 		HookEvent("player_incapacitated", vEventHandler);
+		HookEvent("player_spawn", vEventHandler);
+
 		if (bIsValidGame())
 		{
 			HookEvent("player_now_it", vEventHandler);
 			HookEvent("player_no_longer_it", vEventHandler);
 		}
-		HookEvent("player_spawn", vEventHandler);
 
 		vHookEventForward(true);
 	}
@@ -3310,12 +2964,13 @@ static void vHookEvents(bool hook)
 		UnhookEvent("player_bot_replace", vEventHandler);
 		UnhookEvent("player_death", vEventHandler);
 		UnhookEvent("player_incapacitated", vEventHandler);
+		UnhookEvent("player_spawn", vEventHandler);
+
 		if (bIsValidGame())
-		{		
+		{
 			UnhookEvent("player_now_it", vEventHandler);
 			UnhookEvent("player_no_longer_it", vEventHandler);
 		}
-		UnhookEvent("player_spawn", vEventHandler);
 
 		vHookEventForward(false);
 	}
@@ -3447,7 +3102,6 @@ static void vReset()
 			g_bAdminMenu[iPlayer] = false;
 			g_bDying[iPlayer] = false;
 			g_bThirdPerson[iPlayer] = false;
-			g_csState2[iPlayer] = ConfigState_None;
 			g_iTankType[iPlayer] = 0;
 		}
 	}
@@ -4705,7 +4359,14 @@ public Action tTimerKillStuckTank(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	ForcePlayerSuicide(iTank);
+	if (g_iIncapTime[iTank] >= 10)
+	{
+		ForcePlayerSuicide(iTank);
+	}
+	else
+	{
+		g_iIncapTime[iTank]++;
+	}
 
 	return Plugin_Continue;
 }
