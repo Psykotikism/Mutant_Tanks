@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 8.62 (May 15, 2019)
+
+Bug fixes:
+
+1. Fixed some sound effects not working due to non-existent files. (Thanks to Marttt for the pull request!)
+2. Fixed the Heal ability returning errors on L4D1. (Thanks to Marttt for the pull request!)
+3. Fixed the core plugin preventing other plugins from executing code on the `player_death` event.
+4. Fixed the Slow ability targeting the Tank instead of the survivor victim. (Thanks to Marttt for the pull request!)
+
+Changes:
+
+1. Added a check to hook/unhook some events on L4D2 only. (Thanks to Marttt for the pull request!)
+2. Removed the `sm_mt_config` command.
+3. Added a stock function to stop sounds. (Thanks to Marttt for the pull request!)
+
+Files:
+
+1. Updated the include file.
+
 ## Version 8.61 (May 2, 2019)
 
 Bug fixes:
