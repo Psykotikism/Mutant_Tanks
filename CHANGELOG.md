@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 8.63 (June 24, 2019)
+
+Bug fixes:
+
+1. Fixed Tanks glowing when they are no longer biled.
+2. Fixed the issue with other plugins not reading the Tank's health properly. (Thanks to Lux for pointing it out!)
+3. Fixed several abilities not resetting survivors' speed, gravity, and other stats to previous values.
+
+Changes:
+
+1. Added a check for AFK Tanks. (May not be entirely accurate.)
+
+Files:
+
+1. Updated the include file.
+
 ## Version 8.62 (May 15, 2019)
 
 Bug fixes:

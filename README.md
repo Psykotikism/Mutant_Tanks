@@ -1036,7 +1036,6 @@ sm_mt_list - View a list of installed abilities.
 sm_tank2 - Spawn a Mutant Tank.
 
 // Accessible by all players.
-sm_mt_config - View a section of the config file.
 sm_mt_info - View information about Mutant Tanks.
 sm_mt_absorb - View information about the Absorb ability.
 sm_mt_acid - View information about the Acid ability.
