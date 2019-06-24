@@ -496,8 +496,8 @@ static void vUltimateAbility(int tank)
 				EmitSoundToAll(SOUND_GROWL1, tank);
 			}
 
- 			SetEntityHealth(tank, RoundToNearest(g_iUltimateHealth[tank] * g_flUltimateHealthPortion[MT_GetTankType(tank)]));
-
+ 			//SetEntityHealth(tank, RoundToNearest(g_iUltimateHealth[tank] * g_flUltimateHealthPortion[MT_GetTankType(tank)]));
+			SetEntProp(tank, Prop_Send, "m_iHealth", RoundToNearest(g_iUltimateHealth[tank] * g_flUltimateHealthPortion[MT_GetTankType(tank)]));
 			SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
 
 			CreateTimer(g_flUltimateDuration[MT_GetTankType(tank)], tTimerStopUltimate, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
