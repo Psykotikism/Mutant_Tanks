@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.63 (June 24, 2019)
+## Version 8.63 (June 25, 2019)
 
 Bug fixes:
 
