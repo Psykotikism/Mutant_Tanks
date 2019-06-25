@@ -152,7 +152,7 @@ ConVar g_cvMTDifficulty, g_cvMTGameMode, g_cvMTGameTypes, g_cvMTMaxPlayerZombies
 float g_flClawDamage[MT_MAXTYPES + 1], g_flClawDamage2[MAXPLAYERS + 1], g_flPropsChance[MT_MAXTYPES + 1][6], g_flPropsChance2[MAXPLAYERS + 1][6], g_flRandomInterval[MT_MAXTYPES + 1], g_flRandomInterval2[MAXPLAYERS + 1], g_flRegularInterval, g_flRockDamage[MT_MAXTYPES + 1], g_flRockDamage2[MAXPLAYERS + 1], g_flRunSpeed[MT_MAXTYPES + 1],
 	g_flRunSpeed2[MAXPLAYERS + 1], g_flTankChance[MT_MAXTYPES + 1], g_flThrowInterval[MT_MAXTYPES + 1], g_flThrowInterval2[MAXPLAYERS + 1], g_flTransformDelay[MT_MAXTYPES + 1], g_flTransformDelay2[MAXPLAYERS + 1], g_flTransformDuration[MT_MAXTYPES + 1], g_flTransformDuration2[MAXPLAYERS + 1];
 
-Handle g_hAbilityActivatedForward, g_hButtonPressedForward, g_hButtonReleasedForward, g_hChangeTypeForward, g_hConfigsLoadForward, g_hConfigsLoadedForward, g_hDisplayMenuForward, g_hEventFiredForward, g_hHookEventForward, g_hMenuItemSelectedForward, g_hPluginEndForward, g_hPostTankSpawnForward, g_hRockBreakForward, g_hRockThrowForward;
+GlobalForward g_gfAbilityActivatedForward, g_gfButtonPressedForward, g_gfButtonReleasedForward, g_gfChangeTypeForward, g_gfConfigsLoadForward, g_gfConfigsLoadedForward, g_gfDisplayMenuForward, g_gfEventFiredForward, g_gfHookEventForward, g_gfMenuItemSelectedForward, g_gfPluginEndForward, g_gfPostTankSpawnForward, g_gfRockBreakForward, g_gfRockThrowForward;
 
 int g_iAccessFlags, g_iAccessFlags2[MT_MAXTYPES + 1], g_iAccessFlags3[MAXPLAYERS + 1], g_iAccessFlags4[MT_MAXTYPES + 1][MAXPLAYERS + 1], g_iAllowDeveloper, g_iAnnounceArrival, g_iAnnounceArrival2[MT_MAXTYPES + 1], g_iAnnounceArrival3[MAXPLAYERS + 1], g_iAnnounceDeath, g_iAnnounceDeath2[MT_MAXTYPES + 1], g_iAnnounceDeath3[MAXPLAYERS + 1],
 	g_iBaseHealth, g_iBodyEffects[MT_MAXTYPES + 1], g_iBodyEffects2[MAXPLAYERS + 1], g_iBossHealth[MT_MAXTYPES + 1][4], g_iBossHealth2[MAXPLAYERS + 1][4], g_iBossStageCount[MAXPLAYERS + 1], g_iBossStages[MT_MAXTYPES + 1], g_iBossStages2[MAXPLAYERS + 1], g_iBossType[MT_MAXTYPES + 1][4], g_iBossType2[MAXPLAYERS + 1][4],
@@ -467,20 +467,20 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
-	g_hAbilityActivatedForward = CreateGlobalForward("MT_OnAbilityActivated", ET_Ignore, Param_Cell);
-	g_hButtonPressedForward = CreateGlobalForward("MT_OnButtonPressed", ET_Ignore, Param_Cell, Param_Cell);
-	g_hButtonReleasedForward = CreateGlobalForward("MT_OnButtonReleased", ET_Ignore, Param_Cell, Param_Cell);
-	g_hChangeTypeForward = CreateGlobalForward("MT_OnChangeType", ET_Ignore, Param_Cell, Param_Cell);
-	g_hConfigsLoadForward = CreateGlobalForward("MT_OnConfigsLoad", ET_Ignore);
-	g_hConfigsLoadedForward = CreateGlobalForward("MT_OnConfigsLoaded", ET_Ignore, Param_String, Param_String, Param_String, Param_Cell, Param_Cell);
-	g_hDisplayMenuForward = CreateGlobalForward("MT_OnDisplayMenu", ET_Ignore, Param_Cell);
-	g_hEventFiredForward = CreateGlobalForward("MT_OnEventFired", ET_Ignore, Param_Cell, Param_String, Param_Cell);
-	g_hHookEventForward = CreateGlobalForward("MT_OnHookEvent", ET_Ignore, Param_Cell);
-	g_hMenuItemSelectedForward = CreateGlobalForward("MT_OnMenuItemSelected", ET_Ignore, Param_Cell, Param_String);
-	g_hPluginEndForward = CreateGlobalForward("MT_OnPluginEnd", ET_Ignore);
-	g_hPostTankSpawnForward = CreateGlobalForward("MT_OnPostTankSpawn", ET_Ignore, Param_Cell);
-	g_hRockBreakForward = CreateGlobalForward("MT_OnRockBreak", ET_Ignore, Param_Cell, Param_Cell);
-	g_hRockThrowForward = CreateGlobalForward("MT_OnRockThrow", ET_Ignore, Param_Cell, Param_Cell);
+	g_gfAbilityActivatedForward = new GlobalForward("MT_OnAbilityActivated", ET_Ignore, Param_Cell);
+	g_gfButtonPressedForward = new GlobalForward("MT_OnButtonPressed", ET_Ignore, Param_Cell, Param_Cell);
+	g_gfButtonReleasedForward = new GlobalForward("MT_OnButtonReleased", ET_Ignore, Param_Cell, Param_Cell);
+	g_gfChangeTypeForward = new GlobalForward("MT_OnChangeType", ET_Ignore, Param_Cell, Param_Cell);
+	g_gfConfigsLoadForward = new GlobalForward("MT_OnConfigsLoad", ET_Ignore);
+	g_gfConfigsLoadedForward = new GlobalForward("MT_OnConfigsLoaded", ET_Ignore, Param_String, Param_String, Param_String, Param_Cell, Param_Cell);
+	g_gfDisplayMenuForward = new GlobalForward("MT_OnDisplayMenu", ET_Ignore, Param_Cell);
+	g_gfEventFiredForward = new GlobalForward("MT_OnEventFired", ET_Ignore, Param_Cell, Param_String, Param_Cell);
+	g_gfHookEventForward = new GlobalForward("MT_OnHookEvent", ET_Ignore, Param_Cell);
+	g_gfMenuItemSelectedForward = new GlobalForward("MT_OnMenuItemSelected", ET_Ignore, Param_Cell, Param_String);
+	g_gfPluginEndForward = new GlobalForward("MT_OnPluginEnd", ET_Ignore);
+	g_gfPostTankSpawnForward = new GlobalForward("MT_OnPostTankSpawn", ET_Ignore, Param_Cell);
+	g_gfRockBreakForward = new GlobalForward("MT_OnRockBreak", ET_Ignore, Param_Cell, Param_Cell);
+	g_gfRockThrowForward = new GlobalForward("MT_OnRockThrow", ET_Ignore, Param_Cell, Param_Cell);
 
 	vMultiTargetFilters(1);
 
@@ -799,7 +799,7 @@ public void OnPluginEnd()
 		}
 	}
 
-	Call_StartForward(g_hPluginEndForward);
+	Call_StartForward(g_gfPluginEndForward);
 	Call_Finish();
 }
 
@@ -884,7 +884,7 @@ static void vInfoMenu(int client, int item)
 	mInfoMenu.AddItem("Status", "Status");
 	mInfoMenu.AddItem("Details", "Details");
 	mInfoMenu.AddItem("Human Support", "Human Support");
-	Call_StartForward(g_hDisplayMenuForward);
+	Call_StartForward(g_gfDisplayMenuForward);
 	Call_PushCell(mInfoMenu);
 	Call_Finish();
 	mInfoMenu.ExitBackButton = g_bAdminMenu[client];
@@ -919,7 +919,7 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			Call_StartForward(g_hMenuItemSelectedForward);
+			Call_StartForward(g_gfMenuItemSelectedForward);
 			Call_PushCell(param1);
 			Call_PushString(sInfo);
 			Call_Finish();
@@ -1584,7 +1584,7 @@ public void OnEntityDestroyed(int entity)
 				return;
 			}
 
-			Call_StartForward(g_hRockBreakForward);
+			Call_StartForward(g_gfRockBreakForward);
 			Call_PushCell(iThrower);
 			Call_PushCell(entity);
 			Call_Finish();
@@ -1606,7 +1606,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		{
 			if (!(g_iLastButtons[client] & iButton))
 			{
-				Call_StartForward(g_hButtonPressedForward);
+				Call_StartForward(g_gfButtonPressedForward);
 				Call_PushCell(client);
 				Call_PushCell(iButton);
 				Call_Finish();
@@ -1614,7 +1614,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		}
 		else if ((g_iLastButtons[client] & iButton))
 		{
-			Call_StartForward(g_hButtonReleasedForward);
+			Call_StartForward(g_gfButtonReleasedForward);
 			Call_PushCell(client);
 			Call_PushCell(iButton);
 			Call_Finish();
@@ -1905,7 +1905,7 @@ public void SMCParseStart(SMCParser smc)
 			g_alAdmins = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 		}
 
-		Call_StartForward(g_hConfigsLoadForward);
+		Call_StartForward(g_gfConfigsLoadForward);
 		Call_Finish();
 	}
 }
@@ -2122,7 +2122,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				}
 			}
 
-			Call_StartForward(g_hConfigsLoadedForward);
+			Call_StartForward(g_gfConfigsLoadedForward);
 			Call_PushString(g_sCurrentSubSection);
 			Call_PushString(key);
 			Call_PushString(value);
@@ -2348,7 +2348,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_bAbilityFound[iIndex][iPos] = bHasAbility(g_sCurrentSubSection, iPos);
 						}
 
-						Call_StartForward(g_hConfigsLoadedForward);
+						Call_StartForward(g_gfConfigsLoadedForward);
 						Call_PushString(g_sCurrentSubSection);
 						Call_PushString(key);
 						Call_PushString(value);
@@ -2588,7 +2588,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 							}
 
-							Call_StartForward(g_hConfigsLoadedForward);
+							Call_StartForward(g_gfConfigsLoadedForward);
 							Call_PushString(g_sCurrentSubSection);
 							Call_PushString(key);
 							Call_PushString(value);
@@ -2819,7 +2819,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			g_iTankWave = 0;
 		}
 
-		Call_StartForward(g_hEventFiredForward);
+		Call_StartForward(g_gfEventFiredForward);
 		Call_PushCell(event);
 		Call_PushString(name);
 		Call_PushCell(dontBroadcast);
@@ -2983,7 +2983,7 @@ static void vHookEvents(bool hook)
 
 static void vHookEventForward(bool mode)
 {
-	Call_StartForward(g_hHookEventForward);
+	Call_StartForward(g_gfHookEventForward);
 	Call_PushCell(mode);
 	Call_Finish();
 }
@@ -3015,7 +3015,7 @@ static void vNewTankSettings(int tank, bool revert = false)
 {
 	vResetTank(tank);
 
-	Call_StartForward(g_hChangeTypeForward);
+	Call_StartForward(g_gfChangeTypeForward);
 	Call_PushCell(tank);
 	Call_PushCell(revert);
 	Call_Finish();
@@ -4722,7 +4722,7 @@ public Action tTimerTankTypeUpdate(Handle timer)
 				SetEntPropFloat(iTank, Prop_Send, "m_burnPercent", 1.0);
 			}
 
-			Call_StartForward(g_hAbilityActivatedForward);
+			Call_StartForward(g_gfAbilityActivatedForward);
 			Call_PushCell(iTank);
 			Call_Finish();
 		}
@@ -4827,7 +4827,7 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 
 	vResetSpeed(iTank);
 
-	Call_StartForward(g_hPostTankSpawnForward);
+	Call_StartForward(g_gfPostTankSpawnForward);
 	Call_PushCell(iTank);
 	Call_Finish();
 
@@ -4910,7 +4910,7 @@ public Action tTimerRockThrow(Handle timer, int ref)
 		dpRockEffects.WriteCell(GetClientUserId(iThrower));
 	}
 
-	Call_StartForward(g_hRockThrowForward);
+	Call_StartForward(g_gfRockThrowForward);
 	Call_PushCell(iThrower);
 	Call_PushCell(iRock);
 	Call_Finish();
