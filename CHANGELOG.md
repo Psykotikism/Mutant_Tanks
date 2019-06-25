@@ -11,6 +11,7 @@ Bug fixes:
 Changes:
 
 1. Added a check for AFK Tanks. (May not be entirely accurate.)
+2. Switched to the GlobalForward methodmap added in `SourceMod 1.10.0.6421`.
 
 Files:
 
