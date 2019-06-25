@@ -34,7 +34,7 @@ public Plugin myinfo =
 
 bool g_bCloneInstalled, g_bLateLoad, g_bSlow[MAXPLAYERS + 1], g_bSlow2[MAXPLAYERS + 1], g_bSlow3[MAXPLAYERS + 1], g_bSlow4[MAXPLAYERS + 1], g_bSlow5[MAXPLAYERS + 1];
 
-float g_flHumanCooldown[MT_MAXTYPES + 1], g_flSlowChance[MT_MAXTYPES + 1], g_flSlowDuration[MT_MAXTYPES + 1], g_flSlowRange[MT_MAXTYPES + 1], g_flSlowRangeChance[MT_MAXTYPES + 1], g_flSlowSpeed[MT_MAXTYPES + 1];
+float g_flHumanCooldown[MT_MAXTYPES + 1], g_flOriginalSpeed[MAXPLAYERS + 1], g_flSlowChance[MT_MAXTYPES + 1], g_flSlowDuration[MT_MAXTYPES + 1], g_flSlowRange[MT_MAXTYPES + 1], g_flSlowRangeChance[MT_MAXTYPES + 1], g_flSlowSpeed[MT_MAXTYPES + 1];
 
 int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iSlowAbility[MT_MAXTYPES + 1], g_iSlowCount[MAXPLAYERS + 1], g_iSlowEffect[MT_MAXTYPES + 1], g_iSlowHit[MT_MAXTYPES + 1], g_iSlowHitMode[MT_MAXTYPES + 1], g_iSlowMessage[MT_MAXTYPES + 1], g_iSlowOwner[MAXPLAYERS + 1];
 
@@ -366,7 +366,15 @@ public void MT_OnPluginEnd()
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_spawn"))
+	{
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_ALIVE))
+		{
+			g_flOriginalSpeed[iSurvivor] = GetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue");
+		}
+	}
+	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
@@ -433,7 +441,7 @@ static void vRemoveSlow(int tank)
 			g_bSlow[iSurvivor] = false;
 			g_iSlowOwner[iSurvivor] = 0;
 
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_flOriginalSpeed[iSurvivor]);
 		}
 	}
 
@@ -459,6 +467,7 @@ static void vReset2(int tank)
 	g_bSlow4[tank] = false;
 	g_bSlow5[tank] = false;
 	g_iSlowCount[tank] = 0;
+	g_flOriginalSpeed[tank] = 1.0;
 }
 
 static void vSlowAbility(int tank)
@@ -532,6 +541,7 @@ static void vSlowHit(int survivor, int tank, float chance, int enabled, int mess
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowHuman", g_iSlowCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
 				}
 
+				g_flOriginalSpeed[survivor] = GetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue");
 				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", g_flSlowSpeed[MT_GetTankType(tank)]);
 
 				DataPack dpStopSlow;
@@ -709,7 +719,7 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 		g_bSlow[iSurvivor] = false;
 		g_iSlowOwner[iSurvivor] = 0;
 
-		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_flOriginalSpeed[iSurvivor]);
 
 		return Plugin_Stop;
 	}
@@ -718,7 +728,7 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 	g_bSlow2[iTank] = false;
 	g_iSlowOwner[iSurvivor] = 0;
 
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_flOriginalSpeed[iSurvivor]);
 
 	int iMessage = pack.ReadCell();
 

@@ -937,7 +937,8 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 				iRealHealth = (iCommonHealth >= 0) ? iExtraHealth : iExtraHealth2;
 			if (iHealth > 500)
 			{
-				SetEntityHealth(iTank, iRealHealth);
+				//SetEntityHealth(iTank, iRealHealth);
+				SetEntProp(iTank, Prop_Send, "m_iHealth", iRealHealth);
 
 				if (bIsValidGame())
 				{
@@ -969,7 +970,8 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 					iRealHealth = (iSpecialHealth >= 0) ? iExtraHealth : iExtraHealth2;
 				if (iHealth > 500)
 				{
-					SetEntityHealth(iTank, iRealHealth);
+					//SetEntityHealth(iTank, iRealHealth);
+					SetEntProp(iTank, Prop_Send, "m_iHealth", iRealHealth);
 
 					if (iHealType < 2)
 					{
@@ -1001,7 +1003,8 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 					iRealHealth = (iTankHealth >= 0) ? iExtraHealth : iExtraHealth2;
 				if (iHealth > 500)
 				{
-					SetEntityHealth(iTank, iRealHealth);
+					//SetEntityHealth(iTank, iRealHealth);
+					SetEntProp(iTank, Prop_Send, "m_iHealth", iRealHealth);
 
 					if (bIsValidGame())
 					{

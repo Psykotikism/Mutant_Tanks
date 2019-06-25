@@ -221,7 +221,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
 						iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-					SetEntityHealth(attacker, iFinalHealth);
+					//SetEntityHealth(attacker, iFinalHealth);
+					SetEntProp(attacker, Prop_Send, "m_iHealth", iFinalHealth);
 
 					vEffect(victim, attacker, g_iXiphosEffect[MT_GetTankType(attacker)], 1);
 
@@ -245,7 +246,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
 					iFinalHealth = (iNewHealth > g_iXiphosMaxHealth[MT_GetTankType(victim)]) ? g_iXiphosMaxHealth[MT_GetTankType(victim)] : iNewHealth;
-				SetEntityHealth(attacker, iFinalHealth);
+				//SetEntityHealth(attacker, iFinalHealth);
+				SetEntProp(attacker, Prop_Send, "m_iHealth", iFinalHealth);
 
 				if (g_iXiphosMessage[MT_GetTankType(victim)] == 1)
 				{

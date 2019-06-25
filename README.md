@@ -36,7 +36,7 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 12. Administration system - Provides an administration system revolved around the usage and effectiveness of each Mutant Tank type.
 
 ### Requirements
-1. You must have at least `SourceMod 1.10.0.6352` or higher.
+1. You must have at least `SourceMod 1.10.0.6421` or higher.
 
 ### Notes
 1. I do not provide support for listen servers but the plugin and its modules should still work properly on them.
@@ -1036,7 +1036,6 @@ sm_mt_list - View a list of installed abilities.
 sm_tank2 - Spawn a Mutant Tank.
 
 // Accessible by all players.
-sm_mt_config - View a section of the config file.
 sm_mt_info - View information about Mutant Tanks.
 sm_mt_absorb - View information about the Absorb ability.
 sm_mt_acid - View information about the Acid ability.

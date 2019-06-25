@@ -50,7 +50,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 bool g_bCloneInstalled, g_bDrunk[MAXPLAYERS + 1], g_bDrunk2[MAXPLAYERS + 1], g_bDrunk3[MAXPLAYERS + 1], g_bDrunk4[MAXPLAYERS + 1], g_bDrunk5[MAXPLAYERS + 1];
 
-float g_flDrunkChance[MT_MAXTYPES + 1], g_flDrunkDuration[MT_MAXTYPES + 1], g_flDrunkRange[MT_MAXTYPES + 1], g_flDrunkRangeChance[MT_MAXTYPES + 1], g_flDrunkSpeedInterval[MT_MAXTYPES + 1], g_flDrunkTurnInterval[MT_MAXTYPES + 1], g_flHumanCooldown[MT_MAXTYPES + 1];
+float g_flDrunkChance[MT_MAXTYPES + 1], g_flDrunkDuration[MT_MAXTYPES + 1], g_flDrunkRange[MT_MAXTYPES + 1], g_flDrunkRangeChance[MT_MAXTYPES + 1], g_flDrunkSpeedInterval[MT_MAXTYPES + 1], g_flDrunkTurnInterval[MT_MAXTYPES + 1], g_flHumanCooldown[MT_MAXTYPES + 1], g_flOriginalSpeed[MAXPLAYERS + 1];
 
 int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iDrunkAbility[MT_MAXTYPES + 1], g_iDrunkCount[MAXPLAYERS + 1], g_iDrunkEffect[MT_MAXTYPES + 1], g_iDrunkHit[MT_MAXTYPES + 1], g_iDrunkHitMode[MT_MAXTYPES + 1], g_iDrunkMessage[MT_MAXTYPES + 1], g_iDrunkOwner[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
 
@@ -363,14 +363,22 @@ public void MT_OnPluginEnd()
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE) && g_bDrunk[iSurvivor])
 		{
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_flOriginalSpeed[iSurvivor]);
 		}
 	}
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_spawn"))
+	{
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_ALIVE))
+		{
+			g_flOriginalSpeed[iSurvivor] = GetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue");
+		}
+	}
+	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
@@ -590,6 +598,7 @@ static void vReset3(int tank)
 	g_bDrunk4[tank] = false;
 	g_bDrunk5[tank] = false;
 	g_iDrunkCount[tank] = 0;
+	g_flOriginalSpeed[tank] = 1.0;
 }
 
 static bool bHasAdminAccess(int admin)
@@ -737,6 +746,7 @@ public Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	g_flOriginalSpeed[iSurvivor] = GetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue");
 	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", GetRandomFloat(1.5, 3.0));
 
 	CreateTimer(GetRandomFloat(1.0, 3.0), tTimerStopDrunkSpeed, GetClientUserId(iSurvivor), TIMER_FLAG_NO_MAPCHANGE);
@@ -812,7 +822,7 @@ public Action tTimerStopDrunkSpeed(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_flOriginalSpeed[iSurvivor]);
 
 	return Plugin_Continue;
 }
