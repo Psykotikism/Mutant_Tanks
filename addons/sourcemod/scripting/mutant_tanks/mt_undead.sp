@@ -250,8 +250,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				g_bUndead[victim] = false;
 
-				//SetEntityHealth(victim, g_iUndeadHealth[victim]);
-				SetEntProp(victim, Prop_Send, "m_iHealth", g_iUndeadHealth[victim]);
+				SetEntityHealth(victim, g_iUndeadHealth[victim]);
+				//SetEntProp(victim, Prop_Send, "m_iHealth", g_iUndeadHealth[victim]);
 
 				if (MT_IsTankSupported(victim, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(victim)] == 1 && !g_bUndead2[victim])
 				{

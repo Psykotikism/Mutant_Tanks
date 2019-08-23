@@ -509,8 +509,8 @@ static void vMedicAbility(int tank, bool main)
 								iExtraHealth = (iNewHealth > iGetMaxHealth(tank, iInfected)) ? iGetMaxHealth(tank, iInfected) : iNewHealth,
 								iExtraHealth2 = (iNewHealth < iHealth) ? 1 : iNewHealth,
 								iRealHealth = (iNewHealth >= 0) ? iExtraHealth : iExtraHealth2;
-							//SetEntityHealth(iInfected, iRealHealth);
-							SetEntProp(iInfected, Prop_Send, "m_iHealth", iRealHealth);
+							SetEntityHealth(iInfected, iRealHealth);
+							//SetEntProp(iInfected, Prop_Send, "m_iHealth", iRealHealth);
 						}
 					}
 				}

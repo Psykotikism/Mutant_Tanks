@@ -294,13 +294,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					if (g_iHypnoMode[MT_GetTankType(victim)] == 1 && iTarget > 0)
 					{
-						//SetEntityHealth(iTarget, iHealth - RoundToNearest(damage));
-						SetEntProp(iTarget, Prop_Send, "m_iHealth", iHealth - RoundToNearest(damage));
+						SetEntityHealth(iTarget, iHealth - RoundToNearest(damage));
+						//SetEntProp(iTarget, Prop_Send, "m_iHealth", iHealth - RoundToNearest(damage));
 					}
 					else
 					{
-						//SetEntityHealth(attacker, iHealth - RoundToNearest(damage));
-						SetEntProp(attacker, Prop_Send, "m_iHealth", iHealth - RoundToNearest(damage));
+						SetEntityHealth(attacker, iHealth - RoundToNearest(damage));
+						//SetEntProp(attacker, Prop_Send, "m_iHealth", iHealth - RoundToNearest(damage));
 					}
 				}
 				else

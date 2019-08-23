@@ -1,5 +1,18 @@
 # Changelog
 
+## Version 8.64 (August 23, 2019)
+
+Bug fixes:
+
+1. Fixed a timer error from the Whirl ability.
+2. Fixed the Clone ability not replacing dead clones.
+3. Fixed the issue with several abilities causing permanent gravity changes.
+4. Fixed the issue with Tanks dying randomly.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.63 (June 25, 2019)
 
 Bug fixes:

@@ -737,10 +737,10 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 
 	int iSurvivorHealth = GetClientHealth(iSurvivor), iTankHealth = GetClientHealth(iTank), iNewHealth = iSurvivorHealth - 1, iNewHealth2 = iTankHealth + 1,
 		iFinalHealth = (iNewHealth < 1) ? 1 : iNewHealth, iFinalHealth2 = (iNewHealth2 > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth2;
-	//SetEntityHealth(iSurvivor, iFinalHealth);
-	SetEntProp(iSurvivor, Prop_Send, "m_iHealth", iFinalHealth);
-	//SetEntityHealth(iTank, iFinalHealth2);
-	SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalHealth2);
+	SetEntityHealth(iSurvivor, iFinalHealth);
+	//SetEntProp(iSurvivor, Prop_Send, "m_iHealth", iFinalHealth);
+	SetEntityHealth(iTank, iFinalHealth2);
+	//SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalHealth2);
 
 	return Plugin_Continue;
 }
