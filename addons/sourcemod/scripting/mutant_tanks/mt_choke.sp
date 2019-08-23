@@ -50,7 +50,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 bool g_bChoke[MAXPLAYERS + 1], g_bChoke2[MAXPLAYERS + 1], g_bChoke3[MAXPLAYERS + 1], g_bChoke4[MAXPLAYERS + 1], g_bChoke5[MAXPLAYERS + 1], g_bCloneInstalled;
 
-float g_flChokeAngle[MAXPLAYERS + 1][3], g_flChokeChance[MT_MAXTYPES + 1], g_flChokeDamage[MT_MAXTYPES + 1], g_flChokeDelay[MT_MAXTYPES + 1], g_flChokeDuration[MT_MAXTYPES + 1], g_flChokeHeight[MT_MAXTYPES + 1], g_flChokeRange[MT_MAXTYPES + 1], g_flChokeRangeChance[MT_MAXTYPES + 1], g_flHumanCooldown[MT_MAXTYPES + 1], g_flOriginalGravity[MAXPLAYERS + 1];
+float g_flChokeAngle[MAXPLAYERS + 1][3], g_flChokeChance[MT_MAXTYPES + 1], g_flChokeDamage[MT_MAXTYPES + 1], g_flChokeDelay[MT_MAXTYPES + 1], g_flChokeDuration[MT_MAXTYPES + 1], g_flChokeHeight[MT_MAXTYPES + 1], g_flChokeRange[MT_MAXTYPES + 1], g_flChokeRangeChance[MT_MAXTYPES + 1], g_flHumanCooldown[MT_MAXTYPES + 1];
 
 int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iChokeAbility[MT_MAXTYPES + 1], g_iChokeCount[MAXPLAYERS + 1], g_iChokeEffect[MT_MAXTYPES + 1], g_iChokeHit[MT_MAXTYPES + 1], g_iChokeHitMode[MT_MAXTYPES + 1], g_iChokeMessage[MT_MAXTYPES + 1], g_iChokeOwner[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
 
@@ -366,22 +366,14 @@ public void MT_OnPluginEnd()
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE) && g_bChoke[iSurvivor])
 		{
 			SetEntityMoveType(iSurvivor, MOVETYPE_WALK);
-			SetEntityGravity(iSurvivor, g_flOriginalGravity[iSurvivor]);
+			SetEntityGravity(iSurvivor, 1.0);
 		}
 	}
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_spawn"))
-	{
-		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_ALIVE))
-		{
-			g_flOriginalGravity[iSurvivor] = GetEntityGravity(iSurvivor);
-		}
-	}
-	else if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
@@ -581,7 +573,7 @@ static void vReset2(int survivor, int tank, int messages)
 	g_iChokeOwner[survivor] = 0;
 
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
-	SetEntityGravity(survivor, g_flOriginalGravity[survivor]);
+	SetEntityGravity(survivor, 1.0);
 
 	if (g_iChokeMessage[MT_GetTankType(tank)] & messages)
 	{
@@ -597,7 +589,6 @@ static void vReset3(int tank)
 	g_bChoke4[tank] = false;
 	g_bChoke5[tank] = false;
 	g_iChokeCount[tank] = 0;
-	g_flOriginalGravity[tank] = 1.0;
 }
 
 static bool bHasAdminAccess(int admin)
@@ -752,7 +743,6 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	flVelocity[2] = g_flChokeHeight[MT_GetTankType(iTank)];
 
 	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
-	g_flOriginalGravity[iSurvivor] = GetEntityGravity(iSurvivor);
 	SetEntityGravity(iSurvivor, 0.1);
 
 	DataPack dpChokeDamage;
@@ -818,7 +808,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 
 	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
-	SetEntityGravity(iSurvivor, g_flOriginalGravity[iSurvivor]);
+	SetEntityGravity(iSurvivor, 1.0);
 
 	vDamageEntity(iSurvivor, iTank, g_flChokeDamage[MT_GetTankType(iTank)], "16384");
 

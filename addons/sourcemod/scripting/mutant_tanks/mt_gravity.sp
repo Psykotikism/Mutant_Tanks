@@ -50,7 +50,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 bool g_bCloneInstalled, g_bGravity[MAXPLAYERS + 1], g_bGravity2[MAXPLAYERS + 1], g_bGravity3[MAXPLAYERS + 1], g_bGravity4[MAXPLAYERS + 1], g_bGravity5[MAXPLAYERS + 1], g_bGravity6[MAXPLAYERS + 1], g_bGravity7[MAXPLAYERS + 1];
 
-float g_flGravityChance[MT_MAXTYPES + 1], g_flGravityDuration[MT_MAXTYPES + 1], g_flGravityForce[MT_MAXTYPES + 1], g_flGravityRange[MT_MAXTYPES + 1], g_flGravityRangeChance[MT_MAXTYPES + 1], g_flGravityValue[MT_MAXTYPES + 1], g_flHumanCooldown[MT_MAXTYPES + 1], g_flOriginalGravity[MAXPLAYERS + 1];
+float g_flGravityChance[MT_MAXTYPES + 1], g_flGravityDuration[MT_MAXTYPES + 1], g_flGravityForce[MT_MAXTYPES + 1], g_flGravityRange[MT_MAXTYPES + 1], g_flGravityRangeChance[MT_MAXTYPES + 1], g_flGravityValue[MT_MAXTYPES + 1], g_flHumanCooldown[MT_MAXTYPES + 1];
 
 int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iGravity[MAXPLAYERS + 1], g_iGravityAbility[MT_MAXTYPES + 1], g_iGravityCount[MAXPLAYERS + 1], g_iGravityCount2[MAXPLAYERS + 1], g_iGravityEffect[MT_MAXTYPES + 1], g_iGravityHit[MT_MAXTYPES + 1], g_iGravityHitMode[MT_MAXTYPES + 1], g_iGravityMessage[MT_MAXTYPES + 1], g_iGravityOwner[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iHumanMode[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
 
@@ -409,14 +409,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vReset2(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_spawn"))
-	{
-		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_ALIVE))
-		{
-			g_flOriginalGravity[iSurvivor] = GetEntityGravity(iSurvivor);
-		}
-	}
 	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
@@ -690,7 +682,6 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, int m
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman2", g_iGravityCount2[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
 				}
 
-				g_flOriginalGravity[survivor] = GetEntityGravity(survivor);
 				SetEntityGravity(survivor, g_flGravityValue[MT_GetTankType(tank)]);
 
 				DataPack dpStopGravity;
@@ -743,7 +734,7 @@ static void vRemoveGravity(int tank)
 			g_bGravity2[iSurvivor] = false;
 			g_iGravityOwner[iSurvivor] = 0;
 
-			SetEntityGravity(iSurvivor, g_flOriginalGravity[iSurvivor]);
+			SetEntityGravity(iSurvivor, 1.0);
 		}
 	}
 }
@@ -777,7 +768,6 @@ static void vReset2(int tank, bool revert = false)
 	g_iGravity[tank] = INVALID_ENT_REFERENCE;
 	g_iGravityCount[tank] = 0;
 	g_iGravityCount2[tank] = 0;
-	g_flOriginalGravity[tank] = 1.0;
 }
 
 static void vReset3(int tank)
@@ -982,7 +972,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 		g_bGravity2[iSurvivor] = false;
 		g_iGravityOwner[iSurvivor] = 0;
 
-		SetEntityGravity(iSurvivor, g_flOriginalGravity[iSurvivor]);
+		SetEntityGravity(iSurvivor, 1.0);
 
 		return Plugin_Stop;
 	}
@@ -991,7 +981,7 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	g_bGravity4[iTank] = false;
 	g_iGravityOwner[iSurvivor] = 0;
 
-	SetEntityGravity(iSurvivor, g_flOriginalGravity[iSurvivor]);
+	SetEntityGravity(iSurvivor, 1.0);
 
 	int iMessage = pack.ReadCell();
 

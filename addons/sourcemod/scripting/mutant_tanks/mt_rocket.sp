@@ -56,7 +56,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 bool g_bCloneInstalled, g_bRocket[MAXPLAYERS + 1], g_bRocket2[MAXPLAYERS + 1], g_bRocket3[MAXPLAYERS + 1], g_bRocket4[MAXPLAYERS + 1], g_bRocket5[MAXPLAYERS + 1];
 
-float g_flHumanCooldown[MT_MAXTYPES + 1], g_flOriginalGravity[MAXPLAYERS + 1], g_flRocketChance[MT_MAXTYPES + 1], g_flRocketDelay[MT_MAXTYPES + 1], g_flRocketRange[MT_MAXTYPES + 1], g_flRocketRangeChance[MT_MAXTYPES + 1];
+float g_flHumanCooldown[MT_MAXTYPES + 1], g_flRocketChance[MT_MAXTYPES + 1], g_flRocketDelay[MT_MAXTYPES + 1], g_flRocketRange[MT_MAXTYPES + 1], g_flRocketRangeChance[MT_MAXTYPES + 1];
 
 int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iRocketAbility[MT_MAXTYPES + 1], g_iRocketCount[MAXPLAYERS + 1], g_iRocketEffect[MT_MAXTYPES + 1], g_iRocketHit[MT_MAXTYPES + 1], g_iRocketHitMode[MT_MAXTYPES + 1], g_iRocketMessage[MT_MAXTYPES + 1], g_iRocketOwner[MAXPLAYERS + 1], g_iRocketSprite = -1;
 
@@ -364,22 +364,14 @@ public void MT_OnPluginEnd()
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE) && g_bRocket[iSurvivor])
 		{
-			SetEntityGravity(iSurvivor, g_flOriginalGravity[iSurvivor]);
+			SetEntityGravity(iSurvivor, 1.0);
 		}
 	}
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_spawn"))
-	{
-		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_ALIVE))
-		{
-			g_flOriginalGravity[iSurvivor] = GetEntityGravity(iSurvivor);
-		}
-	}
-	else if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
@@ -469,7 +461,7 @@ static void vReset2(int survivor)
 	g_bRocket[survivor] = false;
 	g_iRocketOwner[survivor] = 0;
 
-	SetEntityGravity(survivor, g_flOriginalGravity[survivor]);
+	SetEntityGravity(survivor, 1.0);
 }
 
 static void vReset3(int tank)
@@ -480,7 +472,6 @@ static void vReset3(int tank)
 	g_bRocket4[tank] = false;
 	g_bRocket5[tank] = false;
 	g_iRocketCount[tank] = 0;
-	g_flOriginalGravity[tank] = 1.0;
 }
 
 static void vRocketAbility(int tank)
@@ -778,7 +769,6 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 	EmitSoundToAll(SOUND_LAUNCH, iSurvivor, _, _, _, 1.0);
 
 	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
-	g_flOriginalGravity[iSurvivor] = GetEntityGravity(iSurvivor);
 	SetEntityGravity(iSurvivor, 0.1);
 
 	return Plugin_Continue;
@@ -814,7 +804,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	TE_SendToAll();
 
 	ForcePlayerSuicide(iSurvivor);
-	SetEntityGravity(iSurvivor, g_flOriginalGravity[iSurvivor]);
+	SetEntityGravity(iSurvivor, 1.0);
 
 	int iMessage = pack.ReadCell();
 	if (g_iRocketMessage[MT_GetTankType(iTank)] & iMessage)

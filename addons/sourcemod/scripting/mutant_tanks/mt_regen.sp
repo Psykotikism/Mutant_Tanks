@@ -578,8 +578,8 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 		iNewHealth2 = (iExtraHealth <= 1) ? iHealth : iExtraHealth,
 		iRealHealth = (g_iRegenHealth[MT_GetTankType(iTank)] >= 1) ? iNewHealth : iNewHealth2,
 		iFinalHealth = (g_iRegenHealth[MT_GetTankType(iTank)] >= 1 && iRealHealth >= g_iRegenLimit[MT_GetTankType(iTank)]) ? g_iRegenLimit[MT_GetTankType(iTank)] : iRealHealth;
-	//SetEntityHealth(iTank, iFinalHealth);
-	SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalHealth);
+	SetEntityHealth(iTank, iFinalHealth);
+	//SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalHealth);
 
 	return Plugin_Continue;
 }

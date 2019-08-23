@@ -475,8 +475,8 @@ static void vCloneAbility(int tank)
 						g_iCloneOwner[iSelectedType] = tank;
 
 						int iNewHealth = (g_iCloneHealth[MT_GetTankType(tank)] > MT_MAXHEALTH) ? MT_MAXHEALTH : g_iCloneHealth[MT_GetTankType(tank)];
-						//SetEntityHealth(iSelectedType, iNewHealth);
-						SetEntProp(iSelectedType, Prop_Send, "m_iHealth", iNewHealth);
+						SetEntityHealth(iSelectedType, iNewHealth);
+						//SetEntProp(iSelectedType, Prop_Send, "m_iHealth", iNewHealth);
 						SetEntProp(iSelectedType, Prop_Send, "m_iMaxHealth", iNewHealth);
 
 						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)

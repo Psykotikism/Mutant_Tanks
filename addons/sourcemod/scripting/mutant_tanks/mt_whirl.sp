@@ -773,7 +773,10 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 		g_bWhirl[iSurvivor] = false;
 		g_iWhirlOwner[iSurvivor] = 0;
 
-		SetClientViewEntity(iSurvivor, iSurvivor);
+		if (bIsHumanSurvivor(iSurvivor))
+		{
+			SetClientViewEntity(iSurvivor, iSurvivor);
+		}
 
 		return Plugin_Stop;
 	}

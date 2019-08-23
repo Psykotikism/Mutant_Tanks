@@ -3005,8 +3005,8 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 		vTankSpawn(tank, 1);
 
 		int iNewHealth = g_iTankHealth[tank] + limit, iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-		//SetEntityHealth(tank, iFinalHealth);
-		SetEntProp(tank, Prop_Send, "m_iHealth", iFinalHealth);
+		SetEntityHealth(tank, iFinalHealth);
+		//SetEntProp(tank, Prop_Send, "m_iHealth", iFinalHealth);
 		SetEntProp(tank, Prop_Send, "m_iMaxHealth", iFinalHealth);
 	}
 }
@@ -3792,15 +3792,6 @@ static void vMutantTank(int tank)
 		{
 			vFavoriteMenu(tank);
 		}
-
-		float flOrigin[3];
-		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
-		DataPack dpAFK;
-		CreateDataTimer(10.0, tTimerCheckAFKTank, dpAFK, TIMER_FLAG_NO_MAPCHANGE);
-		dpAFK.WriteCell(GetClientUserId(tank));
-		dpAFK.WriteFloat(flOrigin[0]);
-		dpAFK.WriteFloat(flOrigin[1]);
-		dpAFK.WriteFloat(flOrigin[2]);
 	}
 }
 
@@ -4308,47 +4299,6 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerCheckAFKTank(Handle timer, DataPack pack)
-{
-	pack.Reset();
-
-	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!g_bPluginEnabled || !bIsTankAllowed(iTank))
-	{
-		return Plugin_Stop;
-	}
-
-	float flOrigin[3], flNewOrigin[3];
-	flOrigin[0] = pack.ReadFloat(), flOrigin[1] = pack.ReadFloat(), flOrigin[2] = pack.ReadFloat();
-	GetEntPropVector(iTank, Prop_Send, "m_vecOrigin", flNewOrigin);
-
-	int iButtons = GetClientButtons(iTank);
-	if ((flOrigin[0] == flNewOrigin[0] && flOrigin[1] == flNewOrigin[1] && flOrigin[2] == flNewOrigin[2])
-	|| (!(iButtons & IN_FORWARD) && !(iButtons & IN_BACK) && !(iButtons & IN_MOVERIGHT) && !(iButtons & IN_MOVELEFT)))
-	{
-		if (iGetTankCount() > 1)
-		{
-			for (int iTank2 = 1; iTank2 <= MaxClients; iTank2++)
-			{
-				if (bIsTank(iTank2, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE) && iTank != iTank2)
-				{
-					float flOrigin2[3];
-					GetEntPropVector(iTank2, Prop_Send, "m_vecOrigin", flOrigin2);
-					TeleportEntity(iTank, flOrigin2, NULL_VECTOR, NULL_VECTOR);
-
-					break;
-				}
-			}
-		}
-		else
-		{
-			ForcePlayerSuicide(iTank);
-		}
-	}
-
-	return Plugin_Continue;
-}
-
 public Action tTimerCheckView(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -4783,8 +4733,8 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 				iFinalHealth = (iExtraHealthNormal >= 0) ? iBoost : iNegaBoost,
 				iFinalHealth2 = (iExtraHealthNormal >= 0) ? iBoost2 : iNegaBoost2,
 				iFinalHealth3 = (iExtraHealthNormal >= 0) ? iBoost3 : iNegaBoost3;
-			//SetEntityHealth(iTank, iFinalNoHealth);
-			SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalNoHealth);
+			SetEntityHealth(iTank, iFinalNoHealth);
+			//SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalNoHealth);
 			SetEntProp(iTank, Prop_Send, "m_iMaxHealth", iFinalNoHealth);
 
 			int iMultiHealth = (g_iMultiHealth2[g_iTankType[iTank]] > 0) ? g_iMultiHealth2[g_iTankType[iTank]] : g_iMultiHealth;
@@ -4793,20 +4743,20 @@ public Action tTimerTankSpawn(Handle timer, DataPack pack)
 			{
 				case 1:
 				{
-					//SetEntityHealth(iTank, iFinalHealth);
-					SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalHealth);
+					SetEntityHealth(iTank, iFinalHealth);
+					//SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalHealth);
 					SetEntProp(iTank, Prop_Send, "m_iMaxHealth", iFinalHealth);
 				}
 				case 2:
 				{
-					//SetEntityHealth(iTank, iFinalHealth2);
-					SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalHealth2);
+					SetEntityHealth(iTank, iFinalHealth2);
+					//SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalHealth2);
 					SetEntProp(iTank, Prop_Send, "m_iMaxHealth", iFinalHealth2);
 				}
 				case 3:
 				{
-					//SetEntityHealth(iTank, iFinalHealth3);
-					SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalHealth3);
+					SetEntityHealth(iTank, iFinalHealth3);
+					//SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalHealth3);
 					SetEntProp(iTank, Prop_Send, "m_iMaxHealth", iFinalHealth3);
 				}
 			}
