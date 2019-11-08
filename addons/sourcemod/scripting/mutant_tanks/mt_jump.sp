@@ -348,23 +348,23 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iHumanMode[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
 		g_iJumpAbility[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iJumpAbility[type], value, 0, 3);
 		g_iJumpEffect[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iJumpEffect[type], value, 0, 7);
 		g_iJumpMessage[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iJumpMessage[type], value, 0, 7);
 		g_flJumpChance[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpChance", "Jump Chance", "Jump_Chance", "chance", g_flJumpChance[type], value, 0.0, 100.0);
-		g_flJumpDuration[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", g_flJumpDuration[type], value, 0.1, 9999999999.0);
-		g_flJumpHeight[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpHeight", "Jump Height", "Jump_Height", "height", g_flJumpHeight[type], value, 0.1, 9999999999.0);
+		g_flJumpDuration[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpDuration", "Jump Duration", "Jump_Duration", "duration", g_flJumpDuration[type], value, 0.1, 999999.0);
+		g_flJumpHeight[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpHeight", "Jump Height", "Jump_Height", "height", g_flJumpHeight[type], value, 0.1, 999999.0);
 		g_iJumpHit[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpHit", "Jump Hit", "Jump_Hit", "hit", g_iJumpHit[type], value, 0, 1);
 		g_iJumpHitMode[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpHitMode", "Jump Hit Mode", "Jump_Hit_Mode", "hitmode", g_iJumpHitMode[type], value, 0, 2);
-		g_flJumpInterval[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpInterval", "Jump Interval", "Jump_Interval", "interval", g_flJumpInterval[type], value, 0.1, 9999999999.0);
+		g_flJumpInterval[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpInterval", "Jump Interval", "Jump_Interval", "interval", g_flJumpInterval[type], value, 0.1, 999999.0);
 		g_iJumpMode[type] = iGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpMode", "Jump Mode", "Jump_Mode", "mode", g_iJumpMode[type], value, 0, 1);
-		g_flJumpRange[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpRange", "Jump Range", "Jump_Range", "range", g_flJumpRange[type], value, 1.0, 9999999999.0);
+		g_flJumpRange[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpRange", "Jump Range", "Jump_Range", "range", g_flJumpRange[type], value, 1.0, 999999.0);
 		g_flJumpRangeChance[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpRangeChance", "Jump Range Chance", "Jump_Range_Chance", "rangechance", g_flJumpRangeChance[type], value, 0.0, 100.0);
 		g_flJumpSporadicChance[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpSporadicChance", "Jump Sporadic Chance", "Jump_Sporadic_Chance", "sporadicchance", g_flJumpSporadicChance[type], value, 0.0, 100.0);
-		g_flJumpSporadicHeight[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpSporadicHeight", "Jump Sporadic Height", "Jump_Sporadic_Height", "sporadicheight", g_flJumpSporadicHeight[type], value, 0.1, 9999999999.0);
+		g_flJumpSporadicHeight[type] = flGetValue(subsection, "jumpability", "jump ability", "jump_ability", "jump", key, "JumpSporadicHeight", "Jump Sporadic Height", "Jump_Sporadic_Height", "sporadicheight", g_flJumpSporadicHeight[type], value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "jumpability", false) || StrEqual(subsection, "jump ability", false) || StrEqual(subsection, "jump_ability", false) || StrEqual(subsection, "jump", false))
 		{

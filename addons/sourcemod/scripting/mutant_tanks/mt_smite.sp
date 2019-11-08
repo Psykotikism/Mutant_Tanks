@@ -327,15 +327,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iSmiteAbility[type] = iGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iSmiteAbility[type], value, 0, 1);
 		g_iSmiteEffect[type] = iGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iSmiteEffect[type], value, 0, 7);
 		g_iSmiteMessage[type] = iGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iSmiteMessage[type], value, 0, 3);
 		g_flSmiteChance[type] = flGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_flSmiteChance[type], value, 0.0, 100.0);
 		g_iSmiteHit[type] = iGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteHit", "Smite Hit", "Smite_Hit", "hit", g_iSmiteHit[type], value, 0, 1);
 		g_iSmiteHitMode[type] = iGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteHitMode", "Smite Hit Mode", "Smite_Hit_Mode", "hitmode", g_iSmiteHitMode[type], value, 0, 2);
-		g_flSmiteRange[type] = flGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteRange", "Smite Range", "Smite_Range", "range", g_flSmiteRange[type], value, 1.0, 9999999999.0);
+		g_flSmiteRange[type] = flGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteRange", "Smite Range", "Smite_Range", "range", g_flSmiteRange[type], value, 1.0, 999999.0);
 		g_flSmiteRangeChance[type] = flGetValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteRangeChance", "Smite Range Chance", "Smite_Range_Chance", "rangechance", g_flSmiteRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "smiteability", false) || StrEqual(subsection, "smite ability", false) || StrEqual(subsection, "smite_ability", false) || StrEqual(subsection, "smite", false))

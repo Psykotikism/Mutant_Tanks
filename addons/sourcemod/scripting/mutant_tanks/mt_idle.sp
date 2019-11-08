@@ -350,15 +350,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iIdleAbility[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iIdleAbility[type], value, 0, 1);
 		g_iIdleEffect[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iIdleEffect[type], value, 0, 7);
 		g_iIdleMessage[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iIdleMessage[type], value, 0, 7);
 		g_flIdleChance[type] = flGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_flIdleChance[type], value, 0.0, 100.0);
 		g_iIdleHit[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_iIdleHit[type], value, 0, 1);
 		g_iIdleHitMode[type] = iGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleHitMode", "Idle Hit Mode", "Idle_Hit_Mode", "hitmode", g_iIdleHitMode[type], value, 0, 2);
-		g_flIdleRange[type] = flGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleRange", "Idle Range", "Idle_Range", "range", g_flIdleRange[type], value, 1.0, 9999999999.0);
+		g_flIdleRange[type] = flGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleRange", "Idle Range", "Idle_Range", "range", g_flIdleRange[type], value, 1.0, 999999.0);
 		g_flIdleRangeChance[type] = flGetValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_flIdleRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "idleability", false) || StrEqual(subsection, "idle ability", false) || StrEqual(subsection, "idle_ability", false) || StrEqual(subsection, "idle", false))

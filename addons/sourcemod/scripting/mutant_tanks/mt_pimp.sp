@@ -329,18 +329,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iPimpAbility[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iPimpAbility[type], value, 0, 1);
 		g_iPimpEffect[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iPimpEffect[type], value, 0, 7);
 		g_iPimpMessage[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iPimpMessage[type], value, 0, 3);
 		g_flPimpChance[type] = flGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpChance", "Pimp Chance", "Pimp_Chance", "chance", g_flPimpChance[type], value, 0.0, 100.0);
-		g_iPimpDamage[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpDamage", "Pimp Damage", "Pimp_Damage", "damage", g_iPimpDamage[type], value, 1, 9999999999);
-		g_flPimpDuration[type] = flGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpDuration", "Pimp Duration", "Pimp_Duration", "duration", g_flPimpDuration[type], value, 0.1, 9999999999.0);
+		g_iPimpDamage[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpDamage", "Pimp Damage", "Pimp_Damage", "damage", g_iPimpDamage[type], value, 1, 999999);
+		g_flPimpDuration[type] = flGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpDuration", "Pimp Duration", "Pimp_Duration", "duration", g_flPimpDuration[type], value, 0.1, 999999.0);
 		g_iPimpHit[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpHit", "Pimp Hit", "Pimp_Hit", "hit", g_iPimpHit[type], value, 0, 1);
 		g_iPimpHitMode[type] = iGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpHitMode", "Pimp Hit Mode", "Pimp_Hit_Mode", "hitmode", g_iPimpHitMode[type], value, 0, 2);
-		g_flPimpInterval[type] = flGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpInterval", "Pimp Interval", "Pimp_Interval", "interval", g_flPimpInterval[type], value, 0.1, 9999999999.0);
-		g_flPimpRange[type] = flGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpRange", "Pimp Range", "Pimp_Range", "range", g_flPimpRange[type], value, 1.0, 9999999999.0);
+		g_flPimpInterval[type] = flGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpInterval", "Pimp Interval", "Pimp_Interval", "interval", g_flPimpInterval[type], value, 0.1, 999999.0);
+		g_flPimpRange[type] = flGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpRange", "Pimp Range", "Pimp_Range", "range", g_flPimpRange[type], value, 1.0, 999999.0);
 		g_flPimpRangeChance[type] = flGetValue(subsection, "pimpability", "pimp ability", "pimp_ability", "pimp", key, "PimpRangeChance", "Pimp Range Chance", "Pimp_Range_Chance", "rangechance", g_flPimpRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "pimpability", false) || StrEqual(subsection, "pimp ability", false) || StrEqual(subsection, "pimp_ability", false) || StrEqual(subsection, "pimp", false))

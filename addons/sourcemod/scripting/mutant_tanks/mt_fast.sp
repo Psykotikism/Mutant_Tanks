@@ -270,13 +270,13 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iHumanMode[type] = iGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
 		g_iFastAbility[type] = iGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iFastAbility[type], value, 0, 1);
 		g_iFastMessage[type] = iGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iFastMessage[type], value, 0, 1);
 		g_flFastChance[type] = flGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "FastChance", "Fast Chance", "Famt_Chance", "chance", g_flFastChance[type], value, 0.0, 100.0);
-		g_flFastDuration[type] = flGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "FastDuration", "Fast Duration", "Famt_Duration", "duration", g_flFastDuration[type], value, 0.1, 9999999999.0);
+		g_flFastDuration[type] = flGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "FastDuration", "Fast Duration", "Famt_Duration", "duration", g_flFastDuration[type], value, 0.1, 999999.0);
 		g_flFastSpeed[type] = flGetValue(subsection, "fastability", "fast ability", "famt_ability", "fast", key, "FastSpeed", "Fast Speed", "Famt_Speed", "speed", g_flFastSpeed[type], value, 3.0, 10.0);
 
 		if (StrEqual(subsection, "fastability", false) || StrEqual(subsection, "fast ability", false) || StrEqual(subsection, "famt_ability", false) || StrEqual(subsection, "fast", false))

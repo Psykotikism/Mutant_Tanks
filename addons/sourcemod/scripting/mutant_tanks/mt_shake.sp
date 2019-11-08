@@ -328,17 +328,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iShakeAbility[type] = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iShakeAbility[type], value, 0, 1);
 		g_iShakeEffect[type] = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iShakeEffect[type], value, 0, 7);
 		g_iShakeMessage[type] = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iShakeMessage[type], value, 0, 3);
 		g_flShakeChance[type] = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_flShakeChance[type], value, 0.0, 100.0);
-		g_flShakeDuration[type] = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeDuration", "Shake Duration", "Shake_Duration", "duration", g_flShakeDuration[type], value, 0.1, 9999999999.0);
+		g_flShakeDuration[type] = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeDuration", "Shake Duration", "Shake_Duration", "duration", g_flShakeDuration[type], value, 0.1, 999999.0);
 		g_iShakeHit[type] = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeHit", "Shake Hit", "Shake_Hit", "hit", g_iShakeHit[type], value, 0, 1);
 		g_iShakeHitMode[type] = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeHitMode", "Shake Hit Mode", "Shake_Hit_Mode", "hitmode", g_iShakeHitMode[type], value, 0, 2);
-		g_flShakeInterval[type] = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeInterval", "Shake Interval", "Shake_Interval", "interval", g_flShakeInterval[type], value, 0.1, 9999999999.0);
-		g_flShakeRange[type] = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeRange", "Shake Range", "Shake_Range", "range", g_flShakeRange[type], value, 1.0, 9999999999.0);
+		g_flShakeInterval[type] = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeInterval", "Shake Interval", "Shake_Interval", "interval", g_flShakeInterval[type], value, 0.1, 999999.0);
+		g_flShakeRange[type] = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeRange", "Shake Range", "Shake_Range", "range", g_flShakeRange[type], value, 1.0, 999999.0);
 		g_flShakeRangeChance[type] = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeRangeChance", "Shake Range Chance", "Shake_Range_Chance", "rangechance", g_flShakeRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "shakeability", false) || StrEqual(subsection, "shake ability", false) || StrEqual(subsection, "shake_ability", false) || StrEqual(subsection, "shake", false))

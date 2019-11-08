@@ -272,15 +272,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
-		g_flHumanDuration[type] = flGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
+		g_flHumanDuration[type] = flGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 999999.0);
 		g_iHumanMode[type] = iGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
 		g_iZombieAbility[type] = iGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iZombieAbility[type], value, 0, 1);
 		g_iZombieMessage[type] = iGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iZombieMessage[type], value, 0, 1);
 		g_iZombieAmount[type] = iGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_iZombieAmount[type], value, 1, 100);
 		g_flZombieChance[type] = flGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieChance", "Zombie Chance", "Zombie_Chance", "chance", g_flZombieChance[type], value, 0.0, 100.0);
-		g_flZombieInterval[type] = flGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_flZombieInterval[type], value, 0.1, 9999999999.0);
+		g_flZombieInterval[type] = flGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_flZombieInterval[type], value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "zombieability", false) || StrEqual(subsection, "zombie ability", false) || StrEqual(subsection, "zombie_ability", false) || StrEqual(subsection, "zombie", false))
 		{

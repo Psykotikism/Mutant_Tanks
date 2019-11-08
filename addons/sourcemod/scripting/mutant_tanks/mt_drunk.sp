@@ -329,19 +329,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iDrunkAbility[type] = iGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iDrunkAbility[type], value, 0, 1);
 		g_iDrunkEffect[type] = iGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iDrunkEffect[type], value, 0, 7);
 		g_iDrunkMessage[type] = iGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iDrunkMessage[type], value, 0, 3);
 		g_flDrunkChance[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkChance", "Drunk Chance", "Drunk_Chance", "chance", g_flDrunkChance[type], value, 0.0, 100.0);
-		g_flDrunkDuration[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkDuration", "Drunk Duration", "Drunk_Duration", "duration", g_flDrunkDuration[type], value, 0.1, 9999999999.0);
+		g_flDrunkDuration[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkDuration", "Drunk Duration", "Drunk_Duration", "duration", g_flDrunkDuration[type], value, 0.1, 999999.0);
 		g_iDrunkHit[type] = iGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkHit", "Drunk Hit", "Drunk_Hit", "hit", g_iDrunkHit[type], value, 0, 1);
 		g_iDrunkHitMode[type] = iGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkHitMode", "Drunk Hit Mode", "Drunk_Hit_Mode", "hitmode", g_iDrunkHitMode[type], value, 0, 2);
-		g_flDrunkRange[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkRange", "Drunk Range", "Drunk_Range", "range", g_flDrunkRange[type], value, 1.0, 9999999999.0);
+		g_flDrunkRange[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkRange", "Drunk Range", "Drunk_Range", "range", g_flDrunkRange[type], value, 1.0, 999999.0);
 		g_flDrunkRangeChance[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkRangeChance", "Drunk Range Chance", "Drunk_Range_Chance", "rangechance", g_flDrunkRangeChance[type], value, 0.0, 100.0);
-		g_flDrunkSpeedInterval[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkSpeedInterval", "Drunk Speed Interval", "Drunk_Speed_Interval", "speedinterval", g_flDrunkSpeedInterval[type], value, 0.1, 9999999999.0);
-		g_flDrunkTurnInterval[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkTurnInterval", "Drunk Turn Interval", "Drunk_Turn_Interval", "turninterval", g_flDrunkTurnInterval[type], value, 0.1, 9999999999.0);
+		g_flDrunkSpeedInterval[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkSpeedInterval", "Drunk Speed Interval", "Drunk_Speed_Interval", "speedinterval", g_flDrunkSpeedInterval[type], value, 0.1, 999999.0);
+		g_flDrunkTurnInterval[type] = flGetValue(subsection, "drunkability", "drunk ability", "drunk_ability", "drunk", key, "DrunkTurnInterval", "Drunk Turn Interval", "Drunk_Turn_Interval", "turninterval", g_flDrunkTurnInterval[type], value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "drunkability", false) || StrEqual(subsection, "drunk ability", false) || StrEqual(subsection, "drunk_ability", false) || StrEqual(subsection, "drunk", false))
 		{

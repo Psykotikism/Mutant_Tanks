@@ -280,14 +280,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
-		g_flHumanDuration[type] = flGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
+		g_flHumanDuration[type] = flGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 999999.0);
 		g_iHumanMode[type] = iGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
 		g_iCloudAbility[type] = iGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iCloudAbility[type], value, 0, 1);
 		g_iCloudMessage[type] = iGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iCloudMessage[type], value, 0, 1);
 		g_flCloudChance[type] = flGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "CloudChance", "Cloud Chance", "Cloud_Chance", "chance", g_flCloudChance[type], value, 0.0, 100.0);
-		g_flCloudDamage[type] = flGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "CloudDamage", "Cloud Damage", "Cloud_Damage", "damage", g_flCloudDamage[type], value, 1.0, 9999999999.0);
+		g_flCloudDamage[type] = flGetValue(subsection, "cloudability", "cloud ability", "cloud_ability", "cloud", key, "CloudDamage", "Cloud Damage", "Cloud_Damage", "damage", g_flCloudDamage[type], value, 1.0, 999999.0);
 
 		if (StrEqual(subsection, "cloudability", false) || StrEqual(subsection, "cloud ability", false) || StrEqual(subsection, "cloud_ability", false) || StrEqual(subsection, "cloud", false))
 		{

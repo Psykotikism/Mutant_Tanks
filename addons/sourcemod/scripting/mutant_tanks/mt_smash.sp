@@ -339,15 +339,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iSmashAbility[type] = iGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iSmashAbility[type], value, 0, 1);
 		g_iSmashEffect[type] = iGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iSmashEffect[type], value, 0, 7);
 		g_iSmashMessage[type] = iGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iSmashMessage[type], value, 0, 3);
 		g_flSmashChance[type] = flGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashChance", "Smash Chance", "Smash_Chance", "chance", g_flSmashChance[type], value, 0.0, 100.0);
 		g_iSmashHit[type] = iGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashHit", "Smash Hit", "Smash_Hit", "hit", g_iSmashHit[type], value, 0, 1);
 		g_iSmashHitMode[type] = iGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashHitMode", "Smash Hit Mode", "Smash_Hit_Mode", "hitmode", g_iSmashHitMode[type], value, 0, 2);
-		g_flSmashRange[type] = flGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashRange", "Smash Range", "Smash_Range", "range", g_flSmashRange[type], value, 1.0, 9999999999.0);
+		g_flSmashRange[type] = flGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashRange", "Smash Range", "Smash_Range", "range", g_flSmashRange[type], value, 1.0, 999999.0);
 		g_flSmashRangeChance[type] = flGetValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashRangeChance", "Smash Range Chance", "Smash_Range_Chance", "rangechance", g_flSmashRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "smashability", false) || StrEqual(subsection, "smash ability", false) || StrEqual(subsection, "smash_ability", false) || StrEqual(subsection, "smash", false))

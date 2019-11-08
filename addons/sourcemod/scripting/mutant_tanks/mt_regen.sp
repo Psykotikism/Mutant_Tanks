@@ -272,15 +272,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
-		g_flHumanDuration[type] = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
+		g_flHumanDuration[type] = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 999999.0);
 		g_iHumanMode[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
 		g_iRegenAbility[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iRegenAbility[type], value, 0, 1);
 		g_iRegenMessage[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iRegenMessage[type], value, 0, 1);
 		g_flRegenChance[type] = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_flRegenChance[type], value, 0.0, 100.0);
 		g_iRegenHealth[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenHealth", "Regen Health", "Regen_Health", "health", g_iRegenHealth[type], value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-		g_flRegenInterval[type] = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_flRegenInterval[type], value, 0.1, 9999999999.0);
+		g_flRegenInterval[type] = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_flRegenInterval[type], value, 0.1, 999999.0);
 		g_iRegenLimit[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenLimit", "Regen Limit", "Regen_Limit", "limit", g_iRegenLimit[type], value, 1, MT_MAXHEALTH);
 
 		if (StrEqual(subsection, "regenability", false) || StrEqual(subsection, "regen ability", false) || StrEqual(subsection, "regen_ability", false) || StrEqual(subsection, "regen", false))

@@ -351,17 +351,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iShoveAbility[type] = iGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iShoveAbility[type], value, 0, 1);
 		g_iShoveEffect[type] = iGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iShoveEffect[type], value, 0, 7);
 		g_iShoveMessage[type] = iGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iShoveMessage[type], value, 0, 3);
 		g_flShoveChance[type] = flGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveChance", "Shove Chance", "Shove_Chance", "chance", g_flShoveChance[type], value, 0.0, 100.0);
-		g_flShoveDuration[type] = flGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveDuration", "Shove Duration", "Shove_Duration", "duration", g_flShoveDuration[type], value, 0.1, 9999999999.0);
+		g_flShoveDuration[type] = flGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveDuration", "Shove Duration", "Shove_Duration", "duration", g_flShoveDuration[type], value, 0.1, 999999.0);
 		g_iShoveHit[type] = iGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveHit", "Shove Hit", "Shove_Hit", "hit", g_iShoveHit[type], value, 0, 1);
 		g_iShoveHitMode[type] = iGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveHitMode", "Shove Hit Mode", "Shove_Hit_Mode", "hitmode", g_iShoveHitMode[type], value, 0, 2);
-		g_flShoveInterval[type] = flGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveInterval", "Shove Interval", "Shove_Interval", "interval", g_flShoveInterval[type], value, 0.1, 9999999999.0);
-		g_flShoveRange[type] = flGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveRange", "Shove Range", "Shove_Range", "range", g_flShoveRange[type], value, 1.0, 9999999999.0);
+		g_flShoveInterval[type] = flGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveInterval", "Shove Interval", "Shove_Interval", "interval", g_flShoveInterval[type], value, 0.1, 999999.0);
+		g_flShoveRange[type] = flGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveRange", "Shove Range", "Shove_Range", "range", g_flShoveRange[type], value, 1.0, 999999.0);
 		g_flShoveRangeChance[type] = flGetValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveRangeChance", "Shove Range Chance", "Shove_Range_Chance", "rangechance", g_flShoveRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "shoveability", false) || StrEqual(subsection, "shove ability", false) || StrEqual(subsection, "shove_ability", false) || StrEqual(subsection, "shove", false))

@@ -86,8 +86,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define WEAPON_M16_W "models/w_models/weapons/w_rifle_m16a2.mdl"
 #define WEAPON_PISTOL_V "models/v_models/weapons/v_pistol_1911.mdl"
 #define WEAPON_PISTOL_W "models/w_models/weapons/w_pistol_1911.mdl"
-#define WEAPON_PUMP_V "models/v_models/weapons/v_pumpshotgun_a.mdl"
-#define WEAPON_PUMP_W "models/w_models/weapons/w_pumpshotgun_a.mdl"
+#define WEAPON_PUMP_V "models/v_models/weapons/v_shotgun.mdl"
+#define WEAPON_PUMP_W "models/w_models/weapons/w_shotgun.mdl"
 #define WEAPON_SMG_V "models/v_models/weapons/v_smg_uzi.mdl"
 #define WEAPON_SMG_W "models/w_models/weapons/w_smg_uzi.mdl"
 

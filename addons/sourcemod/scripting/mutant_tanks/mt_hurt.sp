@@ -329,18 +329,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iHurtAbility[type] = iGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iHurtAbility[type], value, 0, 1);
 		g_iHurtEffect[type] = iGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iHurtEffect[type], value, 0, 7);
 		g_iHurtMessage[type] = iGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iHurtMessage[type], value, 0, 3);
 		g_flHurtChance[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtChance", "Hurt Chance", "Hurt_Chance", "chance", g_flHurtChance[type], value, 0.0, 100.0);
-		g_flHurtDamage[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_flHurtDamage[type], value, 1.0, 9999999999.0);
-		g_flHurtDuration[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_flHurtDuration[type], value, 0.1, 9999999999.0);
+		g_flHurtDamage[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtDamage", "Hurt Damage", "Hurt_Damage", "damage", g_flHurtDamage[type], value, 1.0, 999999.0);
+		g_flHurtDuration[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtDuration", "Hurt Duration", "Hurt_Duration", "duration", g_flHurtDuration[type], value, 0.1, 999999.0);
 		g_iHurtHit[type] = iGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtHit", "Hurt Hit", "Hurt_Hit", "hit", g_iHurtHit[type], value, 0, 1);
 		g_iHurtHitMode[type] = iGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtHitMode", "Hurt Hit Mode", "Hurt_Hit_Mode", "hitmode", g_iHurtHitMode[type], value, 0, 2);
-		g_flHurtInterval[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_flHurtInterval[type], value, 0.1, 9999999999.0);
-		g_flHurtRange[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_flHurtRange[type], value, 1.0, 9999999999.0);
+		g_flHurtInterval[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_flHurtInterval[type], value, 0.1, 999999.0);
+		g_flHurtRange[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_flHurtRange[type], value, 1.0, 999999.0);
 		g_flHurtRangeChance[type] = flGetValue(subsection, "hurtability", "hurt ability", "hurt_ability", "hurt", key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_flHurtRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "hurtability", false) || StrEqual(subsection, "hurt ability", false) || StrEqual(subsection, "hurt_ability", false) || StrEqual(subsection, "hurt", false))

@@ -278,16 +278,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
-		g_flHumanDuration[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
+		g_flHumanDuration[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 999999.0);
 		g_iHumanMode[type] = iGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
 		g_iSplashAbility[type] = iGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iSplashAbility[type], value, 0, 1);
 		g_iSplashMessage[type] = iGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iSplashMessage[type], value, 0, 1);
 		g_flSplashChance[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_flSplashChance[type], value, 0.0, 100.0);
-		g_flSplashDamage[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_flSplashDamage[type], value, 1.0, 9999999999.0);
-		g_flSplashInterval[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_flSplashInterval[type], value, 0.1, 9999999999.0);
-		g_flSplashRange[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashRange", "Splash Range", "Splash_Range", "range", g_flSplashRange[type], value, 1.0, 9999999999.0);
+		g_flSplashDamage[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_flSplashDamage[type], value, 1.0, 999999.0);
+		g_flSplashInterval[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_flSplashInterval[type], value, 0.1, 999999.0);
+		g_flSplashRange[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashRange", "Splash Range", "Splash_Range", "range", g_flSplashRange[type], value, 1.0, 999999.0);
 
 		if (StrEqual(subsection, "splashability", false) || StrEqual(subsection, "splash ability", false) || StrEqual(subsection, "splash_ability", false) || StrEqual(subsection, "splash", false))
 		{

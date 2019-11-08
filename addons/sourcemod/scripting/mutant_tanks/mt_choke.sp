@@ -330,19 +330,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iChokeAbility[type] = iGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iChokeAbility[type], value, 0, 1);
 		g_iChokeEffect[type] = iGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iChokeEffect[type], value, 0, 7);
 		g_iChokeMessage[type] = iGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iChokeMessage[type], value, 0, 3);
 		g_flChokeChance[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeChance", "Choke Chance", "Choke_Chance", "chance", g_flChokeChance[type], value, 0.0, 100.0);
-		g_flChokeDamage[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_flChokeDamage[type], value, 1.0, 9999999999.0);
-		g_flChokeDelay[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDelay", "Choke Delay", "Choke_Delay", "delay", g_flChokeDelay[type], value, 0.1, 9999999999.0);
-		g_flChokeDuration[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDuration", "Choke Duration", "Choke_Duration", "duration", g_flChokeDuration[type], value, 0.1, 9999999999.0);
-		g_flChokeHeight[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeHeight", "Choke Height", "Choke_Height", "height", g_flChokeHeight[type], value, 0.1, 9999999999.0);
+		g_flChokeDamage[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_flChokeDamage[type], value, 1.0, 999999.0);
+		g_flChokeDelay[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDelay", "Choke Delay", "Choke_Delay", "delay", g_flChokeDelay[type], value, 0.1, 999999.0);
+		g_flChokeDuration[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDuration", "Choke Duration", "Choke_Duration", "duration", g_flChokeDuration[type], value, 0.1, 999999.0);
+		g_flChokeHeight[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeHeight", "Choke Height", "Choke_Height", "height", g_flChokeHeight[type], value, 0.1, 999999.0);
 		g_iChokeHit[type] = iGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeHit", "Choke Hit", "Choke_Hit", "hit", g_iChokeHit[type], value, 0, 1);
 		g_iChokeHitMode[type] = iGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeHitMode", "Choke Hit Mode", "Choke_Hit_Mode", "hitmode", g_iChokeHitMode[type], value, 0, 2);
-		g_flChokeRange[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_flChokeRange[type], value, 1.0, 9999999999.0);
+		g_flChokeRange[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_flChokeRange[type], value, 1.0, 999999.0);
 		g_flChokeRangeChance[type] = flGetValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeRangeChance", "Choke Range Chance", "Choke_Range_Chance", "rangechance", g_flChokeRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "chokeability", false) || StrEqual(subsection, "choke ability", false) || StrEqual(subsection, "choke_ability", false) || StrEqual(subsection, "choke", false))

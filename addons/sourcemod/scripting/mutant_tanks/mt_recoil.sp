@@ -327,16 +327,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iRecoilAbility[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iRecoilAbility[type], value, 0, 1);
 		g_iRecoilEffect[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iRecoilEffect[type], value, 0, 7);
 		g_iRecoilMessage[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iRecoilMessage[type], value, 0, 3);
 		g_flRecoilChance[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_flRecoilChance[type], value, 0.0, 100.0);
-		g_flRecoilDuration[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_flRecoilDuration[type], value, 0.1, 9999999999.0);
+		g_flRecoilDuration[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_flRecoilDuration[type], value, 0.1, 999999.0);
 		g_iRecoilHit[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_iRecoilHit[type], value, 0, 1);
 		g_iRecoilHitMode[type] = iGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_iRecoilHitMode[type], value, 0, 2);
-		g_flRecoilRange[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_flRecoilRange[type], value, 1.0, 9999999999.0);
+		g_flRecoilRange[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_flRecoilRange[type], value, 1.0, 999999.0);
 		g_flRecoilRangeChance[type] = flGetValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_flRecoilRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "recoilability", false) || StrEqual(subsection, "recoil ability", false) || StrEqual(subsection, "recoil_ability", false) || StrEqual(subsection, "recoil", false))

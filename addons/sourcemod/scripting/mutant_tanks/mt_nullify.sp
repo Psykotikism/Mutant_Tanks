@@ -330,16 +330,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iNullifyAbility[type] = iGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iNullifyAbility[type], value, 0, 1);
 		g_iNullifyEffect[type] = iGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iNullifyEffect[type], value, 0, 7);
 		g_iNullifyMessage[type] = iGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iNullifyMessage[type], value, 0, 3);
 		g_flNullifyChance[type] = flGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_flNullifyChance[type], value, 0.0, 100.0);
-		g_flNullifyDuration[type] = flGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_flNullifyDuration[type], value, 0.1, 9999999999.0);
+		g_flNullifyDuration[type] = flGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_flNullifyDuration[type], value, 0.1, 999999.0);
 		g_iNullifyHit[type] = iGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyHit", "Nullify Hit", "Nullify_Hit", "hit", g_iNullifyHit[type], value, 0, 1);
 		g_iNullifyHitMode[type] = iGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_iNullifyHitMode[type], value, 0, 2);
-		g_flNullifyRange[type] = flGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_flNullifyRange[type], value, 1.0, 9999999999.0);
+		g_flNullifyRange[type] = flGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_flNullifyRange[type], value, 1.0, 999999.0);
 		g_flNullifyRangeChance[type] = flGetValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_flNullifyRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "nullifyability", false) || StrEqual(subsection, "nullify ability", false) || StrEqual(subsection, "nullify_ability", false) || StrEqual(subsection, "nullify", false))

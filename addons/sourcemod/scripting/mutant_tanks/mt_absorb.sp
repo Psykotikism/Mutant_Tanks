@@ -334,17 +334,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iHumanMode[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
 		g_iAbsorbAbility[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iAbsorbAbility[type], value, 0, 1);
 		g_iAbsorbMessage[type] = iGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iAbsorbMessage[type], value, 0, 1);
-		g_flAbsorbBulletDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_flAbsorbBulletDivisor[type], value, 0.1, 9999999999.0);
+		g_flAbsorbBulletDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_flAbsorbBulletDivisor[type], value, 0.1, 999999.0);
 		g_flAbsorbChance[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbChance", "Absorb Chance", "Absorb_Chance", "chance", g_flAbsorbChance[type], value, 0.0, 100.0);
-		g_flAbsorbDuration[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_flAbsorbDuration[type], value, 0.1, 9999999999.0);
-		g_flAbsorbExplosiveDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_flAbsorbExplosiveDivisor[type], value, 0.1, 9999999999.0);
-		g_flAbsorbFireDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_flAbsorbFireDivisor[type], value, 0.1, 9999999999.0);
-		g_flAbsorbMeleeDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_flAbsorbMeleeDivisor[type], value, 0.1, 9999999999.0);
+		g_flAbsorbDuration[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_flAbsorbDuration[type], value, 0.1, 999999.0);
+		g_flAbsorbExplosiveDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_flAbsorbExplosiveDivisor[type], value, 0.1, 999999.0);
+		g_flAbsorbFireDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_flAbsorbFireDivisor[type], value, 0.1, 999999.0);
+		g_flAbsorbMeleeDivisor[type] = flGetValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_flAbsorbMeleeDivisor[type], value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "absorbability", false) || StrEqual(subsection, "absorb ability", false) || StrEqual(subsection, "absorb_ability", false) || StrEqual(subsection, "absorb", false))
 		{

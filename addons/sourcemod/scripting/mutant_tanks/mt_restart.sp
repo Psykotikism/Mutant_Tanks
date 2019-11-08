@@ -344,8 +344,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iRestartAbility[type] = iGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iRestartAbility[type], value, 0, 1);
 		g_iRestartEffect[type] = iGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iRestartEffect[type], value, 0, 7);
 		g_iRestartMessage[type] = iGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iRestartMessage[type], value, 0, 3);
@@ -353,7 +353,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_iRestartHit[type] = iGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "RestartHit", "Restart Hit", "Restart_Hit", "hit", g_iRestartHit[type], value, 0, 1);
 		g_iRestartHitMode[type] = iGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "RestartHitMode", "Restart Hit Mode", "Restart_Hit_Mode", "hitmode", g_iRestartHitMode[type], value, 0, 2);
 		g_iRestartMode[type] = iGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "RestartMode", "Restart Mode", "Restart_Mode", "mode", g_iRestartMode[type], value, 0, 1);
-		g_flRestartRange[type] = flGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "RestartRange", "Restart Range", "Restart_Range", "range", g_flRestartRange[type], value, 1.0, 9999999999.0);
+		g_flRestartRange[type] = flGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "RestartRange", "Restart Range", "Restart_Range", "range", g_flRestartRange[type], value, 1.0, 999999.0);
 		g_flRestartRangeChance[type] = flGetValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "RestartRangeChance", "Restart Range Chance", "Restart_Range_Chance", "rangechance", g_flRestartRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "restartability", false) || StrEqual(subsection, "restart ability", false) || StrEqual(subsection, "restart_ability", false) || StrEqual(subsection, "restart", false))

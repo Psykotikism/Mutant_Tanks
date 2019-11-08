@@ -366,16 +366,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iInvertAbility[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iInvertAbility[type], value, 0, 1);
 		g_iInvertEffect[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iInvertEffect[type], value, 0, 7);
 		g_iInvertMessage[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iInvertMessage[type], value, 0, 7);
 		g_flInvertChance[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertChance", "Invert Chance", "Invert_Chance", "chance", g_flInvertChance[type], value, 0.0, 100.0);
-		g_flInvertDuration[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", g_flInvertDuration[type], value, 0.1, 9999999999.0);
+		g_flInvertDuration[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertDuration", "Invert Duration", "Invert_Duration", "duration", g_flInvertDuration[type], value, 0.1, 999999.0);
 		g_iInvertHit[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertHit", "Invert Hit", "Invert_Hit", "hit", g_iInvertHit[type], value, 0, 1);
 		g_iInvertHitMode[type] = iGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertHitMode", "Invert Hit Mode", "Invert_Hit_Mode", "hitmde", g_iInvertHitMode[type], value, 0, 2);
-		g_flInvertRange[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertRange", "Invert Range", "Invert_Range", "range", g_flInvertRange[type], value, 1.0, 9999999999.0);
+		g_flInvertRange[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertRange", "Invert Range", "Invert_Range", "range", g_flInvertRange[type], value, 1.0, 999999.0);
 		g_flInvertRangeChance[type] = flGetValue(subsection, "invertability", "invert ability", "invert_ability", "invert", key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_flInvertRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "invertability", false) || StrEqual(subsection, "invert ability", false) || StrEqual(subsection, "invert_ability", false) || StrEqual(subsection, "invert", false))

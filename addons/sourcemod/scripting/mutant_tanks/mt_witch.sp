@@ -311,14 +311,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iWitchAbility[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iWitchAbility[type], value, 0, 1);
 		g_iWitchMessage[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iWitchMessage[type], value, 0, 1);
 		g_iWitchAmount[type] = iGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_iWitchAmount[type], value, 1, 25);
 		g_flWitchChance[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_flWitchChance[type], value, 0.0, 100.0);
-		g_flWitchDamage[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_flWitchDamage[type], value, 1.0, 9999999999.0);
-		g_flWitchRange[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchRange", "Witch Range", "Witch_Range", "range", g_flWitchRange[type], value, 1.0, 9999999999.0);
+		g_flWitchDamage[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_flWitchDamage[type], value, 1.0, 999999.0);
+		g_flWitchRange[type] = flGetValue(subsection, "witchability", "witch ability", "witch_ability", "witch", key, "WitchRange", "Witch Range", "Witch_Range", "range", g_flWitchRange[type], value, 1.0, 999999.0);
 
 		if (StrEqual(subsection, "witchability", false) || StrEqual(subsection, "witch ability", false) || StrEqual(subsection, "witch_ability", false) || StrEqual(subsection, "witch", false))
 		{

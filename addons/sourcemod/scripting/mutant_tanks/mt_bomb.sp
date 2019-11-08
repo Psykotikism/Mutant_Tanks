@@ -325,15 +325,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iBombAbility[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iBombAbility[type], value, 0, 1);
 		g_iBombEffect[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iBombEffect[type], value, 0, 7);
 		g_iBombMessage[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iBombMessage[type], value, 0, 7);
 		g_flBombChance[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_flBombChance[type], value, 0.0, 100.0);
 		g_iBombHit[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombHit", "Bomb Hit", "Bomb_Hit", "hit", g_iBombHit[type], value, 0, 1);
 		g_iBombHitMode[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombHitMode", "Bomb Hit Mode", "Bomb_Hit_Mode", "hitmode", g_iBombHitMode[type], value, 0, 2);
-		g_flBombRange[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRange", "Bomb Range", "Bomb_Range", "range", g_flBombRange[type], value, 1.0, 9999999999.0);
+		g_flBombRange[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRange", "Bomb Range", "Bomb_Range", "range", g_flBombRange[type], value, 1.0, 999999.0);
 		g_flBombRangeChance[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRangeChance", "Bomb Range Chance", "Bomb_Range_Chance", "rangechance", g_flBombRangeChance[type], value, 0.0, 100.0);
 		g_iBombRockBreak[type] = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_iBombRockBreak[type], value, 0, 1);
 		g_flBombRockChance[type] = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_flBombRockChance[type], value, 0.0, 100.0);

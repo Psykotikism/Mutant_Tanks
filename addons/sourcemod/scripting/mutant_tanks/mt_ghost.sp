@@ -359,21 +359,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
-		g_flHumanDuration[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
+		g_flHumanDuration[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 999999.0);
 		g_iHumanMode[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
 		g_iGhostAbility[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iGhostAbility[type], value, 0, 3);
 		g_iGhostEffect[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iGhostEffect[type], value, 0, 7);
 		g_iGhostMessage[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iGhostMessage[type], value, 0, 7);
 		g_flGhostChance[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostChance", "Ghost Chance", "Ghomt_Chance", "chance", g_flGhostChance[type], value, 0.0, 100.0);
 		g_iGhostFadeAlpha[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostFadeAlpha", "Ghost Fade Alpha", "Ghomt_Fade_Alpha", "fadealpha", g_iGhostFadeAlpha[type], value, 0, 255);
-		g_flGhostFadeDelay[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostFadeDelay", "Ghost Fade Delay", "Ghomt_Fade_Delay", "fadedelay", g_flGhostFadeDelay[type], value, 0.1, 9999999999.0);
+		g_flGhostFadeDelay[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostFadeDelay", "Ghost Fade Delay", "Ghomt_Fade_Delay", "fadedelay", g_flGhostFadeDelay[type], value, 0.1, 999999.0);
 		g_iGhostFadeLimit[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostFadeLimit", "Ghost Fade Limit", "Ghomt_Fade_Limit", "fadelimit", g_iGhostFadeLimit[type], value, 0, 255);
-		g_flGhostFadeRate[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostFadeRate", "Ghost Fade Rate", "Ghomt_Fade_Rate", "faderate", g_flGhostFadeRate[type], value, 0.1, 9999999999.0);
+		g_flGhostFadeRate[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostFadeRate", "Ghost Fade Rate", "Ghomt_Fade_Rate", "faderate", g_flGhostFadeRate[type], value, 0.1, 999999.0);
 		g_iGhostHit[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostHit", "Ghost Hit", "Ghomt_Hit", "hit", g_iGhostHit[type], value, 0, 1);
 		g_iGhostHitMode[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostHitMode", "Ghost Hit Mode", "Ghomt_Hit_Mode", "hitmode", g_iGhostHitMode[type], value, 0, 2);
-		g_flGhostRange[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostRange", "Ghost Range", "Ghomt_Range", "range", g_flGhostRange[type], value, 1.0, 9999999999.0);
+		g_flGhostRange[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostRange", "Ghost Range", "Ghomt_Range", "range", g_flGhostRange[type], value, 1.0, 999999.0);
 		g_flGhostRangeChance[type] = flGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostRangeChance", "Ghost Range Chance", "Ghomt_Range_Chance", "rangechance", g_flGhostRangeChance[type], value, 0.0, 100.0);
 		g_iGhostWeaponSlots[type] = iGetValue(subsection, "ghostability", "ghost ability", "ghomt_ability", "ghost", key, "GhostWeaponSlots", "Ghost Weapon Slots", "Ghomt_Weapon_Slots", "slots", g_iGhostWeaponSlots[type], value, 0, 31);
 

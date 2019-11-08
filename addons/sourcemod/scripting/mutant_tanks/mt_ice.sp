@@ -331,16 +331,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iIceAbility[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iIceAbility[type], value, 0, 1);
 		g_iIceEffect[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iIceEffect[type], value, 0, 7);
 		g_iIceMessage[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iIceMessage[type], value, 0, 3);
 		g_flIceChance[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceChance", "Ice Chance", "Ice_Chance", "chance", g_flIceChance[type], value, 0.0, 100.0);
-		g_flIceDuration[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_flIceDuration[type], value, 0.1, 9999999999.0);
+		g_flIceDuration[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceDuration", "Ice Duration", "Ice_Duration", "duration", g_flIceDuration[type], value, 0.1, 999999.0);
 		g_iIceHit[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceHit", "Ice Hit", "Ice_Hit", "hit", g_iIceHit[type], value, 0, 1);
 		g_iIceHitMode[type] = iGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", g_iIceHitMode[type], value, 0, 2);
-		g_flIceRange[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceRange", "Ice Range", "Ice_Range", "range", g_flIceRange[type], value, 1.0, 9999999999.0);
+		g_flIceRange[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceRange", "Ice Range", "Ice_Range", "range", g_flIceRange[type], value, 1.0, 999999.0);
 		g_flIceRangeChance[type] = flGetValue(subsection, "iceability", "ice ability", "ice_ability", "ice", key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_flIceRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "iceability", false) || StrEqual(subsection, "ice ability", false) || StrEqual(subsection, "ice_ability", false) || StrEqual(subsection, "ice", false))

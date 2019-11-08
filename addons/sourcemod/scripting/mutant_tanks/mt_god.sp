@@ -315,13 +315,13 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iHumanMode[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
 		g_iGodAbility[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iGodAbility[type], value, 0, 1);
 		g_iGodMessage[type] = iGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iGodMessage[type], value, 0, 1);
 		g_flGodChance[type] = flGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "GodChance", "God Chance", "God_Chance", "chance", g_flGodChance[type], value, 0.0, 100.0);
-		g_flGodDuration[type] = flGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "GodDuration", "God Duration", "God_Duration", "duration", g_flGodDuration[type], value, 0.1, 9999999999.0);
+		g_flGodDuration[type] = flGetValue(subsection, "godability", "god ability", "god_ability", "god", key, "GodDuration", "God Duration", "God_Duration", "duration", g_flGodDuration[type], value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "godability", false) || StrEqual(subsection, "god ability", false) || StrEqual(subsection, "god_ability", false) || StrEqual(subsection, "god", false))
 		{

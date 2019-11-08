@@ -355,16 +355,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iQuietAbility[type] = iGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iQuietAbility[type], value, 0, 1);
 		g_iQuietEffect[type] = iGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iQuietEffect[type], value, 0, 7);
 		g_iQuietMessage[type] = iGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iQuietMessage[type], value, 0, 3);
 		g_flQuietChance[type] = flGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_flQuietChance[type], value, 0.0, 100.0);
-		g_flQuietDuration[type] = flGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_flQuietDuration[type], value, 0.1, 9999999999.0);
+		g_flQuietDuration[type] = flGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_flQuietDuration[type], value, 0.1, 999999.0);
 		g_iQuietHit[type] = iGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietHit", "Quiet Hit", "Quiet_Hit", "hit", g_iQuietHit[type], value, 0, 1);
 		g_iQuietHitMode[type] = iGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietHitMode", "Quiet Hit Mode", "Quiet_Hit_Mode", "hitmode", g_iQuietHitMode[type], value, 0, 2);
-		g_flQuietRange[type] = flGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_flQuietRange[type], value, 1.0, 9999999999.0);
+		g_flQuietRange[type] = flGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_flQuietRange[type], value, 1.0, 999999.0);
 		g_flQuietRangeChance[type] = flGetValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_flQuietRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "quietability", false) || StrEqual(subsection, "quiet ability", false) || StrEqual(subsection, "quiet_ability", false) || StrEqual(subsection, "quiet", false))

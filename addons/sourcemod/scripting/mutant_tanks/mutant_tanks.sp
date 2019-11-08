@@ -159,8 +159,8 @@ int g_iAccessFlags, g_iAccessFlags2[MT_MAXTYPES + 1], g_iAccessFlags3[MAXPLAYERS
 	g_iBulletImmunity[MT_MAXTYPES + 1], g_iBulletImmunity2[MAXPLAYERS + 1], g_iConfigCreate, g_iConfigEnable, g_iConfigExecute, g_iConfigMode, g_iCooldown[MAXPLAYERS + 1], g_iDeathRevert, g_iDeathRevert2[MT_MAXTYPES + 1], g_iDeathRevert3[MAXPLAYERS + 1], g_iDetectPlugins, g_iDetectPlugins2[MT_MAXTYPES + 1], g_iDetectPlugins3[MAXPLAYERS + 1],
 	g_iDisplayHealth, g_iDisplayHealth2[MT_MAXTYPES + 1], g_iDisplayHealth3[MAXPLAYERS + 1], g_iDisplayHealthType, g_iDisplayHealthType2[MT_MAXTYPES + 1], g_iDisplayHealthType3[MAXPLAYERS + 1], g_iExplosiveImmunity[MT_MAXTYPES + 1], g_iExplosiveImmunity2[MAXPLAYERS + 1], g_iExtraHealth[MT_MAXTYPES + 1], g_iExtraHealth2[MAXPLAYERS + 1],
 	g_iFavoriteType[MAXPLAYERS + 1], g_iFileTimeOld[7], g_iFileTimeNew[7], g_iFinalesOnly, g_iFinaleTank[MT_MAXTYPES + 1], g_iFinaleType[4], g_iFinaleWave[4], g_iFireImmunity[MT_MAXTYPES + 1], g_iFireImmunity2[MAXPLAYERS + 1], g_iFlame[MAXPLAYERS + 1][3], g_iFlameColor[MT_MAXTYPES + 1][4], g_iFlameColor2[MAXPLAYERS + 1][4], g_iGameModeTypes,
-	g_iGlowEnabled[MT_MAXTYPES + 1], g_iGlowEnabled2[MAXPLAYERS + 1], g_iGlowColor[MT_MAXTYPES + 1][3], g_iGlowColor2[MAXPLAYERS + 1][3], g_iGlowType[MT_MAXTYPES + 1], g_iGlowType2[MAXPLAYERS + 1], g_iGlowFlashing[MT_MAXTYPES + 1], g_iGlowFlashing2[MAXPLAYERS + 1], g_iGlowMaxRange[MT_MAXTYPES + 1], g_iGlowMaxRange2[MAXPLAYERS + 1], g_iGlowMinRange[MT_MAXTYPES + 1], g_iGlowMinRange2[MAXPLAYERS + 1],
-	g_iHumanCooldown, g_iHumanSupport[MT_MAXTYPES + 1], g_iIgnoreLevel, g_iImmunityFlags, g_iImmunityFlags2[MT_MAXTYPES + 1], g_iImmunityFlags3[MAXPLAYERS + 1], g_iImmunityFlags4[MT_MAXTYPES + 1][MAXPLAYERS + 1],
+	g_iGlowEnabled[MT_MAXTYPES + 1], g_iGlowEnabled2[MAXPLAYERS + 1], g_iGlowColor[MT_MAXTYPES + 1][3], g_iGlowColor2[MAXPLAYERS + 1][3], g_iGlowFlashing[MT_MAXTYPES + 1], g_iGlowFlashing2[MAXPLAYERS + 1], g_iGlowMinRange[MT_MAXTYPES + 1], g_iGlowMinRange2[MAXPLAYERS + 1], g_iGlowMaxRange[MT_MAXTYPES + 1], g_iGlowMaxRange2[MAXPLAYERS + 1],
+	g_iGlowType[MT_MAXTYPES + 1], g_iGlowType2[MAXPLAYERS + 1], g_iHumanCooldown, g_iHumanSupport[MT_MAXTYPES + 1], g_iIgnoreLevel, g_iImmunityFlags, g_iImmunityFlags2[MT_MAXTYPES + 1], g_iImmunityFlags3[MAXPLAYERS + 1], g_iImmunityFlags4[MT_MAXTYPES + 1][MAXPLAYERS + 1],
 	g_iIncapTime[MAXPLAYERS + 1], g_iLastButtons[MAXPLAYERS + 1], g_iLight[MAXPLAYERS + 1][4], g_iLightColor[MT_MAXTYPES + 1][4], g_iLightColor2[MAXPLAYERS + 1][4], g_iMasterControl, g_iMaxType, g_iMeleeImmunity[MT_MAXTYPES + 1], g_iMeleeImmunity2[MAXPLAYERS + 1], g_iMenuEnabled[MT_MAXTYPES + 1], g_iMinType, g_iMultiHealth,
 	g_iMultiHealth2[MT_MAXTYPES + 1], g_iMultiHealth3[MAXPLAYERS + 1], g_iOzTank[MAXPLAYERS + 1][3], g_iOzTankColor[MT_MAXTYPES + 1][4], g_iOzTankColor2[MAXPLAYERS + 1][4], g_iPlayerCount[2], g_iPluginEnabled, g_iPropsAttached[MT_MAXTYPES + 1], g_iPropsAttached2[MAXPLAYERS + 1], g_iRandomTank[MT_MAXTYPES + 1], g_iRandomTank2[MAXPLAYERS + 1],
 	g_iRegularAmount, g_iRegularMode, g_iRegularType, g_iRegularWave, g_iRockEffects[MT_MAXTYPES + 1], g_iRockEffects2[MAXPLAYERS + 1], g_iRock[MAXPLAYERS + 1][17], g_iRockColor[MT_MAXTYPES + 1][4], g_iRockColor2[MAXPLAYERS + 1][4], g_iSkinColor[MT_MAXTYPES + 1][4], g_iSkinColor2[MAXPLAYERS + 1][4], g_iSpawnEnabled[MT_MAXTYPES + 1],
@@ -552,6 +552,8 @@ public void OnMapStart()
 	PrecacheSound(SOUND_BOSS, true);
 
 	vReset();
+
+	AddNormalSoundHook(SoundHook);
 }
 
 public void OnClientPutInServer(int client)
@@ -781,6 +783,8 @@ public void OnMapEnd()
 {
 	vReset();
 
+	RemoveNormalSoundHook(SoundHook);
+
 	if (g_alAdmins != null)
 	{
 		g_alAdmins.Clear();
@@ -932,14 +936,14 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		}
 		case MenuAction_Display:
 		{
-			char sMenuTitle[255];
+			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel panel = view_as<Panel>(param2);
 			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "MTInfoMenu", param1);
 			panel.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
-			char sMenuOption[255];
+			char sMenuOption[PLATFORM_MAX_PATH];
 			switch (param2)
 			{
 				case 0:
@@ -1553,7 +1557,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		}
 		case MenuAction_Display:
 		{
-			char sMenuTitle[255];
+			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel panel = view_as<Panel>(param2);
 			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "MTMenu", param1);
 			panel.SetTitle(sMenuTitle);
@@ -1672,6 +1676,18 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
+public Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
+{
+	if (g_bPluginEnabled && StrEqual(sample, "player/tank/attack/thrown_missile_loop_1.wav", false))
+	{
+		numClients = 0;
+
+		return Plugin_Changed;
+	}
+
+	return Plugin_Continue;
+}
+
 public Action SetTransmit(int entity, int client)
 {
 	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
@@ -1695,6 +1711,7 @@ static void vLoadConfigs(const char[] savepath, int mode)
 	smcLoader.OnLeaveSection = SMCEndSection;
 	smcLoader.OnEnd = SMCParseEnd;
 	SMCError smcError = smcLoader.ParseFile(savepath);
+
 	if (smcError != SMCError_Okay)
 	{
 		char sSmcError[64];
@@ -1769,10 +1786,10 @@ public void SMCParseStart(SMCParser smc)
 			g_iMultiHealth2[iIndex] = 0;
 			g_iHumanSupport[iIndex] = 0;
 			g_iGlowEnabled[iIndex] = 0;
-			g_iGlowType[iIndex] = 3;
 			g_iGlowFlashing[iIndex] = 0;
 			g_iGlowMinRange[iIndex] = 0;
-			g_iGlowMaxRange[iIndex] = 0;
+			g_iGlowMaxRange[iIndex] = 999999;
+			g_iGlowType[iIndex] = 1;
 			g_iAccessFlags2[iIndex] = 0;
 			g_iImmunityFlags2[iIndex] = 0;
 			g_iTypeLimit[iIndex] = 32;
@@ -1816,18 +1833,18 @@ public void SMCParseStart(SMCParser smc)
 
 				if (iPos < 4)
 				{
-					g_iSkinColor[iIndex][iPos] = 255;
+					g_iSkinColor[iIndex][iPos] = -1;
 					g_iBossType[iIndex][iPos] = iPos + 2;
-					g_iLightColor[iIndex][iPos] = 255;
-					g_iOzTankColor[iIndex][iPos] = 255;
-					g_iFlameColor[iIndex][iPos] = 255;
-					g_iRockColor[iIndex][iPos] = 255;
-					g_iTireColor[iIndex][iPos] = 255;
+					g_iLightColor[iIndex][iPos] = -1;
+					g_iOzTankColor[iIndex][iPos] = -1;
+					g_iFlameColor[iIndex][iPos] = -1;
+					g_iRockColor[iIndex][iPos] = -1;
+					g_iTireColor[iIndex][iPos] = -1;
 				}
 
 				if (iPos < 3)
 				{
-					g_iGlowColor[iIndex][iPos] = 255;
+					g_iGlowColor[iIndex][iPos] = -1;
 				}
 			}
 		}
@@ -1846,10 +1863,10 @@ public void SMCParseStart(SMCParser smc)
 				g_sHealthCharacters3[iPlayer][0] = '\0';
 				g_iMultiHealth3[iPlayer] = 0;
 				g_iGlowEnabled2[iPlayer] = 0;
-				g_iGlowType2[iPlayer] = 3;
 				g_iGlowFlashing2[iPlayer] = 0;
 				g_iGlowMinRange2[iPlayer] = 0;
-				g_iGlowMaxRange2[iPlayer] = 0;
+				g_iGlowMaxRange2[iPlayer] = 999999;
+				g_iGlowType2[iPlayer] = 1;
 				g_iFavoriteType[iPlayer] = 0;
 				g_iAccessFlags3[iPlayer] = 0;
 				g_iImmunityFlags3[iPlayer] = 0;
@@ -2037,11 +2054,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_iDisplayHealthType = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_iDisplayHealthType, value, 0, 2);
 			g_iFinalesOnly = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_iFinalesOnly, value, 0, 1);
 			g_iMultiHealth = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_iMultiHealth, value, 0, 3);
-			g_iHumanCooldown = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "cooldown", g_iHumanCooldown, value, 0, 9999999999);
+			g_iHumanCooldown = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "cooldown", g_iHumanCooldown, value, 0, 999999);
 			g_iMasterControl = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "MasterControl", "Master Control", "Master_Control", "master", g_iMasterControl, value, 0, 1);
 			g_iMTMode = iGetValue(g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "spawnmode", g_iMTMode, value, 0, 1);
 			g_iRegularAmount = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularAmount", "Regular Amount", "Regular_Amount", "regamount", g_iRegularAmount, value, 1, 64);
-			g_flRegularInterval = flGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularInterval", "Regular Interval", "Regular_Interval", "reginterval", g_flRegularInterval, value, 0.1, 9999999999.0);
+			g_flRegularInterval = flGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularInterval", "Regular Interval", "Regular_Interval", "reginterval", g_flRegularInterval, value, 0.1, 999999.0);
 			g_iRegularMode = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularMode", "Regular Mode", "Regular_Mode", "regmode", g_iRegularMode, value, 0, 1);
 			g_iRegularType = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularType", "Regular Type", "Regular_Type", "regtype", g_iRegularType, value, 0, g_iMaxType);
 			g_iRegularWave = iGetValue(g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularWave", "Regular Wave", "Regular_Wave", "regwave", g_iRegularWave, value, 0, 1);
@@ -2171,26 +2188,24 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_iMultiHealth2[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_iMultiHealth2[iIndex], value, 0, 3);
 						g_iHumanSupport[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "HumanSupport", "Human Support", "Human_Support", "human", g_iHumanSupport[iIndex], value, 0, 1);
 						g_iGlowEnabled[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_iGlowEnabled[iIndex], value, 0, 1);
-						g_iGlowType[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowType", "Glow Type", "Glow_Type", "glowtype", g_iGlowType[iIndex], value, 0, 1);
 						g_iGlowFlashing[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "glowflashing", g_iGlowFlashing[iIndex], value, 0, 1);
-						g_iGlowMinRange[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowMinRange", "Glow Min Range", "Glow_Min_Range", "glowminrange", g_iGlowMinRange[iIndex], value, 0, 999999999);
-						g_iGlowMaxRange[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowMaxRange", "Glow Max Range", "Glow_Max_Range", "glowmaxrange", g_iGlowMaxRange[iIndex], value, 0, 999999999);
+						g_iGlowType[iIndex] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowType", "Glow Type", "Glow_Type", "glowtype", g_iGlowType[iIndex], value, 0, 1);
 						g_iTypeLimit[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_iTypeLimit[iIndex], value, 0, 64);
 						g_iFinaleTank[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_iFinaleTank[iIndex], value, 0, 1);
 						g_iBossStages[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_iBossStages[iIndex], value, 1, 4);
 						g_iRandomTank[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomTank", "Random Tank", "Random_Tank", "random", g_iRandomTank[iIndex], value, 0, 1);
-						g_flRandomInterval[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_flRandomInterval[iIndex], value, 0.1, 9999999999.0);
-						g_flTransformDelay[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDelay", "Transform Delay", "Transform_Delay", "transdelay", g_flTransformDelay[iIndex], value, 0.1, 9999999999.0);
-						g_flTransformDuration[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDuration", "Transform Duration", "Transform_Duration", "transduration", g_flTransformDuration[iIndex], value, 0.1, 9999999999.0);
+						g_flRandomInterval[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_flRandomInterval[iIndex], value, 0.1, 999999.0);
+						g_flTransformDelay[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDelay", "Transform Delay", "Transform_Delay", "transdelay", g_flTransformDelay[iIndex], value, 0.1, 999999.0);
+						g_flTransformDuration[iIndex] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDuration", "Transform Duration", "Transform_Duration", "transduration", g_flTransformDuration[iIndex], value, 0.1, 999999.0);
 						g_iSpawnMode[iIndex] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "mode", g_iSpawnMode[iIndex], value, 0, 3);
 						g_iPropsAttached[iIndex] = iGetValue(g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_iPropsAttached[iIndex], value, 0, 63);
 						g_iBodyEffects[iIndex] = iGetValue(g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_iBodyEffects[iIndex], value, 0, 127);
 						g_iRockEffects[iIndex] = iGetValue(g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_iRockEffects[iIndex], value, 0, 15);
-						g_flClawDamage[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_flClawDamage[iIndex], value, -1.0, 9999999999.0);
+						g_flClawDamage[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_flClawDamage[iIndex], value, -1.0, 999999.0);
 						g_iExtraHealth[iIndex] = iGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_iExtraHealth[iIndex], value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-						g_flRockDamage[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_flRockDamage[iIndex], value, -1.0, 9999999999.0);
+						g_flRockDamage[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_flRockDamage[iIndex], value, -1.0, 999999.0);
 						g_flRunSpeed[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_flRunSpeed[iIndex], value, -1.0, 3.0);
-						g_flThrowInterval[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_flThrowInterval[iIndex], value, -1.0, 9999999999.0);
+						g_flThrowInterval[iIndex] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_flThrowInterval[iIndex], value, -1.0, 999999.0);
 						g_iBulletImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_iBulletImmunity[iIndex], value, 0, 1);
 						g_iExplosiveImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_iExplosiveImmunity[iIndex], value, 0, 1);
 						g_iFireImmunity[iIndex] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_iFireImmunity[iIndex], value, 0, 1);
@@ -2239,6 +2254,16 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 									g_iGlowColor[iIndex][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
 								}
+							}
+							else if (StrEqual(key, "GlowRange", false) || StrEqual(key, "Glow Range", false) || StrEqual(key, "Glow_Range", false))
+							{
+								char sRange[2][7], sValue[14];
+								strcopy(sValue, sizeof(sValue), value);
+								ReplaceString(sValue, sizeof(sValue), " ", "");
+								ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+
+								g_iGlowMinRange[iIndex] = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, 999999) : g_iGlowMinRange[iIndex];
+								g_iGlowMaxRange[iIndex] = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, 999999) : g_iGlowMaxRange[iIndex];
 							}
 						}
 
@@ -2391,23 +2416,21 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_iDisplayHealthType3[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_iDisplayHealthType3[iPlayer], value, 0, 2);
 							g_iMultiHealth3[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_iMultiHealth3[iPlayer], value, 0, 3);
 							g_iGlowEnabled2[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_iGlowEnabled2[iPlayer], value, 0, 1);
-							g_iGlowType2[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowType", "Glow Type", "Glow_Type", "glowtype", g_iGlowType2[iPlayer], value, 0, 1);
 							g_iGlowFlashing2[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "glowflashing", g_iGlowFlashing2[iPlayer], value, 0, 1);
-							g_iGlowMinRange2[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowMinRange", "Glow Min Range", "Glow_Min_Range", "glowminrange", g_iGlowMinRange2[iPlayer], value, 0, 999999999);
-							g_iGlowMaxRange2[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowMaxRange", "Glow Max Range", "Glow_Max_Range", "glowmaxrange", g_iGlowMaxRange2[iPlayer], value, 0, 999999999);
+							g_iGlowType2[iPlayer] = iGetValue(g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowType", "Glow Type", "Glow_Type", "glowtype", g_iGlowType2[iPlayer], value, 0, 1);
 							g_iBossStages2[iPlayer] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_iBossStages2[iPlayer], value, 1, 4);
 							g_iRandomTank2[iPlayer] = iGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomTank", "Random Tank", "Random_Tank", "random", g_iRandomTank2[iPlayer], value, 0, 1);
-							g_flRandomInterval2[iPlayer] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_flRandomInterval2[iPlayer], value, 0.1, 9999999999.0);
-							g_flTransformDelay2[iPlayer] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDelay", "Transform Delay", "Transform_Delay", "transdelay", g_flTransformDelay2[iPlayer], value, 0.1, 9999999999.0);
-							g_flTransformDuration2[iPlayer] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDuration", "Transform Duration", "Transform_Duration", "transduration", g_flTransformDuration2[iPlayer], value, 0.1, 9999999999.0);
+							g_flRandomInterval2[iPlayer] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_flRandomInterval2[iPlayer], value, 0.1, 999999.0);
+							g_flTransformDelay2[iPlayer] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDelay", "Transform Delay", "Transform_Delay", "transdelay", g_flTransformDelay2[iPlayer], value, 0.1, 999999.0);
+							g_flTransformDuration2[iPlayer] = flGetValue(g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDuration", "Transform Duration", "Transform_Duration", "transduration", g_flTransformDuration2[iPlayer], value, 0.1, 999999.0);
 							g_iPropsAttached2[iPlayer] = iGetValue(g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_iPropsAttached2[iPlayer], value, 0, 63);
 							g_iBodyEffects2[iPlayer] = iGetValue(g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_iBodyEffects2[iPlayer], value, 0, 127);
 							g_iRockEffects2[iPlayer] = iGetValue(g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_iRockEffects2[iPlayer], value, 0, 15);
-							g_flClawDamage2[iPlayer] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_flClawDamage2[iPlayer], value, -1.0, 9999999999.0);
+							g_flClawDamage2[iPlayer] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_flClawDamage2[iPlayer], value, -1.0, 999999.0);
 							g_iExtraHealth2[iPlayer] = iGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_iExtraHealth2[iPlayer], value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-							g_flRockDamage2[iPlayer] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_flRockDamage2[iPlayer], value, -1.0, 9999999999.0);
+							g_flRockDamage2[iPlayer] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_flRockDamage2[iPlayer], value, -1.0, 999999.0);
 							g_flRunSpeed2[iPlayer] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_flRunSpeed2[iPlayer], value, -1.0, 3.0);
-							g_flThrowInterval2[iPlayer] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_flThrowInterval2[iPlayer], value, -1.0, 9999999999.0);
+							g_flThrowInterval2[iPlayer] = flGetValue(g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_flThrowInterval2[iPlayer], value, -1.0, 999999.0);
 							g_iBulletImmunity2[iPlayer] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_iBulletImmunity2[iPlayer], value, 0, 1);
 							g_iExplosiveImmunity2[iPlayer] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_iExplosiveImmunity2[iPlayer], value, 0, 1);
 							g_iFireImmunity2[iPlayer] = iGetValue(g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_iFireImmunity2[iPlayer], value, 0, 1);
@@ -2457,6 +2480,16 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 										g_iGlowColor2[iPlayer][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
 									}
+								}
+								else if (StrEqual(key, "GlowRange", false) || StrEqual(key, "Glow Range", false) || StrEqual(key, "Glow_Range", false))
+								{
+									char sRange[2][7], sValue[14];
+									strcopy(sValue, sizeof(sValue), value);
+									ReplaceString(sValue, sizeof(sValue), " ", "");
+									ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+
+									g_iGlowMinRange2[iPlayer] = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, 999999) : g_iGlowMinRange2[iPlayer];
+									g_iGlowMaxRange2[iPlayer] = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, 999999) : g_iGlowMaxRange2[iPlayer];
 								}
 							}
 
@@ -2774,6 +2807,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
  			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
 			{
 				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
+				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
 			}
 		}
 		else if (StrEqual(name, "player_no_longer_it"))
@@ -2786,22 +2820,21 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					return;
 				}
 
-				int iGlowColor[3];
+				int iGlowColor[3], iGlowFlashing = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_iGlowFlashing2[iTank] > 0) ? g_iGlowFlashing2[iTank] : g_iGlowFlashing[g_iTankType[iTank]],
+					iGlowMinRange = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_iGlowMinRange2[iTank] > 0) ? g_iGlowMinRange2[iTank] : g_iGlowMinRange[g_iTankType[iTank]],
+					iGlowMaxRange = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_iGlowMaxRange2[iTank] > 0) ? g_iGlowMaxRange2[iTank] : g_iGlowMaxRange[g_iTankType[iTank]],
+					iGlowType = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_iGlowType2[iTank] > 0) ? g_iGlowType2[iTank] : g_iGlowType[g_iTankType[iTank]];
+
 				for (int iPos = 0; iPos < 3; iPos++)
 				{
 					iGlowColor[iPos] = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_iGlowColor2[iTank][iPos] >= -2) ? g_iGlowColor2[iTank][iPos] : g_iGlowColor[g_iTankType[iTank]][iPos];
 				}
 
-				int iGlowType = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_iGlowType2[iTank] >= 0) ? g_iGlowType2[iTank] : g_iGlowType[g_iTankType[iTank]];
-				int iGlowFlashing = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_iGlowFlashing2[iTank] >= 0) ? g_iGlowFlashing2[iTank] : g_iGlowFlashing[g_iTankType[iTank]];
-				int iGlowMinRange = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_iGlowMinRange2[iTank] >= 0) ? g_iGlowMinRange2[iTank] : g_iGlowMinRange[g_iTankType[iTank]];
-				int iGlowMaxRange = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_iGlowMaxRange2[iTank] >= 0) ? g_iGlowMaxRange2[iTank] : g_iGlowMaxRange[g_iTankType[iTank]];
-
 				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
-				SetEntProp(iTank, Prop_Send, "m_iGlowType", iGlowType ? 3 : 2);
 				SetEntProp(iTank, Prop_Send, "m_bFlashing", iGlowFlashing);
 				SetEntProp(iTank, Prop_Send, "m_nGlowRangeMin", iGlowMinRange);
 				SetEntProp(iTank, Prop_Send, "m_nGlowRange", iGlowMaxRange);
+				SetEntProp(iTank, Prop_Send, "m_iGlowType", (iGlowType == 1 ? 3 : 2));
 			}
 		}
 		else if (StrEqual(name, "player_spawn"))
@@ -3110,6 +3143,7 @@ static void vRemoveProps(int tank, int mode = 1)
 	if (bIsValidGame() && (g_iGlowEnabled[g_iTankType[tank]] == 1 || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_iGlowEnabled2[tank] == 1)))
 	{
 		SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
+		SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
 	}
 
 	if (mode == 1)
@@ -3221,22 +3255,21 @@ static void vSetColor(int tank, int value = 0)
 
 	if (bIsValidGame() && (g_iGlowEnabled[value] == 1 || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_iGlowEnabled2[tank] == 1)))
 	{
-		int iGlowColor[3];
+		int iGlowColor[3], iGlowFlashing = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_iGlowFlashing2[tank] > 0) ? g_iGlowFlashing2[tank] : g_iGlowFlashing[value],
+			iGlowMinRange = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_iGlowMinRange2[tank] > 0) ? g_iGlowMinRange2[tank] : g_iGlowMinRange[value],
+			iGlowMaxRange = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_iGlowMaxRange2[tank] > 0) ? g_iGlowMaxRange2[tank] : g_iGlowMaxRange[value],
+			iGlowType = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_iGlowType2[tank] > 0) ? g_iGlowType2[tank] : g_iGlowType[value];
+
 		for (int iPos = 0; iPos < 3; iPos++)
 		{
 			iGlowColor[iPos] = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_iGlowColor2[tank][iPos] >= -2) ? g_iGlowColor2[tank][iPos] : g_iGlowColor[value][iPos];
 		}
 
-		int iGlowType = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_iGlowType2[tank] >= 0) ? g_iGlowType2[tank] : g_iGlowType[value];
-		int iGlowFlashing = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_iGlowFlashing2[tank] >= 0) ? g_iGlowFlashing2[tank] : g_iGlowFlashing[value];
-		int iGlowMinRange = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_iGlowMinRange2[tank] >= 0) ? g_iGlowMinRange2[tank] : g_iGlowMinRange[value];
-		int iGlowMaxRange = (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_iGlowMaxRange2[tank] >= 0) ? g_iGlowMaxRange2[tank] : g_iGlowMaxRange[value];
-
 		SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
-		SetEntProp(tank, Prop_Send, "m_iGlowType", iGlowType ? 3 : 2);
 		SetEntProp(tank, Prop_Send, "m_bFlashing", iGlowFlashing);
 		SetEntProp(tank, Prop_Send, "m_nGlowRangeMin", iGlowMinRange);
 		SetEntProp(tank, Prop_Send, "m_nGlowRange", iGlowMaxRange);
+		SetEntProp(tank, Prop_Send, "m_iGlowType", (iGlowType == 1 ? 3 : 2));
 	}
 
 	g_iTankType[tank] = value;
@@ -3850,14 +3883,14 @@ public int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		}
 		case MenuAction_Display:
 		{
-			char sMenuTitle[255];
+			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel panel = view_as<Panel>(param2);
 			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "MTFavoriteMenu", param1);
 			panel.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
-			char sMenuOption[255];
+			char sMenuOption[PLATFORM_MAX_PATH];
 			switch (param2)
 			{
 				case 0:

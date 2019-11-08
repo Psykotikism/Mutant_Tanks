@@ -326,16 +326,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iSlowAbility[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iSlowAbility[type], value, 0, 1);
 		g_iSlowEffect[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iSlowEffect[type], value, 0, 7);
 		g_iSlowMessage[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iSlowMessage[type], value, 0, 7);
 		g_flSlowChance[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", g_flSlowChance[type], value, 0.0, 100.0);
-		g_flSlowDuration[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_flSlowDuration[type], value, 0.1, 9999999999.0);
+		g_flSlowDuration[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_flSlowDuration[type], value, 0.1, 999999.0);
 		g_iSlowHit[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowHit", "Slow Hit", "Slow_Hit", "hit", g_iSlowHit[type], value, 0, 1);
 		g_iSlowHitMode[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowHitMode", "Slow Hit Mode", "Slow_Hit_Mode", "hitmode", g_iSlowHitMode[type], value, 0, 2);
-		g_flSlowRange[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowRange", "Slow Range", "Slow_Range", "range", g_flSlowRange[type], value, 1.0, 9999999999.0);
+		g_flSlowRange[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowRange", "Slow Range", "Slow_Range", "range", g_flSlowRange[type], value, 1.0, 999999.0);
 		g_flSlowRangeChance[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_flSlowRangeChance[type], value, 0.0, 100.0);
 		g_flSlowSpeed[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_flSlowSpeed[type], value, 0.1, 0.9);
 

@@ -328,17 +328,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iVisionAbility[type] = iGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iVisionAbility[type], value, 0, 1);
 		g_iVisionEffect[type] = iGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iVisionEffect[type], value, 0, 7);
 		g_iVisionMessage[type] = iGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iVisionMessage[type], value, 0, 3);
 		g_flVisionChance[type] = flGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_flVisionChance[type], value, 0.0, 100.0);
-		g_flVisionDuration[type] = flGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_flVisionDuration[type], value, 0.1, 9999999999.0);
+		g_flVisionDuration[type] = flGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_flVisionDuration[type], value, 0.1, 999999.0);
 		g_iVisionFOV[type] = iGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionFOV", "Vision FOV", "Vision_FOV", "fov", g_iVisionFOV[type], value, 1, 160);
 		g_iVisionHit[type] = iGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionHit", "Vision Hit", "Vision_Hit", "hit", g_iVisionHit[type], value, 0, 1);
 		g_iVisionHitMode[type] = iGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_iVisionHitMode[type], value, 0, 2);
-		g_flVisionRange[type] = flGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionRange", "Vision Range", "Vision_Range", "range", g_flVisionRange[type], value, 1.0, 9999999999.0);
+		g_flVisionRange[type] = flGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionRange", "Vision Range", "Vision_Range", "range", g_flVisionRange[type], value, 1.0, 999999.0);
 		g_flVisionRangeChance[type] = flGetValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_flVisionRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "visionability", false) || StrEqual(subsection, "vision ability", false) || StrEqual(subsection, "vision_ability", false) || StrEqual(subsection, "vision", false))

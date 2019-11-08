@@ -325,15 +325,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iFireAbility[type] = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iFireAbility[type], value, 0, 1);
 		g_iFireEffect[type] = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iFireEffect[type], value, 0, 7);
 		g_iFireMessage[type] = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iFireMessage[type], value, 0, 7);
 		g_flFireChance[type] = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireChance", "Fire Chance", "Fire_Chance", "chance", g_flFireChance[type], value, 0.0, 100.0);
 		g_iFireHit[type] = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireHit", "Fire Hit", "Fire_Hit", "hit", g_iFireHit[type], value, 0, 1);
 		g_iFireHitMode[type] = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireHitMode", "Fire Hit Mode", "Fire_Hit_Mode", "hitmode", g_iFireHitMode[type], value, 0, 2);
-		g_flFireRange[type] = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRange", "Fire Range", "Fire_Range", "range", g_flFireRange[type], value, 1.0, 9999999999.0);
+		g_flFireRange[type] = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRange", "Fire Range", "Fire_Range", "range", g_flFireRange[type], value, 1.0, 999999.0);
 		g_flFireRangeChance[type] = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRangeChance", "Fire Range Chance", "Fire_Range_Chance", "rangechance", g_flFireRangeChance[type], value, 0.0, 100.0);
 		g_iFireRockBreak[type] = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRockBreak", "Fire Rock Break", "Fire_Rock_Break", "rock", g_iFireRockBreak[type], value, 0, 1);
 		g_flFireRockChance[type] = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRockChance", "Fire Rock Chance", "Fire_Rock_Chance", "rockchance", g_flFireRockChance[type], value, 0.0, 100.0);

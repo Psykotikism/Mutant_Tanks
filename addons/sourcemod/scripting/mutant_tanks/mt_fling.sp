@@ -368,16 +368,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iFlingAbility[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iFlingAbility[type], value, 0, 1);
 		g_iFlingEffect[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iFlingEffect[type], value, 0, 7);
 		g_iFlingMessage[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iFlingMessage[type], value, 0, 3);
 		g_flFlingChance[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingChance", "Fling Chance", "Fling_Chance", "chance", g_flFlingChance[type], value, 0.0, 100.0);
-		g_flFlingForce[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingForce", "Fling Force", "Fling_Force", "force", g_flFlingForce[type], value, 1.0, 9999999999.0);
+		g_flFlingForce[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingForce", "Fling Force", "Fling_Force", "force", g_flFlingForce[type], value, 1.0, 999999.0);
 		g_iFlingHit[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingHit", "Fling Hit", "Fling_Hit", "hit", g_iFlingHit[type], value, 0, 1);
 		g_iFlingHitMode[type] = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingHitMode", "Fling Hit Mode", "Fling_Hit_Mode", "hitmode", g_iFlingHitMode[type], value, 0, 2);
-		g_flFlingRange[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingRange", "Fling Range", "Fling_Range", "range", g_flFlingRange[type], value, 1.0, 9999999999.0);
+		g_flFlingRange[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingRange", "Fling Range", "Fling_Range", "range", g_flFlingRange[type], value, 1.0, 999999.0);
 		g_flFlingRangeChance[type] = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", g_flFlingRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "flingability", false) || StrEqual(subsection, "fling ability", false) || StrEqual(subsection, "fling_ability", false) || StrEqual(subsection, "fling", false))

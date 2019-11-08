@@ -332,17 +332,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iBlindAbility[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iBlindAbility[type], value, 0, 1);
 		g_iBlindEffect[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iBlindEffect[type], value, 0, 7);
 		g_iBlindMessage[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iBlindMessage[type], value, 0, 3);
 		g_flBlindChance[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_flBlindChance[type], value, 0.0, 100.0);
-		g_flBlindDuration[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_flBlindDuration[type], value, 0.1, 9999999999.0);
+		g_flBlindDuration[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_flBlindDuration[type], value, 0.1, 999999.0);
 		g_iBlindHit[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindHit", "Blind Hit", "Blind_Hit", "hit", g_iBlindHit[type], value, 0, 1);
 		g_iBlindHitMode[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindHitMode", "Blind Hit Mode", "Blind_Hit_Mode", "hitmode", g_iBlindHitMode[type], value, 0, 2);
 		g_iBlindIntensity[type] = iGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindIntensity", "Blind Intensity", "Blind_Intensity", "intensity", g_iBlindIntensity[type], value, 0, 255);
-		g_flBlindRange[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindRange", "Blind Range", "Blind_Range", "range", g_flBlindRange[type], value, 1.0, 9999999999.0);
+		g_flBlindRange[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindRange", "Blind Range", "Blind_Range", "range", g_flBlindRange[type], value, 1.0, 999999.0);
 		g_flBlindRangeChance[type] = flGetValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindRangeChance", "Blind Range Chance", "Blind_Range_Chance", "rangechance", g_flBlindRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "blindability", false) || StrEqual(subsection, "blind ability", false) || StrEqual(subsection, "blind_ability", false) || StrEqual(subsection, "blind", false))

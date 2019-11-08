@@ -327,16 +327,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 9999999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 9999999999.0);
+		g_iHumanAmmo[type] = iGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
 		g_iLagAbility[type] = iGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iLagAbility[type], value, 0, 1);
 		g_iLagEffect[type] = iGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iLagEffect[type], value, 0, 7);
 		g_iLagMessage[type] = iGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iLagMessage[type], value, 0, 3);
 		g_flLagChance[type] = flGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagChance", "Lag Chance", "Lag_Chance", "chance", g_flLagChance[type], value, 0.0, 100.0);
-		g_flLagDuration[type] = flGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_flLagDuration[type], value, 0.1, 9999999999.0);
+		g_flLagDuration[type] = flGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_flLagDuration[type], value, 0.1, 999999.0);
 		g_iLagHit[type] = iGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagHit", "Lag Hit", "Lag_Hit", "hit", g_iLagHit[type], value, 0, 1);
 		g_iLagHitMode[type] = iGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagHitMode", "Lag Hit Mode", "Lag_Hit_Mode", "hitmode", g_iLagHitMode[type], value, 0, 2);
-		g_flLagRange[type] = flGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagRange", "Lag Range", "Lag_Range", "range", g_flLagRange[type], value, 1.0, 9999999999.0);
+		g_flLagRange[type] = flGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagRange", "Lag Range", "Lag_Range", "range", g_flLagRange[type], value, 1.0, 999999.0);
 		g_flLagRangeChance[type] = flGetValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagRangeChance", "Lag Range Chance", "Lag_Range_Chance", "rangechance", g_flLagRangeChance[type], value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "lagability", false) || StrEqual(subsection, "lag ability", false) || StrEqual(subsection, "lag_ability", false) || StrEqual(subsection, "lag", false))
