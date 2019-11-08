@@ -172,7 +172,7 @@
 			// Human-controlled Mutant Tanks must wait this long before changing their current Mutant Tank type.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Cooldown"			"600"
 
 			// Human-controlled Mutant Tanks are exempted from cooldowns when using the "sm_mutanttank" command to switch their current Mutant Tank type.
@@ -201,7 +201,7 @@
 			// Note: This will not work unless "Regular Mode" is set to 1.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Regular Interval"			"300.0"
 
 			// The mode of the regular wave spawner.
@@ -506,6 +506,7 @@
 			"Glow Enabled"				"0"
 
 			// These are the RGB values of the Mutant Tank's glow outline color.
+			// Note: Only available in Left 4 Dead 2.
 			// Note: Any value less than 0 will output a random color.
 			// --
 			// 1st number = Red
@@ -513,34 +514,34 @@
 			// 3rd number = Blue
 			"Glow Color"				"255,255,255"
 			
-			// The Mutant Tank's glow outline visibility type.
-			// Note: Only available in Left 4 Dead 2.
-			// --
-			// 0: Glow outline visible only on sight.
-			// 1: Glow outline visible through the walls.
-			"Glow Type"					"1"
-			
-			// The Mutant Tank's will have a glow outline flashing.
+			// The Mutant Tank's glow outline will flash.
 			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Glow Flashing"				"0"
 			
-			// The minimum range that a client can be away from the Mutant Tank until the glow start to outline.
+			// The minimum range that a client can be away from the Mutant Tank until the glow outline starts to appear.
 			// Note: Only available in Left 4 Dead 2.
 			// --
-			// Minimum: 0 (Unlimited)
-			// Maximum: 999999999
-			// 0: Unlimited
-			"Glow Min Range"			"0"
-			
-			// The maximum range that a client can be away from the Mutant Tank until the glow stop to outline.
+			// Separate values with "-".
+			// --
+			// Value limit: 2
+			// Character limit for each value: 6
+			// --
+			// Minimum number for each value: 0 (Unlimited)
+			// Maximum number for each value: 999999
+			// --
+			// 1st number = Minimum value
+			// 2nd number = Maximum value
+			"Glow Range"				"0-999999"
+
+			// The Mutant Tank's glow outline visibility type.
 			// Note: Only available in Left 4 Dead 2.
 			// --
-			// Minimum: 0 (Unlimited)
-			// Maximum: 999999999
-			"Glow Max Range"			"0"
+			// 0: Glow outline visible only on sight.
+			// 1: Glow outline visible through the walls.
+			"Glow Type"				"0"
 		}
 		"Administration"
 		{
@@ -629,21 +630,21 @@
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 2.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Random Interval"			"5.0"
 
 			// The Mutant Tank is able to transform again after this many seconds passes.
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Transform Delay"			"10.0"
 
 			// The Mutant Tank's transformations last this long.
 			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Transform Duration"			"10.0"
 
 			// The types that the Mutant Tank can transform into.
@@ -790,7 +791,7 @@
 			// --
 			// OFF: -1.0
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Claw Damage"				"-1.0"
 
 			// Extra health given to the Mutant Tank.
@@ -809,7 +810,7 @@
 			// --
 			// OFF: -1.0
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Rock Damage"				"-1.0"
 
 			// Set the Mutant Tank's run speed.
@@ -825,7 +826,7 @@
 			// --
 			// OFF: -1.0
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Throw Interval"			"-1.0"
 		}
 		"Immunities"
@@ -886,13 +887,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -919,7 +920,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Bullet damage/1.0 = Bullet damage)
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Absorb Bullet Divisor"			"20.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -932,7 +933,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Absorb Duration"			"5.0"
 
 			// The explosive damage received by the Mutant Tank is divided by this value.
@@ -941,7 +942,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Explosive damage/1.0 = Explosive damage)
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Absorb Explosive Divisor"		"20.0"
 
 			// The fire damage received by the Mutant Tank is divided by this value.
@@ -950,7 +951,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Fire damage/1.0 = Fire damage)
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Absorb Fire Divisor"			"200.0"
 
 			// The melee damage received by the Mutant Tank is divided by this value.
@@ -959,7 +960,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Melee damage/1.0 = Melee damage)
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Absorb Melee Divisor"			"200.0"
 		}
 	}
@@ -1007,13 +1008,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -1073,7 +1074,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Acid Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -1139,13 +1140,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -1190,7 +1191,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Aimless Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -1209,7 +1210,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Aimless Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -1261,13 +1262,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -1332,7 +1333,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Ammo Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -1384,13 +1385,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -1435,7 +1436,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Blind Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -1461,7 +1462,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Blind Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -1515,13 +1516,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -1581,7 +1582,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Bomb Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -1646,13 +1647,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -1697,13 +1698,13 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Bury Duration"				"5.0"
 
 			// The Mutant Tank buries survivors this deep into the ground.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Bury Height"				"50.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -1723,7 +1724,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Bury Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -1762,20 +1763,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -1869,13 +1870,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -1920,25 +1921,25 @@
 			// The Mutant Tank's chokes do this much damage.
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Choke Damage"				"5.0"
 
 			// The Mutant Tank chokes survivors in the air after this many seconds passes upon triggering the ability.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Choke Delay"				"1.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Choke Duration"			"5.0"
 
 			// The Mutant Tank brings survivors this high up into the air.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Choke Height"				"300.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -1957,7 +1958,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Choke Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -1996,13 +1997,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -2085,20 +2086,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -2128,7 +2129,7 @@
 			// The Mutant Tank's clouds do this much damage.
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Cloud Damage"				"5.0"
 		}
 	}
@@ -2239,13 +2240,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -2290,7 +2291,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Drug Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -2310,13 +2311,13 @@
 			// The Mutant Tank drugs survivors every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Drug Interval"				"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Drug Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -2368,13 +2369,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -2419,7 +2420,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Drunk Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -2438,7 +2439,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Drunk Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -2450,13 +2451,13 @@
 			// The Mutant Tank causes the survivors' speed to randomly change every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Drunk Speed Interval"			"1.5"
 
 			// The Mutant Tank causes the survivors to turn at a random direction every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Drunk Turn Interval"			"0.5"
 		}
 	}
@@ -2502,13 +2503,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -2553,13 +2554,13 @@
 			// The Mutant Tank's electrocutions do this much damage.
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Electric Damage"			"5.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Electric Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -2579,13 +2580,13 @@
 			// The Mutant Tank electrocutes survivors every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Electric Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Electric Range"			"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -2637,13 +2638,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -2688,7 +2689,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Enforce Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -2708,7 +2709,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Enforce Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -2762,13 +2763,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -2799,7 +2800,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Fast Duration"				"5.0"
 
 			// The Mutant Tank's special speed.
@@ -2853,13 +2854,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -2919,7 +2920,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Fire Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -2984,13 +2985,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -3050,13 +3051,13 @@
 			// Note: This setting determines how powerful the force is.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Fling Force"				"300.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Fling Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -3095,13 +3096,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -3128,7 +3129,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Bullet damage x 1.0 = Bullet damage)
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Fragile Bullet Multiplier"		"5.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -3141,7 +3142,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Fragile Duration"			"5.0"
 
 			// The explosive damage received by the Mutant Tank is multiplied by this value.
@@ -3150,7 +3151,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Explosive damage x 1.0 = Explosive damage)
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Fragile Explosive Multiplier"		"5.0"
 
 			// The fire damage received by the Mutant Tank is multiplied by this value.
@@ -3159,7 +3160,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Fire damage x 1.0 = Fire damage)
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Fragile Fire Multiplier"		"3.0"
 
 			// The melee damage received by the Mutant Tank is multiplied by this value.
@@ -3168,7 +3169,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Melee damage x 1.0 = Melee damage)
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Fragile Melee Multiplier"		"1.5"
 		}
 	}
@@ -3219,20 +3220,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -3294,7 +3295,7 @@
 			// The Mutant Tank's ghost fade effect starts all over after this many seconds passes upon reaching the limit set by the "Ghost Fade Limit" setting.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Ghost Fade Delay"			"5.0"
 
 			// The limit of the Mutant Tank's ghost fade effect.
@@ -3306,7 +3307,7 @@
 			// The rate of the Mutant Tank's ghost fade effect.
 			// --
 			// Minimum: 0.1 (Fastest)
-			// Maximum: 9999999999.0 (Slowest)
+			// Maximum: 999999.0 (Slowest)
 			"Ghost Fade Rate"			"0.1"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -3326,7 +3327,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Ghost Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -3380,13 +3381,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -3417,7 +3418,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"God Duration"				"5.0"
 		}
 	}
@@ -3465,13 +3466,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -3527,7 +3528,7 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Gravity Duration"			"5.0"
 
 			// The Mutant Tank's gravity force.
@@ -3556,7 +3557,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Gravity Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -3568,7 +3569,7 @@
 			// The Mutant Tank sets the survivors' gravity to this value.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Gravity Value"				"0.3"
 		}
 	}
@@ -3617,20 +3618,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -3679,7 +3680,7 @@
 			// The distance between an infected and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Heal Absorb Range"			"500.0"
 
 			// The amount of temporary health given to survivors.
@@ -3711,13 +3712,13 @@
 			// The Mutant Tank receives health from nearby infected every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Heal Interval"				"5.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Heal Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -3799,7 +3800,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Damage x 1.0 = Damage)
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Hit Damage Multiplier"			"1.5"
 
 			// The only part of the Mutant Tank that can be damage.
@@ -3856,13 +3857,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -3907,13 +3908,13 @@
 			// The Mutant Tank's pain inflictions do this much damage.
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Hurt Damage"				"5.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Hurt Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -3933,13 +3934,13 @@
 			// The Mutant Tank hurts survivors every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Hurt Interval"				"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Hurt Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -3991,13 +3992,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -4039,7 +4040,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Bullet damage/1.0 = Bullet damage)
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Hypno Bullet Divisor"			"20.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -4051,7 +4052,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Hypno Duration"			"5.0"
 
 			// The explosive damage reflected towards survivors by the Mutant Tank is divided by this value.
@@ -4060,7 +4061,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Explosive damage/1.0 = Explosive damage)
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Hypno Explosive Divisor"		"20.0"
 
 			// The fire damage reflected towards survivors by the Mutant Tank is divided by this value.
@@ -4069,7 +4070,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Fire damage/1.0 = Fire damage)
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Hypno Fire Divisor"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -4092,7 +4093,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Melee damage/1.0 = Melee damage)
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Hypno Melee Divisor"			"200.0"
 
 			// The mode of the Mutant Tank's hypno ability.
@@ -4104,7 +4105,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Hypno Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -4156,13 +4157,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -4207,7 +4208,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Ice Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -4227,7 +4228,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Ice Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -4279,13 +4280,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -4344,7 +4345,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Idle Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -4396,13 +4397,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -4447,7 +4448,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Invert Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -4466,7 +4467,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Invert Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -4591,13 +4592,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -4653,13 +4654,13 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Jump Duration"				"5.0"
 
 			// The Mutant Tank and survivors jump this high off a surface.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Jump Height"				"300.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -4679,7 +4680,7 @@
 			// The Mutant Tank jumps every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Jump Interval"				"1.0"
 
 			// The mode of the Mutant Tank's jumping ability.
@@ -4691,7 +4692,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Jump Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -4711,7 +4712,7 @@
 			// Note: This setting only applies if the "Jump Mode" setting is set to 1.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Jump Sporadic Height"			"750.0"
 		}
 	}
@@ -4810,7 +4811,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Kamikaze Range"			"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -4862,13 +4863,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -4913,7 +4914,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Lag Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -4932,7 +4933,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Lag Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -4984,13 +4985,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -5035,7 +5036,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Leech Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -5055,13 +5056,13 @@
 			// The Mutant Tank leeches health off of survivors every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Leech Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Leech Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -5100,20 +5101,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -5169,7 +5170,7 @@
 			// The Mutant Tank heals nearby special infected every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Medic Interval"			"5.0"
 
 			// The special infected's max health.
@@ -5190,7 +5191,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Medic Range"				"500.0"
 		}
 	}
@@ -5230,13 +5231,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -5267,14 +5268,14 @@
 			// Note: This setting only applies if the "Meteor Mode" setting is set to 1.
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Meteor Damage"				"5.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Meteor Duration"			"5.0"
 
 			// The mode of the Mutant Tank's meteor shower ability.
@@ -5324,13 +5325,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -5409,20 +5410,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -5452,7 +5453,7 @@
 			// The distance between a special infected and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Necro Range"				"500.0"
 		}
 	}
@@ -5498,13 +5499,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -5549,7 +5550,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Nullify Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -5568,7 +5569,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Nullify Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -5607,13 +5608,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -5643,7 +5644,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Omni Duration"				"5.0"
 
 			// The mode of the Mutant Tank's omni ability.
@@ -5655,7 +5656,7 @@
 			// The distance between another Mutant Tank and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Omni Range"				"500.0"
 		}
 	}
@@ -5688,20 +5689,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -5731,7 +5732,7 @@
 			// The Mutant Tank starts a panic event every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Panic Interval"			"5.0"
 		}
 	}
@@ -5777,13 +5778,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -5828,13 +5829,13 @@
 			// The Mutant Tank's pimp slaps do this much damage.
 			// --
 			// Minimum: 1
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Pimp Damage"				"5"
 
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Pimp Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -5854,13 +5855,13 @@
 			// The Mutant Tank pimp slaps survivors every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Pimp Interval"				"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Pimp Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -5912,13 +5913,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -5977,7 +5978,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Puke Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -6016,13 +6017,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -6052,14 +6053,14 @@
 			// The Mutant Tank's damage boost value when on fire.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Pyro Damage Boost"			"1.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Pyro Duration"				"5.0"
 
 			// The mode of the Mutant Tank's damage and speed boosts.
@@ -6121,13 +6122,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -6172,7 +6173,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Quiet Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -6192,7 +6193,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Quiet Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -6244,13 +6245,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -6295,7 +6296,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Recoil Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -6314,7 +6315,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Recoil Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -6353,20 +6354,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -6405,7 +6406,7 @@
 			// The Mutant Tank regenerates health every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Regen Interval"			"1.0"
 
 			// The Mutant Tank stops regenerating health at this value.
@@ -6444,7 +6445,7 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Enable this ability.
@@ -6463,7 +6464,7 @@
 			// Note: This setting only applies if the "Respawn Random" setting is set to 0.
 			// --
 			// Minimum: 1
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Respawn Amount"			"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -6528,13 +6529,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -6608,7 +6609,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Restart Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -6647,13 +6648,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -6683,14 +6684,14 @@
 			// The Mutant Tank's rocks do this much damage.
 			// --
 			// Minimum: 1
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Rock Damage"				"5"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Rock Duration"				"5.0"
 
 			// The radius of the Mutant Tank's rock shower.
@@ -6747,13 +6748,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -6798,7 +6799,7 @@
 			// The Mutant Tank sends survivors into space after this many seconds passes upon triggering the ability.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Rocket Delay"				"1.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -6817,7 +6818,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Rocket Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -6869,13 +6870,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -6920,7 +6921,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Shake Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -6940,13 +6941,13 @@
 			// The Mutant Tank shakes survivors' screems every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Shake Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Shake Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -6992,20 +6993,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -7044,7 +7045,7 @@
 			// The Mutant Tank's shield reactivates after this many seconds passes upon destroying the shield.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Shield Delay"				"5.0"
 
 			// The type of the Mutant Tank's shield'.
@@ -7098,13 +7099,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -7149,7 +7150,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Shove Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -7169,13 +7170,13 @@
 			// The Mutant Tank shoves survivors every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Shove Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Shove Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -7227,13 +7228,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -7278,7 +7279,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Slow Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -7298,7 +7299,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Slow Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -7356,13 +7357,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -7421,7 +7422,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Smash Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -7473,13 +7474,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -7538,7 +7539,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Smite Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -7577,13 +7578,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -7613,14 +7614,14 @@
 			// The Mutant Tank's rocks do this much damage.
 			// --
 			// Minimum: 1
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Spam Damage"				"5"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Spam Duration"				"5.0"
 		}
 	}
@@ -7660,20 +7661,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -7703,19 +7704,19 @@
 			// The Mutant Tank's splashes do this much damage.
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Splash Damage"				"5.0"
 
 			// The Mutant Tank deals splash damage to nearby survivors every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Splash Interval"			"5.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Splash Range"				"500.0"
 		}
 	}
@@ -7748,13 +7749,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -7858,13 +7859,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -7895,7 +7896,7 @@
 			// Note: This setting only applies if the "Track Mode" setting is set to 1.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Track Speed"				"500.0"
 		}
 	}
@@ -7935,13 +7936,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -7959,25 +7960,25 @@
 			// The Mutant Tank can activate ultimate mode up to this many times.
 			// --
 			// Minimum: 1
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Ultimate Amount"			"1"
 
 			// The Mutant Tank's damage boost value during ultimate mode.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Ultimate Damage Boost"			"1.2"
 
 			// The Mutant Tank must deal this much damage to survivors to activate ultimate mode.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Ultimate Damage Required"		"200.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Ultimate Duration"			"5.0"
 
 			// The Mutant Tank can activate ultimate mode when its health is equal to or below this value.
@@ -8022,13 +8023,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -8046,7 +8047,7 @@
 			// The Mutant Tank stays alive up to this many times.
 			// --
 			// Minimum: 1
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Undead Amount"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -8157,13 +8158,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -8208,7 +8209,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Vision Duration"			"5.0"
 
 			// The Mutant Tank sets survivors' fields of view to this value.
@@ -8234,7 +8235,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Vision Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -8289,20 +8290,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -8371,7 +8372,7 @@
 			// The Mutant Tank warps to a random survivor every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Warp Interval"				"5.0"
 
 			// The mode of the Mutant Tank's warp ability.
@@ -8383,7 +8384,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Warp Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -8435,13 +8436,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -8499,7 +8500,7 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Whirl Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -8519,7 +8520,7 @@
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Whirl Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -8531,7 +8532,7 @@
 			// The Mutant Tank makes survivors whirl at this speed.
 			// --
 			// Minimum: 1.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Whirl Speed"				"500.0"
 		}
 	}
@@ -8571,13 +8572,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// Enable this ability.
@@ -8607,13 +8608,13 @@
 			// The Mutant Tank's Witch minion causes this much damage per hit.
 			// --
 			// Minimum: 1
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Witch Damage"				"5"
 
 			// The distance between a common infected and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Witch Range"				"500.0"
 		}
 	}
@@ -8719,13 +8720,13 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -8755,13 +8756,13 @@
 			// The Mutant Tank's ability effects last this long.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Yell Duration"				"5.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
 			// --
 			// Minimum: 1.0 (Closest)
-			// Maximum: 9999999999.0 (Farthest)
+			// Maximum: 999999.0 (Farthest)
 			"Yell Range"				"500.0"
 		}
 	}
@@ -8794,20 +8795,20 @@
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
 			// --
 			// Minimum: 0
-			// Maximum: 9999999999
+			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
 			// --
 			// Minimum: 0.0
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Cooldown"			"30.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Human Duration"			"5.0"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -8843,7 +8844,7 @@
 			// The Mutant Tank spawns a zombie mob every time this many seconds passes.
 			// --
 			// Minimum: 0.1
-			// Maximum: 9999999999.0
+			// Maximum: 999999.0
 			"Zombie Interval"			"5.0"
 		}
 	}

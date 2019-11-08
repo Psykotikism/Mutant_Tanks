@@ -168,8 +168,8 @@ This is not okay:
 			"Tank Chance"				"59.0" // Tank has 59% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can spawn.
 			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255 0 0 255" // The string should not contain any commas.
-			"Glow Color"				"255 255 0" // The string should not contain any commas.
+			"Skin Color"				"255 0 0 255" // The values should be separated by commas not white spaces.
+			"Glow Color"				"255 255 0" // The values should be separated by commas not white spaces.
 		}
 	}
 }
@@ -358,7 +358,7 @@ Scenario 3:
 "Enabled Game Modes" "coop,versus" // The plugin is enabled in only "coop" and "versus" mode.
 "Disabled Game Modes" "coop" // The plugin is disabled in "coop" mode.
 
-Outcome: The plugin works in every Campaign-based and Survival-based game mode except "coop" mode.
+Outcome: The plugin works only in "coop" mode.
 ```
 
 4. How come some Mutant Tanks aren't showing up?
@@ -366,7 +366,7 @@ Outcome: The plugin works in every Campaign-based and Survival-based game mode e
 It may be due to one or more of the following:
 
 - The `Tank Enabled` setting for that Mutant Tank may be set to 0 or doesn't exists at all which defaults to 0.
-- The `Spawn Enabled` setting for that Mutant Tank may be set to 0
+- The `Spawn Enabled` setting for that Mutant Tank may be set to 0.
 - You have created a new Mutant Tank and didn't raise the maximum value of `Type Range`.
 - You have misspelled one of the settings.
 - You are still using the `Tank Character` setting which is no longer used since v8.16.
@@ -1502,7 +1502,9 @@ Examples:
 
 **FatalOE71** - For suggesting ideas.
 
-**Marttt** - For convincing me the effectiveness and usefulness of convar flags, and the pull requests.
+**Marttt** - For helping me with many things and the pull requests.
+
+**Dragokas** - For reporting issues and providing fixes.
 
 **AngelAce113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, and overall support.
 

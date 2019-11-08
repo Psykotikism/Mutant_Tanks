@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 8.65 (November 10, 2019)
+
+Bug fixes:
+
+1. Fixed model error for pump shotgun in L4D1. (Thanks to Dragokas for reporting!)
+
+Changes:
+
+1. Updated the L4D1 signatures for the `CTerrorPlayer_OnStaggered` function. (Thanks to Dragokas for reporting and providing the new signatures!)
+2. Added more settings for glow option (Thanks to Marttt for the pull request!):
+- `Glow Flashing`
+- `Glow Range`
+- `Glow Type`
+3. Added sound hook to block wind sound. (Thanks to Dragokas for the code!)
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.64 (August 23, 2019)
 
 Bug fixes:
