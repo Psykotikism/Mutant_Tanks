@@ -512,6 +512,35 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			"Glow Color"				"255,255,255"
+			
+			// The Mutant Tank's glow outline visibility type.
+			// Note: Only available in Left 4 Dead 2.
+			// --
+			// 0: Glow outline visible only on sight.
+			// 1: Glow outline visible through the walls.
+			"Glow Type"					"1"
+			
+			// The Mutant Tank's glow outline will flash.
+			// Note: Only available in Left 4 Dead 2.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Glow Flashing"				"0"
+			
+			// The minimum range that a client can be away from the Mutant Tank until the glow start to outline.
+			// Note: Only available in Left 4 Dead 2.
+			// --
+			// Minimum: 0 (Unlimited)
+			// Maximum: 999999999
+			// 0: Unlimited
+			"Glow Min Range"			"0"
+			
+			// The maximum range that a client can be away from the Mutant Tank until the glow stop to outline.
+			// Note: Only available in Left 4 Dead 2.
+			// --
+			// Minimum: 0 (Unlimited)
+			// Maximum: 999999999
+			"Glow Max Range"			"0"
 		}
 		"Administration"
 		{
