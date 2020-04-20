@@ -5,7 +5,7 @@ Mutant Tanks takes [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread
 > The following license is also placed inside the source code of each plugin and include file.
 
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
+Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -1071,6 +1071,7 @@ sm_mt_item - View information about the Item ability.
 sm_mt_jump - View information about the Jump ability.
 sm_mt_kamikaze - View information about the Kamikaze ability.
 sm_mt_lag - View information about the Lag ability.
+sm_mt_laser - View information about the Laser ability.
 sm_mt_leech - View information about the Leech ability.
 sm_mt_medic - View information about the Medic ability.
 sm_mt_meteor - View information about the Meteor ability.
@@ -1444,7 +1445,7 @@ Examples:
 
 **Farbror Godis** - For the [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
 
-**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?p=1694338) plugin.
+**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) plugin.
 
 **Phil25** - For the [[TF2] Roll the Dice Revamped (RTD)](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
 
@@ -1463,6 +1464,8 @@ Examples:
 **sheo** - For the [[L4D2] Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?t=239809) plugin.
 
 **nico-op** - For the [[L4D/L4D2] Infected Health Gauge (Tank & Witch & Special)](https://forums.alliedmods.net/showthread.php?t=125747) plugin.
+
+**Ernecio** - For the [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) plugin.
 
 **Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
 
@@ -1500,13 +1503,15 @@ Examples:
 
 **foquaxticity** - For suggesting ideas.
 
+**sxslmk** - For suggesting ideas.
+
 **FatalOE71** - For suggesting ideas.
 
 **Marttt** - For helping me with many things and the pull requests.
 
 **Dragokas** - For reporting issues and providing fixes.
 
-**AngelAce113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, and overall support.
+**Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, and overall support.
 
 **Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
 

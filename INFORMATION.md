@@ -5,7 +5,7 @@
 > Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file and recompile at your own risk.)
-- Ability count: 72 (Suggest more if you want; we always needs more.)
+- Ability count: 73 (Suggest more if you want; we always needs more.)
 
 ## Sections
 - Plugin Settings
@@ -3664,7 +3664,7 @@
 			// 4: Show effect when the Mutant Tank uses its range ability.
 			"Ability Effect"			"0"
 
-			// Display a message whenever the ability activate/deactivate.
+			// Display a message whenever the ability activates/deactivates.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3803,7 +3803,7 @@
 			// Maximum: 999999.0
 			"Hit Damage Multiplier"			"1.5"
 
-			// The only part of the Mutant Tank that can be damage.
+			// The only part of the Mutant Tank that can be damaged.
 			// --
 			// 1: Headshots only.
 			// 2: Chest shots only.
@@ -4946,6 +4946,100 @@
 }
 ```
 
+##### Laser Ability
+
+```
+"Mutant Tanks"
+{
+	"Tank #1"
+	{
+		// The Mutant Tank shoots lasers.
+		// Requires "mt_laser.smx" to be installed.
+		"Laser Ability"
+		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
+			// Allow human-controlled Mutant Tanks to use this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// --
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// --
+			// Minimum: 0.0
+			// Maximum: 999999.0
+			"Human Cooldown"			"30.0"
+
+			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// Enable this ability.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"			"0"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Laser Chance"				"33.3"
+
+			// The Mutant Tank's lasers do this much damage.
+			// --
+			// Minimum: 1.0
+			// Maximum: 999999.0
+			"Laser Damage"				"5.0"
+
+			// The Mutant Tank's ability effects last this long.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Laser Duration"			"5.0"
+
+			// The Mutant Tank shoots lasers at survivors every time this many seconds passes.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Laser Interval"			"1.0"
+
+			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 999999.0 (Farthest)
+			"Laser Range"				"150.0"
+		}
+	}
+}
+```
+
 ##### Leech Ability
 
 ```
@@ -5629,7 +5723,7 @@
 			// 1: ON
 			"Ability Enabled"			"0"
 
-			// Display a message whenever the ability activate/deactivate.
+			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -5717,7 +5811,7 @@
 			// 1: ON
 			"Ability Enabled"			"0"
 
-			// Display a message whenever the ability activate/deactivate.
+			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -7772,7 +7866,7 @@
 			// 8: The Mutant Tank throws Witches.
 			"Ability Enabled"			"0"
 
-			// Display a message whenever the ability activate/deactivate.
+			// Display a message whenever the ability activates/deactivates.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8336,7 +8430,7 @@
 			// 4: Show effect when the Mutant Tank uses its range ability.
 			"Ability Effect"			"0"
 
-			// Display a message whenever the ability activate/deactivate.
+			// Display a message whenever the ability activates/deactivates.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8664,7 +8758,7 @@
 			// 1: ON
 			"Ability Effect"			"0"
 
-			// Display a message whenever the ability activate/deactivate.
+			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -8741,7 +8835,7 @@
 			// 1: ON
 			"Ability Enabled"			"0"
 
-			// Display a message whenever the ability activate/deactivate.
+			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -8823,7 +8917,7 @@
 			// 1: ON
 			"Ability Enabled"			"0"
 
-			// Display a message whenever the ability activate/deactivate.
+			// Display a message whenever the ability activates/deactivates.
 			// --
 			// 0: OFF
 			// 1: ON

@@ -1,10 +1,18 @@
 # Changelog
 
-## Version 8.65 (November 10, 2019)
+## Version 8.65 (April 20, 2020)
 
 Bug fixes:
 
 1. Fixed model error for pump shotgun in L4D1. (Thanks to Dragokas for reporting!)
+2. Fixed the `MT_GetPropColors` native not checking for player-assigned colors.
+3. Fixed Tanks having black skin and prop colors when controlled by a player without assigned colors.
+4. Fixed various override settings not working when their values are not defined in the config file.
+5. Fixed variables not resetting on players. (This resulted in many bugs.)
+6. Fixed the `Yell` ability using the wrong phrases.
+7. Fixed the `Yell` ability not working when `Human Mode` is set to `1`.
+8. Fixed the `Yell Range` setting using the `Yell Duration` setting's default value.
+9. Fixed admin settings not being assigned default values.
 
 Changes:
 
@@ -14,10 +22,17 @@ Changes:
 - `Glow Range`
 - `Glow Type`
 3. Added sound hook to block wind sound. (Thanks to Dragokas for the code!)
+4. Renamed the `MT_CHECK_KICKQUEUE` define to `MT_CHECK_INKICKQUEUE`.
+5. Added the `Laser` ability. (Thanks to Ernecio for the code.)
+6. Added `mt_pluginenabled` convar to enable/disable plugin via other plugins. (Requested by sxslmk.)
+7. The `MT_OnConfigsLoad` and `MT_OnConfigsLoaded` forwards now each have one extra parameter to manage how much of the config file is read.
 
 Files:
 
-1. Updated include file.
+1. Updated config file.
+2. Updated gamedata file.
+3. Updated include file.
+4. Updated translation file.
 
 ## Version 8.64 (August 23, 2019)
 
@@ -1184,7 +1199,7 @@ Bug fixes:
 
 Changes:
 
-1. Added the convar st_gamemodetypes to determine what game mode types to enable/disable the plugin in. (0: All, 1: coop modes only, 2: versus modes only, 4: survival modes only, 8: scavenge modes only.)
+1. Added the convar `st_gamemodetypes` to determine what game mode types to enable/disable the plugin in. (0: All, 1: coop modes only, 2: versus modes only, 4: survival modes only, 8: scavenge modes only.)
 2. Removed the `@witches` target filter for not working properly.
 3. Optimized code a bit more.
 
