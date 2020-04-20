@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -39,7 +39,7 @@
 #define MT_CHECK_CONNECTED (1 << 1) // Check IsClientConnected(client)
 #define MT_CHECK_INGAME (1 << 2) // Check IsClientInGame(client)
 #define MT_CHECK_ALIVE (1 << 3) // Check IsPlayerAlive(client)
-#define MT_CHECK_KICKQUEUE (1 << 4) // Check IsClientInKickQueue(client)
+#define MT_CHECK_INKICKQUEUE (1 << 4) // Check IsClientInKickQueue(client)
 #define MT_CHECK_FAKECLIENT (1 << 5) // Check IsFakeClient(client)
 
 // Attack flags
@@ -94,8 +94,10 @@ forward void MT_OnChangeType(int tank, bool revert);
 /**
  * Called when the config file is about to load.
  * Use this forward to set default values for settings for the plugin.
+ *
+ * @param mode			1 = Load general settings, 2 = 1 + load type settings, 3 = Load admin settings
  **/
-forward void MT_OnConfigsLoad();
+forward void MT_OnConfigsLoad(int mode);
 
 /**
  * Called when the config file is loaded.
@@ -106,8 +108,9 @@ forward void MT_OnConfigsLoad();
  * @param value			The value the config parser is currently on.
  * @param type			The Mutant Tank type the config parser is currently on. (Used for Mutant Tank-specific settings.)
  * @param admin			Client index of an admin. (Used for admin-specific settings.)
+ * @param mode			1 = Load general settings, 2 = 1 + load type settings, 3 = Load admin settings
  **/
-forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin);
+forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode);
 
 /**
  * Called when a player uses the "sm_st_info" command.
@@ -131,9 +134,9 @@ forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
  * Called when the core plugin is hooking/unhooking events.
  * Use this forward to hook/unhook events.
  *
- * @param mode			True if event was hooked, false otherwise.
+ * @param hooked		True if event was hooked, false otherwise.
  **/
-forward void MT_OnHookEvent(bool mode);
+forward void MT_OnHookEvent(bool hooked);
 
 /**
  * Called when a player selects an item from the "Mutant Tanks Information" menu.
@@ -351,12 +354,12 @@ native bool MT_IsGlowEnabled(int tank);
  * @param tank			Client index of the Tank.
  * @param flags			Checks to run.
  *				MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
- *				MT_CHECK_ALIVE = life state, MT_CHECK_KICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
- *				Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE
+ *				MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
+ *				Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE
  * @return			True if Tank is allowed to be a Mutant Tank, false otherwise.
  * @error			Invalid client index.
  **/
-native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE);
+native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE);
 
 /**
  * Returns if a certain Mutant Tank type is enabled.
@@ -681,6 +684,22 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 	}
 }
 
+stock void vAttachParticle2(float pos[3], float angle[3], const char[] particlename, float duration = 0.0)
+{
+	int iParticle = CreateEntityByName("info_particle_system");
+	if (bIsValidEntity(iParticle))
+	{
+		DispatchKeyValue(iParticle, "effect_name", particlename); 
+		TeleportEntity(iParticle, pos, angle, NULL_VECTOR);
+		DispatchSpawn(iParticle);
+		ActivateEntity(iParticle);
+		AcceptEntityInput(iParticle, "Start");
+
+		iParticle = EntIndexToEntRef(iParticle);
+		vDeleteEntity(iParticle, duration);
+	}
+}
+
 stock void vCheatCommand(int player, const char[] command, const char[] arguments = "")
 {
 	int iCmdFlags = GetCommandFlags(command);
@@ -977,27 +996,27 @@ stock bool bHasIdlePlayer(int survivor)
 	return false;
 }
 
-stock bool bIsBoomer(int boomer, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE)
+stock bool bIsBoomer(int boomer, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
 	return bIsInfected(boomer, flags) && GetEntProp(boomer, Prop_Send, "m_zombieClass") == 2;
 }
 
-stock bool bIsBotIdle(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE)
+stock bool bIsBotIdle(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
 {
 	return bIsSurvivor(bot, flags) && !bIsValidClient(bot, MT_CHECK_FAKECLIENT) && bHasIdlePlayer(bot);
 }
 
-stock bool bIsBotIdleSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE)
+stock bool bIsBotIdleSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
 {
 	return bIsSurvivor(bot, flags) && !bIsValidClient(bot, MT_CHECK_FAKECLIENT) && !bHasIdlePlayer(bot);
 }
 
-stock bool bIsBotSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE)
+stock bool bIsBotSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
 {
 	return bIsSurvivor(bot, flags) && !bIsValidClient(bot, MT_CHECK_FAKECLIENT);
 }
 
-stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE)
+stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
 	return bIsInfected(charger, flags) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
@@ -1029,27 +1048,27 @@ stock bool bIsGunWeapon(int survivor)
 	return false;
 }
 
-stock bool bIsHumanSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT)
+stock bool bIsHumanSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT)
 {
 	return bIsSurvivor(survivor, flags) && !bHasIdlePlayer(survivor) && !bIsPlayerIdle(survivor);
 }
 
-stock bool bIsHunter(int hunter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE)
+stock bool bIsHunter(int hunter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
 	return bIsInfected(hunter, flags) && GetEntProp(hunter, Prop_Send, "m_zombieClass") == 3;
 }
 
-stock bool bIsIdlePlayer(int bot, int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT)
+stock bool bIsIdlePlayer(int bot, int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT)
 {
 	return bIsValidClient(survivor, flags) && GetClientTeam(bot) == 2;
 }
 
-stock bool bIsInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE)
+stock bool bIsInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
 	return bIsValidClient(infected, flags) && GetClientTeam(infected) == 3;
 }
 
-stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE)
+stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
 	return bIsInfected(jockey, flags) && bIsValidGame() && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
 }
@@ -1159,32 +1178,32 @@ stock bool bIsPluginEnabled(ConVar gamemode, int mode, char[] enabled, char[] di
 	return true;
 }
 
-stock bool bIsSmoker(int smoker, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE)
+stock bool bIsSmoker(int smoker, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
 	return bIsInfected(smoker, flags) && GetEntProp(smoker, Prop_Send, "m_zombieClass") == 1;
 }
 
-stock bool bIsSpecialInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE)
+stock bool bIsSpecialInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
 	return bIsSmoker(infected, flags) || bIsBoomer(infected, flags) || bIsHunter(infected, flags) || bIsSpitter(infected, flags) || bIsJockey(infected, flags) || bIsCharger(infected, flags);
 }
 
-stock bool bIsSpitter(int spitter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE)
+stock bool bIsSpitter(int spitter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
 	return bIsInfected(spitter, flags) && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
 }
 
-stock bool bIsSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE)
+stock bool bIsSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
 {
 	return bIsValidClient(survivor, flags) && GetClientTeam(survivor) == 2;
 }
 
-stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE)
+stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
 {
 	return bIsInfected(tank, flags) && (bIsValidGame() ? GetEntProp(tank, Prop_Send, "m_zombieClass") == 8 : GetEntProp(tank, Prop_Send, "m_zombieClass") == 5);
 }
 
-stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT)
+stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT)
 {
 	if ((bIsValidGame() && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0)
 	{
@@ -1202,7 +1221,7 @@ stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGA
 	return false;
 }
 
-stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE)
+stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
 	if ((flags & MT_CHECK_INDEX) && (player <= 0 || player > MaxClients))
 	{
@@ -1224,7 +1243,7 @@ stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME
 		return false;
 	}
 
-	if ((flags & MT_CHECK_KICKQUEUE) && IsClientInKickQueue(player))
+	if ((flags & MT_CHECK_INKICKQUEUE) && IsClientInKickQueue(player))
 	{
 		return false;
 	}
@@ -1273,7 +1292,7 @@ public bool bBoomerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsBoomer(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE))
+		if (bIsBoomer(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1286,7 +1305,7 @@ public bool bChargerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsCharger(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE))
+		if (bIsCharger(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1299,7 +1318,7 @@ public bool bHunterFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsHunter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE))
+		if (bIsHunter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1312,7 +1331,7 @@ public bool bInfectedFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE))
+		if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1325,7 +1344,7 @@ public bool bJockeyFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsJockey(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE))
+		if (bIsJockey(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1338,7 +1357,7 @@ public bool bSmokerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSmoker(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE))
+		if (bIsSmoker(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1351,7 +1370,7 @@ public bool bSpecialFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSpecialInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE))
+		if (bIsSpecialInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1364,7 +1383,7 @@ public bool bSpitterFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsSpitter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE))
+		if (bIsSpitter(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1377,7 +1396,7 @@ public bool bTankFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE))
+		if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			PushArrayCell(clients, iPlayer);
 		}
@@ -1398,7 +1417,7 @@ public bool bTraceRayDontHitSelf(int entity, int mask, any data)
 
 public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
 {
-	if (entity == data || bIsValidClient(entity, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+	if (entity == data || bIsValidClient(entity, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 	{
 		return false;
 	}
@@ -1532,7 +1551,7 @@ stock int iGetBotSurvivor()
 {
 	for (int iBot = MaxClients; iBot > 0; iBot--)
 	{
-		if (bIsBotSurvivor(iBot, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE))
+		if (bIsBotSurvivor(iBot, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			return iBot;
 		}
@@ -1546,7 +1565,7 @@ stock int iGetHumanCount()
 	int iHumanCount;
 	for (int iHuman = 1; iHuman <= MaxClients; iHuman++)
 	{
-		if (bIsHumanSurvivor(iHuman, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
+		if (bIsHumanSurvivor(iHuman, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 		{
 			iHumanCount++;
 		}
@@ -1592,7 +1611,7 @@ stock int iGetPlayerCount()
 	int iPlayerCount;
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 		{
 			iPlayerCount++;
 		}
@@ -1611,7 +1630,7 @@ stock int iGetRandomSurvivor(int tank)
 			continue;
 		}
 
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE))
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			iSurvivors[iSurvivorCount++] = iSurvivor;
 		}

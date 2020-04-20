@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -103,7 +103,7 @@ public Action cmdZombieInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", MT_TAG);
 
@@ -153,7 +153,7 @@ public int iZombieMenuHandler(Menu menu, MenuAction action, int param1, int para
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 			{
 				vZombieMenu(param1, menu.Selection);
 			}
@@ -230,35 +230,40 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
-public void MT_OnConfigsLoad()
+public void MT_OnConfigsLoad(int mode)
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (mode == 3)
 	{
-		if (bIsValidClient(iPlayer))
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			g_iAccessFlags2[iPlayer] = 0;
+			if (bIsValidClient(iPlayer))
+			{
+				g_iAccessFlags2[iPlayer] = 0;
+			}
 		}
 	}
-
-	for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+	else if (mode == 1)
 	{
-		g_iAccessFlags[iIndex] = 0;
-		g_iHumanAbility[iIndex] = 0;
-		g_iHumanAmmo[iIndex] = 5;
-		g_flHumanCooldown[iIndex] = 30.0;
-		g_flHumanDuration[iIndex] = 5.0;
-		g_iHumanMode[iIndex] = 1;
-		g_iZombieAbility[iIndex] = 0;
-		g_iZombieMessage[iIndex] = 0;
-		g_iZombieAmount[iIndex] = 10;
-		g_flZombieChance[iIndex] = 33.3;
-		g_flZombieInterval[iIndex] = 5.0;
+		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+		{
+			g_iAccessFlags[iIndex] = 0;
+			g_iHumanAbility[iIndex] = 0;
+			g_iHumanAmmo[iIndex] = 5;
+			g_flHumanCooldown[iIndex] = 30.0;
+			g_flHumanDuration[iIndex] = 5.0;
+			g_iHumanMode[iIndex] = 1;
+			g_iZombieAbility[iIndex] = 0;
+			g_iZombieMessage[iIndex] = 0;
+			g_iZombieAmount[iIndex] = 10;
+			g_flZombieChance[iIndex] = 33.3;
+			g_flZombieInterval[iIndex] = 5.0;
+		}
 	}
 }
 
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
 {
-	if (bIsValidClient(admin) && value[0] != '\0')
+	if (mode == 3 && bIsValidClient(admin) && value[0] != '\0')
 	{
 		if (StrEqual(subsection, "zombieability", false) || StrEqual(subsection, "zombie ability", false) || StrEqual(subsection, "zombie_ability", false) || StrEqual(subsection, "zombie", false))
 		{
@@ -269,7 +274,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		}
 	}
 
-	if (type > 0)
+	if (mode < 3 && type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iHumanAmmo[type] = iGetValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
@@ -297,7 +302,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveZombie(iTank);
 
@@ -329,7 +334,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
 		{
@@ -384,7 +389,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnButtonReleased(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
@@ -415,7 +420,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveZombie(iPlayer);
 		}
@@ -601,7 +606,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bZombie2[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bZombie2[iTank])
 	{
 		g_bZombie2[iTank] = false;
 

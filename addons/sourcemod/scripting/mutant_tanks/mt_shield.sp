@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -94,7 +94,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -134,7 +134,7 @@ public Action cmdShieldInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", MT_TAG);
 
@@ -184,7 +184,7 @@ public int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int para
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 			{
 				vShieldMenu(param1, menu.Selection);
 			}
@@ -263,7 +263,7 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage > 0.0)
 	{
 		if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
@@ -281,52 +281,37 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 						if (damagetype & DMG_BULLET)
 						{
 							vShieldAbility(victim, false);
+						}
 
-							return Plugin_Handled;
-						}
-						else
-						{
-							return Plugin_Handled;
-						}
+						return Plugin_Handled;
+
 					}
 					case 1:
 					{
 						if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
 						{
 							vShieldAbility(victim, false);
+						}
 
-							return Plugin_Handled;
-						}
-						else
-						{
-							return Plugin_Handled;
-						}
+						return Plugin_Handled;
 					}
 					case 2:
 					{
 						if (damagetype & DMG_BURN)
 						{
 							vShieldAbility(victim, false);
+						}
 
-							return Plugin_Handled;
-						}
-						else
-						{
-							return Plugin_Handled;
-						}
+						return Plugin_Handled;
 					}
 					case 3:
 					{
 						if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
 						{
 							vShieldAbility(victim, false);
+						}
 
-							return Plugin_Handled;
-						}
-						else
-						{
-							return Plugin_Handled;
-						}
+						return Plugin_Handled;
 					}
 				}
 			}
@@ -336,42 +321,47 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public void MT_OnConfigsLoad()
+public void MT_OnConfigsLoad(int mode)
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (mode == 3)
 	{
-		if (bIsValidClient(iPlayer))
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			g_iAccessFlags2[iPlayer] = 0;
-			g_iImmunityFlags2[iPlayer] = 0;
+			if (bIsValidClient(iPlayer))
+			{
+				g_iAccessFlags2[iPlayer] = 0;
+				g_iImmunityFlags2[iPlayer] = 0;
+			}
 		}
 	}
-
-	for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+	else if (mode == 1)
 	{
-		g_iAccessFlags[iIndex] = 0;
-		g_iImmunityFlags[iIndex] = 0;
-		g_iHumanAbility[iIndex] = 0;
-		g_iHumanAmmo[iIndex] = 5;
-		g_flHumanCooldown[iIndex] = 30.0;
-		g_flHumanDuration[iIndex] = 5.0;
-		g_iHumanMode[iIndex] = 1;
-		g_iShieldAbility[iIndex] = 0;
-		g_iShieldMessage[iIndex] = 0;
-		g_flShieldChance[iIndex] = 33.3;
-		g_flShieldDelay[iIndex] = 5.0;
-		g_iShieldType[iIndex] = 1;
-
-		for (int iPos = 0; iPos < 4; iPos++)
+		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iShieldColor[iIndex][iPos] = 255;
+			g_iAccessFlags[iIndex] = 0;
+			g_iImmunityFlags[iIndex] = 0;
+			g_iHumanAbility[iIndex] = 0;
+			g_iHumanAmmo[iIndex] = 5;
+			g_flHumanCooldown[iIndex] = 30.0;
+			g_flHumanDuration[iIndex] = 5.0;
+			g_iHumanMode[iIndex] = 1;
+			g_iShieldAbility[iIndex] = 0;
+			g_iShieldMessage[iIndex] = 0;
+			g_flShieldChance[iIndex] = 33.3;
+			g_flShieldDelay[iIndex] = 5.0;
+			g_iShieldType[iIndex] = 1;
+
+			for (int iPos = 0; iPos < 4; iPos++)
+			{
+				g_iShieldColor[iIndex][iPos] = 255;
+			}
 		}
 	}
 }
 
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
 {
-	if (bIsValidClient(admin) && value[0] != '\0')
+	if (mode == 3 && bIsValidClient(admin) && value[0] != '\0')
 	{
 		if (StrEqual(subsection, "shieldability", false) || StrEqual(subsection, "shield ability", false) || StrEqual(subsection, "shield_ability", false) || StrEqual(subsection, "shield", false))
 		{
@@ -386,7 +376,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		}
 	}
 
-	if (type > 0)
+	if (mode < 3 && type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iHumanAmmo[type] = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
@@ -435,7 +425,7 @@ public void MT_OnPluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE) && g_bShield[iTank])
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_bShield[iTank])
 		{
 			vRemoveShield(iTank);
 		}
@@ -469,7 +459,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveShield(iTank);
 
@@ -493,7 +483,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
 		{
@@ -552,7 +542,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnButtonReleased(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
@@ -573,7 +563,7 @@ public void MT_OnButtonReleased(int tank, int button)
 
 public void MT_OnChangeType(int tank, bool revert)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 	{
 		vRemoveShield(tank);
 	}
@@ -613,7 +603,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vReset2(iPlayer);
 		}
@@ -734,7 +724,7 @@ static void vShieldAbility(int tank, bool shield)
 
 			g_bShield[tank] = false;
 
-			switch (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
+			switch (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 			{
 				case true: vReset3(tank);
 				case false:
@@ -968,7 +958,7 @@ public Action tTimerStopShield(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bShield2[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bShield2[iTank])
 	{
 		g_bShield2[iTank] = false;
 

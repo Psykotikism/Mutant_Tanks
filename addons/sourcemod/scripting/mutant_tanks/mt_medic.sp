@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -102,7 +102,7 @@ public Action cmdMedicInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", MT_TAG);
 
@@ -156,7 +156,7 @@ public int iMedicMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 			{
 				vMedicMenu(param1, menu.Selection);
 			}
@@ -233,47 +233,52 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
-public void MT_OnConfigsLoad()
+public void MT_OnConfigsLoad(int mode)
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (mode == 3)
 	{
-		if (bIsValidClient(iPlayer))
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			g_iAccessFlags2[iPlayer] = 0;
+			if (bIsValidClient(iPlayer))
+			{
+				g_iAccessFlags2[iPlayer] = 0;
+			}
 		}
 	}
-
-	for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+	else if (mode == 1)
 	{
-		g_iAccessFlags[iIndex] = 0;
-		g_iHumanAbility[iIndex] = 0;
-		g_iHumanAmmo[iIndex] = 5;
-		g_flHumanCooldown[iIndex] = 30.0;
-		g_flHumanDuration[iIndex] = 5.0;
-		g_iHumanMode[iIndex] = 1;
-		g_iMedicAbility[iIndex] = 0;
-		g_iMedicMessage[iIndex] = 0;
-		g_flMedicChance[iIndex] = 33.3;
-		g_flMedicInterval[iIndex] = 5.0;
-		g_iMedicMaxHealth[iIndex][0] = 250;
-		g_iMedicMaxHealth[iIndex][1] = 50;
-		g_iMedicMaxHealth[iIndex][2] = 250;
-		g_iMedicMaxHealth[iIndex][3] = 100;
-		g_iMedicMaxHealth[iIndex][4] = 325;
-		g_iMedicMaxHealth[iIndex][5] = 600;
-		g_iMedicMaxHealth[iIndex][6] = 8000;
-		g_flMedicRange[iIndex] = 500.0;
-
-		for (int iPos = 0; iPos < 6; iPos++)
+		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iMedicHealth[iIndex][iPos] = 25;
+			g_iAccessFlags[iIndex] = 0;
+			g_iHumanAbility[iIndex] = 0;
+			g_iHumanAmmo[iIndex] = 5;
+			g_flHumanCooldown[iIndex] = 30.0;
+			g_flHumanDuration[iIndex] = 5.0;
+			g_iHumanMode[iIndex] = 1;
+			g_iMedicAbility[iIndex] = 0;
+			g_iMedicMessage[iIndex] = 0;
+			g_flMedicChance[iIndex] = 33.3;
+			g_flMedicInterval[iIndex] = 5.0;
+			g_iMedicMaxHealth[iIndex][0] = 250;
+			g_iMedicMaxHealth[iIndex][1] = 50;
+			g_iMedicMaxHealth[iIndex][2] = 250;
+			g_iMedicMaxHealth[iIndex][3] = 100;
+			g_iMedicMaxHealth[iIndex][4] = 325;
+			g_iMedicMaxHealth[iIndex][5] = 600;
+			g_iMedicMaxHealth[iIndex][6] = 8000;
+			g_flMedicRange[iIndex] = 500.0;
+
+			for (int iPos = 0; iPos < 6; iPos++)
+			{
+				g_iMedicHealth[iIndex][iPos] = 25;
+			}
 		}
 	}
 }
 
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
 {
-	if (bIsValidClient(admin) && value[0] != '\0')
+	if (mode == 3 && bIsValidClient(admin) && value[0] != '\0')
 	{
 		if (StrEqual(subsection, "medicability", false) || StrEqual(subsection, "medic ability", false) || StrEqual(subsection, "medic_ability", false) || StrEqual(subsection, "medic", false))
 		{
@@ -284,7 +289,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		}
 	}
 
-	if (type > 0)
+	if (mode < 3 && type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iHumanAmmo[type] = iGetValue(subsection, "medicability", "medic ability", "medic_ability", "medic", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
@@ -332,7 +337,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= g_flMedicChance[MT_GetTankType(iTank)] && g_bMedic3[iTank])
 			{
@@ -364,7 +369,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
 		{
@@ -436,7 +441,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnButtonReleased(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
@@ -496,7 +501,7 @@ static void vMedicAbility(int tank, bool main)
 
 				for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 				{
-					if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE)) && tank != iInfected)
+					if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)) && tank != iInfected)
 					{
 						float flInfectedPos[3];
 						GetClientAbsOrigin(iInfected, flInfectedPos);
@@ -568,7 +573,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveMedic(iPlayer);
 		}
@@ -709,7 +714,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
-		if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE)) && iTank != iInfected)
+		if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)) && iTank != iInfected)
 		{
 			float flInfectedPos[3];
 			GetClientAbsOrigin(iInfected, flInfectedPos);
@@ -734,7 +739,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bMedic2[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bMedic2[iTank])
 	{
 		g_bMedic2[iTank] = false;
 

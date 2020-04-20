@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -130,7 +130,7 @@ public Action cmdYellInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
 		ReplyToCommand(client, "%s This command is to be used only in-game.", MT_TAG);
 
@@ -180,7 +180,7 @@ public int iYellMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 			{
 				vYellMenu(param1, menu.Selection);
 			}
@@ -263,7 +263,7 @@ public Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PL
 	{
 		for (int iSurvivor = 0; iSurvivor < numClients; iSurvivor++)
 		{
-			if (bIsHumanSurvivor(clients[iSurvivor], MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE) && g_bYell3[clients[iSurvivor]])
+			if (bIsHumanSurvivor(clients[iSurvivor], MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_bYell3[clients[iSurvivor]])
 			{
 				for (int iPlayers = iSurvivor; iPlayers < numClients - 1; iPlayers++)
 				{
@@ -281,36 +281,41 @@ public Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PL
 	return Plugin_Continue;
 }
 
-public void MT_OnConfigsLoad()
+public void MT_OnConfigsLoad(int mode)
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (mode == 3)
 	{
-		if (bIsValidClient(iPlayer))
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			g_iAccessFlags2[iPlayer] = 0;
-			g_iImmunityFlags2[iPlayer] = 0;
+			if (bIsValidClient(iPlayer))
+			{
+				g_iAccessFlags2[iPlayer] = 0;
+				g_iImmunityFlags2[iPlayer] = 0;
+			}
 		}
 	}
-
-	for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+	else if (mode == 1)
 	{
-		g_iAccessFlags[iIndex] = 0;
-		g_iImmunityFlags[iIndex] = 0;
-		g_iHumanAbility[iIndex] = 0;
-		g_iHumanAmmo[iIndex] = 5;
-		g_flHumanCooldown[iIndex] = 30.0;
-		g_iHumanMode[iIndex] = 1;
-		g_iYellAbility[iIndex] = 0;
-		g_iYellMessage[iIndex] = 0;
-		g_flYellChance[iIndex] = 33.3;
-		g_flYellDuration[iIndex] = 5.0;
-		g_flYellRange[iIndex] = 500.0;
+		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+		{
+			g_iAccessFlags[iIndex] = 0;
+			g_iImmunityFlags[iIndex] = 0;
+			g_iHumanAbility[iIndex] = 0;
+			g_iHumanAmmo[iIndex] = 5;
+			g_flHumanCooldown[iIndex] = 30.0;
+			g_iHumanMode[iIndex] = 1;
+			g_iYellAbility[iIndex] = 0;
+			g_iYellMessage[iIndex] = 0;
+			g_flYellChance[iIndex] = 33.3;
+			g_flYellDuration[iIndex] = 5.0;
+			g_flYellRange[iIndex] = 500.0;
+		}
 	}
 }
 
-public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin)
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
 {
-	if (bIsValidClient(admin) && value[0] != '\0')
+	if (mode == 3 && bIsValidClient(admin) && value[0] != '\0')
 	{
 		if (StrEqual(subsection, "yellability", false) || StrEqual(subsection, "yell ability", false) || StrEqual(subsection, "yell_ability", false) || StrEqual(subsection, "yell", false))
 		{
@@ -325,7 +330,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		}
 	}
 
-	if (type > 0)
+	if (mode < 3 && type > 0)
 	{
 		g_iHumanAbility[type] = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
 		g_iHumanAmmo[type] = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
@@ -335,7 +340,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_iYellMessage[type] = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iYellMessage[type], value, 0, 3);
 		g_flYellChance[type] = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_flYellChance[type], value, 0.0, 100.0);
 		g_flYellDuration[type] = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellDuration", "Yell Duration", "Yell_Duration", "duration", g_flYellDuration[type], value, 0.1, 999999.0);
-		g_flYellRange[type] = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellRange", "Yell Range", "Yell_Range", "range", g_flYellDuration[type], value, 0.1, 999999.0);
+		g_flYellRange[type] = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellRange", "Yell Range", "Yell_Range", "range", g_flYellRange[type], value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "yellability", false) || StrEqual(subsection, "yell ability", false) || StrEqual(subsection, "yell_ability", false) || StrEqual(subsection, "yell", false))
 		{
@@ -356,7 +361,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveYell(iTank);
 		}
@@ -378,7 +383,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
 		{
@@ -415,6 +420,8 @@ public void MT_OnButtonPressed(int tank, int button)
 								g_bYell[tank] = true;
 								g_iYellCount[tank]++;
 
+								vYell(tank);
+
 								MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_iYellCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
 							}
 						}
@@ -431,7 +438,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnButtonReleased(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
@@ -467,7 +474,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE))
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveYell(iPlayer);
 
@@ -510,12 +517,27 @@ static void vReset4(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE) && g_bYell3[iSurvivor] && g_iYellOwner[iSurvivor] == tank)
+		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_bYell3[iSurvivor] && g_iYellOwner[iSurvivor] == tank)
 		{
 			g_bYell3[iSurvivor] = false;
 			g_iYellOwner[iSurvivor] = 0;
 		}
 	}
+}
+
+static void vYell(int tank)
+{
+	EmitSoundToAll(SOUND_YELL, tank);
+	EmitSoundToAll(SOUND_YELL2, tank);
+	EmitSoundToAll(SOUND_YELL3, tank);
+	EmitSoundToAll(SOUND_YELL4, tank);
+	EmitSoundToAll(SOUND_YELL5, tank);
+	EmitSoundToAll(SOUND_YELL6, tank);
+	EmitSoundToAll(SOUND_YELL7, tank);
+	EmitSoundToAll(SOUND_YELL8, tank);
+	EmitSoundToAll(SOUND_YELL9, tank);
+	EmitSoundToAll(SOUND_YELL10, tank);
+	EmitSoundToAll(SOUND_YELL11, tank);
 }
 
 static void vYellAbility(int tank)
@@ -535,7 +557,7 @@ static void vYellAbility(int tank)
 			int iSurvivorCount;
 			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_KICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank) && !g_bYell3[iSurvivor])
+				if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank) && !g_bYell3[iSurvivor])
 				{
 					float flSurvivorPos[3];
 					GetClientAbsOrigin(iSurvivor, flSurvivorPos);
@@ -562,17 +584,7 @@ static void vYellAbility(int tank)
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_iYellCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
 				}
 
-				EmitSoundToAll(SOUND_YELL, tank);
-				EmitSoundToAll(SOUND_YELL2, tank);
-				EmitSoundToAll(SOUND_YELL3, tank);
-				EmitSoundToAll(SOUND_YELL4, tank);
-				EmitSoundToAll(SOUND_YELL5, tank);
-				EmitSoundToAll(SOUND_YELL6, tank);
-				EmitSoundToAll(SOUND_YELL7, tank);
-				EmitSoundToAll(SOUND_YELL8, tank);
-				EmitSoundToAll(SOUND_YELL9, tank);
-				EmitSoundToAll(SOUND_YELL10, tank);
-				EmitSoundToAll(SOUND_YELL11, tank);
+				vYell(tank);
 
 				CreateTimer(g_flYellDuration[MT_GetTankType(tank)], tTimerStopYell, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 
@@ -740,7 +752,7 @@ public Action tTimerStopYell(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bYell2[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bYell2[iTank])
 	{
 		g_bYell2[iTank] = false;
 
