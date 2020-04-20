@@ -5,7 +5,7 @@ Mutant Tanks takes [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread
 > The following license is also placed inside the source code of each plugin and include file.
 
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2019  Alfred "Crasher_3637/Psyk0tik" Llagas
+Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -168,8 +168,8 @@ This is not okay:
 			"Tank Chance"				"59.0" // Tank has 59% chance of spawning.
 			"Spawn Enabled"				"1" // Tank can spawn.
 			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255 0 0 255" // The string should not contain any commas.
-			"Glow Color"				"255 255 0" // The string should not contain any commas.
+			"Skin Color"				"255 0 0 255" // The values should be separated by commas not white spaces.
+			"Glow Color"				"255 255 0" // The values should be separated by commas not white spaces.
 		}
 	}
 }
@@ -358,7 +358,7 @@ Scenario 3:
 "Enabled Game Modes" "coop,versus" // The plugin is enabled in only "coop" and "versus" mode.
 "Disabled Game Modes" "coop" // The plugin is disabled in "coop" mode.
 
-Outcome: The plugin works in every Campaign-based and Survival-based game mode except "coop" mode.
+Outcome: The plugin works only in "coop" mode.
 ```
 
 4. How come some Mutant Tanks aren't showing up?
@@ -366,7 +366,7 @@ Outcome: The plugin works in every Campaign-based and Survival-based game mode e
 It may be due to one or more of the following:
 
 - The `Tank Enabled` setting for that Mutant Tank may be set to 0 or doesn't exists at all which defaults to 0.
-- The `Spawn Enabled` setting for that Mutant Tank may be set to 0
+- The `Spawn Enabled` setting for that Mutant Tank may be set to 0.
 - You have created a new Mutant Tank and didn't raise the maximum value of `Type Range`.
 - You have misspelled one of the settings.
 - You are still using the `Tank Character` setting which is no longer used since v8.16.
@@ -1071,6 +1071,7 @@ sm_mt_item - View information about the Item ability.
 sm_mt_jump - View information about the Jump ability.
 sm_mt_kamikaze - View information about the Kamikaze ability.
 sm_mt_lag - View information about the Lag ability.
+sm_mt_laser - View information about the Laser ability.
 sm_mt_leech - View information about the Leech ability.
 sm_mt_medic - View information about the Medic ability.
 sm_mt_meteor - View information about the Meteor ability.
@@ -1444,7 +1445,7 @@ Examples:
 
 **Farbror Godis** - For the [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
 
-**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?p=1694338) plugin.
+**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) plugin.
 
 **Phil25** - For the [[TF2] Roll the Dice Revamped (RTD)](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
 
@@ -1463,6 +1464,8 @@ Examples:
 **sheo** - For the [[L4D2] Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?t=239809) plugin.
 
 **nico-op** - For the [[L4D/L4D2] Infected Health Gauge (Tank & Witch & Special)](https://forums.alliedmods.net/showthread.php?t=125747) plugin.
+
+**Ernecio** - For the [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) plugin.
 
 **Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
 
@@ -1500,11 +1503,15 @@ Examples:
 
 **foquaxticity** - For suggesting ideas.
 
+**sxslmk** - For suggesting ideas.
+
 **FatalOE71** - For suggesting ideas.
 
-**Marttt** - For convincing me the effectiveness and usefulness of convar flags, and the pull requests.
+**Marttt** - For helping me with many things and the pull requests.
 
-**AngelAce113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, and overall support.
+**Dragokas** - For reporting issues and providing fixes.
+
+**Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, and overall support.
 
 **Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
 

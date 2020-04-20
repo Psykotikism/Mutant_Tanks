@@ -22,9 +22,9 @@
 
 public Plugin myinfo =
 {
-	name = "[MT] Splash Ability",
+	name = "[MT] Laser Ability",
 	author = MT_AUTHOR,
-	description = "The Mutant Tank constantly deals splash damage to nearby survivors.",
+	description = "The Mutant Tank shoots lasers at survivors.",
 	version = MT_VERSION,
 	url = MT_URL
 };
@@ -33,7 +33,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "\"[MT] Splash Ability\" only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[MT] Laser Ability\" only supports Left 4 Dead 1 & 2.");
 
 		return APLRes_SilentFailure;
 	}
@@ -41,13 +41,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-#define MT_MENU_SPLASH "Splash Ability"
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 
-bool g_bCloneInstalled, g_bSplash[MAXPLAYERS + 1], g_bSplash2[MAXPLAYERS + 1];
+#define SOUND_ELECTRICITY "ambient/energy/zap1.wav"
 
-float g_flHumanCooldown[MT_MAXTYPES + 1], g_flHumanDuration[MT_MAXTYPES + 1], g_flSplashChance[MT_MAXTYPES + 1], g_flSplashDamage[MT_MAXTYPES + 1], g_flSplashInterval[MT_MAXTYPES + 1], g_flSplashRange[MT_MAXTYPES + 1];
+#define MT_MENU_LASER "Laser Ability"
 
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iHumanMode[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iSplashAbility[MT_MAXTYPES + 1], g_iSplashCount[MAXPLAYERS + 1], g_iSplashMessage[MT_MAXTYPES + 1];
+bool g_bCloneInstalled, g_bLaser[MAXPLAYERS + 1], g_bLaser2[MAXPLAYERS + 1];
+
+float g_flHumanCooldown[MT_MAXTYPES + 1], g_flLaserChance[MT_MAXTYPES + 1], g_flLaserDamage[MT_MAXTYPES + 1], g_flLaserDuration[MT_MAXTYPES + 1], g_flLaserInterval[MT_MAXTYPES + 1], g_flLaserRange[MT_MAXTYPES + 1];
+
+int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iHumanMode[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iLaserAbility[MT_MAXTYPES + 1], g_iLaserCount[MAXPLAYERS + 1], g_iLaserMessage[MT_MAXTYPES + 1], g_iLaserSprite = -1;
 
 public void OnAllPluginsLoaded()
 {
@@ -75,17 +79,22 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
-	RegConsoleCmd("sm_mt_splash", cmdSplashInfo, "View information about the Splash ability.");
+	RegConsoleCmd("sm_mt_laser", cmdLaserInfo, "View information about the Laser ability.");
 }
 
 public void OnMapStart()
 {
-	vReset();
-}
+	switch (bIsValidGame())
+	{
+		case true: g_iLaserSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
+		case false: g_iLaserSprite = PrecacheModel("materials/sprites/laser.vmt");
+	}
 
-public void OnClientPutInServer(int client)
-{
-	vRemoveSplash(client);
+	vPrecacheParticle(PARTICLE_ELECTRICITY);
+
+	PrecacheSound(SOUND_ELECTRICITY, true);
+
+	vReset();
 }
 
 public void OnMapEnd()
@@ -93,7 +102,7 @@ public void OnMapEnd()
 	vReset();
 }
 
-public Action cmdSplashInfo(int client, int args)
+public Action cmdLaserInfo(int client, int args)
 {
 	if (!MT_IsCorePluginEnabled())
 	{
@@ -112,16 +121,16 @@ public Action cmdSplashInfo(int client, int args)
 	switch (IsVoteInProgress())
 	{
 		case true: ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-		case false: vSplashMenu(client, 0);
+		case false: vLaserMenu(client, 0);
 	}
 
 	return Plugin_Handled;
 }
 
-static void vSplashMenu(int client, int item)
+static void vLaserMenu(int client, int item)
 {
-	Menu mAbilityMenu = new Menu(iSplashMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
-	mAbilityMenu.SetTitle("Splash Ability Information");
+	Menu mAbilityMenu = new Menu(iLaserMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mAbilityMenu.SetTitle("Laser Ability Information");
 	mAbilityMenu.AddItem("Status", "Status");
 	mAbilityMenu.AddItem("Ammunition", "Ammunition");
 	mAbilityMenu.AddItem("Buttons", "Buttons");
@@ -133,7 +142,7 @@ static void vSplashMenu(int client, int item)
 	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
 
-public int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+public int iLaserMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -142,26 +151,26 @@ public int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iSplashAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iSplashCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iLaserAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iLaserCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanMode[MT_GetTankType(param1)] == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_flHumanCooldown[MT_GetTankType(param1)]);
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "SplashDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_flHumanDuration[MT_GetTankType(param1)]);
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "LaserDetails");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_flLaserDuration[MT_GetTankType(param1)]);
 				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 			{
-				vSplashMenu(param1, menu.Selection);
+				vLaserMenu(param1, menu.Selection);
 			}
 		}
 		case MenuAction_Display:
 		{
 			char sMenuTitle[255];
 			Panel panel = view_as<Panel>(param2);
-			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "SplashMenu", param1);
+			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "LaserMenu", param1);
 			panel.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
@@ -218,14 +227,14 @@ public int iSplashMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 public void MT_OnDisplayMenu(Menu menu)
 {
-	menu.AddItem(MT_MENU_SPLASH, MT_MENU_SPLASH);
+	menu.AddItem(MT_MENU_LASER, MT_MENU_LASER);
 }
 
 public void MT_OnMenuItemSelected(int client, const char[] info)
 {
-	if (StrEqual(info, MT_MENU_SPLASH, false))
+	if (StrEqual(info, MT_MENU_LASER, false))
 	{
-		vSplashMenu(client, 0);
+		vLaserMenu(client, 0);
 	}
 }
 
@@ -251,14 +260,14 @@ public void MT_OnConfigsLoad(int mode)
 			g_iHumanAbility[iIndex] = 0;
 			g_iHumanAmmo[iIndex] = 5;
 			g_flHumanCooldown[iIndex] = 30.0;
-			g_flHumanDuration[iIndex] = 5.0;
 			g_iHumanMode[iIndex] = 1;
-			g_iSplashAbility[iIndex] = 0;
-			g_iSplashMessage[iIndex] = 0;
-			g_flSplashChance[iIndex] = 33.3;
-			g_flSplashDamage[iIndex] = 5.0;
-			g_flSplashInterval[iIndex] = 5.0;
-			g_flSplashRange[iIndex] = 500.0;
+			g_iLaserAbility[iIndex] = 0;
+			g_iLaserMessage[iIndex] = 0;
+			g_flLaserChance[iIndex] = 33.3;
+			g_flLaserDamage[iIndex] = 5.0;
+			g_flLaserDuration[iIndex] = 5.0;
+			g_flLaserInterval[iIndex] = 1.0;
+			g_flLaserRange[iIndex] = 500.0;
 		}
 	}
 }
@@ -267,7 +276,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin) && value[0] != '\0')
 	{
-		if (StrEqual(subsection, "splashability", false) || StrEqual(subsection, "splash ability", false) || StrEqual(subsection, "splash_ability", false) || StrEqual(subsection, "splash", false))
+		if (StrEqual(subsection, "laserability", false) || StrEqual(subsection, "laser ability", false) || StrEqual(subsection, "laser_ability", false) || StrEqual(subsection, "laser", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -282,19 +291,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
-		g_flHumanDuration[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 999999.0);
-		g_iHumanMode[type] = iGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
-		g_iSplashAbility[type] = iGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iSplashAbility[type], value, 0, 1);
-		g_iSplashMessage[type] = iGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iSplashMessage[type], value, 0, 1);
-		g_flSplashChance[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_flSplashChance[type], value, 0.0, 100.0);
-		g_flSplashDamage[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_flSplashDamage[type], value, 1.0, 999999.0);
-		g_flSplashInterval[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_flSplashInterval[type], value, 0.1, 999999.0);
-		g_flSplashRange[type] = flGetValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashRange", "Splash Range", "Splash_Range", "range", g_flSplashRange[type], value, 1.0, 999999.0);
+		g_iHumanAbility[type] = iGetValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
+		g_iHumanAmmo[type] = iGetValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
+		g_flHumanCooldown[type] = flGetValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
+		g_iHumanMode[type] = iGetValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
+		g_iLaserAbility[type] = iGetValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iLaserAbility[type], value, 0, 1);
+		g_iLaserMessage[type] = iGetValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iLaserMessage[type], value, 0, 3);
+		g_flLaserChance[type] = flGetValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "LaserChance", "Laser Chance", "Laser_Chance", "chance", g_flLaserChance[type], value, 0.0, 100.0);
+		g_flLaserDamage[type] = flGetValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "LaserDamage", "Laser Damage", "Laser_Damage", "damage", g_flLaserDamage[type], value, 0.1, 999999.0);
+		g_flLaserDuration[type] = flGetValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "LaserDuration", "Laser Duration", "Laser_Duration", "duration", g_flLaserDuration[type], value, 0.1, 999999.0);
+		g_flLaserInterval[type] = flGetValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "LaserInterval", "Laser Interval", "Laser_Interval", "interval", g_flLaserInterval[type], value, 0.1, 999999.0);
+		g_flLaserRange[type] = flGetValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "LaserRange", "Laser Range", "Laser_Range", "range", g_flLaserRange[type], value, 0.1, 999999.0);
 
-		if (StrEqual(subsection, "splashability", false) || StrEqual(subsection, "splash ability", false) || StrEqual(subsection, "splash_ability", false) || StrEqual(subsection, "splash", false))
+		if (StrEqual(subsection, "laserability", false) || StrEqual(subsection, "laser ability", false) || StrEqual(subsection, "laser_ability", false) || StrEqual(subsection, "laser", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -310,23 +319,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_incapacitated"))
-	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(iTank, g_bCloneInstalled) && g_iSplashAbility[MT_GetTankType(iTank)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flSplashChance[MT_GetTankType(iTank)])
-		{
-			if (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank))
-			{
-				vSplash(iTank, 0.4, TIMER_FLAG_NO_MAPCHANGE);
-			}
-		}
-	}
-	else if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
-			vRemoveSplash(iTank);
+			vRemoveLaser(iTank);
 		}
 	}
 }
@@ -338,9 +336,9 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iSplashAbility[MT_GetTankType(tank)] == 1 && !g_bSplash[tank])
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iLaserAbility[MT_GetTankType(tank)] == 1 && !g_bLaser[tank])
 	{
-		vSplashAbility(tank);
+		vLaserAbility(tank);
 	}
 }
 
@@ -355,42 +353,42 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iSplashAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_iLaserAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
 			{
 				switch (g_iHumanMode[MT_GetTankType(tank)])
 				{
 					case 0:
 					{
-						if (!g_bSplash[tank] && !g_bSplash2[tank])
+						if (!g_bLaser[tank] && !g_bLaser2[tank])
 						{
-							vSplashAbility(tank);
+							vLaserAbility(tank);
 						}
-						else if (g_bSplash[tank])
+						else if (g_bLaser[tank])
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman3");
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman3");
 						}
-						else if (g_bSplash2[tank])
+						else if (g_bLaser2[tank])
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman4");
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman4");
 						}
 					}
 					case 1:
 					{
-						if (g_iSplashCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+						if (g_iLaserCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
 						{
-							if (!g_bSplash[tank] && !g_bSplash2[tank])
+							if (!g_bLaser[tank] && !g_bLaser2[tank])
 							{
-								g_bSplash[tank] = true;
-								g_iSplashCount[tank]++;
+								g_bLaser[tank] = true;
+								g_iLaserCount[tank]++;
 
-								vSplash(tank, g_flSplashInterval[MT_GetTankType(tank)], TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+								vLaser(tank);
 
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman", g_iSplashCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman", g_iLaserCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
 							}
 						}
 						else
 						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashAmmo");
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserAmmo");
 						}
 					}
 				}
@@ -405,11 +403,13 @@ public void MT_OnButtonReleased(int tank, int button)
 	{
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iSplashAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_iLaserAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
 			{
-				if (g_iHumanMode[MT_GetTankType(tank)] == 1 && g_bSplash[tank] && !g_bSplash2[tank])
+				if (g_iHumanMode[MT_GetTankType(tank)] == 1 && g_bLaser[tank] && !g_bLaser2[tank])
 				{
-					vReset2(tank);
+					g_bLaser[tank] = false;
+
+					vReset3(tank);
 				}
 			}
 		}
@@ -418,14 +418,86 @@ public void MT_OnButtonReleased(int tank, int button)
 
 public void MT_OnChangeType(int tank, bool revert)
 {
-	vRemoveSplash(tank);
+	vRemoveLaser(tank);
 }
 
-static void vRemoveSplash(int tank)
+static void vLaser(int tank)
 {
-	g_bSplash[tank] = false;
-	g_bSplash2[tank] = false;
-	g_iSplashCount[tank] = 0;
+	float flTankAngles[3], flTankPos[3];
+	GetEntPropVector(tank, Prop_Send, "m_angRotation", flTankAngles);
+	GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flTankPos);
+	flTankPos[2] += 65.0;
+
+	int iSurvivor = iGetNearestSurvivor(tank, flTankPos);
+	if (iSurvivor > 0)
+	{
+		float flSurvivorPos[3];
+		GetClientEyePosition(iSurvivor, flSurvivorPos);
+		flSurvivorPos[2] -= 15.0;
+
+		vAttachParticle2(flSurvivorPos, NULL_VECTOR, PARTICLE_ELECTRICITY, 3.0);
+		EmitSoundToAll(SOUND_ELECTRICITY, 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flSurvivorPos, NULL_VECTOR, true, 0.0);
+		EmitSoundToAll(SOUND_ELECTRICITY, 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flTankPos, NULL_VECTOR, true, 0.0);
+
+		int iColor[4];
+		MT_GetTankColors(tank, GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
+
+		TE_SetupBeamPoints(flTankPos, flSurvivorPos, g_iLaserSprite, 0, 0, 0, 0.5, 5.0, 5.0, 1, 0.0, iColor, 0);
+		TE_SendToAll();
+
+		vDamageEntity(iSurvivor, tank, g_flLaserDamage[MT_GetTankType(tank)], "256");
+
+		if (g_iLaserMessage[MT_GetTankType(tank)] == 1)
+		{
+			char sTankName[33];
+			MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
+			MT_PrintToChatAll("%s %t", MT_TAG2, "Laser", sTankName, iSurvivor);
+		}
+	}
+}
+
+static void vLaserAbility(int tank)
+{
+	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
+	if (g_iLaserCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	{
+		if (GetRandomFloat(0.1, 100.0) <= g_flLaserChance[MT_GetTankType(tank)] && !g_bLaser[tank])
+		{
+			g_bLaser[tank] = true;
+
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			{
+				g_iLaserCount[tank]++;
+
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman", g_iLaserCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+			}
+
+			DataPack dpLaser;
+			CreateDataTimer(g_flLaserInterval[MT_GetTankType(tank)], tTimerLaser, dpLaser, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			dpLaser.WriteCell(GetClientUserId(tank));
+			dpLaser.WriteCell(MT_GetTankType(tank));
+			dpLaser.WriteFloat(GetEngineTime());
+		}
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+		{
+			MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman2");
+		}
+	}
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserAmmo");
+	}
+}
+
+static void vRemoveLaser(int tank)
+{
+	g_bLaser[tank] = false;
+	g_bLaser2[tank] = false;
+	g_iLaserCount[tank] = 0;
 }
 
 static void vReset()
@@ -434,74 +506,36 @@ static void vReset()
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
-			vRemoveSplash(iPlayer);
+			vRemoveLaser(iPlayer);
 		}
 	}
 }
 
 static void vReset2(int tank)
 {
-	g_bSplash[tank] = false;
-	g_bSplash2[tank] = true;
+	g_bLaser[tank] = false;
 
-	MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman5");
+	if (g_iLaserMessage[MT_GetTankType(tank)] == 1)
+	{
+		char sTankName[33];
+		MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Laser2", sTankName);
+	}
+}
 
-	if (g_iSplashCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+static void vReset3(int tank)
+{
+	g_bLaser2[tank] = true;
+
+	MT_PrintToChat(tank, "%s %t", MT_TAG3, "LaserHuman5");
+
+	if (g_iLaserCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
 	{
 		CreateTimer(g_flHumanCooldown[MT_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
-		g_bSplash2[tank] = false;
-	}
-}
-
-static void vSplash(int tank, float time, int flags)
-{
-	DataPack dpSplash;
-	CreateDataTimer(time, tTimerSplash, dpSplash, flags);
-	dpSplash.WriteCell(GetClientUserId(tank));
-	dpSplash.WriteCell(MT_GetTankType(tank));
-	dpSplash.WriteFloat(GetEngineTime());
-}
-
-static void vSplashAbility(int tank)
-{
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
-	{
-		return;
-	}
-
-	if (g_iSplashCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
-	{
-		if (GetRandomFloat(0.1, 100.0) <= g_flSplashChance[MT_GetTankType(tank)])
-		{
-			g_bSplash[tank] = true;
-
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
-			{
-				g_iSplashCount[tank]++;
-
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman", g_iSplashCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
-			}
-
-			vSplash(tank, g_flSplashInterval[MT_GetTankType(tank)], TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-
-			if (g_iSplashMessage[MT_GetTankType(tank)] == 1)
-			{
-				char sTankName[33];
-				MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Splash", sTankName);
-			}
-		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
-		{
-			MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashHuman2");
-		}
-	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SplashAmmo");
+		g_bLaser2[tank] = false;
 	}
 }
 
@@ -627,50 +661,48 @@ static bool bIsAdminImmune(int survivor, int tank)
 	return false;
 }
 
-public Action tTimerSplash(Handle timer, DataPack pack)
+static int iGetNearestSurvivor(int tank, float pos[3])
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !bIsAdminImmune(iSurvivor, tank))
+		{
+			float flSurvivorPos[3];
+			GetClientEyePosition(iSurvivor, flSurvivorPos);
+
+			float flDistance = GetVectorDistance(pos, flSurvivorPos);
+			if (flDistance <= g_flLaserRange[MT_GetTankType(tank)] && bVisiblePosition(pos, flSurvivorPos, tank, 1))
+			{
+				return iSurvivor;
+			}
+		}
+	}
+
+	return 0;
+}
+
+public Action tTimerLaser(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != MT_GetTankType(iTank) || g_iSplashAbility[MT_GetTankType(iTank)] == 0 || !g_bSplash[iTank])
-	{
-		g_bSplash[iTank] = false;
-
-		if (g_iSplashMessage[MT_GetTankType(iTank)] == 1)
-		{
-			char sTankName[33];
-			MT_GetTankName(iTank, MT_GetTankType(iTank), sTankName);
-			MT_PrintToChatAll("%s %t", MT_TAG2, "Splash2", sTankName);
-		}
-
-		return Plugin_Stop;
-	}
-
-	float flTime = pack.ReadFloat();
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(iTank)] == 1 && g_iHumanMode[MT_GetTankType(iTank)] == 0 && (flTime + g_flHumanDuration[MT_GetTankType(iTank)]) < GetEngineTime() && !g_bSplash2[iTank])
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != MT_GetTankType(iTank) || !g_bLaser[iTank])
 	{
 		vReset2(iTank);
 
 		return Plugin_Stop;
 	}
 
-	float flTankPos[3];
-	GetClientAbsOrigin(iTank, flTankPos);
-
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	float flTime = pack.ReadFloat();
+	if ((flTime + g_flLaserDuration[MT_GetTankType(iTank)]) < GetEngineTime())
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, iTank))
-		{
-			float flSurvivorPos[3];
-			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+		vReset2(iTank);
+		vReset3(iTank);
 
-			float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-			if (flDistance <= g_flSplashRange[MT_GetTankType(iTank)])
-			{
-				vDamageEntity(iSurvivor, iTank, g_flSplashDamage[MT_GetTankType(iTank)], "65536");
-			}
-		}
+		return Plugin_Stop;
 	}
+
+	vLaser(iTank);
 
 	return Plugin_Continue;
 }
@@ -678,16 +710,16 @@ public Action tTimerSplash(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bSplash2[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bLaser2[iTank])
 	{
-		g_bSplash2[iTank] = false;
+		g_bLaser2[iTank] = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bSplash2[iTank] = false;
+	g_bLaser2[iTank] = false;
 
-	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "SplashHuman6");
+	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "LaserHuman6");
 
 	return Plugin_Continue;
 }
