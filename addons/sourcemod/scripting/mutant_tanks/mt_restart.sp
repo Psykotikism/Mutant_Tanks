@@ -11,7 +11,6 @@
 
 #include <sourcemod>
 #include <sdkhooks>
-#include <left4dhooks>
 
 #undef REQUIRE_PLUGIN
 #include <left4dhooks>
