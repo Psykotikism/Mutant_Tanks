@@ -52,24 +52,58 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_SHIELD "Shield Ability"
 
-bool g_bCloneInstalled, g_bShield[MAXPLAYERS + 1], g_bShield2[MAXPLAYERS + 1];
+enum struct esGeneralSettings
+{
+	bool g_bCloneInstalled;
 
-ConVar g_cvMTTankThrowForce;
+	ConVar g_cvMTTankThrowForce;
+}
 
-float g_flHumanCooldown[MT_MAXTYPES + 1], g_flHumanDuration[MT_MAXTYPES + 1], g_flShieldChance[MT_MAXTYPES + 1], g_flShieldDelay[MT_MAXTYPES + 1];
+esGeneralSettings g_esGeneral;
 
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iHumanMode[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iShield[MAXPLAYERS + 1], g_iShieldAbility[MT_MAXTYPES + 1], g_iShieldColor[MT_MAXTYPES + 1][4], g_iShieldCount[MAXPLAYERS + 1], g_iShieldMessage[MT_MAXTYPES + 1], g_iShieldType[MT_MAXTYPES + 1];
+enum struct esPlayerSettings
+{
+	bool g_bShield;
+	bool g_bShield2;
+
+	int g_iAccessFlags2;
+	int g_iImmunityFlags2;
+	int g_iShield;
+	int g_iShieldCount;
+}
+
+esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+
+enum struct esAbilitySettings
+{
+	float g_flHumanCooldown;
+	float g_flHumanDuration;
+	float g_flShieldChance;
+	float g_flShieldDelay;
+
+	int g_iAccessFlags;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanMode;
+	int g_iImmunityFlags;
+	int g_iShieldAbility;
+	int g_iShieldColor[4];
+	int g_iShieldMessage;
+	int g_iShieldType;
+}
+
+esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
-	g_bCloneInstalled = LibraryExists("mt_clone");
+	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "mt_clone", false))
 	{
-		g_bCloneInstalled = true;
+		g_esGeneral.g_bCloneInstalled = true;
 	}
 }
 
@@ -77,7 +111,7 @@ public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "mt_clone", false))
 	{
-		g_bCloneInstalled = false;
+		g_esGeneral.g_bCloneInstalled = false;
 	}
 }
 
@@ -88,7 +122,7 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_mt_shield", cmdShieldInfo, "View information about the Shield ability.");
 
-	g_cvMTTankThrowForce = FindConVar("z_tank_throw_force");
+	g_esGeneral.g_cvMTTankThrowForce = FindConVar("z_tank_throw_force");
 
 	if (g_bLateLoad)
 	{
@@ -107,7 +141,6 @@ public void OnPluginStart()
 public void OnMapStart()
 {
 	PrecacheModel(MODEL_GASCAN, true);
-	PrecacheModel(MODEL_PROPANETANK, true);
 	PrecacheModel(MODEL_SHIELD, true);
 
 	vReset();
@@ -174,14 +207,14 @@ public int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iShieldAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iShieldCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iShieldAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iShieldCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanMode[MT_GetTankType(param1)] == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_flHumanCooldown[MT_GetTankType(param1)]);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ShieldDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_flHumanDuration[MT_GetTankType(param1)]);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esAbility[MT_GetTankType(param1)].g_flHumanDuration);
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -263,18 +296,20 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
 	{
-		if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
+		if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_esGeneral.g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
 			{
+				vShieldAbility(victim, false);
+
 				return Plugin_Continue;
 			}
 
-			if (g_bShield[victim])
+			if (g_esPlayer[victim].g_bShield)
 			{
-				switch (g_iShieldType[MT_GetTankType(victim)])
+				switch (g_esAbility[MT_GetTankType(victim)].g_iShieldType)
 				{
 					case 0:
 					{
@@ -288,7 +323,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					}
 					case 1:
 					{
-						if (damagetype & DMG_BLAST || damagetype & DMG_BLAST_SURFACE || damagetype & DMG_AIRBOAT || damagetype & DMG_PLASMA)
+						if ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA))
 						{
 							vShieldAbility(victim, false);
 						}
@@ -306,7 +341,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					}
 					case 3:
 					{
-						if (damagetype & DMG_SLASH || damagetype & DMG_CLUB)
+						if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
 						{
 							vShieldAbility(victim, false);
 						}
@@ -321,6 +356,21 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
+public void MT_OnPluginCheck(ArrayList &list)
+{
+	char sName[32];
+	GetPluginFilename(null, sName, sizeof(sName));
+	list.PushString(sName);
+}
+
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString("shieldability");
+	list2.PushString("shield ability");
+	list3.PushString("shield_ability");
+	list4.PushString("shield");
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	if (mode == 3)
@@ -329,8 +379,8 @@ public void MT_OnConfigsLoad(int mode)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				g_iAccessFlags2[iPlayer] = 0;
-				g_iImmunityFlags2[iPlayer] = 0;
+				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
+				g_esPlayer[iPlayer].g_iImmunityFlags2 = 0;
 			}
 		}
 	}
@@ -338,22 +388,22 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iAccessFlags[iIndex] = 0;
-			g_iImmunityFlags[iIndex] = 0;
-			g_iHumanAbility[iIndex] = 0;
-			g_iHumanAmmo[iIndex] = 5;
-			g_flHumanCooldown[iIndex] = 30.0;
-			g_flHumanDuration[iIndex] = 5.0;
-			g_iHumanMode[iIndex] = 1;
-			g_iShieldAbility[iIndex] = 0;
-			g_iShieldMessage[iIndex] = 0;
-			g_flShieldChance[iIndex] = 33.3;
-			g_flShieldDelay[iIndex] = 5.0;
-			g_iShieldType[iIndex] = 1;
+			g_esAbility[iIndex].g_iAccessFlags = 0;
+			g_esAbility[iIndex].g_iImmunityFlags = 0;
+			g_esAbility[iIndex].g_iHumanAbility = 0;
+			g_esAbility[iIndex].g_iHumanAmmo = 5;
+			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
+			g_esAbility[iIndex].g_flHumanDuration = 5.0;
+			g_esAbility[iIndex].g_iHumanMode = 1;
+			g_esAbility[iIndex].g_iShieldAbility = 0;
+			g_esAbility[iIndex].g_iShieldMessage = 0;
+			g_esAbility[iIndex].g_flShieldChance = 33.3;
+			g_esAbility[iIndex].g_flShieldDelay = 5.0;
+			g_esAbility[iIndex].g_iShieldType = 1;
 
 			for (int iPos = 0; iPos < 4; iPos++)
 			{
-				g_iShieldColor[iIndex][iPos] = 255;
+				g_esAbility[iIndex].g_iShieldColor[iPos] = -1;
 			}
 		}
 	}
@@ -367,37 +417,37 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+				g_esPlayer[admin].g_iImmunityFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iImmunityFlags2;
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
-		g_flHumanDuration[type] = flGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 999999.0);
-		g_iHumanMode[type] = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
-		g_iShieldAbility[type] = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iShieldAbility[type], value, 0, 1);
-		g_iShieldMessage[type] = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iShieldMessage[type], value, 0, 1);
-		g_flShieldChance[type] = flGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldChance", "Shield Chance", "Shield_Chance", "chance", g_flShieldChance[type], value, 0.0, 100.0);
-		g_flShieldDelay[type] = flGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDelay", "Shield Delay", "Shield_Delay", "delay", g_flShieldDelay[type], value, 0.1, 999999.0);
-		g_iShieldType[type] = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldType", "Shield Type", "Shield_Type", "type", g_iShieldType[type], value, 0, 3);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
+		g_esAbility[type].g_flHumanDuration = flGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_flHumanDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iHumanMode = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iShieldAbility = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iShieldAbility, value, 0, 1);
+		g_esAbility[type].g_iShieldMessage = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iShieldMessage, value, 0, 1);
+		g_esAbility[type].g_flShieldChance = flGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldChance", "Shield Chance", "Shield_Chance", "chance", g_esAbility[type].g_flShieldChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flShieldDelay = flGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDelay", "Shield Delay", "Shield_Delay", "delay", g_esAbility[type].g_flShieldDelay, value, 0.1, 999999.0);
+		g_esAbility[type].g_iShieldType = iGetValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldType", "Shield Type", "Shield_Type", "type", g_esAbility[type].g_iShieldType, value, 0, 3);
 
 		if (StrEqual(subsection, "shieldability", false) || StrEqual(subsection, "shield ability", false) || StrEqual(subsection, "shield_ability", false) || StrEqual(subsection, "shield", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+				g_esAbility[type].g_iImmunityFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iImmunityFlags;
 			}
 		}
 
@@ -415,7 +465,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 					continue;
 				}
 
-				g_iShieldColor[type][iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+				g_esAbility[type].g_iShieldColor[iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
 			}
 		}
 	}
@@ -425,7 +475,7 @@ public void MT_OnPluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_bShield[iTank])
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_esPlayer[iTank].g_bShield)
 		{
 			vRemoveShield(iTank);
 		}
@@ -456,7 +506,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vReset2(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated"))
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -470,12 +520,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[MT_GetTankType(tank)] == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iShieldAbility[MT_GetTankType(tank)] == 1 && !g_bShield[tank] && !g_bShield2[tank])
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iShieldAbility == 1 && !g_esPlayer[tank].g_bShield && !g_esPlayer[tank].g_bShield2)
 	{
 		vShieldAbility(tank, true);
 	}
@@ -483,7 +533,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled))
 	{
 		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
 		{
@@ -492,41 +542,49 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iShieldAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iShieldAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				switch (g_iHumanMode[MT_GetTankType(tank)])
+				switch (g_esAbility[MT_GetTankType(tank)].g_iHumanMode)
 				{
 					case 0:
 					{
-						if (!g_bShield[tank] && !g_bShield2[tank])
+						if (!g_esPlayer[tank].g_bShield && !g_esPlayer[tank].g_bShield2)
 						{
 							vShieldAbility(tank, true);
 						}
-						else if (g_bShield[tank])
+						else if (g_esPlayer[tank].g_bShield)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman3");
 						}
-						else if (g_bShield2[tank])
+						else if (g_esPlayer[tank].g_bShield2)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman4");
 						}
 					}
 					case 1:
 					{
-						if (g_iShieldCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+						if (g_esPlayer[tank].g_iShieldCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 						{
-							if (!g_bShield[tank] && !g_bShield2[tank])
+							if (!g_esPlayer[tank].g_bShield && !g_esPlayer[tank].g_bShield2)
 							{
-								g_bShield[tank] = true;
-								g_iShieldCount[tank]++;
+								g_esPlayer[tank].g_bShield = true;
+								g_esPlayer[tank].g_iShieldCount++;
 
-								g_iShield[tank] = CreateEntityByName("prop_dynamic");
-								if (bIsValidEntity(g_iShield[tank]))
+								g_esPlayer[tank].g_iShield = CreateEntityByName("prop_dynamic");
+								if (bIsValidEntity(g_esPlayer[tank].g_iShield))
 								{
 									vShield(tank);
 								}
 
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_iShieldCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_esPlayer[tank].g_iShieldCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
+							}
+							else if (g_esPlayer[tank].g_bShield)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman3");
+							}
+							else if (g_esPlayer[tank].g_bShield2)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman4");
 							}
 						}
 						else
@@ -542,17 +600,17 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnButtonReleased(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled))
 	{
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iShieldAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iShieldAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				if (g_iHumanMode[MT_GetTankType(tank)] == 1 && g_bShield[tank] && !g_bShield2[tank])
+				if (g_esAbility[MT_GetTankType(tank)].g_iHumanMode == 1 && g_esPlayer[tank].g_bShield && !g_esPlayer[tank].g_bShield2)
 				{
 					vRemoveShield(tank);
 
-					g_bShield[tank] = false;
+					g_esPlayer[tank].g_bShield = false;
 
 					vReset3(tank);
 				}
@@ -573,7 +631,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnRockThrow(int tank, int rock)
 {
-	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iShieldAbility[MT_GetTankType(tank)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flShieldChance[MT_GetTankType(tank)])
+	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iShieldAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flShieldChance)
 	{
 		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
 		{
@@ -590,13 +648,17 @@ public void MT_OnRockThrow(int tank, int rock)
 
 static void vRemoveShield(int tank)
 {
-	if (bIsValidEntRef(g_iShield[tank]))
+	if (bIsValidEntRef(g_esPlayer[tank].g_iShield))
 	{
-		MT_HideEntity(g_iShield[tank], false);
-		RemoveEntity(g_iShield[tank]);
+		g_esPlayer[tank].g_iShield = EntRefToEntIndex(g_esPlayer[tank].g_iShield);
+		if (bIsValidEntity(g_esPlayer[tank].g_iShield))
+		{
+			MT_HideEntity(g_esPlayer[tank].g_iShield, false);
+			RemoveEntity(g_esPlayer[tank].g_iShield);
+		}
 	}
 
-	g_iShield[tank] = INVALID_ENT_REFERENCE;
+	g_esPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
 }
 
 static void vReset()
@@ -614,29 +676,29 @@ static void vReset2(int tank, bool revert = false)
 {
 	if (!revert)
 	{
-		g_bShield[tank] = false;
+		g_esPlayer[tank].g_bShield = false;
 	}
 
-	g_bShield2[tank] = false;
-	g_iShield[tank] = INVALID_ENT_REFERENCE;
-	g_iShieldCount[tank] = 0;
+	g_esPlayer[tank].g_bShield2 = false;
+	g_esPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
+	g_esPlayer[tank].g_iShieldCount = 0;
 }
 
 static void vReset3(int tank)
 {
-	if (!g_bShield2[tank])
+	if (!g_esPlayer[tank].g_bShield2)
 	{
-		g_bShield2[tank] = true;
+		g_esPlayer[tank].g_bShield2 = true;
 
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman5");
 
-		if (g_iShieldCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+		if (g_esPlayer[tank].g_iShieldCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 		{
-			CreateTimer(g_flHumanCooldown[MT_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 		else
 		{
-			g_bShield2[tank] = false;
+			g_esPlayer[tank].g_bShield2 = false;
 		}
 	}
 }
@@ -652,19 +714,19 @@ static void vShield(int tank)
 	GetClientAbsOrigin(tank, flOrigin);
 	flOrigin[2] -= 120.0;
 
-	SetEntityModel(g_iShield[tank], MODEL_SHIELD);
+	SetEntityModel(g_esPlayer[tank].g_iShield, MODEL_SHIELD);
 
-	DispatchKeyValueVector(g_iShield[tank], "origin", flOrigin);
-	DispatchSpawn(g_iShield[tank]);
-	vSetEntityParent(g_iShield[tank], tank, true);
+	DispatchKeyValueVector(g_esPlayer[tank].g_iShield, "origin", flOrigin);
+	DispatchSpawn(g_esPlayer[tank].g_iShield);
+	vSetEntityParent(g_esPlayer[tank].g_iShield, tank, true);
 
-	SetEntityRenderMode(g_iShield[tank], RENDER_TRANSTEXTURE);
-	SetEntityRenderColor(g_iShield[tank], g_iShieldColor[MT_GetTankType(tank)][0], g_iShieldColor[MT_GetTankType(tank)][1], g_iShieldColor[MT_GetTankType(tank)][2], g_iShieldColor[MT_GetTankType(tank)][3]);
+	SetEntityRenderMode(g_esPlayer[tank].g_iShield, RENDER_TRANSTEXTURE);
+	SetEntityRenderColor(g_esPlayer[tank].g_iShield, g_esAbility[MT_GetTankType(tank)].g_iShieldColor[0], g_esAbility[MT_GetTankType(tank)].g_iShieldColor[1], g_esAbility[MT_GetTankType(tank)].g_iShieldColor[2], g_esAbility[MT_GetTankType(tank)].g_iShieldColor[3]);
 
-	SetEntProp(g_iShield[tank], Prop_Send, "m_CollisionGroup", 1);
+	SetEntProp(g_esPlayer[tank].g_iShield, Prop_Send, "m_CollisionGroup", 1);
 
-	MT_HideEntity(g_iShield[tank], true);
-	g_iShield[tank] = EntIndexToEntRef(g_iShield[tank]);
+	MT_HideEntity(g_esPlayer[tank].g_iShield, true);
+	g_esPlayer[tank].g_iShield = EntIndexToEntRef(g_esPlayer[tank].g_iShield);
 }
 
 static void vShieldAbility(int tank, bool shield)
@@ -678,29 +740,29 @@ static void vShieldAbility(int tank, bool shield)
 				return;
 			}
 
-			if (g_iShieldCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+			if (g_esPlayer[tank].g_iShieldCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 			{
-				if (GetRandomFloat(0.1, 100.0) <= g_flShieldChance[MT_GetTankType(tank)])
+				if (GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flShieldChance)
 				{
-					g_iShield[tank] = CreateEntityByName("prop_dynamic");
-					if (bIsValidEntity(g_iShield[tank]))
+					g_esPlayer[tank].g_iShield = CreateEntityByName("prop_dynamic");
+					if (bIsValidEntity(g_esPlayer[tank].g_iShield))
 					{
 						vShield(tank);
 
-						g_bShield[tank] = true;
+						g_esPlayer[tank].g_bShield = true;
 
 						ExtinguishEntity(tank);
 
-						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 						{
-							g_iShieldCount[tank]++;
+							g_esPlayer[tank].g_iShieldCount++;
 
-							CreateTimer(g_flHumanDuration[MT_GetTankType(tank)], tTimerStopShield, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+							CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flHumanDuration, tTimerStopShield, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_iShieldCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_esPlayer[tank].g_iShieldCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
 						}
 
-						if (g_iShieldMessage[MT_GetTankType(tank)] == 1)
+						if (g_esAbility[MT_GetTankType(tank)].g_iShieldMessage == 1)
 						{
 							char sTankName[33];
 							MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
@@ -708,12 +770,12 @@ static void vShieldAbility(int tank, bool shield)
 						}
 					}
 				}
-				else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+				else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman2");
 				}
 			}
-			else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldAmmo");
 			}
@@ -722,23 +784,23 @@ static void vShieldAbility(int tank, bool shield)
 		{
 			vRemoveShield(tank);
 
-			g_bShield[tank] = false;
+			g_esPlayer[tank].g_bShield = false;
 
 			switch (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 			{
 				case true: vReset3(tank);
 				case false:
 				{
-					if (!g_bShield2[tank])
+					if (!g_esPlayer[tank].g_bShield2)
 					{
-						g_bShield2[tank] = true;
+						g_esPlayer[tank].g_bShield2 = true;
 
-						CreateTimer(g_flShieldDelay[MT_GetTankType(tank)], tTimerShield, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flShieldDelay, tTimerShield, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 					}
 				}
 			}
 
-			if (g_iShieldMessage[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iShieldMessage == 1)
 			{
 				char sTankName[33];
 				MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
@@ -755,49 +817,34 @@ static bool bHasAdminAccess(int admin)
 		return true;
 	}
 
-	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0)
+	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 	}
 
 	if (iAbilityFlags != 0)
@@ -815,56 +862,42 @@ static bool bIsAdminImmune(int survivor, int tank)
 		return false;
 	}
 
-	int iAbilityFlags = g_iImmunityFlags[MT_GetTankType(survivor)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(tank)].g_iImmunityFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iAbilityFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
-	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(survivor));
-	if (iTypeFlags != 0)
+	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(tank));
+	if (iTypeFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iTypeFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetImmunityFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iGlobalFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetImmunityFlags(4, MT_GetTankType(tank), survivor),
 		iClientTypeFlags2 = MT_GetImmunityFlags(4, MT_GetTankType(tank), tank);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
-		{
-			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
-		}
+		return (iClientTypeFlags2 != 0 && (iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetImmunityFlags(3, 0, survivor),
 		iClientGlobalFlags2 = MT_GetImmunityFlags(3, 0, tank);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
-		{
-			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
-		}
+		return (iClientGlobalFlags2 != 0 && (iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
 	}
 
-	if (iAbilityFlags != 0)
+	int iSurvivorFlags = GetUserFlagBits(survivor), iTankFlags = GetUserFlagBits(tank);
+	if (iAbilityFlags != 0 && iSurvivorFlags != 0 && (iSurvivorFlags & iAbilityFlags))
 	{
-		return ((GetUserFlagBits(tank) & iAbilityFlags) && GetUserFlagBits(survivor) <= GetUserFlagBits(tank)) ? false : true;
+		return (iTankFlags != 0 && iSurvivorFlags <= iTankFlags) ? false : true;
 	}
 
 	return false;
@@ -873,14 +906,14 @@ static bool bIsAdminImmune(int survivor, int tank)
 public Action tTimerShield(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || g_iShieldAbility[MT_GetTankType(iTank)] == 0 || !g_bShield2[iTank])
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || g_esAbility[MT_GetTankType(iTank)].g_iShieldAbility == 0 || !g_esPlayer[iTank].g_bShield2)
 	{
-		g_bShield2[iTank] = false;
+		g_esPlayer[iTank].g_bShield2 = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bShield2[iTank] = false;
+	g_esPlayer[iTank].g_bShield2 = false;
 
 	vShieldAbility(iTank, true);
 
@@ -898,12 +931,12 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != MT_GetTankType(iTank) || g_iShieldAbility[MT_GetTankType(iTank)] == 0 || !g_bShield[iTank])
+	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || iType != MT_GetTankType(iTank) || g_esAbility[MT_GetTankType(iTank)].g_iShieldAbility == 0 || !g_esPlayer[iTank].g_bShield)
 	{
 		return Plugin_Stop;
 	}
 
-	if (g_iShieldType[MT_GetTankType(iTank)] != 1 && g_iShieldType[MT_GetTankType(iTank)] != 2)
+	if (g_esAbility[MT_GetTankType(iTank)].g_iShieldType != 1 && g_esAbility[MT_GetTankType(iTank)].g_iShieldType != 2)
 	{
 		return Plugin_Stop;
 	}
@@ -917,7 +950,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 		int iThrowable = CreateEntityByName("prop_physics");
 		if (bIsValidEntity(iThrowable))
 		{
-			switch (g_iShieldType[MT_GetTankType(iTank)])
+			switch (g_esAbility[MT_GetTankType(iTank)].g_iShieldType)
 			{
 				case 1: SetEntityModel(iThrowable, MODEL_PROPANETANK);
 				case 2: SetEntityModel(iThrowable, MODEL_GASCAN);
@@ -928,7 +961,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 			RemoveEntity(iRock);
 
 			NormalizeVector(flVelocity, flVelocity);
-			ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
+			ScaleVector(flVelocity, g_esGeneral.g_cvMTTankThrowForce.FloatValue * 1.4);
 
 			DispatchSpawn(iThrowable);
 			TeleportEntity(iThrowable, flPos, NULL_VECTOR, flVelocity);
@@ -943,7 +976,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 public Action tTimerStopShield(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bShield[iTank])
+	if (!MT_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || !g_esPlayer[iTank].g_bShield)
 	{
 		vShieldAbility(iTank, false);
 
@@ -958,14 +991,14 @@ public Action tTimerStopShield(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bShield2[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || !g_esPlayer[iTank].g_bShield2)
 	{
-		g_bShield2[iTank] = false;
+		g_esPlayer[iTank].g_bShield2 = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bShield2[iTank] = false;
+	g_esPlayer[iTank].g_bShield2 = false;
 
 	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "ShieldHuman6");
 

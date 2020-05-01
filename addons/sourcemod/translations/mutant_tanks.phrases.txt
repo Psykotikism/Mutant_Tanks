@@ -301,6 +301,10 @@
 		"#format"		"{1:s},{2:s}"
 		"en"			"{olive}{1}{mint} reverted back into{olive} {2}{mint}!"
 	}
+	"SpawnManually"
+	{
+		"en"			"You will have to spawn manually."
+	}
 	"Absorb"
 	{
 		"#format"		"{1:s}"
@@ -4158,5 +4162,9 @@
 	{
 		"en"			"{mint}This Tank can shapeshift into different Mutant Tank types. Don't underestimate it..."
 	}
+	//"STEAM_0:1:23456789" // This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
+	//{
+	//	"en"			"{mint}This Tank is controlled by someone."
+	//}
 	// Add Tank Note phrases for your own Mutant Tanks below!
 }

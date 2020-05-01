@@ -17,7 +17,7 @@
 #include <sdktools>
 
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
-#define MT_VERSION "8.65"
+#define MT_VERSION "8.66"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define MT_TAG "[MT]"
@@ -53,8 +53,6 @@
 #define MT_MESSAGE_SPECIAL (1 << 2) // special ability
 #define MT_MESSAGE_SPECIAL2 (1 << 3) // special ability #2
 
-static int g_iCurrentMode;
-
 // Forwards
 /**
  * Called every second to trigger a Mutant Tank's ability.
@@ -63,6 +61,17 @@ static int g_iCurrentMode;
  * @param tank			Client index of the Tank.
  **/
 forward void MT_OnAbilityActivated(int tank);
+
+/**
+ * Called before the config file is read.
+ * Use this forward to store the different formats of the ability's section name.
+ *
+ * @param list			List to store the first format.
+ * @param list2			List to store the second format.
+ * @param list3			List to store the third format.
+ * @param list4			List to store the fourth format.
+ **/
+forward void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4);
 
 /**
  * Called when a human-controlled Mutant Tank presses a button.
@@ -148,6 +157,14 @@ forward void MT_OnHookEvent(bool hooked);
 forward void MT_OnMenuItemSelected(int client, const char[] info);
 
 /**
+ * Called before the config file is read.
+ * Use this forward to officially register an ability's plugin.
+ *
+ * @param list			List to store plugin's name in.
+ **/
+forward void MT_OnPluginCheck(ArrayList &list);
+
+/**
  * Called when the core plugin is unloaded/reloaded.
  * Use this forward to get rid of any modifications to Tanks or survivors.
  **/
@@ -180,6 +197,18 @@ forward void MT_OnRockBreak(int tank, int rock);
  **/
 forward void MT_OnRockThrow(int tank, int rock);
 
+/**
+ * Called when a Mutant Tank type has been chosen.
+ * Use this forward to check or change the chosen type.
+ *
+ * @param type			Type chosen.
+ * @param tank			Client index of the Tank if the type chosen is being applied directly, 0 otherwise.
+ *
+ * @return			Plugin_Handled to choose another type, Plugin_Stop to prevent the Tank from mutating,
+ *					Plugin_Changed to change the chosen type, Plugin_Continue to allow.
+ */
+forward Action MT_OnTypeChosen(int &type, int tank = 0);
+
 // Natives
 /**
  * Returns if a certain Mutant Tank type can spawn.
@@ -188,7 +217,17 @@ forward void MT_OnRockThrow(int tank, int rock);
  * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0.
  **/
+#pragma deprecated Use MT_CanTypeSpawn() instead.
 native bool MT_CanTankSpawn(int type);
+
+/**
+ * Returns if a certain Mutant Tank type can spawn.
+ *
+ * @param type			Mutant Tank type.
+ * @return			True if the type can spawn, false otherwise.
+ * @error			Type is 0.
+ **/
+native bool MT_CanTypeSpawn(int type);
 
 /**
  * Returns the current access flags set by the core plugin.
@@ -238,7 +277,7 @@ native int MT_GetMinType();
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color, 4 = Rock color,
- *				5 = Tire color
+ *				5 = Tire color, 6 = Propane tank color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.
@@ -260,14 +299,14 @@ native float MT_GetRunSpeed(int tank);
  * Returns the RGB colors given to a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
- * @param mode			1 = Skin color, 2 = Glow outline color
+ * @param type			1 = Skin color, 2 = Glow outline color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
  * @error			Invalid client index.
  **/
-native void MT_GetTankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
+native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
 /**
  * Returns the custom name given to a Mutant Tank.
@@ -337,7 +376,17 @@ native bool MT_IsCorePluginEnabled();
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0.
  **/
+#pragma deprecated Use MT_IsFinaleType() instead.
 native bool MT_IsFinaleTank(int type);
+
+/**
+ * Returns if a certain Mutant Tank type is only available on finale maps.
+ *
+ * @param type			Mutant Tank type.
+ * @return			True if the type is available, false otherwise.
+ * @error			Type is 0.
+ **/
+native bool MT_IsFinaleType(int type);
 
 /**
  * Returns if a Mutant Tank type has a glow outline.
@@ -349,12 +398,21 @@ native bool MT_IsFinaleTank(int type);
 native bool MT_IsGlowEnabled(int tank);
 
 /**
+ * Returns if a certain Mutant Tank type is only available on non-finale maps.
+ *
+ * @param type			Mutant Tank type.
+ * @return			True if the type is available, false otherwise.
+ * @error			Type is 0.
+ **/
+native bool MT_IsNonFinaleType(int type);
+
+/**
  * Returns if a Tank is allowed to be a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
  * @param flags			Checks to run.
- *				MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
- *				MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
+ *					MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
+ *					MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
  *				Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE
  * @return			True if Tank is allowed to be a Mutant Tank, false otherwise.
  * @error			Invalid client index.
@@ -587,7 +645,7 @@ native void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, 
  * @return			True if the type can be spawned, false otherwise.
  * @error			Type is 0.
  **/
-#pragma deprecated Use MT_CanTankSpawn() instead.
+#pragma deprecated Use MT_CanTypeSpawn() instead.
 native bool ST_SpawnEnabled(int type);
 
 /* Returns the status of the "Human Super Tanks" setting.
@@ -805,26 +863,6 @@ stock void vExternalView(int player, float time)
 	}
 }
 
-public void vGameMode(const char[] output, int caller, int activator, float delay)
-{
-	if (StrEqual(output, "OnCoop"))
-	{
-		g_iCurrentMode = 1;
-	}
-	else if (StrEqual(output, "OnVersus"))
-	{
-		g_iCurrentMode = 2;
-	}
-	else if (StrEqual(output, "OnSurvival"))
-	{
-		g_iCurrentMode = 4;
-	}
-	else if (StrEqual(output, "OnScavenge"))
-	{
-		g_iCurrentMode = 8;
-	}
-}
-
 stock void vMultiTargetFilters(int toggle)
 {
 	switch (toggle)
@@ -1021,6 +1059,19 @@ stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT
 	return bIsInfected(charger, flags) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
 
+stock bool bIsCommonInfected(int common)
+{
+	if (bIsValidEntity(common))
+	{
+		char sClassname[32];
+		GetEntityClassname(common, sClassname, sizeof(sClassname));
+
+		return StrEqual(sClassname, "infected");
+	}
+
+	return false;
+}
+
 stock bool bIsEntityGrounded(int entity)
 {
 	if ((HasEntProp(entity, Prop_Send, "m_fFlags") && (GetEntProp(entity, Prop_Send, "m_fFlags") & FL_ONGROUND)) || (HasEntProp(entity, Prop_Send, "m_hGroundEntity") && GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity") == 0))
@@ -1033,7 +1084,7 @@ stock bool bIsEntityGrounded(int entity)
 
 stock bool bIsFinaleMap()
 {
-	return FindEntityByClassname(-1, "trigger_finale") != -1;
+	return (FindEntityByClassname(-1, "info_changelevel") == -1 && FindEntityByClassname(-1, "trigger_changelevel") == -1) || FindEntityByClassname(-1, "trigger_finale") != -1 || FindEntityByClassname(-1, "finale_trigger") != -1;
 }
 
 stock bool bIsGunWeapon(int survivor)
@@ -1119,63 +1170,6 @@ stock bool bIsPlayerIncapacitated(int survivor)
 	}
 
 	return false;
-}
-
-stock bool bIsPluginEnabled(ConVar gamemode, int mode, char[] enabled, char[] disabled)
-{
-	if (gamemode == null)
-	{
-		return false;
-	}
-
-	if (mode != 0)
-	{
-		g_iCurrentMode = 0;
-
-		int iGameMode = CreateEntityByName("info_gamemode");
-		if (bIsValidEntity(iGameMode))
-		{
-			DispatchSpawn(iGameMode);
-
-			HookSingleEntityOutput(iGameMode, "OnCoop", vGameMode, true);
-			HookSingleEntityOutput(iGameMode, "OnSurvival", vGameMode, true);
-			HookSingleEntityOutput(iGameMode, "OnVersus", vGameMode, true);
-			HookSingleEntityOutput(iGameMode, "OnScavenge", vGameMode, true);
-
-			ActivateEntity(iGameMode);
-			AcceptEntityInput(iGameMode, "PostSpawnActivate");
-			RemoveEntity(iGameMode);
-		}
-
-		if (g_iCurrentMode == 0 || !(mode & g_iCurrentMode))
-		{
-			return false;
-		}
-	}
-
-	char sGameMode[32], sGameModes[513];
-	gamemode.GetString(sGameMode, sizeof(sGameMode));
-	Format(sGameMode, sizeof(sGameMode), ",%s,", sGameMode);
-
-	if (!StrEqual(enabled, ""))
-	{
-		Format(sGameModes, sizeof(sGameModes), ",%s,", enabled);
-		if (StrContains(sGameModes, sGameMode, false) == -1)
-		{
-			return false;
-		}
-	}
-
-	if (!StrEqual(disabled, ""))
-	{
-		Format(sGameModes, sizeof(sGameModes), ",%s,", disabled);
-		if (StrContains(sGameModes, sGameMode, false) != -1)
-		{
-			return false;
-		}
-	}
-
-	return true;
 }
 
 stock bool bIsSmoker(int smoker, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
@@ -1713,7 +1707,7 @@ public SharedPlugin __pl_mutanttanks =
 #if !defined REQUIRE_PLUGIN
 public void __pl_mutanttanks_SetNTVOptional()
 {
-	MarkNativeAsOptional("MT_CanTankSpawn");
+	MarkNativeAsOptional("MT_CanTypeSpawn");
 	MarkNativeAsOptional("MT_GetAccessFlags");
 	MarkNativeAsOptional("MT_GetCurrentFinaleWave");
 	MarkNativeAsOptional("MT_GetImmunityFlags");
@@ -1729,7 +1723,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_HideEntity");
 	MarkNativeAsOptional("MT_IsAdminImmune");
 	MarkNativeAsOptional("MT_IsCorePluginEnabled");
-	MarkNativeAsOptional("MT_IsFinaleTank");
+	MarkNativeAsOptional("MT_IsFinaleType");
 	MarkNativeAsOptional("MT_IsGlowEnabled");
 	MarkNativeAsOptional("MT_IsTankSupported");
 	MarkNativeAsOptional("MT_IsTypeEnabled");
