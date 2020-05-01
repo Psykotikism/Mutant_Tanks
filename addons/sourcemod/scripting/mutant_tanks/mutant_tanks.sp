@@ -834,6 +834,7 @@ public void OnClientPutInServer(int client)
 	g_esPlayer[client].g_bAdminMenu = false;
 	g_esPlayer[client].g_bThirdPerson = false;
 	g_esPlayer[client].g_iIncapTime = 0;
+	g_esPlayer[client].g_sOriginalName[0] = '\0';
 	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 
 	CreateTimer(1.0, tTimerCheckView, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -854,6 +855,7 @@ public void OnClientDisconnect_Post(int client)
 	g_esPlayer[client].g_iIncapTime = 0;
 	g_esPlayer[client].g_iLastButtons = 0;
 	g_esPlayer[client].g_iTankType = 0;
+	g_esPlayer[client].g_sOriginalName[0] = '\0';
 }
 
 public void OnConfigsExecuted()
@@ -3069,6 +3071,15 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 			if (bIsValidClient(iTank) && bIsTank(iBot))
 			{
+				char sCurrentName[33];
+				GetClientName(iTank, sCurrentName, sizeof(sCurrentName));
+				if (!StrEqual(sCurrentName, g_esPlayer[iTank].g_sOriginalName) && g_esPlayer[iTank].g_sOriginalName[0] != '\0')
+				{
+					g_esGeneral.g_bHideNameChange = true;
+					SetClientName(iTank, g_esPlayer[iTank].g_sOriginalName);
+					g_esGeneral.g_bHideNameChange = false;
+				}
+
 				vReset2(iTank, 0);
 			}
 		}
@@ -3184,11 +3195,18 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				char sCurrentName[33];
 				GetClientName(iTank, sCurrentName, sizeof(sCurrentName));
-				if (!StrEqual(sCurrentName, g_esPlayer[iTank].g_sOriginalName) && g_esPlayer[iTank].g_sOriginalName[0] != '\0')
+				if (g_esPlayer[iTank].g_sOriginalName[0] != '\0')
 				{
-					g_esGeneral.g_bHideNameChange = true;
-					SetClientName(iTank, g_esPlayer[iTank].g_sOriginalName);
-					g_esGeneral.g_bHideNameChange = false;
+					if (!StrEqual(sCurrentName, g_esPlayer[iTank].g_sOriginalName))
+					{
+						g_esGeneral.g_bHideNameChange = true;
+						SetClientName(iTank, g_esPlayer[iTank].g_sOriginalName);
+						g_esGeneral.g_bHideNameChange = false;
+					}
+				}
+				else
+				{
+					strcopy(g_esPlayer[iTank].g_sOriginalName, sizeof(g_esPlayer[].g_sOriginalName), sCurrentName);
 				}
 			}
 
@@ -3500,6 +3518,7 @@ static void vReset()
 			g_esPlayer[iPlayer].g_bDied = false;
 			g_esPlayer[iPlayer].g_bDying = false;
 			g_esPlayer[iPlayer].g_bThirdPerson = false;
+			g_esPlayer[iPlayer].g_sOriginalName[0] = '\0';
 		}
 	}
 
@@ -3960,7 +3979,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			}
 		}
 
-		if (bIsValidClient(tank, MT_CHECK_FAKECLIENT))
+		if (bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_sOriginalName[0] == '\0')
 		{
 			strcopy(g_esPlayer[tank].g_sOriginalName, sizeof(g_esPlayer[].g_sOriginalName), oldname);
 		}
