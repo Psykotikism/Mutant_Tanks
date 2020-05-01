@@ -10,10 +10,8 @@
  **/
 
 #include <sourcemod>
-
-#define REQUIRE_PLUGIN
+#include <mt_clone>
 #include <mutant_tanks>
-#undef REQUIRE_PLUGIN
 
 #pragma semicolon 1
 #pragma newdecls required

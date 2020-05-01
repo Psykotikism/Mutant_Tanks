@@ -12,7 +12,7 @@
 #include <sourcemod>
 
 #undef REQUIRE_PLUGIN
-#include <mt_clone>
+#tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
 
 #include <mutant_tanks>

@@ -16,8 +16,8 @@
 #include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
-#include <left4dhooks>
-#include <mt_clone>
+#tryinclude <left4dhooks>
+#tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
 
 #pragma semicolon 1
