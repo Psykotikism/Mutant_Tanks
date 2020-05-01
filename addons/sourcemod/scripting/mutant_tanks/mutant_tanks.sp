@@ -4789,6 +4789,7 @@ static int iGetTypeCount(int type)
 	return iType;
 }
 
+#if defined _l4dh_included
 public void L4D_OnEnterGhostState(int client)
 {
 	if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_iTankType > 0)
@@ -4798,6 +4799,7 @@ public void L4D_OnEnterGhostState(int client)
 		CreateTimer(1.0, tTimerForceSpawnTank, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
+#endif
 
 public MRESReturn mreTankRock(Handle hReturn)
 {
@@ -5043,6 +5045,7 @@ public Action tTimerFireEffect(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
+#if defined _l4dh_included
 public Action tTimerForceSpawnTank(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -5059,6 +5062,7 @@ public Action tTimerForceSpawnTank(Handle timer, int userid)
 
 	return Plugin_Continue;
 }
+#endif
 
 public Action tTimerIceEffect(Handle timer, int userid)
 {
