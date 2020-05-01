@@ -47,11 +47,36 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_CAR "Car Ability"
 
-bool g_bCar[MAXPLAYERS + 1], g_bCar2[MAXPLAYERS + 1], g_bCloneInstalled;
+bool g_bCloneInstalled;
 
-float g_flCarChance[MT_MAXTYPES + 1], g_flCarDuration[MT_MAXTYPES + 1], g_flCarRadius[MT_MAXTYPES + 1][2], g_flHumanCooldown[MT_MAXTYPES + 1];
+enum struct esPlayerSettings
+{
+	bool g_bCar;
+	bool g_bCar2;
 
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iCarAbility[MT_MAXTYPES + 1], g_iCarCount[MAXPLAYERS + 1], g_iCarMessage[MT_MAXTYPES + 1], g_iCarOptions[MT_MAXTYPES + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iHumanMode[MT_MAXTYPES + 1];
+	int g_iAccessFlags2;
+	int g_iCarCount;
+}
+
+esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+
+enum struct esAbilitySettings
+{
+	float g_flCarChance;
+	float g_flCarDuration;
+	float g_flCarRadius[2];
+	float g_flHumanCooldown;
+
+	int g_iAccessFlags;
+	int g_iCarAbility;
+	int g_iCarMessage;
+	int g_iCarOptions;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanMode;
+}
+
+esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -150,14 +175,14 @@ public int iCarMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iCarAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iCarCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iCarAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iCarCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanMode[MT_GetTankType(param1)] == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_flHumanCooldown[MT_GetTankType(param1)]);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "CarDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_flCarDuration[MT_GetTankType(param1)]);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esAbility[MT_GetTankType(param1)].g_flCarDuration);
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -237,6 +262,21 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
+public void MT_OnPluginCheck(ArrayList &list)
+{
+	char sName[32];
+	GetPluginFilename(null, sName, sizeof(sName));
+	list.PushString(sName);
+}
+
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString("carability");
+	list2.PushString("car ability");
+	list3.PushString("car_ability");
+	list4.PushString("car");
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	if (mode == 3)
@@ -245,7 +285,7 @@ public void MT_OnConfigsLoad(int mode)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				g_iAccessFlags2[iPlayer] = 0;
+				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
 			}
 		}
 	}
@@ -253,18 +293,18 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iAccessFlags[iIndex] = 0;
-			g_iHumanAbility[iIndex] = 0;
-			g_iHumanAmmo[iIndex] = 5;
-			g_flHumanCooldown[iIndex] = 30.0;
-			g_iHumanMode[iIndex] = 1;
-			g_iCarAbility[iIndex] = 0;
-			g_iCarMessage[iIndex] = 0;
-			g_flCarChance[iIndex] = 33.3;
-			g_flCarDuration[iIndex] = 5.0;
-			g_iCarOptions[iIndex] = 0;
-			g_flCarRadius[iIndex][0] = -180.0;
-			g_flCarRadius[iIndex][1] = 180.0;
+			g_esAbility[iIndex].g_iAccessFlags = 0;
+			g_esAbility[iIndex].g_iHumanAbility = 0;
+			g_esAbility[iIndex].g_iHumanAmmo = 5;
+			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
+			g_esAbility[iIndex].g_iHumanMode = 1;
+			g_esAbility[iIndex].g_iCarAbility = 0;
+			g_esAbility[iIndex].g_iCarMessage = 0;
+			g_esAbility[iIndex].g_flCarChance = 33.3;
+			g_esAbility[iIndex].g_flCarDuration = 5.0;
+			g_esAbility[iIndex].g_iCarOptions = 0;
+			g_esAbility[iIndex].g_flCarRadius[0] = -180.0;
+			g_esAbility[iIndex].g_flCarRadius[1] = 180.0;
 		}
 	}
 }
@@ -277,28 +317,28 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
-		g_iHumanMode[type] = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
-		g_iCarAbility[type] = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iCarAbility[type], value, 0, 1);
-		g_iCarMessage[type] = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iCarMessage[type], value, 0, 1);
-		g_flCarChance[type] = flGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarChance", "Car Chance", "Car_Chance", "chance", g_flCarChance[type], value, 0.0, 100.0);
-		g_flCarDuration[type] = flGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_flCarDuration[type], value, 0.1, 999999.0);
-		g_iCarOptions[type] = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarOptions", "Car Options", "Car_Options", "options", g_iCarOptions[type], value, 0, 7);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
+		g_esAbility[type].g_iHumanMode = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iCarAbility = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iCarAbility, value, 0, 1);
+		g_esAbility[type].g_iCarMessage = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iCarMessage, value, 0, 1);
+		g_esAbility[type].g_flCarChance = flGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esAbility[type].g_flCarChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flCarDuration = flGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esAbility[type].g_flCarDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iCarOptions = iGetValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarOptions", "Car Options", "Car_Options", "options", g_esAbility[type].g_iCarOptions, value, 0, 7);
 
 		if (StrEqual(subsection, "carability", false) || StrEqual(subsection, "car ability", false) || StrEqual(subsection, "car_ability", false) || StrEqual(subsection, "car", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
 			}
 		}
 
@@ -309,15 +349,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			ReplaceString(sValue, sizeof(sValue), " ", "");
 			ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-			g_flCarRadius[type][0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 0.0) : g_flCarRadius[type][0];
-			g_flCarRadius[type][1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 200.0) : g_flCarRadius[type][1];
+			g_esAbility[type].g_flCarRadius[0] = (sSet[0][0] != '\0') ? flClamp(StringToFloat(sSet[0]), -200.0, 0.0) : g_esAbility[type].g_flCarRadius[0];
+			g_esAbility[type].g_flCarRadius[1] = (sSet[1][0] != '\0') ? flClamp(StringToFloat(sSet[1]), 0.0, 200.0) : g_esAbility[type].g_flCarRadius[1];
 		}
 	}
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -329,12 +369,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[MT_GetTankType(tank)] == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iCarAbility[MT_GetTankType(tank)] == 1 && !g_bCar[tank])
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iCarAbility == 1 && !g_esPlayer[tank].g_bCar)
 	{
 		vCarAbility(tank);
 	}
@@ -351,37 +391,45 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iCarAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iCarAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				switch (g_iHumanMode[MT_GetTankType(tank)])
+				switch (g_esAbility[MT_GetTankType(tank)].g_iHumanMode)
 				{
 					case 0:
 					{
-						if (!g_bCar[tank] && !g_bCar2[tank])
+						if (!g_esPlayer[tank].g_bCar && !g_esPlayer[tank].g_bCar2)
 						{
 							vCarAbility(tank);
 						}
-						else if (g_bCar[tank])
+						else if (g_esPlayer[tank].g_bCar)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman3");
 						}
-						else if (g_bCar2[tank])
+						else if (g_esPlayer[tank].g_bCar2)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman4");
 						}
 					}
 					case 1:
 					{
-						if (g_iCarCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+						if (g_esPlayer[tank].g_iCarCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 						{
-							if (!g_bCar[tank] && !g_bCar2[tank])
+							if (!g_esPlayer[tank].g_bCar && !g_esPlayer[tank].g_bCar2)
 							{
-								g_bCar[tank] = true;
-								g_iCarCount[tank]++;
+								g_esPlayer[tank].g_bCar = true;
+								g_esPlayer[tank].g_iCarCount++;
 
 								vCar(tank);
 
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman", g_iCarCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman", g_esPlayer[tank].g_iCarCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
+							}
+							else if (g_esPlayer[tank].g_bCar)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman3");
+							}
+							else if (g_esPlayer[tank].g_bCar2)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman4");
 							}
 						}
 						else
@@ -401,11 +449,11 @@ public void MT_OnButtonReleased(int tank, int button)
 	{
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iCarAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iCarAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				if (g_iHumanMode[MT_GetTankType(tank)] == 1 && g_bCar[tank] && !g_bCar2[tank])
+				if (g_esAbility[MT_GetTankType(tank)].g_iHumanMode == 1 && g_esPlayer[tank].g_bCar && !g_esPlayer[tank].g_bCar2)
 				{
-					g_bCar[tank] = false;
+					g_esPlayer[tank].g_bCar = false;
 
 					vReset2(tank);
 				}
@@ -440,35 +488,35 @@ static void vCarAbility(int tank)
 		return;
 	}
 
-	if (g_iCarCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iCarCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_flCarChance[MT_GetTankType(tank)])
+		if (GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flCarChance)
 		{
-			g_bCar[tank] = true;
+			g_esPlayer[tank].g_bCar = true;
 
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bCar2[tank])
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bCar2)
 			{
-				g_bCar2[tank] = true;
-				g_iCarCount[tank]++;
+				g_esPlayer[tank].g_bCar2 = true;
+				g_esPlayer[tank].g_iCarCount++;
 
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman", g_iCarCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman", g_esPlayer[tank].g_iCarCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
 			}
 
 			vCar(tank);
 
-			if (g_iCarMessage[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iCarMessage == 1)
 			{
 				char sTankName[33];
 				MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Car", sTankName);
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman2");
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarAmmo");
 	}
@@ -476,9 +524,9 @@ static void vCarAbility(int tank)
 
 static void vRemoveCar(int tank)
 {
-	g_bCar[tank] = false;
-	g_bCar2[tank] = false;
-	g_iCarCount[tank] = 0;
+	g_esPlayer[tank].g_bCar = false;
+	g_esPlayer[tank].g_bCar2 = false;
+	g_esPlayer[tank].g_iCarCount = 0;
 }
 
 static void vReset()
@@ -494,17 +542,17 @@ static void vReset()
 
 static void vReset2(int tank)
 {
-	g_bCar2[tank] = true;
+	g_esPlayer[tank].g_bCar2 = true;
 
 	MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman5");
 
-	if (g_iCarCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iCarCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		CreateTimer(g_flHumanCooldown[MT_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
-		g_bCar2[tank] = false;
+		g_esPlayer[tank].g_bCar2 = false;
 	}
 }
 
@@ -515,49 +563,34 @@ static bool bHasAdminAccess(int admin)
 		return true;
 	}
 
-	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0)
+	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 	}
 
 	if (iAbilityFlags != 0)
@@ -573,24 +606,24 @@ public Action tTimerCar(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != MT_GetTankType(iTank) || !g_bCar[iTank])
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != MT_GetTankType(iTank) || !g_esPlayer[iTank].g_bCar)
 	{
-		g_bCar[iTank] = false;
+		g_esPlayer[iTank].g_bCar = false;
 
 		return Plugin_Stop;
 	}
 
 	float flTime = pack.ReadFloat();
-	if (g_iCarAbility[MT_GetTankType(iTank)] == 0 || ((!MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) || (g_iHumanAbility[MT_GetTankType(iTank)] == 1 && g_iHumanMode[MT_GetTankType(iTank)] == 0)) && (flTime + g_flCarDuration[MT_GetTankType(iTank)]) < GetEngineTime()))
+	if (g_esAbility[MT_GetTankType(iTank)].g_iCarAbility == 0 || ((!MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) || (g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1 && g_esAbility[MT_GetTankType(iTank)].g_iHumanMode == 0)) && (flTime + g_esAbility[MT_GetTankType(iTank)].g_flCarDuration) < GetEngineTime()))
 	{
-		g_bCar[iTank] = false;
+		g_esPlayer[iTank].g_bCar = false;
 
-		if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(iTank)] == 1 && g_iHumanMode[MT_GetTankType(iTank)] == 0 && !g_bCar2[iTank])
+		if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1 && g_esAbility[MT_GetTankType(iTank)].g_iHumanMode == 0 && !g_esPlayer[iTank].g_bCar2)
 		{
 			vReset2(iTank);
 		}
 
-		if (g_iCarMessage[MT_GetTankType(iTank)] == 1)
+		if (g_esAbility[MT_GetTankType(iTank)].g_iCarMessage == 1)
 		{
 			char sTankName[33];
 			MT_GetTankName(iTank, MT_GetTankType(iTank), sTankName);
@@ -633,7 +666,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 			for (int iBit = 0; iBit < 3; iBit++)
 			{
 				int iFlag = (1 << iBit);
-				if (!(g_iCarOptions[MT_GetTankType(iTank)] & iFlag))
+				if (!(g_esAbility[MT_GetTankType(iTank)].g_iCarOptions & iFlag))
 				{
 					continue;
 				}
@@ -663,7 +696,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 			for (int iPos = 0; iPos < 3; iPos++)
 			{
 				iCarColor[iPos] = GetRandomInt(0, 255);
-				flAngles2[iPos] = GetRandomFloat(g_flCarRadius[MT_GetTankType(iTank)][0], g_flCarRadius[MT_GetTankType(iTank)][1]);
+				flAngles2[iPos] = GetRandomFloat(g_esAbility[MT_GetTankType(iTank)].g_flCarRadius[0], g_esAbility[MT_GetTankType(iTank)].g_flCarRadius[1]);
 			}
 
 			SetEntityRenderColor(iCar, iCarColor[0], iCarColor[1], iCarColor[2], 255);
@@ -701,14 +734,14 @@ public Action tTimerSetCarVelocity(Handle timer, int ref)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bCar2[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_esPlayer[iTank].g_bCar2)
 	{
-		g_bCar2[iTank] = false;
+		g_esPlayer[iTank].g_bCar2 = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bCar2[iTank] = false;
+	g_esPlayer[iTank].g_bCar2 = false;
 
 	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "CarHuman6");
 

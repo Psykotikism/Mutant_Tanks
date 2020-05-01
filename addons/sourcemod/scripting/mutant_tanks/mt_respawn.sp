@@ -43,11 +43,34 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_RESPAWN "Respawn Ability"
 
-bool g_bCloneInstalled, g_bRespawn[MAXPLAYERS + 1];
+bool g_bCloneInstalled;
 
-float g_flRespawnChance[MT_MAXTYPES + 1];
+enum struct esPlayerSettings
+{
+	bool g_bRespawn;
 
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iRespawnAbility[MT_MAXTYPES + 1], g_iRespawnAmount[MT_MAXTYPES + 1], g_iRespawnCount[MAXPLAYERS + 1], g_iRespawnCount2[MAXPLAYERS + 1], g_iRespawnMessage[MT_MAXTYPES + 1], g_iRespawnMode[MT_MAXTYPES + 1], g_iRespawnType[MT_MAXTYPES + 1];
+	int g_iAccessFlags2;
+	int g_iRespawnCount;
+	int g_iRespawnCount2;
+}
+
+esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+
+enum struct esAbilitySettings
+{
+	float g_flRespawnChance;
+
+	int g_iAccessFlags;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iRespawnAbility;
+	int g_iRespawnAmount;
+	int g_iRespawnMessage;
+	int g_iRespawnMode;
+	int g_iRespawnType;
+}
+
+esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -139,11 +162,11 @@ public int iRespawnMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iRespawnAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iRespawnCount2[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iRespawnAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iRespawnCount2, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons4");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "RespawnDetails");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -208,6 +231,21 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
+public void MT_OnPluginCheck(ArrayList &list)
+{
+	char sName[32];
+	GetPluginFilename(null, sName, sizeof(sName));
+	list.PushString(sName);
+}
+
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString("respawnability");
+	list2.PushString("respawn ability");
+	list3.PushString("respawn_ability");
+	list4.PushString("respawn");
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	if (mode == 3)
@@ -216,7 +254,7 @@ public void MT_OnConfigsLoad(int mode)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				g_iAccessFlags2[iPlayer] = 0;
+				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
 			}
 		}
 	}
@@ -224,15 +262,15 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iAccessFlags[iIndex] = 0;
-			g_iHumanAbility[iIndex] = 0;
-			g_iHumanAmmo[iIndex] = 5;
-			g_iRespawnAbility[iIndex] = 0;
-			g_iRespawnMessage[iIndex] = 0;
-			g_iRespawnAmount[iIndex] = 1;
-			g_flRespawnChance[iIndex] = 33.3;
-			g_iRespawnMode[iIndex] = 0;
-			g_iRespawnType[iIndex] = 0;
+			g_esAbility[iIndex].g_iAccessFlags = 0;
+			g_esAbility[iIndex].g_iHumanAbility = 0;
+			g_esAbility[iIndex].g_iHumanAmmo = 5;
+			g_esAbility[iIndex].g_iRespawnAbility = 0;
+			g_esAbility[iIndex].g_iRespawnMessage = 0;
+			g_esAbility[iIndex].g_iRespawnAmount = 1;
+			g_esAbility[iIndex].g_flRespawnChance = 33.3;
+			g_esAbility[iIndex].g_iRespawnMode = 0;
+			g_esAbility[iIndex].g_iRespawnType = 0;
 		}
 	}
 }
@@ -245,27 +283,27 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_iRespawnAbility[type] = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iRespawnAbility[type], value, 0, 1);
-		g_iRespawnMessage[type] = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iRespawnMessage[type], value, 0, 1);
-		g_iRespawnAmount[type] = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnAmount", "Respawn Amount", "Respawn_Amount", "amount", g_iRespawnAmount[type], value, 1, 999999);
-		g_flRespawnChance[type] = flGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnChance", "Respawn Chance", "Respawn_Chance", "chance", g_flRespawnChance[type], value, 0.0, 100.0);
-		g_iRespawnMode[type] = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnMode", "Respawn Mode", "Respawn_Mode", "mode", g_iRespawnMode[type], value, 0, 2);
-		g_iRespawnType[type] = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnType", "Respawn Type", "Respawn_Type", "type", g_iRespawnType[type], value, 0, MT_MAXTYPES);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iRespawnAbility = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iRespawnAbility, value, 0, 1);
+		g_esAbility[type].g_iRespawnMessage = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iRespawnMessage, value, 0, 1);
+		g_esAbility[type].g_iRespawnAmount = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnAmount", "Respawn Amount", "Respawn_Amount", "amount", g_esAbility[type].g_iRespawnAmount, value, 1, 999999);
+		g_esAbility[type].g_flRespawnChance = flGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnChance", "Respawn Chance", "Respawn_Chance", "chance", g_esAbility[type].g_flRespawnChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iRespawnMode = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnMode", "Respawn Mode", "Respawn_Mode", "mode", g_esAbility[type].g_iRespawnMode, value, 0, 2);
+		g_esAbility[type].g_iRespawnType = iGetValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnType", "Respawn Type", "Respawn_Type", "type", g_esAbility[type].g_iRespawnType, value, 0, MT_MAXTYPES);
 
 		if (StrEqual(subsection, "respawnability", false) || StrEqual(subsection, "respawn ability", false) || StrEqual(subsection, "respawn_ability", false) || StrEqual(subsection, "respawn", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
 			}
 		}
 	}
@@ -276,7 +314,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(iTank, g_bCloneInstalled) && g_iRespawnAbility[MT_GetTankType(iTank)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flRespawnChance[MT_GetTankType(iTank)])
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(iTank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iRespawnAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(iTank)].g_flRespawnChance)
 		{
 			if (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank))
 			{
@@ -315,16 +353,16 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_SPECIAL_KEY2 == MT_SPECIAL_KEY2)
 		{
-			if (g_iRespawnAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iRespawnAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				switch (g_bRespawn[tank])
+				switch (g_esPlayer[tank].g_bRespawn)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RespawnHuman2");
 					case false:
 					{
-						if (g_iRespawnCount2[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+						if (g_esPlayer[tank].g_iRespawnCount2 < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 						{
-							g_bRespawn[tank] = true;
+							g_esPlayer[tank].g_bRespawn = true;
 
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RespawnHuman");
 						}
@@ -354,7 +392,7 @@ static void vRandomRespawn(int tank)
 	int iTypeCount, iTankTypes[MT_MAXTYPES + 1];
 	for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 	{
-		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTankSpawn(iIndex) || (MT_IsFinaleTank(iIndex) && (!bIsFinaleMap() || MT_GetCurrentFinaleWave() <= 0)) || MT_GetTankType(tank) == iIndex)
+		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_GetTankType(tank) == iIndex)
 		{
 			continue;
 		}
@@ -372,9 +410,9 @@ static void vRandomRespawn(int tank)
 
 static void vRemoveRespawn(int tank)
 {
-	g_bRespawn[tank] = false;
-	g_iRespawnCount[tank] = 0;
-	g_iRespawnCount2[tank] = 0;
+	g_esPlayer[tank].g_bRespawn = false;
+	g_esPlayer[tank].g_iRespawnCount = 0;
+	g_esPlayer[tank].g_iRespawnCount2 = 0;
 }
 
 static void vReset()
@@ -395,49 +433,34 @@ static bool bHasAdminAccess(int admin)
 		return true;
 	}
 
-	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0)
+	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 	}
 
 	if (iAbilityFlags != 0)
@@ -453,17 +476,17 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsPlayerIncapacitated(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || g_iRespawnAbility[MT_GetTankType(iTank)] == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsPlayerIncapacitated(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || g_esAbility[MT_GetTankType(iTank)].g_iRespawnAbility == 0)
 	{
-		g_iRespawnCount[iTank] = 0;
+		g_esPlayer[iTank].g_iRespawnCount = 0;
 
 		return Plugin_Stop;
 	}
 
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(iTank)] == 1 && !g_bRespawn[iTank])
+	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1 && !g_esPlayer[iTank].g_bRespawn)
 	{
-		g_bRespawn[iTank] = false;
-		g_iRespawnCount[iTank] = 0;
+		g_esPlayer[iTank].g_bRespawn = false;
+		g_esPlayer[iTank].g_iRespawnCount = 0;
 
 		return Plugin_Stop;
 	}
@@ -478,16 +501,16 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	flAngles[1] = pack.ReadFloat();
 	flAngles[2] = pack.ReadFloat();
 
-	if (g_iRespawnCount[iTank] < g_iRespawnAmount[MT_GetTankType(iTank)] && g_iRespawnCount2[iTank] < g_iHumanAmmo[MT_GetTankType(iTank)] && g_iHumanAmmo[MT_GetTankType(iTank)] > 0)
+	if (g_esPlayer[iTank].g_iRespawnCount < g_esAbility[MT_GetTankType(iTank)].g_iRespawnAmount && g_esPlayer[iTank].g_iRespawnCount2 < g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo > 0)
 	{
-		g_bRespawn[iTank] = false;
-		g_iRespawnCount[iTank]++;
+		g_esPlayer[iTank].g_bRespawn = false;
+		g_esPlayer[iTank].g_iRespawnCount++;
 
-		if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(iTank)] == 1)
+		if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1)
 		{
-			g_iRespawnCount2[iTank]++;
+			g_esPlayer[iTank].g_iRespawnCount2++;
 
-			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "RespawnHuman3", g_iRespawnCount2[iTank], g_iHumanAmmo[MT_GetTankType(iTank)]);
+			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "RespawnHuman3", g_esPlayer[iTank].g_iRespawnCount2, g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo);
 		}
 
 		bool bExists[MAXPLAYERS + 1];
@@ -500,15 +523,15 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			}
 		}
 
-		switch (g_iRespawnMode[MT_GetTankType(iTank)])
+		switch (g_esAbility[MT_GetTankType(iTank)].g_iRespawnMode)
 		{
 			case 0: MT_SpawnTank(iTank, MT_GetTankType(iTank));
 			case 1:
 			{
-				switch (g_iRespawnType[MT_GetTankType(iTank)])
+				switch (g_esAbility[MT_GetTankType(iTank)].g_iRespawnType)
 				{
 					case 0: vRandomRespawn(iTank);
-					default: MT_SpawnTank(iTank, g_iRespawnType[MT_GetTankType(iTank)]);
+					default: MT_SpawnTank(iTank, g_esAbility[MT_GetTankType(iTank)].g_iRespawnType);
 				}
 			}
 			case 2: vRandomRespawn(iTank);
@@ -520,9 +543,9 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			if (MT_IsTankSupported(iRespawn, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(iRespawn, g_bCloneInstalled) && !bExists[iRespawn])
 			{
 				iNewTank = iRespawn;
-				g_bRespawn[iNewTank] = false;
-				g_iRespawnCount[iNewTank] = g_iRespawnCount[iTank];
-				g_iRespawnCount2[iNewTank] = g_iRespawnCount2[iTank];
+				g_esPlayer[iNewTank].g_bRespawn = false;
+				g_esPlayer[iNewTank].g_iRespawnCount = g_esPlayer[iTank].g_iRespawnCount;
+				g_esPlayer[iNewTank].g_iRespawnCount2 = g_esPlayer[iTank].g_iRespawnCount2;
 
 				vRemoveRespawn(iTank);
 
@@ -542,7 +565,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			SetEntProp(iNewTank, Prop_Data, "m_nSequence", iSequence);
 			TeleportEntity(iNewTank, flPos, flAngles, NULL_VECTOR);
 
-			if (g_iRespawnMessage[MT_GetTankType(iTank)] == 1)
+			if (g_esAbility[MT_GetTankType(iTank)].g_iRespawnMessage == 1)
 			{
 				char sTankName[33];
 				MT_GetTankName(iTank, MT_GetTankType(iTank), sTankName);
@@ -554,7 +577,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 	{
 		vRemoveRespawn(iTank);
 
-		if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(iTank)] == 1)
+		if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "RespawnAmmo");
 		}

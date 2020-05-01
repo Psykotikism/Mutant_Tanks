@@ -55,11 +55,39 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_YELL "Yell Ability"
 
-bool g_bCloneInstalled, g_bYell[MAXPLAYERS + 1], g_bYell2[MAXPLAYERS + 1], g_bYell3[MAXPLAYERS + 1];
+bool g_bCloneInstalled;
 
-float g_flHumanCooldown[MT_MAXTYPES + 1], g_flYellChance[MT_MAXTYPES + 1], g_flYellDuration[MT_MAXTYPES + 1], g_flYellRange[MT_MAXTYPES + 1];
+enum struct esPlayerSettings
+{
+	bool g_bYell;
+	bool g_bYell2;
+	bool g_bYell3;
 
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iHumanMode[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iYellAbility[MT_MAXTYPES + 1], g_iYellCount[MAXPLAYERS + 1], g_iYellMessage[MT_MAXTYPES + 1], g_iYellOwner[MAXPLAYERS + 1];
+	int g_iAccessFlags2;
+	int g_iImmunityFlags2;
+	int g_iYellCount;
+	int g_iYellOwner;
+}
+
+esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+
+enum struct esAbilitySettings
+{
+	float g_flHumanCooldown;
+	float g_flYellChance;
+	float g_flYellDuration;
+	float g_flYellRange;
+
+	int g_iAccessFlags;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanMode;
+	int g_iImmunityFlags;
+	int g_iYellAbility;
+	int g_iYellMessage;
+}
+
+esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -170,14 +198,14 @@ public int iYellMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iYellAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iYellCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iYellAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iYellCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanMode[MT_GetTankType(param1)] == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_flHumanCooldown[MT_GetTankType(param1)]);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "YellDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_flYellDuration[MT_GetTankType(param1)]);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esAbility[MT_GetTankType(param1)].g_flYellDuration);
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -263,7 +291,7 @@ public Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PL
 	{
 		for (int iSurvivor = 0; iSurvivor < numClients; iSurvivor++)
 		{
-			if (bIsHumanSurvivor(clients[iSurvivor], MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_bYell3[clients[iSurvivor]])
+			if (bIsHumanSurvivor(clients[iSurvivor], MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_esPlayer[clients[iSurvivor]].g_bYell3)
 			{
 				for (int iPlayers = iSurvivor; iPlayers < numClients - 1; iPlayers++)
 				{
@@ -281,6 +309,21 @@ public Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PL
 	return Plugin_Continue;
 }
 
+public void MT_OnPluginCheck(ArrayList &list)
+{
+	char sName[32];
+	GetPluginFilename(null, sName, sizeof(sName));
+	list.PushString(sName);
+}
+
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString("yellability");
+	list2.PushString("yell ability");
+	list3.PushString("yell_ability");
+	list4.PushString("yell");
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	if (mode == 3)
@@ -289,8 +332,8 @@ public void MT_OnConfigsLoad(int mode)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				g_iAccessFlags2[iPlayer] = 0;
-				g_iImmunityFlags2[iPlayer] = 0;
+				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
+				g_esPlayer[iPlayer].g_iImmunityFlags2 = 0;
 			}
 		}
 	}
@@ -298,17 +341,17 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iAccessFlags[iIndex] = 0;
-			g_iImmunityFlags[iIndex] = 0;
-			g_iHumanAbility[iIndex] = 0;
-			g_iHumanAmmo[iIndex] = 5;
-			g_flHumanCooldown[iIndex] = 30.0;
-			g_iHumanMode[iIndex] = 1;
-			g_iYellAbility[iIndex] = 0;
-			g_iYellMessage[iIndex] = 0;
-			g_flYellChance[iIndex] = 33.3;
-			g_flYellDuration[iIndex] = 5.0;
-			g_flYellRange[iIndex] = 500.0;
+			g_esAbility[iIndex].g_iAccessFlags = 0;
+			g_esAbility[iIndex].g_iImmunityFlags = 0;
+			g_esAbility[iIndex].g_iHumanAbility = 0;
+			g_esAbility[iIndex].g_iHumanAmmo = 5;
+			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
+			g_esAbility[iIndex].g_iHumanMode = 1;
+			g_esAbility[iIndex].g_iYellAbility = 0;
+			g_esAbility[iIndex].g_iYellMessage = 0;
+			g_esAbility[iIndex].g_flYellChance = 33.3;
+			g_esAbility[iIndex].g_flYellDuration = 5.0;
+			g_esAbility[iIndex].g_flYellRange = 500.0;
 		}
 	}
 }
@@ -321,36 +364,36 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+				g_esPlayer[admin].g_iImmunityFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iImmunityFlags2;
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
-		g_iHumanMode[type] = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
-		g_iYellAbility[type] = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iYellAbility[type], value, 0, 1);
-		g_iYellMessage[type] = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iYellMessage[type], value, 0, 3);
-		g_flYellChance[type] = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_flYellChance[type], value, 0.0, 100.0);
-		g_flYellDuration[type] = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellDuration", "Yell Duration", "Yell_Duration", "duration", g_flYellDuration[type], value, 0.1, 999999.0);
-		g_flYellRange[type] = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellRange", "Yell Range", "Yell_Range", "range", g_flYellRange[type], value, 0.1, 999999.0);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
+		g_esAbility[type].g_iHumanMode = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iYellAbility = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iYellAbility, value, 0, 1);
+		g_esAbility[type].g_iYellMessage = iGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iYellMessage, value, 0, 3);
+		g_esAbility[type].g_flYellChance = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esAbility[type].g_flYellChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flYellDuration = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellDuration", "Yell Duration", "Yell_Duration", "duration", g_esAbility[type].g_flYellDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_flYellRange = flGetValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellRange", "Yell Range", "Yell_Range", "range", g_esAbility[type].g_flYellRange, value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "yellability", false) || StrEqual(subsection, "yell ability", false) || StrEqual(subsection, "yell_ability", false) || StrEqual(subsection, "yell", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+				g_esAbility[type].g_iImmunityFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iImmunityFlags;
 			}
 		}
 	}
@@ -358,7 +401,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -370,12 +413,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[MT_GetTankType(tank)] == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iYellAbility[MT_GetTankType(tank)] == 1 && !g_bYell[tank])
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iYellAbility == 1 && !g_esPlayer[tank].g_bYell)
 	{
 		vYellAbility(tank);
 	}
@@ -392,37 +435,45 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iYellAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iYellAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				switch (g_iHumanMode[MT_GetTankType(tank)])
+				switch (g_esAbility[MT_GetTankType(tank)].g_iHumanMode)
 				{
 					case 0:
 					{
-						if (!g_bYell[tank] && !g_bYell2[tank])
+						if (!g_esPlayer[tank].g_bYell && !g_esPlayer[tank].g_bYell2)
 						{
 							vYellAbility(tank);
 						}
-						else if (g_bYell[tank])
+						else if (g_esPlayer[tank].g_bYell)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman3");
 						}
-						else if (g_bYell2[tank])
+						else if (g_esPlayer[tank].g_bYell2)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman4");
 						}
 					}
 					case 1:
 					{
-						if (g_iYellCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+						if (g_esPlayer[tank].g_iYellCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 						{
-							if (!g_bYell[tank] && !g_bYell2[tank])
+							if (!g_esPlayer[tank].g_bYell && !g_esPlayer[tank].g_bYell2)
 							{
-								g_bYell[tank] = true;
-								g_iYellCount[tank]++;
+								g_esPlayer[tank].g_bYell = true;
+								g_esPlayer[tank].g_iYellCount++;
 
 								vYell(tank);
 
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_iYellCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_esPlayer[tank].g_iYellCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
+							}
+							else if (g_esPlayer[tank].g_bYell)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman3");
+							}
+							else if (g_esPlayer[tank].g_bYell2)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman4");
 							}
 						}
 						else
@@ -442,11 +493,11 @@ public void MT_OnButtonReleased(int tank, int button)
 	{
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iYellAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iYellAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				if (g_iHumanMode[MT_GetTankType(tank)] == 1 && g_bYell[tank] && !g_bYell2[tank])
+				if (g_esAbility[MT_GetTankType(tank)].g_iHumanMode == 1 && g_esPlayer[tank].g_bYell && !g_esPlayer[tank].g_bYell2)
 				{
-					g_bYell[tank] = false;
+					g_esPlayer[tank].g_bYell = false;
 
 					vReset3(tank);
 				}
@@ -464,10 +515,10 @@ static void vRemoveYell(int tank)
 {
 	vReset4(tank);
 
-	g_bYell[tank] = false;
-	g_bYell2[tank] = false;
-	g_bYell3[tank] = false;
-	g_iYellCount[tank] = 0;
+	g_esPlayer[tank].g_bYell = false;
+	g_esPlayer[tank].g_bYell2 = false;
+	g_esPlayer[tank].g_bYell3 = false;
+	g_esPlayer[tank].g_iYellCount = 0;
 }
 
 static void vReset()
@@ -478,18 +529,18 @@ static void vReset()
 		{
 			vRemoveYell(iPlayer);
 
-			g_iYellOwner[iPlayer] = 0;
+			g_esPlayer[iPlayer].g_iYellOwner = 0;
 		}
 	}
 }
 
 static void vReset2(int tank)
 {
-	g_bYell[tank] = false;
+	g_esPlayer[tank].g_bYell = false;
 
 	vReset4(tank);
 
-	if (g_iYellMessage[MT_GetTankType(tank)] == 1)
+	if (g_esAbility[MT_GetTankType(tank)].g_iYellMessage == 1)
 	{
 		char sTankName[33];
 		MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
@@ -499,17 +550,17 @@ static void vReset2(int tank)
 
 static void vReset3(int tank)
 {
-	g_bYell2[tank] = true;
+	g_esPlayer[tank].g_bYell2 = true;
 
 	MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman5");
 
-	if (g_iYellCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iYellCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		CreateTimer(g_flHumanCooldown[MT_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
-		g_bYell2[tank] = false;
+		g_esPlayer[tank].g_bYell2 = false;
 	}
 }
 
@@ -517,10 +568,10 @@ static void vReset4(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_bYell3[iSurvivor] && g_iYellOwner[iSurvivor] == tank)
+		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esPlayer[iSurvivor].g_bYell3 && g_esPlayer[iSurvivor].g_iYellOwner == tank)
 		{
-			g_bYell3[iSurvivor] = false;
-			g_iYellOwner[iSurvivor] = 0;
+			g_esPlayer[iSurvivor].g_bYell3 = false;
+			g_esPlayer[iSurvivor].g_iYellOwner = 0;
 		}
 	}
 }
@@ -547,9 +598,9 @@ static void vYellAbility(int tank)
 		return;
 	}
 
-	if (g_iYellCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iYellCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_flYellChance[MT_GetTankType(tank)])
+		if (GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flYellChance)
 		{
 			float flTankPos[3];
 			GetClientAbsOrigin(tank, flTankPos);
@@ -557,38 +608,38 @@ static void vYellAbility(int tank)
 			int iSurvivorCount;
 			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
-				if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank) && !g_bYell3[iSurvivor])
+				if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank) && !g_esPlayer[iSurvivor].g_bYell3)
 				{
 					float flSurvivorPos[3];
 					GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 					float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-					if (flDistance <= g_flYellRange[MT_GetTankType(tank)])
+					if (flDistance <= g_esAbility[MT_GetTankType(tank)].g_flYellRange)
 					{
-						g_bYell3[iSurvivor] = true;
-						g_iYellOwner[iSurvivor] = tank;
+						g_esPlayer[iSurvivor].g_bYell3 = true;
+						g_esPlayer[iSurvivor].g_iYellOwner = tank;
 
 						iSurvivorCount++;
 					}
 				}
 			}
 
-			if (iSurvivorCount > 0 && !g_bYell[tank])
+			if (iSurvivorCount > 0 && !g_esPlayer[tank].g_bYell)
 			{
-				g_bYell[tank] = true;
+				g_esPlayer[tank].g_bYell = true;
 
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 				{
-					g_iYellCount[tank]++;
+					g_esPlayer[tank].g_iYellCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_iYellCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_esPlayer[tank].g_iYellCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
 				}
 
 				vYell(tank);
 
-				CreateTimer(g_flYellDuration[MT_GetTankType(tank)], tTimerStopYell, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+				CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flYellDuration, tTimerStopYell, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 
-				if (g_iYellMessage[MT_GetTankType(tank)] == 1)
+				if (g_esAbility[MT_GetTankType(tank)].g_iYellMessage == 1)
 				{
 					char sTankName[33];
 					MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
@@ -596,12 +647,12 @@ static void vYellAbility(int tank)
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman2");
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellAmmo");
 	}
@@ -614,49 +665,34 @@ static bool bHasAdminAccess(int admin)
 		return true;
 	}
 
-	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0)
+	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 	}
 
 	if (iAbilityFlags != 0)
@@ -674,56 +710,42 @@ static bool bIsAdminImmune(int survivor, int tank)
 		return false;
 	}
 
-	int iAbilityFlags = g_iImmunityFlags[MT_GetTankType(survivor)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(tank)].g_iImmunityFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iAbilityFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
-	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(survivor));
-	if (iTypeFlags != 0)
+	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(tank));
+	if (iTypeFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iTypeFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetImmunityFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iGlobalFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetImmunityFlags(4, MT_GetTankType(tank), survivor),
 		iClientTypeFlags2 = MT_GetImmunityFlags(4, MT_GetTankType(tank), tank);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
-		{
-			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
-		}
+		return (iClientTypeFlags2 != 0 && (iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetImmunityFlags(3, 0, survivor),
 		iClientGlobalFlags2 = MT_GetImmunityFlags(3, 0, tank);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
-		{
-			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
-		}
+		return (iClientGlobalFlags2 != 0 && (iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
 	}
 
-	if (iAbilityFlags != 0)
+	int iSurvivorFlags = GetUserFlagBits(survivor), iTankFlags = GetUserFlagBits(tank);
+	if (iAbilityFlags != 0 && iSurvivorFlags != 0 && (iSurvivorFlags & iAbilityFlags))
 	{
-		return ((GetUserFlagBits(tank) & iAbilityFlags) && GetUserFlagBits(survivor) <= GetUserFlagBits(tank)) ? false : true;
+		return (iTankFlags != 0 && iSurvivorFlags <= iTankFlags) ? false : true;
 	}
 
 	return false;
@@ -741,7 +763,7 @@ public Action tTimerStopYell(Handle timer, int userid)
 
 	vReset2(iTank);
 
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_iHumanAbility[MT_GetTankType(iTank)] == 1 && !g_bYell2[iTank])
+	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1 && !g_esPlayer[iTank].g_bYell2)
 	{
 		vReset3(iTank);
 	}
@@ -752,14 +774,14 @@ public Action tTimerStopYell(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bYell2[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_esPlayer[iTank].g_bYell2)
 	{
-		g_bYell2[iTank] = false;
+		g_esPlayer[iTank].g_bYell2 = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bYell2[iTank] = false;
+	g_esPlayer[iTank].g_bYell2 = false;
 
 	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "YellHuman6");
 

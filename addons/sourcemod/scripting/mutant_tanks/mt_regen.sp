@@ -43,11 +43,37 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_REGEN "Regen Ability"
 
-bool g_bCloneInstalled, g_bRegen[MAXPLAYERS + 1], g_bRegen2[MAXPLAYERS + 1];
+bool g_bCloneInstalled;
 
-float g_flHumanCooldown[MT_MAXTYPES + 1], g_flHumanDuration[MT_MAXTYPES + 1], g_flRegenChance[MT_MAXTYPES + 1], g_flRegenInterval[MT_MAXTYPES + 1];
+enum struct esPlayerSettings
+{
+	bool g_bRegen;
+	bool g_bRegen2;
 
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iHumanMode[MT_MAXTYPES + 1], g_iRegenAbility[MT_MAXTYPES + 1], g_iRegenCount[MAXPLAYERS + 1], g_iRegenHealth[MT_MAXTYPES + 1], g_iRegenLimit[MT_MAXTYPES + 1], g_iRegenMessage[MT_MAXTYPES + 1];
+	int g_iAccessFlags2;
+	int g_iRegenCount;
+}
+
+esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+
+enum struct esAbilitySettings
+{
+	float g_flHumanCooldown;
+	float g_flHumanDuration;
+	float g_flRegenChance;
+	float g_flRegenInterval;
+
+	int g_iAccessFlags;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanMode;
+	int g_iRegenAbility;
+	int g_iRegenHealth;
+	int g_iRegenLimit;
+	int g_iRegenMessage;
+}
+
+esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -142,14 +168,14 @@ public int iRegenMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iRegenAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iRegenCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iRegenAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iRegenCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanMode[MT_GetTankType(param1)] == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_flHumanCooldown[MT_GetTankType(param1)]);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "RegenDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_flHumanDuration[MT_GetTankType(param1)]);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esAbility[MT_GetTankType(param1)].g_flHumanDuration);
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -229,6 +255,21 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
+public void MT_OnPluginCheck(ArrayList &list)
+{
+	char sName[32];
+	GetPluginFilename(null, sName, sizeof(sName));
+	list.PushString(sName);
+}
+
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString("regenability");
+	list2.PushString("regen ability");
+	list3.PushString("regen_ability");
+	list4.PushString("regen");
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	if (mode == 3)
@@ -237,7 +278,7 @@ public void MT_OnConfigsLoad(int mode)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				g_iAccessFlags2[iPlayer] = 0;
+				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
 			}
 		}
 	}
@@ -245,18 +286,18 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iAccessFlags[iIndex] = 0;
-			g_iHumanAbility[iIndex] = 0;
-			g_iHumanAmmo[iIndex] = 5;
-			g_flHumanCooldown[iIndex] = 30.0;
-			g_flHumanDuration[iIndex] = 5.0;
-			g_iHumanMode[iIndex] = 1;
-			g_iRegenAbility[iIndex] = 0;
-			g_iRegenMessage[iIndex] = 0;
-			g_flRegenChance[iIndex] = 33.3;
-			g_iRegenHealth[iIndex] = 1;
-			g_flRegenInterval[iIndex] = 1.0;
-			g_iRegenLimit[iIndex] = MT_MAXHEALTH;
+			g_esAbility[iIndex].g_iAccessFlags = 0;
+			g_esAbility[iIndex].g_iHumanAbility = 0;
+			g_esAbility[iIndex].g_iHumanAmmo = 5;
+			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
+			g_esAbility[iIndex].g_flHumanDuration = 5.0;
+			g_esAbility[iIndex].g_iHumanMode = 1;
+			g_esAbility[iIndex].g_iRegenAbility = 0;
+			g_esAbility[iIndex].g_iRegenMessage = 0;
+			g_esAbility[iIndex].g_flRegenChance = 33.3;
+			g_esAbility[iIndex].g_iRegenHealth = 1;
+			g_esAbility[iIndex].g_flRegenInterval = 1.0;
+			g_esAbility[iIndex].g_iRegenLimit = MT_MAXHEALTH;
 		}
 	}
 }
@@ -269,30 +310,30 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
-		g_flHumanDuration[type] = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 999999.0);
-		g_iHumanMode[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
-		g_iRegenAbility[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iRegenAbility[type], value, 0, 1);
-		g_iRegenMessage[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iRegenMessage[type], value, 0, 1);
-		g_flRegenChance[type] = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_flRegenChance[type], value, 0.0, 100.0);
-		g_iRegenHealth[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenHealth", "Regen Health", "Regen_Health", "health", g_iRegenHealth[type], value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
-		g_flRegenInterval[type] = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_flRegenInterval[type], value, 0.1, 999999.0);
-		g_iRegenLimit[type] = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenLimit", "Regen Limit", "Regen_Limit", "limit", g_iRegenLimit[type], value, 1, MT_MAXHEALTH);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
+		g_esAbility[type].g_flHumanDuration = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_flHumanDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iHumanMode = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iRegenAbility = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iRegenAbility, value, 0, 1);
+		g_esAbility[type].g_iRegenMessage = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iRegenMessage, value, 0, 1);
+		g_esAbility[type].g_flRegenChance = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenChance", "Regen Chance", "Regen_Chance", "chance", g_esAbility[type].g_flRegenChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iRegenHealth = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenHealth", "Regen Health", "Regen_Health", "health", g_esAbility[type].g_iRegenHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+		g_esAbility[type].g_flRegenInterval = flGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenInterval", "Regen Interval", "Regen_Interval", "interval", g_esAbility[type].g_flRegenInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_iRegenLimit = iGetValue(subsection, "regenability", "regen ability", "regen_ability", "regen", key, "RegenLimit", "Regen Limit", "Regen_Limit", "limit", g_esAbility[type].g_iRegenLimit, value, 1, MT_MAXHEALTH);
 
 		if (StrEqual(subsection, "regenability", false) || StrEqual(subsection, "regen ability", false) || StrEqual(subsection, "regen_ability", false) || StrEqual(subsection, "regen", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
 			}
 		}
 	}
@@ -300,7 +341,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -312,12 +353,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[MT_GetTankType(tank)] == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iRegenAbility[MT_GetTankType(tank)] == 1 && !g_bRegen[tank])
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iRegenAbility == 1 && !g_esPlayer[tank].g_bRegen)
 	{
 		vRegenAbility(tank);
 	}
@@ -334,37 +375,45 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iRegenAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iRegenAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				switch (g_iHumanMode[MT_GetTankType(tank)])
+				switch (g_esAbility[MT_GetTankType(tank)].g_iHumanMode)
 				{
 					case 0:
 					{
-						if (!g_bRegen[tank] && !g_bRegen2[tank])
+						if (!g_esPlayer[tank].g_bRegen && !g_esPlayer[tank].g_bRegen2)
 						{
 							vRegenAbility(tank);
 						}
-						else if (g_bRegen[tank])
+						else if (g_esPlayer[tank].g_bRegen)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman3");
 						}
-						else if (g_bRegen2[tank])
+						else if (g_esPlayer[tank].g_bRegen2)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman4");
 						}
 					}
 					case 1:
 					{
-						if (g_iRegenCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+						if (g_esPlayer[tank].g_iRegenCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 						{
-							if (!g_bRegen[tank] && !g_bRegen2[tank])
+							if (!g_esPlayer[tank].g_bRegen && !g_esPlayer[tank].g_bRegen2)
 							{
-								g_bRegen[tank] = true;
-								g_iRegenCount[tank]++;
+								g_esPlayer[tank].g_bRegen = true;
+								g_esPlayer[tank].g_iRegenCount++;
 
 								vRegen(tank);
 
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman", g_iRegenCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman", g_esPlayer[tank].g_iRegenCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
+							}
+							else if (g_esPlayer[tank].g_bRegen)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman3");
+							}
+							else if (g_esPlayer[tank].g_bRegen2)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman4");
 							}
 						}
 						else
@@ -384,11 +433,11 @@ public void MT_OnButtonReleased(int tank, int button)
 	{
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iRegenAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iRegenAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				if (g_iHumanMode[MT_GetTankType(tank)] == 1 && g_bRegen[tank] && !g_bRegen2[tank])
+				if (g_esAbility[MT_GetTankType(tank)].g_iHumanMode == 1 && g_esPlayer[tank].g_bRegen && !g_esPlayer[tank].g_bRegen2)
 				{
-					g_bRegen[tank] = false;
+					g_esPlayer[tank].g_bRegen = false;
 
 					vReset2(tank);
 				}
@@ -410,7 +459,7 @@ static void vRegen(int tank)
 	}
 
 	DataPack dpRegen;
-	CreateDataTimer(g_flRegenInterval[MT_GetTankType(tank)], tTimerRegen, dpRegen, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateDataTimer(g_esAbility[MT_GetTankType(tank)].g_flRegenInterval, tTimerRegen, dpRegen, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpRegen.WriteCell(GetClientUserId(tank));
 	dpRegen.WriteCell(MT_GetTankType(tank));
 	dpRegen.WriteFloat(GetEngineTime());
@@ -423,34 +472,34 @@ static void vRegenAbility(int tank)
 		return;
 	}
 
-	if (g_iRegenCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iRegenCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_flRegenChance[MT_GetTankType(tank)])
+		if (GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flRegenChance)
 		{
-			g_bRegen[tank] = true;
+			g_esPlayer[tank].g_bRegen = true;
 
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				g_iRegenCount[tank]++;
+				g_esPlayer[tank].g_iRegenCount++;
 
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman", g_iRegenCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman", g_esPlayer[tank].g_iRegenCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
 			}
 
 			vRegen(tank);
 
-			if (g_iRegenMessage[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iRegenMessage == 1)
 			{
 				char sTankName[33];
 				MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Regen", sTankName, g_flRegenInterval[MT_GetTankType(tank)]);
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Regen", sTankName, g_esAbility[MT_GetTankType(tank)].g_flRegenInterval);
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman2");
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenAmmo");
 	}
@@ -458,9 +507,9 @@ static void vRegenAbility(int tank)
 
 static void vRemoveRegen(int tank)
 {
-	g_bRegen[tank] = false;
-	g_bRegen2[tank] = false;
-	g_iRegenCount[tank] = 0;
+	g_esPlayer[tank].g_bRegen = false;
+	g_esPlayer[tank].g_bRegen2 = false;
+	g_esPlayer[tank].g_iRegenCount = 0;
 }
 
 static void vReset()
@@ -476,17 +525,17 @@ static void vReset()
 
 static void vReset2(int tank)
 {
-	g_bRegen2[tank] = true;
+	g_esPlayer[tank].g_bRegen2 = true;
 
 	MT_PrintToChat(tank, "%s %t", MT_TAG3, "RegenHuman5");
 
-	if (g_iRegenCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iRegenCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		CreateTimer(g_flHumanCooldown[MT_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
-		g_bRegen2[tank] = false;
+		g_esPlayer[tank].g_bRegen2 = false;
 	}
 }
 
@@ -497,49 +546,34 @@ static bool bHasAdminAccess(int admin)
 		return true;
 	}
 
-	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0)
+	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 	}
 
 	if (iAbilityFlags != 0)
@@ -555,11 +589,11 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != MT_GetTankType(iTank) || g_iRegenAbility[MT_GetTankType(iTank)] == 0 || !g_bRegen[iTank])
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != MT_GetTankType(iTank) || g_esAbility[MT_GetTankType(iTank)].g_iRegenAbility == 0 || !g_esPlayer[iTank].g_bRegen)
 	{
-		g_bRegen[iTank] = false;
+		g_esPlayer[iTank].g_bRegen = false;
 
-		if (g_iRegenMessage[MT_GetTankType(iTank)] == 1)
+		if (g_esAbility[MT_GetTankType(iTank)].g_iRegenMessage == 1)
 		{
 			char sTankName[33];
 			MT_GetTankName(iTank, MT_GetTankType(iTank), sTankName);
@@ -570,7 +604,7 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 	}
 
 	float flTime = pack.ReadFloat();
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(iTank)] == 1 && g_iHumanMode[MT_GetTankType(iTank)] == 0 && (flTime + g_flHumanDuration[MT_GetTankType(iTank)]) < GetEngineTime() && !g_bRegen2[iTank])
+	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1 && g_esAbility[MT_GetTankType(iTank)].g_iHumanMode == 0 && (flTime + g_esAbility[MT_GetTankType(iTank)].g_flHumanDuration) < GetEngineTime() && !g_esPlayer[iTank].g_bRegen2)
 	{
 		vReset2(iTank);
 
@@ -578,13 +612,13 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 	}
 
 	int iHealth = GetClientHealth(iTank),
-		iExtraHealth = iHealth + g_iRegenHealth[MT_GetTankType(iTank)],
+		iExtraHealth = iHealth + g_esAbility[MT_GetTankType(iTank)].g_iRegenHealth,
 		iNewHealth = (iExtraHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealth,
 		iNewHealth2 = (iExtraHealth <= 1) ? iHealth : iExtraHealth,
-		iRealHealth = (g_iRegenHealth[MT_GetTankType(iTank)] >= 1) ? iNewHealth : iNewHealth2,
-		iFinalHealth = (g_iRegenHealth[MT_GetTankType(iTank)] >= 1 && iRealHealth >= g_iRegenLimit[MT_GetTankType(iTank)]) ? g_iRegenLimit[MT_GetTankType(iTank)] : iRealHealth;
-	SetEntityHealth(iTank, iFinalHealth);
-	//SetEntProp(iTank, Prop_Send, "m_iHealth", iFinalHealth);
+		iRealHealth = (g_esAbility[MT_GetTankType(iTank)].g_iRegenHealth >= 1) ? iNewHealth : iNewHealth2,
+		iFinalHealth = (g_esAbility[MT_GetTankType(iTank)].g_iRegenHealth >= 1 && iRealHealth >= g_esAbility[MT_GetTankType(iTank)].g_iRegenLimit) ? g_esAbility[MT_GetTankType(iTank)].g_iRegenLimit : iRealHealth;
+	//SetEntityHealth(iTank, iFinalHealth);
+	SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth);
 
 	return Plugin_Continue;
 }
@@ -592,14 +626,14 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bRegen2[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_esPlayer[iTank].g_bRegen2)
 	{
-		g_bRegen2[iTank] = false;
+		g_esPlayer[iTank].g_bRegen2 = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bRegen2[iTank] = false;
+	g_esPlayer[iTank].g_bRegen2 = false;
 
 	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "RegenHuman6");
 

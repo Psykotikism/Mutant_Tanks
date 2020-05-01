@@ -50,24 +50,58 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_PUKE "Puke Ability"
 
-bool g_bCloneInstalled, g_bPuke[MAXPLAYERS + 1], g_bPuke2[MAXPLAYERS + 1], g_bPuke3[MAXPLAYERS + 1];
+enum struct esGeneralSettings
+{
+	bool g_bCloneInstalled;
 
-float g_flHumanCooldown[MT_MAXTYPES + 1], g_flPukeChance[MT_MAXTYPES + 1], g_flPukeRange[MT_MAXTYPES + 1], g_flPukeRangeChance[MT_MAXTYPES + 1];
+	Handle g_hSDKPukePlayer;
+}
 
-Handle g_hSDKPukePlayer;
+esGeneralSettings g_esGeneral;
 
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iPukeAbility[MT_MAXTYPES + 1], g_iPukeCount[MAXPLAYERS + 1], g_iPukeEffect[MT_MAXTYPES + 1], g_iPukeHit[MT_MAXTYPES + 1], g_iPukeHitMode[MT_MAXTYPES + 1], g_iPukeMessage[MT_MAXTYPES + 1];
+enum struct esPlayerSettings
+{
+	bool g_bPuke;
+	bool g_bPuke2;
+	bool g_bPuke3;
+
+	int g_iAccessFlags2;
+	int g_iImmunityFlags2;
+	int g_iPukeCount;
+}
+
+esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+
+enum struct esAbilitySettings
+{
+	float g_flHumanCooldown;
+	float g_flPukeChance;
+	float g_flPukeRange;
+	float g_flPukeRangeChance;
+
+	int g_iAccessFlags;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iImmunityFlags;
+	int g_iPukeAbility;
+	int g_iPukeEffect;
+	int g_iPukeHit;
+	int g_iPukeHitMode;
+	int g_iPukeMessage;
+}
+
+esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
-	g_bCloneInstalled = LibraryExists("mt_clone");
+	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "mt_clone", false))
 	{
-		g_bCloneInstalled = true;
+		g_esGeneral.g_bCloneInstalled = true;
 	}
 }
 
@@ -75,7 +109,7 @@ public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "mt_clone", false))
 	{
-		g_bCloneInstalled = false;
+		g_esGeneral.g_bCloneInstalled = false;
 	}
 }
 
@@ -91,16 +125,21 @@ public void OnPluginStart()
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+
 		return;
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon");
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon"))
+	{
+		SetFailState("Failed to find signature: CTerrorPlayer_OnVomitedUpon");
+	}
+
 	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	g_hSDKPukePlayer = EndPrepSDKCall();
+	g_esGeneral.g_hSDKPukePlayer = EndPrepSDKCall();
 
-	if (g_hSDKPukePlayer == null)
+	if (g_esGeneral.g_hSDKPukePlayer == null)
 	{
 		PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", MT_TAG);
 	}
@@ -187,12 +226,12 @@ public int iPukeMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iPukeAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iPukeCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iPukeAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iPukeCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_flHumanCooldown[MT_GetTankType(param1)]);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "PukeDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -264,11 +303,11 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iPukeHitMode[MT_GetTankType(attacker)] == 0 || g_iPukeHitMode[MT_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_esGeneral.g_bCloneInstalled) && (g_esAbility[MT_GetTankType(attacker)].g_iPukeHitMode == 0 || g_esAbility[MT_GetTankType(attacker)].g_iPukeHitMode == 1) && bIsSurvivor(victim))
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
 			{
@@ -277,10 +316,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vPukeHit(victim, attacker, g_flPukeChance[MT_GetTankType(attacker)], g_iPukeHit[MT_GetTankType(attacker)], MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vPukeHit(victim, attacker, g_esAbility[MT_GetTankType(attacker)].g_flPukeChance, g_esAbility[MT_GetTankType(attacker)].g_iPukeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iPukeHitMode[MT_GetTankType(victim)] == 0 || g_iPukeHitMode[MT_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_esGeneral.g_bCloneInstalled) && (g_esAbility[MT_GetTankType(victim)].g_iPukeHitMode == 0 || g_esAbility[MT_GetTankType(victim)].g_iPukeHitMode == 2) && bIsSurvivor(attacker))
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
 			{
@@ -289,12 +328,27 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vPukeHit(attacker, victim, g_flPukeChance[MT_GetTankType(victim)], g_iPukeHit[MT_GetTankType(victim)], MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vPukeHit(attacker, victim, g_esAbility[MT_GetTankType(victim)].g_flPukeChance, g_esAbility[MT_GetTankType(victim)].g_iPukeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
 
 	return Plugin_Continue;
+}
+
+public void MT_OnPluginCheck(ArrayList &list)
+{
+	char sName[32];
+	GetPluginFilename(null, sName, sizeof(sName));
+	list.PushString(sName);
+}
+
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString("pukeability");
+	list2.PushString("puke ability");
+	list3.PushString("puke_ability");
+	list4.PushString("puke");
 }
 
 public void MT_OnConfigsLoad(int mode)
@@ -305,8 +359,8 @@ public void MT_OnConfigsLoad(int mode)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				g_iAccessFlags2[iPlayer] = 0;
-				g_iImmunityFlags2[iPlayer] = 0;
+				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
+				g_esPlayer[iPlayer].g_iImmunityFlags2 = 0;
 			}
 		}
 	}
@@ -314,19 +368,19 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iAccessFlags[iIndex] = 0;
-			g_iImmunityFlags[iIndex] = 0;
-			g_iHumanAbility[iIndex] = 0;
-			g_iHumanAmmo[iIndex] = 5;
-			g_flHumanCooldown[iIndex] = 30.0;
-			g_iPukeAbility[iIndex] = 0;
-			g_iPukeEffect[iIndex] = 0;
-			g_iPukeMessage[iIndex] = 0;
-			g_flPukeChance[iIndex] = 33.3;
-			g_iPukeHit[iIndex] = 0;
-			g_iPukeHitMode[iIndex] = 0;
-			g_flPukeRange[iIndex] = 150.0;
-			g_flPukeRangeChance[iIndex] = 15.0;
+			g_esAbility[iIndex].g_iAccessFlags = 0;
+			g_esAbility[iIndex].g_iImmunityFlags = 0;
+			g_esAbility[iIndex].g_iHumanAbility = 0;
+			g_esAbility[iIndex].g_iHumanAmmo = 5;
+			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
+			g_esAbility[iIndex].g_iPukeAbility = 0;
+			g_esAbility[iIndex].g_iPukeEffect = 0;
+			g_esAbility[iIndex].g_iPukeMessage = 0;
+			g_esAbility[iIndex].g_flPukeChance = 33.3;
+			g_esAbility[iIndex].g_iPukeHit = 0;
+			g_esAbility[iIndex].g_iPukeHitMode = 0;
+			g_esAbility[iIndex].g_flPukeRange = 150.0;
+			g_esAbility[iIndex].g_flPukeRangeChance = 15.0;
 		}
 	}
 }
@@ -339,38 +393,38 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+				g_esPlayer[admin].g_iImmunityFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iImmunityFlags2;
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
-		g_iPukeAbility[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iPukeAbility[type], value, 0, 1);
-		g_iPukeEffect[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iPukeEffect[type], value, 0, 7);
-		g_iPukeMessage[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iPukeMessage[type], value, 0, 3);
-		g_flPukeChance[type] = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeChance", "Puke Chance", "Puke_Chance", "chance", g_flPukeChance[type], value, 0.0, 100.0);
-		g_iPukeHit[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHit", "Puke Hit", "Puke_Hit", "hit", g_iPukeHit[type], value, 0, 1);
-		g_iPukeHitMode[type] = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHitMode", "Puke Hit Mode", "Puke_Hit_Mode", "hitmode", g_iPukeHitMode[type], value, 0, 2);
-		g_flPukeRange[type] = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeRange", "Puke Range", "Puke_Range", "range", g_flPukeRange[type], value, 1.0, 999999.0);
-		g_flPukeRangeChance[type] = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeRangeChance", "Puke Range Chance", "Puke_Range_Chance", "rangechance", g_flPukeRangeChance[type], value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
+		g_esAbility[type].g_iPukeAbility = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iPukeAbility, value, 0, 1);
+		g_esAbility[type].g_iPukeEffect = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iPukeEffect, value, 0, 7);
+		g_esAbility[type].g_iPukeMessage = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iPukeMessage, value, 0, 3);
+		g_esAbility[type].g_flPukeChance = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeChance", "Puke Chance", "Puke_Chance", "chance", g_esAbility[type].g_flPukeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iPukeHit = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHit", "Puke Hit", "Puke_Hit", "hit", g_esAbility[type].g_iPukeHit, value, 0, 1);
+		g_esAbility[type].g_iPukeHitMode = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHitMode", "Puke Hit Mode", "Puke_Hit_Mode", "hitmode", g_esAbility[type].g_iPukeHitMode, value, 0, 2);
+		g_esAbility[type].g_flPukeRange = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeRange", "Puke Range", "Puke_Range", "range", g_esAbility[type].g_flPukeRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flPukeRangeChance = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeRangeChance", "Puke Range Chance", "Puke_Range_Chance", "rangechance", g_esAbility[type].g_flPukeRangeChance, value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "pukeability", false) || StrEqual(subsection, "puke ability", false) || StrEqual(subsection, "puke_ability", false) || StrEqual(subsection, "puke", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+				g_esAbility[type].g_iImmunityFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iImmunityFlags;
 			}
 		}
 	}
@@ -378,12 +432,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
-			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_iPukeAbility[MT_GetTankType(iTank)] == 1)
+			if (bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iPukeAbility == 1)
 			{
 				vAttachParticle(iTank, PARTICLE_BLOOD, 0.1, 0.0);
 
@@ -400,7 +454,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 						float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 						if (flDistance <= 200.0)
 						{
-							SDKCall(g_hSDKPukePlayer, iSurvivor, iTank, true);
+							SDKCall(g_esGeneral.g_hSDKPukePlayer, iSurvivor, iTank, true);
 						}
 					}
 				}
@@ -413,12 +467,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[MT_GetTankType(tank)] == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iPukeAbility[MT_GetTankType(tank)] == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iPukeAbility == 1)
 	{
 		vPukeAbility(tank);
 	}
@@ -426,7 +480,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled))
 	{
 		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
 		{
@@ -435,9 +489,9 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_SUB_KEY == MT_SUB_KEY)
 		{
-			if (g_iPukeAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iPukeAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				switch (g_bPuke[tank])
+				switch (g_esPlayer[tank].g_bPuke)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeHuman3");
 					case false: vPukeAbility(tank);
@@ -459,10 +513,10 @@ static void vPukeAbility(int tank)
 		return;
 	}
 
-	if (g_iPukeCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iPukeCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		g_bPuke2[tank] = false;
-		g_bPuke3[tank] = false;
+		g_esPlayer[tank].g_bPuke2 = false;
+		g_esPlayer[tank].g_bPuke3 = false;
 
 		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
@@ -476,9 +530,9 @@ static void vPukeAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= g_flPukeRange[MT_GetTankType(tank)])
+				if (flDistance <= g_esAbility[MT_GetTankType(tank)].g_flPukeRange)
 				{
-					vPukeHit(iSurvivor, tank, g_flPukeRangeChance[MT_GetTankType(tank)], g_iPukeAbility[MT_GetTankType(tank)], MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+					vPukeHit(iSurvivor, tank, g_esAbility[MT_GetTankType(tank)].g_flPukeRangeChance, g_esAbility[MT_GetTankType(tank)].g_iPukeAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -487,13 +541,13 @@ static void vPukeAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeHuman4");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeAmmo");
 	}
@@ -508,51 +562,51 @@ static void vPukeHit(int survivor, int tank, float chance, int enabled, int mess
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iPukeCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+		if (g_esPlayer[tank].g_iPukeCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && (flags & MT_ATTACK_RANGE) && !g_bPuke[tank])
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && !g_esPlayer[tank].g_bPuke)
 				{
-					g_bPuke[tank] = true;
-					g_iPukeCount[tank]++;
+					g_esPlayer[tank].g_bPuke = true;
+					g_esPlayer[tank].g_iPukeCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeHuman", g_iPukeCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeHuman", g_esPlayer[tank].g_iPukeCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
 
-					if (g_iPukeCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+					if (g_esPlayer[tank].g_iPukeCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 					{
-						CreateTimer(g_flHumanCooldown[MT_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 					}
 					else
 					{
-						g_bPuke[tank] = false;
+						g_esPlayer[tank].g_bPuke = false;
 					}
 				}
 
-				SDKCall(g_hSDKPukePlayer, survivor, tank, true);
+				SDKCall(g_esGeneral.g_hSDKPukePlayer, survivor, tank, true);
 
-				vEffect(survivor, tank, g_iPukeEffect[MT_GetTankType(tank)], flags);
+				vEffect(survivor, tank, g_esAbility[MT_GetTankType(tank)].g_iPukeEffect, flags);
 
-				if (g_iPukeMessage[MT_GetTankType(tank)] & messages)
+				if (g_esAbility[MT_GetTankType(tank)].g_iPukeMessage & messages)
 				{
 					char sTankName[33];
 					MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && !g_bPuke[tank])
+			else if ((flags & MT_ATTACK_RANGE) && !g_esPlayer[tank].g_bPuke)
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bPuke2[tank])
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bPuke2)
 				{
-					g_bPuke2[tank] = true;
+					g_esPlayer[tank].g_bPuke2 = true;
 
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeHuman2");
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bPuke3[tank])
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bPuke3)
 		{
-			g_bPuke3[tank] = true;
+			g_esPlayer[tank].g_bPuke3 = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeAmmo");
 		}
@@ -561,10 +615,10 @@ static void vPukeHit(int survivor, int tank, float chance, int enabled, int mess
 
 static void vRemovePuke(int tank)
 {
-	g_bPuke[tank] = false;
-	g_bPuke2[tank] = false;
-	g_bPuke3[tank] = false;
-	g_iPukeCount[tank] = 0;
+	g_esPlayer[tank].g_bPuke = false;
+	g_esPlayer[tank].g_bPuke2 = false;
+	g_esPlayer[tank].g_bPuke3 = false;
+	g_esPlayer[tank].g_iPukeCount = 0;
 }
 
 static void vReset()
@@ -585,49 +639,34 @@ static bool bHasAdminAccess(int admin)
 		return true;
 	}
 
-	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0)
+	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 	}
 
 	if (iAbilityFlags != 0)
@@ -645,56 +684,42 @@ static bool bIsAdminImmune(int survivor, int tank)
 		return false;
 	}
 
-	int iAbilityFlags = g_iImmunityFlags[MT_GetTankType(survivor)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(tank)].g_iImmunityFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iAbilityFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
-	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(survivor));
-	if (iTypeFlags != 0)
+	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(tank));
+	if (iTypeFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iTypeFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetImmunityFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iGlobalFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetImmunityFlags(4, MT_GetTankType(tank), survivor),
 		iClientTypeFlags2 = MT_GetImmunityFlags(4, MT_GetTankType(tank), tank);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
-		{
-			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
-		}
+		return (iClientTypeFlags2 != 0 && (iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetImmunityFlags(3, 0, survivor),
 		iClientGlobalFlags2 = MT_GetImmunityFlags(3, 0, tank);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
-		{
-			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
-		}
+		return (iClientGlobalFlags2 != 0 && (iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
 	}
 
-	if (iAbilityFlags != 0)
+	int iSurvivorFlags = GetUserFlagBits(survivor), iTankFlags = GetUserFlagBits(tank);
+	if (iAbilityFlags != 0 && iSurvivorFlags != 0 && (iSurvivorFlags & iAbilityFlags))
 	{
-		return ((GetUserFlagBits(tank) & iAbilityFlags) && GetUserFlagBits(survivor) <= GetUserFlagBits(tank)) ? false : true;
+		return (iTankFlags != 0 && iSurvivorFlags <= iTankFlags) ? false : true;
 	}
 
 	return false;
@@ -703,14 +728,14 @@ static bool bIsAdminImmune(int survivor, int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bPuke[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || !g_esPlayer[iTank].g_bPuke)
 	{
-		g_bPuke[iTank] = false;
+		g_esPlayer[iTank].g_bPuke = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bPuke[iTank] = false;
+	g_esPlayer[iTank].g_bPuke = false;
 
 	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "PukeHuman5");
 

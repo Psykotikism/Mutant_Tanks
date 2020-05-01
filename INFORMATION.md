@@ -1,5 +1,5 @@
 # Mutant Tanks
-> Psyk0tik (Crasher_3637)
+> by Psyk0tik (Crasher_3637)
 
 ## Information
 > Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
@@ -84,16 +84,22 @@
 			// Display Mutant Tanks' names and health.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
-			// Add up numbers together for different results.
-			// --
 			// Minimum: 0
-			// Maximum: 7
+			// Maximum: 11
 			// --
 			// 0: OFF
-			// 1: ON, show names only.
+			// 1: ON, show name only.
 			// 2: ON, show health only.
-			// 4: ON, show both names and health.
-			"Display Health"			"7"
+			// 3: ON, show health percentage only.
+			// 4: ON, show healthbar only.
+			// 5: ON, show name and health only.
+			// 6: ON, show name and health percentage only.
+			// 7: ON, show name and healthbar only.
+			// 8: ON, show health and healthbar only.
+			// 9: ON, show health percentage and healthbar only.
+			// 10: ON, show name, health, and healthbar.
+			// 11: ON, show name, health percentage, and healthbar.
+			"Display Health"			"11"
 
 			// Display type of Mutant Tanks' names and health.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
@@ -110,9 +116,9 @@
 			"Finales Only"				"0"
 
 			// The characters used to represent the health bar of Mutant Tanks.
-			// Note: This setting only takes affect when the "Display Health" setting is enabled.
+			// Note: This setting only takes effect when the "Display Health" setting is enabled.
 			// --
-			// Separate characters with commas.
+			// Separate characters with commas (",").
 			// --
 			// Character limit: 2
 			// Character limit for each character: 1
@@ -136,7 +142,7 @@
 			// Separate values with "-".
 			// --
 			// Value limit: 2
-			// Character limit for each value: 3
+			// Character limit for each value: 4
 			// --
 			// Minimum number for each value: 1
 			// Maximum number for each value: 1000
@@ -215,9 +221,17 @@
 			// The type of Mutant Tank that will spawn.
 			// Note: This will not work unless "Regular Mode" is set to 1.
 			// --
-			// 0: OFF, use the randomization feature.
-			// 1-1000: ON, the type that will spawn.
-			"Regular Type"				"0"
+			// Separate values with "-".
+			// --
+			// Value limit: 2
+			// Character limit for each value: 4
+			// --
+			// Minimum number for each value: 1
+			// Maximum number for each value: 1000
+			// --
+			// 1st number = Minimum value
+			// 2nd number = Maximum value
+			"Regular Type"				"1-114"
 
 			// Spawn Tanks on non-finale maps periodically.
 			// Note: This will not work unless "Regular Mode" is set to 1.
@@ -227,28 +241,31 @@
 			// 1: ON
 			"Regular Wave"				"0"
 
-			// The type of Mutant Tank that will spawn in each wave.
+			// The types of Mutant Tanks that can spawn in each wave.
+			// Note: If the chosen type is not available, a random type will be chosen in its place.
 			// --
-			// Separate types with commas.
+			// Separate types per wave with commas (",").
+			// Separate values with "-".
 			// --
 			// Wave limit: 3
-			// Character limit for each wave: 4
+			// Character limit for each wave: 10
 			// --
 			// Minimum value for each wave: 0
 			// Maximum value for each wave: 1000
 			// --
-			// 1st number = 1st wave
-			// 2nd number = 2nd wave
-			// 3rd number = 3rd wave
+			// 1st number = Minimum value
+			// 2nd number = Maximum value
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-1000: ON, the type that will spawn.
-			"Finale Types"				"0,0,0"
+			"Finale Types"				"1-114,1-114,1-114"
 
 			// Number of Tanks to spawn for each finale wave.
 			// Note: This setting does not seem to work on the official L4D1 campaigns' finale maps. They have their own finale scripts which limit the number of Tanks to 1 for each wave.
+			// Note: Use Silvers' "VScript File Replacer" plugin to raise the Tank limits on L4D1 campaign finale maps so this setting can work.
+			// Link: https://forums.alliedmods.net/showthread.php?t=318024
 			// --
-			// Separate waves with commas.
+			// Separate waves with commas (",").
 			// --
 			// Wave limit: 3
 			// Character limit for each wave: 3
@@ -279,7 +296,7 @@
 
 			// Enable Mutant Tanks in these game modes.
 			// --
-			// Separate game modes with commas.
+			// Separate game modes with commas (",").
 			// --
 			// Character limit: 512 (including commas)
 			// --
@@ -289,7 +306,7 @@
 
 			// Disable Mutant Tanks in these game modes.
 			// --
-			// Separate game modes with commas.
+			// Separate game modes with commas (",").
 			// --
 			// Character limit: 512 (including commas)
 			// --
@@ -377,6 +394,7 @@
 			// Note: This note can also be displayed for clones if "Clone Mode" is set to 1, so the chat could be spammed if multiple clones spawn.
 			// Note: A note must be manually created in the translation file.
 			// Note: Tank notes support chat color tags in the translation file.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -399,6 +417,7 @@
 
 			// Announce the Mutant Tank's arrival.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -415,6 +434,7 @@
 
 			// Announce the Mutant Tank's death.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -424,6 +444,7 @@
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This feature is simply for cosmetic purposes.
 			// You do not need to worry about this setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -440,20 +461,28 @@
 
 			// Display the Mutant Tank's name and health.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// --
-			// Add up numbers together for different results.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
-			// Maximum: 7
+			// Maximum: 11
 			// --
 			// 0: OFF
-			// 1: ON, show names only.
+			// 1: ON, show name only.
 			// 2: ON, show health only.
-			// 4: ON, show health bar only.
-			"Display Health"			"7"
+			// 3: ON, show health percentage only.
+			// 4: ON, show healthbar only.
+			// 5: ON, show name and health only.
+			// 6: ON, show name and health percentage only.
+			// 7: ON, show name and healthbar only.
+			// 8: ON, show health and healthbar only.
+			// 9: ON, show health percentage and healthbar only.
+			// 10: ON, show name, health, and healthbar.
+			// 11: ON, show name, health percentage, and healthbar.
+			"Display Health"			"11"
 
 			// Display type of the Mutant Tank's names and health.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, show in hint text.
@@ -462,9 +491,10 @@
 
 			// The characters used to represent the health bar of the Mutant Tank.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting only takes affect when the "Display Health" setting is enabled.
+			// Note: This setting only takes effect when the "Display Health" setting is enabled.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Separate characters with commas.
+			// Separate characters with commas (",").
 			// --
 			// Character limit: 2
 			// Character limit for each character: 1
@@ -476,6 +506,7 @@
 			// Multiply the Mutant Tank's health.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: No changes to health.
 			// 1: Multiply original health only.
@@ -491,15 +522,17 @@
 
 			// These are the RGBA values of the Mutant Tank's skin color.
 			// Note: Any value less than 0 will output a random color.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Skin Color"				"255,255,255,255"
+			"Skin Color"				"-1,-1,-1,-1"
 
 			// The Mutant Tank will have a glow outline.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -508,14 +541,16 @@
 			// These are the RGB values of the Mutant Tank's glow outline color.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: Any value less than 0 will output a random color.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
-			"Glow Color"				"255,255,255"
+			"Glow Color"				"-1,-1,-1"
 			
 			// The Mutant Tank's glow outline will flash.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -523,6 +558,7 @@
 			
 			// The minimum range that a client can be away from the Mutant Tank until the glow outline starts to appear.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate values with "-".
 			// --
@@ -538,6 +574,7 @@
 
 			// The Mutant Tank's glow outline visibility type.
 			// Note: Only available in Left 4 Dead 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Glow outline visible only on sight.
 			// 1: Glow outline visible through the walls.
@@ -547,6 +584,7 @@
 		{
 			// Admins with one or more of these access flags has access to the Mutant Tank type.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Administration" section.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No access flags have access.
 			// Not empty: These access flags have access.
@@ -554,6 +592,7 @@
 
 			// Admins with one or more of these immunity flags are immune to all of the Mutant Tank's attacks.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Administration" section.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -573,14 +612,16 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected. 
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0: OFF, the Mutant Tank can appear on any map.
+			// 1: ON, the Mutant Tank can only appear on finale maps.
+			// 2: ON, the Mutant Tank can only appear on non-finale maps.
 			"Finale Tank"				"0"
 
 			// The health of bosses needed for each stage.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 1.
 			// Note: The values will be added to the boss's new health on every new stage.
 			// Note: The values will determine when the boss evolves to the next stage.
+			// Note: This setting can be overridden for specific players.
 			// Example: When Stage 2 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
 			// --
 			// Character limit: 25
@@ -596,15 +637,17 @@
 			"Boss Health Stages"			"5000,2500,1500,1000"
 
 			// The number of stages for Mutant Tank bosses.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 4
 			"Boss Stages"				"4"
 
 			// The Mutant Tank types that the boss will evolve into.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 1.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 1.
 			// Note: Make sure that the Mutant Tank types that the boss will evolve into are enabled.
+			// Note: This setting can be overridden for specific players.
 			// Example: When Stage 1 boss evolves into Stage 2, it will evolve into Tank #2.
 			// --
 			// Character limit: 20
@@ -621,36 +664,41 @@
 
 			// The Mutant Tank can be used by other Mutant Tanks who spawn with the Randomization mode feature.
 			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Random Tank"				"1"
 
 			// The Mutant Tank switches to a random type every time this many seconds passes.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 2.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 2.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Random Interval"			"5.0"
 
 			// The Mutant Tank is able to transform again after this many seconds passes.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 3.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Transform Delay"			"10.0"
 
 			// The Mutant Tank's transformations last this long.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 3.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Transform Duration"			"10.0"
 
 			// The types that the Mutant Tank can transform into.
-			// Note: This setting only takes affect when the "Spawn Mode" setting is set to 3.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 3.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Separate game modes with commas.
+			// Separate game modes with commas (",").
 			// --
 			// Character limit: 80 (including commas)
 			// Character limit for each type: 4
@@ -674,11 +722,12 @@
 		"Props"
 		{
 			// Props that the Mutant Tank can spawn with.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
-			// Maximum: 63
+			// Maximum: 127
 			// --
 			// 0: OFF
 			// 1: Attach a blur effect only.
@@ -687,13 +736,15 @@
 			// 8: Attach flames to oxygen tanks.
 			// 16: Attach rocks only.
 			// 32: Attach tires only.
-			"Props Attached"			"62"
+			// 64: Attach a propane tank only.
+			"Props Attached"			"126"
 
 			// Each prop has this many chances out of 100.0% to appear when the Mutant Tank appears.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate chances with commas.
 			// --
-			// Chances limit: 6
+			// Chances limit: 7
 			// Character limit for each chance: 6
 			// --
 			// Minimum value for each chance: 0.0 (No chance)
@@ -705,56 +756,81 @@
 			// 4th number = Chance for oxygen tank flames to appear.
 			// 5th number = Chance for rocks to appear.
 			// 6th number = Chance for tires to appear.
-			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3"
+			// 7th number = Chance for a propane tank to appear.
+			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3,33.3"
 
 			// These are the RGBA values of the Mutant Tank's light prop's color.
 			// Note: Any value less than 0 will output a random color.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Light Color"				"255,255,255,255"
+			"Light Color"				"-1,-1,-1,-1"
 
 			// These are the RGBA values of the Mutant Tank's oxygen tank prop's color.
 			// Note: Any value less than 0 will output a random color.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Oxygen Tank Color"			"255,255,255,255"
+			"Oxygen Tank Color"			"-1,-1,-1,-1"
 
 			// These are the RGBA values of the Mutant Tank's oxygen tank prop's flame's color.
 			// Note: Any value less than 0 will output a random color.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Flame Color"				"255,255,255,180"
+			"Flame Color"				"-1,-1,-1,-1"
 
 			// These are the RGBA values of the Mutant Tank's rock prop's color.
 			// Note: Any value less than 0 will output a random color.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Rock Color"				"255,255,255,255"
+			"Rock Color"				"-1,-1,-1,-1"
+
+			// This is the model of the Mutant Tank's rocks, which includes the rocks attached to him and the ones that he throws/spawns.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF, use default model.
+			// 1: ON, use tree chunk model.
+			// 2: ON, switch between both.
+			"Rock Model"				"2"
 
 			// These are the RGBA values of the Mutant Tank's tire prop's color.
 			// Note: Any value less than 0 will output a random color.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Tire Color"				"255,255,255,255"
+			"Tire Color"				"-1,-1,-1,-1"
+
+			// These are the RGBA values of the Mutant Tank's propane tank prop's color.
+			// Note: Any value less than 0 will output a random color.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Propane Tank Color"			"-1,-1,-1,-1"
 		}
 		"Particles"
 		{
 			// The particle effects for the Mutant Tank's body.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -772,6 +848,7 @@
 			"Body Effects"				"0"
 
 			// The particle effects for the Mutant Tank's rock.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -788,6 +865,7 @@
 		"Enhancements"
 		{
 			// The Mutant Tank's claw attacks do this much damage.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// OFF: -1.0
 			// Minimum: 0.0
@@ -798,6 +876,7 @@
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
@@ -807,6 +886,7 @@
 			"Extra Health"				"0"
 
 			// The Mutant Tank's rock throws do this much damage.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// OFF: -1.0
 			// Minimum: 0.0
@@ -815,6 +895,7 @@
 
 			// Set the Mutant Tank's run speed.
 			// Note: Default run speed is 1.0.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// OFF: -1.0
 			// Minimum: 0.1
@@ -823,6 +904,7 @@
 
 			// The Mutant Tank throws a rock every time this many seconds passes.
 			// Note: Default throw interval is 5.0 seconds.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// OFF: -1.0
 			// Minimum: 0.1
@@ -832,24 +914,28 @@
 		"Immunities"
 		{
 			// Give the Mutant Tank bullet immunity.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Bullet Immunity"			"0"
 
 			// Give the Mutant Tank explosive immunity.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Explosive Immunity"			"0"
 
 			// Give the Mutant Tank fire immunity.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Fire Immunity"				"0"
 
 			// Give the Mutant Tank melee immunity.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -7134,7 +7220,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Shield Color"				"255 255 255 50"
+			"Shield Color"				"-1,-1,-1,-1"
 
 			// The Mutant Tank's shield reactivates after this many seconds passes upon destroying the shield.
 			// --
@@ -8950,7 +9036,7 @@
 ```
 "Mutant Tanks"
 {
-	// Use the admin's Steam32ID or Steam3ID when making an entry.
+	// Use the admin's SteamID32 or Steam3ID when making an entry.
 	"STEAM_0:1:23456789" // [U:1:23456789]
 	{
 		"Administration"
@@ -8962,14 +9048,14 @@
 			// 1-1000: ON, the type that will be favorited.
 			"Favorite Type"				"0"
 
-			// Admins with one or more of these access flags have access to all Mutant Tank types.
+			// Admins with one or more of these access flags have access to all Mutant Tank types that have any of these flags.
 			// Note: This setting overrides all other "Access Flags" settings above.
 			// --
 			// Empty: No access flags have access.
 			// Not empty: These access flags have access.
 			"Access Flags"				""
 
-			// Admins with one or more of these immunity flags are immune to all Mutant Tanks' attacks.
+			// Admins with one or more of these immunity flags are immune to all attacks of Mutant Tanks that have any of these flags.
 			// Note: This setting overrides all other "Immunity Flags" settings above.
 			// --
 			// Empty: No immunity flags are immune.

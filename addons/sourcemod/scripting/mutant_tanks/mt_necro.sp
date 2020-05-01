@@ -43,11 +43,35 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_NECRO "Necro Ability"
 
-bool g_bCloneInstalled, g_bNecro[MAXPLAYERS + 1], g_bNecro2[MAXPLAYERS + 1];
+bool g_bCloneInstalled;
 
-float g_flHumanCooldown[MT_MAXTYPES + 1], g_flHumanDuration[MT_MAXTYPES + 1], g_flNecroChance[MT_MAXTYPES + 1], g_flNecroRange[MT_MAXTYPES + 1];
+enum struct esPlayerSettings
+{
+	bool g_bNecro;
+	bool g_bNecro2;
 
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iHumanMode[MT_MAXTYPES + 1], g_iNecroAbility[MT_MAXTYPES + 1], g_iNecroCount[MAXPLAYERS + 1], g_iNecroMessage[MT_MAXTYPES + 1];
+	int g_iAccessFlags2;
+	int g_iNecroCount;
+}
+
+esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+
+enum struct esAbilitySettings
+{
+	float g_flHumanCooldown;
+	float g_flHumanDuration;
+	float g_flNecroChance;
+	float g_flNecroRange;
+
+	int g_iAccessFlags;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanMode;
+	int g_iNecroAbility;
+	int g_iNecroMessage;
+}
+
+esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -87,7 +111,7 @@ public void OnClientPutInServer(int client)
 {
 	vRemoveNecro(client);
 
-	g_bNecro[client] = false;
+	g_esPlayer[client].g_bNecro = false;
 }
 
 public void OnMapEnd()
@@ -144,14 +168,14 @@ public int iNecroMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iNecroAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iNecroCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iNecroAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iNecroCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanMode[MT_GetTankType(param1)] == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
-				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_flHumanCooldown[MT_GetTankType(param1)]);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "NecroDetails");
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_flHumanDuration[MT_GetTankType(param1)]);
-				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esAbility[MT_GetTankType(param1)].g_flHumanDuration);
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -231,6 +255,21 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
+public void MT_OnPluginCheck(ArrayList &list)
+{
+	char sName[32];
+	GetPluginFilename(null, sName, sizeof(sName));
+	list.PushString(sName);
+}
+
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString("necroability");
+	list2.PushString("necro ability");
+	list3.PushString("necro_ability");
+	list4.PushString("necro");
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	if (mode == 3)
@@ -239,7 +278,7 @@ public void MT_OnConfigsLoad(int mode)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				g_iAccessFlags2[iPlayer] = 0;
+				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
 			}
 		}
 	}
@@ -247,16 +286,16 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iAccessFlags[iIndex] = 0;
-			g_iHumanAbility[iIndex] = 0;
-			g_iHumanAmmo[iIndex] = 5;
-			g_flHumanCooldown[iIndex] = 30.0;
-			g_flHumanDuration[iIndex] = 5.0;
-			g_iHumanMode[iIndex] = 1;
-			g_iNecroAbility[iIndex] = 0;
-			g_iNecroMessage[iIndex] = 0;
-			g_flNecroChance[iIndex] = 33.3;
-			g_flNecroRange[iIndex] = 500.0;
+			g_esAbility[iIndex].g_iAccessFlags = 0;
+			g_esAbility[iIndex].g_iHumanAbility = 0;
+			g_esAbility[iIndex].g_iHumanAmmo = 5;
+			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
+			g_esAbility[iIndex].g_flHumanDuration = 5.0;
+			g_esAbility[iIndex].g_iHumanMode = 1;
+			g_esAbility[iIndex].g_iNecroAbility = 0;
+			g_esAbility[iIndex].g_iNecroMessage = 0;
+			g_esAbility[iIndex].g_flNecroChance = 33.3;
+			g_esAbility[iIndex].g_flNecroRange = 500.0;
 		}
 	}
 }
@@ -269,28 +308,28 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
-		g_flHumanDuration[type] = flGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_flHumanDuration[type], value, 0.1, 999999.0);
-		g_iHumanMode[type] = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_iHumanMode[type], value, 0, 1);
-		g_iNecroAbility[type] = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iNecroAbility[type], value, 0, 1);
-		g_iNecroMessage[type] = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iNecroMessage[type], value, 0, 1);
-		g_flNecroChance[type] = flGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_flNecroChance[type], value, 0.0, 100.0);
-		g_flNecroRange[type] = flGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "NecroRange", "Necro Range", "Necro_Range", "range", g_flNecroRange[type], value, 1.0, 999999.0);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
+		g_esAbility[type].g_flHumanDuration = flGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_flHumanDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iHumanMode = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iNecroAbility = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iNecroAbility, value, 0, 1);
+		g_esAbility[type].g_iNecroMessage = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iNecroMessage, value, 0, 1);
+		g_esAbility[type].g_flNecroChance = flGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esAbility[type].g_flNecroChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flNecroRange = flGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esAbility[type].g_flNecroRange, value, 1.0, 999999.0);
 
 		if (StrEqual(subsection, "necroability", false) || StrEqual(subsection, "necro ability", false) || StrEqual(subsection, "necro_ability", false) || StrEqual(subsection, "necro", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
 			}
 		}
 	}
@@ -308,20 +347,20 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 			for (int iTank = 1; iTank <= MaxClients; iTank++)
 			{
-				if (MT_IsTankSupported(iTank) && bIsCloneAllowed(iTank, g_bCloneInstalled) && g_bNecro[iTank])
+				if (MT_IsTankSupported(iTank) && bIsCloneAllowed(iTank, g_bCloneInstalled) && g_esPlayer[iTank].g_bNecro)
 				{
 					if (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank))
 					{
 						continue;
 					}
 
-					if (g_iNecroAbility[MT_GetTankType(iTank)] == 1 && GetRandomFloat(0.1, 100.0) <= g_flNecroChance[MT_GetTankType(iTank)])
+					if (g_esAbility[MT_GetTankType(iTank)].g_iNecroAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(iTank)].g_flNecroChance)
 					{
 						float flTankPos[3];
 						GetClientAbsOrigin(iTank, flTankPos);
 
 						float flDistance = GetVectorDistance(flInfectedPos, flTankPos);
-						if (flDistance <= g_flNecroRange[MT_GetTankType(iTank)])
+						if (flDistance <= g_esAbility[MT_GetTankType(iTank)].g_flNecroRange)
 						{
 							switch (GetEntProp(iInfected, Prop_Send, "m_zombieClass"))
 							{
@@ -347,12 +386,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[MT_GetTankType(tank)] == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iNecroAbility[MT_GetTankType(tank)] == 1 && !g_bNecro[tank])
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iNecroAbility == 1 && !g_esPlayer[tank].g_bNecro)
 	{
 		vNecroAbility(tank);
 	}
@@ -369,35 +408,43 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iNecroAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iNecroAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				switch (g_iHumanMode[MT_GetTankType(tank)])
+				switch (g_esAbility[MT_GetTankType(tank)].g_iHumanMode)
 				{
 					case 0:
 					{
-						if (!g_bNecro[tank] && !g_bNecro2[tank])
+						if (!g_esPlayer[tank].g_bNecro && !g_esPlayer[tank].g_bNecro2)
 						{
 							vNecroAbility(tank);
 						}
-						else if (g_bNecro[tank])
+						else if (g_esPlayer[tank].g_bNecro)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman3");
 						}
-						else if (g_bNecro2[tank])
+						else if (g_esPlayer[tank].g_bNecro2)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman4");
 						}
 					}
 					case 1:
 					{
-						if (g_iNecroCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+						if (g_esPlayer[tank].g_iNecroCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 						{
-							if (!g_bNecro[tank] && !g_bNecro2[tank])
+							if (!g_esPlayer[tank].g_bNecro && !g_esPlayer[tank].g_bNecro2)
 							{
-								g_bNecro[tank] = true;
-								g_iNecroCount[tank]++;
+								g_esPlayer[tank].g_bNecro = true;
+								g_esPlayer[tank].g_iNecroCount++;
 								
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_iNecroCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_esPlayer[tank].g_iNecroCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
+							}
+							else if (g_esPlayer[tank].g_bNecro)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman3");
+							}
+							else if (g_esPlayer[tank].g_bNecro2)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman4");
 							}
 						}
 						else
@@ -417,11 +464,11 @@ public void MT_OnButtonReleased(int tank, int button)
 	{
 		if (button & MT_MAIN_KEY == MT_MAIN_KEY)
 		{
-			if (g_iNecroAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iNecroAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				if (g_iHumanMode[MT_GetTankType(tank)] == 1 && g_bNecro[tank] && !g_bNecro2[tank])
+				if (g_esAbility[MT_GetTankType(tank)].g_iHumanMode == 1 && g_esPlayer[tank].g_bNecro && !g_esPlayer[tank].g_bNecro2)
 				{
-					g_bNecro[tank] = false;
+					g_esPlayer[tank].g_bNecro = false;
 								
 					vReset2(tank);
 				}
@@ -470,7 +517,7 @@ static void vNecro(int tank, float pos[3], const char[] type)
 	{
 		TeleportEntity(iInfected, pos, NULL_VECTOR, NULL_VECTOR);
 
-		if (g_iNecroMessage[MT_GetTankType(tank)] == 1)
+		if (g_esAbility[MT_GetTankType(tank)].g_iNecroMessage == 1)
 		{
 			char sTankName[33];
 			MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
@@ -486,27 +533,27 @@ static void vNecroAbility(int tank)
 		return;
 	}
 
-	if (g_iNecroCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iNecroCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_flNecroChance[MT_GetTankType(tank)])
+		if (GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flNecroChance)
 		{
-			g_bNecro[tank] = true;
+			g_esPlayer[tank].g_bNecro = true;
 
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bNecro2[tank])
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNecro2)
 			{
-				g_iNecroCount[tank]++;
+				g_esPlayer[tank].g_iNecroCount++;
 
-				CreateTimer(g_flHumanDuration[MT_GetTankType(tank)], tTimerStopNecro, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+				CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flHumanDuration, tTimerStopNecro, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_iNecroCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_esPlayer[tank].g_iNecroCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman2");
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroAmmo");
 	}
@@ -514,8 +561,8 @@ static void vNecroAbility(int tank)
 
 static void vRemoveNecro(int tank)
 {
-	g_bNecro2[tank] = false;
-	g_iNecroCount[tank] = 0;
+	g_esPlayer[tank].g_bNecro2 = false;
+	g_esPlayer[tank].g_iNecroCount = 0;
 }
 
 static void vReset()
@@ -526,24 +573,24 @@ static void vReset()
 		{
 			vRemoveNecro(iPlayer);
 
-			g_bNecro[iPlayer] = false;
+			g_esPlayer[iPlayer].g_bNecro = false;
 		}
 	}
 }
 
 static void vReset2(int tank)
 {
-	g_bNecro2[tank] = true;
+	g_esPlayer[tank].g_bNecro2 = true;
 
 	MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman5");
 
-	if (g_iNecroCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iNecroCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		CreateTimer(g_flHumanCooldown[MT_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
-		g_bNecro2[tank] = false;
+		g_esPlayer[tank].g_bNecro2 = false;
 	}
 }
 
@@ -554,49 +601,34 @@ static bool bHasAdminAccess(int admin)
 		return true;
 	}
 
-	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0)
+	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 	}
 
 	if (iAbilityFlags != 0)
@@ -610,16 +642,16 @@ static bool bHasAdminAccess(int admin)
 public Action tTimerStopNecro(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bNecro[iTank])
+	if (!MT_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_esPlayer[iTank].g_bNecro)
 	{
-		g_bNecro[iTank] = false;
+		g_esPlayer[iTank].g_bNecro = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bNecro[iTank] = false;
+	g_esPlayer[iTank].g_bNecro = false;
 
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_iHumanAbility[MT_GetTankType(iTank)] == 1 && g_iHumanMode[MT_GetTankType(iTank)] == 0 && !g_bNecro2[iTank])
+	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1 && g_esAbility[MT_GetTankType(iTank)].g_iHumanMode == 0 && !g_esPlayer[iTank].g_bNecro2)
 	{
 		vReset2(iTank);
 	}
@@ -630,14 +662,14 @@ public Action tTimerStopNecro(Handle timer, int userid)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bNecro2[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_esPlayer[iTank].g_bNecro2)
 	{
-		g_bNecro2[iTank] = false;
+		g_esPlayer[iTank].g_bNecro2 = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bNecro2[iTank] = false;
+	g_esPlayer[iTank].g_bNecro2 = false;
 
 	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "NecroHuman6");
 

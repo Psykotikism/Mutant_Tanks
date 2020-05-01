@@ -48,11 +48,46 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_ENFORCE "Enforce Ability"
 
-bool g_bCloneInstalled, g_bEnforce[MAXPLAYERS + 1], g_bEnforce2[MAXPLAYERS + 1], g_bEnforce3[MAXPLAYERS + 1], g_bEnforce4[MAXPLAYERS + 1], g_bEnforce5[MAXPLAYERS + 1];
+bool g_bCloneInstalled;
 
-float g_flEnforceChance[MT_MAXTYPES + 1], g_flEnforceDuration[MT_MAXTYPES + 1], g_flEnforceRange[MT_MAXTYPES + 1], g_flEnforceRangeChance[MT_MAXTYPES + 1], g_flHumanCooldown[MT_MAXTYPES + 1];
+enum struct esPlayerSettings
+{
+	bool g_bEnforce;
+	bool g_bEnforce2;
+	bool g_bEnforce3;
+	bool g_bEnforce4;
+	bool g_bEnforce5;
 
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iEnforceAbility[MT_MAXTYPES + 1], g_iEnforceCount[MAXPLAYERS + 1], g_iEnforceEffect[MT_MAXTYPES + 1], g_iEnforceHit[MT_MAXTYPES + 1], g_iEnforceHitMode[MT_MAXTYPES + 1], g_iEnforceMessage[MT_MAXTYPES + 1], g_iEnforceOwner[MAXPLAYERS + 1], g_iEnforceSlot[MAXPLAYERS + 1], g_iEnforceWeaponSlots[MT_MAXTYPES + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
+	int g_iAccessFlags2;
+	int g_iEnforceCount;
+	int g_iEnforceOwner;
+	int g_iEnforceSlot;
+	int g_iImmunityFlags2;
+}
+
+esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+
+enum struct esAbilitySettings
+{
+	float g_flEnforceChance;
+	float g_flEnforceDuration;
+	float g_flEnforceRange;
+	float g_flEnforceRangeChance;
+	float g_flHumanCooldown;
+
+	int g_iAccessFlags;
+	int g_iEnforceAbility;
+	int g_iEnforceEffect;
+	int g_iEnforceHit;
+	int g_iEnforceHitMode;
+	int g_iEnforceMessage;
+	int g_iEnforceWeaponSlots;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iImmunityFlags;
+}
+
+esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -161,13 +196,13 @@ public int iEnforceMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iEnforceAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iEnforceCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iEnforceAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iEnforceCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_flHumanCooldown[MT_GetTankType(param1)]);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "EnforceDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_flEnforceDuration[MT_GetTankType(param1)]);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esAbility[MT_GetTankType(param1)].g_flEnforceDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -249,9 +284,9 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		return Plugin_Continue;
 	}
 
-	if (bIsSurvivor(client) && g_bEnforce[client])
+	if (bIsSurvivor(client) && g_esPlayer[client].g_bEnforce)
 	{
-		weapon = GetPlayerWeaponSlot(client, g_iEnforceSlot[client]);
+		weapon = GetPlayerWeaponSlot(client, g_esPlayer[client].g_iEnforceSlot);
 	}
 
 	return Plugin_Continue;
@@ -259,11 +294,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iEnforceHitMode[MT_GetTankType(attacker)] == 0 || g_iEnforceHitMode[MT_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_esAbility[MT_GetTankType(attacker)].g_iEnforceHitMode == 0 || g_esAbility[MT_GetTankType(attacker)].g_iEnforceHitMode == 1) && bIsSurvivor(victim))
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
 			{
@@ -272,10 +307,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vEnforceHit(victim, attacker, g_flEnforceChance[MT_GetTankType(attacker)], g_iEnforceHit[MT_GetTankType(attacker)], MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vEnforceHit(victim, attacker, g_esAbility[MT_GetTankType(attacker)].g_flEnforceChance, g_esAbility[MT_GetTankType(attacker)].g_iEnforceHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iEnforceHitMode[MT_GetTankType(victim)] == 0 || g_iEnforceHitMode[MT_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_esAbility[MT_GetTankType(victim)].g_iEnforceHitMode == 0 || g_esAbility[MT_GetTankType(victim)].g_iEnforceHitMode == 2) && bIsSurvivor(attacker))
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
 			{
@@ -284,12 +319,27 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vEnforceHit(attacker, victim, g_flEnforceChance[MT_GetTankType(victim)], g_iEnforceHit[MT_GetTankType(victim)], MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vEnforceHit(attacker, victim, g_esAbility[MT_GetTankType(victim)].g_flEnforceChance, g_esAbility[MT_GetTankType(victim)].g_iEnforceHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
 
 	return Plugin_Continue;
+}
+
+public void MT_OnPluginCheck(ArrayList &list)
+{
+	char sName[32];
+	GetPluginFilename(null, sName, sizeof(sName));
+	list.PushString(sName);
+}
+
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString("enforceability");
+	list2.PushString("enforce ability");
+	list3.PushString("enforce_ability");
+	list4.PushString("enforce");
 }
 
 public void MT_OnConfigsLoad(int mode)
@@ -300,8 +350,8 @@ public void MT_OnConfigsLoad(int mode)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				g_iAccessFlags2[iPlayer] = 0;
-				g_iImmunityFlags2[iPlayer] = 0;
+				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
+				g_esPlayer[iPlayer].g_iImmunityFlags2 = 0;
 			}
 		}
 	}
@@ -309,21 +359,21 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iAccessFlags[iIndex] = 0;
-			g_iImmunityFlags[iIndex] = 0;
-			g_iHumanAbility[iIndex] = 0;
-			g_iHumanAmmo[iIndex] = 5;
-			g_flHumanCooldown[iIndex] = 30.0;
-			g_iEnforceAbility[iIndex] = 0;
-			g_iEnforceEffect[iIndex] = 0;
-			g_iEnforceMessage[iIndex] = 0;
-			g_flEnforceChance[iIndex] = 33.3;
-			g_flEnforceDuration[iIndex] = 5.0;
-			g_iEnforceHit[iIndex] = 0;
-			g_iEnforceHitMode[iIndex] = 0;
-			g_flEnforceRange[iIndex] = 150.0;
-			g_flEnforceRangeChance[iIndex] = 15.0;
-			g_iEnforceWeaponSlots[iIndex] = 0;
+			g_esAbility[iIndex].g_iAccessFlags = 0;
+			g_esAbility[iIndex].g_iImmunityFlags = 0;
+			g_esAbility[iIndex].g_iHumanAbility = 0;
+			g_esAbility[iIndex].g_iHumanAmmo = 5;
+			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
+			g_esAbility[iIndex].g_iEnforceAbility = 0;
+			g_esAbility[iIndex].g_iEnforceEffect = 0;
+			g_esAbility[iIndex].g_iEnforceMessage = 0;
+			g_esAbility[iIndex].g_flEnforceChance = 33.3;
+			g_esAbility[iIndex].g_flEnforceDuration = 5.0;
+			g_esAbility[iIndex].g_iEnforceHit = 0;
+			g_esAbility[iIndex].g_iEnforceHitMode = 0;
+			g_esAbility[iIndex].g_flEnforceRange = 150.0;
+			g_esAbility[iIndex].g_flEnforceRangeChance = 15.0;
+			g_esAbility[iIndex].g_iEnforceWeaponSlots = 0;
 		}
 	}
 }
@@ -336,40 +386,40 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+				g_esPlayer[admin].g_iImmunityFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iImmunityFlags2;
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
-		g_iEnforceAbility[type] = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iEnforceAbility[type], value, 0, 1);
-		g_iEnforceEffect[type] = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iEnforceEffect[type], value, 0, 7);
-		g_iEnforceMessage[type] = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iEnforceMessage[type], value, 0, 3);
-		g_flEnforceChance[type] = flGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_flEnforceChance[type], value, 0.0, 100.0);
-		g_flEnforceDuration[type] = flGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_flEnforceDuration[type], value, 0.1, 999999.0);
-		g_iEnforceHit[type] = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_iEnforceHit[type], value, 0, 1);
-		g_iEnforceHitMode[type] = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_iEnforceHitMode[type], value, 0, 2);
-		g_flEnforceRange[type] = flGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_flEnforceRange[type], value, 1.0, 999999.0);
-		g_flEnforceRangeChance[type] = flGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_flEnforceRangeChance[type], value, 0.0, 100.0);
-		g_iEnforceWeaponSlots[type] = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_iEnforceWeaponSlots[type], value, 0, 31);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
+		g_esAbility[type].g_iEnforceAbility = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iEnforceAbility, value, 0, 1);
+		g_esAbility[type].g_iEnforceEffect = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iEnforceEffect, value, 0, 7);
+		g_esAbility[type].g_iEnforceMessage = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iEnforceMessage, value, 0, 3);
+		g_esAbility[type].g_flEnforceChance = flGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esAbility[type].g_flEnforceChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flEnforceDuration = flGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esAbility[type].g_flEnforceDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iEnforceHit = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_esAbility[type].g_iEnforceHit, value, 0, 1);
+		g_esAbility[type].g_iEnforceHitMode = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_esAbility[type].g_iEnforceHitMode, value, 0, 2);
+		g_esAbility[type].g_flEnforceRange = flGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esAbility[type].g_flEnforceRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flEnforceRangeChance = flGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esAbility[type].g_flEnforceRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iEnforceWeaponSlots = iGetValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esAbility[type].g_iEnforceWeaponSlots, value, 0, 31);
 
 		if (StrEqual(subsection, "enforceability", false) || StrEqual(subsection, "enforce ability", false) || StrEqual(subsection, "enforce_ability", false) || StrEqual(subsection, "enforce", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+				g_esAbility[type].g_iImmunityFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iImmunityFlags;
 			}
 		}
 	}
@@ -377,7 +427,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -389,12 +439,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[MT_GetTankType(tank)] == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iEnforceAbility[MT_GetTankType(tank)] == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iEnforceAbility == 1)
 	{
 		vEnforceAbility(tank);
 	}
@@ -411,17 +461,17 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_SUB_KEY == MT_SUB_KEY)
 		{
-			if (g_iEnforceAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iEnforceAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				if (!g_bEnforce2[tank] && !g_bEnforce3[tank])
+				if (!g_esPlayer[tank].g_bEnforce2 && !g_esPlayer[tank].g_bEnforce3)
 				{
 					vEnforceAbility(tank);
 				}
-				else if (g_bEnforce2[tank])
+				else if (g_esPlayer[tank].g_bEnforce2)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman3");
 				}
-				else if (g_bEnforce3[tank])
+				else if (g_esPlayer[tank].g_bEnforce3)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman4");
 				}
@@ -442,10 +492,10 @@ static void vEnforceAbility(int tank)
 		return;
 	}
 
-	if (g_iEnforceCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iEnforceCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		g_bEnforce4[tank] = false;
-		g_bEnforce5[tank] = false;
+		g_esPlayer[tank].g_bEnforce4 = false;
+		g_esPlayer[tank].g_bEnforce5 = false;
 
 		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
@@ -459,9 +509,9 @@ static void vEnforceAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= g_flEnforceRange[MT_GetTankType(tank)])
+				if (flDistance <= g_esAbility[MT_GetTankType(tank)].g_flEnforceRange)
 				{
-					vEnforceHit(iSurvivor, tank, g_flEnforceRangeChance[MT_GetTankType(tank)], g_iEnforceAbility[MT_GetTankType(tank)], MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+					vEnforceHit(iSurvivor, tank, g_esAbility[MT_GetTankType(tank)].g_flEnforceRangeChance, g_esAbility[MT_GetTankType(tank)].g_iEnforceAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -470,13 +520,13 @@ static void vEnforceAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman5");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceAmmo");
 	}
@@ -491,26 +541,26 @@ static void vEnforceHit(int survivor, int tank, float chance, int enabled, int m
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iEnforceCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+		if (g_esPlayer[tank].g_iEnforceCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 		{
-			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bEnforce[survivor])
+			if (GetRandomFloat(0.1, 100.0) <= chance && !g_esPlayer[survivor].g_bEnforce)
 			{
-				g_bEnforce[survivor] = true;
-				g_iEnforceOwner[survivor] = tank;
+				g_esPlayer[survivor].g_bEnforce = true;
+				g_esPlayer[survivor].g_iEnforceOwner = tank;
 
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && (flags & MT_ATTACK_RANGE) && !g_bEnforce2[tank])
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && !g_esPlayer[tank].g_bEnforce2)
 				{
-					g_bEnforce2[tank] = true;
-					g_iEnforceCount[tank]++;
+					g_esPlayer[tank].g_bEnforce2 = true;
+					g_esPlayer[tank].g_iEnforceCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman", g_iEnforceCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman", g_esPlayer[tank].g_iEnforceCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
 				}
 
 				int iSlotCount, iSlots[6];
 				for (int iBit = 0; iBit < 5; iBit++)
 				{
 					int iFlag = (1 << iBit);
-					if (!(g_iEnforceWeaponSlots[MT_GetTankType(tank)] & iFlag))
+					if (!(g_esAbility[MT_GetTankType(tank)].g_iEnforceWeaponSlots & iFlag))
 					{
 						continue;
 					}
@@ -525,27 +575,27 @@ static void vEnforceHit(int survivor, int tank, float chance, int enabled, int m
 					case 1:
 					{
 						sSlotNumber = "1st";
-						g_iEnforceSlot[survivor] = 0;
+						g_esPlayer[survivor].g_iEnforceSlot = 0;
 					}
 					case 2:
 					{
 						sSlotNumber = "2nd";
-						g_iEnforceSlot[survivor] = 1;
+						g_esPlayer[survivor].g_iEnforceSlot = 1;
 					}
 					case 4:
 					{
 						sSlotNumber = "3rd";
-						g_iEnforceSlot[survivor] = 2;
+						g_esPlayer[survivor].g_iEnforceSlot = 2;
 					}
 					case 8:
 					{
 						sSlotNumber = "4th";
-						g_iEnforceSlot[survivor] = 3;
+						g_esPlayer[survivor].g_iEnforceSlot = 3;
 					}
 					case 16:
 					{
 						sSlotNumber = "5th";
-						g_iEnforceSlot[survivor] = 4;
+						g_esPlayer[survivor].g_iEnforceSlot = 4;
 					}
 					default:
 					{
@@ -554,60 +604,60 @@ static void vEnforceHit(int survivor, int tank, float chance, int enabled, int m
 							case 1:
 							{
 								sSlotNumber = "1st";
-								g_iEnforceSlot[survivor] = 0;
+								g_esPlayer[survivor].g_iEnforceSlot = 0;
 							}
 							case 2:
 							{
 								sSlotNumber = "2nd";
-								g_iEnforceSlot[survivor] = 1;
+								g_esPlayer[survivor].g_iEnforceSlot = 1;
 							}
 							case 3:
 							{
 								sSlotNumber = "3rd";
-								g_iEnforceSlot[survivor] = 2;
+								g_esPlayer[survivor].g_iEnforceSlot = 2;
 							}
 							case 4:
 							{
 								sSlotNumber = "4th";
-								g_iEnforceSlot[survivor] = 3;
+								g_esPlayer[survivor].g_iEnforceSlot = 3;
 							}
 							case 5:
 							{
 								sSlotNumber = "5th";
-								g_iEnforceSlot[survivor] = 4;
+								g_esPlayer[survivor].g_iEnforceSlot = 4;
 							}
 						}
 					}
 				}
 
 				DataPack dpStopEnforce;
-				CreateDataTimer(g_flEnforceDuration[MT_GetTankType(tank)], tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
+				CreateDataTimer(g_esAbility[MT_GetTankType(tank)].g_flEnforceDuration, tTimerStopEnforce, dpStopEnforce, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopEnforce.WriteCell(GetClientUserId(survivor));
 				dpStopEnforce.WriteCell(GetClientUserId(tank));
 				dpStopEnforce.WriteCell(messages);
 
-				vEffect(survivor, tank, g_iEnforceEffect[MT_GetTankType(tank)], flags);
+				vEffect(survivor, tank, g_esAbility[MT_GetTankType(tank)].g_iEnforceEffect, flags);
 
-				if (g_iEnforceMessage[MT_GetTankType(tank)] & messages)
+				if (g_esAbility[MT_GetTankType(tank)].g_iEnforceMessage & messages)
 				{
 					char sTankName[33];
 					MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Enforce", sTankName, survivor, sSlotNumber);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && !g_bEnforce2[tank])
+			else if ((flags & MT_ATTACK_RANGE) && !g_esPlayer[tank].g_bEnforce2)
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bEnforce4[tank])
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bEnforce4)
 				{
-					g_bEnforce4[tank] = true;
+					g_esPlayer[tank].g_bEnforce4 = true;
 
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman2");
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bEnforce5[tank])
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bEnforce5)
 		{
-			g_bEnforce5[tank] = true;
+			g_esPlayer[tank].g_bEnforce5 = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceAmmo");
 		}
@@ -618,11 +668,11 @@ static void vRemoveEnforce(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_bEnforce[iSurvivor] && g_iEnforceOwner[iSurvivor] == tank)
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esPlayer[iSurvivor].g_bEnforce && g_esPlayer[iSurvivor].g_iEnforceOwner == tank)
 		{
-			g_bEnforce[iSurvivor] = false;
-			g_iEnforceOwner[iSurvivor] = 0;
-			g_iEnforceSlot[iSurvivor] = INVALID_ENT_REFERENCE;
+			g_esPlayer[iSurvivor].g_bEnforce = false;
+			g_esPlayer[iSurvivor].g_iEnforceOwner = 0;
+			g_esPlayer[iSurvivor].g_iEnforceSlot = INVALID_ENT_REFERENCE;
 		}
 	}
 
@@ -637,27 +687,27 @@ static void vReset()
 		{
 			vReset2(iPlayer);
 
-			g_iEnforceOwner[iPlayer] = 0;
-			g_iEnforceSlot[iPlayer] = INVALID_ENT_REFERENCE;
+			g_esPlayer[iPlayer].g_iEnforceOwner = 0;
+			g_esPlayer[iPlayer].g_iEnforceSlot = INVALID_ENT_REFERENCE;
 		}
 	}
 }
 
 static void vReset2(int tank)
 {
-	g_bEnforce[tank] = false;
-	g_bEnforce2[tank] = false;
-	g_bEnforce3[tank] = false;
-	g_bEnforce4[tank] = false;
-	g_bEnforce5[tank] = false;
-	g_iEnforceCount[tank] = 0;
+	g_esPlayer[tank].g_bEnforce = false;
+	g_esPlayer[tank].g_bEnforce2 = false;
+	g_esPlayer[tank].g_bEnforce3 = false;
+	g_esPlayer[tank].g_bEnforce4 = false;
+	g_esPlayer[tank].g_bEnforce5 = false;
+	g_esPlayer[tank].g_iEnforceCount = 0;
 }
 
 static void vReset3(int survivor)
 {
-	g_bEnforce[survivor] = false;
-	g_iEnforceOwner[survivor] = 0;
-	g_iEnforceSlot[survivor] = INVALID_ENT_REFERENCE;
+	g_esPlayer[survivor].g_bEnforce = false;
+	g_esPlayer[survivor].g_iEnforceOwner = 0;
+	g_esPlayer[survivor].g_iEnforceSlot = INVALID_ENT_REFERENCE;
 }
 
 static bool bHasAdminAccess(int admin)
@@ -667,49 +717,34 @@ static bool bHasAdminAccess(int admin)
 		return true;
 	}
 
-	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0)
+	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 	}
 
 	if (iAbilityFlags != 0)
@@ -727,56 +762,42 @@ static bool bIsAdminImmune(int survivor, int tank)
 		return false;
 	}
 
-	int iAbilityFlags = g_iImmunityFlags[MT_GetTankType(survivor)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(tank)].g_iImmunityFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iAbilityFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
-	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(survivor));
-	if (iTypeFlags != 0)
+	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(tank));
+	if (iTypeFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iTypeFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetImmunityFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iGlobalFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetImmunityFlags(4, MT_GetTankType(tank), survivor),
 		iClientTypeFlags2 = MT_GetImmunityFlags(4, MT_GetTankType(tank), tank);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
-		{
-			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
-		}
+		return (iClientTypeFlags2 != 0 && (iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetImmunityFlags(3, 0, survivor),
 		iClientGlobalFlags2 = MT_GetImmunityFlags(3, 0, tank);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
-		{
-			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
-		}
+		return (iClientGlobalFlags2 != 0 && (iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
 	}
 
-	if (iAbilityFlags != 0)
+	int iSurvivorFlags = GetUserFlagBits(survivor), iTankFlags = GetUserFlagBits(tank);
+	if (iAbilityFlags != 0 && iSurvivorFlags != 0 && (iSurvivorFlags & iAbilityFlags))
 	{
-		return ((GetUserFlagBits(tank) & iAbilityFlags) && GetUserFlagBits(survivor) <= GetUserFlagBits(tank)) ? false : true;
+		return (iTankFlags != 0 && iSurvivorFlags <= iTankFlags) ? false : true;
 	}
 
 	return false;
@@ -787,7 +808,7 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bEnforce[iSurvivor])
+	if (!bIsSurvivor(iSurvivor) || !g_esPlayer[iSurvivor].g_bEnforce)
 	{
 		vReset3(iSurvivor);
 
@@ -802,29 +823,29 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	g_bEnforce2[iTank] = false;
+	g_esPlayer[iTank].g_bEnforce2 = false;
 
 	vReset3(iSurvivor);
 
 	int iMessage = pack.ReadCell();
 
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_iHumanAbility[MT_GetTankType(iTank)] == 1 && (iMessage & MT_MESSAGE_RANGE) && !g_bEnforce3[iTank])
+	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1 && (iMessage & MT_MESSAGE_RANGE) && !g_esPlayer[iTank].g_bEnforce3)
 	{
-		g_bEnforce3[iTank] = true;
+		g_esPlayer[iTank].g_bEnforce3 = true;
 
 		MT_PrintToChat(iTank, "%s %t", MT_TAG3, "EnforceHuman6");
 
-		if (g_iEnforceCount[iTank] < g_iHumanAmmo[MT_GetTankType(iTank)] && g_iHumanAmmo[MT_GetTankType(iTank)] > 0)
+		if (g_esPlayer[iTank].g_iEnforceCount < g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo > 0)
 		{
-			CreateTimer(g_flHumanCooldown[MT_GetTankType(iTank)], tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_esAbility[MT_GetTankType(iTank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 		else
 		{
-			g_bEnforce3[iTank] = false;
+			g_esPlayer[iTank].g_bEnforce3 = false;
 		}
 	}
 
-	if (g_iEnforceMessage[MT_GetTankType(iTank)] & iMessage)
+	if (g_esAbility[MT_GetTankType(iTank)].g_iEnforceMessage & iMessage)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Enforce2", iSurvivor);
 	}
@@ -835,14 +856,14 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bEnforce3[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_esPlayer[iTank].g_bEnforce3)
 	{
-		g_bEnforce3[iTank] = false;
+		g_esPlayer[iTank].g_bEnforce3 = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bEnforce3[iTank] = false;
+	g_esPlayer[iTank].g_bEnforce3 = false;
 
 	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "EnforceHuman7");
 

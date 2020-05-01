@@ -30,13 +30,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-#define MT_MENU_SLOW "Slow Ability"
-
-bool g_bCloneInstalled, g_bLateLoad, g_bSlow[MAXPLAYERS + 1], g_bSlow2[MAXPLAYERS + 1], g_bSlow3[MAXPLAYERS + 1], g_bSlow4[MAXPLAYERS + 1], g_bSlow5[MAXPLAYERS + 1];
-
-float g_flHumanCooldown[MT_MAXTYPES + 1], g_flOriginalSpeed[MAXPLAYERS + 1], g_flSlowChance[MT_MAXTYPES + 1], g_flSlowDuration[MT_MAXTYPES + 1], g_flSlowRange[MT_MAXTYPES + 1], g_flSlowRangeChance[MT_MAXTYPES + 1], g_flSlowSpeed[MT_MAXTYPES + 1];
-
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1], g_iSlowAbility[MT_MAXTYPES + 1], g_iSlowCount[MAXPLAYERS + 1], g_iSlowEffect[MT_MAXTYPES + 1], g_iSlowHit[MT_MAXTYPES + 1], g_iSlowHitMode[MT_MAXTYPES + 1], g_iSlowMessage[MT_MAXTYPES + 1], g_iSlowOwner[MAXPLAYERS + 1];
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -51,6 +45,50 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+#define MT_MENU_SLOW "Slow Ability"
+
+bool g_bCloneInstalled;
+
+enum struct esPlayerSettings
+{
+	bool g_bSlow;
+	bool g_bSlow2;
+	bool g_bSlow3;
+	bool g_bSlow4;
+	bool g_bSlow5;
+
+	float g_flOriginalSpeed;
+
+	int g_iAccessFlags2;
+	int g_iImmunityFlags2;
+	int g_iSlowCount;
+	int g_iSlowOwner;
+}
+
+esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+
+enum struct esAbilitySettings
+{
+	float g_flHumanCooldown;
+	float g_flSlowChance;
+	float g_flSlowDuration;
+	float g_flSlowRange;
+	float g_flSlowRangeChance;
+	float g_flSlowSpeed;
+
+	int g_iAccessFlags;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iImmunityFlags;
+	int g_iSlowAbility;
+	int g_iSlowEffect;
+	int g_iSlowHit;
+	int g_iSlowHitMode;
+	int g_iSlowMessage;
+}
+
+esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -159,13 +197,13 @@ public int iSlowMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iSlowAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iSlowCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iSlowAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iSlowCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_flHumanCooldown[MT_GetTankType(param1)]);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "SlowDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_flSlowDuration[MT_GetTankType(param1)]);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esAbility[MT_GetTankType(param1)].g_flSlowDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -242,11 +280,11 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iSlowHitMode[MT_GetTankType(attacker)] == 0 || g_iSlowHitMode[MT_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_esAbility[MT_GetTankType(attacker)].g_iSlowHitMode == 0 || g_esAbility[MT_GetTankType(attacker)].g_iSlowHitMode == 1) && bIsSurvivor(victim))
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
 			{
@@ -255,10 +293,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vSlowHit(victim, attacker, g_flSlowChance[MT_GetTankType(attacker)], g_iSlowHit[MT_GetTankType(attacker)], MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vSlowHit(victim, attacker, g_esAbility[MT_GetTankType(attacker)].g_flSlowChance, g_esAbility[MT_GetTankType(attacker)].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iSlowHitMode[MT_GetTankType(victim)] == 0 || g_iSlowHitMode[MT_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_esAbility[MT_GetTankType(victim)].g_iSlowHitMode == 0 || g_esAbility[MT_GetTankType(victim)].g_iSlowHitMode == 2) && bIsSurvivor(attacker))
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
 			{
@@ -267,12 +305,27 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vSlowHit(attacker, victim, g_flSlowChance[MT_GetTankType(victim)], g_iSlowHit[MT_GetTankType(victim)], MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vSlowHit(attacker, victim, g_esAbility[MT_GetTankType(victim)].g_flSlowChance, g_esAbility[MT_GetTankType(victim)].g_iSlowHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
 
 	return Plugin_Continue;
+}
+
+public void MT_OnPluginCheck(ArrayList &list)
+{
+	char sName[32];
+	GetPluginFilename(null, sName, sizeof(sName));
+	list.PushString(sName);
+}
+
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString("slowability");
+	list2.PushString("slow ability");
+	list3.PushString("slow_ability");
+	list4.PushString("slow");
 }
 
 public void MT_OnConfigsLoad(int mode)
@@ -283,8 +336,8 @@ public void MT_OnConfigsLoad(int mode)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				g_iAccessFlags2[iPlayer] = 0;
-				g_iImmunityFlags2[iPlayer] = 0;
+				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
+				g_esPlayer[iPlayer].g_iImmunityFlags2 = 0;
 			}
 		}
 	}
@@ -292,21 +345,21 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iAccessFlags[iIndex] = 0;
-			g_iImmunityFlags[iIndex] = 0;
-			g_iHumanAbility[iIndex] = 0;
-			g_iHumanAmmo[iIndex] = 5;
-			g_flHumanCooldown[iIndex] = 30.0;
-			g_iSlowAbility[iIndex] = 0;
-			g_iSlowEffect[iIndex] = 0;
-			g_iSlowMessage[iIndex] = 0;
-			g_flSlowChance[iIndex] = 33.3;
-			g_flSlowDuration[iIndex] = 5.0;
-			g_iSlowHit[iIndex] = 0;
-			g_iSlowHitMode[iIndex] = 0;
-			g_flSlowRange[iIndex] = 150.0;
-			g_flSlowRangeChance[iIndex] = 15.0;
-			g_flSlowSpeed[iIndex] = 0.25;
+			g_esAbility[iIndex].g_iAccessFlags = 0;
+			g_esAbility[iIndex].g_iImmunityFlags = 0;
+			g_esAbility[iIndex].g_iHumanAbility = 0;
+			g_esAbility[iIndex].g_iHumanAmmo = 5;
+			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
+			g_esAbility[iIndex].g_iSlowAbility = 0;
+			g_esAbility[iIndex].g_iSlowEffect = 0;
+			g_esAbility[iIndex].g_iSlowMessage = 0;
+			g_esAbility[iIndex].g_flSlowChance = 33.3;
+			g_esAbility[iIndex].g_flSlowDuration = 5.0;
+			g_esAbility[iIndex].g_iSlowHit = 0;
+			g_esAbility[iIndex].g_iSlowHitMode = 0;
+			g_esAbility[iIndex].g_flSlowRange = 150.0;
+			g_esAbility[iIndex].g_flSlowRangeChance = 15.0;
+			g_esAbility[iIndex].g_flSlowSpeed = 0.25;
 		}
 	}
 }
@@ -319,40 +372,40 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+				g_esPlayer[admin].g_iImmunityFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iImmunityFlags2;
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
-		g_iSlowAbility[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iSlowAbility[type], value, 0, 1);
-		g_iSlowEffect[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iSlowEffect[type], value, 0, 7);
-		g_iSlowMessage[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iSlowMessage[type], value, 0, 7);
-		g_flSlowChance[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", g_flSlowChance[type], value, 0.0, 100.0);
-		g_flSlowDuration[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_flSlowDuration[type], value, 0.1, 999999.0);
-		g_iSlowHit[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowHit", "Slow Hit", "Slow_Hit", "hit", g_iSlowHit[type], value, 0, 1);
-		g_iSlowHitMode[type] = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowHitMode", "Slow Hit Mode", "Slow_Hit_Mode", "hitmode", g_iSlowHitMode[type], value, 0, 2);
-		g_flSlowRange[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowRange", "Slow Range", "Slow_Range", "range", g_flSlowRange[type], value, 1.0, 999999.0);
-		g_flSlowRangeChance[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_flSlowRangeChance[type], value, 0.0, 100.0);
-		g_flSlowSpeed[type] = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_flSlowSpeed[type], value, 0.1, 0.9);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
+		g_esAbility[type].g_iSlowAbility = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iSlowAbility, value, 0, 1);
+		g_esAbility[type].g_iSlowEffect = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iSlowEffect, value, 0, 7);
+		g_esAbility[type].g_iSlowMessage = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSlowMessage, value, 0, 7);
+		g_esAbility[type].g_flSlowChance = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowChance", "Slow Chance", "Slow_Chance", "chance", g_esAbility[type].g_flSlowChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flSlowDuration = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowDuration", "Slow Duration", "Slow_Duration", "duration", g_esAbility[type].g_flSlowDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iSlowHit = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowHit", "Slow Hit", "Slow_Hit", "hit", g_esAbility[type].g_iSlowHit, value, 0, 1);
+		g_esAbility[type].g_iSlowHitMode = iGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowHitMode", "Slow Hit Mode", "Slow_Hit_Mode", "hitmode", g_esAbility[type].g_iSlowHitMode, value, 0, 2);
+		g_esAbility[type].g_flSlowRange = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowRange", "Slow Range", "Slow_Range", "range", g_esAbility[type].g_flSlowRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flSlowRangeChance = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowRangeChance", "Slow Range Chance", "Slow_Range_Chance", "rangechance", g_esAbility[type].g_flSlowRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flSlowSpeed = flGetValue(subsection, "slowability", "slow ability", "slow_ability", "slow", key, "SlowSpeed", "Slow Speed", "Slow_Speed", "speed", g_esAbility[type].g_flSlowSpeed, value, 0.1, 0.9);
 
 		if (StrEqual(subsection, "slowability", false) || StrEqual(subsection, "slow ability", false) || StrEqual(subsection, "slow_ability", false) || StrEqual(subsection, "slow", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+				g_esAbility[type].g_iImmunityFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iImmunityFlags;
 			}
 		}
 	}
@@ -371,15 +424,7 @@ public void MT_OnPluginEnd()
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_spawn"))
-	{
-		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_ALIVE))
-		{
-			g_flOriginalSpeed[iSurvivor] = GetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue");
-		}
-	}
-	else if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -387,16 +432,25 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveSlow(iTank);
 		}
 	}
+
+	if (StrEqual(name, "player_spawn"))
+	{
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_ALIVE))
+		{
+			g_esPlayer[iSurvivor].g_flOriginalSpeed = GetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue");
+		}
+	}
 }
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[MT_GetTankType(tank)] == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iSlowAbility[MT_GetTankType(tank)] == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iSlowAbility == 1)
 	{
 		vSlowAbility(tank);
 	}
@@ -413,17 +467,17 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_SUB_KEY == MT_SUB_KEY)
 		{
-			if (g_iSlowAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iSlowAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				if (!g_bSlow2[tank] && !g_bSlow3[tank])
+				if (!g_esPlayer[tank].g_bSlow2 && !g_esPlayer[tank].g_bSlow3)
 				{
 					vSlowAbility(tank);
 				}
-				else if (g_bSlow2[tank])
+				else if (g_esPlayer[tank].g_bSlow2)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowHuman3");
 				}
-				else if (g_bSlow3[tank])
+				else if (g_esPlayer[tank].g_bSlow3)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowHuman4");
 				}
@@ -441,12 +495,12 @@ static void vRemoveSlow(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_bSlow[iSurvivor] && g_iSlowOwner[iSurvivor] == tank)
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_esPlayer[iSurvivor].g_bSlow && g_esPlayer[iSurvivor].g_iSlowOwner == tank)
 		{
-			g_bSlow[iSurvivor] = false;
-			g_iSlowOwner[iSurvivor] = 0;
+			g_esPlayer[iSurvivor].g_bSlow = false;
+			g_esPlayer[iSurvivor].g_iSlowOwner = 0;
 
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_flOriginalSpeed[iSurvivor]);
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_esPlayer[iSurvivor].g_flOriginalSpeed);
 		}
 	}
 
@@ -466,13 +520,13 @@ static void vReset()
 
 static void vReset2(int tank)
 {
-	g_bSlow[tank] = false;
-	g_bSlow2[tank] = false;
-	g_bSlow3[tank] = false;
-	g_bSlow4[tank] = false;
-	g_bSlow5[tank] = false;
-	g_iSlowCount[tank] = 0;
-	g_flOriginalSpeed[tank] = 1.0;
+	g_esPlayer[tank].g_bSlow = false;
+	g_esPlayer[tank].g_bSlow2 = false;
+	g_esPlayer[tank].g_bSlow3 = false;
+	g_esPlayer[tank].g_bSlow4 = false;
+	g_esPlayer[tank].g_bSlow5 = false;
+	g_esPlayer[tank].g_iSlowCount = 0;
+	g_esPlayer[tank].g_flOriginalSpeed = 1.0;
 }
 
 static void vSlowAbility(int tank)
@@ -482,10 +536,10 @@ static void vSlowAbility(int tank)
 		return;
 	}
 
-	if (g_iSlowCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iSlowCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		g_bSlow4[tank] = false;
-		g_bSlow5[tank] = false;
+		g_esPlayer[tank].g_bSlow4 = false;
+		g_esPlayer[tank].g_bSlow5 = false;
 
 		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
@@ -499,9 +553,9 @@ static void vSlowAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= g_flSlowRange[MT_GetTankType(tank)])
+				if (flDistance <= g_esAbility[MT_GetTankType(tank)].g_flSlowRange)
 				{
-					vSlowHit(iSurvivor, tank, g_flSlowRangeChance[MT_GetTankType(tank)], g_iSlowAbility[MT_GetTankType(tank)], MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+					vSlowHit(iSurvivor, tank, g_esAbility[MT_GetTankType(tank)].g_flSlowRangeChance, g_esAbility[MT_GetTankType(tank)].g_iSlowAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -510,13 +564,13 @@ static void vSlowAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowHuman5");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowAmmo");
 	}
@@ -531,52 +585,52 @@ static void vSlowHit(int survivor, int tank, float chance, int enabled, int mess
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iSlowCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+		if (g_esPlayer[tank].g_iSlowCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 		{
-			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bSlow[survivor])
+			if (GetRandomFloat(0.1, 100.0) <= chance && !g_esPlayer[survivor].g_bSlow)
 			{
-				g_bSlow[survivor] = true;
-				g_iSlowOwner[survivor] = tank;
+				g_esPlayer[survivor].g_bSlow = true;
+				g_esPlayer[survivor].g_iSlowOwner = tank;
 
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bSlow2[tank])
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bSlow2)
 				{
-					g_bSlow2[tank] = true;
-					g_iSlowCount[tank]++;
+					g_esPlayer[tank].g_bSlow2 = true;
+					g_esPlayer[tank].g_iSlowCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowHuman", g_iSlowCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowHuman", g_esPlayer[tank].g_iSlowCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
 				}
 
-				g_flOriginalSpeed[survivor] = GetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue");
-				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", g_flSlowSpeed[MT_GetTankType(tank)]);
+				g_esPlayer[survivor].g_flOriginalSpeed = GetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue");
+				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", g_esAbility[MT_GetTankType(tank)].g_flSlowSpeed);
 
 				DataPack dpStopSlow;
-				CreateDataTimer(g_flSlowDuration[MT_GetTankType(tank)], tTimerStopSlow, dpStopSlow, TIMER_FLAG_NO_MAPCHANGE);
+				CreateDataTimer(g_esAbility[MT_GetTankType(tank)].g_flSlowDuration, tTimerStopSlow, dpStopSlow, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopSlow.WriteCell(GetClientUserId(survivor));
 				dpStopSlow.WriteCell(GetClientUserId(tank));
 				dpStopSlow.WriteCell(messages);
 
-				vEffect(survivor, tank, g_iSlowEffect[MT_GetTankType(tank)], flags);
+				vEffect(survivor, tank, g_esAbility[MT_GetTankType(tank)].g_iSlowEffect, flags);
 
-				if (g_iSlowMessage[MT_GetTankType(tank)] & messages)
+				if (g_esAbility[MT_GetTankType(tank)].g_iSlowMessage & messages)
 				{
 					char sTankName[33];
 					MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Slow", sTankName, survivor, g_flSlowSpeed[MT_GetTankType(tank)]);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Slow", sTankName, survivor, g_esAbility[MT_GetTankType(tank)].g_flSlowSpeed);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && !g_bSlow2[tank])
+			else if ((flags & MT_ATTACK_RANGE) && !g_esPlayer[tank].g_bSlow2)
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bSlow4[tank])
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bSlow4)
 				{
-					g_bSlow4[tank] = true;
+					g_esPlayer[tank].g_bSlow4 = true;
 
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowHuman2");
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bSlow5[tank])
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bSlow5)
 		{
-			g_bSlow5[tank] = true;
+			g_esPlayer[tank].g_bSlow5 = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowAmmo");
 		}
@@ -590,49 +644,34 @@ static bool bHasAdminAccess(int admin)
 		return true;
 	}
 
-	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0)
+	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 	}
 
 	if (iAbilityFlags != 0)
@@ -650,56 +689,42 @@ static bool bIsAdminImmune(int survivor, int tank)
 		return false;
 	}
 
-	int iAbilityFlags = g_iImmunityFlags[MT_GetTankType(survivor)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(tank)].g_iImmunityFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iAbilityFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
-	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(survivor));
-	if (iTypeFlags != 0)
+	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(tank));
+	if (iTypeFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iTypeFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetImmunityFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iGlobalFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetImmunityFlags(4, MT_GetTankType(tank), survivor),
 		iClientTypeFlags2 = MT_GetImmunityFlags(4, MT_GetTankType(tank), tank);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
-		{
-			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
-		}
+		return (iClientTypeFlags2 != 0 && (iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetImmunityFlags(3, 0, survivor),
 		iClientGlobalFlags2 = MT_GetImmunityFlags(3, 0, tank);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
-		{
-			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
-		}
+		return (iClientGlobalFlags2 != 0 && (iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
 	}
 
-	if (iAbilityFlags != 0)
+	int iSurvivorFlags = GetUserFlagBits(survivor), iTankFlags = GetUserFlagBits(tank);
+	if (iAbilityFlags != 0 && iSurvivorFlags != 0 && (iSurvivorFlags & iAbilityFlags))
 	{
-		return ((GetUserFlagBits(tank) & iAbilityFlags) && GetUserFlagBits(survivor) <= GetUserFlagBits(tank)) ? false : true;
+		return (iTankFlags != 0 && iSurvivorFlags <= iTankFlags) ? false : true;
 	}
 
 	return false;
@@ -712,48 +737,48 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		g_bSlow[iSurvivor] = false;
-		g_iSlowOwner[iSurvivor] = 0;
+		g_esPlayer[iSurvivor].g_bSlow = false;
+		g_esPlayer[iSurvivor].g_iSlowOwner = 0;
 
 		return Plugin_Stop;
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bSlow[iSurvivor])
+	if (!MT_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_esPlayer[iSurvivor].g_bSlow)
 	{
-		g_bSlow[iSurvivor] = false;
-		g_iSlowOwner[iSurvivor] = 0;
+		g_esPlayer[iSurvivor].g_bSlow = false;
+		g_esPlayer[iSurvivor].g_iSlowOwner = 0;
 
-		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_flOriginalSpeed[iSurvivor]);
+		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_esPlayer[iSurvivor].g_flOriginalSpeed);
 
 		return Plugin_Stop;
 	}
 
-	g_bSlow[iSurvivor] = false;
-	g_bSlow2[iTank] = false;
-	g_iSlowOwner[iSurvivor] = 0;
+	g_esPlayer[iSurvivor].g_bSlow = false;
+	g_esPlayer[iTank].g_bSlow2 = false;
+	g_esPlayer[iSurvivor].g_iSlowOwner = 0;
 
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_flOriginalSpeed[iSurvivor]);
+	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_esPlayer[iSurvivor].g_flOriginalSpeed);
 
 	int iMessage = pack.ReadCell();
 
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_iHumanAbility[MT_GetTankType(iTank)] == 1 && (iMessage & MT_MESSAGE_RANGE) && !g_bSlow3[iTank])
+	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1 && (iMessage & MT_MESSAGE_RANGE) && !g_esPlayer[iTank].g_bSlow3)
 	{
-		g_bSlow3[iTank] = true;
+		g_esPlayer[iTank].g_bSlow3 = true;
 
 		MT_PrintToChat(iTank, "%s %t", MT_TAG3, "SlowHuman6");
 
-		if (g_iSlowCount[iTank] < g_iHumanAmmo[MT_GetTankType(iTank)] && g_iHumanAmmo[MT_GetTankType(iTank)] > 0)
+		if (g_esPlayer[iTank].g_iSlowCount < g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo > 0)
 		{
-			CreateTimer(g_flHumanCooldown[MT_GetTankType(iTank)], tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_esAbility[MT_GetTankType(iTank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 		else
 		{
-			g_bSlow3[iTank] = false;
+			g_esPlayer[iTank].g_bSlow3 = false;
 		}
 	}
 
-	if (g_iSlowMessage[MT_GetTankType(iTank)] & iMessage)
+	if (g_esAbility[MT_GetTankType(iTank)].g_iSlowMessage & iMessage)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Slow2", iSurvivor);
 	}
@@ -764,14 +789,14 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bSlow3[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_esPlayer[iTank].g_bSlow3)
 	{
-		g_bSlow3[iTank] = false;
+		g_esPlayer[iTank].g_bSlow3 = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bSlow3[iTank] = false;
+	g_esPlayer[iTank].g_bSlow3 = false;
 
 	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "SlowHuman7");
 

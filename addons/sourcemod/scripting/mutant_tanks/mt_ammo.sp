@@ -48,11 +48,41 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_AMMO "Ammo Ability"
 
-bool g_bAmmo[MAXPLAYERS + 1], g_bAmmo2[MAXPLAYERS + 1], g_bAmmo3[MAXPLAYERS + 1], g_bCloneInstalled;
+bool g_bCloneInstalled;
 
-float g_flAmmoChance[MT_MAXTYPES + 1], g_flAmmoRange[MT_MAXTYPES + 1], g_flAmmoRangeChance[MT_MAXTYPES + 1], g_flHumanCooldown[MT_MAXTYPES + 1];
+enum struct esPlayerSettings
+{
+	bool g_bAmmo;
+	bool g_bAmmo2;
+	bool g_bAmmo3;
 
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iAmmoAbility[MT_MAXTYPES + 1], g_iAmmoAmount[MT_MAXTYPES + 1], g_iAmmoCount[MAXPLAYERS + 1], g_iAmmoEffect[MT_MAXTYPES + 1], g_iAmmoHit[MT_MAXTYPES + 1], g_iAmmoHitMode[MT_MAXTYPES + 1], g_iAmmoMessage[MT_MAXTYPES + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
+	int g_iAccessFlags2;
+	int g_iAmmoCount;
+	int g_iImmunityFlags2;
+}
+
+esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+
+enum struct esAbilitySettings
+{
+	float g_flAmmoChance;
+	float g_flAmmoRange;
+	float g_flAmmoRangeChance;
+	float g_flHumanCooldown;
+
+	int g_iAccessFlags;
+	int g_iAmmoAbility;
+	int g_iAmmoAmount;
+	int g_iAmmoEffect;
+	int g_iAmmoHit;
+	int g_iAmmoHitMode;
+	int g_iAmmoMessage;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iImmunityFlags;
+}
+
+esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -160,12 +190,12 @@ public int iAmmoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iAmmoAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iAmmoCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iAmmoAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iAmmoCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_flHumanCooldown[MT_GetTankType(param1)]);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AmmoDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -237,11 +267,11 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iAmmoHitMode[MT_GetTankType(attacker)] == 0 || g_iAmmoHitMode[MT_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_esAbility[MT_GetTankType(attacker)].g_iAmmoHitMode == 0 || g_esAbility[MT_GetTankType(attacker)].g_iAmmoHitMode == 1) && bIsSurvivor(victim))
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
 			{
@@ -250,10 +280,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vAmmoHit(victim, attacker, g_flAmmoChance[MT_GetTankType(attacker)], g_iAmmoHit[MT_GetTankType(attacker)], MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vAmmoHit(victim, attacker, g_esAbility[MT_GetTankType(attacker)].g_flAmmoChance, g_esAbility[MT_GetTankType(attacker)].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iAmmoHitMode[MT_GetTankType(victim)] == 0 || g_iAmmoHitMode[MT_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_esAbility[MT_GetTankType(victim)].g_iAmmoHitMode == 0 || g_esAbility[MT_GetTankType(victim)].g_iAmmoHitMode == 2) && bIsSurvivor(attacker))
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
 			{
@@ -262,12 +292,27 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vAmmoHit(attacker, victim, g_flAmmoChance[MT_GetTankType(victim)], g_iAmmoHit[MT_GetTankType(victim)], MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vAmmoHit(attacker, victim, g_esAbility[MT_GetTankType(victim)].g_flAmmoChance, g_esAbility[MT_GetTankType(victim)].g_iAmmoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
 
 	return Plugin_Continue;
+}
+
+public void MT_OnPluginCheck(ArrayList &list)
+{
+	char sName[32];
+	GetPluginFilename(null, sName, sizeof(sName));
+	list.PushString(sName);
+}
+
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString("ammoability");
+	list2.PushString("ammo ability");
+	list3.PushString("ammo_ability");
+	list4.PushString("ammo");
 }
 
 public void MT_OnConfigsLoad(int mode)
@@ -278,8 +323,8 @@ public void MT_OnConfigsLoad(int mode)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				g_iAccessFlags2[iPlayer] = 0;
-				g_iImmunityFlags2[iPlayer] = 0;
+				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
+				g_esPlayer[iPlayer].g_iImmunityFlags2 = 0;
 			}
 		}
 	}
@@ -287,20 +332,20 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iAccessFlags[iIndex] = 0;
-			g_iImmunityFlags[iIndex] = 0;
-			g_iHumanAbility[iIndex] = 0;
-			g_iHumanAmmo[iIndex] = 5;
-			g_flHumanCooldown[iIndex] = 30.0;
-			g_iAmmoAbility[iIndex] = 0;
-			g_iAmmoEffect[iIndex] = 0;
-			g_iAmmoMessage[iIndex] = 0;
-			g_flAmmoChance[iIndex] = 33.3;
-			g_iAmmoAmount[iIndex] = 0;
-			g_iAmmoHit[iIndex] = 0;
-			g_iAmmoHitMode[iIndex] = 0;
-			g_flAmmoRange[iIndex] = 150.0;
-			g_flAmmoRangeChance[iIndex] = 15.0;
+			g_esAbility[iIndex].g_iAccessFlags = 0;
+			g_esAbility[iIndex].g_iImmunityFlags = 0;
+			g_esAbility[iIndex].g_iHumanAbility = 0;
+			g_esAbility[iIndex].g_iHumanAmmo = 5;
+			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
+			g_esAbility[iIndex].g_iAmmoAbility = 0;
+			g_esAbility[iIndex].g_iAmmoEffect = 0;
+			g_esAbility[iIndex].g_iAmmoMessage = 0;
+			g_esAbility[iIndex].g_flAmmoChance = 33.3;
+			g_esAbility[iIndex].g_iAmmoAmount = 0;
+			g_esAbility[iIndex].g_iAmmoHit = 0;
+			g_esAbility[iIndex].g_iAmmoHitMode = 0;
+			g_esAbility[iIndex].g_flAmmoRange = 150.0;
+			g_esAbility[iIndex].g_flAmmoRangeChance = 15.0;
 		}
 	}
 }
@@ -313,39 +358,39 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+				g_esPlayer[admin].g_iImmunityFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iImmunityFlags2;
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
-		g_iAmmoAbility[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iAmmoAbility[type], value, 0, 1);
-		g_iAmmoEffect[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iAmmoEffect[type], value, 0, 7);
-		g_iAmmoMessage[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iAmmoMessage[type], value, 0, 3);
-		g_flAmmoChance[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_flAmmoChance[type], value, 0.0, 100.0);
-		g_iAmmoAmount[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_iAmmoAmount[type], value, 0, 25);
-		g_iAmmoHit[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_iAmmoHit[type], value, 0, 1);
-		g_iAmmoHitMode[type] = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_iAmmoHitMode[type], value, 0, 2);
-		g_flAmmoRange[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_flAmmoRange[type], value, 1.0, 999999.0);
-		g_flAmmoRangeChance[type] = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_flAmmoRangeChance[type], value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
+		g_esAbility[type].g_iAmmoAbility = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iAmmoAbility, value, 0, 1);
+		g_esAbility[type].g_iAmmoEffect = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iAmmoEffect, value, 0, 7);
+		g_esAbility[type].g_iAmmoMessage = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iAmmoMessage, value, 0, 3);
+		g_esAbility[type].g_flAmmoChance = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAbility[type].g_flAmmoChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iAmmoAmount = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAbility[type].g_iAmmoAmount, value, 0, 25);
+		g_esAbility[type].g_iAmmoHit = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esAbility[type].g_iAmmoHit, value, 0, 1);
+		g_esAbility[type].g_iAmmoHitMode = iGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esAbility[type].g_iAmmoHitMode, value, 0, 2);
+		g_esAbility[type].g_flAmmoRange = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esAbility[type].g_flAmmoRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flAmmoRangeChance = flGetValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esAbility[type].g_flAmmoRangeChance, value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "ammoability", false) || StrEqual(subsection, "ammo ability", false) || StrEqual(subsection, "ammo_ability", false) || StrEqual(subsection, "ammo", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+				g_esAbility[type].g_iImmunityFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iImmunityFlags;
 			}
 		}
 	}
@@ -353,7 +398,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -365,12 +410,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[MT_GetTankType(tank)] == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iAmmoAbility[MT_GetTankType(tank)] == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iAmmoAbility == 1)
 	{
 		vAmmoAbility(tank);
 	}
@@ -387,9 +432,9 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_SUB_KEY == MT_SUB_KEY)
 		{
-			if (g_iAmmoAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iAmmoAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				switch (g_bAmmo[tank])
+				switch (g_esPlayer[tank].g_bAmmo)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoHuman3");
 					case false: vAmmoAbility(tank);
@@ -411,10 +456,10 @@ static void vAmmoAbility(int tank)
 		return;
 	}
 
-	if (g_iAmmoCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iAmmoCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		g_bAmmo2[tank] = false;
-		g_bAmmo3[tank] = false;
+		g_esPlayer[tank].g_bAmmo2 = false;
+		g_esPlayer[tank].g_bAmmo3 = false;
 
 		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
@@ -428,9 +473,9 @@ static void vAmmoAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= g_flAmmoRange[MT_GetTankType(tank)])
+				if (flDistance <= g_esAbility[MT_GetTankType(tank)].g_flAmmoRange)
 				{
-					vAmmoHit(iSurvivor, tank, g_flAmmoRangeChance[MT_GetTankType(tank)], g_iAmmoAbility[MT_GetTankType(tank)], MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+					vAmmoHit(iSurvivor, tank, g_esAbility[MT_GetTankType(tank)].g_flAmmoRangeChance, g_esAbility[MT_GetTankType(tank)].g_iAmmoAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -439,13 +484,13 @@ static void vAmmoAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoHuman4");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoAmmo");
 	}
@@ -460,24 +505,24 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, int mess
 
 	if (enabled == 1 && bIsSurvivor(survivor) && GetPlayerWeaponSlot(survivor, 0) > 0)
 	{
-		if (g_iAmmoCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+		if (g_esPlayer[tank].g_iAmmoCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && (flags & MT_ATTACK_RANGE) && !g_bAmmo[tank])
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && !g_esPlayer[tank].g_bAmmo)
 				{
-					g_bAmmo[tank] = true;
-					g_iAmmoCount[tank]++;
+					g_esPlayer[tank].g_bAmmo = true;
+					g_esPlayer[tank].g_iAmmoCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoHuman", g_iAmmoCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoHuman", g_esPlayer[tank].g_iAmmoCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
 
-					if (g_iAmmoCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+					if (g_esPlayer[tank].g_iAmmoCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 					{
-						CreateTimer(g_flHumanCooldown[MT_GetTankType(tank)], tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
 					}
 					else
 					{
-						g_bAmmo[tank] = false;
+						g_esPlayer[tank].g_bAmmo = false;
 					}
 				}
 
@@ -488,78 +533,78 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, int mess
 				{
 					if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_sg552"))
 					{
-						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 3);
+						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 3);
 					}
 					else if (StrEqual(sWeapon, "weapon_smg") || StrEqual(sWeapon, "weapon_smg_silenced") || StrEqual(sWeapon, "weapon_smg_mp5"))
 					{
-						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 5);
+						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 5);
 					}
 					else if (StrEqual(sWeapon, "weapon_pumpshotgun"))
 					{
 						switch (bIsValidGame())
 						{
-							case true: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 7);
-							case false: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 6);
+							case true: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 7);
+							case false: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 6);
 						}
 					}
 					else if (StrEqual(sWeapon, "weapon_shotgun_chrome"))
 					{
-						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 7);
+						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 7);
 					}
 					else if (StrEqual(sWeapon, "weapon_autoshotgun"))
 					{
 						switch (bIsValidGame())
 						{
-							case true: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 8);
-							case false: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 6);
+							case true: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 8);
+							case false: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 6);
 						}
 					}
 					else if (StrEqual(sWeapon, "weapon_shotgun_spas"))
 					{
-						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 8);
+						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 8);
 					}
 					else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
 					{
 						switch (bIsValidGame())
 						{
-							case true: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 9);
-							case false: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 2);
+							case true: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 9);
+							case false: SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 2);
 						}
 					}
 					else if (StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_awp"))
 					{
-						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 10);
+						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 10);
 					}
 					else if (StrEqual(sWeapon, "weapon_grenade_launcher"))
 					{
-						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_iAmmoAmount[MT_GetTankType(tank)], _, 17);
+						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, _, 17);
 					}
 				}
 
-				SetEntProp(GetPlayerWeaponSlot(survivor, 0), Prop_Data, "m_iClip1", g_iAmmoAmount[MT_GetTankType(tank)], 1);
+				SetEntProp(GetPlayerWeaponSlot(survivor, 0), Prop_Data, "m_iClip1", g_esAbility[MT_GetTankType(tank)].g_iAmmoAmount, 1);
 
-				vEffect(survivor, tank, g_iAmmoEffect[MT_GetTankType(tank)], flags);
+				vEffect(survivor, tank, g_esAbility[MT_GetTankType(tank)].g_iAmmoEffect, flags);
 
-				if (g_iAmmoMessage[MT_GetTankType(tank)] & messages)
+				if (g_esAbility[MT_GetTankType(tank)].g_iAmmoMessage & messages)
 				{
 					char sTankName[33];
 					MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Ammo", sTankName, survivor);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && !g_bAmmo[tank])
+			else if ((flags & MT_ATTACK_RANGE) && !g_esPlayer[tank].g_bAmmo)
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bAmmo2[tank])
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bAmmo2)
 				{
-					g_bAmmo2[tank] = true;
+					g_esPlayer[tank].g_bAmmo2 = true;
 
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoHuman2");
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bAmmo3[tank])
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bAmmo3)
 		{
-			g_bAmmo3[tank] = true;
+			g_esPlayer[tank].g_bAmmo3 = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "AmmoAmmo");
 		}
@@ -568,10 +613,10 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, int mess
 
 static void vRemoveAmmo(int tank)
 {
-	g_bAmmo[tank] = false;
-	g_bAmmo2[tank] = false;
-	g_bAmmo3[tank] = false;
-	g_iAmmoCount[tank] = 0;
+	g_esPlayer[tank].g_bAmmo = false;
+	g_esPlayer[tank].g_bAmmo2 = false;
+	g_esPlayer[tank].g_bAmmo3 = false;
+	g_esPlayer[tank].g_iAmmoCount = 0;
 }
 
 static void vReset()
@@ -592,49 +637,34 @@ static bool bHasAdminAccess(int admin)
 		return true;
 	}
 
-	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0)
+	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 	}
 
 	if (iAbilityFlags != 0)
@@ -652,56 +682,42 @@ static bool bIsAdminImmune(int survivor, int tank)
 		return false;
 	}
 
-	int iAbilityFlags = g_iImmunityFlags[MT_GetTankType(survivor)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(tank)].g_iImmunityFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iAbilityFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
-	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(survivor));
-	if (iTypeFlags != 0)
+	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(tank));
+	if (iTypeFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iTypeFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetImmunityFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iGlobalFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetImmunityFlags(4, MT_GetTankType(tank), survivor),
 		iClientTypeFlags2 = MT_GetImmunityFlags(4, MT_GetTankType(tank), tank);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
-		{
-			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
-		}
+		return (iClientTypeFlags2 != 0 && (iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetImmunityFlags(3, 0, survivor),
 		iClientGlobalFlags2 = MT_GetImmunityFlags(3, 0, tank);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
-		{
-			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
-		}
+		return (iClientGlobalFlags2 != 0 && (iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
 	}
 
-	if (iAbilityFlags != 0)
+	int iSurvivorFlags = GetUserFlagBits(survivor), iTankFlags = GetUserFlagBits(tank);
+	if (iAbilityFlags != 0 && iSurvivorFlags != 0 && (iSurvivorFlags & iAbilityFlags))
 	{
-		return ((GetUserFlagBits(tank) & iAbilityFlags) && GetUserFlagBits(survivor) <= GetUserFlagBits(tank)) ? false : true;
+		return (iTankFlags != 0 && iSurvivorFlags <= iTankFlags) ? false : true;
 	}
 
 	return false;
@@ -710,14 +726,14 @@ static bool bIsAdminImmune(int survivor, int tank)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bAmmo[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_esPlayer[iTank].g_bAmmo)
 	{
-		g_bAmmo[iTank] = false;
+		g_esPlayer[iTank].g_bAmmo = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bAmmo[iTank] = false;
+	g_esPlayer[iTank].g_bAmmo = false;
 
 	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "AmmoHuman5");
 

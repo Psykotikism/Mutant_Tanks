@@ -48,11 +48,46 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_AIMLESS "Aimless Ability"
 
-bool g_bAimless[MAXPLAYERS + 1], g_bAimless2[MAXPLAYERS + 1], g_bAimless3[MAXPLAYERS + 1], g_bAimless4[MAXPLAYERS + 1], g_bAimless5[MAXPLAYERS + 1], g_bCloneInstalled;
+bool g_bCloneInstalled;
 
-float g_flAimlessAngle[MAXPLAYERS + 1][3], g_flAimlessChance[MT_MAXTYPES + 1], g_flAimlessDuration[MT_MAXTYPES + 1], g_flAimlessRange[MT_MAXTYPES + 1], g_flAimlessRangeChance[MT_MAXTYPES + 1], g_flHumanCooldown[MT_MAXTYPES + 1];
+enum struct esPlayerSettings
+{
+	bool g_bAimless;
+	bool g_bAimless2;
+	bool g_bAimless3;
+	bool g_bAimless4;
+	bool g_bAimless5;
 
-int g_iAccessFlags[MT_MAXTYPES + 1], g_iAccessFlags2[MAXPLAYERS + 1], g_iAimlessAbility[MT_MAXTYPES + 1], g_iAimlessCount[MAXPLAYERS + 1], g_iAimlessEffect[MT_MAXTYPES + 1], g_iAimlessHit[MT_MAXTYPES + 1], g_iAimlessHitMode[MT_MAXTYPES + 1], g_iAimlessMessage[MT_MAXTYPES + 1], g_iAimlessOwner[MAXPLAYERS + 1], g_iHumanAbility[MT_MAXTYPES + 1], g_iHumanAmmo[MT_MAXTYPES + 1], g_iImmunityFlags[MT_MAXTYPES + 1], g_iImmunityFlags2[MAXPLAYERS + 1];
+	float g_flAimlessAngle[3];
+
+	int g_iAccessFlags2;
+	int g_iAimlessCount;
+	int g_iAimlessOwner;
+	int g_iImmunityFlags2;
+}
+
+esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+
+enum struct esAbilitySettings
+{
+	float g_flAimlessChance;
+	float g_flAimlessDuration;
+	float g_flAimlessRange;
+	float g_flAimlessRangeChance;
+	float g_flHumanCooldown;
+
+	int g_iAccessFlags;
+	int g_iAimlessAbility;
+	int g_iAimlessEffect;
+	int g_iAimlessHit;
+	int g_iAimlessHitMode;
+	int g_iAimlessMessage;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iImmunityFlags;
+}
+
+esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
@@ -161,13 +196,13 @@ public int iAimlessMenuHandler(Menu menu, MenuAction action, int param1, int par
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iAimlessAbility[MT_GetTankType(param1)] == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_iHumanAmmo[MT_GetTankType(param1)] - g_iAimlessCount[param1], g_iHumanAmmo[MT_GetTankType(param1)]);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iAimlessAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iAimlessCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_flHumanCooldown[MT_GetTankType(param1)]);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AimlessDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_flAimlessDuration[MT_GetTankType(param1)]);
-				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_iHumanAbility[MT_GetTankType(param1)] == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esAbility[MT_GetTankType(param1)].g_flAimlessDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -249,9 +284,9 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		return Plugin_Continue;
 	}
 
-	if (g_bAimless[client])
+	if (g_esPlayer[client].g_bAimless)
 	{
-		TeleportEntity(client, NULL_VECTOR, g_flAimlessAngle[client], NULL_VECTOR);
+		TeleportEntity(client, NULL_VECTOR, g_esPlayer[client].g_flAimlessAngle, NULL_VECTOR);
 	}
 
 	return Plugin_Continue;
@@ -259,11 +294,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
 	{
 		char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_iAimlessHitMode[MT_GetTankType(attacker)] == 0 || g_iAimlessHitMode[MT_GetTankType(attacker)] == 1) && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_esAbility[MT_GetTankType(attacker)].g_iAimlessHitMode == 0 || g_esAbility[MT_GetTankType(attacker)].g_iAimlessHitMode == 1) && bIsSurvivor(victim))
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
 			{
@@ -272,10 +307,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vAimlessHit(victim, attacker, g_flAimlessChance[MT_GetTankType(attacker)], g_iAimlessHit[MT_GetTankType(attacker)], MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vAimlessHit(victim, attacker, g_esAbility[MT_GetTankType(attacker)].g_flAimlessChance, g_esAbility[MT_GetTankType(attacker)].g_iAimlessHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_iAimlessHitMode[MT_GetTankType(victim)] == 0 || g_iAimlessHitMode[MT_GetTankType(victim)] == 2) && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && (g_esAbility[MT_GetTankType(victim)].g_iAimlessHitMode == 0 || g_esAbility[MT_GetTankType(victim)].g_iAimlessHitMode == 2) && bIsSurvivor(attacker))
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
 			{
@@ -284,12 +319,27 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vAimlessHit(attacker, victim, g_flAimlessChance[MT_GetTankType(victim)], g_iAimlessHit[MT_GetTankType(victim)], MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vAimlessHit(attacker, victim, g_esAbility[MT_GetTankType(victim)].g_flAimlessChance, g_esAbility[MT_GetTankType(victim)].g_iAimlessHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
 
 	return Plugin_Continue;
+}
+
+public void MT_OnPluginCheck(ArrayList &list)
+{
+	char sName[32];
+	GetPluginFilename(null, sName, sizeof(sName));
+	list.PushString(sName);
+}
+
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString("aimlessability");
+	list2.PushString("aimless ability");
+	list3.PushString("aimless_ability");
+	list4.PushString("aimless");
 }
 
 public void MT_OnConfigsLoad(int mode)
@@ -300,8 +350,8 @@ public void MT_OnConfigsLoad(int mode)
 		{
 			if (bIsValidClient(iPlayer))
 			{
-				g_iAccessFlags2[iPlayer] = 0;
-				g_iImmunityFlags2[iPlayer] = 0;
+				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
+				g_esPlayer[iPlayer].g_iImmunityFlags2 = 0;
 			}
 		}
 	}
@@ -309,20 +359,20 @@ public void MT_OnConfigsLoad(int mode)
 	{
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			g_iAccessFlags[iIndex] = 0;
-			g_iImmunityFlags[iIndex] = 0;
-			g_iHumanAbility[iIndex] = 0;
-			g_iHumanAmmo[iIndex] = 5;
-			g_flHumanCooldown[iIndex] = 30.0;
-			g_iAimlessAbility[iIndex] = 0;
-			g_iAimlessEffect[iIndex] = 0;
-			g_iAimlessMessage[iIndex] = 0;
-			g_flAimlessChance[iIndex] = 33.3;
-			g_flAimlessDuration[iIndex] = 5.0;
-			g_iAimlessHit[iIndex] = 0;
-			g_iAimlessHitMode[iIndex] = 0;
-			g_flAimlessRange[iIndex] = 150.0;
-			g_flAimlessRangeChance[iIndex] = 15.0;
+			g_esAbility[iIndex].g_iAccessFlags = 0;
+			g_esAbility[iIndex].g_iImmunityFlags = 0;
+			g_esAbility[iIndex].g_iHumanAbility = 0;
+			g_esAbility[iIndex].g_iHumanAmmo = 5;
+			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
+			g_esAbility[iIndex].g_iAimlessAbility = 0;
+			g_esAbility[iIndex].g_iAimlessEffect = 0;
+			g_esAbility[iIndex].g_iAimlessMessage = 0;
+			g_esAbility[iIndex].g_flAimlessChance = 33.3;
+			g_esAbility[iIndex].g_flAimlessDuration = 5.0;
+			g_esAbility[iIndex].g_iAimlessHit = 0;
+			g_esAbility[iIndex].g_iAimlessHitMode = 0;
+			g_esAbility[iIndex].g_flAimlessRange = 150.0;
+			g_esAbility[iIndex].g_flAimlessRangeChance = 15.0;
 		}
 	}
 }
@@ -335,39 +385,39 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags2[admin];
+				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags2[admin] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags2[admin];
+				g_esPlayer[admin].g_iImmunityFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iImmunityFlags2;
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_iHumanAbility[type] = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_iHumanAbility[type], value, 0, 1);
-		g_iHumanAmmo[type] = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_iHumanAmmo[type], value, 0, 999999);
-		g_flHumanCooldown[type] = flGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_flHumanCooldown[type], value, 0.0, 999999.0);
-		g_iAimlessAbility[type] = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_iAimlessAbility[type], value, 0, 1);
-		g_iAimlessEffect[type] = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_iAimlessEffect[type], value, 0, 7);
-		g_iAimlessMessage[type] = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_iAimlessMessage[type], value, 0, 3);
-		g_flAimlessChance[type] = flGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessChance", "Aimless Chance", "Aimless_Chance", "chance", g_flAimlessChance[type], value, 0.0, 100.0);
-		g_flAimlessDuration[type] = flGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessDuration", "Aimless Duration", "Aimless_Duration", "duration", g_flAimlessDuration[type], value, 0.1, 999999.0);
-		g_iAimlessHit[type] = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessHit", "Aimless Hit", "Aimless_Hit", "hit", g_iAimlessHit[type], value, 0, 1);
-		g_iAimlessHitMode[type] = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessHitMode", "Aimless Hit Mode", "Aimless_Hit_Mode", "hitmode", g_iAimlessHitMode[type], value, 0, 2);
-		g_flAimlessRange[type] = flGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessRange", "Aimless Range", "Aimless_Range", "range", g_flAimlessRange[type], value, 1.0, 999999.0);
-		g_flAimlessRangeChance[type] = flGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessRangeChance", "Aimless Range Chance", "Aimless_Range_Chance", "rangechance", g_flAimlessRangeChance[type], value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
+		g_esAbility[type].g_iAimlessAbility = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iAimlessAbility, value, 0, 1);
+		g_esAbility[type].g_iAimlessEffect = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iAimlessEffect, value, 0, 7);
+		g_esAbility[type].g_iAimlessMessage = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iAimlessMessage, value, 0, 3);
+		g_esAbility[type].g_flAimlessChance = flGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessChance", "Aimless Chance", "Aimless_Chance", "chance", g_esAbility[type].g_flAimlessChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flAimlessDuration = flGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessDuration", "Aimless Duration", "Aimless_Duration", "duration", g_esAbility[type].g_flAimlessDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iAimlessHit = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessHit", "Aimless Hit", "Aimless_Hit", "hit", g_esAbility[type].g_iAimlessHit, value, 0, 1);
+		g_esAbility[type].g_iAimlessHitMode = iGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessHitMode", "Aimless Hit Mode", "Aimless_Hit_Mode", "hitmode", g_esAbility[type].g_iAimlessHitMode, value, 0, 2);
+		g_esAbility[type].g_flAimlessRange = flGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessRange", "Aimless Range", "Aimless_Range", "range", g_esAbility[type].g_flAimlessRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flAimlessRangeChance = flGetValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessRangeChance", "Aimless Range Chance", "Aimless_Range_Chance", "rangechance", g_esAbility[type].g_flAimlessRangeChance, value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "aimlessability", false) || StrEqual(subsection, "aimless ability", false) || StrEqual(subsection, "aimless_ability", false) || StrEqual(subsection, "aimless", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_iAccessFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iAccessFlags[type];
+				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_iImmunityFlags[type] = (value[0] != '\0') ? ReadFlagString(value) : g_iImmunityFlags[type];
+				g_esAbility[type].g_iImmunityFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iImmunityFlags;
 			}
 		}
 	}
@@ -375,7 +425,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -387,12 +437,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_iHumanAbility[MT_GetTankType(tank)] == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_iHumanAbility[MT_GetTankType(tank)] == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_iAimlessAbility[MT_GetTankType(tank)] == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iAimlessAbility == 1)
 	{
 		vAimlessAbility(tank);
 	}
@@ -409,17 +459,17 @@ public void MT_OnButtonPressed(int tank, int button)
 
 		if (button & MT_SUB_KEY == MT_SUB_KEY)
 		{
-			if (g_iAimlessAbility[MT_GetTankType(tank)] == 1 && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (g_esAbility[MT_GetTankType(tank)].g_iAimlessAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
-				if (!g_bAimless2[tank] && !g_bAimless3[tank])
+				if (!g_esPlayer[tank].g_bAimless2 && !g_esPlayer[tank].g_bAimless3)
 				{
 					vAimlessAbility(tank);
 				}
-				else if (g_bAimless2[tank])
+				else if (g_esPlayer[tank].g_bAimless2)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "AimlessHuman3");
 				}
-				else if (g_bAimless3[tank])
+				else if (g_esPlayer[tank].g_bAimless3)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "AimlessHuman4");
 				}
@@ -440,10 +490,10 @@ static void vAimlessAbility(int tank)
 		return;
 	}
 
-	if (g_iAimlessCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+	if (g_esPlayer[tank].g_iAimlessCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 	{
-		g_bAimless4[tank] = false;
-		g_bAimless5[tank] = false;
+		g_esPlayer[tank].g_bAimless4 = false;
+		g_esPlayer[tank].g_bAimless5 = false;
 
 		float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
@@ -457,9 +507,9 @@ static void vAimlessAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= g_flAimlessRange[MT_GetTankType(tank)])
+				if (flDistance <= g_esAbility[MT_GetTankType(tank)].g_flAimlessRange)
 				{
-					vAimlessHit(iSurvivor, tank, g_flAimlessRangeChance[MT_GetTankType(tank)], g_iAimlessAbility[MT_GetTankType(tank)], MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+					vAimlessHit(iSurvivor, tank, g_esAbility[MT_GetTankType(tank)].g_flAimlessRangeChance, g_esAbility[MT_GetTankType(tank)].g_iAimlessAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -468,13 +518,13 @@ static void vAimlessAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "AimlessHuman5");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1)
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "AimlessAmmo");
 	}
@@ -489,51 +539,51 @@ static void vAimlessHit(int survivor, int tank, float chance, int enabled, int m
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_iAimlessCount[tank] < g_iHumanAmmo[MT_GetTankType(tank)] && g_iHumanAmmo[MT_GetTankType(tank)] > 0)
+		if (g_esPlayer[tank].g_iAimlessCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
 		{
-			if (GetRandomFloat(0.1, 100.0) <= chance && !g_bAimless[survivor])
+			if (GetRandomFloat(0.1, 100.0) <= chance && !g_esPlayer[survivor].g_bAimless)
 			{
-				g_bAimless[survivor] = true;
-				g_iAimlessOwner[survivor] = tank;
+				g_esPlayer[survivor].g_bAimless = true;
+				g_esPlayer[survivor].g_iAimlessOwner = tank;
 
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && (flags & MT_ATTACK_RANGE) && !g_bAimless2[tank])
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && !g_esPlayer[tank].g_bAimless2)
 				{
-					g_bAimless2[tank] = true;
-					g_iAimlessCount[tank]++;
+					g_esPlayer[tank].g_bAimless2 = true;
+					g_esPlayer[tank].g_iAimlessCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "AimlessHuman", g_iAimlessCount[tank], g_iHumanAmmo[MT_GetTankType(tank)]);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "AimlessHuman", g_esPlayer[tank].g_iAimlessCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
 				}
 
-				GetClientEyeAngles(survivor, g_flAimlessAngle[survivor]);
+				GetClientEyeAngles(survivor, g_esPlayer[survivor].g_flAimlessAngle);
 
 				DataPack dpStopAimless;
-				CreateDataTimer(g_flAimlessDuration[MT_GetTankType(tank)], tTimerStopAimless, dpStopAimless, TIMER_FLAG_NO_MAPCHANGE);
+				CreateDataTimer(g_esAbility[MT_GetTankType(tank)].g_flAimlessDuration, tTimerStopAimless, dpStopAimless, TIMER_FLAG_NO_MAPCHANGE);
 				dpStopAimless.WriteCell(GetClientUserId(survivor));
 				dpStopAimless.WriteCell(GetClientUserId(tank));
 				dpStopAimless.WriteCell(messages);
 
-				vEffect(survivor, tank, g_iAimlessEffect[MT_GetTankType(tank)], flags);
+				vEffect(survivor, tank, g_esAbility[MT_GetTankType(tank)].g_iAimlessEffect, flags);
 
-				if (g_iAimlessMessage[MT_GetTankType(tank)] & messages)
+				if (g_esAbility[MT_GetTankType(tank)].g_iAimlessMessage & messages)
 				{
 					char sTankName[33];
 					MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Aimless", sTankName, survivor);
 				}
 			}
-			else if ((flags & MT_ATTACK_RANGE) && !g_bAimless2[tank])
+			else if ((flags & MT_ATTACK_RANGE) && !g_esPlayer[tank].g_bAimless2)
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bAimless4[tank])
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bAimless4)
 				{
-					g_bAimless4[tank] = true;
+					g_esPlayer[tank].g_bAimless4 = true;
 
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "AimlessHuman2");
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_iHumanAbility[MT_GetTankType(tank)] == 1 && !g_bAimless5[tank])
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bAimless5)
 		{
-			g_bAimless5[tank] = true;
+			g_esPlayer[tank].g_bAimless5 = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "AimlessAmmo");
 		}
@@ -544,10 +594,10 @@ static void vRemoveAimless(int tank)
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_bAimless[iSurvivor] && g_iAimlessOwner[iSurvivor] == tank)
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esPlayer[iSurvivor].g_bAimless && g_esPlayer[iSurvivor].g_iAimlessOwner == tank)
 		{
-			g_bAimless[iSurvivor] = false;
-			g_iAimlessOwner[iSurvivor] = 0;
+			g_esPlayer[iSurvivor].g_bAimless = false;
+			g_esPlayer[iSurvivor].g_iAimlessOwner = 0;
 		}
 	}
 
@@ -562,19 +612,19 @@ static void vReset()
 		{
 			vReset2(iPlayer);
 
-			g_iAimlessOwner[iPlayer] = 0;
+			g_esPlayer[iPlayer].g_iAimlessOwner = 0;
 		}
 	}
 }
 
 static void vReset2(int tank)
 {
-	g_bAimless[tank] = false;
-	g_bAimless2[tank] = false;
-	g_bAimless3[tank] = false;
-	g_bAimless4[tank] = false;
-	g_bAimless5[tank] = false;
-	g_iAimlessCount[tank] = 0;
+	g_esPlayer[tank].g_bAimless = false;
+	g_esPlayer[tank].g_bAimless2 = false;
+	g_esPlayer[tank].g_bAimless3 = false;
+	g_esPlayer[tank].g_bAimless4 = false;
+	g_esPlayer[tank].g_bAimless5 = false;
+	g_esPlayer[tank].g_iAimlessCount = 0;
 }
 
 static bool bHasAdminAccess(int admin)
@@ -584,49 +634,34 @@ static bool bHasAdminAccess(int admin)
 		return true;
 	}
 
-	int iAbilityFlags = g_iAccessFlags[MT_GetTankType(admin)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iAbilityFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
 	}
 
 	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0)
+	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iTypeFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
 	{
-		if (g_iAccessFlags2[admin] != 0)
-		{
-			return (!(g_iAccessFlags2[admin] & iGlobalFlags)) ? false : true;
-		}
+		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
 	{
-		if (iAbilityFlags != 0)
-		{
-			return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-		}
+		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
 	}
 
 	if (iAbilityFlags != 0)
@@ -644,56 +679,42 @@ static bool bIsAdminImmune(int survivor, int tank)
 		return false;
 	}
 
-	int iAbilityFlags = g_iImmunityFlags[MT_GetTankType(survivor)];
-	if (iAbilityFlags != 0)
+	int iAbilityFlags = g_esAbility[MT_GetTankType(tank)].g_iImmunityFlags;
+	if (iAbilityFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iAbilityFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iAbilityFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
-	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(survivor));
-	if (iTypeFlags != 0)
+	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(tank));
+	if (iTypeFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iTypeFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iTypeFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iGlobalFlags = MT_GetImmunityFlags(1);
-	if (iGlobalFlags != 0)
+	if (iGlobalFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iGlobalFlags))
 	{
-		if (g_iImmunityFlags2[survivor] != 0 && (g_iImmunityFlags2[survivor] & iGlobalFlags))
-		{
-			return ((g_iImmunityFlags2[tank] & iAbilityFlags) && g_iImmunityFlags2[survivor] <= g_iImmunityFlags2[tank]) ? false : true;
-		}
+		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
 	}
 
 	int iClientTypeFlags = MT_GetImmunityFlags(4, MT_GetTankType(tank), survivor),
 		iClientTypeFlags2 = MT_GetImmunityFlags(4, MT_GetTankType(tank), tank);
-	if (iClientTypeFlags != 0)
+	if (iClientTypeFlags != 0 && iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
-		{
-			return ((iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
-		}
+		return (iClientTypeFlags2 != 0 && (iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
 	}
 
 	int iClientGlobalFlags = MT_GetImmunityFlags(3, 0, survivor),
 		iClientGlobalFlags2 = MT_GetImmunityFlags(3, 0, tank);
-	if (iClientGlobalFlags != 0)
+	if (iClientGlobalFlags != 0 && iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
 	{
-		if (iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
-		{
-			return ((iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
-		}
+		return (iClientGlobalFlags2 != 0 && (iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
 	}
 
-	if (iAbilityFlags != 0)
+	int iSurvivorFlags = GetUserFlagBits(survivor), iTankFlags = GetUserFlagBits(tank);
+	if (iAbilityFlags != 0 && iSurvivorFlags != 0 && (iSurvivorFlags & iAbilityFlags))
 	{
-		return ((GetUserFlagBits(tank) & iAbilityFlags) && GetUserFlagBits(survivor) <= GetUserFlagBits(tank)) ? false : true;
+		return (iTankFlags != 0 && iSurvivorFlags <= iTankFlags) ? false : true;
 	}
 
 	return false;
@@ -704,10 +725,10 @@ public Action tTimerStopAimless(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_bAimless[iSurvivor])
+	if (!bIsSurvivor(iSurvivor) || !g_esPlayer[iSurvivor].g_bAimless)
 	{
-		g_bAimless[iSurvivor] = false;
-		g_iAimlessOwner[iSurvivor] = 0;
+		g_esPlayer[iSurvivor].g_bAimless = false;
+		g_esPlayer[iSurvivor].g_iAimlessOwner = 0;
 
 		return Plugin_Stop;
 	}
@@ -715,35 +736,35 @@ public Action tTimerStopAimless(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled))
 	{
-		g_bAimless[iSurvivor] = false;
-		g_iAimlessOwner[iSurvivor] = 0;
+		g_esPlayer[iSurvivor].g_bAimless = false;
+		g_esPlayer[iSurvivor].g_iAimlessOwner = 0;
 
 		return Plugin_Stop;
 	}
 
-	g_bAimless[iSurvivor] = false;
-	g_bAimless2[iTank] = false;
-	g_iAimlessOwner[iSurvivor] = 0;
+	g_esPlayer[iSurvivor].g_bAimless = false;
+	g_esPlayer[iTank].g_bAimless2 = false;
+	g_esPlayer[iSurvivor].g_iAimlessOwner = 0;
 
 	int iMessage = pack.ReadCell();
 
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_iHumanAbility[MT_GetTankType(iTank)] == 1 && (iMessage & MT_MESSAGE_RANGE) && !g_bAimless3[iTank])
+	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank)) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1 && (iMessage & MT_MESSAGE_RANGE) && !g_esPlayer[iTank].g_bAimless3)
 	{
-		g_bAimless3[iTank] = true;
+		g_esPlayer[iTank].g_bAimless3 = true;
 
 		MT_PrintToChat(iTank, "%s %t", MT_TAG3, "AimlessHuman6");
 
-		if (g_iAimlessCount[iTank] < g_iHumanAmmo[MT_GetTankType(iTank)] && g_iHumanAmmo[MT_GetTankType(iTank)] > 0)
+		if (g_esPlayer[iTank].g_iAimlessCount < g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo > 0)
 		{
-			CreateTimer(g_flHumanCooldown[MT_GetTankType(iTank)], tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_esAbility[MT_GetTankType(iTank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
 		}
 		else
 		{
-			g_bAimless3[iTank] = false;
+			g_esPlayer[iTank].g_bAimless3 = false;
 		}
 	}
 
-	if (g_iAimlessMessage[MT_GetTankType(iTank)] & iMessage)
+	if (g_esAbility[MT_GetTankType(iTank)].g_iAimlessMessage & iMessage)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Aimless2", iSurvivor);
 	}
@@ -754,14 +775,14 @@ public Action tTimerStopAimless(Handle timer, DataPack pack)
 public Action tTimerResetCooldown(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_bAimless3[iTank])
+	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_esPlayer[iTank].g_bAimless3)
 	{
-		g_bAimless3[iTank] = false;
+		g_esPlayer[iTank].g_bAimless3 = false;
 
 		return Plugin_Stop;
 	}
 
-	g_bAimless3[iTank] = false;
+	g_esPlayer[iTank].g_bAimless3 = false;
 
 	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "AimlessHuman7");
 
