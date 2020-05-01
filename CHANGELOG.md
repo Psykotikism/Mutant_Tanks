@@ -9,13 +9,15 @@ Bug fixes:
 3. Fixed possible client index errors for the `MT_GetImmunityFlags` and `MT_GetAccessFlags` natives.
 4. Fixed admin access and immunity flags not being determined properly.
 5. Fixed the `Gravity`, `Drug`, and `Blind` abilities not resetting properly. (Thanks to Marttt for reporting!)
-6. Fixed the missing textures from the `Electric` ability's particle effect. (Thanks to Marttt for reporting!)
-7. Fixed the `Shield` ability's shield not breaking when the attacker has higher admin access than the Tank.
-8. Fixed the `Shield` ability's default `Shield Color` values not being set to `-1`.
-9. Fixed players with personalized Tanks not being renamed.
-10. Fixed `sm_mt_list` returning invalid handle errors.
-11. Fixed some abilities not working due to their corresponding plugins not being detected.
-12. Fixed the `MT_OnConfigsLoaded` forward not sending the value of the `mode` parameter.
+6. Fixed the missing textures from the `Electric` and `Laser` abilities' particle effects. (Thanks to Marttt for reporting!)
+7. Fixed `bIsPluginEnabled` potentially causing errors before map start.
+8. Fixed the `Shield` ability's shield not breaking when the attacker has higher admin access than the Tank.
+9. Fixed the `Shield` ability's default `Shield Color` values not being set to `-1`.
+10. Fixed players with personalized Tanks not being renamed.
+11. Fixed `sm_mt_list` returning invalid handle errors.
+12. Fixed some abilities not working due to their corresponding plugins not being detected.
+13. Fixed the `MT_OnConfigsLoaded` forward not sending the value of the `mode` parameter.
+14. Fixed abilities not resetting upon player death.
 
 Changes:
 
