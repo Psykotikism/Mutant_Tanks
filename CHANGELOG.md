@@ -51,9 +51,9 @@ Changes:
 26. The `MT_GetPropColors` native's `mode` parameter now accepts values as high as 6 to add support for the new propane tank prop.
 27. The `Regular Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
 28. The core plugin now uses Left 4 DHooks to check when Tanks enter ghost state and materializes them 1 second later. (This is optional but highly recommended.)
-29. The `Restart` ability's plugin (`mt_restart.smx`) now uses Left 4 Dhooks to check when a survivor is inside the starting safe area in order to get their "spawn coordinates" to be used when `Restart Mode` is set to `0`. (This is optional but highly recommended.)
+29. The `Restart` ability's plugin (`mt_restart.smx`) now uses Left 4 DHooks to check when a survivor is inside the starting safe area in order to get their "spawn coordinates" to be used when `Restart Mode` is set to `0`.
 30. Added the `mt_enabledgamemodes`, `mt_disabledgamemodes`, and `mt_gamemodetypes` cvars as cvar equivalents of the `Enabled Game Modes`, `Disabled Game Modes`, and `Game Mode Types` settings.
-31. The core plugin now requires DHooks.
+31. The core plugin now requires DHooks and Left 4 DHooks.
 32. Removed some useless code.
 
 Files:

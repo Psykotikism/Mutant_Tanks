@@ -11,9 +11,9 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <left4dhooks>
 
 #undef REQUIRE_PLUGIN
-#tryinclude <left4dhooks>
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
 
@@ -100,17 +100,12 @@ esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
 
 public void OnAllPluginsLoaded()
 {
-	g_esGeneral.g_bDhooksInstalled = LibraryExists("left4dhooks");
 	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
 }
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "left4dhooks", false))
-	{
-		g_esGeneral.g_bDhooksInstalled = true;
-	}
-	else if (StrEqual(name, "mt_clone", false))
+	if (StrEqual(name, "mt_clone", false))
 	{
 		g_esGeneral.g_bCloneInstalled = true;
 	}
@@ -118,11 +113,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "left4dhooks", false))
-	{
-		g_esGeneral.g_bDhooksInstalled = false;
-	}
-	else if (StrEqual(name, "mt_clone", false))
+	if (StrEqual(name, "mt_clone", false))
 	{
 		g_esGeneral.g_bCloneInstalled = false;
 	}
@@ -463,7 +454,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_spawn"))
 	{
 		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor) && (!g_esPlayer[iSurvivor].g_bRestart4 || (g_esGeneral.g_bDhooksInstalled && L4D_IsInFirstCheckpoint(iSurvivor))))
+		if (bIsSurvivor(iSurvivor) && (!g_esPlayer[iSurvivor].g_bRestart4 || L4D_IsInFirstCheckpoint(iSurvivor)))
 		{
 			g_esPlayer[iSurvivor].g_bRestart4 = true;
 
