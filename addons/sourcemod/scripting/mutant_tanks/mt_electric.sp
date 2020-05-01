@@ -832,7 +832,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	vDamageEntity(iSurvivor, iTank, g_esAbility[MT_GetTankType(iTank)].g_flElectricDamage, "256");
+	vDamageEntity(iSurvivor, iTank, g_esAbility[MT_GetTankType(iTank)].g_flElectricDamage, "1024");
 
 	char sEffect[32];
 	vGetRandomParticle(sEffect, sizeof(sEffect));

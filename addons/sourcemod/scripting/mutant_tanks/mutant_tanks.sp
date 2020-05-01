@@ -834,6 +834,7 @@ public void OnClientPutInServer(int client)
 	g_esPlayer[client].g_bAdminMenu = false;
 	g_esPlayer[client].g_bThirdPerson = false;
 	g_esPlayer[client].g_iIncapTime = 0;
+	g_esPlayer[client].g_iTankType = 0;
 	g_esPlayer[client].g_sOriginalName[0] = '\0';
 	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 
@@ -842,6 +843,8 @@ public void OnClientPutInServer(int client)
 
 public void OnClientPostAdminCheck(int client)
 {
+	CreateTimer(3.0, tTimerSaveName, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
 		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
@@ -3137,6 +3140,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				iMode = (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esPlayer[iTank].g_iDeathRevert3 == 1) ? g_esPlayer[iTank].g_iDeathRevert3 : iMode;
 				vReset2(iTank, iMode);
 
+				CreateTimer(1.5, tTimerResetType, iTankId, TIMER_FLAG_NO_MAPCHANGE);
 				CreateTimer(3.0, tTimerTankWave, g_esGeneral.g_iTankWave, TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
@@ -3195,18 +3199,11 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				char sCurrentName[33];
 				GetClientName(iTank, sCurrentName, sizeof(sCurrentName));
-				if (g_esPlayer[iTank].g_sOriginalName[0] != '\0')
+				if (!StrEqual(sCurrentName, g_esPlayer[iTank].g_sOriginalName) && g_esPlayer[iTank].g_sOriginalName[0] != '\0')
 				{
-					if (!StrEqual(sCurrentName, g_esPlayer[iTank].g_sOriginalName))
-					{
-						g_esGeneral.g_bHideNameChange = true;
-						SetClientName(iTank, g_esPlayer[iTank].g_sOriginalName);
-						g_esGeneral.g_bHideNameChange = false;
-					}
-				}
-				else
-				{
-					strcopy(g_esPlayer[iTank].g_sOriginalName, sizeof(g_esPlayer[].g_sOriginalName), sCurrentName);
+					g_esGeneral.g_bHideNameChange = true;
+					SetClientName(iTank, g_esPlayer[iTank].g_sOriginalName);
+					g_esGeneral.g_bHideNameChange = false;
 				}
 			}
 
@@ -3316,7 +3313,7 @@ static void vHookEvents(bool hook)
 		HookEvent("finale_vehicle_leaving", vEventHandler);
 		HookEvent("finale_vehicle_ready", vEventHandler);
 		HookEvent("player_bot_replace", vEventHandler);
-		HookEvent("player_death", vEventHandler);
+		HookEvent("player_death", vEventHandler, EventHookMode_Pre);
 		HookEvent("player_incapacitated", vEventHandler);
 		HookEvent("player_spawn", vEventHandler);
 
@@ -3339,7 +3336,7 @@ static void vHookEvents(bool hook)
 		UnhookEvent("finale_vehicle_leaving", vEventHandler);
 		UnhookEvent("finale_vehicle_ready", vEventHandler);
 		UnhookEvent("player_bot_replace", vEventHandler);
-		UnhookEvent("player_death", vEventHandler);
+		UnhookEvent("player_death", vEventHandler, EventHookMode_Pre);
 		UnhookEvent("player_incapacitated", vEventHandler);
 		UnhookEvent("player_spawn", vEventHandler);
 
@@ -3518,6 +3515,7 @@ static void vReset()
 			g_esPlayer[iPlayer].g_bDied = false;
 			g_esPlayer[iPlayer].g_bDying = false;
 			g_esPlayer[iPlayer].g_bThirdPerson = false;
+			g_esPlayer[iPlayer].g_iTankType = 0;
 			g_esPlayer[iPlayer].g_sOriginalName[0] = '\0';
 		}
 	}
@@ -3544,7 +3542,6 @@ static void vReset2(int tank, int mode = 1)
 	g_esPlayer[tank].g_bSpit = false;
 	g_esPlayer[tank].g_iBossStageCount = 0;
 	g_esPlayer[tank].g_iCooldown = 0;
-	g_esPlayer[tank].g_iTankType = 0;
 }
 
 static void vResetSpeed(int tank, bool mode = false)
@@ -3977,11 +3974,6 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 				g_esPlayer[tank].g_iPropTank = INVALID_ENT_REFERENCE;
 			}
-		}
-
-		if (bIsValidClient(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_sOriginalName[0] == '\0')
-		{
-			strcopy(g_esPlayer[tank].g_sOriginalName, sizeof(g_esPlayer[].g_sOriginalName), oldname);
 		}
 
 		g_esGeneral.g_bHideNameChange = true;
@@ -5799,6 +5791,36 @@ public Action tTimerResetCooldown(Handle timer, int userid)
 	}
 
 	g_esPlayer[iTank].g_iCooldown--;
+
+	return Plugin_Continue;
+}
+
+public Action tTimerResetType(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!bIsValidClient(iTank))
+	{
+		g_esPlayer[iTank].g_iTankType = 0;
+
+		return Plugin_Stop;
+	}
+
+	g_esPlayer[iTank].g_iTankType = 0;
+
+	return Plugin_Continue;
+}
+
+public Action tTimerSaveName(Handle timer, int userid)
+{
+	int iPlayer = GetClientOfUserId(userid);
+	if (!bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	{
+		return Plugin_Stop;
+	}
+
+	char sCurrentName[33];
+	GetClientName(iPlayer, sCurrentName, sizeof(sCurrentName));
+	strcopy(g_esPlayer[iPlayer].g_sOriginalName, sizeof(g_esPlayer[].g_sOriginalName), sCurrentName);
 
 	return Plugin_Continue;
 }
