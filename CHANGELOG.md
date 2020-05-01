@@ -1,5 +1,66 @@
 # Changelog
 
+## Version 8.66 (May 1, 2020)
+
+Bug fixes:
+
+1. Fixed props and glow outlines sticking around after Tanks die. (Thanks to everyone that reported!)
+2. Fixed some settings not using their assigned default values.
+3. Fixed possible client index errors for the `MT_GetImmunityFlags` and `MT_GetAccessFlags` natives.
+4. Fixed admin access and immunity flags not being determined properly.
+5. Fixed the `Gravity`, `Drug`, and `Blind` abilities not resetting properly. (Thanks to Marttt for reporting!)
+6. Fixed the missing textures from the `Electric` ability's particle effect. (Thanks to Marttt for reporting!)
+7. Fixed the `Shield` ability's shield not breaking when the attacker has higher admin access than the Tank.
+8. Fixed the `Shield` ability's default `Shield Color` values not being set to `-1`.
+9. Fixed players with personalized Tanks not being renamed.
+10. Fixed `sm_mt_list` returning invalid handle errors.
+11. Fixed some abilities not working due to their corresponding plugins not being detected.
+12. Fixed the `MT_OnConfigsLoaded` forward not sending the value of the `mode` parameter.
+
+Changes:
+
+1. Converted all plugins to use enum structs!
+2. The `Tank Note` setting can now be overridden for specific players. A phrase must be created in the translation file for each specified player. The name of the phrase must be the player's SteamID32 or Steam3ID. See the bottom of the translation file for an example.
+3. Added support for versus games in coop modes. (Requested by Neptunia.)
+4. Added more `Display Health` options. (Requested by foxhound27.)
+5. The `Finale Types` setting now takes in type ranges. Example: `1-10,11-20,21-30` (Requested by Neptunia.)
+6. Added the `Rock Model` setting under the following sections (Requested by Mi.Cura.):
+- `Props`: Determines what model a Tank's rocks should look like.
+- `STEAM_ID`: Overrides the setting under `Props` for specific players.
+7. Added more particle and sound effects for the `Electric ability`.
+8. Common infected are now immune to Tank abilities. They should no longer die from running into fires or explosions caused by certain abilities.
+9. The rocks from the `Rock` and `Spam` abilities are now colored based on the Tank's `Rock Color` setting. (Thanks to epz for the detour idea and gamedata info!)
+10. The leftover rocks created by the `Meteor` ability now explode after 10 seconds regardless if they hit the ground.
+11. The `Rock` and `Spam` abilities now create three times more rocks.
+12. Lowered the position of the `Spam` ability's rock launcher so that it's more likely to hit survivors.
+13. The chat notification for changing names is now hidden when a player with a personalized Tank is renamed.
+14. Added the `MT_OnTypeChosen` forward which allows developers to either override the chosen type, prevent the chosen type from being chosen which will force the plugin to rechoose, or prevent a Tank from mutating.
+15. Added the `MT_IsNonFinaleType` native which allows developers to check if a certain type is only available on non-finale maps.
+16. Renamed the `MT_CanTankSpawn` native to `MT_CanTypeSpawn`.
+17. Renamed the `MT_IsFinaleTank` native to `MT_IsFinaleType`.
+18. The `MT_CanTypeSpawn` native now calls `MT_IsNonFinaleType` and `MT_IsFinaleType` internally.
+19. The `Finale Tank` setting now accepts the value `2` which sets the type to only be available on non-finale maps.
+20. Tanks can now spawn with a propane tank helmet. (Requested by Tank Rush.)
+21. The core plugin now uses a dynamic method for detecting ability plugins.
+22. The core plugin can now detect up to 100 abilities.
+23. Added the `MT_OnPluginCheck` forward to allow developers to register the filenames of custom ability plugins for the core plugin to detect.
+24. Added the `MT_OnAbilityCheck` forward to allow developers to register the possible section names of custom abilities to be checked before reading the config file.
+25. Added the `Propane Tank Color` setting under the `Props` section.
+26. The `MT_GetPropColors` native's `mode` parameter now accepts values as high as 6 to add support for the new propane tank prop.
+27. The `Regular Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
+28. The core plugin now uses Left 4 DHooks to check when Tanks enter ghost state and materializes them 1 second later. (This is optional but highly recommended.)
+29. The `Restart` ability's plugin (`mt_restart.smx`) now uses Left 4 Dhooks to check when a survivor is inside the starting safe area in order to get their "spawn coordinates" to be used when `Restart Mode` is set to `0`. (This is optional but highly recommended.)
+30. Added the `mt_enabledgamemodes`, `mt_disabledgamemodes`, and `mt_gamemodetypes` cvars as cvar equivalents of the `Enabled Game Modes`, `Disabled Game Modes`, and `Game Mode Types` settings.
+31. The core plugin now requires DHooks.
+32. Removed some useless code.
+
+Files:
+
+1. Updated config file.
+2. Updated gamedata file.
+3. Updated include file.
+4. Updated translation file.
+
 ## Version 8.65 (April 20, 2020)
 
 Bug fixes:
@@ -23,7 +84,7 @@ Changes:
 - `Glow Type`
 3. Added sound hook to block wind sound. (Thanks to Dragokas for the code!)
 4. Renamed the `MT_CHECK_KICKQUEUE` define to `MT_CHECK_INKICKQUEUE`.
-5. Added the `Laser` ability. (Thanks to Ernecio for the code.)
+5. Added the `Laser` ability. (Thanks to Ernecio for the code!)
 6. Added `mt_pluginenabled` convar to enable/disable plugin via other plugins. (Requested by sxslmk.)
 7. The `MT_OnConfigsLoad` and `MT_OnConfigsLoaded` forwards now each have one extra parameter to manage how much of the config file is read.
 
