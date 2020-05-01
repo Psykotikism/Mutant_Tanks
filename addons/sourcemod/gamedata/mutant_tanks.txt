@@ -1,5 +1,43 @@
 "Games"
 {
+	"#default"
+	{
+		"Functions"
+		{
+			"CEnvRockLauncher::LaunchCurrentDir"
+			{
+				"signature"	"CEnvRockLauncher::LaunchCurrentDir"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+			"CTankRock::Create"
+			{
+				"signature"	"CTankRock::Create"
+				"callconv"	"cdecl"
+				"return"	"cbaseentity"
+				"arguments"
+				{
+					"origin"
+					{
+						"type"		"vectorptr"
+					}
+					"angles"
+					{
+						"type"		"objectptr"
+					}
+					"velocity"
+					{
+						"type"		"vectorptr"
+					}
+					"owner"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+		}
+	}
 	"left4dead"
 	{
 		"Signatures"
@@ -20,7 +58,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_bb"
-				"windows"	"\x83\xEC\x14\x53\x55\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A" 
+				"windows"	"\x83\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84" 
 			}
 			"RoundRespawn"
 			{
@@ -33,6 +71,18 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
 				"windows"	"\x83\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+			}
+			"CEnvRockLauncher::LaunchCurrentDir"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CEnvRockLauncher16LaunchCurrentDirEv"
+				"windows"	"\x83\xEC\x40\x56\x8B\xF1\x8B\x86\x1C\x01\x00\x00"
+			}
+			"CTankRock::Create"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter.constprop.123"
+				"windows"	"\x8B\x44\x24\x08\x53\x8B\x5C\x24\x08"
 			}
 		}
 	}
@@ -50,7 +100,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer5FlingERK6Vector17PlayerAnimEvent_tP20CBaseCombatCharacterf"
-				"windows"	"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\xA8\x00\x00\x00\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x43\x10"
+				"windows"	"\x53\x8B\xDC\x83\xEC\x2A\x83\xE4\x2A\x83\xC4\x2A\x55\x8B\x6B\x2A\x89\x6C\x2A\x2A\x8B\xEC\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x8B\x43\x2A\x56\x8B\x73\x2A\x57\x6A\x2A\x8B\xF9\x89\x45"
 			}
 			"CTerrorPlayer::GoAwayFromKeyboard"
 			{
@@ -68,7 +118,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_b"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x53\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x53\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90"
 			}
 			"RoundRespawn"
 			{
@@ -80,7 +130,19 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+				"windows"	"\x53\x8B\x2A\x83\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+			}
+			"CEnvRockLauncher::LaunchCurrentDir"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CEnvRockLauncher16LaunchCurrentDirEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x3C\x56\x8B\xF1\x8B\x86\x38\x01\x00\x00"
+			}
+			"CTankRock::Create"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter"
+				"windows"	"\x55\x8B\xEC\x8B\x45\x0C\x8B\x4D\x08\x53"
 			}
 		}
 	}
