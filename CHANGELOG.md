@@ -1,5 +1,44 @@
 # Changelog
 
+## Version 8.67 (May 10, 2020)
+
+Bug fixes:
+
+1. Fixed all abilities potentially not resetting when a Tank leaves the server.
+2. Fixed invalid handle errors.
+3. Fixed parsing failure errors.
+4. Fixed several abilities not working for AI Tanks when `Human Ammo` is set to `0`.
+5. Fixed more possible client index errors for the `MT_GetImmunityFlags` and `MT_GetAccessFlags` natives.
+6. Fixed possible client index errors for the thirdperson detection.
+7. Fixed invalid entity errors. (Thanks to BloodyBlade for reporting!)
+8. Fixed all potential `Handle` leaks.
+
+Changes:
+
+1. Added extra checks to prevent disabled Tanks from spawning in certain situations.
+2. Left 4 DHooks is now optional. (Thanks to Silvers!)
+3. The `Hit Group` setting now allows for multiple hit groups to be specified using bit flags.
+4. Added back the `sm_mt_config` command.
+5. The core plugin now uses the `GetCmdArgInt()` function added in `SourceMod 1.11.0.6511`.
+6. The `Human Support` setting now has an option to not inform human-controlled Tanks about the buttons used for activating their abilities manually. (Requested by zaviier.)
+7. The `Human Ability` setting for several abilities now has an option to automate the ability for human-controlled Tanks. (Requested by zaviier.)
+8. Removed redundant phrases from translation file.
+9. The `Regular Amount` and `Finale Waves` settings can now be disabled with values of `0`.
+10. Changed the default values for the `Regular Amount` and `Finale Waves` settings.
+11. Improved thirdperson detection to know better when to display props.
+12. The thirdperson detection timer is now faster.
+13. Added the following settings for the `Acid`, `Bomb`, `Fire`, `Fling`, `Puke`, `Shake`, and `Shove` abilities:
+- `* Death` - Whether the Mutant Tank will activate a range ability upon death.
+- `* Death Chance` - The chance of the Mutant Tank activating a range ability upon death.
+- `* Death Range` - The range of the Mutant Tank's range ability upon death. (Not available for `Bomb` and `Fire`.)
+14. Optimized some of the code.
+
+Files:
+
+1. Updated config file.
+2. Updated include file.
+3. Updated translation file.
+
 ## Version 8.66 (May 1, 2020)
 
 Bug fixes:
