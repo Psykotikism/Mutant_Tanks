@@ -17,7 +17,7 @@
 #include <sdktools>
 
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
-#define MT_VERSION "8.66"
+#define MT_VERSION "8.67"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define MT_TAG "[MT]"
@@ -851,6 +851,8 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 			bfWrite.WriteByte(150);
 
 			EndMessage();
+
+			delete hFadeTarget;
 		}
 	}
 }
@@ -1438,12 +1440,17 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int flag)
 		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
 	}
 
-	if (TR_DidHit(hTrace))
+	if (hTrace != null)
 	{
-		return false;
-	}
+		if (TR_DidHit(hTrace))
+		{
+			delete hTrace;
 
-	delete hTrace;
+			return false;
+		}
+
+		delete hTrace;
+	}
 
 	return true;
 }
@@ -1489,18 +1496,21 @@ stock float flGetGroundUnits(int entity)
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
 
 		Handle hTrace = TR_TraceRayFilterEx(flOrigin, view_as<float>({90.0, 0.0, 0.0}), CONTENTS_SOLID|CONTENTS_MOVEABLE, RayType_Infinite, bTraceRayDontHitSelf, entity);
-		if (TR_DidHit(hTrace))
+		if (hTrace != null)
 		{
-			float flUnits;
-			TR_GetEndPosition(flPosition, hTrace);
-			flUnits = flOrigin[2] - flPosition[2];
+			if (TR_DidHit(hTrace))
+			{
+				float flUnits;
+				TR_GetEndPosition(flPosition, hTrace);
+				flUnits = flOrigin[2] - flPosition[2];
+
+				delete hTrace;
+
+				return flUnits;
+			}
 
 			delete hTrace;
-
-			return flUnits;
 		}
-
-		delete hTrace;
 	}
 
 	return 0.0;
@@ -1644,13 +1654,16 @@ stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entit
 	}
 
 	int iHit = 0;
-	if (TR_DidHit(hTrace))
+	if (hTrace != null)
 	{
-		TR_GetEndPosition(hitpos, hTrace);
-		iHit = TR_GetEntityIndex(hTrace);
-	}
+		if (TR_DidHit(hTrace))
+		{
+			TR_GetEndPosition(hitpos, hTrace);
+			iHit = TR_GetEntityIndex(hTrace);
+		}
 
-	delete hTrace;
+		delete hTrace;
+	}
 
 	if (offset)
 	{

@@ -11,12 +11,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -70,6 +69,8 @@ enum struct esAbilitySettings
 {
 	float g_flHumanCooldown;
 	float g_flShakeChance;
+	float g_flShakeDeathChance;
+	float g_flShakeDeathRange;
 	float g_flShakeDuration;
 	float g_flShakeInterval;
 	float g_flShakeRange;
@@ -80,6 +81,7 @@ enum struct esAbilitySettings
 	int g_iHumanAmmo;
 	int g_iImmunityFlags;
 	int g_iShakeAbility;
+	int g_iShakeDeath;
 	int g_iShakeEffect;
 	int g_iShakeHit;
 	int g_iShakeHitMode;
@@ -139,6 +141,11 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
+	vReset3(client);
+}
+
+public void OnClientDisconnect_Post(int client)
+{
 	vReset3(client);
 }
 
@@ -224,36 +231,43 @@ public int iShakeMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 6:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -352,6 +366,9 @@ public void MT_OnConfigsLoad(int mode)
 			g_esAbility[iIndex].g_iShakeEffect = 0;
 			g_esAbility[iIndex].g_iShakeMessage = 0;
 			g_esAbility[iIndex].g_flShakeChance = 33.3;
+			g_esAbility[iIndex].g_iShakeDeath = 0;
+			g_esAbility[iIndex].g_flShakeDeathChance = 33.3;
+			g_esAbility[iIndex].g_flShakeDeathRange = 200.0;
 			g_esAbility[iIndex].g_flShakeDuration = 5.0;
 			g_esAbility[iIndex].g_iShakeHit = 0;
 			g_esAbility[iIndex].g_iShakeHitMode = 0;
@@ -381,13 +398,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iShakeAbility = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iShakeAbility, value, 0, 1);
 		g_esAbility[type].g_iShakeEffect = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iShakeEffect, value, 0, 7);
 		g_esAbility[type].g_iShakeMessage = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iShakeMessage, value, 0, 3);
 		g_esAbility[type].g_flShakeChance = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeChance", "Shake Chance", "Shake_Chance", "chance", g_esAbility[type].g_flShakeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iShakeDeath = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeDeath", "Shake Death", "Shake_Death", "death", g_esAbility[type].g_iShakeDeath, value, 0, 1);
+		g_esAbility[type].g_flShakeDeathChance = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeDeathChance", "Shake Death Chance", "Shake_Death_Chance", "deathchance", g_esAbility[type].g_flShakeDeathChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flShakeDeathRange = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeDeathRange", "Shake Death Range", "Shake_Death_Range", "deathrange", g_esAbility[type].g_flShakeDeathRange, value, 1.0, 999999.0);
 		g_esAbility[type].g_flShakeDuration = flGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeDuration", "Shake Duration", "Shake_Duration", "duration", g_esAbility[type].g_flShakeDuration, value, 0.1, 999999.0);
 		g_esAbility[type].g_iShakeHit = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeHit", "Shake Hit", "Shake_Hit", "hit", g_esAbility[type].g_iShakeHit, value, 0, 1);
 		g_esAbility[type].g_iShakeHitMode = iGetValue(subsection, "shakeability", "shake ability", "shake_ability", "shake", key, "ShakeHitMode", "Shake Hit Mode", "Shake_Hit_Mode", "hitmode", g_esAbility[type].g_iShakeHitMode, value, 0, 2);
@@ -418,7 +438,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveShake(iTank);
 
-			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iShakeAbility == 1)
+			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iShakeDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(iTank)].g_flShakeDeathChance)
 			{
 				if (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank))
 				{
@@ -436,7 +456,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 						float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-						if (flDistance <= 200.0)
+						if (flDistance <= g_esAbility[MT_GetTankType(iTank)].g_flShakeDeathRange)
 						{
 							vShake(iTank, 2.0);
 						}
@@ -454,7 +474,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iShakeAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iShakeAbility == 1)
 	{
 		vShakeAbility(tank);
 	}
@@ -554,6 +574,8 @@ static void vShake(int survivor, float duration = 1.0)
 		bfWrite.WriteFloat(0.5);
 		bfWrite.WriteFloat(duration);
 		EndMessage();
+
+		delete hShakeTarget;
 	}
 }
 
@@ -564,7 +586,7 @@ static void vShakeAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iShakeCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iShakeCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bShake4 = false;
 		g_esPlayer[tank].g_bShake5 = false;
@@ -613,7 +635,7 @@ static void vShakeHit(int survivor, int tank, float chance, int enabled, int mes
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_esPlayer[tank].g_iShakeCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iShakeCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_esPlayer[survivor].g_bShake)
 			{

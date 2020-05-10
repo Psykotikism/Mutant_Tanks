@@ -11,12 +11,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -67,6 +66,7 @@ esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
 enum struct esAbilitySettings
 {
 	float g_flFireChance;
+	float g_flFireDeathChance;
 	float g_flFireRange;
 	float g_flFireRangeChance;
 	float g_flFireRockChance;
@@ -74,6 +74,7 @@ enum struct esAbilitySettings
 
 	int g_iAccessFlags;
 	int g_iFireAbility;
+	int g_iFireDeath;
 	int g_iFireEffect;
 	int g_iFireHit;
 	int g_iFireHitMode;
@@ -139,6 +140,11 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
+	vRemoveFire(client);
+}
+
+public void OnClientDisconnect_Post(int client)
+{
 	vRemoveFire(client);
 }
 
@@ -222,31 +228,37 @@ public int iFireMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -345,6 +357,8 @@ public void MT_OnConfigsLoad(int mode)
 			g_esAbility[iIndex].g_iFireEffect = 0;
 			g_esAbility[iIndex].g_iFireMessage = 0;
 			g_esAbility[iIndex].g_flFireChance = 33.3;
+			g_esAbility[iIndex].g_iFireDeath = 0;
+			g_esAbility[iIndex].g_flFireDeathChance = 200.0;
 			g_esAbility[iIndex].g_iFireHit = 0;
 			g_esAbility[iIndex].g_iFireHitMode = 0;
 			g_esAbility[iIndex].g_flFireRange = 150.0;
@@ -374,13 +388,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iFireAbility = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iFireAbility, value, 0, 1);
 		g_esAbility[type].g_iFireEffect = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iFireEffect, value, 0, 7);
 		g_esAbility[type].g_iFireMessage = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iFireMessage, value, 0, 7);
 		g_esAbility[type].g_flFireChance = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireChance", "Fire Chance", "Fire_Chance", "chance", g_esAbility[type].g_flFireChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iFireDeath = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireDeath", "Fire Death", "Fire_Death", "death", g_esAbility[type].g_iFireDeath, value, 0, 1);
+		g_esAbility[type].g_flFireDeathChance = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireDeathChance", "Fire Death Chance", "Fire_Death_Chance", "deathchance", g_esAbility[type].g_flFireDeathChance, value, 1.0, 999999.0);
 		g_esAbility[type].g_iFireHit = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireHit", "Fire Hit", "Fire_Hit", "hit", g_esAbility[type].g_iFireHit, value, 0, 1);
 		g_esAbility[type].g_iFireHitMode = iGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireHitMode", "Fire Hit Mode", "Fire_Hit_Mode", "hitmode", g_esAbility[type].g_iFireHitMode, value, 0, 2);
 		g_esAbility[type].g_flFireRange = flGetValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRange", "Fire Range", "Fire_Range", "range", g_esAbility[type].g_flFireRange, value, 1.0, 999999.0);
@@ -411,7 +427,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveFire(iTank);
 
-			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iFireAbility == 1)
+			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iFireDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(iTank)].g_flFireDeathChance)
 			{
 				if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && ((MT_HasAdminAccess(iTank) && bHasAdminAccess(iTank)) || g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 0))
 				{
@@ -433,7 +449,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iFireAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iFireAbility == 1)
 	{
 		vFireAbility(tank);
 	}
@@ -511,7 +527,7 @@ static void vFireAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iFireCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iFireCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bFire2 = false;
 		g_esPlayer[tank].g_bFire3 = false;
@@ -560,7 +576,7 @@ static void vFireHit(int survivor, int tank, float chance, int enabled, int mess
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_esPlayer[tank].g_iFireCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iFireCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{

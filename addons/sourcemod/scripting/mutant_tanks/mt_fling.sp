@@ -11,12 +11,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -76,6 +75,8 @@ esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
 enum struct esAbilitySettings
 {
 	float g_flFlingChance;
+	float g_flFlingDeathChance;
+	float g_flFlingDeathRange;
 	float g_flFlingForce;
 	float g_flFlingRange;
 	float g_flFlingRangeChance;
@@ -83,6 +84,7 @@ enum struct esAbilitySettings
 
 	int g_iAccessFlags;
 	int g_iFlingAbility;
+	int g_iFlingDeath;
 	int g_iFlingEffect;
 	int g_iFlingHit;
 	int g_iFlingHitMode;
@@ -201,6 +203,11 @@ public void OnClientPutInServer(int client)
 	vRemoveFling(client);
 }
 
+public void OnClientDisconnect_Post(int client)
+{
+	vRemoveFling(client);
+}
+
 public void OnMapEnd()
 {
 	vReset();
@@ -281,31 +288,37 @@ public int iFlingMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -404,6 +417,9 @@ public void MT_OnConfigsLoad(int mode)
 			g_esAbility[iIndex].g_iFlingEffect = 0;
 			g_esAbility[iIndex].g_iFlingMessage = 0;
 			g_esAbility[iIndex].g_flFlingChance = 33.3;
+			g_esAbility[iIndex].g_iFlingDeath = 0;
+			g_esAbility[iIndex].g_flFlingDeathChance = 33.3;
+			g_esAbility[iIndex].g_flFlingDeathRange = 200.0;
 			g_esAbility[iIndex].g_flFlingForce = 300.0;
 			g_esAbility[iIndex].g_iFlingHit = 0;
 			g_esAbility[iIndex].g_iFlingHitMode = 0;
@@ -432,13 +448,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iFlingAbility = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iFlingAbility, value, 0, 1);
 		g_esAbility[type].g_iFlingEffect = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iFlingEffect, value, 0, 7);
 		g_esAbility[type].g_iFlingMessage = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iFlingMessage, value, 0, 3);
 		g_esAbility[type].g_flFlingChance = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingChance", "Fling Chance", "Fling_Chance", "chance", g_esAbility[type].g_flFlingChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iFlingDeath = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingDeath", "Fling Death", "Fling_Death", "death", g_esAbility[type].g_iFlingDeath, value, 0, 1);
+		g_esAbility[type].g_flFlingDeathChance = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingDeathChance", "Fling Death Chance", "Fling_Death_Chance", "deathchance", g_esAbility[type].g_flFlingDeathChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flFlingDeathRange = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingDeathRange", "Fling Death Range", "Fling_Death_Range", "deathrange", g_esAbility[type].g_flFlingDeathRange, value, 1.0, 999999.0);
 		g_esAbility[type].g_flFlingForce = flGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingForce", "Fling Force", "Fling_Force", "force", g_esAbility[type].g_flFlingForce, value, 1.0, 999999.0);
 		g_esAbility[type].g_iFlingHit = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingHit", "Fling Hit", "Fling_Hit", "hit", g_esAbility[type].g_iFlingHit, value, 0, 1);
 		g_esAbility[type].g_iFlingHitMode = iGetValue(subsection, "flingability", "fling ability", "fling_ability", "fling", key, "FlingHitMode", "Fling Hit Mode", "Fling_Hit_Mode", "hitmode", g_esAbility[type].g_iFlingHitMode, value, 0, 2);
@@ -468,7 +487,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveFling(iTank);
 
-			if (bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iFlingAbility == 1)
+			if (bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iFlingDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(iTank)].g_flFlingDeathChance)
 			{
 				if (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank))
 				{
@@ -491,7 +510,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 						float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-						if (flDistance <= 200.0)
+						if (flDistance <= g_esAbility[MT_GetTankType(iTank)].g_flFlingDeathRange)
 						{
 							switch (bIsValidGame())
 							{
@@ -513,7 +532,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iFlingAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iFlingAbility == 1)
 	{
 		vFlingAbility(tank);
 	}
@@ -575,7 +594,7 @@ static void vFlingAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iFlingCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iFlingCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bFling2 = false;
 		g_esPlayer[tank].g_bFling3 = false;
@@ -624,7 +643,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_esPlayer[tank].g_iFlingCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iFlingCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{

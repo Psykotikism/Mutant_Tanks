@@ -11,12 +11,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -187,16 +186,19 @@ public int iHitMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -225,21 +227,14 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
 	{
 		if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && g_esAbility[MT_GetTankType(victim)].g_iHitAbility == 1 && bIsSurvivor(attacker))
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim) || g_esAbility[MT_GetTankType(victim)].g_iHumanAbility == 0)
 			{
 				return Plugin_Continue;
 			}
 
-			if (hitgroup == g_esAbility[MT_GetTankType(victim)].g_iHitGroup)
-			{
-				damage *= g_esAbility[MT_GetTankType(victim)].g_flHitDamageMultiplier;
+			damage *= g_esAbility[MT_GetTankType(victim)].g_flHitDamageMultiplier;
 
-				return Plugin_Changed;
-			}
-			else
-			{
-				return Plugin_Handled;
-			}
+			return bCanHitGroup(victim, hitgroup) ? Plugin_Changed : Plugin_Handled;
 		}
 	}
 
@@ -310,7 +305,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
 		g_esAbility[type].g_iHitAbility = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iHitAbility, value, 0, 1);
 		g_esAbility[type].g_flHitDamageMultiplier = flGetValue(subsection, "Hit Ability", "Hit Ability", "Hit_Ability", "hit", key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_esAbility[type].g_flHitDamageMultiplier, value, 1.0, 999999.0);
-		g_esAbility[type].g_iHitGroup = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esAbility[type].g_iHitGroup, value, 1, 7);
+		g_esAbility[type].g_iHitGroup = iGetValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esAbility[type].g_iHitGroup, value, 1, 127);
 
 		if (StrEqual(subsection, "hitability", false) || StrEqual(subsection, "hit ability", false) || StrEqual(subsection, "hit_ability", false) || StrEqual(subsection, "hit", false))
 		{
@@ -324,6 +319,13 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			}
 		}
 	}
+}
+
+static bool bCanHitGroup(int tank, int hitgroup)
+{
+	int iBit = hitgroup - 1, iFlag = (1 << iBit);
+
+	return !!(g_esAbility[MT_GetTankType(tank)].g_iHitGroup & iFlag);
 }
 
 static bool bHasAdminAccess(int admin)

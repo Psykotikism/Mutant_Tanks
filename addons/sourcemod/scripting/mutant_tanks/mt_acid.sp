@@ -11,12 +11,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -76,6 +75,8 @@ esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
 enum struct esAbilitySettings
 {
 	float g_flAcidChance;
+	float g_flAcidDeathChance;
+	float g_flAcidDeathRange;
 	float g_flAcidRange;
 	float g_flAcidRangeChance;
 	float g_flAcidRockChance;
@@ -83,6 +84,7 @@ enum struct esAbilitySettings
 
 	int g_iAccessFlags;
 	int g_iAcidAbility;
+	int g_iAcidDeath;
 	int g_iAcidEffect;
 	int g_iAcidHit;
 	int g_iAcidHitMode;
@@ -205,6 +207,11 @@ public void OnClientPutInServer(int client)
 	vRemoveAcid(client);
 }
 
+public void OnClientDisconnect_Post(int client)
+{
+	vRemoveAcid(client);
+}
+
 public void OnMapEnd()
 {
 	vReset();
@@ -285,31 +292,37 @@ public int iAcidMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -408,6 +421,9 @@ public void MT_OnConfigsLoad(int mode)
 			g_esAbility[iIndex].g_iAcidEffect = 0;
 			g_esAbility[iIndex].g_iAcidMessage = 0;
 			g_esAbility[iIndex].g_flAcidChance = 33.3;
+			g_esAbility[iIndex].g_iAcidDeath = 0;
+			g_esAbility[iIndex].g_flAcidDeathChance = 33.3;
+			g_esAbility[iIndex].g_flAcidDeathRange = 200.0;
 			g_esAbility[iIndex].g_iAcidHit = 0;
 			g_esAbility[iIndex].g_iAcidHitMode = 0;
 			g_esAbility[iIndex].g_flAcidRange = 150.0;
@@ -437,13 +453,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iAcidAbility = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iAcidAbility, value, 0, 1);
 		g_esAbility[type].g_iAcidEffect = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iAcidEffect, value, 0, 7);
 		g_esAbility[type].g_iAcidMessage = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iAcidMessage, value, 0, 7);
 		g_esAbility[type].g_flAcidChance = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAbility[type].g_flAcidChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iAcidDeath = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAbility[type].g_iAcidDeath, value, 0, 1);
+		g_esAbility[type].g_flAcidDeathChance = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAbility[type].g_flAcidDeathChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flAcidDeathRange = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAbility[type].g_flAcidDeathRange, value, 1.0, 999999.0);
 		g_esAbility[type].g_iAcidHit = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAbility[type].g_iAcidHit, value, 0, 1);
 		g_esAbility[type].g_iAcidHitMode = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esAbility[type].g_iAcidHitMode, value, 0, 2);
 		g_esAbility[type].g_flAcidRange = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esAbility[type].g_flAcidRange, value, 1.0, 999999.0);
@@ -474,7 +493,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveAcid(iTank);
 
-			if (bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iAcidAbility == 1)
+			if (bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iAcidDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(iTank)].g_flAcidDeathChance)
 			{
 				if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && ((MT_HasAdminAccess(iTank) && bHasAdminAccess(iTank)) || g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 0))
 				{
@@ -499,7 +518,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 								GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 								float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-								if (flDistance <= 200.0)
+								if (flDistance <= g_esAbility[MT_GetTankType(iTank)].g_flAcidDeathRange)
 								{
 									SDKCall(g_esGeneral.g_hSDKPukePlayer, iSurvivor, iTank, true);
 								}
@@ -519,7 +538,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iAcidAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iAcidAbility == 1)
 	{
 		vAcidAbility(tank);
 	}
@@ -611,7 +630,7 @@ static void vAcidAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iAcidCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAcidCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bAcid2 = false;
 		g_esPlayer[tank].g_bAcid3 = false;
@@ -660,7 +679,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_esPlayer[tank].g_iAcidCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAcidCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{

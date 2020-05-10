@@ -52,19 +52,19 @@
 	}
 	"AbilityButtons"
 	{
-		"en"			"{yellow}+use (default: E}:{olive} Activates your main ability."
+		"en"			"{yellow}+use (default: E}:{olive} Activate your main ability."
 	}
 	"AbilityButtons2"
 	{
-		"en"			"{yellow}+reload (default: R}:{olive} Activates your range ability."
+		"en"			"{yellow}+reload (default: R}:{olive} Activate your range ability."
 	}
 	"AbilityButtons3"
 	{
-		"en"			"{yellow}+zoom (default: Mouse3/Scroll wheel}:{olive} Activates your special ability."
+		"en"			"{yellow}+zoom (default: Mouse3/Scroll wheel}:{olive} Activate your special ability."
 	}
 	"AbilityButtons4"
 	{
-		"en"			"{yellow}+duck (default: CTRL}:{olive} Activates your upon-death ability."
+		"en"			"{yellow}+duck (default: CTRL}:{olive} Activate your upon-death ability."
 	}
 	"Cooldown"
 	{
@@ -234,10 +234,6 @@
 		"#format"		"{1:i}"
 		"en"			"You must wait for{olive} {1}{mint} second(s) before changing into a different Mutant Tank type."
 	}
-	"MainButton"
-	{
-		"en"			"{yellow}+use (default: E){mint}: Activate your main abilit(y/ies)."
-	}
 	"MultipleMatches"
 	{
 		"en"			"Multiple{olive} Tank types{mint} matched that name. Selecting a random match..."
@@ -245,6 +241,10 @@
 	"NoCommandAccess"
 	{
 		"en"			"You do not have access to this command."
+	}
+	"NoItems"
+	{
+		"en"			"There are no items available."
 	}
 	"NoTypeAccess"
 	{
@@ -278,18 +278,6 @@
 	"SpawnMessage"
 	{
 		"en"			"You spawned as a Mutant Tank! You can now use the following:"
-	}
-	"SpecialButton"
-	{
-		"en"			"{yellow}+zoom (default: Mouse3/Scroll wheel){mint}: Activate your special abilit(y/ies)."
-	}
-	"SpecialButton2"
-	{
-		"en"			"{yellow}+duck (default: CTRL){mint}: Activate your upon-death abilit(y/ies)."
-	}
-	"SubButton"
-	{
-		"en"			"{yellow}+reload (default: R){mint}: Activate your range abilit(y/ies)."
 	}
 	"Transformed"
 	{

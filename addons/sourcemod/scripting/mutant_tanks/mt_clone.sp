@@ -106,6 +106,11 @@ public void OnClientPutInServer(int client)
 	vRemoveClone(client);
 }
 
+public void OnClientDisconnect_Post(int client)
+{
+	vRemoveClone(client);
+}
+
 public void OnMapEnd()
 {
 	vReset();
@@ -186,31 +191,37 @@ public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -294,7 +305,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iCloneAbility = iGetValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iCloneAbility, value, 0, 1);
@@ -411,7 +422,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && g_esAbility[MT_GetTankType(tank)].g_iCloneAbility == 1 && !g_esPlayer[tank].g_bClone)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && g_esAbility[MT_GetTankType(tank)].g_iCloneAbility == 1 && !g_esPlayer[tank].g_bClone)
 	{
 		vCloneAbility(tank);
 	}
@@ -459,7 +470,7 @@ static void vCloneAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iCloneCount < g_esAbility[MT_GetTankType(tank)].g_iCloneAmount && g_esPlayer[tank].g_iCloneCount2 < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (g_esPlayer[tank].g_iCloneCount < g_esAbility[MT_GetTankType(tank)].g_iCloneAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCloneCount2 < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flCloneChance)
 		{
@@ -475,70 +486,73 @@ static void vCloneAbility(int tank)
 			GetVectorAngles(flAngles, flAngles);
 
 			Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
-			if (TR_DidHit(hTrace))
+			if (hTrace != null)
 			{
-				TR_GetEndPosition(flHitPosition, hTrace);
-				NormalizeVector(flVector, flVector);
-				ScaleVector(flVector, -40.0);
-				AddVectors(flHitPosition, flVector, flHitPosition);
-
-				float flDistance = GetVectorDistance(flHitPosition, flPosition);
-				if (flDistance < 200.0 && flDistance > 40.0)
+				if (TR_DidHit(hTrace))
 				{
-					bool bTankBoss[MAXPLAYERS + 1];
-					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+					TR_GetEndPosition(flHitPosition, hTrace);
+					NormalizeVector(flVector, flVector);
+					ScaleVector(flVector, -40.0);
+					AddVectors(flHitPosition, flVector, flHitPosition);
+
+					float flDistance = GetVectorDistance(flHitPosition, flPosition);
+					if (flDistance < 200.0 && flDistance > 40.0)
 					{
-						bTankBoss[iPlayer] = false;
-						if (MT_IsTankSupported(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
+						bool bTankBoss[MAXPLAYERS + 1];
+						for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 						{
-							bTankBoss[iPlayer] = true;
-						}
-					}
-
-					MT_SpawnTank(tank, MT_GetTankType(tank));
-
-					int iSelectedType;
-					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-					{
-						if (MT_IsTankSupported(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !bTankBoss[iPlayer])
-						{
-							iSelectedType = iPlayer;
-
-							break;
-						}
-					}
-
-					if (iSelectedType > 0)
-					{
-						TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
-
-						g_esPlayer[iSelectedType].g_bClone = true;
-						g_esPlayer[tank].g_iCloneCount++;
-						g_esPlayer[iSelectedType].g_iCloneOwner = tank;
-
-						int iNewHealth = (g_esAbility[MT_GetTankType(tank)].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esAbility[MT_GetTankType(tank)].g_iCloneHealth;
-						//SetEntityHealth(iSelectedType, iNewHealth);
-						SetEntProp(iSelectedType, Prop_Data, "m_iHealth", iNewHealth);
-						SetEntProp(iSelectedType, Prop_Data, "m_iMaxHealth", iNewHealth);
-
-						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
-						{
-							g_esPlayer[tank].g_iCloneCount2++;
-
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloneHuman", g_esPlayer[tank].g_iCloneCount2, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
+							bTankBoss[iPlayer] = false;
+							if (MT_IsTankSupported(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
+							{
+								bTankBoss[iPlayer] = true;
+							}
 						}
 
-						if (g_esAbility[MT_GetTankType(tank)].g_iCloneMessage == 1)
+						MT_SpawnTank(tank, MT_GetTankType(tank));
+
+						int iSelectedType;
+						for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 						{
-							char sTankName[33];
-							MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Clone", sTankName);
+							if (MT_IsTankSupported(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !bTankBoss[iPlayer])
+							{
+								iSelectedType = iPlayer;
+
+								break;
+							}
+						}
+
+						if (iSelectedType > 0)
+						{
+							TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
+
+							g_esPlayer[iSelectedType].g_bClone = true;
+							g_esPlayer[tank].g_iCloneCount++;
+							g_esPlayer[iSelectedType].g_iCloneOwner = tank;
+
+							int iNewHealth = (g_esAbility[MT_GetTankType(tank)].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esAbility[MT_GetTankType(tank)].g_iCloneHealth;
+							//SetEntityHealth(iSelectedType, iNewHealth);
+							SetEntProp(iSelectedType, Prop_Data, "m_iHealth", iNewHealth);
+							SetEntProp(iSelectedType, Prop_Data, "m_iMaxHealth", iNewHealth);
+
+							if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
+							{
+								g_esPlayer[tank].g_iCloneCount2++;
+
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloneHuman", g_esPlayer[tank].g_iCloneCount2, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
+							}
+
+							if (g_esAbility[MT_GetTankType(tank)].g_iCloneMessage == 1)
+							{
+								char sTankName[33];
+								MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
+								MT_PrintToChatAll("%s %t", MT_TAG2, "Clone", sTankName);
+							}
 						}
 					}
 				}
-			}
 
-			delete hTrace;
+				delete hTrace;
+			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 		{

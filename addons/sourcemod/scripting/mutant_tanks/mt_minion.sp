@@ -10,12 +10,11 @@
  **/
 
 #include <sourcemod>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -114,6 +113,11 @@ public void OnClientPutInServer(int client)
 	vRemoveMinion(client);
 }
 
+public void OnClientDisconnect_Post(int client)
+{
+	vRemoveMinion(client);
+}
+
 public void OnMapEnd()
 {
 	vReset();
@@ -194,31 +198,37 @@ public int iMinionMenuHandler(Menu menu, MenuAction action, int param1, int para
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -301,7 +311,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iMinionAbility = iGetValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iMinionAbility, value, 0, 1);
@@ -401,7 +411,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iMinionAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iMinionAbility == 1)
 	{
 		vMinionAbility(tank);
 	}
@@ -445,7 +455,7 @@ static void vMinionAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iMinionCount < g_esAbility[MT_GetTankType(tank)].g_iMinionAmount && g_esPlayer[tank].g_iMinionCount2 < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (g_esPlayer[tank].g_iMinionCount < g_esAbility[MT_GetTankType(tank)].g_iMinionAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iMinionCount2 < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flMinionChance)
 		{
@@ -461,97 +471,100 @@ static void vMinionAbility(int tank)
 			GetVectorAngles(flAngles, flAngles);
 
 			Handle hTrace = TR_TraceRayFilterEx(flPosition, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
-			if (TR_DidHit(hTrace))
+			if (hTrace != null)
 			{
-				TR_GetEndPosition(flHitPosition, hTrace);
-				NormalizeVector(flVector, flVector);
-				ScaleVector(flVector, -40.0);
-				AddVectors(flHitPosition, flVector, flHitPosition);
-
-				if (GetVectorDistance(flHitPosition, flPosition) < 200.0 && GetVectorDistance(flHitPosition, flPosition) > 40.0)
+				if (TR_DidHit(hTrace))
 				{
-					bool bSpecialInfected[MAXPLAYERS + 1];
-					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-					{
-						bSpecialInfected[iPlayer] = false;
-						if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
-						{
-							bSpecialInfected[iPlayer] = true;
-						}
-					}
+					TR_GetEndPosition(flHitPosition, hTrace);
+					NormalizeVector(flVector, flVector);
+					ScaleVector(flVector, -40.0);
+					AddVectors(flHitPosition, flVector, flHitPosition);
 
-					int iTypeCount, iTypes[7];
-					for (int iBit = 0; iBit < 6; iBit++)
+					if (GetVectorDistance(flHitPosition, flPosition) < 200.0 && GetVectorDistance(flHitPosition, flPosition) > 40.0)
 					{
-						int iFlag = (1 << iBit);
-						if (!(g_esAbility[MT_GetTankType(tank)].g_iMinionTypes & iFlag))
+						bool bSpecialInfected[MAXPLAYERS + 1];
+						for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 						{
-							continue;
-						}
-
-						iTypes[iTypeCount] = iFlag;
-						iTypeCount++;
-					}
-
-					switch (iTypes[GetRandomInt(0, iTypeCount - 1)])
-					{
-						case 1: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "smoker");
-						case 2: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "boomer");
-						case 4: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "hunter");
-						case 8: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "spitter" : "boomer");
-						case 16: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "jockey" : "hunter");
-						case 32: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "charger" : "smoker");
-						default:
-						{
-							switch (GetRandomInt(1, 6))
+							bSpecialInfected[iPlayer] = false;
+							if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 							{
-								case 1: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "smoker");
-								case 2: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "boomer");
-								case 3: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "hunter");
-								case 4: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "spitter" : "boomer");
-								case 5: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "jockey" : "hunter");
-								case 6: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "charger" : "smoker");
+								bSpecialInfected[iPlayer] = true;
+							}
+						}
+
+						int iTypeCount, iTypes[7];
+						for (int iBit = 0; iBit < 6; iBit++)
+						{
+							int iFlag = (1 << iBit);
+							if (!(g_esAbility[MT_GetTankType(tank)].g_iMinionTypes & iFlag))
+							{
+								continue;
+							}
+
+							iTypes[iTypeCount] = iFlag;
+							iTypeCount++;
+						}
+
+						switch (iTypes[GetRandomInt(0, iTypeCount - 1)])
+						{
+							case 1: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "smoker");
+							case 2: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "boomer");
+							case 4: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "hunter");
+							case 8: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "spitter" : "boomer");
+							case 16: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "jockey" : "hunter");
+							case 32: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "charger" : "smoker");
+							default:
+							{
+								switch (GetRandomInt(1, 6))
+								{
+									case 1: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "smoker");
+									case 2: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "boomer");
+									case 3: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "hunter");
+									case 4: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "spitter" : "boomer");
+									case 5: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "jockey" : "hunter");
+									case 6: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "charger" : "smoker");
+								}
+							}
+						}
+
+						int iSelectedType;
+						for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+						{
+							if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && !bSpecialInfected[iPlayer])
+							{
+								iSelectedType = iPlayer;
+
+								break;
+							}
+						}
+
+						if (iSelectedType > 0)
+						{
+							TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
+
+							g_esPlayer[iSelectedType].g_bMinion = true;
+							g_esPlayer[tank].g_iMinionCount++;
+							g_esPlayer[iSelectedType].g_iMinionOwner = tank;
+
+							if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
+							{
+								g_esPlayer[tank].g_iMinionCount2++;
+
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman", g_esPlayer[tank].g_iMinionCount2, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
+							}
+
+							if (g_esAbility[MT_GetTankType(tank)].g_iMinionMessage == 1)
+							{
+								char sTankName[33];
+								MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
+								MT_PrintToChatAll("%s %t", MT_TAG2, "Minion", sTankName);
 							}
 						}
 					}
-
-					int iSelectedType;
-					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-					{
-						if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && !bSpecialInfected[iPlayer])
-						{
-							iSelectedType = iPlayer;
-
-							break;
-						}
-					}
-
-					if (iSelectedType > 0)
-					{
-						TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
-
-						g_esPlayer[iSelectedType].g_bMinion = true;
-						g_esPlayer[tank].g_iMinionCount++;
-						g_esPlayer[iSelectedType].g_iMinionOwner = tank;
-
-						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
-						{
-							g_esPlayer[tank].g_iMinionCount2++;
-
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman", g_esPlayer[tank].g_iMinionCount2, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
-						}
-
-						if (g_esAbility[MT_GetTankType(tank)].g_iMinionMessage == 1)
-						{
-							char sTankName[33];
-							MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Minion", sTankName);
-						}
-					}
 				}
-			}
 
-			delete hTrace;
+				delete hTrace;
+			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
 		{

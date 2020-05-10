@@ -11,12 +11,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -76,6 +75,8 @@ enum struct esAbilitySettings
 {
 	float g_flHumanCooldown;
 	float g_flPukeChance;
+	float g_flPukeDeathChance;
+	float g_flPukeDeathRange;
 	float g_flPukeRange;
 	float g_flPukeRangeChance;
 
@@ -84,6 +85,7 @@ enum struct esAbilitySettings
 	int g_iHumanAmmo;
 	int g_iImmunityFlags;
 	int g_iPukeAbility;
+	int g_iPukeDeath;
 	int g_iPukeEffect;
 	int g_iPukeHit;
 	int g_iPukeHitMode;
@@ -174,6 +176,11 @@ public void OnClientPutInServer(int client)
 	vRemovePuke(client);
 }
 
+public void OnClientDisconnect_Post(int client)
+{
+	vRemovePuke(client);
+}
+
 public void OnMapEnd()
 {
 	vReset();
@@ -254,31 +261,37 @@ public int iPukeMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -377,6 +390,9 @@ public void MT_OnConfigsLoad(int mode)
 			g_esAbility[iIndex].g_iPukeEffect = 0;
 			g_esAbility[iIndex].g_iPukeMessage = 0;
 			g_esAbility[iIndex].g_flPukeChance = 33.3;
+			g_esAbility[iIndex].g_iPukeDeath = 0;
+			g_esAbility[iIndex].g_flPukeDeathChance = 33.3;
+			g_esAbility[iIndex].g_flPukeDeathRange = 200.0;
 			g_esAbility[iIndex].g_iPukeHit = 0;
 			g_esAbility[iIndex].g_iPukeHitMode = 0;
 			g_esAbility[iIndex].g_flPukeRange = 150.0;
@@ -404,13 +420,16 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iPukeAbility = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iPukeAbility, value, 0, 1);
 		g_esAbility[type].g_iPukeEffect = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iPukeEffect, value, 0, 7);
 		g_esAbility[type].g_iPukeMessage = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iPukeMessage, value, 0, 3);
 		g_esAbility[type].g_flPukeChance = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeChance", "Puke Chance", "Puke_Chance", "chance", g_esAbility[type].g_flPukeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iPukeDeath = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeDeath", "Puke Death", "Puke_Death", "death", g_esAbility[type].g_iPukeDeath, value, 0, 1);
+		g_esAbility[type].g_flPukeDeathChance = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeDeathChance", "Puke Death Chance", "Puke_Death_Chance", "deathchance", g_esAbility[type].g_flPukeDeathChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flPukeDeathRange = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeDeathRange", "Puke Death Range", "Puke_Death_Range", "deathrange", g_esAbility[type].g_flPukeDeathRange, value, 1.0, 999999.0);
 		g_esAbility[type].g_iPukeHit = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHit", "Puke Hit", "Puke_Hit", "hit", g_esAbility[type].g_iPukeHit, value, 0, 1);
 		g_esAbility[type].g_iPukeHitMode = iGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHitMode", "Puke Hit Mode", "Puke_Hit_Mode", "hitmode", g_esAbility[type].g_iPukeHitMode, value, 0, 2);
 		g_esAbility[type].g_flPukeRange = flGetValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeRange", "Puke Range", "Puke_Range", "range", g_esAbility[type].g_flPukeRange, value, 1.0, 999999.0);
@@ -437,7 +456,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
-			if (bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iPukeAbility == 1)
+			if (bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iPukeDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(iTank)].g_flPukeDeathChance)
 			{
 				vAttachParticle(iTank, PARTICLE_BLOOD, 0.1, 0.0);
 
@@ -452,7 +471,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 						float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-						if (flDistance <= 200.0)
+						if (flDistance <= g_esAbility[MT_GetTankType(iTank)].g_flPukeDeathRange)
 						{
 							SDKCall(g_esGeneral.g_hSDKPukePlayer, iSurvivor, iTank, true);
 						}
@@ -472,7 +491,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iPukeAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iPukeAbility == 1)
 	{
 		vPukeAbility(tank);
 	}
@@ -513,7 +532,7 @@ static void vPukeAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iPukeCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iPukeCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bPuke2 = false;
 		g_esPlayer[tank].g_bPuke3 = false;
@@ -562,7 +581,7 @@ static void vPukeHit(int survivor, int tank, float chance, int enabled, int mess
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_esPlayer[tank].g_iPukeCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iPukeCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{

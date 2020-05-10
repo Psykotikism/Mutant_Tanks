@@ -11,12 +11,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -153,6 +152,11 @@ public void OnClientPutInServer(int client)
 	vReset3(client);
 }
 
+public void OnClientDisconnect_Post(int client)
+{
+	vReset3(client);
+}
+
 public void OnMapEnd()
 {
 	vReset();
@@ -235,36 +239,43 @@ public int iDrugMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 6:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -392,7 +403,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iDrugAbility = iGetValue(subsection, "drugability", "drug ability", "drug_ability", "drug", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iDrugAbility, value, 0, 1);
@@ -459,7 +470,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iDrugAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iDrugAbility == 1)
 	{
 		vDrugAbility(tank);
 	}
@@ -519,31 +530,36 @@ static void vDrug(int survivor, bool toggle, float angles[20])
 	}
 
 	Handle hDrugTarget = StartMessageEx(g_esGeneral.g_umFadeUserMsgId, iClients, 1);
-	switch (GetUserMessageType() == UM_Protobuf)
+	if (hDrugTarget != null)
 	{
-		case true:
+		switch (GetUserMessageType() == UM_Protobuf)
 		{
-			Protobuf pbSet = UserMessageToProtobuf(hDrugTarget);
-			pbSet.SetInt("duration", toggle ? 255: 1536);
-			pbSet.SetInt("hold_time", toggle ? 255 : 1536);
-			pbSet.SetInt("flags", iFlags);
-			pbSet.SetColor("clr", toggle ? iColor : iColor2);
-		}
-		case false:
-		{
-			BfWrite bfWrite = UserMessageToBfWrite(hDrugTarget);
-			bfWrite.WriteShort(toggle ? 255 : 1536);
-			bfWrite.WriteShort(toggle ? 255 : 1536);
-			bfWrite.WriteShort(iFlags);
-
-			for (int iPos = 0; iPos < 4; iPos++)
+			case true:
 			{
-				bfWrite.WriteByte(toggle ? iColor[iPos] : iColor2[iPos]);
+				Protobuf pbSet = UserMessageToProtobuf(hDrugTarget);
+				pbSet.SetInt("duration", toggle ? 255: 1536);
+				pbSet.SetInt("hold_time", toggle ? 255 : 1536);
+				pbSet.SetInt("flags", iFlags);
+				pbSet.SetColor("clr", toggle ? iColor : iColor2);
+			}
+			case false:
+			{
+				BfWrite bfWrite = UserMessageToBfWrite(hDrugTarget);
+				bfWrite.WriteShort(toggle ? 255 : 1536);
+				bfWrite.WriteShort(toggle ? 255 : 1536);
+				bfWrite.WriteShort(iFlags);
+
+				for (int iPos = 0; iPos < 4; iPos++)
+				{
+					bfWrite.WriteByte(toggle ? iColor[iPos] : iColor2[iPos]);
+				}
 			}
 		}
-	}
 
-	EndMessage();
+		EndMessage();
+
+		delete hDrugTarget;
+	}
 }
 
 static void vDrugAbility(int tank)
@@ -553,7 +569,7 @@ static void vDrugAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iDrugCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iDrugCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bDrug4 = false;
 		g_esPlayer[tank].g_bDrug5 = false;
@@ -602,7 +618,7 @@ static void vDrugHit(int survivor, int tank, float chance, int enabled, int mess
 
 	if (enabled == 1 && bIsHumanSurvivor(survivor))
 	{
-		if (g_esPlayer[tank].g_iDrugCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iDrugCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_esPlayer[survivor].g_bDrug)
 			{
