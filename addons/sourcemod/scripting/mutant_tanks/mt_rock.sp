@@ -10,12 +10,11 @@
  **/
 
 #include <sourcemod>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -117,6 +116,11 @@ public void OnClientPutInServer(int client)
 	vRemoveRock(client);
 }
 
+public void OnClientDisconnect_Post(int client)
+{
+	vRemoveRock(client);
+}
+
 public void OnMapEnd()
 {
 	vReset();
@@ -201,41 +205,49 @@ public int iRockMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 6:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 7:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -320,7 +332,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iHumanMode = iGetValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
@@ -370,7 +382,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iRockAbility == 1 && !g_esPlayer[tank].g_bRock)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iRockAbility == 1 && !g_esPlayer[tank].g_bRock)
 	{
 		vRockAbility(tank);
 	}
@@ -514,38 +526,38 @@ static void vRock(int tank)
 	char sDamage[11];
 	IntToString(g_esAbility[MT_GetTankType(tank)].g_iRockDamage, sDamage, sizeof(sDamage));
 
-	int iRock = CreateEntityByName("env_rock_launcher");
-	if (bIsValidEntity(iRock))
+	int iLauncher = CreateEntityByName("env_rock_launcher");
+	if (bIsValidEntity(iLauncher))
 	{
-		SetEntPropEnt(iRock, Prop_Send, "m_hOwnerEntity", tank);
-		DispatchSpawn(iRock);
-		DispatchKeyValue(iRock, "rockdamageoverride", sDamage);
-		iRock = EntIndexToEntRef(iRock);
+		SetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity", tank);
+		DispatchSpawn(iLauncher);
+		DispatchKeyValue(iLauncher, "rockdamageoverride", sDamage);
+		iLauncher = EntIndexToEntRef(iLauncher);
 	}
 
-	int iRock2 = CreateEntityByName("env_rock_launcher");
-	if (bIsValidEntity(iRock2))
+	int iLauncher2 = CreateEntityByName("env_rock_launcher");
+	if (bIsValidEntity(iLauncher2))
 	{
-		SetEntPropEnt(iRock2, Prop_Send, "m_hOwnerEntity", tank);
-		DispatchSpawn(iRock2);
-		DispatchKeyValue(iRock2, "rockdamageoverride", sDamage);
-		iRock2 = EntIndexToEntRef(iRock2);
+		SetEntPropEnt(iLauncher2, Prop_Send, "m_hOwnerEntity", tank);
+		DispatchSpawn(iLauncher2);
+		DispatchKeyValue(iLauncher2, "rockdamageoverride", sDamage);
+		iLauncher2 = EntIndexToEntRef(iLauncher2);
 	}
 
-	int iRock3 = CreateEntityByName("env_rock_launcher");
-	if (bIsValidEntity(iRock3))
+	int iLauncher3 = CreateEntityByName("env_rock_launcher");
+	if (bIsValidEntity(iLauncher3))
 	{
-		SetEntPropEnt(iRock3, Prop_Send, "m_hOwnerEntity", tank);
-		DispatchSpawn(iRock3);
-		DispatchKeyValue(iRock3, "rockdamageoverride", sDamage);
-		iRock3 = EntIndexToEntRef(iRock3);
+		SetEntPropEnt(iLauncher3, Prop_Send, "m_hOwnerEntity", tank);
+		DispatchSpawn(iLauncher3);
+		DispatchKeyValue(iLauncher3, "rockdamageoverride", sDamage);
+		iLauncher3 = EntIndexToEntRef(iLauncher3);
 	}
 
 	DataPack dpRock;
 	CreateDataTimer(0.2, tTimerRock, dpRock, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpRock.WriteCell(iRock);
-	dpRock.WriteCell(iRock2);
-	dpRock.WriteCell(iRock3);
+	dpRock.WriteCell(iLauncher);
+	dpRock.WriteCell(iLauncher2);
+	dpRock.WriteCell(iLauncher3);
 	dpRock.WriteCell(GetClientUserId(tank));
 	dpRock.WriteCell(MT_GetTankType(tank));
 	dpRock.WriteFloat(GetEngineTime());
@@ -558,7 +570,7 @@ static void vRockAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iRockCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iRockCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flRockChance)
 		{
@@ -640,8 +652,8 @@ public Action tTimerRock(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iRock = EntRefToEntIndex(pack.ReadCell()), iRock2 = EntRefToEntIndex(pack.ReadCell()), iRock3 = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
-	if ((iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock)) && (iRock2 == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock2)) && (iRock3 == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock3)))
+	int iLauncher = EntRefToEntIndex(pack.ReadCell()), iLauncher2 = EntRefToEntIndex(pack.ReadCell()), iLauncher3 = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
+	if ((iLauncher == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher)) && (iLauncher2 == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher2)) && (iLauncher3 == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher3)))
 	{
 		g_esPlayer[iTank].g_bRock = false;
 
@@ -702,37 +714,37 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	if (flDistance > 300.0)
 	{ 
 		float flAngles2[3];
-		if (bIsValidEntity(iRock))
+		if (bIsValidEntity(iLauncher))
 		{
 			flAngles2[0] = GetRandomFloat(g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[0], g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[1]);
 			flAngles2[1] = GetRandomFloat(g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[0], g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[1]);
 			flAngles2[2] = -2.0;
 			GetVectorAngles(flAngles2, flAngles2);
 
-			TeleportEntity(iRock, flHitPos, flAngles2, NULL_VECTOR);
-			AcceptEntityInput(iRock, "LaunchRock");
+			TeleportEntity(iLauncher, flHitPos, flAngles2, NULL_VECTOR);
+			AcceptEntityInput(iLauncher, "LaunchRock");
 		}
 
-		if (bIsValidEntity(iRock2))
+		if (bIsValidEntity(iLauncher2))
 		{
 			flAngles2[0] = GetRandomFloat(g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[0], g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[1]);
 			flAngles2[1] = GetRandomFloat(g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[0], g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[1]);
 			flAngles2[2] = -2.0;
 			GetVectorAngles(flAngles2, flAngles2);
 
-			TeleportEntity(iRock2, flHitPos, flAngles2, NULL_VECTOR);
-			AcceptEntityInput(iRock2, "LaunchRock");
+			TeleportEntity(iLauncher2, flHitPos, flAngles2, NULL_VECTOR);
+			AcceptEntityInput(iLauncher2, "LaunchRock");
 		}
 
-		if (bIsValidEntity(iRock3))
+		if (bIsValidEntity(iLauncher3))
 		{
 			flAngles2[0] = GetRandomFloat(g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[0], g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[1]);
 			flAngles2[1] = GetRandomFloat(g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[0], g_esAbility[MT_GetTankType(iTank)].g_flRockRadius[1]);
 			flAngles2[2] = -2.0;
 			GetVectorAngles(flAngles2, flAngles2);
 
-			TeleportEntity(iRock3, flHitPos, flAngles2, NULL_VECTOR);
-			AcceptEntityInput(iRock3, "LaunchRock");
+			TeleportEntity(iLauncher3, flHitPos, flAngles2, NULL_VECTOR);
+			AcceptEntityInput(iLauncher3, "LaunchRock");
 		}
 	}
 

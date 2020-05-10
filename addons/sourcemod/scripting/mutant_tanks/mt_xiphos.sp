@@ -11,12 +11,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -189,16 +188,19 @@ public int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int para
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -266,7 +268,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				int iDamage = RoundToNearest(damage), iHealth = GetClientHealth(attacker), iNewHealth = iHealth + iDamage,
 					iFinalHealth = (iNewHealth > g_esAbility[MT_GetTankType(victim)].g_iXiphosMaxHealth) ? g_esAbility[MT_GetTankType(victim)].g_iXiphosMaxHealth : iNewHealth;
 				//SetEntityHealth(attacker, iFinalHealth);
-				SetEntProp(attacker, Prop_Send, "m_iHealth", iFinalHealth);
+				SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
 
 				if (g_esAbility[MT_GetTankType(victim)].g_iXiphosMessage == 1)
 				{

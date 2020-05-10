@@ -11,12 +11,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -166,6 +165,11 @@ public void OnClientPutInServer(int client)
 	vRemoveUltimate(client);
 }
 
+public void OnClientDisconnect_Post(int client)
+{
+	vRemoveUltimate(client);
+}
+
 public void OnMapEnd()
 {
 	vReset();
@@ -248,36 +252,43 @@ public int iUltimateMenuHandler(Menu menu, MenuAction action, int param1, int pa
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 6:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -406,7 +417,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iUltimateAbility = iGetValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iUltimateAbility, value, 0, 1);
@@ -462,7 +473,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iUltimateAbility == 1 && g_esPlayer[tank].g_bUltimate && !g_esPlayer[tank].g_bUltimate2)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iUltimateAbility == 1 && g_esPlayer[tank].g_bUltimate && !g_esPlayer[tank].g_bUltimate2)
 	{
 		vUltimateAbility(tank);
 	}
@@ -518,64 +529,6 @@ public void MT_OnPostTankSpawn(int tank)
 	}
 }
 
-static void vUltimateAbility(int tank)
-{
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
-	{
-		return;
-	}
-
-	if (GetClientHealth(tank) <= g_esAbility[MT_GetTankType(tank)].g_iUltimateHealthLimit)
-	{
-		if (g_esPlayer[tank].g_iUltimateCount< g_esAbility[MT_GetTankType(tank)].g_iUltimateAmount && g_esPlayer[tank].g_iUltimateCount2 < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
-		{
-			g_esPlayer[tank].g_bUltimate2 = true;
-			g_esPlayer[tank].g_iUltimateCount++;
-			g_esPlayer[tank].g_flUltimateDamage = 0.0;
-
-			ExtinguishEntity(tank);
-			vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
-			EmitSoundToAll(SOUND_ELECTRICITY, tank);
-			EmitSoundToAll(SOUND_EXPLOSION, tank);
-
-			if (bIsValidGame())
-			{
-				EmitSoundToAll(SOUND_GROWL2, tank);
-				EmitSoundToAll(SOUND_SMASH2, tank);
-			}
-			else
-			{
-				EmitSoundToAll(SOUND_GROWL1, tank);
-				EmitSoundToAll(SOUND_SMASH1, tank);
-			}
-
- 			SetEntityHealth(tank, RoundToNearest(g_esPlayer[tank].g_iUltimateHealth * g_esAbility[MT_GetTankType(tank)].g_flUltimateHealthPortion));
-			//SetEntProp(tank, Prop_Send, "m_iHealth", RoundToNearest(g_esPlayer[tank].g_iUltimateHealth * g_esAbility[MT_GetTankType(tank)].g_flUltimateHealthPortion));
-			SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
-
-			CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flUltimateDuration, tTimerStopUltimate, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
-
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
-			{
-				g_esPlayer[tank].g_iUltimateCount2++;
-
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "UltimateHuman", g_esPlayer[tank].g_iUltimateCount2, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
-			}
-
-			if (g_esAbility[MT_GetTankType(tank)].g_iUltimateMessage == 1)
-			{
-				char sTankName[33];
-				MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Ultimate", sTankName);
-			}
-		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
-		{
-			MT_PrintToChat(tank, "%s %t", MT_TAG3, "UltimateAmmo");
-		}
-	}
-}
-
 static void vRemoveUltimate(int tank)
 {
 	g_esPlayer[tank].g_bUltimate = false;
@@ -615,6 +568,64 @@ static void vReset2(int tank)
 	else
 	{
 		g_esPlayer[tank].g_bUltimate3 = false;
+	}
+}
+
+static void vUltimateAbility(int tank)
+{
+	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	{
+		return;
+	}
+
+	if (GetClientHealth(tank) <= g_esAbility[MT_GetTankType(tank)].g_iUltimateHealthLimit)
+	{
+		if (g_esPlayer[tank].g_iUltimateCount < g_esAbility[MT_GetTankType(tank)].g_iUltimateAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iUltimateCount2 < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)))
+		{
+			g_esPlayer[tank].g_bUltimate2 = true;
+			g_esPlayer[tank].g_iUltimateCount++;
+			g_esPlayer[tank].g_flUltimateDamage = 0.0;
+
+			ExtinguishEntity(tank);
+			vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
+			EmitSoundToAll(SOUND_ELECTRICITY, tank);
+			EmitSoundToAll(SOUND_EXPLOSION, tank);
+
+			if (bIsValidGame())
+			{
+				EmitSoundToAll(SOUND_GROWL2, tank);
+				EmitSoundToAll(SOUND_SMASH2, tank);
+			}
+			else
+			{
+				EmitSoundToAll(SOUND_GROWL1, tank);
+				EmitSoundToAll(SOUND_SMASH1, tank);
+			}
+
+ 			//SetEntityHealth(tank, RoundToNearest(g_esPlayer[tank].g_iUltimateHealth * g_esAbility[MT_GetTankType(tank)].g_flUltimateHealthPortion));
+			SetEntProp(tank, Prop_Data, "m_iHealth", RoundToNearest(g_esPlayer[tank].g_iUltimateHealth * g_esAbility[MT_GetTankType(tank)].g_flUltimateHealthPortion));
+			SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
+
+			CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flUltimateDuration, tTimerStopUltimate, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
+			{
+				g_esPlayer[tank].g_iUltimateCount2++;
+
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "UltimateHuman", g_esPlayer[tank].g_iUltimateCount2, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
+			}
+
+			if (g_esAbility[MT_GetTankType(tank)].g_iUltimateMessage == 1)
+			{
+				char sTankName[33];
+				MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Ultimate", sTankName);
+			}
+		}
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
+		{
+			MT_PrintToChat(tank, "%s %t", MT_TAG3, "UltimateAmmo");
+		}
 	}
 }
 

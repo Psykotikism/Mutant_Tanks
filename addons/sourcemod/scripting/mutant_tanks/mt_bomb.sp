@@ -11,12 +11,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -68,6 +67,7 @@ esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
 enum struct esAbilitySettings
 {
 	float g_flBombChance;
+	float g_flBombDeathChance;
 	float g_flBombRange;
 	float g_flBombRangeChance;
 	float g_flBombRockChance;
@@ -75,6 +75,7 @@ enum struct esAbilitySettings
 
 	int g_iAccessFlags;
 	int g_iBombAbility;
+	int g_iBombDeath;
 	int g_iBombEffect;
 	int g_iBombHit;
 	int g_iBombHitMode;
@@ -138,6 +139,11 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
+	vRemoveBomb(client);
+}
+
+public void OnClientDisconnect_Post(int client)
+{
 	vRemoveBomb(client);
 }
 
@@ -221,31 +227,37 @@ public int iBombMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -344,6 +356,8 @@ public void MT_OnConfigsLoad(int mode)
 			g_esAbility[iIndex].g_iBombEffect = 0;
 			g_esAbility[iIndex].g_iBombMessage = 0;
 			g_esAbility[iIndex].g_flBombChance = 33.3;
+			g_esAbility[iIndex].g_iBombDeath = 0;
+			g_esAbility[iIndex].g_flBombDeathChance = 200.0;
 			g_esAbility[iIndex].g_iBombHit = 0;
 			g_esAbility[iIndex].g_iBombHitMode = 0;
 			g_esAbility[iIndex].g_flBombRange = 150.0;
@@ -373,13 +387,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iBombAbility = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iBombAbility, value, 0, 1);
 		g_esAbility[type].g_iBombEffect = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iBombEffect, value, 0, 7);
 		g_esAbility[type].g_iBombMessage = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iBombMessage, value, 0, 7);
 		g_esAbility[type].g_flBombChance = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_esAbility[type].g_flBombChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iBombDeath = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombDeath", "Bomb Death", "Bomb_Death", "death", g_esAbility[type].g_iBombDeath, value, 0, 1);
+		g_esAbility[type].g_flBombDeathChance = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombDeathChance", "Bomb Death Chance", "Bomb_Death_Chance", "deathchance", g_esAbility[type].g_flBombDeathChance, value, 1.0, 999999.0);
 		g_esAbility[type].g_iBombHit = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombHit", "Bomb Hit", "Bomb_Hit", "hit", g_esAbility[type].g_iBombHit, value, 0, 1);
 		g_esAbility[type].g_iBombHitMode = iGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombHitMode", "Bomb Hit Mode", "Bomb_Hit_Mode", "hitmode", g_esAbility[type].g_iBombHitMode, value, 0, 2);
 		g_esAbility[type].g_flBombRange = flGetValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRange", "Bomb Range", "Bomb_Range", "range", g_esAbility[type].g_flBombRange, value, 1.0, 999999.0);
@@ -410,7 +426,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveBomb(iTank);
 
-			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iBombAbility == 1)
+			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iBombDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(iTank)].g_flBombDeathChance)
 			{
 				if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && ((MT_HasAdminAccess(iTank) && bHasAdminAccess(iTank)) || g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 0))
 				{
@@ -432,7 +448,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iBombAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iBombAbility == 1)
 	{
 		vBombAbility(tank);
 	}
@@ -510,7 +526,7 @@ static void vBombAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iBombCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iBombCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bBomb2 = false;
 		g_esPlayer[tank].g_bBomb3 = false;
@@ -559,7 +575,7 @@ static void vBombHit(int survivor, int tank, float chance, int enabled, int mess
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_esPlayer[tank].g_iBombCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iBombCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{

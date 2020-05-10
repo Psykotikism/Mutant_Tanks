@@ -11,12 +11,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -147,6 +146,11 @@ public void OnClientPutInServer(int client)
 	vReset3(client);
 }
 
+public void OnClientDisconnect_Post(int client)
+{
+	vReset3(client);
+}
+
 public void OnMapEnd()
 {
 	vReset();
@@ -229,36 +233,43 @@ public int iWhirlMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 6:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -387,7 +398,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_iWhirlAbility = iGetValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iWhirlAbility, value, 0, 1);
@@ -446,7 +457,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iWhirlAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iWhirlAbility == 1)
 	{
 		vWhirlAbility(tank);
 	}
@@ -551,7 +562,7 @@ static void vWhirlAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iWhirlCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iWhirlCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bWhirl4 = false;
 		g_esPlayer[tank].g_bWhirl5 = false;
@@ -600,7 +611,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, int mes
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (g_esPlayer[tank].g_iWhirlCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iWhirlCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 		{
 			if (GetRandomFloat(0.1, 100.0) <= chance && !g_esPlayer[survivor].g_bWhirl)
 			{

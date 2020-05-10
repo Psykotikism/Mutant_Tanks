@@ -22,23 +22,23 @@ Mutant Tanks will enhance and intensify Tank fights by making each Tank that spa
 Mutant Tanks enhances the experience and fun that players get from Tank fights by 1000. This plugin gives server owners an arsenal of Mutant Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ## Features
-1. Provides the option to enable/disable the plugin in all game modes.
-2. Provides support for custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
-3. Provides the ability to fully customize all Mutant Tanks.
-4. Provides the ability to store up to 1000 Mutant Tank types.
-5. Provides 4 different formats for the config file.
-6. Provides the feature to auto-reload the config file when users change settings mid-game.
-7. Provides the option to choose which abilities to install.
-8. Provides the ability to allow users to add their own abilities and features through the use of forwards and natives.
-9. Provides custom target filters for targeting survivors and special infected.
-10. Provides support for translations.
-11. Provides chat color tags for translation files.
-12. Provides an administration system designed for access to and immunity from Mutant Tanks.
+1. Enable/disable the plugin in all game modes.
+2. Supports custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
+3. Fully customize all Mutant Tanks.
+4. Store up to 1000 Mutant Tank types.
+5. Four different formats for the config file.
+6. Auto-reload the config file when you change settings mid-game.
+7. Choose which abilities to install.
+8. Add your own abilities and features through the use of forwards and natives.
+9. Custom target filters for targeting survivors and special infected.
+10. Supports multiple languages.
+11. Chat color tags for translation files.
+12. Administration system designed for access to and immunity from Mutant Tanks.
 
 ### Requirements
-1. You must have at least `SourceMod 1.10.0.6421` or higher.
+1. You must have at least `SourceMod 1.11.0.6511` or higher.
 2. [DHooks](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
+3. Optional but highly recommended: [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
 
 ### Notes
 1. I do not provide support for listen servers but the plugin and its modules should still work properly on them.
@@ -1115,11 +1115,13 @@ If you are a Tank:
 ```
 
 ```
-// Accessible by the developer and admins with "z" (Root) flag.
+// Accessible by the developer and admins with "z" (Root) flag only.
+sm_mt_config - View a section of the config file.
 sm_mt_list - View a list of installed abilities.
 sm_tank2 - Spawn a Mutant Tank.
 
 // Accessible by all players.
+sm_mutanttank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
 sm_mt_info - View information about Mutant Tanks.
 sm_mt_absorb - View information about the Absorb ability.
 sm_mt_acid - View information about the Acid ability.
@@ -1268,7 +1270,7 @@ Currently, the system allows admins to each have a favorite/custom/personalized 
 
 Each custom admin setting will override the general settings. This is a powerful feature because each admin can have his/her own custom-made Mutant Tank type without tampering with the general Mutant Tank types.
 
-The only limitation at the moment is that admins cannot have custom/personalized ability settings. Whatever Mutant Tank type the admin spawns as, the admin will inherit that type's current abilities.
+The only limitation is that admins cannot have custom/personalized ability settings. Whatever Mutant Tank type the admin spawns as, the admin will inherit that type's current abilities. This is a failsafe to prevent admins from using abilities that their assigned type doesn't have access to.
 
 Example:
 
@@ -1360,11 +1362,11 @@ In short, this setting does not give the developer access to other features or p
 ### Human Support
 1. How do I enable human support?
 
-Set `Human Support` to 1.
+Set `Human Support` to 1 or 2.
 
-2. Can players use the abilities manually?
+2. Can players use the abilities automatically/manually?
 
-Yes, just set `Human Ability` to 1 for EACH ability.
+Yes, just set `Human Ability` to 1 or 2 for EACH ability.
 
 Example:
 
@@ -1579,6 +1581,8 @@ Examples:
 
 **fig101** - For reporting issues.
 
+**BloodyBlade** - For reporting issues.
+
 **AK978** - For reporting issues.
 
 **ricksfishin** - For reporting issues.
@@ -1598,6 +1602,8 @@ Examples:
 **Tank Rush** - For suggesting ideas.
 
 **FatalOE71** - For suggesting ideas.
+
+**zaviier** - For suggesting ideas.
 
 **Marttt** - For helping me with many things and the pull requests.
 

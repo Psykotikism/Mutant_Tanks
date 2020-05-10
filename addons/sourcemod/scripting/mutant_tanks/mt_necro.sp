@@ -10,12 +10,11 @@
  **/
 
 #include <sourcemod>
+#include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
-
-#include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -110,8 +109,11 @@ public void OnMapStart()
 public void OnClientPutInServer(int client)
 {
 	vRemoveNecro(client);
+}
 
-	g_esPlayer[client].g_bNecro = false;
+public void OnClientDisconnect_Post(int client)
+{
+	vRemoveNecro(client);
 }
 
 public void OnMapEnd()
@@ -198,41 +200,49 @@ public int iNecroMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 0:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 6:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 7:
 				{
 					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+
 					return RedrawMenuItem(sMenuOption);
 				}
 			}
@@ -315,7 +325,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
 		g_esAbility[type].g_flHumanDuration = flGetValue(subsection, "necroability", "necro ability", "necro_ability", "necro", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_flHumanDuration, value, 0.1, 999999.0);
@@ -367,9 +377,27 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 								case 1: vNecro(iTank, flInfectedPos, "smoker");
 								case 2: vNecro(iTank, flInfectedPos, "boomer");
 								case 3: vNecro(iTank, flInfectedPos, "hunter");
-								case 4: vNecro(iTank, flInfectedPos, "spitter");
-								case 5: vNecro(iTank, flInfectedPos, "jockey");
-								case 6: vNecro(iTank, flInfectedPos, "charger");
+								case 4:
+								{
+									if (bIsValidGame())
+									{
+										vNecro(iTank, flInfectedPos, "spitter");
+									}
+								}
+								case 5:
+								{
+									if (bIsValidGame())
+									{
+										vNecro(iTank, flInfectedPos, "jockey");
+									}
+								}
+								case 6:
+								{
+									if (bIsValidGame())
+									{
+										vNecro(iTank, flInfectedPos, "charger");
+									}
+								}
 							}
 						}
 					}
@@ -391,7 +419,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iNecroAbility == 1 && !g_esPlayer[tank].g_bNecro)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iNecroAbility == 1 && !g_esPlayer[tank].g_bNecro)
 	{
 		vNecroAbility(tank);
 	}
@@ -533,7 +561,7 @@ static void vNecroAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iNecroCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iNecroCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flNecroChance)
 		{
@@ -561,6 +589,7 @@ static void vNecroAbility(int tank)
 
 static void vRemoveNecro(int tank)
 {
+	g_esPlayer[tank].g_bNecro = false;
 	g_esPlayer[tank].g_bNecro2 = false;
 	g_esPlayer[tank].g_iNecroCount = 0;
 }
@@ -572,8 +601,6 @@ static void vReset()
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveNecro(iPlayer);
-
-			g_esPlayer[iPlayer].g_bNecro = false;
 		}
 	}
 }

@@ -200,9 +200,12 @@
 		{
 			// Spawn this many Tanks on non-finale maps periodically.
 			// --
-			// Minimum: 1
+			// Minimum: 0
 			// Maximum: 64
-			"Regular Amount"			"2"
+			// --
+			// 0: OFF, no limits.
+			// 1-64: ON, the number of Tanks that will spawn.
+			"Regular Amount"			"0"
 
 			// Spawn Tanks on non-finale maps every time this many seconds passes.
 			// Note: This will not work unless "Regular Mode" is set to 1.
@@ -227,12 +230,15 @@
 			// Value limit: 2
 			// Character limit for each value: 4
 			// --
-			// Minimum number for each value: 1
+			// Minimum number for each value: 0 (OFF)
 			// Maximum number for each value: 1000
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
-			"Regular Type"				"1-114"
+			// --
+			// 0: OFF, use the randomization feature.
+			// 1-1000: ON, the type that will spawn.
+			"Regular Type"				"0-0"
 
 			// Spawn Tanks on non-finale maps periodically.
 			// Note: This will not work unless "Regular Mode" is set to 1.
@@ -251,7 +257,7 @@
 			// Wave limit: 3
 			// Character limit for each wave: 10
 			// --
-			// Minimum value for each wave: 0
+			// Minimum value for each wave: 0 (OFF)
 			// Maximum value for each wave: 1000
 			// --
 			// 1st number = Minimum value
@@ -259,11 +265,11 @@
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-1000: ON, the type that will spawn.
-			"Finale Types"				"1-114,1-114,1-114"
+			"Finale Types"				"0-0,0-0,0-0"
 
 			// Number of Tanks to spawn for each finale wave.
-			// Note: This setting does not seem to work on the official L4D1 campaigns' finale maps. They have their own finale scripts which limit the number of Tanks to 1 for each wave.
-			// Note: Use Silvers' "VScript File Replacer" plugin to raise the Tank limits on L4D1 campaign finale maps so this setting can work.
+			// Note: This setting does not seem to work on the official Left 4 Dead 1 campaigns' finale maps in Left 4 Dead 2. They have their own finale scripts which limit the number of Tanks to 1 for each wave.
+			// Note: Use Silvers' "VScript File Replacer" plugin to raise the Tank limits on Left 4 Dead 1 campaign finale maps so this setting can work.
 			// Link: https://forums.alliedmods.net/showthread.php?t=318024
 			// --
 			// Separate waves with commas (",").
@@ -277,7 +283,10 @@
 			// 1st number = 1st wave
 			// 2nd number = 2nd wave
 			// 3rd number = 3rd wave
-			"Finale Waves"				"2,3,4"
+			// --
+			// 0: OFF, no limits.
+			// 1-64: ON, the number of Tanks that will spawn.
+			"Finale Waves"				"0,0,0"
 		}
 		"Game Modes"
 		{
@@ -521,7 +530,8 @@
 			// Allow players to play as the Mutant Tank.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, inform players about activating their abilities manually.
+			// 2: ON, do not inform players about activating their abilities manually.
 			"Human Support"				"0"
 
 			// These are the RGBA values of the Mutant Tank's skin color.
@@ -971,7 +981,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -1064,10 +1075,13 @@
 {
 	"Tank #1"
 	{
-		// The Mutant Tank creates acid puddles.
-		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, an acid puddle is created underneath the survivor. When the Mutant Tank dies, an acid puddle is created underneath the Mutant Tank.
+		// The Mutant Tank creates acid puddles. (Replaced by the Puke ability in Left 4 Dead 1.)
+		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, an acid puddle is created underneath the survivor.
 		// - "Acid Range"
 		// - "Acid Range Chance"
+		// "Acid Death" - When the Mutant Tank dies, an acid puddle is created underneath the Mutant Tank.
+		// - "Acid Death Chance"
+		// - "Acid Death Range"
 		// "Acid Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, an acid puddle is created underneath the survivor.
 		// - "Acid Chance"
 		// - "Acid Hit Mode"
@@ -1092,7 +1106,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -1146,6 +1161,25 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Acid Chance"				"33.3"
+
+			// Enable the Mutant Tank's upon-death range ability.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Acid Death"				"1"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Acid Death Chance"			"33.3"
+
+			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 999999.0 (Farthest)
+			"Acid Death Range"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -1224,7 +1258,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -1346,7 +1381,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -1469,7 +1505,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -1600,7 +1637,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -1731,7 +1769,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -1847,7 +1886,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -1954,7 +1994,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -2081,7 +2122,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -2170,7 +2212,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -2246,7 +2289,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Enable this ability.
@@ -2324,7 +2368,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -2453,7 +2498,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -2587,7 +2633,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -2722,7 +2769,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -2847,7 +2895,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -2938,7 +2987,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -3043,10 +3093,13 @@
 {
 	"Tank #1"
 	{
-		// The Mutant Tank flings survivors high into the air.
+		// The Mutant Tank flings survivors high into the air. (Replaced by the Puke ability in Left 4 Dead 1.)
 		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, the survivor is flung into the air.
 		// - "Fling Range"
 		// - "Fling Range Chance"
+		// "Fling Death" - When the Mutant Tank dies, nearby survivors are flung into the air.
+		// - "Fling Death Chance"
+		// - "Fling Death Range"
 		// "Fling Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is flung into the air.
 		// - "Fling Chance"
 		// - "Fling Hit Mode"
@@ -3069,7 +3122,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -3122,6 +3176,25 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fling Chance"				"33.3"
+
+			// Enable the Mutant Tank's upon-death range ability.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Fling Death"				"1"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Fling Death Chance"			"33.3"
+
+			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 999999.0 (Farthest)
+			"Fling Death Range"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
@@ -3180,7 +3253,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -3304,7 +3378,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -3465,7 +3540,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -3550,7 +3626,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -3702,7 +3779,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -3875,7 +3953,7 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
 
 			// Enable this ability.
@@ -3895,13 +3973,18 @@
 
 			// The only part of the Mutant Tank that can be damaged.
 			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 1
+			// Maximum: 127
+			// --
 			// 1: Headshots only.
 			// 2: Chest shots only.
-			// 3: Stomach shots only.
-			// 4: Left arm shots only.
-			// 5: Right arm shots only.
-			// 6: Left leg shots only.
-			// 7: Right leg shots only.
+			// 4: Stomach shots only.
+			// 8: Left arm shots only.
+			// 16: Right arm shots only.
+			// 32: Left leg shots only.
+			// 64: Right leg shots only.
 			"Hit Group"				"1"
 		}
 	}
@@ -3941,7 +4024,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -4076,7 +4160,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -4241,7 +4326,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -4364,7 +4450,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -4481,7 +4568,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -4597,7 +4685,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Enable this ability.
@@ -4676,7 +4765,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -4842,7 +4932,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Enable this ability.
@@ -4947,7 +5038,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -5063,7 +5155,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -5163,7 +5256,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -5279,7 +5373,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -5409,7 +5504,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -5503,7 +5599,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -5559,9 +5656,9 @@
 			// 1: Smoker
 			// 2: Boomer
 			// 4: Hunter
-			// 8: Spitter (Switches to Boomer in L4D1.)
-			// 16: Jockey (Switches to Hunter in L4D1.)
-			// 32: Charger (Switches to Smoker in L4D1.)
+			// 8: Spitter (Switches to Boomer in Left 4 Dead 1.)
+			// 16: Jockey (Switches to Hunter in Left 4 Dead 1.)
+			// 32: Charger (Switches to Smoker in Left 4 Dead 1.)
 			"Minion Types"				"63"
 		}
 	}
@@ -5588,7 +5685,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -5677,7 +5775,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -5786,7 +5885,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -5867,7 +5967,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -5956,7 +6057,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -6069,6 +6171,9 @@
 		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, the Mutant Tank pukes on the survivor.
 		// - "Puke Range"
 		// - "Puke Range Chance"
+		// "Puke Death" - When the Mutant Tank dies, nearby survivors are puked on.
+		// - "Puke Death Chance"
+		// - "Puke Death Range"
 		// "Puke Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the Mutant Tank pukes on the survivor.
 		// - "Puke Chance"
 		// - "Puke Hit Mode"
@@ -6091,7 +6196,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -6145,6 +6251,25 @@
 			// Maximum: 100.0 (Highest chance)
 			"Puke Chance"				"33.3"
 
+			// Enable the Mutant Tank's upon-death range ability.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Puke Death"				"1"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Puke Death Chance"			"33.3"
+
+			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 999999.0 (Farthest)
+			"Puke Death Range"			"200.0"
+
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
 			// --
@@ -6195,7 +6320,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -6300,7 +6426,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -6423,7 +6550,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -6532,7 +6660,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -6623,7 +6752,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -6707,7 +6837,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -6826,7 +6957,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -6926,7 +7058,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -7026,6 +7159,9 @@
 		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, the survivor's screen is shaken.
 		// - "Shake Range"
 		// - "Shake Range Chance"
+		// "Shake Death" - When the Mutant Tank dies, nearby survivors' screens are shaken.
+		// - "Shake Death Chance"
+		// - "Shake Death Range"
 		// "Shake Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's screen is shaken.
 		// - "Shake Chance"
 		// - "Shake Hit Mode"
@@ -7048,7 +7184,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -7101,6 +7238,25 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shake Chance"				"33.3"
+
+			// Enable the Mutant Tank's upon-death range ability.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Shake Death"				"1"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Shake Death Chance"			"33.3"
+
+			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 999999.0 (Farthest)
+			"Shake Death Range"			"200.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// --
@@ -7171,7 +7327,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -7232,7 +7389,7 @@
 			// Maximum: 999999.0
 			"Shield Delay"				"5.0"
 
-			// The type of the Mutant Tank's shield'.
+			// The type of the Mutant Tank's shield.
 			// --
 			// 0: Bullet-based (Requires bullets to break shield.)
 			// 1: Blast-based (Requires explosives to break shield.)
@@ -7255,6 +7412,9 @@
 		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, the survivor is shoved repeatedly.
 		// - "Shove Range"
 		// - "Shove Range Chance"
+		// "Shove Death" - When the Mutant Tank dies, nearby survivors are shoved.
+		// - "Shove Death Chance"
+		// - "Shove Death Range"
 		// "Shove Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is shoved repeatedly.
 		// - "Shove Chance"
 		// - "Shove Hit Mode"
@@ -7277,7 +7437,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -7330,6 +7491,25 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shove Chance"				"33.3"
+
+			// Enable the Mutant Tank's upon-death range ability.
+			// Note: This setting does not need "Ability Enabled" set to 1.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Shove Death"				"1"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Shove Death Chance"			"33.3"
+
+			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 999999.0 (Farthest)
+			"Shove Death Range"			"200.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// --
@@ -7406,7 +7586,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -7535,7 +7716,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -7652,7 +7834,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -7756,7 +7939,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -7839,7 +8023,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -7927,7 +8112,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -8000,9 +8186,9 @@
 			// 1: Smoker
 			// 2: Boomer
 			// 4: Hunter
-			// 8: Spitter (Switches to Boomer in L4D1.)
-			// 16: Jockey (Switches to Hunter in L4D1.)
-			// 32: Charger (Switches to Smoker in L4D1.)
+			// 8: Spitter (Switches to Boomer in Left 4 Dead 1.)
+			// 16: Jockey (Switches to Hunter in Left 4 Dead 1.)
+			// 32: Charger (Switches to Smoker in Left 4 Dead 1.)
 			// 64: Tank
 			"Throw Infected Options"		"0"
 		}
@@ -8037,7 +8223,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -8114,7 +8301,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -8201,7 +8389,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -8271,7 +8460,7 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
 
 			// Enable this ability.
@@ -8336,7 +8525,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -8468,7 +8658,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -8614,7 +8805,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -8750,7 +8942,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -8832,7 +9025,7 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
 
 			// Enable this ability.
@@ -8898,7 +9091,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
@@ -8973,7 +9167,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
