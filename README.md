@@ -1603,6 +1603,8 @@ Examples:
 
 **FatalOE71** - For suggesting ideas.
 
+**zaviier** - For suggesting ideas.
+
 **Marttt** - For helping me with many things and the pull requests.
 
 **Dragokas** - For reporting issues and providing fixes.
