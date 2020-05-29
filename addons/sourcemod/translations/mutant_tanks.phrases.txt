@@ -1,5 +1,6 @@
 "Phrases"
 {
+	// MT Chat Color Placeholders:
 	// "{default}" Normal - \x01
 	// "{mint}" Sky-green - \x03
 	// "{yellow}" Yellow-orange - \x04
@@ -4877,5 +4878,5 @@
 	//	"hu"			"{mint}Ezt a Tankot valaki irányítja."
 	//}
 	// Add Tank Note phrases for your own Mutant Tanks below!
-	// hu: Adj saját kifejezést a saját Mutáns Tankjaidnak lentebb!
+	// Adj saját kifejezést a saját Mutáns Tankjaidnak lentebb!
 }
