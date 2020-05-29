@@ -12,10 +12,6 @@
 #include <sourcemod>
 #include <mutant_tanks>
 
-#undef REQUIRE_PLUGIN
-#tryinclude <mt_clone>
-#define REQUIRE_PLUGIN
-
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -46,62 +42,59 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_THROW "Throw Ability"
 
-enum struct esGeneralSettings
+ConVar g_cvMTTankThrowForce;
+
+enum struct esPlayer
 {
-	bool g_bCloneInstalled;
+	bool g_bActivated;
 
-	ConVar g_cvMTTankThrowForce;
-}
-
-esGeneralSettings g_esGeneral;
-
-enum struct esPlayerSettings
-{
-	bool g_bThrow;
-	bool g_bThrow2;
-
-	int g_iAccessFlags2;
-	int g_iThrowCount;
-}
-
-esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
-
-enum struct esAbilitySettings
-{
-	float g_flHumanCooldown;
 	float g_flThrowChance;
 
 	int g_iAccessFlags;
+	int g_iCooldown;
+	int g_iCount;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iTankType;
 	int g_iThrowAbility;
 	int g_iThrowCarOptions;
 	int g_iThrowInfectedOptions;
 	int g_iThrowMessage;
 }
 
-esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
+esPlayer g_esPlayer[MAXPLAYERS + 1];
 
-public void OnAllPluginsLoaded()
+enum struct esAbility
 {
-	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
+	float g_flThrowChance;
+
+	int g_iAccessFlags;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iThrowAbility;
+	int g_iThrowCarOptions;
+	int g_iThrowInfectedOptions;
+	int g_iThrowMessage;
 }
 
-public void OnLibraryAdded(const char[] name)
+esAbility g_esAbility[MT_MAXTYPES + 1];
+
+enum struct esCache
 {
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_esGeneral.g_bCloneInstalled = true;
-	}
+	float g_flThrowChance;
+
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iThrowAbility;
+	int g_iThrowCarOptions;
+	int g_iThrowInfectedOptions;
+	int g_iThrowMessage;
 }
 
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_esGeneral.g_bCloneInstalled = false;
-	}
-}
+esCache g_esCache[MAXPLAYERS + 1];
 
 public void OnPluginStart()
 {
@@ -110,7 +103,7 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_mt_throw", cmdThrowInfo, "View information about the Throw ability.");
 
-	g_esGeneral.g_cvMTTankThrowForce = FindConVar("z_tank_throw_force");
+	g_cvMTTankThrowForce = FindConVar("z_tank_throw_force");
 }
 
 public void OnMapStart()
@@ -186,13 +179,13 @@ public int iThrowMenuHandler(Menu menu, MenuAction action, int param1, int param
 			{
 				case 0:
 				{
-					MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iThrowAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+					MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iThrowAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
 				}
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iThrowCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iCount, g_esCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ThrowDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -204,47 +197,48 @@ public int iThrowMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[255];
 			Panel panel = view_as<Panel>(param2);
-			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "ThrowMenu", param1);
+			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "ThrowMenu", param1);
 			panel.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
 			char sMenuOption[255];
+
 			switch (param2)
 			{
 				case 0:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
@@ -285,65 +279,99 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 
 public void MT_OnConfigsLoad(int mode)
 {
-	if (mode == 3)
+	switch (mode)
 	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		case 1:
 		{
-			if (bIsValidClient(iPlayer))
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
-				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
+				g_esAbility[iIndex].g_iAccessFlags = 0;
+				g_esAbility[iIndex].g_iHumanAbility = 0;
+				g_esAbility[iIndex].g_iHumanAmmo = 5;
+				g_esAbility[iIndex].g_iHumanCooldown = 30;
+				g_esAbility[iIndex].g_iThrowAbility = 0;
+				g_esAbility[iIndex].g_iThrowMessage = 0;
+				g_esAbility[iIndex].g_iThrowCarOptions = 0;
+				g_esAbility[iIndex].g_flThrowChance = 33.3;
+				g_esAbility[iIndex].g_iThrowInfectedOptions = 0;
 			}
 		}
-	}
-	else if (mode == 1)
-	{
-		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+		case 3:
 		{
-			g_esAbility[iIndex].g_iAccessFlags = 0;
-			g_esAbility[iIndex].g_iHumanAbility = 0;
-			g_esAbility[iIndex].g_iHumanAmmo = 5;
-			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
-			g_esAbility[iIndex].g_iThrowAbility = 0;
-			g_esAbility[iIndex].g_iThrowMessage = 0;
-			g_esAbility[iIndex].g_iThrowCarOptions = 0;
-			g_esAbility[iIndex].g_flThrowChance = 33.3;
-			g_esAbility[iIndex].g_iThrowInfectedOptions = 0;
+			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+			{
+				if (bIsValidClient(iPlayer))
+				{
+					g_esPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esPlayer[iPlayer].g_iHumanAbility = 0;
+					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
+					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esPlayer[iPlayer].g_iThrowAbility = 0;
+					g_esPlayer[iPlayer].g_iThrowMessage = 0;
+					g_esPlayer[iPlayer].g_iThrowCarOptions = 0;
+					g_esPlayer[iPlayer].g_flThrowChance = 0.0;
+					g_esPlayer[iPlayer].g_iThrowInfectedOptions = 0;
+				}
+			}
 		}
 	}
 }
 
 public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
 {
-	if (mode == 3 && bIsValidClient(admin) && value[0] != '\0')
+	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iThrowAbility = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iThrowAbility, value, 0, 15);
+		g_esPlayer[admin].g_iThrowMessage = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iThrowMessage, value, 0, 15);
+		g_esPlayer[admin].g_iThrowCarOptions = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "car", g_esPlayer[admin].g_iThrowCarOptions, value, 0, 7);
+		g_esPlayer[admin].g_flThrowChance = flGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esPlayer[admin].g_flThrowChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iThrowInfectedOptions = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infected", g_esPlayer[admin].g_iThrowInfectedOptions, value, 0, 127);
+
 		if (StrEqual(subsection, "throwability", false) || StrEqual(subsection, "throw ability", false) || StrEqual(subsection, "throw_ability", false) || StrEqual(subsection, "throw", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
+				g_esPlayer[admin].g_iAccessFlags = ReadFlagString(value);
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
-		g_esAbility[type].g_iThrowAbility = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iThrowAbility, value, 0, 15);
-		g_esAbility[type].g_iThrowMessage = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iThrowMessage, value, 0, 15);
-		g_esAbility[type].g_iThrowCarOptions = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "car", g_esAbility[type].g_iThrowCarOptions, value, 0, 7);
-		g_esAbility[type].g_flThrowChance = flGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esAbility[type].g_flThrowChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iThrowInfectedOptions = iGetValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infected", g_esAbility[type].g_iThrowInfectedOptions, value, 0, 127);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iThrowAbility = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iThrowAbility, value, 0, 15);
+		g_esAbility[type].g_iThrowMessage = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iThrowMessage, value, 0, 15);
+		g_esAbility[type].g_iThrowCarOptions = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "car", g_esAbility[type].g_iThrowCarOptions, value, 0, 7);
+		g_esAbility[type].g_flThrowChance = flGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esAbility[type].g_flThrowChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iThrowInfectedOptions = iGetKeyValue(subsection, "throwability", "throw ability", "throw_ability", "throw", key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infected", g_esAbility[type].g_iThrowInfectedOptions, value, 0, 127);
 
 		if (StrEqual(subsection, "throwability", false) || StrEqual(subsection, "throw ability", false) || StrEqual(subsection, "throw_ability", false) || StrEqual(subsection, "throw", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
+				g_esAbility[type].g_iAccessFlags = ReadFlagString(value);
 			}
 		}
 	}
+}
+
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+{
+	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	g_esCache[tank].g_flThrowChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowChance, g_esAbility[type].g_flThrowChance);
+	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
+	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
+	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
+	g_esCache[tank].g_iThrowAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowAbility, g_esAbility[type].g_iThrowAbility);
+	g_esCache[tank].g_iThrowCarOptions = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowCarOptions, g_esAbility[type].g_iThrowCarOptions);
+	g_esCache[tank].g_iThrowInfectedOptions = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowInfectedOptions, g_esAbility[type].g_iThrowInfectedOptions);
+	g_esCache[tank].g_iThrowMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowMessage, g_esAbility[type].g_iThrowMessage);
+	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -360,38 +388,42 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
 		{
 			return;
 		}
 
-		if (button & MT_SPECIAL_KEY == MT_SPECIAL_KEY)
+		if (button & MT_SPECIAL_KEY)
 		{
-			if (g_esAbility[MT_GetTankType(tank)].g_iThrowAbility == 0 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
+			if (g_esCache[tank].g_iThrowAbility == 0 && g_esCache[tank].g_iHumanAbility == 1)
 			{
-				if (!g_esPlayer[tank].g_bThrow && !g_esPlayer[tank].g_bThrow2)
+				static int iTime;
+				iTime = GetTime();
+				static bool bRecharging;
+				bRecharging = g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime;
+				if (!g_esPlayer[tank].g_bActivated && !bRecharging)
 				{
-					if (g_esPlayer[tank].g_iThrowCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+					switch (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)
 					{
-						g_esPlayer[tank].g_bThrow = true;
-						g_esPlayer[tank].g_iThrowCount++;
+						case true:
+						{
+							g_esPlayer[tank].g_bActivated = true;
+							g_esPlayer[tank].g_iCount++;
 
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ThrowHuman", g_esPlayer[tank].g_iThrowCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
-					}
-					else
-					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "ThrowAmmo");
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ThrowHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+						}
+						case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ThrowAmmo");
 					}
 				}
-				else if (g_esPlayer[tank].g_bThrow)
+				else if (g_esPlayer[tank].g_bActivated)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ThrowHuman2");
 				}
-				else if (g_esPlayer[tank].g_bThrow2)
+				else if (bRecharging)
 				{
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ThrowHuman3");
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ThrowHuman3", g_esPlayer[tank].g_iCooldown - iTime);
 				}
 			}
 		}
@@ -405,26 +437,31 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnRockThrow(int tank, int rock)
 {
-	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iThrowAbility > 0 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flThrowChance)
+	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank) && g_esCache[tank].g_iThrowAbility > 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flThrowChance)
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
 		{
 			return;
+		}
+
+		if ((!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility == 0) && !g_esPlayer[tank].g_bActivated)
+		{
+			g_esPlayer[tank].g_bActivated = true;
 		}
 
 		DataPack dpThrow;
 		CreateDataTimer(0.1, tTimerThrow, dpThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		dpThrow.WriteCell(EntIndexToEntRef(rock));
 		dpThrow.WriteCell(GetClientUserId(tank));
-		dpThrow.WriteCell(MT_GetTankType(tank));
+		dpThrow.WriteCell(g_esPlayer[tank].g_iTankType);
 	}
 }
 
 static void vRemoveThrow(int tank)
 {
-	g_esPlayer[tank].g_bThrow = false;
-	g_esPlayer[tank].g_bThrow2 = false;
-	g_esPlayer[tank].g_iThrowCount = 0;
+	g_esPlayer[tank].g_bActivated = false;
+	g_esPlayer[tank].g_iCooldown = -1;
+	g_esPlayer[tank].g_iCount = 0;
 }
 
 static void vReset()
@@ -438,93 +475,48 @@ static void vReset()
 	}
 }
 
-static bool bHasAdminAccess(int admin)
-{
-	if (!bIsValidClient(admin, MT_CHECK_FAKECLIENT))
-	{
-		return true;
-	}
-
-	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
-	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
-	{
-		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
-	}
-
-	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
-	{
-		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
-	}
-
-	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
-	{
-		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
-	}
-
-	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
-	{
-		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-	}
-
-	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
-	{
-		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-	}
-
-	if (iAbilityFlags != 0)
-	{
-		return (!(GetUserFlagBits(admin) & iAbilityFlags)) ? false : true;
-	}
-
-	return true;
-}
-
 public Action tTimerThrow(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iRock = EntRefToEntIndex(pack.ReadCell());
+	static int iRock;
+	iRock = EntRefToEntIndex(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || iType != MT_GetTankType(iTank) || (g_esAbility[MT_GetTankType(iTank)].g_iThrowAbility == 0))
+	static int iTank, iType;
+	iTank = GetClientOfUserId(pack.ReadCell());
+	iType = pack.ReadCell();
+	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !bIsCloneAllowed(iTank) || iType != g_esPlayer[iTank].g_iTankType || (g_esCache[iTank].g_iThrowAbility == 0))
 	{
 		return Plugin_Stop;
 	}
 
-	if (!MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 0)
-	{
-		g_esPlayer[iTank].g_bThrow = true;
-	}
-
-	if (!g_esPlayer[iTank].g_bThrow)
+	if (!g_esPlayer[iTank].g_bActivated)
 	{
 		return Plugin_Stop;
 	}
 
-	float flVelocity[3];
+	static float flVelocity[3];
 	GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
 
-	float flVector = GetVectorLength(flVelocity);
+	static float flVector;
+	flVector = GetVectorLength(flVelocity);
 	if (flVector > 500.0)
 	{
-		int iAbilityCount, iAbilities[5];
-		for (int iBit = 0; iBit < 4; iBit++)
+		static int iAbilityCount, iAbilities[4], iAbilityFlag;
+		iAbilityCount = 0;
+		for (int iBit = 0; iBit < sizeof(iAbilities); iBit++)
 		{
-			int iFlag = (1 << iBit);
-			if (!(g_esAbility[MT_GetTankType(iTank)].g_iThrowAbility & iFlag))
+			iAbilityFlag = (1 << iBit);
+			if (!(g_esCache[iTank].g_iThrowAbility & iAbilityFlag))
 			{
 				continue;
 			}
 
-			iAbilities[iAbilityCount] = iFlag;
+			iAbilities[iAbilityCount] = iAbilityFlag;
 			iAbilityCount++;
 		}
 
@@ -534,14 +526,16 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 			{
 				case 1:
 				{
-					int iCar = CreateEntityByName("prop_physics");
+					static int iCar;
+					iCar = CreateEntityByName("prop_physics");
 					if (bIsValidEntity(iCar))
 					{
-						int iOptionCount, iOptions[4];
-						for (int iBit = 0; iBit < 3; iBit++)
+						static int iOptionCount, iOptions[3], iFlag;
+						iOptionCount = 0;
+						for (int iBit = 0; iBit < sizeof(iOptions); iBit++)
 						{
-							int iFlag = (1 << iBit);
-							if (!(g_esAbility[MT_GetTankType(iTank)].g_iThrowCarOptions & iFlag))
+							iFlag = (1 << iBit);
+							if (!(g_esCache[iTank].g_iThrowCarOptions & iFlag))
 							{
 								continue;
 							}
@@ -566,20 +560,20 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							}
 						}
 
-						int iCarColor[3];
-						for (int iPos = 0; iPos < 3; iPos++)
+						static int iCarColor[3];
+						for (int iPos = 0; iPos < sizeof(iCarColor); iPos++)
 						{
 							iCarColor[iPos] = GetRandomInt(0, 255);
 						}
 
 						SetEntityRenderColor(iCar, iCarColor[0], iCarColor[1], iCarColor[2], 255);
 
-						float flPos[3];
+						static float flPos[3];
 						GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 						RemoveEntity(iRock);
 
 						NormalizeVector(flVelocity, flVelocity);
-						ScaleVector(flVelocity, g_esGeneral.g_cvMTTankThrowForce.FloatValue * 1.4);
+						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
 						DispatchSpawn(iCar);
 						TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
@@ -589,24 +583,26 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						iCar = EntIndexToEntRef(iCar);
 						vDeleteEntity(iCar, 10.0);
 
-						if (g_esAbility[MT_GetTankType(iTank)].g_iThrowMessage & MT_MESSAGE_MELEE)
+						if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_MELEE)
 						{
-							char sTankName[33];
-							MT_GetTankName(iTank, MT_GetTankType(iTank), sTankName);
+							static char sTankName[33];
+							MT_GetTankName(iTank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Throw", sTankName);
 						}
 					}
 				}
 				case 2:
 				{
-					int iInfected = CreateFakeClient("Infected");
+					static int iInfected;
+					iInfected = CreateFakeClient("Infected");
 					if (iInfected > 0)
 					{
-						int iOptionCount, iOptions[8];
-						for (int iBit = 0; iBit < 7; iBit++)
+						static int iOptionCount, iOptions[7], iFlag;
+						iOptionCount = 0;
+						for (int iBit = 0; iBit < sizeof(iOptions); iBit++)
 						{
-							int iFlag = (1 << iBit);
-							if (!(g_esAbility[MT_GetTankType(iTank)].g_iThrowInfectedOptions & iFlag))
+							iFlag = (1 << iBit);
+							if (!(g_esCache[iTank].g_iThrowInfectedOptions & iFlag))
 							{
 								continue;
 							}
@@ -639,52 +635,53 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							}
 						}
 
-						float flPos[3];
+						static float flPos[3];
 						GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 						RemoveEntity(iRock);
 
 						NormalizeVector(flVelocity, flVelocity);
-						ScaleVector(flVelocity, g_esGeneral.g_cvMTTankThrowForce.FloatValue * 1.4);
+						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
 						TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
 
-						if (g_esAbility[MT_GetTankType(iTank)].g_iThrowMessage & MT_MESSAGE_RANGE)
+						if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_RANGE)
 						{
-							char sTankName[33];
-							MT_GetTankName(iTank, MT_GetTankType(iTank), sTankName);
+							static char sTankName[33];
+							MT_GetTankName(iTank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Throw2", sTankName);
 						}
 					}
 				}
 				case 4:
 				{
-					float flPos[3];
+					static float flPos[3];
 					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 					RemoveEntity(iRock);
 
 					NormalizeVector(flVelocity, flVelocity);
-					ScaleVector(flVelocity, g_esGeneral.g_cvMTTankThrowForce.FloatValue * 1.4);
+					ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
 					TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
 
-					if (g_esAbility[MT_GetTankType(iTank)].g_iThrowMessage & MT_MESSAGE_SPECIAL)
+					if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL)
 					{
-						char sTankName[33];
-						MT_GetTankName(iTank, MT_GetTankType(iTank), sTankName);
+						static char sTankName[33];
+						MT_GetTankName(iTank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Throw3", sTankName);
 					}
 				}
 				case 8:
 				{
-					int iWitch = CreateEntityByName("witch");
+					static int iWitch;
+					iWitch = CreateEntityByName("witch");
 					if (bIsValidEntity(iWitch))
 					{
-						float flPos[3];
+						static float flPos[3];
 						GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 						RemoveEntity(iRock);
 
 						NormalizeVector(flVelocity, flVelocity);
-						ScaleVector(flVelocity, g_esGeneral.g_cvMTTankThrowForce.FloatValue * 1.4);
+						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
 						DispatchSpawn(iWitch);
 						ActivateEntity(iWitch);
@@ -693,31 +690,26 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
 					}
 
-					if (g_esAbility[MT_GetTankType(iTank)].g_iThrowMessage & MT_MESSAGE_SPECIAL2)
+					if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL2)
 					{
-						char sTankName[33];
-						MT_GetTankName(iTank, MT_GetTankType(iTank), sTankName);
+						static char sTankName[33];
+						MT_GetTankName(iTank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Throw4", sTankName);
 					}
 				}
 			}
 		}
 
-		g_esPlayer[iTank].g_bThrow = false;
+		g_esPlayer[iTank].g_bActivated = false;
 
-		if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility && !g_esPlayer[iTank].g_bThrow2)
+		static int iTime;
+		iTime = GetTime();
+		if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iTime))
 		{
-			g_esPlayer[iTank].g_bThrow2 = true;
-
-			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "ThrowHuman4");
-
-			if (g_esPlayer[iTank].g_iThrowCount < g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo > 0)
+			g_esPlayer[iTank].g_iCooldown = (g_esPlayer[iTank].g_iCount < g_esCache[iTank].g_iHumanAmmo && g_esCache[iTank].g_iHumanAmmo > 0) ? (iTime + g_esCache[iTank].g_iHumanCooldown) : -1;
+			if (g_esPlayer[iTank].g_iCooldown != -1 && g_esPlayer[iTank].g_iCooldown > iTime)
 			{
-				CreateTimer(g_esAbility[MT_GetTankType(iTank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
-			}
-			else
-			{
-				g_esPlayer[iTank].g_bThrow2 = false;
+				MT_PrintToChat(iTank, "%s %t", MT_TAG3, "ThrowHuman4", g_esPlayer[iTank].g_iCooldown - iTime);
 			}
 		}
 
@@ -729,30 +721,14 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 public Action tTimerSetCarVelocity(Handle timer, int ref)
 {
-	int iCar = EntRefToEntIndex(ref);
+	static int iCar;
+	iCar = EntRefToEntIndex(ref);
 	if (iCar == INVALID_ENT_REFERENCE || !bIsValidEntity(iCar))
 	{
 		return Plugin_Stop;
 	}
 
 	TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-
-	return Plugin_Continue;
-}
-
-public Action tTimerResetCooldown(Handle timer, int userid)
-{
-	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || !g_esPlayer[iTank].g_bThrow2)
-	{
-		g_esPlayer[iTank].g_bThrow2 = false;
-
-		return Plugin_Stop;
-	}
-
-	g_esPlayer[iTank].g_bThrow2 = false;
-
-	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "ThrowHuman5");
 
 	return Plugin_Continue;
 }

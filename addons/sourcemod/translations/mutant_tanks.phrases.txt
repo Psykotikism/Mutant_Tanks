@@ -20,6 +20,14 @@
 	{
 		"en"			"Mutant Tanks Information"
 	}
+	"MTListMenu"
+	{
+		"en"			"Mutant Tanks Abilities"
+	}
+	"MTVersionMenu"
+	{
+		"en"			"Mutant Tanks Version"
+	}
 	"Ammunition"
 	{
 		"en"			"Ammunition"
@@ -72,8 +80,8 @@
 	}
 	"AbilityCooldown"
 	{
-		"#format"		"{1:.2f}"
-		"en"			"Cooldown:{olive} {1}"
+		"#format"		"{1:i}"
+		"en"			"Cooldown:{olive} {1} second(s)"
 	}
 	"Details"
 	{
@@ -86,7 +94,12 @@
 	"AbilityDuration"
 	{
 		"#format"		"{1:.2f}"
-		"en"			"Duration:{olive} {1}"
+		"en"			"Duration:{olive} {1} second(s)"
+	}
+	"AbilityDuration2"
+	{
+		"#format"		"{1:i}"
+		"en"			"Duration:{olive} {1} second(s)"
 	}
 	"HumanSupport"
 	{
@@ -232,7 +245,7 @@
 	"HumanCooldown"
 	{
 		"#format"		"{1:i}"
-		"en"			"You must wait for{olive} {1}{mint} second(s) before changing into a different Mutant Tank type."
+		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Tank type."
 	}
 	"MultipleMatches"
 	{
@@ -326,15 +339,13 @@
 	}
 	"AbsorbHuman4"
 	{
-		"en"			"Your absorption ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your absorption ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"AbsorbHuman5"
 	{
-		"en"			"Your absorption ability ended and needs to recharge."
-	}
-	"AbsorbHuman6"
-	{
-		"en"			"Your absorption ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your absorption ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"AbsorbMenu"
 	{
@@ -369,7 +380,8 @@
 	}
 	"AcidHuman3"
 	{
-		"en"			"Your acid range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your acid range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"AcidHuman4"
 	{
@@ -377,7 +389,8 @@
 	}
 	"AcidHuman5"
 	{
-		"en"			"Your acid range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your acid range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"AcidMenu"
 	{
@@ -412,23 +425,17 @@
 	}
 	"AimlessHuman3"
 	{
-		"en"			"You already activated your aimless range ability."
+		"#format"		"{1:i}"
+		"en"			"Your aimless range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"AimlessHuman4"
 	{
-		"en"			"Your aimless range ability is still recharging."
+		"en"			"There are no survivors nearby to use your aimless range ability on."
 	}
 	"AimlessHuman5"
 	{
-		"en"			"There are no survivors nearby to use your aimless range ability on."
-	}
-	"AimlessHuman6"
-	{
-		"en"			"Your aimless range ability ended and needs to recharge."
-	}
-	"AimlessHuman7"
-	{
-		"en"			"Your aimless range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your aimless range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"AimlessMenu"
 	{
@@ -458,7 +465,8 @@
 	}
 	"AmmoHuman3"
 	{
-		"en"			"Your ammo range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your ammo range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"AmmoHuman4"
 	{
@@ -466,7 +474,8 @@
 	}
 	"AmmoHuman5"
 	{
-		"en"			"Your ammo range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your ammo range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"AmmoMenu"
 	{
@@ -501,23 +510,17 @@
 	}
 	"BlindHuman3"
 	{
-		"en"			"You already activated your blind range ability."
+		"#format"		"{1:i}"
+		"en"			"Your blind range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"BlindHuman4"
 	{
-		"en"			"Your blind range ability is still recharging."
+		"en"			"There are no survivors nearby to use your blind range ability on."
 	}
 	"BlindHuman5"
 	{
-		"en"			"There are no survivors nearby to use your blind range ability on."
-	}
-	"BlindHuman6"
-	{
-		"en"			"Your blind range ability ended and needs to recharge."
-	}
-	"BlindHuman7"
-	{
-		"en"			"Your blind range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your blind range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"BlindMenu"
 	{
@@ -552,7 +555,8 @@
 	}
 	"BombHuman3"
 	{
-		"en"			"Your bomb range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your bomb range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"BombHuman4"
 	{
@@ -560,7 +564,8 @@
 	}
 	"BombHuman5"
 	{
-		"en"			"Your bomb range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your bomb range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"BombMenu"
 	{
@@ -595,23 +600,17 @@
 	}
 	"BuryHuman3"
 	{
-		"en"			"You already activated your bury range ability."
+		"#format"		"{1:i}"
+		"en"			"Your bury range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"BuryHuman4"
 	{
-		"en"			"Your bury range ability is still recharging."
+		"en"			"There are no survivors nearby to use your bury range ability on."
 	}
 	"BuryHuman5"
 	{
-		"en"			"There are no survivors nearby to use your bury range ability on."
-	}
-	"BuryHuman6"
-	{
-		"en"			"Your bury range ability ended and needs to recharge."
-	}
-	"BuryHuman7"
-	{
-		"en"			"Your bury range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your bury range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"BuryMenu"
 	{
@@ -650,15 +649,13 @@
 	}
 	"CarHuman4"
 	{
-		"en"			"Your car shower is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your car shower still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"CarHuman5"
 	{
-		"en"			"Your car shower ended and needs to recharge."
-	}
-	"CarHuman6"
-	{
-		"en"			"Your car shower's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your car shower ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"CarMenu"
 	{
@@ -693,23 +690,17 @@
 	}
 	"ChokeHuman3"
 	{
-		"en"			"You already activated your choke range ability."
+		"#format"		"{1:i}"
+		"en"			"Your choke range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"ChokeHuman4"
 	{
-		"en"			"Your choke range ability is still recharging."
+		"en"			"There are no survivors nearby to use your choke range ability on."
 	}
 	"ChokeHuman5"
 	{
-		"en"			"There are no survivors nearby to use your choke range ability on."
-	}
-	"ChokeHuman6"
-	{
-		"en"			"Your choke range ability ended and needs to recharge."
-	}
-	"ChokeHuman7"
-	{
-		"en"			"Your choke range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your choke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"ChokeMenu"
 	{
@@ -743,7 +734,8 @@
 	}
 	"CloneHuman4"
 	{
-		"en"			"Your clone ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your clone ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"CloneHuman5"
 	{
@@ -751,11 +743,8 @@
 	}
 	"CloneHuman6"
 	{
-		"en"			"All your clones died and your clone ability needs to recharge."
-	}
-	"CloneHuman7"
-	{
-		"en"			"Your clone ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"All your clones died and your clone ability needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"CloneMenu"
 	{
@@ -794,15 +783,13 @@
 	}
 	"CloudHuman4"
 	{
-		"en"			"Your cloud ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your cloud ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"CloudHuman5"
 	{
-		"en"			"Your cloud ability ended and needs to recharge."
-	}
-	"CloudHuman6"
-	{
-		"en"			"Your cloud ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your cloud ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"CloudMenu"
 	{
@@ -863,23 +850,17 @@
 	}
 	"DrugHuman3"
 	{
-		"en"			"You already activated your drug range ability."
+		"#format"		"{1:i}"
+		"en"			"Your drug range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"DrugHuman4"
 	{
-		"en"			"Your drug range ability is still recharging."
+		"en"			"There are no survivors nearby to use your drug range ability on."
 	}
 	"DrugHuman5"
 	{
-		"en"			"There are no survivors nearby to use your drug range ability on."
-	}
-	"DrugHuman6"
-	{
-		"en"			"Your drug range ability ended and needs to recharge."
-	}
-	"DrugHuman7"
-	{
-		"en"			"Your drug range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your drug range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"DrugMenu"
 	{
@@ -914,23 +895,17 @@
 	}
 	"DrunkHuman3"
 	{
-		"en"			"You already activated your drunk range ability."
+		"#format"		"{1:i}"
+		"en"			"Your drunk range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"DrunkHuman4"
 	{
-		"en"			"Your drunk range ability is still recharging."
+		"en"			"There are no survivors nearby to use your drunk range ability on."
 	}
 	"DrunkHuman5"
 	{
-		"en"			"There are no survivors nearby to use your drunk range ability on."
-	}
-	"DrunkHuman6"
-	{
-		"en"			"Your drunk range ability ended and needs to recharge."
-	}
-	"DrunkHuman7"
-	{
-		"en"			"Your drunk range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your drunk range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"DrunkMenu"
 	{
@@ -965,23 +940,17 @@
 	}
 	"ElectricHuman3"
 	{
-		"en"			"You already activated your electric range ability."
+		"#format"		"{1:i}"
+		"en"			"Your electric range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"ElectricHuman4"
 	{
-		"en"			"Your electric range ability is still recharging."
+		"en"			"There are no survivors nearby to use your electric range ability on."
 	}
 	"ElectricHuman5"
 	{
-		"en"			"There are no survivors nearby to use your electric range ability on."
-	}
-	"ElectricHuman6"
-	{
-		"en"			"Your electric range ability ended and needs to recharge."
-	}
-	"ElectricHuman7"
-	{
-		"en"			"Your electric range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your electric range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"ElectricMenu"
 	{
@@ -990,7 +959,7 @@
 	"Enforce"
 	{
 		"#format"		"{1:s},{2:N},{3:s}"
-		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to only use their{yellow} {3} slot{mint}!"
+		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to only use their weapon slot{yellow} #{3}{mint}!"
 	}
 	"Enforce2"
 	{
@@ -1016,23 +985,17 @@
 	}
 	"EnforceHuman3"
 	{
-		"en"			"You already activated your enforce range ability."
+		"#format"		"{1:i}"
+		"en"			"Your enforce range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"EnforceHuman4"
 	{
-		"en"			"Your enforce range ability is still recharging."
+		"en"			"There are no survivors nearby to use your enforce range ability on."
 	}
 	"EnforceHuman5"
 	{
-		"en"			"There are no survivors nearby to use your enforce range ability on."
-	}
-	"EnforceHuman6"
-	{
-		"en"			"Your enforce range ability ended and needs to recharge."
-	}
-	"EnforceHuman7"
-	{
-		"en"			"Your enforce range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your enforce range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"EnforceMenu"
 	{
@@ -1071,15 +1034,13 @@
 	}
 	"FastHuman4"
 	{
-		"en"			"Your fast ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your fast ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"FastHuman5"
 	{
-		"en"			"Your fast ability ended and needs to recharge."
-	}
-	"FastHuman6"
-	{
-		"en"			"Your fast ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your fast ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"FastMenu"
 	{
@@ -1114,7 +1075,8 @@
 	}
 	"FireHuman3"
 	{
-		"en"			"Your fire range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your fire range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"FireHuman4"
 	{
@@ -1122,7 +1084,8 @@
 	}
 	"FireHuman5"
 	{
-		"en"			"Your fire range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your fire range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"FireMenu"
 	{
@@ -1152,7 +1115,8 @@
 	}
 	"FlingHuman3"
 	{
-		"en"			"Your fling range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your fling range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"FlingHuman4"
 	{
@@ -1160,7 +1124,8 @@
 	}
 	"FlingHuman5"
 	{
-		"en"			"Your fling range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your fling range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"FlingMenu"
 	{
@@ -1169,7 +1134,7 @@
 	"Fragile"
 	{
 		"#format"		"{1:s}"
-		"en"			"{olive}{1}{mint} is temporarily fragile to damage!"
+		"en"			"{olive}{1}{mint} is temporarily fragile to damage but can deal more damage and run faster!"
 	}
 	"Fragile2"
 	{
@@ -1182,7 +1147,7 @@
 	}
 	"FragileDetails"
 	{
-		"en"			"You take more damage."
+		"en"			"You take more damage while dealing more damage and running faster."
 	}
 	"FragileHuman"
 	{
@@ -1199,15 +1164,13 @@
 	}
 	"FragileHuman4"
 	{
-		"en"			"Your fragility ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your fragility ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"FragileHuman5"
 	{
-		"en"			"Your fragility ability ended and needs to recharge."
-	}
-	"FragileHuman6"
-	{
-		"en"			"Your fragility ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your fragility ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"FragileMenu"
 	{
@@ -1260,11 +1223,13 @@
 	}
 	"GhostHuman5"
 	{
-		"en"			"Your cloaking ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your cloaking ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"GhostHuman6"
 	{
-		"en"			"Your disarming range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your disarming range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"GhostHuman7"
 	{
@@ -1272,15 +1237,13 @@
 	}
 	"GhostHuman8"
 	{
-		"en"			"Your cloaking ability ended and needs to recharge."
+		"#format"		"{1:i}"
+		"en"			"Your cloaking ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"GhostHuman9"
 	{
-		"en"			"Your cloaking ability's cooldown is over."
-	}
-	"GhostHuman10"
-	{
-		"en"			"Your disarming range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your disarming range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"GhostMenu"
 	{
@@ -1298,7 +1261,7 @@
 	}
 	"GodAmmo"
 	{
-		"en"			"You've used up all your god ability's ammo."
+		"en"			"You've used up all your godlike ability's ammo."
 	}
 	"GodDetails"
 	{
@@ -1307,27 +1270,25 @@
 	"GodHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your god ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your godlike ability!"
 	}
 	"GodHuman2"
 	{
-		"en"			"Your god ability failed to activate. Try again."
+		"en"			"Your godlike ability failed to activate. Try again."
 	}
 	"GodHuman3"
 	{
-		"en"			"You already activated your god ability."
+		"en"			"You already activated your godlike ability."
 	}
 	"GodHuman4"
 	{
-		"en"			"Your god ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your godlike ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"GodHuman5"
 	{
-		"en"			"Your god ability ended and needs to recharge."
-	}
-	"GodHuman6"
-	{
-		"en"			"Your god ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your godlike ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"GodMenu"
 	{
@@ -1359,7 +1320,7 @@
 	}
 	"GravityAmmo2"
 	{
-		"en"			"You've used up all your low gravity range range ability's ammo."
+		"en"			"You've used up all your low gravity range ability's ammo."
 	}
 	"GravityDetails"
 	{
@@ -1373,11 +1334,11 @@
 	"GravityHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your low gravity range range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your low gravity range ability!"
 	}
 	"GravityHuman3"
 	{
-		"en"			"Your low gravity range range ability failed to activate. Try again."
+		"en"			"Your low gravity range ability failed to activate. Try again."
 	}
 	"GravityHuman4"
 	{
@@ -1385,35 +1346,27 @@
 	}
 	"GravityHuman5"
 	{
-		"en"			"Your gravitational pull ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your gravitational pull ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"GravityHuman6"
 	{
-		"en"			"You already activated your low gravity range range ability."
+		"#format"		"{1:i}"
+		"en"			"Your low gravity range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"GravityHuman7"
 	{
-		"en"			"Your low gravity range range ability is still recharging."
+		"en"			"There are no survivors nearby to use your low gravity range ability on."
 	}
 	"GravityHuman8"
 	{
-		"en"			"There are no survivors nearby to use your low gravity range range ability on."
+		"#format"		"{1:i}"
+		"en"			"Your gravitational pull ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"GravityHuman9"
 	{
-		"en"			"Your gravitational pull ability ended and needs to recharge."
-	}
-	"GravityHuman10"
-	{
-		"en"			"Your low gravity range ability ended and needs to recharge."
-	}
-	"GravityHuman11"
-	{
-		"en"			"Your gravitational pull ability's cooldown is over."
-	}
-	"GravityHuman12"
-	{
-		"en"			"Your low gravity range range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your low gravity range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"GravityMenu"
 	{
@@ -1466,11 +1419,13 @@
 	}
 	"HealHuman5"
 	{
-		"en"			"Your healing ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your healing ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"HealHuman6"
 	{
-		"en"			"Your bad-health range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your bad-health range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"HealHuman7"
 	{
@@ -1478,15 +1433,13 @@
 	}
 	"HealHuman8"
 	{
-		"en"			"Your healing ability ended and needs to recharge."
+		"#format"		"{1:i}"
+		"en"			"Your healing ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"HealHuman9"
 	{
-		"en"			"Your healing ability's cooldown is over."
-	}
-	"HealHuman10"
-	{
-		"en"			"Your bad-health range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your bad-health range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"HealMenu"
 	{
@@ -1494,7 +1447,7 @@
 	}
 	"HitDetails"
 	{
-		"en"			"You only take damage in certain parts of your body."
+		"en"			"You only take damage on certain parts of your body."
 	}
 	"HitMenu"
 	{
@@ -1529,23 +1482,17 @@
 	}
 	"HurtHuman3"
 	{
-		"en"			"You already activated your hurt range ability."
+		"#format"		"{1:i}"
+		"en"			"Your hurt range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"HurtHuman4"
 	{
-		"en"			"Your hurt range ability is still recharging."
+		"en"			"There are no survivors nearby to use your hurt range ability on."
 	}
 	"HurtHuman5"
 	{
-		"en"			"There are no survivors nearby to use your hurt range ability on."
-	}
-	"HurtHuman6"
-	{
-		"en"			"Your hurt range ability ended and needs to recharge."
-	}
-	"HurtHuman7"
-	{
-		"en"			"Your hurt range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your hurt range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"HurtMenu"
 	{
@@ -1580,23 +1527,17 @@
 	}
 	"HypnoHuman3"
 	{
-		"en"			"You already activated your hypno range ability."
+		"#format"		"{1:i}"
+		"en"			"Your hypno range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"HypnoHuman4"
 	{
-		"en"			"Your hypno range ability is still recharging."
+		"en"			"There are no survivors nearby to use your hypno range ability on."
 	}
 	"HypnoHuman5"
 	{
-		"en"			"There are no survivors nearby to use your hypno range ability on."
-	}
-	"HypnoHuman6"
-	{
-		"en"			"Your hypno range ability ended and needs to recharge."
-	}
-	"HypnoHuman7"
-	{
-		"en"			"Your hypno range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your hypno range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"HypnoMenu"
 	{
@@ -1631,23 +1572,17 @@
 	}
 	"IceHuman3"
 	{
-		"en"			"You already activated your ice range ability."
+		"#format"		"{1:i}"
+		"en"			"Your ice range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"IceHuman4"
 	{
-		"en"			"Your ice range ability is still recharging."
+		"en"			"There are no survivors nearby to use your ice range ability on."
 	}
 	"IceHuman5"
 	{
-		"en"			"There are no survivors nearby to use your ice range ability on."
-	}
-	"IceHuman6"
-	{
-		"en"			"Your ice range ability ended and needs to recharge."
-	}
-	"IceHuman7"
-	{
-		"en"			"Your ice range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your ice range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"IceMenu"
 	{
@@ -1677,7 +1612,8 @@
 	}
 	"IdleHuman3"
 	{
-		"en"			"Your idle range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your idle range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"IdleHuman4"
 	{
@@ -1685,7 +1621,8 @@
 	}
 	"IdleHuman5"
 	{
-		"en"			"Your idle range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your idle range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"IdleMenu"
 	{
@@ -1720,23 +1657,17 @@
 	}
 	"InvertHuman3"
 	{
-		"en"			"You already activated your invert range ability."
+		"#format"		"{1:i}"
+		"en"			"Your invert range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"InvertHuman4"
 	{
-		"en"			"Your invert range ability is still recharging."
+		"en"			"There are no survivors nearby to use your invert range ability on."
 	}
 	"InvertHuman5"
 	{
-		"en"			"There are no survivors nearby to use your invert range ability on."
-	}
-	"InvertHuman6"
-	{
-		"en"			"Your invert range ability ended and needs to recharge."
-	}
-	"InvertHuman7"
-	{
-		"en"			"Your invert range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your invert range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"InvertMenu"
 	{
@@ -1810,35 +1741,27 @@
 	}
 	"JumpHuman5"
 	{
-		"en"			"Your periodical jumping ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your periodical jumping ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"JumpHuman6"
 	{
-		"en"			"You already activated your jump range ability."
+		"#format"		"{1:i}"
+		"en"			"Your jump range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"JumpHuman7"
 	{
-		"en"			"Your jump range ability is still recharging."
+		"en"			"There are no survivors nearby to use your jump range ability on."
 	}
 	"JumpHuman8"
 	{
-		"en"			"There are no survivors nearby to use your jump range ability on."
+		"#format"		"{1:i}"
+		"en"			"Your periodical jumping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"JumpHuman9"
 	{
-		"en"			"Your periodical jumping ability ended and needs to recharge."
-	}
-	"JumpHuman10"
-	{
-		"en"			"Your jump range ability ended and needs to recharge."
-	}
-	"JumpHuman11"
-	{
-		"en"			"Your periodical jumping ability's cooldown is over."
-	}
-	"JumpHuman12"
-	{
-		"en"			"Your jump range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your jump range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"JumpMenu"
 	{
@@ -1898,23 +1821,17 @@
 	}
 	"LagHuman3"
 	{
-		"en"			"You already activated your lag range ability."
+		"#format"		"{1:i}"
+		"en"			"Your lag range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"LagHuman4"
 	{
-		"en"			"Your lag range ability is still recharging."
+		"en"			"There are no survivors nearby to use your lag range ability on."
 	}
 	"LagHuman5"
 	{
-		"en"			"There are no survivors nearby to use your lag range ability on."
-	}
-	"LagHuman6"
-	{
-		"en"			"Your lag range ability ended and needs to recharge."
-	}
-	"LagHuman7"
-	{
-		"en"			"Your lag range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your lag range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"LagMenu"
 	{
@@ -1953,15 +1870,13 @@
 	}
 	"LaserHuman4"
 	{
-		"en"			"Your laser ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your laser ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"LaserHuman5"
 	{
-		"en"			"Your laser ability ended and needs to recharge."
-	}
-	"LaserHuman6"
-	{
-		"en"			"Your laser ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your laser ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"LaserMenu"
 	{
@@ -1996,23 +1911,17 @@
 	}
 	"LeechHuman3"
 	{
-		"en"			"You already activated your leech range ability."
+		"#format"		"{1:i}"
+		"en"			"Your leech range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"LeechHuman4"
 	{
-		"en"			"Your leech range ability is still recharging."
+		"en"			"There are no survivors nearby to use your leech range ability on."
 	}
 	"LeechHuman5"
 	{
-		"en"			"There are no survivors nearby to use your leech range ability on."
-	}
-	"LeechHuman6"
-	{
-		"en"			"Your leech range ability ended and needs to recharge."
-	}
-	"LeechHuman7"
-	{
-		"en"			"Your leech range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your leech range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"LeechMenu"
 	{
@@ -2055,15 +1964,13 @@
 	}
 	"MedicHuman5"
 	{
-		"en"			"Your medic range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your medical range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"MedicHuman6"
 	{
-		"en"			"Your medic range ability ended and needs to recharge."
-	}
-	"MedicHuman7"
-	{
-		"en"			"Your medic range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your medical range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"MedicMenu"
 	{
@@ -2102,15 +2009,13 @@
 	}
 	"MeteorHuman4"
 	{
-		"en"			"Your meteor shower is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your meteor shower ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"MeteorHuman5"
 	{
-		"en"			"Your meteor shower ended and needs to recharge."
-	}
-	"MeteorHuman6"
-	{
-		"en"			"Your meteor shower's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your meteor shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"MeteorMenu"
 	{
@@ -2140,7 +2045,8 @@
 	}
 	"MinionHuman3"
 	{
-		"en"			"Your minion ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your minion spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"MinionHuman4"
 	{
@@ -2148,11 +2054,8 @@
 	}
 	"MinionHuman5"
 	{
-		"en"			"All your minions died and your minion ability needs to recharge."
-	}
-	"MinionHuman6"
-	{
-		"en"			"Your minion ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"All your minions died and your minion spawner ability needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"MinionMenu"
 	{
@@ -2186,15 +2089,13 @@
 	}
 	"NecroHuman4"
 	{
-		"en"			"Your necro ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your necro ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"NecroHuman5"
 	{
-		"en"			"Your necro ability ended and needs to recharge."
-	}
-	"NecroHuman6"
-	{
-		"en"			"Your necro ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your necro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"NecroMenu"
 	{
@@ -2229,23 +2130,17 @@
 	}
 	"NullifyHuman3"
 	{
-		"en"			"You already activated your nullify range ability."
+		"#format"		"{1:i}"
+		"en"			"Your damage nullifier range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"NullifyHuman4"
 	{
-		"en"			"Your nullify range ability is still recharging."
+		"en"			"There are no survivors nearby to use your damage nullifier range ability on."
 	}
 	"NullifyHuman5"
 	{
-		"en"			"There are no survivors nearby to use your nullify range ability on."
-	}
-	"NullifyHuman6"
-	{
-		"en"			"Your nullify range ability ended and needs to recharge."
-	}
-	"NullifyHuman7"
-	{
-		"en"			"Your nullify range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your damage nullifier range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"NullifyMenu"
 	{
@@ -2284,15 +2179,13 @@
 	}
 	"OmniHuman4"
 	{
-		"en"			"Your omni ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your omni ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"OmniHuman5"
 	{
-		"en"			"Your omni ability ended and needs to recharge."
-	}
-	"OmniHuman6"
-	{
-		"en"			"Your omni ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your omni ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"OmniMenu"
 	{
@@ -2331,15 +2224,13 @@
 	}
 	"PanicHuman4"
 	{
-		"en"			"Your panic ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your panic ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"PanicHuman5"
 	{
-		"en"			"Your panic ability ended and needs to recharge."
-	}
-	"PanicHuman6"
-	{
-		"en"			"Your panic ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your panic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"PanicMenu"
 	{
@@ -2374,23 +2265,17 @@
 	}
 	"PimpHuman3"
 	{
-		"en"			"You already activated your pimp range ability."
+		"#format"		"{1:i}"
+		"en"			"Your pimp slap range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"PimpHuman4"
 	{
-		"en"			"Your pimp range ability is still recharging."
+		"en"			"There are no survivors nearby to use your pimp slap range ability on."
 	}
 	"PimpHuman5"
 	{
-		"en"			"There are no survivors nearby to use your pimp range ability on."
-	}
-	"PimpHuman6"
-	{
-		"en"			"Your pimp range ability ended and needs to recharge."
-	}
-	"PimpHuman7"
-	{
-		"en"			"Your pimp range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your pimp slap range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"PimpMenu"
 	{
@@ -2420,7 +2305,8 @@
 	}
 	"PukeHuman3"
 	{
-		"en"			"Your puke range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your puke range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"PukeHuman4"
 	{
@@ -2428,7 +2314,8 @@
 	}
 	"PukeHuman5"
 	{
-		"en"			"Your puke range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your puke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"PukeMenu"
 	{
@@ -2472,15 +2359,13 @@
 	}
 	"PyroHuman4"
 	{
-		"en"			"Your pyro ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your pyro ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"PyroHuman5"
 	{
-		"en"			"Your pyro ability ended and needs to recharge."
-	}
-	"PyroHuman6"
-	{
-		"en"			"Your pyro ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your pyro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"PyroMenu"
 	{
@@ -2515,23 +2400,17 @@
 	}
 	"QuietHuman3"
 	{
-		"en"			"You already activated your quiet range ability."
+		"#format"		"{1:i}"
+		"en"			"Your quiet range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"QuietHuman4"
 	{
-		"en"			"Your quiet range ability is still recharging."
+		"en"			"There are no survivors nearby to use your quiet range ability on."
 	}
 	"QuietHuman5"
 	{
-		"en"			"There are no survivors nearby to use your quiet range ability on."
-	}
-	"QuietHuman6"
-	{
-		"en"			"Your quiet range ability ended and needs to recharge."
-	}
-	"QuietHuman7"
-	{
-		"en"			"Your quiet range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your quiet range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"QuietMenu"
 	{
@@ -2566,23 +2445,17 @@
 	}
 	"RecoilHuman3"
 	{
-		"en"			"You already activated your recoil range ability."
+		"#format"		"{1:i}"
+		"en"			"Your recoil range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"RecoilHuman4"
 	{
-		"en"			"Your recoil range ability is still recharging."
+		"en"			"There are no survivors nearby to use your recoil range ability on."
 	}
 	"RecoilHuman5"
 	{
-		"en"			"There are no survivors nearby to use your recoil range ability on."
-	}
-	"RecoilHuman6"
-	{
-		"en"			"Your recoil range ability ended and needs to recharge."
-	}
-	"RecoilHuman7"
-	{
-		"en"			"Your recoil range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your recoil range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"RecoilMenu"
 	{
@@ -2621,15 +2494,13 @@
 	}
 	"RegenHuman4"
 	{
-		"en"			"Your regen ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your regen ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"RegenHuman5"
 	{
-		"en"			"Your regen ability ended and needs to recharge."
-	}
-	"RegenHuman6"
-	{
-		"en"			"Your regen ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your regen ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"RegenMenu"
 	{
@@ -2689,7 +2560,8 @@
 	}
 	"RestartHuman3"
 	{
-		"en"			"Your restart range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your restart range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"RestartHuman4"
 	{
@@ -2697,7 +2569,8 @@
 	}
 	"RestartHuman5"
 	{
-		"en"			"Your restart range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your restart range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"RestartMenu"
 	{
@@ -2736,15 +2609,13 @@
 	}
 	"RockHuman4"
 	{
-		"en"			"Your rock shower is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your rock shower ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"RockHuman5"
 	{
-		"en"			"Your rock shower ended and needs to recharge."
-	}
-	"RockHuman6"
-	{
-		"en"			"Your rock shower's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your rock shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"RockMenu"
 	{
@@ -2774,23 +2645,17 @@
 	}
 	"RocketHuman3"
 	{
-		"en"			"You already activated your rocket range ability."
+		"#format"		"{1:i}"
+		"en"			"Your rocket range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"RocketHuman4"
 	{
-		"en"			"Your rocket range ability is still recharging."
+		"en"			"There are no survivors nearby to use your rocket range ability on."
 	}
 	"RocketHuman5"
 	{
-		"en"			"There are no survivors nearby to use your rocket range ability on."
-	}
-	"RocketHuman6"
-	{
-		"en"			"Your rocket range ability ended and needs to recharge."
-	}
-	"RocketHuman7"
-	{
-		"en"			"Your rocket range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your rocket range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"RocketMenu"
 	{
@@ -2825,23 +2690,17 @@
 	}
 	"ShakeHuman3"
 	{
-		"en"			"You already activated your shake range ability."
+		"#format"		"{1:i}"
+		"en"			"Your shake range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"ShakeHuman4"
 	{
-		"en"			"Your shake range ability is still recharging."
+		"en"			"There are no survivors nearby to use your shake range ability on."
 	}
 	"ShakeHuman5"
 	{
-		"en"			"There are no survivors nearby to use your shake range ability on."
-	}
-	"ShakeHuman6"
-	{
-		"en"			"Your shake range ability ended and needs to recharge."
-	}
-	"ShakeHuman7"
-	{
-		"en"			"Your shake range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your shake range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"ShakeMenu"
 	{
@@ -2880,15 +2739,13 @@
 	}
 	"ShieldHuman4"
 	{
-		"en"			"Your shield is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your shield still needs another{yellow} {1} second(s){mint} to regenerate."
 	}
 	"ShieldHuman5"
 	{
-		"en"			"Your shield ended and needs to recharge."
-	}
-	"ShieldHuman6"
-	{
-		"en"			"Your shield's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your shield broke and needs to regenerate for{yellow} {1} second(s){mint}."
 	}
 	"ShieldMenu"
 	{
@@ -2923,23 +2780,17 @@
 	}
 	"ShoveHuman3"
 	{
-		"en"			"You already activated your shove range ability."
+		"#format"		"{1:i}"
+		"en"			"Your shove range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"ShoveHuman4"
 	{
-		"en"			"Your shove range ability is still recharging."
+		"en"			"There are no survivors nearby to use your shove range ability on."
 	}
 	"ShoveHuman5"
 	{
-		"en"			"There are no survivors nearby to use your shove range ability on."
-	}
-	"ShoveHuman6"
-	{
-		"en"			"Your shove range ability ended and needs to recharge."
-	}
-	"ShoveHuman7"
-	{
-		"en"			"Your shove range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your shove range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"ShoveMenu"
 	{
@@ -2974,23 +2825,17 @@
 	}
 	"SlowHuman3"
 	{
-		"en"			"You already activated your slow range ability."
+		"#format"		"{1:i}"
+		"en"			"Your slow range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"SlowHuman4"
 	{
-		"en"			"Your slow range ability is still recharging."
+		"en"			"There are no survivors nearby to use your slow range ability on."
 	}
 	"SlowHuman5"
 	{
-		"en"			"There are no survivors nearby to use your slow range ability on."
-	}
-	"SlowHuman6"
-	{
-		"en"			"Your slow range ability ended and needs to recharge."
-	}
-	"SlowHuman7"
-	{
-		"en"			"Your slow range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your slow range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"SlowMenu"
 	{
@@ -3020,7 +2865,8 @@
 	}
 	"SmashHuman3"
 	{
-		"en"			"Your smash range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your smash range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"SmashHuman4"
 	{
@@ -3028,7 +2874,8 @@
 	}
 	"SmashHuman5"
 	{
-		"en"			"Your smash range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your smash range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"SmashMenu"
 	{
@@ -3058,7 +2905,8 @@
 	}
 	"SmiteHuman3"
 	{
-		"en"			"Your smite range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your smite range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"SmiteHuman4"
 	{
@@ -3066,7 +2914,8 @@
 	}
 	"SmiteHuman5"
 	{
-		"en"			"Your smite range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your smite range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"SmiteMenu"
 	{
@@ -3105,15 +2954,13 @@
 	}
 	"SpamHuman4"
 	{
-		"en"			"Your spam ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your rock spammer ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"SpamHuman5"
 	{
-		"en"			"Your spam ability ended and needs to recharge."
-	}
-	"SpamHuman6"
-	{
-		"en"			"Your spam ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your rock spammer ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"SpamMenu"
 	{
@@ -3152,15 +2999,13 @@
 	}
 	"SplashHuman4"
 	{
-		"en"			"Your splash ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your splash ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"SplashHuman5"
 	{
-		"en"			"Your splash ability ended and needs to recharge."
-	}
-	"SplashHuman6"
-	{
-		"en"			"Your splash ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your splash ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"SplashMenu"
 	{
@@ -3205,15 +3050,13 @@
 	}
 	"ThrowHuman3"
 	{
-		"en"			"Your throw ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your throw ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"ThrowHuman4"
 	{
-		"en"			"Your throw ability ended and needs to recharge."
-	}
-	"ThrowHuman5"
-	{
-		"en"			"Your throw ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your throw ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"ThrowMenu"
 	{
@@ -3243,15 +3086,13 @@
 	}
 	"TrackHuman3"
 	{
-		"en"			"Your track ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your track ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"TrackHuman4"
 	{
-		"en"			"Your track ability ended and needs to recharge."
-	}
-	"TrackHuman5"
-	{
-		"en"			"Your track ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your track ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"TrackMenu"
 	{
@@ -3299,15 +3140,13 @@
 	}
 	"UltimateHuman4"
 	{
-		"en"			"Your ultimate ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your ultimate ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"UltimateHuman5"
 	{
-		"en"			"Your ultimate ability ended and needs to recharge."
-	}
-	"UltimateHuman6"
-	{
-		"en"			"Your ultimate ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your ultimate ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"UltimateMenu"
 	{
@@ -3346,15 +3185,13 @@
 	}
 	"UndeadHuman4"
 	{
-		"en"			"Your undead ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your undead ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"UndeadHuman5"
 	{
-		"en"			"Your undead ability ended and needs to recharge."
-	}
-	"UndeadHuman6"
-	{
-		"en"			"Your undead ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your undead ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"UndeadMenu"
 	{
@@ -3402,23 +3239,17 @@
 	}
 	"VisionHuman3"
 	{
-		"en"			"You already activated your vision range ability."
+		"#format"		"{1:i}"
+		"en"			"Your visual range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"VisionHuman4"
 	{
-		"en"			"Your vision range ability is still recharging."
+		"en"			"There are no survivors nearby to use your vision range ability on."
 	}
 	"VisionHuman5"
 	{
-		"en"			"There are no survivors nearby to use your vision range ability on."
-	}
-	"VisionHuman6"
-	{
-		"en"			"Your vision range ability ended and needs to recharge."
-	}
-	"VisionHuman7"
-	{
-		"en"			"Your vision range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your visual range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"VisionMenu"
 	{
@@ -3471,11 +3302,13 @@
 	}
 	"WarpHuman5"
 	{
-		"en"			"Your periodical warping ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your periodical warping ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"WarpHuman6"
 	{
-		"en"			"Your warp range ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your warp range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"WarpHuman7"
 	{
@@ -3483,15 +3316,13 @@
 	}
 	"WarpHuman8"
 	{
-		"en"			"Your periodical warping ability ended and needs to recharge."
+		"#format"		"{1:i}"
+		"en"			"Your periodical warping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"WarpHuman9"
 	{
-		"en"			"Your periodical warping ability's cooldown is over."
-	}
-	"WarpHuman10"
-	{
-		"en"			"Your warp range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your warp range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"WarpMenu"
 	{
@@ -3526,23 +3357,17 @@
 	}
 	"WhirlHuman3"
 	{
-		"en"			"You already activated your whirl range ability."
+		"#format"		"{1:i}"
+		"en"			"Your whirl range ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"WhirlHuman4"
 	{
-		"en"			"Your whirl range ability is still recharging."
+		"en"			"There are no survivors nearby to use your whirl range ability on."
 	}
 	"WhirlHuman5"
 	{
-		"en"			"There are no survivors nearby to use your whirl range ability on."
-	}
-	"WhirlHuman6"
-	{
-		"en"			"Your whirl range ability ended and needs to recharge."
-	}
-	"WhirlHuman7"
-	{
-		"en"			"Your whirl range ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your whirl range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"WhirlMenu"
 	{
@@ -3572,11 +3397,13 @@
 	}
 	"WitchHuman3"
 	{
-		"en"			"Your witch ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your witch spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"WitchHuman4"
 	{
-		"en"			"Your witch ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your witch spawner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"WitchMenu"
 	{
@@ -3633,15 +3460,13 @@
 	}
 	"YellHuman4"
 	{
-		"en"			"Your yell ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your yell ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"YellHuman5"
 	{
-		"en"			"Your yell ability ended and needs to recharge."
-	}
-	"YellHuman6"
-	{
-		"en"			"Your yell ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your yell ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"YellMenu"
 	{
@@ -3668,27 +3493,25 @@
 	"ZombieHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your zombie ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your zombie spawner ability!"
 	}
 	"ZombieHuman2"
 	{
-		"en"			"Your zombie ability failed to activate. Try again."
+		"en"			"Your zombie spawner ability failed to activate. Try again."
 	}
 	"ZombieHuman3"
 	{
-		"en"			"You already activated your zombie ability."
+		"en"			"You already activated your zombie spawner ability."
 	}
 	"ZombieHuman4"
 	{
-		"en"			"Your zombie ability is still recharging."
+		"#format"		"{1:i}"
+		"en"			"Your zombie spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
 	}
 	"ZombieHuman5"
 	{
-		"en"			"Your zombie ability ended and needs to recharge."
-	}
-	"ZombieHuman6"
-	{
-		"en"			"Your zombie ability's cooldown is over."
+		"#format"		"{1:i}"
+		"en"			"Your zombie spawner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 	}
 	"ZombieMenu"
 	{
@@ -3732,7 +3555,7 @@
 	}
 	"Tank #10"
 	{
-		"en"			"{mint}This Tank can throw cars at survivors. The cars disappear after 10 seconds."
+		"en"			"{mint}This Tank can throw cars at survivors. The cars disappear after 30 seconds."
 	}
 	"Tank #11"
 	{
@@ -3784,7 +3607,7 @@
 	}
 	"Tank #23"
 	{
-		"en"			"{mint}This Tank takes extra damage."
+		"en"			"{mint}This Tank takes extra damage while dealing more damage and running faster."
 	}
 	"Tank #24"
 	{

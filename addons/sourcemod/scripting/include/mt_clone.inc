@@ -18,23 +18,12 @@
  * Returns if the clone can use abilities.
  *
  * @param tank				Client index of the Tank.
- * @param clone				Checks whether "mt_clone.smx" is installed.
  * @return				True if clone can use abilities, false otherwise.
  **/
-native bool MT_IsCloneSupported(int tank, bool clone);
+native bool MT_IsCloneSupported(int tank);
 
 #pragma deprecated Use MT_IsCloneSupported() instead.
 native bool MT_CloneAllowed(int client, bool clone);
-
-stock bool bIsCloneAllowed(int tank, bool clone)
-{
-	if (clone && !MT_IsCloneSupported(tank, clone))
-	{
-		return false;
-	}
-
-	return true;
-}
 
 public SharedPlugin __pl_mutanttankscloneability = 
 {
