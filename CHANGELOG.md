@@ -52,15 +52,16 @@ Changes:
 16. Replaced all cooldown timers by tracking `GetTime` instead.
 17. Replaced all `GetEngineTime` instances with `GetTime` for more accuracy.
 18. `RequestFrame` is now used instead of 0.1-second timers.
-19. Added sound effects for the `Absorb`, `Blind`, `Bomb`, `Fire`, `God`, `Gravity`, `Hurt`, `Shake`, and `Slow` abilities. (Requested by Tank Rush.)
-20. Added the `sm_mt_version` command which allows users to check the current version in-game.
-21. Added backwards compatibility for old natives.
-22. Updated/removed several phrases for each ability.
-23. DHooks is now optional. (Still needed for Left 4 DHooks Direct to work.)
-24. Moved all redundant code to the core plugin's include file for universal usage.
-25. Changed how the administration system works. (Please read the `Administration System` section of the `README.md` file.)
-26. Optimized the code of all the plugins included.
-27. Added Hungarian translations. (Thanks to KasperH!)
+19. The cooldowns for some abilities now start when the abilities end, not when they activate.
+20. Added sound effects for the `Absorb`, `Blind`, `Bomb`, `Fire`, `God`, `Gravity`, `Hurt`, `Shake`, and `Slow` abilities. (Requested by Tank Rush.)
+21. Added the `sm_mt_version` command which allows users to check the current version in-game.
+22. Added backwards compatibility for old natives.
+23. Updated/removed several phrases for each ability.
+24. DHooks is now optional. (Still needed for Left 4 DHooks Direct to work.)
+25. Moved all redundant code to the core plugin's include file for universal usage.
+26. Changed how the administration system works. (Please read the `Administration System` section of the `README.md` file.)
+27. Optimized the code of all the plugins included.
+28. Added Hungarian translations. (Thanks to KasperH!)
 
 Files:
 
