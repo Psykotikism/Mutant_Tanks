@@ -60,6 +60,7 @@ Changes:
 24. Moved all redundant code to the core plugin's include file for universal usage.
 25. Changed how the administration system works. (Please read the `Administration System` section of the `README.md` file.)
 26. Optimized the code of all the plugins included.
+27. Added Hungarian translations. (Thanks to KasperH!)
 
 Files:
 

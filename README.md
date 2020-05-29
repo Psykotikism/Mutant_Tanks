@@ -1598,7 +1598,7 @@ Examples:
 
 **Mi.Cura** - For reporting issues, suggesting ideas, and overall support.
 
-**KasperH** - For reporting issues, suggesting ideas, and overall support.
+**KasperH** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
