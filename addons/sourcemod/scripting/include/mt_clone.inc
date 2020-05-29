@@ -23,7 +23,10 @@
 native bool MT_IsCloneSupported(int tank);
 
 #pragma deprecated Use MT_IsCloneSupported() instead.
-native bool MT_CloneAllowed(int client, bool clone);
+stock bool MT_CloneAllowed(int client, bool clone)
+{
+	return MT_IsCloneSupported(tank) && clone;
+}
 
 public SharedPlugin __pl_mutanttankscloneability = 
 {
