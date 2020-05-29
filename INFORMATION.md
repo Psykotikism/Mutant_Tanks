@@ -189,6 +189,14 @@
 			// 1: ON
 			"Master Control"			"0"
 
+			// Human-controlled Mutant Tanks are renamed to their type's assigned name. If the player has a personalized Mutant Tank with a custom name, the player will use that name instead. Names are reverted back upon death, player disconnect, or end of map.
+			// Note: This setting can be overridden for each Mutant Tank under the "Human Support" section of their settings.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Rename Players"			"0"
+
 			// The mode of how human-controlled Tanks spawn.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
@@ -201,10 +209,10 @@
 			// Spawn this many Tanks on non-finale maps periodically.
 			// --
 			// Minimum: 0
-			// Maximum: 64
+			// Maximum: 16
 			// --
 			// 0: OFF, no limits.
-			// 1-64: ON, the number of Tanks that will spawn.
+			// 1-16: ON, the number of Tanks that will spawn.
 			"Regular Amount"			"0"
 
 			// Spawn Tanks on non-finale maps every time this many seconds passes.
@@ -213,6 +221,14 @@
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Regular Interval"			"300.0"
+
+			// How many waves of Tanks can spawn before the regular wave spawner stops.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This will not work unless "Regular Mode" is set to 1.
+			// --
+			// 0: OFF
+			// 1-999999: Only allow this number of waves.
+			"Regular Limit"				"2"
 
 			// The mode of the regular wave spawner.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -278,14 +294,14 @@
 			// Character limit for each wave: 3
 			// --
 			// Minimum value for each wave: 1
-			// Maximum value for each wave: 64
+			// Maximum value for each wave: 16
 			// --
 			// 1st number = 1st wave
 			// 2nd number = 2nd wave
 			// 3rd number = 3rd wave
 			// --
 			// 0: OFF, no limits.
-			// 1-64: ON, the number of Tanks that will spawn.
+			// 1-16: ON, the number of Tanks that will spawn.
 			"Finale Waves"				"0,0,0"
 		}
 		"Game Modes"
@@ -381,6 +397,7 @@
 		"General"
 		{
 			// Name of the Mutant Tank.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Character limit: 32
 			// --
@@ -467,6 +484,7 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This does not disable the Mutant Tank if it does not have any abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -526,13 +544,6 @@
 			// 2: Multiply extra health only.
 			// 3: Multiply both.
 			"Multiply Health"			"0"
-
-			// Allow players to play as the Mutant Tank.
-			// --
-			// 0: OFF
-			// 1: ON, inform players about activating their abilities manually.
-			// 2: ON, do not inform players about activating their abilities manually.
-			"Human Support"				"0"
 
 			// These are the RGBA values of the Mutant Tank's skin color.
 			// Note: Any value less than 0 will output a random color.
@@ -612,15 +623,33 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
+		"Human Support"
+		{
+			// Allow players to play as the Mutant Tank.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON, inform players about activating their abilities manually.
+			// 2: ON, do not inform players about activating their abilities manually.
+			"Human Support"				"0"
+
+			// Human-controlled Mutant Tanks are renamed to their type's assigned name. If the player has a personalized Mutant Tank with a custom name, the player will use that name instead. Names are reverted back upon death, player disconnect, or end of map.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Human Support" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Rename Players"			"0"
+		}
 		"Spawn"
 		{
 			// The number of Mutant Tanks with this type that can be alive at any given time.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected. 
 			// --
-			// Minimum: 0
-			// Maximum: 64
-			"Type Limit"				"32"
+			// Minimum: 0 (OFF)
+			// Maximum: 16
+			"Type Limit"				"0"
 
 			// The Mutant Tank will only spawn on finale maps.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -648,7 +677,7 @@
 			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to 2 or higher.)
 			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to 3 or higher.)
 			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to 4 or higher.)
-			"Boss Health Stages"			"5000,2500,1500,1000"
+			"Boss Health Stages"			"5000,2500,1666,1250"
 
 			// The number of stages for Mutant Tank bosses.
 			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 1.
@@ -979,6 +1008,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -986,30 +1016,35 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -1019,12 +1054,14 @@
 			// Note: Damage = Bullet damage/Absorb bullet divisor
 			// Example: Damage = 30.0/20.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Bullet damage/1.0 = Bullet damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Absorb Bullet Divisor"			"20.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1032,15 +1069,17 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Absorb Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Absorb Duration"			"5"
 
 			// The explosive damage received by the Mutant Tank is divided by this value.
 			// Note: Damage = Explosive damage/Absorb explosive divisor
 			// Example: Damage = 30.0/20.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Explosive damage/1.0 = Explosive damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -1050,6 +1089,7 @@
 			// Note: Damage = Fire damage/Absorb fire divisor
 			// Example: Damage = 300.0/200.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Fire damage/1.0 = Fire damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -1059,6 +1099,7 @@
 			// Note: Damage = Melee damage/Absorb melee divisor
 			// Example: Damage = 300.0/200.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Melee damage/1.0 = Melee damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -1104,6 +1145,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -1111,19 +1153,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Acid Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -1131,6 +1176,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1144,6 +1190,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1157,6 +1204,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1164,18 +1212,21 @@
 
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Acid Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Acid Death Chance"			"33.3"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
@@ -1183,12 +1234,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Acid Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -1196,12 +1249,14 @@
 			"Acid Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Acid Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1210,12 +1265,14 @@
 			// The Mutant Tank's rock creates an acid puddle when it breaks.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: This does not need "Ability Enabled" or "Acid Hit" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Acid Rock Break"			"0"
 
 			// The Mutant Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1256,6 +1313,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -1263,19 +1321,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Aimless Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -1283,6 +1344,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1296,6 +1358,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1308,24 +1371,28 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Aimless Chance"			"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Aimless Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Aimless Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -1333,12 +1400,14 @@
 			"Aimless Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Aimless Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1379,6 +1448,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -1386,19 +1456,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Ammo Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -1406,6 +1479,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1419,6 +1493,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1431,12 +1506,14 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ammo Chance"				"33.3"
 
 			// The Mutant Tank sets survivors' ammunition to this amount.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 25
@@ -1444,12 +1521,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ammo Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -1457,12 +1536,14 @@
 			"Ammo Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Ammo Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1503,6 +1584,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -1510,19 +1592,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Blind Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -1530,6 +1615,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1543,6 +1629,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1555,12 +1642,14 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Blind Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -1568,12 +1657,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Blind Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -1581,18 +1672,21 @@
 			"Blind Hit Mode"			"0"
 
 			// The intensity of the Mutant Tank's blind effect.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0 (No effect)
 			// Maximum: 255 (Fully blind)
 			"Blind Intensity"			"255"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Blind Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1635,6 +1729,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -1642,19 +1737,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Bomb Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -1662,6 +1760,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1675,6 +1774,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1688,6 +1788,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1695,12 +1796,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Bomb Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -1708,12 +1811,14 @@
 			"Bomb Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Bomb Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1721,12 +1826,14 @@
 
 			// The Mutant Tank's rock creates an explosion when it breaks.
 			// Note: This does not need "Ability Enabled" or "Bomb Hit" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Bomb Rock Break"			"0"
 
 			// The Mutant Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1767,6 +1874,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -1774,19 +1882,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Bury Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -1794,6 +1905,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1807,6 +1919,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1819,18 +1932,21 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Bury Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Bury Duration"				"5.0"
 
 			// The Mutant Tank buries survivors this deep into the ground.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -1838,12 +1954,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Bury Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -1851,12 +1969,14 @@
 			"Bury Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Bury Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1884,6 +2004,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -1891,49 +2012,56 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
-
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
-			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Car Chance"				"33.3"
 
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 999999
+			"Car Duration"			"5"
+
 			// The Mutant Tank create car showers with these cars.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -1947,6 +2075,7 @@
 			"Car Options"				"0"
 
 			// The radius of the Mutant Tank's car shower.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Minimum radius
 			// Minimum: -200.0
@@ -1992,6 +2121,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -1999,19 +2129,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Choke Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -2019,6 +2152,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -2032,6 +2166,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -2044,42 +2179,49 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Choke Chance"				"33.3"
 
 			// The Mutant Tank's chokes do this much damage.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Choke Damage"				"5.0"
 
 			// The Mutant Tank chokes survivors in the air after this many seconds passes upon triggering the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Choke Delay"				"1.0"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Choke Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Choke Duration"			"5"
 
 			// The Mutant Tank brings survivors this high up into the air.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Choke Height"				"300.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Choke Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -2087,12 +2229,14 @@
 			"Choke Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Choke Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -2120,6 +2264,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -2127,42 +2272,49 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The amount of clones the Mutant Tank can create.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
-			// Maximum: 25
+			// Maximum: 15
 			"Clone Amount"				"2"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Clone Chance"				"33.3"
 
 			// The Mutant Tank's clone's health.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 65535
@@ -2170,12 +2322,14 @@
 
 			// The Mutant Tank's clone will be treated as a real Mutant Tank.
 			// Note: Clones cannot clone themselves for obvious safety reasons.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF, the clone cannot use abilities like real Mutant Tanks.
 			// 1: ON, the clone can use abilities like real Mutant Tanks.
 			"Clone Mode"				"0"
 
 			// The Mutant Tank's clones are replaced with new ones when they die.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -2210,6 +2364,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -2217,49 +2372,57 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Cloud Chance"				"33.3"
 
 			// The Mutant Tank's clouds do this much damage.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
@@ -2287,6 +2450,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -2294,38 +2458,52 @@
 			"Human Ability"				"0"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drop Chance"				"33.3"
 
 			// The Mutant Tank has this many chances out of 100.0% to drop guns with a full clip.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drop Clip Chance"			"33.3"
 
+			// The position of the Mutant Tank's weapon.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0 OR 3: Pick randomly between left and right hands.
+			// 1: Guns only.
+			// 2: Melee weapons only.
+			"Drop Hand Position"			"0"
+
 			// The mode of the Mutant Tank's drop ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Guns only.
-			// 2: Melee weapons only.
+			// 2: Melee weapons only. (Only available in Left 4 Dead 2.)
 			"Drop Mode"				"0"
 
 			// The Mutant Tank's weapon size is multiplied by this value.
 			// Note: Default weapon size x Drop weapon scale
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 2.0
@@ -2366,6 +2544,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -2373,19 +2552,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Drug Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -2393,6 +2575,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -2406,6 +2589,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -2418,25 +2602,29 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drug Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Drug Duration"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Drug Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Drug Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -2444,18 +2632,21 @@
 			"Drug Hit Mode"				"0"
 
 			// The Mutant Tank drugs survivors every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Drug Interval"				"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Drug Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -2496,6 +2687,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -2503,19 +2695,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Drunk Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -2523,6 +2718,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -2536,6 +2732,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -2548,24 +2745,28 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drunk Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Drunk Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Drunk Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Drunk Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -2573,24 +2774,28 @@
 			"Drunk Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Drunk Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Drunk Range Chance"			"15.0"
 
 			// The Mutant Tank causes the survivors' speed to randomly change every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Drunk Speed Interval"			"1.5"
 
 			// The Mutant Tank causes the survivors to turn at a random direction every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -2631,6 +2836,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -2638,19 +2844,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Electric Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -2658,6 +2867,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -2671,6 +2881,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -2683,31 +2894,36 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Electric Chance"			"33.3"
 
 			// The Mutant Tank's electrocutions do this much damage.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Electric Damage"			"5.0"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Electric Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Electric Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Electric Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -2715,18 +2931,21 @@
 			"Electric Hit Mode"			"0"
 
 			// The Mutant Tank electrocutes survivors every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Electric Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Electric Range"			"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -2767,6 +2986,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -2774,19 +2994,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Enforce Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -2794,6 +3017,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -2807,6 +3031,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -2819,12 +3044,14 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Enforce Chance"			"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -2832,12 +3059,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Enforce Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -2845,18 +3074,21 @@
 			"Enforce Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Enforce Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Enforce Range Chance"			"15.0"
 
 			// The Mutant Tank forces survivors to only use one of the following weapon slots.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -2893,6 +3125,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -2900,36 +3133,42 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -2937,12 +3176,14 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Fast Duration"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Fast Duration"				"5"
 
 			// The Mutant Tank's special speed.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 3.0
 			// Maximum: 10.0
@@ -2985,6 +3226,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -2992,19 +3234,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Fire Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -3012,6 +3257,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3025,6 +3271,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3038,6 +3285,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -3045,12 +3293,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Fire Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -3058,12 +3308,14 @@
 			"Fire Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Fire Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -3071,12 +3323,14 @@
 
 			// The Mutant Tank's rock creates a fire when it breaks.
 			// Note: This does not need "Ability Enabled" or "Fire Hit" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Fire Rock Break"			"0"
 
 			// The Mutant Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -3120,6 +3374,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -3127,19 +3382,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Fling Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -3147,6 +3405,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3160,6 +3419,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3172,6 +3432,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -3179,18 +3440,21 @@
 
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Fling Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fling Death Chance"			"33.3"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
@@ -3198,12 +3462,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Fling Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -3212,18 +3478,21 @@
 
 			// The force of the Mutant Tank's ability.
 			// Note: This setting determines how powerful the force is.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Fling Force"				"300.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Fling Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -3251,6 +3520,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -3258,30 +3528,35 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -3291,28 +3566,39 @@
 			// Note: Damage = Bullet damage x Fragile bullet multiplier
 			// Example: Damage = 30.0 x 5.0 (150.0)
 			// Note: Use the value "1.0" to disable this setting. (Bullet damage x 1.0 = Bullet damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Fragile Bullet Multiplier"		"5.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fragile Chance"			"33.3"
 
-			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// The Mutant Tank's damage boost value when fragile.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
-			"Fragile Duration"			"5.0"
+			"Fragile Damage Boost"			"5.0"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 999999
+			"Fragile Duration"			"5"
 
 			// The explosive damage received by the Mutant Tank is multiplied by this value.
 			// Note: Damage = Explosive damage x Fragile explosive multiplier
 			// Example: Damage = 30.0 x 5.0 (150.0)
 			// Note: Use the value "1.0" to disable this setting. (Explosive damage x 1.0 = Explosive damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
@@ -3322,6 +3608,7 @@
 			// Note: Damage = Fire damage x Fragile fire multiplier
 			// Example: Damage = 30.0 x 3.0 (90.0)
 			// Note: Use the value "1.0" to disable this setting. (Fire damage x 1.0 = Fire damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
@@ -3331,10 +3618,29 @@
 			// Note: Damage = Melee damage x Fragile melee multiplier
 			// Example: Damage = 100.0 x 1.5 (150.0)
 			// Note: Use the value "1.0" to disable this setting. (Melee damage x 1.0 = Melee damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Fragile Melee Multiplier"		"1.5"
+
+			// The mode of the Mutant Tank's damage and speed boosts.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0:
+			// Mutant Tank's damage = Claw/rock damage + Fragile damage boost
+			// Mutant Tank's speed = Run speed + Fragile speed boost
+			// 1:
+			// Mutant Tank's damage = Fragile damage boost
+			// Mutant Tank's speed = Fragile speed boost
+			"Fragile Mode"				"0"
+
+			// The Mutant Tank's speed boost value when fragile.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 3.0
+			"Fragile Speed Boost"			"1.0"
 		}
 	}
 }
@@ -3347,12 +3653,15 @@
 {
 	"Tank #1"
 	{
-		// The Mutant Tank cloaks itself and disarms survivors.
+		// The Mutant Tank cloaks itself and nearby special infected, and disarms survivors.
 		// "Ability Enabled" - When a Mutant Tank spawns, it becomes invisible.
 		// - "Ghost Fade Alpha"
 		// - "Ghost Fade Delay"
 		// - "Ghost Fade Limit"
 		// - "Ghost Fade Rate"
+		// - "Ghost Specials"
+		// - "Ghost Specials Chance"
+		// - "Ghost Specials Range"
 		// "Ability Enabled" - When a survivor is within range of the Mutant Tank, the survivor is disarmed.
 		// - "Ghost Range"
 		// - "Ghost Range Chance"
@@ -3376,6 +3685,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -3383,26 +3693,30 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting does not apply to the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
@@ -3410,15 +3724,17 @@
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Ghost Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, the Mutant Tank can disarm survivors.
-			// 2: ON, the Mutant Tank can cloak itself.
+			// 2: ON, the Mutant Tank can cloak itself and nearby special infected.
 			// 3: ON, the Mutant Tank can do both.
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3432,6 +3748,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3445,6 +3762,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -3452,24 +3770,28 @@
 
 			// The amount of alpha to take from the Mutant Tank's alpha every X seconds until the limit set by the "Ghost Fade Limit" is reached.
 			// Note: The rate at which the Mutant Tank's alpha is reduced depends on the "Ghost Fade Rate" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0 (No effect)
 			// Maximum: 255 (Fully faded)
 			"Ghost Fade Alpha"			"2"
 
 			// The Mutant Tank's ghost fade effect starts all over after this many seconds passes upon reaching the limit set by the "Ghost Fade Limit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Ghost Fade Delay"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Ghost Fade Delay"			"5"
 
 			// The limit of the Mutant Tank's ghost fade effect.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0 (Fully faded)
 			// Maximum: 255 (No effect)
 			"Ghost Fade Limit"			"0"
 
 			// The rate of the Mutant Tank's ghost fade effect.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1 (Fastest)
 			// Maximum: 999999.0 (Slowest)
@@ -3477,12 +3799,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" to be on.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ghost Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -3490,18 +3814,43 @@
 			"Ghost Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Ghost Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ghost Range Chance"			"15.0"
 
+			// The Mutant Tank can cloak nearby special infected.
+			// Note: This setting needs "Ability Enabled" to be set to 2 or higher than 3.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ghost Specials"			"1"
+
+			// The Mutant Tank has this many chances out of 100.0% to cloak nearby special infected.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Ghost Specials Chance"			"33.3"
+
+			// The distance between a special infected and the Mutant Tank needed to cloak that special infected.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0 (Closest)
+			// Maximum: 999999.0 (Farthest)
+			"Ghost Specials Range"			"500.0"
+
 			// The Mutant Tank disarms the following weapon slots.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3538,6 +3887,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -3545,36 +3895,42 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -3582,10 +3938,11 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
+			// Minimum: 1
 			// Maximum: 999999.0
-			"God Duration"				"5.0"
+			"God Duration"				"5"
 		}
 	}
 }
@@ -3624,6 +3981,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -3631,19 +3989,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting does not apply to the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
@@ -3651,6 +4012,7 @@
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Gravity Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, the Mutant Tank can change survivors' gravity value.
@@ -3660,6 +4022,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3673,6 +4036,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3686,6 +4050,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -3693,12 +4058,14 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
+			// Minimum: 1
 			// Maximum: 999999.0
-			"Gravity Duration"			"5.0"
+			"Gravity Duration"			"5"
 
 			// The Mutant Tank's gravity force.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: -100.0
 			// Maximum: 100.0
@@ -3709,12 +4076,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" to be on.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Gravity Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -3722,18 +4091,21 @@
 			"Gravity Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Gravity Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Gravity Range Chance"			"15.0"
 
 			// The Mutant Tank sets the survivors' gravity to this value.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -3777,6 +4149,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -3784,26 +4157,30 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting does not apply to the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
@@ -3811,6 +4188,7 @@
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Heal Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, the Mutant Tank can give survivors temporary health.
@@ -3820,6 +4198,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3833,6 +4212,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -3846,18 +4226,21 @@
 			"Ability Message"			"0"
 
 			// The distance between an infected and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Heal Absorb Range"			"500.0"
 
 			// The amount of temporary health given to survivors.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 65535.0
 			"Heal Buffer"				"25.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -3865,12 +4248,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" to be on.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Heal Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -3878,24 +4263,28 @@
 			"Heal Hit Mode"				"0"
 
 			// The Mutant Tank receives health from nearby infected every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Heal Interval"				"5.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Heal Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Heal Range Chance"			"15.0"
 
 			// The Mutant Tank receives this much health from nearby common infected.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
@@ -3905,6 +4294,7 @@
 			"Health From Commons"			"50"
 
 			// The Mutant Tank receives this much health from other nearby special infected.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
@@ -3914,6 +4304,7 @@
 			"Health From Specials"			"100"
 
 			// The Mutant Tank receives this much health from other nearby Tanks.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
@@ -3957,6 +4348,7 @@
 			"Human Ability"				"0"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -3966,12 +4358,14 @@
 			// Note: Damage = Damage x Hit damage multiplier
 			// Example: Damage = 30.0 x 1.5 (45.0)
 			// Note: Use the value "1.0" to disable this setting. (Damage x 1.0 = Damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Hit Damage Multiplier"			"1.5"
 
 			// The only part of the Mutant Tank that can be damaged.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4022,6 +4416,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -4029,19 +4424,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Hurt Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -4049,6 +4447,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4062,6 +4461,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4074,31 +4474,36 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Hurt Chance"				"33.3"
 
 			// The Mutant Tank's pain inflictions do this much damage.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Hurt Damage"				"5.0"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Hurt Duration"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Hurt Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Hurt Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -4106,18 +4511,21 @@
 			"Hurt Hit Mode"				"0"
 
 			// The Mutant Tank hurts survivors every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Hurt Interval"				"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Hurt Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -4158,6 +4566,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -4165,19 +4574,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Hypno Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -4185,6 +4597,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4198,6 +4611,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4213,18 +4627,21 @@
 			// Note: Damage = Bullet damage/Hypno bullet divisor
 			// Example: Damage = 30.0/20.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Bullet damage/1.0 = Bullet damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Hypno Bullet Divisor"			"20.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Hypno Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -4234,6 +4651,7 @@
 			// Note: Damage = Explosive damage/Hypno explosive divisor
 			// Example: Damage = 30.0/20.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Explosive damage/1.0 = Explosive damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -4243,6 +4661,7 @@
 			// Note: Damage = Fire damage/Hypno fire divisor
 			// Example: Damage = 300.0/200.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Fire damage/1.0 = Fire damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -4250,12 +4669,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Hypno Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -4266,24 +4687,28 @@
 			// Note: Damage = Melee damage/Hypno melee divisor
 			// Example: Damage = 300.0/200.0 (1.5)
 			// Note: Use the value "1.0" to disable this setting. (Melee damage/1.0 = Melee damage)
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Hypno Melee Divisor"			"200.0"
 
 			// The mode of the Mutant Tank's hypno ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Hypnotized survivors hurt themselves.
 			// 1: Hypnotized survivors can hurt their teammates.
 			"Hypno Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Hypno Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -4324,6 +4749,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -4331,19 +4757,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Ice Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -4351,6 +4780,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4364,6 +4794,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4376,12 +4807,14 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Ice Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -4389,12 +4822,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ice Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -4402,12 +4837,14 @@
 			"Ice Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Ice Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -4448,6 +4885,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -4455,19 +4893,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Idle Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -4475,6 +4916,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4488,6 +4930,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4500,6 +4943,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -4507,12 +4951,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Idle Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -4520,12 +4966,14 @@
 			"Idle Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Idle Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -4566,6 +5014,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -4573,19 +5022,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Invert Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -4593,6 +5045,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4606,6 +5059,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4618,24 +5072,28 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Invert Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Invert Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Invert Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -4643,12 +5101,14 @@
 			"Invert Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Invert Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -4683,6 +5143,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -4690,24 +5151,28 @@
 			"Human Ability"				"0"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Item Chance"				"33.3"
 
 			// The Mutant Tank gives survivors this loadout.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Item limit: 5
 			// Character limit for each item: 64
@@ -4718,6 +5183,7 @@
 			"Item Loadout"				"rifle,pistol,firmt_aid_kit,pain_pills"
 
 			// The mode of the Mutant Tank's item ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Survivors get a random item.
 			// 1: Survivors get all items.
@@ -4763,6 +5229,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -4770,19 +5237,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting does not apply to the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
@@ -4790,6 +5260,7 @@
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Jump Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, the Mutant Tank can force survivors to jump uncontrollably.
@@ -4799,6 +5270,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4812,6 +5284,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4825,6 +5298,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -4832,12 +5306,14 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Jump Duration"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Jump Duration"				"5"
 
 			// The Mutant Tank and survivors jump this high off a surface.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -4845,12 +5321,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" to be on.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Jump Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -4858,24 +5336,28 @@
 			"Jump Hit Mode"				"0"
 
 			// The Mutant Tank jumps every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Jump Interval"				"1.0"
 
 			// The mode of the Mutant Tank's jumping ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: The Mutant Tank jumps periodically.
 			// 1: The Mutant Tank jumps sporadically.
 			"Jump Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Jump Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -4883,6 +5365,7 @@
 
 			// The Mutant Tank has this many chances out of 100.0% to jump sporadically.
 			// Note: This setting only applies if the "Jump Mode" setting is set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -4890,6 +5373,7 @@
 
 			// The Mutant Tank jumps this high up into the air.
 			// Note: This setting only applies if the "Jump Mode" setting is set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -4930,6 +5414,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -4938,6 +5423,7 @@
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Kamikaze Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -4945,6 +5431,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4958,6 +5445,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4970,6 +5458,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -4977,12 +5466,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Kamikaze Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -4990,12 +5481,14 @@
 			"Kamikaze Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Kamikaze Range"			"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -5036,6 +5529,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -5043,19 +5537,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Lag Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -5063,6 +5560,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -5076,6 +5574,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -5088,24 +5587,28 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Lag Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Lag Duration"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Lag Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Lag Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -5113,12 +5616,14 @@
 			"Lag Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Lag Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -5153,6 +5658,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -5160,60 +5666,70 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Laser Chance"				"33.3"
 
 			// The Mutant Tank's lasers do this much damage.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Laser Damage"				"5.0"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Laser Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Laser Duration"			"5"
 
 			// The Mutant Tank shoots lasers at survivors every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Laser Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
@@ -5254,6 +5770,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -5261,19 +5778,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Leech Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -5281,6 +5801,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -5294,6 +5815,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -5306,25 +5828,29 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Leech Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Leech Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Leech Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Leech Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -5332,18 +5858,21 @@
 			"Leech Hit Mode"			"0"
 
 			// The Mutant Tank leeches health off of survivors every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Leech Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Leech Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -5371,6 +5900,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -5378,32 +5908,37 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting does not apply to the upon-death ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, the Mutant Tank can heal nearby special infected upon death.
@@ -5412,6 +5947,7 @@
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -5424,12 +5960,14 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Medic Chance"				"33.3"
 
 			// The Mutant Tank gives special infected this much health each time.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
@@ -5447,6 +5985,7 @@
 			"Medic Health"				"25,25,25,25,25,25,25"
 
 			// The Mutant Tank heals nearby special infected every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -5454,6 +5993,7 @@
 
 			// The special infected's max health.
 			// Note: The Mutant Tank will not heal special infected if they already have this much health.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 65535
@@ -5468,6 +6008,7 @@
 			"Medic Max Health"			"250,50,250,100,325,600,8000"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
@@ -5502,6 +6043,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -5509,36 +6051,42 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -5546,6 +6094,7 @@
 
 			// The Mutant Tank's meteorites do this much damage.
 			// Note: This setting only applies if the "Meteor Mode" setting is set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
@@ -5553,18 +6102,21 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Meteor Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Meteor Duration"			"5"
 
 			// The mode of the Mutant Tank's meteor shower ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: The Mutant Tank's meteorites will explode and start fires.
 			// 1: The Mutant Tank's meteorites will explode and damage and push back nearby survivors.
 			"Meteor Mode"				"0"
 
 			// The radius of the Mutant Tank's meteor shower.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Minimum radius
 			// Minimum: -200.0
@@ -5597,6 +6149,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -5604,48 +6157,56 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The amount of minions the Mutant Tank can spawn.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
-			// Maximum: 25
+			// Maximum: 15
 			"Minion Amount"				"5"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Minion Chance"				"33.3"
 
 			// The Mutant Tank's minions are replaced with new ones when they die.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Minion Replace"			"1"
 
 			// The Mutant Tank spawns these minions.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -5683,6 +6244,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -5690,49 +6252,57 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Necro Chance"				"33.3"
 
 			// The distance between a special infected and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
@@ -5773,6 +6343,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -5780,19 +6351,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Nullify Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -5800,6 +6374,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -5813,6 +6388,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -5825,24 +6401,28 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Nullify Chance"			"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Nullify Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Nullify Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -5850,12 +6430,14 @@
 			"Nullify Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Nullify Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -5883,6 +6465,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -5890,54 +6473,63 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Omni Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Omni Duration"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Omni Duration"				"5"
 
 			// The mode of the Mutant Tank's omni ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: The Mutant Tank's type becomes the same as the nearby Mutant Tank's type.
 			// 1: The Mutant Tank physically transforms into the nearby Mutant Tank.
 			"Omni Mode"				"0"
 
 			// The distance between another Mutant Tank and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
@@ -5965,6 +6557,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -5972,49 +6565,57 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Panic Chance"				"33.3"
 
 			// The Mutant Tank starts a panic event every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -6055,6 +6656,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -6062,19 +6664,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Pimp Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -6082,6 +6687,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -6095,6 +6701,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -6107,31 +6714,36 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Pimp Chance"				"33.3"
 
 			// The Mutant Tank's pimp slaps do this much damage.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 999999
 			"Pimp Damage"				"5"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Pimp Duration"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Pimp Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Pimp Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -6139,18 +6751,21 @@
 			"Pimp Hit Mode"				"0"
 
 			// The Mutant Tank pimp slaps survivors every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Pimp Interval"				"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Pimp Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -6194,6 +6809,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -6201,19 +6817,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Puke Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -6221,6 +6840,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -6234,6 +6854,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -6246,6 +6867,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -6253,18 +6875,21 @@
 
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Puke Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Puke Death Chance"			"33.3"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
@@ -6272,12 +6897,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Puke Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -6285,12 +6912,14 @@
 			"Puke Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Puke Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -6318,6 +6947,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -6325,55 +6955,64 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Pyro Chance"				"33.3"
 
 			// The Mutant Tank's damage boost value when on fire.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
-			"Pyro Damage Boost"			"1.0"
+			"Pyro Damage Boost"			"5.0"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Pyro Duration"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Pyro Duration"				"5"
 
 			// The mode of the Mutant Tank's damage and speed boosts.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0:
 			// Mutant Tank's damage = Claw/rock damage + Pyro damage boost
@@ -6384,6 +7023,7 @@
 			"Pyro Mode"				"0"
 
 			// The Mutant Tank's speed boost value when on fire.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 3.0
@@ -6424,6 +7064,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -6431,19 +7072,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Quiet Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -6451,6 +7095,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -6464,6 +7109,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -6476,12 +7122,14 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Quiet Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -6489,12 +7137,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Quiet Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -6502,12 +7152,14 @@
 			"Quiet Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Quiet Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -6548,6 +7200,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -6555,19 +7208,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Recoil Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -6575,6 +7231,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -6588,6 +7245,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -6600,24 +7258,28 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Recoil Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Recoil Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Recoil Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -6625,12 +7287,14 @@
 			"Recoil Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Recoil Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -6658,6 +7322,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -6665,49 +7330,57 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Regen Chance"				"33.3"
 
 			// The Mutant Tank regenerates this much health each time.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
@@ -6717,12 +7390,14 @@
 			"Regen Health"				"1"
 
 			// The Mutant Tank regenerates health every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Regen Interval"			"1.0"
 
 			// The Mutant Tank stops regenerating health at this value.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 65535
@@ -6750,6 +7425,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -6757,18 +7433,21 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -6776,18 +7455,21 @@
 
 			// The Mutant Tank respawns up to this many times.
 			// Note: This setting only applies if the "Respawn Random" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 999999
 			"Respawn Amount"			"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Respawn Chance"			"33.3"
 
 			// The mode of the Mutant Tank's respawns.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: The Mutant Tank respawns as the same type.
 			// 1: The Mutant Tank respawns as the type used in the "Respawn Type" setting.
@@ -6795,6 +7477,7 @@
 			"Respawn Mode"				"0"
 
 			// The type that the Mutant Tank will respawn as.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-1000: ON, the type to respawn as.
@@ -6835,6 +7518,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -6842,19 +7526,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Restart Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -6862,6 +7549,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -6875,6 +7563,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -6887,18 +7576,21 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Restart Chance"			"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Restart Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -6906,6 +7598,7 @@
 			"Restart Hit Mode"			"0"
 
 			// The Mutant Tank makes survivors restart with this loadout.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Item limit: 5
 			// Character limit for each item: 64
@@ -6916,18 +7609,21 @@
 			"Restart Loadout"			"smg,pistol,pain_pills"
 
 			// The mode of the Mutant Tank's restart ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Survivors are teleported to the spawn area.
 			// 1: Survivors are teleported to another teammate.
 			"Restart Mode"				"1"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Restart Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -6955,6 +7651,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -6962,42 +7659,49 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Rock Chance"				"33.3"
 
 			// The Mutant Tank's rocks do this much damage.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 999999
@@ -7005,12 +7709,14 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Rock Duration"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Rock Duration"				"5"
 
 			// The radius of the Mutant Tank's rock shower.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Minimum radius
 			// Minimum: -5.0
@@ -7056,6 +7762,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -7063,19 +7770,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Rocket Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -7083,6 +7793,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7096,6 +7807,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7108,24 +7820,28 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Rocket Chance"				"33.3"
 
 			// The Mutant Tank sends survivors into space after this many seconds passes upon triggering the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Rocket Delay"				"1.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Rocket Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -7133,12 +7849,14 @@
 			"Rocket Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Rocket Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -7182,6 +7900,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -7189,19 +7908,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Shake Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -7209,6 +7931,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7222,6 +7945,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7234,6 +7958,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -7241,37 +7966,43 @@
 
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Shake Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shake Death Chance"			"33.3"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Shake Death Range"			"200.0"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Shake Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Shake Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Shake Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -7279,18 +8010,21 @@
 			"Shake Hit Mode"			"0"
 
 			// The Mutant Tank shakes survivors' screems every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Shake Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Shake Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -7325,6 +8059,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -7332,43 +8067,50 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -7376,6 +8118,7 @@
 
 			// These are the RGBA values of the Mutant Tank's shield prop's color.
 			// Note: Any value less than 0 will output a random color.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
@@ -7384,12 +8127,14 @@
 			"Shield Color"				"-1,-1,-1,-1"
 
 			// The Mutant Tank's shield reactivates after this many seconds passes upon destroying the shield.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Shield Delay"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Shield Delay"				"5"
 
 			// The type of the Mutant Tank's shield.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Bullet-based (Requires bullets to break shield.)
 			// 1: Blast-based (Requires explosives to break shield.)
@@ -7435,6 +8180,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -7442,19 +8188,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Shove Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -7462,6 +8211,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7475,6 +8225,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7487,6 +8238,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -7494,37 +8246,43 @@
 
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Shove Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Shove Death Chance"			"33.3"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Shove Death Range"			"200.0"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Shove Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Shove Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Shove Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -7532,18 +8290,21 @@
 			"Shove Hit Mode"			"0"
 
 			// The Mutant Tank shoves survivors every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Shove Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Shove Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -7584,6 +8345,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -7591,19 +8353,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Slow Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -7611,6 +8376,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7624,6 +8390,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7636,12 +8403,14 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Slow Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -7649,12 +8418,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Slow Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -7662,18 +8433,21 @@
 			"Slow Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Slow Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Slow Range Chance"			"15.0"
 
 			// The Mutant Tank sets the survivors' run speed to this value.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 0.99
@@ -7714,6 +8488,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -7721,19 +8496,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Smash Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -7741,6 +8519,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7754,6 +8533,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7766,6 +8546,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -7773,12 +8554,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Smash Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -7786,12 +8569,14 @@
 			"Smash Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Smash Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -7832,6 +8617,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -7839,19 +8625,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Smite Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -7859,6 +8648,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7872,6 +8662,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -7884,6 +8675,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -7891,12 +8683,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Smite Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -7904,12 +8698,14 @@
 			"Smite Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Smite Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -7937,6 +8733,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -7944,42 +8741,49 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Spam Chance"				"33.3"
 
 			// The Mutant Tank's rocks do this much damage.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 999999
@@ -7987,10 +8791,11 @@
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Spam Duration"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Spam Duration"				"5"
 		}
 	}
 }
@@ -8021,6 +8826,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -8028,61 +8834,71 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Splash Chance"				"33.3"
 
 			// The Mutant Tank's splashes do this much damage.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Splash Damage"				"5.0"
 
 			// The Mutant Tank deals splash damage to nearby survivors every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Splash Interval"			"5.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
@@ -8110,6 +8926,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -8117,18 +8934,21 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8143,6 +8963,7 @@
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8157,6 +8978,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank throws these cars.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8170,12 +8992,14 @@
 			"Throw Car Options"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Throw Chance"				"33.3"
 
 			// The Mutant Tank throws these special infected.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8221,6 +9045,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -8228,36 +9053,42 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Track Chance"				"33.3"
 
 			// The mode of the Mutant Tank's track ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: The Mutant Tank's rock will only start tracking when it is near a survivor.
 			// 1: The Mutant Tank's rock will track the nearest survivor.
@@ -8265,6 +9096,7 @@
 
 			// The Mutant Tank's track ability is this fast.
 			// Note: This setting only applies if the "Track Mode" setting is set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -8299,6 +9131,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -8306,60 +9139,70 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank can activate ultimate mode up to this many times.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 999999
 			"Ultimate Amount"			"1"
 
 			// The Mutant Tank's damage boost value during ultimate mode.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Ultimate Damage Boost"			"1.2"
 
 			// The Mutant Tank must deal this much damage to survivors to activate ultimate mode.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Ultimate Damage Required"		"200.0"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Ultimate Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Ultimate Duration"			"5"
 
 			// The Mutant Tank can activate ultimate mode when its health is equal to or below this value.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 65535
 			"Ultimate Health Limit"			"100"
 
 			// The Mutant Tank regenerates up to this much percentage of its original health upon activating ultimate mode.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 1.0 (Full health)
@@ -8387,6 +9230,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -8394,36 +9238,42 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank stays alive up to this many times.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 999999
 			"Undead Amount"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -8464,6 +9314,7 @@
 			"Human Ability"				"0"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -8471,18 +9322,21 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -8523,6 +9377,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -8530,19 +9385,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Vision Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -8550,6 +9408,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8563,6 +9422,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8575,18 +9435,21 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Vision Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Vision Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Vision Duration"			"5"
 
 			// The Mutant Tank sets survivors' fields of view to this value.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 160
@@ -8594,12 +9457,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Vision Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -8607,12 +9472,14 @@
 			"Vision Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Vision Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -8656,6 +9523,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -8663,26 +9531,30 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
 			// Note: This setting does not apply to the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
@@ -8690,6 +9562,7 @@
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Warp Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, the Mutant Tank can warp a survivor to a random teammate.
@@ -8699,6 +9572,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8712,6 +9586,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8725,6 +9600,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -8732,12 +9608,14 @@
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" to be on.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Warp Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -8745,24 +9623,28 @@
 			"Warp Hit Mode"				"0"
 
 			// The Mutant Tank warps to a random survivor every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Warp Interval"				"5.0"
 
 			// The mode of the Mutant Tank's warp ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: The Mutant Tank warps to a random survivor.
 			// 1: The Mutant Tank switches places with a random survivor.
 			"Warp Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Warp Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -8803,6 +9685,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -8810,19 +9693,22 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Whirl Hit" setting.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -8830,6 +9716,7 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8843,6 +9730,7 @@
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8855,6 +9743,7 @@
 			"Ability Message"			"0"
 
 			// The axis of the Mutant Tank's whirl effect.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -8868,25 +9757,29 @@
 			"Whirl Axis"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Whirl Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Whirl Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Whirl Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Whirl Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
@@ -8894,18 +9787,21 @@
 			"Whirl Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Whirl Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Whirl Range Chance"			"15.0"
 
 			// The Mutant Tank makes survivors whirl at this speed.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
@@ -8940,6 +9836,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -8947,48 +9844,56 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank converts this many common infected into Witch minions at once.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 25
 			"Witch Amount"				"3"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Witch Chance"				"33.3"
 
 			// The Mutant Tank's Witch minion causes this much damage per hit.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 999999
 			"Witch Damage"				"5"
 
 			// The distance between a common infected and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
@@ -9029,6 +9934,7 @@
 			"Human Ability"				"0"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -9036,18 +9942,21 @@
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -9055,6 +9964,7 @@
 
 			// The survivors' max health.
 			// Note: Survivors will not gain health if they already have this much health.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 65535
@@ -9089,6 +9999,7 @@
 			"Immunity Flags"			""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -9096,48 +10007,56 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Yell Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Yell Duration"				"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Yell Duration"				"5"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
@@ -9165,6 +10084,7 @@
 			"Access Flags"				""
 
 			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
@@ -9172,55 +10092,64 @@
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.0
-			// Maximum: 999999.0
-			"Human Cooldown"			"30.0"
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Human Duration"			"5.0"
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
 			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank spawns this many common infected at once.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
 			// Maximum: 100
 			"Zombie Amount"				"10"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Zombie Chance"				"33.3"
 
 			// The Mutant Tank spawns a zombie mob every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -9295,7 +10224,7 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
-		// Note: Admins can each have their own personalized/custom Mutant Tanks by using the same settings above in the "Tank Settings" sections.
+		// Note: Admins can each have their own personalized/custom Mutant Tanks by using the same settings above in the "Tank Settings" and "X Ability" sections.
 	}
 }
 ```
