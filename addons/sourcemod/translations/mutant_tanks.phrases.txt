@@ -1,4882 +1,5782 @@
 "Phrases"
 {
-	// MT Chat Color Placeholders:
+	// MT Chat Color Placeholders
+	// --
 	// "{default}" Normal - \x01
 	// "{mint}" Sky-green - \x03
 	// "{yellow}" Yellow-orange - \x04
 	// "{olive}" Yellow-green - \x05
+
 	"MTMenu"
 	{
 		"en"			"Mutant Tanks Menu"
 		"hu"			"Mutáns Tankok Menü"
 	}
+
 	"MTConfigMenu"
 	{
 		"en"			"Config Parser Menu"
 		"hu"			"Konfiguráció Elemző Menü"
 	}
+
 	"MTFavoriteMenu"
 	{
 		"en"			"Use your favorite Mutant Tank type?"
 		"hu"			"Használjuk a kedvenc Mutáns Tank típusodat?"
 	}
+
 	"MTInfoMenu"
 	{
 		"en"			"Mutant Tanks Information"
 		"hu"			"Mutáns Tankok Információ"
 	}
+
 	"MTListMenu"
 	{
 		"en"			"Mutant Tanks Abilities"
 		"hu"			"Mutáns Tank Képességek"
 	}
+
 	"MTVersionMenu"
 	{
 		"en"			"Mutant Tanks Version"
 		"hu"			"Mutáns Tank Verzió"
 	}
+
 	"Ammunition"
 	{
 		"en"			"Ammunition"
 		"hu"			"Lőszer"
 	}
+
 	"AbilityAmmo"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"Your main/special/upon-death ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
 		"hu"			"A képességednek{olive} {1}{mint}/{olive}{2}{mint} lőszere maradt."
 	}
+
 	"AbilityAmmo2"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"Your range ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
 		"hu"			"A távolsági képességednek{olive} {1}{mint}/{olive}{2}{mint} lőszere maradt."
 	}
+
 	"ButtonMode"
 	{
 		"en"			"Button Mode"
 		"hu"			"Gomb Mód"
 	}
+
 	"AbilityButtonMode1"
 	{
 		"en"			"Press button(s) to activate your abilit(y/ies)."
 		"hu"			"Nyomj gombo(kat)t hogy aktiváld a képesége(idet)det."
 	}
+
 	"AbilityButtonMode2"
 	{
 		"en"			"Hold button(s) down to use your abilit(y/ies)."
 		"hu"			"Tarts lenyomva gombo(kat) a képessége(ek)id használatához."
 	}
+
 	"Buttons"
 	{
 		"en"			"Button(s)"
 		"hu"			"Gomb(ok)"
 	}
+
 	"AbilityButtons"
 	{
 		"en"			"{yellow}+use (default: E}:{olive} Activate your main ability."
 		"hu"			"{yellow}+használat (alapért.: E}:{olive} Aktiválja a fő képességedet."
 	}
+
 	"AbilityButtons2"
 	{
 		"en"			"{yellow}+reload (default: R}:{olive} Activate your range ability."
 		"hu"			"{yellow}+újratöltés (alapért.: R}:{olive} Aktiválja a távolsági képességedet."
 	}
+
 	"AbilityButtons3"
 	{
 		"en"			"{yellow}+zoom (default: Mouse3/Scroll wheel}:{olive} Activate your special ability."
 		"hu"			"{yellow}+közelítés (alapért.: Egér3/Görgő}:{olive} Aktiválja a speciális képességedet."
 	}
+
 	"AbilityButtons4"
 	{
 		"en"			"{yellow}+duck (default: CTRL}:{olive} Activate your upon-death ability."
 		"hu"			"{yellow}+guggolás (alapért.: CTRL}:{olive} Aktiválja a halál utáni képességedet."
 	}
+
 	"Cooldown"
 	{
 		"en"			"Cooldown"
 		"hu"			"Újratöltés"
 	}
+
 	"AbilityCooldown"
 	{
 		"#format"		"{1:i}"
 		"en"			"Cooldown:{olive} {1} second(s)"
 		"hu"			"Újratöltés:{olive} {1} másodperc"
 	}
+
 	"Details"
 	{
 		"en"			"Details"
 		"hu"			"Részletek"
 	}
+
 	"Duration"
 	{
 		"en"			"Duration"
 		"hu"			"Élettartam"
 	}
+
 	"AbilityDuration"
 	{
 		"#format"		"{1:.2f}"
 		"en"			"Duration:{olive} {1} second(s)"
 		"hu"			"Élettartam:{olive} {1} másodperc"
 	}
+
 	"AbilityDuration2"
 	{
 		"#format"		"{1:i}"
 		"en"			"Duration:{olive} {1} second(s)"
 		"hu"			"Élettartam:{olive} {1} másodperc"
 	}
+
 	"HumanSupport"
 	{
 		"en"			"Human Support"
 		"hu"			"Emberi Támogatás"
 	}
+
 	"AbilityHumanSupport1"
 	{
 		"en"			"Enabled:{olive} No"
 		"hu"			"Engedélyezve:{olive} Nem"
 	}
+
 	"AbilityHumanSupport2"
 	{
 		"en"			"Enabled:{olive} Yes"
 		"hu"			"Engedélyezve:{olive} Igen"
 	}
+
 	"Status"
 	{
 		"en"			"Status"
 		"hu"			"Állapot"
 	}
+
 	"AbilityStatus1"
 	{
 		"en"			"Status:{olive} Disabled"
 		"hu"			"Állapot:{olive} Tiltva"
 	}
+
 	"AbilityStatus2"
 	{
 		"en"			"Status:{olive} Enabled"
 		"hu"			"Állapot:{olive} Engedélyezve"
 	}
+
 	"Arrival1"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{default} has appeared!"
 		"hu"			"{olive}{1}{default} megérkezett!"
 	}
+
 	"Arrival2"
 	{
 		"#format"		"{1:s}"
 		"en"			"Here comes{olive} {1}{default}!"
 		"hu"			"Itt jön a(z){olive} {1}{default}!"
 	}
+
 	"Arrival3"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{default} is ready to kill!"
 		"hu"			"{olive}{1}{default} készen áll gyilkolni!"
 	}
+
 	"Arrival4"
 	{
 		"#format"		"{1:s}"
 		"en"			"Are you ready to face{olive} {1}{default}?"
 		"hu"			"Készen állsz szembenézni a(z){olive} {1}{default}-al?"
 	}
+
 	"Arrival5"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{default} came for a challenge!"
 		"hu"			"{olive}{1}{default} kihívásra érkezett!"
 	}
+
 	"Arrival6"
 	{
 		"#format"		"{1:s}"
 		"en"			"Get ready!{olive} {1}{default} is coming!"
 		"hu"			"Állj készen!{olive} {1}{default} érkezik!"
 	}
+
 	"Arrival7"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{default} is here!"
 		"hu"			"{olive}{1}{default} itt van!"
 	}
+
 	"Arrival8"
 	{
 		"#format"		"{1:s}"
 		"en"			"Oh no!{olive} {1}{default} is nearing!"
 		"hu"			"Jaj ne!{olive} {1}{default} közeledik!"
 	}
+
 	"Arrival9"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{default} joined the game..."
 		"hu"			"{olive}{1}{default} csatlakozott a játékba..."
 	}
+
 	"Arrival10"
 	{
 		"#format"		"{1:s}"
 		"en"			"It seems{olive} {1}{default} is joining your company..."
 		"hu"			"Úgy látszik{olive} {1}{default} csatlakozik a társasághoz..."
 	}
+
 	"ChangeType"
 	{
 		"en"			"Your personal Mutant Tank type changed."
 		"hu"			"A személyes Mutáns Tank típusod megváltozott."
 	}
+
 	"Death1"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{default} is defeated!"
 		"hu"			"{olive}{1}{default} legyőzve!"
 	}
+
 	"Death2"
 	{
 		"#format"		"{1:s}"
 		"en"			"The survivors defeated{olive} {1}{default}!"
 		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!"
 	}
+
 	"Death3"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{default} goes to hell!"
 		"hu"			"{olive}{1}{default} elindult a pokolba!"
 	}
+
 	"Death4"
 	{
 		"#format"		"{1:s}"
 		"en"			"Is{olive} {1}{default} really dead...?"
 		"hu"			"A(z){olive} {1}{default} tényleg halott...?"
 	}
+
 	"Death5"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{default} lost the challenge against the survivors!"
 		"hu"			"{olive}{1}{default} elvesztette a kihívást a túlélőkkel szemben!"
 	}
+
 	"Death6"
 	{
 		"#format"		"{1:s}"
 		"en"			"The{olive} {1}{default} failed to kill the survivors!"
 		"hu"			"A(z){olive} {1}{default} elbukta a túlélők megölését!"
 	}
+
 	"Death7"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{default} has met their demise!"
 		"hu"			"{olive}{1}{default} találkozott a halállal!"
 	}
+
 	"Death8"
 	{
 		"#format"		"{1:s}"
 		"en"			"Yay!{olive} {1}{default} is dead!"
 		"hu"			"Éljen!{olive} {1}{default} halott!"
 	}
+
 	"Death9"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{default} left the game..."
 		"hu"			"{olive}{1}{default} elhagyta a játékot..."
 	}
+
 	"Death10"
 	{
 		"#format"		"{1:s}"
 		"en"			"It seems{olive} {1}{default} could not beat the survivors after all..."
 		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket..."
 	}
+
 	"Evolved"
 	{
 		"#format"		"{1:s},{2:s},{3:i}"
 		"en"			"{olive}{1}{mint} evolved into{olive} {2}{yellow} (Stage {3}){mint}!"
 		"hu"			"{olive}{1}{mint} tovább fejlődött{olive} {2}{yellow} (Stage {3}){mint}!"
 	}
+
 	"FavoriteUnused"
 	{
 		"en"			"You chose not to use your favorite Mutant Tank type."
 		"hu"			"Úgy döntöttél nem használod a kedvenc Mutáns Tank típusodat."
 	}
+
 	"GeneralDetails"
 	{
 		"en"			"Mutant Tanks makes fighting Tanks great again!"
 		"hu"			"A Mutáns Tankok újra izgalmassá teszik a küzdelmet!"
 	}
+
 	"HumanCooldown"
 	{
 		"#format"		"{1:i}"
 		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Tank type."
 		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Tankra váltasz."
 	}
+
 	"MultipleMatches"
 	{
 		"en"			"Multiple{olive} Tank types{mint} matched that name. Selecting a random match..."
 		"hu"			"Többféle{olive} Tank típushoz{mint} illik a név. Választunk véletlenszerűen..."
 	}
+
 	"NoCommandAccess"
 	{
 		"en"			"You do not have access to this command."
 		"hu"			"Nincs hozzáférésed ehhez a parancshoz."
 	}
+
 	"NoItems"
 	{
 		"en"			"There are no items available."
 		"hu"			"Nincsenek elérhető tételek."
 	}
+
 	"NoTypeAccess"
 	{
 		"en"			"You do not have access to this Mutant Tank type."
 		"hu"			"Nincs hozzáférésed ehhez a Mutáns Tank típushoz."
 	}
+
 	"NoNote"
 	{
 		"en"			"No note found for this Mutant Tank."
 		"hu"			"Nincs jegyzet ehhez a Szuper Tankhoz."
 	}
+
 	"OptionNo"
 	{
 		"en"			"No"
 		"hu"			"Nem"
 	}
+
 	"OptionYes"
 	{
 		"en"			"Yes"
 		"hu"			"Igen"
 	}
+
 	"Randomized"
 	{
 		"#format"		"{1:s},{2:s}"
 		"en"			"{olive}{1}{mint} randomized into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} randomizálva{olive} {2}{mint}!"
 	}
+
 	"RequestFailed"
 	{
 		"en"			"No{olive} Tank types{mint} matched that name. Request failed..."
 		"hu"			"Nem találtunk{olive} ilyen nevű Tank típust.{mint} Kérés sikertelen..."
 	}
+
 	"RequestSucceeded"
 	{
 		"en"			"{mint}One Tank type matched that name. Request succeeded..."
 		"hu"			"{mint}Találtunk ilyen nevű Tank típust. Kérés sikeres..."
 	}
+
 	"SpawnMessage"
 	{
 		"en"			"You spawned as a Mutant Tank! You can now use the following:"
 		"hu"			"Mutáns Tank lettél! Használhatod a következőket:"
 	}
+
 	"Transformed"
 	{
 		"#format"		"{1:s},{2:s}"
 		"en"			"{olive}{1}{mint} transformed into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} átalakult{olive} {2}{mint}!"
 	}
+
 	"Untransformed"
 	{
 		"#format"		"{1:s},{2:s}"
 		"en"			"{olive}{1}{mint} reverted back into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} visszaváltozott{olive} {2}{mint}!"
 	}
+
 	"SpawnManually"
 	{
 		"en"			"You will have to spawn manually."
 		"hu"			"Manuálisan kell megszületned."
 	}
+
 	"Absorb"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is temporarily absorbing most of your damage!"
 		"hu"			"{olive}{1}{mint} ideiglenesen elnyeli a sebzésed nagy részét!"
 	}
+
 	"Absorb2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is no longer absorbing most of your damage!"
 		"hu"			"{olive}{1}{mint} már nem nyeli el a sebzésed nagy részét!"
 	}
+
 	"AbsorbAmmo"
 	{
 		"en"			"You've used up all your absorption ability's ammo."
 		"hu"			"Elhasználtad az elnyelő képességed összes lőszerét."
 	}
+
 	"AbsorbDetails"
 	{
 		"en"			"You absorb most of the damage you receive."
 		"hu"			"Elnyeled a sebzések nagy részét amit kapsz."
 	}
+
 	"AbsorbHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your absorption ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik elnyelő képességedet!"
 	}
+
 	"AbsorbHuman2"
 	{
 		"en"			"Your absorption ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az elnyelő képességedet. Próbáld újra."
 	}
+
 	"AbsorbHuman3"
 	{
 		"en"			"You already activated your absorption ability."
 		"hu"			"Már aktiváltad az elnyelő képességedet."
 	}
+
 	"AbsorbHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your absorption ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az elnyelő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"AbsorbHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your absorption ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az elnyelő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"AbsorbMenu"
 	{
 		"en"			"Absorb Ability Information"
 		"hu"			"Elnyelő képesség információ"
 	}
+
 	"Acid"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} just created an acid puddle underneath{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} létrehozott egy savas pocsolyát{olive} {2}{mint}alatt!"
 	}
+
 	"Acid2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} rock created an acid puddle."
 		"hu"			"{olive}{1}{mint} sziklája létrehozott egy savas pocsolyát."
 	}
+
 	"AcidAmmo"
 	{
 		"en"			"You've used up all your acid range ability's ammo."
 		"hu"			"Elhasználtad a távolsági savas képességed összes lőszerét."
 	}
+
 	"AcidDetails"
 	{
 		"en"			"You create acid puddles."
 		"hu"			"Savas pocsolyákat hozol létre."
 	}
+
 	"AcidHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your acid range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági sav képességedet!"
 	}
+
 	"AcidHuman2"
 	{
 		"en"			"Your acid range ability failed to activate. Try again."
 		"hu"			"A távolsági sav képességed aktiválása nem sikerült. Próbáld újra"
 	}
+
 	"AcidHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your acid range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági sav képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"AcidHuman4"
 	{
 		"en"			"There are no survivors nearby to use your acid range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági sav képességedet."
 	}
+
 	"AcidHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your acid range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági sav képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"AcidMenu"
 	{
 		"en"			"Acid Ability Information"
 		"hu"			"Sav képesség információ"
 	}
+
 	"Aimless"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is preventing{olive} {2}{mint} from aiming!"
 		"hu"			"{olive}{1}{mint} akadályozza{olive} {2}{mint} a célzásban!"
 	}
+
 	"Aimless2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} can aim again!"
 		"hu"			"{olive}{1}{mint} újra tud célozni!"
 	}
+
 	"AimlessAmmo"
 	{
 		"en"			"You've used up all your aimless range ability's ammo."
 		"hu"			"Elhasználtad a céltalan képességed összes lőszerét."
 	}
+
 	"AimlessDetails"
 	{
 		"en"			"You prevent survivors from aiming."
 		"hu"			"Megakadályozod a túlélőket a célzásban."
 	}
+
 	"AimlessHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your aimless range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági céltalan képességed!"
 	}
+
 	"AimlessHuman2"
 	{
 		"en"			"Your aimless range ability failed to activate. Try again."
 		"hu"			"A távolsági céltalan képességed aktiválása nem sikerült. Próbáld újra."
 	}
+
 	"AimlessHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your aimless range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági céltalan képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"AimlessHuman4"
 	{
 		"en"			"There are no survivors nearby to use your aimless range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a céltalan távolsági képességedet."
 	}
+
 	"AimlessHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your aimless range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági céltalan képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"AimlessMenu"
 	{
 		"en"			"Aimless Ability Information"
 		"hu"			"Céltalan képesség információ"
 	}
+
 	"Ammo"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} took all of{olive} {2}'s{mint} ammunition!"
 		"hu"			"{olive}{1}{mint} elvette{olive} {2}{mint}-tól az összes lőszert!"
 	}
+
 	"AmmoAmmo"
 	{
 		"en"			"You've used up all your ammo range ability's ammo."
 		"hu"			"Elhasználtad az összes távolsági lőszer képességed lőszerét."
 	}
+
 	"AmmoDetails"
 	{
 		"en"			"You take away survivors' ammunition."
 		"hu"			"Elveszed a túlélők lőszerét."
 	}
+
 	"AmmoHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ammo range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lőszer képességedet!"
 	}
+
 	"AmmoHuman2"
 	{
 		"en"			"Your ammo range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lőszer képességedet. Próbáld újra."
 	}
+
 	"AmmoHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your ammo range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lőszer képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"AmmoHuman4"
 	{
 		"en"			"There are no survivors nearby to use your ammo range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági lőszer képességedet."
 	}
+
 	"AmmoHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your ammo range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lőszer képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"AmmoMenu"
 	{
 		"en"			"Ammo Ability Information"
 		"hu"			"Lőszer Képesség Információ"
 	}
+
 	"Blind"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} blinded{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} megvakította{olive} {2}{mint}!"
 	}
+
 	"Blind2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer blind!"
 		"hu"			"{olive}{1}{mint} többé már nem vak!"
 	}
+
 	"BlindAmmo"
 	{
 		"en"			"You've used up all your blind range ability's ammo."
 		"hu"			"Elhasználtad az összes távolsági vakító képességed lőszerét."
 	}
+
 	"BlindDetails"
 	{
 		"en"			"You blind survivors."
 		"hu"			"Megvakítod a túlélőket."
 	}
+
 	"BlindHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your blind range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági vakító képességedet!"
 	}
+
 	"BlindHuman2"
 	{
 		"en"			"Your blind range ability failed to activate. Try again."
 		"hu"			"A távolsági vakító képességed aktiválása nem sikerült. Próbáld újra."
 	}
+
 	"BlindHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your blind range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági vakító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"BlindHuman4"
 	{
 		"en"			"There are no survivors nearby to use your blind range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági vakító képességedet."
 	}
+
 	"BlindHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your blind range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági vakító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"BlindMenu"
 	{
 		"en"			"Blind Ability Information"
 		"hu"			"Távolsági Vakító Információ"
 	}
+
 	"Bomb"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} just created an explosion at{olive} {2}'s{mint} location!"
 		"hu"			"{olive}{1}{mint} létrehozott egy robbanást{olive} {2}{mint} helyzeténél!"
 	}
+
 	"Bomb2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} rock created an explosion."
 		"hu"			"{olive}{1}{mint} sziklája robbanást okozott."
 	}
+
 	"BombAmmo"
 	{
 		"en"			"You've used up all your bomb range ability's ammo."
 		"hu"			"Elhasználtad a távolsági robbantás képességed összes lőszerét."
 	}
+
 	"BombDetails"
 	{
 		"en"			"You create explosions."
 		"hu"			"Robbantásokat hozol létre."
 	}
+
 	"BombHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bomb range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági robbantás képességedet!"
 	}
+
 	"BombHuman2"
 	{
 		"en"			"Your bomb range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bomba képességedet. Próbáld újra."
 	}
+
 	"BombHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your bomb range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági bomba képességedet még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"BombHuman4"
 	{
 		"en"			"There are no survivors nearby to use your bomb range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági bomba képességedet."
 	}
+
 	"BombHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your bomb range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bomba képességed véget ért az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"BombMenu"
 	{
 		"en"			"Bomb Ability Information"
 		"hu"			"Bomba Képesség Információ"
 	}
+
 	"Bury"
 	{
 		"#format"		"{1:s},{2:N},{3:.2f}"
 		"en"			"{olive}{1}{mint} buried{olive} {2}{yellow} {3}{mint} feet into the ground!"
 		"hu"			"{olive}{1}{mint} eltemette{olive} {2}{yellow} {3}{mint} lábát a föld alá!"
 	}
+
 	"Bury2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer buried into the ground!"
 		"hu"			"{olive}{1}{mint} nincs többé eltemetve!"
 	}
+
 	"BuryAmmo"
 	{
 		"en"			"You've used up all your bury range ability's ammo."
 		"hu"			"Elhasználtad a távolsági eltemetés képességed összes lőszerét."
 	}
+
 	"BuryDetails"
 	{
 		"en"			"You bury survivors."
 		"hu"			"Eltemeted a túlélőket."
 	}
+
 	"BuryHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bury range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági eltemetés képességedet!"
 	}
+
 	"BuryHuman2"
 	{
 		"en"			"Your bury range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági eltemetés képességedet. Próbáld újra."
 	}
+
 	"BuryHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your bury range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági eltemetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"BuryHuman4"
 	{
 		"en"			"There are no survivors nearby to use your bury range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági eltemetés képességedet."
 	}
+
 	"BuryHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your bury range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági eltemető képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"BuryMenu"
 	{
 		"en"			"Bury Ability Information"
 		"hu"			"Eltemetés Képesség Információ"
 	}
+
 	"Car"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} started a{yellow} car shower{mint}!"
 		"hu"			"{olive}{1}{mint} autó záport{yellow} indított{mint}!"
 	}
+
 	"Car2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} car shower ended!"
 		"hu"			"{olive}{1}{mint} autó zápora véget ért!"
 	}
+
 	"CarAmmo"
 	{
 		"en"			"You've used up all your car showers."
 		"hu"			"Elhasználtad az összes autó záporod."
 	}
+
 	"CarDetails"
 	{
 		"en"			"You create car showers."
 		"hu"			"Autó záporokat hozol létre."
 	}
+
 	"CarHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your car showers!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik autó zápor képességedet!"
 	}
+
 	"CarHuman2"
 	{
 		"en"			"Your car shower failed to activate. Try again."
 		"hu"			"Nem sikerült autó záport létrehoznod. Próbáld újra."
 	}
+
 	"CarHuman3"
 	{
 		"en"			"You already activated your car shower."
 		"hu"			"Már létrehoztál egy autó záport."
 	}
+
 	"CarHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your car shower still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az autó záporodnak még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"CarHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your car shower ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az autó záporod véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"CarMenu"
 	{
 		"en"			"Car Ability Information"
 		"hu"			"Autó Képesség Információ"
 	}
+
 	"Choke"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is choking{olive} {2}{mint} in the air!"
 		"hu"			"{olive}{1}{mint} fojtogatja{olive} {2}{mint} -t a levegőben!"
 	}
+
 	"Choke2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer being choked in the air!"
 		"hu"			"{olive}{1}{mint} többé már nem fuldoklik a levegőben!"
 	}
+
 	"ChokeAmmo"
 	{
 		"en"			"You've used up all your choke range ability's ammo."
 		"hu"			"Elhasználtad a távolsági fojtogatás képességed összes lőszerét."
 	}
+
 	"ChokeDetails"
 	{
 		"en"			"You choke survivors in midair."
 		"hu"			"A levegőben fojtogatod a túlélőket."
 	}
+
 	"ChokeHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your choke range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági fojtogatás képességedet!"
 	}
+
 	"ChokeHuman2"
 	{
 		"en"			"Your choke range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági fojtogatás képességedet. Próbáld újra."
 	}
+
 	"ChokeHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your choke range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági fojtogatás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"ChokeHuman4"
 	{
 		"en"			"There are no survivors nearby to use your choke range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági fojtogatás képességedet."
 	}
+
 	"ChokeHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your choke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági fojtogató képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"ChokeMenu"
 	{
 		"en"			"Choke Ability Information"
 		"hu"			"Fojtogató Képesség Információ"
 	}
+
 	"Clone"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} created a clone of itself!"
 		"hu"			"{olive}{1}{mint} klónozta magát!"
 	}
+
 	"CloneAmmo"
 	{
 		"en"			"You've used up all your clones."
 		"hu"			"Elhasználtad az összes klónodat."
 	}
+
 	"CloneDetails"
 	{
 		"en"			"You create clones of yourself."
 		"hu"			"Klónozni tudod önmagad."
 	}
+
 	"CloneHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You created{olive} {1}{mint}/{olive}{2}{mint} clones!"
 		"hu"			"Létrehoztál{olive} {1}{mint}/{olive}{2}{mint} klónt!"
 	}
+
 	"CloneHuman2"
 	{
 		"en"			"You failed to create a clone. Try again."
 		"hu"			"Nem sikerült klónt létrehozni. Próbáld újra."
 	}
+
 	"CloneHuman3"
 	{
 		"en"			"You cannot create clones as a clone."
 		"hu"			"Nem tudod klónozni magad klónként."
 	}
+
 	"CloneHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your clone ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A klónozó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"CloneHuman5"
 	{
 		"en"			"One of your clones just died."
 		"hu"			"Az egyik klónod meghalt."
 	}
+
 	"CloneHuman6"
 	{
 		"#format"		"{1:i}"
 		"en"			"All your clones died and your clone ability needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az összes klónod meghalt, a klón képességed újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"CloneMenu"
 	{
 		"en"			"Clone Ability Information"
 		"hu"			"Klón Képesség Információ"
 	}
+
 	"Cloud"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is emitting clouds of smoke!"
 		"hu"			"{olive}{1}{mint} füstfelhőt bocsát ki!"
 	}
+
 	"Cloud2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} stopped emitting clouds of smoke!"
 		"hu"			"{olive}{1}{mint} már nem bocsát ki füstfelhőt!"
 	}
+
 	"CloudAmmo"
 	{
 		"en"			"You've used up all your cloud ability's ammo."
 		"hu"			"Elhasználtad a felhő képességed összes lőszerét."
 	}
+
 	"CloudDetails"
 	{
 		"en"			"You constantly emit clouds of smoke that damage survivors caught in them."
 		"hu"			"Folyamatosan füstfelhőt bocsátasz ki, ami sebzi a túlélőket."
 	}
+
 	"CloudHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your cloud ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik felhő képességedet!"
 	}
+
 	"CloudHuman2"
 	{
 		"en"			"Your cloud ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a felhő képességedet. Próbáld újra."
 	}
+
 	"CloudHuman3"
 	{
 		"en"			"You already activated your cloud ability."
 		"hu"			"Már aktiváltad a felhő képességedet."
 	}
+
 	"CloudHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your cloud ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A felhő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"CloudHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your cloud ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A felhő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"CloudMenu"
 	{
 		"en"			"Cloud Ability Information"
 		"hu"			"Felhő Képesség Információ"
 	}
+
 	"Drop"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} dropped a gun!"
 		"hu"			"{olive}{1}{mint} dobott egy fegyvert!"
 	}
+
 	"Drop2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} dropped a melee weapon!"
 		"hu"			"{olive}{1}{mint} dobott egy közelharci fegyvert!"
 	}
+
 	"DropDetails"
 	{
 		"en"			"You drop a weapon upon death."
 		"hu"			"Fegyvert dobsz a halálod után."
 	}
+
 	"DropHuman"
 	{
 		"en"			"You will drop a weapon when you die!"
 		"hu"			"Fegyvert dobsz miután meghalsz!"
 	}
+
 	"DropHuman2"
 	{
 		"en"			"You will already drop a weapon upon death."
 		"hu"			"Azonnal fegyvert dobsz a halálod után."
 	}
+
 	"DropMenu"
 	{
 		"en"			"Drop Ability Information"
 		"hu"			"Dobás Képesség Információ"
 	}
+
 	"Drug"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} drugged{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} bedrogozta{olive} {2}{mint}-t!"
 	}
+
 	"Drug2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer drugged!"
 		"hu"			"{olive}{1}{mint} többé már nincs bedrogozva!"
 	}
+
 	"DrugAmmo"
 	{
 		"en"			"You've used up all your drug range ability's ammo."
 		"hu"			"Elhasználtad a távolsági bedrogozás képességed összes lőszerét."
 	}
+
 	"DrugDetails"
 	{
 		"en"			"You drug survivors."
 		"hu"			"Bedrogozod a túlélőket."
 	}
+
 	"DrugHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drug range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági bedrogozás képességedet!"
 	}
+
 	"DrugHuman2"
 	{
 		"en"			"Your drug range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bedrogozás képességedet. Próbáld újra."
 	}
+
 	"DrugHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your drug range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági bedrogozás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"DrugHuman4"
 	{
 		"en"			"There are no survivors nearby to use your drug range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági bedrogozás képességedet."
 	}
+
 	"DrugHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your drug range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bedrogozás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"DrugMenu"
 	{
 		"en"			"Drug Ability Information"
 		"hu"			"Bedrogozás Képesség Információ"
 	}
+
 	"Drunk"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} made{olive} {2}{mint} drunk!"
 		"hu"			"{olive}{1}{mint} részeggé tette{olive} {2}{mint} -t!"
 	}
+
 	"Drunk2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer drunk!"
 		"hu"			"{olive}{1}{mint} többé már nem részeg!"
 	}
+
 	"DrunkAmmo"
 	{
 		"en"			"You've used up all your drunk range ability's ammo."
 		"hu"			"Elhasználtad a távolsági részegítő képességed összes lőszerét."
 	}
+
 	"DrunkDetails"
 	{
 		"en"			"You make survivors drunk."
 		"hu"			"Részeggé teszed a túlélőket."
 	}
+
 	"DrunkHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drunk range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági részegítő képességedet!"
 	}
+
 	"DrunkHuman2"
 	{
 		"en"			"Your drunk range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági részegítő képességedet. Próbáld újra."
 	}
+
 	"DrunkHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your drunk range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági részegítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"DrunkHuman4"
 	{
 		"en"			"There are no survivors nearby to use your drunk range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági részegítő képességedet."
 	}
+
 	"DrunkHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your drunk range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági részegítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"DrunkMenu"
 	{
 		"en"			"Drunk Ability Information"
 		"hu"			"Részeg Képesség Információ"
 	}
+
 	"Electric"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is electrocuting{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} megrázta{olive} {2}{mint}-t!"
 	}
+
 	"Electric2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer being electrocuted!"
 		"hu"			"{olive}{1}{mint} többé már nincs megrázva!"
 	}
+
 	"ElectricAmmo"
 	{
 		"en"			"You've used up all your electric range ability's ammo."
 		"hu"			"Elhasználtad a távolsági elektromos képességed összes lőszerét."
 	}
+
 	"ElectricDetails"
 	{
 		"en"			"You electrocute survivors."
 		"hu"			"Megrázod a túlélőket."
 	}
+
 	"ElectricHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your electric range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági elektromos képességedet!"
 	}
+
 	"ElectricHuman2"
 	{
 		"en"			"Your electric range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági elektromos képességedet. Próbáld újra."
 	}
+
 	"ElectricHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your electric range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági elektromos képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"ElectricHuman4"
 	{
 		"en"			"There are no survivors nearby to use your electric range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági elektromos képességedet."
 	}
+
 	"ElectricHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your electric range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági elektromos képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"ElectricMenu"
 	{
 		"en"			"Electric Ability Information"
 		"hu"			"Elektromos Képesség Információ"
 	}
+
 	"Enforce"
 	{
 		"#format"		"{1:s},{2:N},{3:s}"
 		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to only use their weapon slot{yellow} #{3}{mint}!"
 		"hu"			"{olive}{1}{mint} kényszeríti{olive} {2}{mint} hogy csak a{yellow} #{3} slottot használja{mint}!"
 	}
+
 	"Enforce2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} can use all weapon slots again!"
 		"hu"			"{olive}{1}{mint} újra használhatja minden fegyverét!"
 	}
+
 	"EnforceAmmo"
 	{
 		"en"			"You've used up all your enforce range ability's ammo."
 		"hu"			"Elhasználtad a távolsági kényszerítő képességed összes lőszerét."
 	}
+
 	"EnforceDetails"
 	{
 		"en"			"You force survivors to only use a certain weapon slot."
 		"hu"			"Kényszeríted a túlélőket hogy csak bizonyos fegyvereket használhassanak."
 	}
+
 	"EnforceHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your enforce range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági kényszerítő képességedet!"
 	}
+
 	"EnforceHuman2"
 	{
 		"en"			"Your enforce range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági kényszerítő képességedet. Próbáld újra."
 	}
+
 	"EnforceHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your enforce range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági kényszerítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"EnforceHuman4"
 	{
 		"en"			"There are no survivors nearby to use your enforce range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági kényszerítő képességedet."
 	}
+
 	"EnforceHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your enforce range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági kényszerítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"EnforceMenu"
 	{
 		"en"			"Enforce Ability Information"
 		"hu"			"Kényszerítő Képesség Információ"
 	}
+
 	"Fast"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} special speed activated!"
 		"hu"			"{olive}{1}{mint} speciális sebessége aktiválva!"
 	}
+
 	"Fast2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} special speed deactivated!"
 		"hu"			"{olive}{1}{mint} speciális sebessége deaktiválva!"
 	}
+
 	"FastAmmo"
 	{
 		"en"			"You've used up all your fast ability's ammo."
 		"hu"			"Elhasználtad a gyorsaság képességed összes lőszerét."
 	}
+
 	"FastDetails"
 	{
 		"en"			"You run really fast like the Flash."
 		"hu"			"Olyan gyorsan futsz mint Flash."
 	}
+
 	"FastHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fast ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gyorsaság képességedet!"
 	}
+
 	"FastHuman2"
 	{
 		"en"			"Your fast ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a gyorsaság képességedet. Próbáld újra!"
 	}
+
 	"FastHuman3"
 	{
 		"en"			"You already activated your fast ability."
 		"hu"			"Már aktiváltad a gyorsaság képességedet."
 	}
+
 	"FastHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fast ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A gyorsaság képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"FastHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fast ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A gyorsaság képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"FastMenu"
 	{
 		"en"			"Fast Ability Information"
 		"hu"			"Gyorsaság Képesség Információ"
 	}
+
 	"Fire"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} just created a fire underneath{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} tüzet okozott{olive} {2}{mint}alatt!"
 	}
+
 	"Fire2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} rock created a fire."
 		"hu"			"{olive}{1}{mint} sziklája tüzet okozott."
 	}
+
 	"FireAmmo"
 	{
 		"en"			"You've used up all your fire range ability's ammo."
 		"hu"			"Elhasználtad a távolsági tűz képességed összes lőszerét."
 	}
+
 	"FireDetails"
 	{
 		"en"			"You create fires."
 		"hu"			"Tüzet okozol."
 	}
+
 	"FireHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fire range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági tűz képességedet!"
 	}
+
 	"FireHuman2"
 	{
 		"en"			"Your fire range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági tűz képességedet. Próbáld újra."
 	}
+
 	"FireHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fire range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági tűz képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"FireHuman4"
 	{
 		"en"			"There are no survivors nearby to use your fire range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági tűz képességedet."
 	}
+
 	"FireHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fire range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági tűz képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"FireMenu"
 	{
 		"en"			"Fire Ability Information"
 		"hu"			"Tűz Képesség Információ"
 	}
+
 	"Fling"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} flung{olive} {2}{mint} into the air!"
 		"hu"			"{olive}{1}{mint} feldobta{olive} {2}{mint} -t a levegőbe!"
 	}
+
 	"FlingAmmo"
 	{
 		"en"			"You've used up all your fling range ability's ammo."
 		"hu"			"Elhasználtad a távolsági dobás képességed összes lőszerét."
 	}
+
 	"FlingDetails"
 	{
 		"en"			"You fling survivors high into the air."
 		"hu"			"Magasba dobod a túlélőket."
 	}
+
 	"FlingHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fling range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági dobás képességedet!"
 	}
+
 	"FlingHuman2"
 	{
 		"en"			"Your fling range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági dobás képességedet. Próbáld újra."
 	}
+
 	"FlingHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fling range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági dobás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"FlingHuman4"
 	{
 		"en"			"There are no survivors nearby to use your fling range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági dobás képességedet."
 	}
+
 	"FlingHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fling range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági dobás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"FlingMenu"
 	{
 		"en"			"Fling Ability Information"
 		"hu"			"Dobás Képesség Információ"
 	}
+
 	"Fragile"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is temporarily fragile to damage but can deal more damage and run faster!"
 		"hu"			"{olive}{1}{mint} ideiglenesen érzékeny a sebzésre, de többet sebez és gyorsabban fut!"
 	}
+
 	"Fragile2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is no longer fragile to damage!"
 		"hu"			"{olive}{1}{mint} már nem érzékeny a sebzésre"
 	}
+
 	"FragileAmmo"
 	{
 		"en"			"You've used up all your fragility ability's ammo."
 		"hu"			"Elhasználtad a sebzés érzékenység képességed összes lőszerét."
 	}
+
 	"FragileDetails"
 	{
 		"en"			"You take more damage while dealing more damage and running faster."
 		"hu"			"Több sebzést szenvedsz el de közben többet sebzel és gyorsabban futsz."
 	}
+
 	"FragileHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fragility ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik sebzés érzékeny képességedet!"
 	}
+
 	"FragileHuman2"
 	{
 		"en"			"Your fragility ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a sebzés érzékeny képességedet. Próbáld újra."
 	}
+
 	"FragileHuman3"
 	{
 		"en"			"You already activated your fragility ability."
 		"hu"			"Már aktiváltad a sebzés érzékeny képességedet."
 	}
+
 	"FragileHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fragility ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A sebzés érzékeny képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"FragileHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fragility ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A sebzés érzékeny képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"FragileMenu"
 	{
 		"en"			"Fragile Ability Information"
 		"hu"			"Érzékeny Képesség Információ"
 	}
+
 	"Ghost"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} disarmed{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lefegyverezte{olive} {2}{mint}-t!"
 	}
+
 	"Ghost2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is cloaking itself!"
 		"hu"			"{olive}{1}{mint} álcázza magát!"
 	}
+
 	"Ghost3"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is visible again!"
 		"hu"			"{olive}{1}{mint} újra látható!"
 	}
+
 	"GhostAmmo"
 	{
 		"en"			"You've used up all your cloaking ability's ammo."
 		"hu"		    "Elhasználtad az álcázó képességed összes lőszerét."
 	}
+
 	"GhostAmmo2"
 	{
 		"en"			"You've used up all your disarming range ability's ammo."
 		"hu"			"Elhasználtad a távolsági lefegyverző képességed összes lőszerét."
 	}
+
 	"GhostDetails"
 	{
 		"en"			"You cloak yourself and disarm survivors."
 		"hu"			"Álcázod magad és lefegyverzed a túlélőket."
 	}
+
 	"GhostHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your cloaking ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik álcázó képességedet!"
 	}
+
 	"GhostHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your disarming range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lefegyverző képességedet!"
 	}
+
 	"GhostHuman3"
 	{
 		"en"			"Your disarming range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lefegyverző képességedet. Próbáld újra."
 	}
+
 	"GhostHuman4"
 	{
 		"en"			"You already activated your cloaking ability."
 		"hu"			"Már aktiváltad az álcázó képességedet."
 	}
+
 	"GhostHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your cloaking ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az álcázó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"GhostHuman6"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your disarming range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lefegyverző képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"GhostHuman7"
 	{
 		"en"			"There are no survivors nearby to use your disarming range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági lefegyverző képességedet."
 	}
+
 	"GhostHuman8"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your cloaking ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az álcázó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"GhostHuman9"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your disarming range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lefegyverző képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"GhostMenu"
 	{
 		"en"			"Ghost Ability Information"
 		"hu"			"Szellem Képesség Információ"
 	}
+
 	"God"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is temporarily invincible!"
 		"hu"			"{olive}{1}{mint} ideiglenesen legyőzhetetlen!"
 	}
+
 	"God2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is no longer invincible!"
 		"hu"			"{olive}{1}{mint} többé már nem legyőzhetetlen!"
 	}
+
 	"GodAmmo"
 	{
 		"en"			"You've used up all your godlike ability's ammo."
 		"hu"			"Elhasználtad az isteni képességed összes lőszerét."
 	}
+
 	"GodDetails"
 	{
 		"en"			"You gain temporary immunity to all types of damage."
 		"hu"			"Ideiglenesen védett vagy az összes fajta sebzés ellen."
 	}
+
 	"GodHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your godlike ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik isteni képességedet!"
 	}
+
 	"GodHuman2"
 	{
 		"en"			"Your godlike ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az isteni képességedet. Próbáld újra."
 	}
+
 	"GodHuman3"
 	{
 		"en"			"You already activated your godlike ability."
 		"hu"			"Már aktiváltad az isteni képességedet."
 	}
+
 	"GodHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your godlike ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az isteni képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"GodHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your godlike ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az isteni képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"GodMenu"
 	{
 		"en"			"God Ability Information"
 		"hu"			"Isteni Képesség Információ"
 	}
+
 	"Gravity"
 	{
 		"#format"		"{1:s},{2:N},{3:.2f}"
 		"en"			"{olive}{1}{mint} changed{olive} {2}'s{mint} gravity to{yellow} {3}{mint}!"
 		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} gravitációját{yellow} {3}{mint}!"
 	}
+
 	"Gravity2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}'s{mint} gravity is back to normal!"
 		"hu"			"{olive}{1}{mint} gravitációja újra normális!"
 	}
+
 	"Gravity3"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} created a gravitational pull!"
 		"hu"			"{olive}{1}{mint} gravitációs vonzást hozott létre!"
 	}
+
 	"Gravity4"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint}'s gravitational pull ended!"
 		"hu"			"{olive}{1}{mint}gravitációs vonzása véget ért!"
 	}
+
 	"GravityAmmo"
 	{
 		"en"			"You've used up all your gravitational pull ability's ammo."
 		"hu"			"Elhasználtad a gravitációs vonzásod összes lőszerét."
 	}
+
 	"GravityAmmo2"
 	{
 		"en"			"You've used up all your low gravity range ability's ammo."
 		"hu"			"Elhasználtad a távolsági alacsony gravitáció képességed összes lőszerét."
 	}
+
 	"GravityDetails"
 	{
 		"en"			"You pull in or push away survivors and any other nearby infected, and change the survivors' gravity."
 		"hu"			"Eltolsz vagy magadhoz húzol mindenkit, és megváltoztatod a túlélők gravitációját."
 	}
+
 	"GravityHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your gravitational pull ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gravitációs vonzás képességedet!"
 	}
+
 	"GravityHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your low gravity range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági alacsony gravitáció képességedet!"
 	}
+
 	"GravityHuman3"
 	{
 		"en"			"Your low gravity range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági alacsony gravitáció képességedet. Próbáld újra."
 	}
+
 	"GravityHuman4"
 	{
 		"en"			"You already activated your gravitational pull ability."
 		"hu"			"Már aktiváltad a gravitációs vonzás képességedet."
 	}
+
 	"GravityHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your gravitational pull ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A gravitációs vonzás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"GravityHuman6"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your low gravity range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági alacsony gravitációs képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"GravityHuman7"
 	{
 		"en"			"There are no survivors nearby to use your low gravity range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági alacsony gravitáció képességedet."
 	}
+
 	"GravityHuman8"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your gravitational pull ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A gravitációs vonzás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"GravityHuman9"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your low gravity range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az alacsony gravitációs képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"GravityMenu"
 	{
 		"en"			"Gravity Ability Information"
 		"hu"			"Gravitációs Képesség Információ"
 	}
+
 	"Heal"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} set{olive} {2}{mint} to temporary health who will die when their HP reaches 0!"
 		"hu"			"{olive}{1}{mint} átállította{olive} {2}{mint} életerejét ideiglenesre, aki meghal amint eléri a 0-át!"
 	}
+
 	"Heal2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is absorbing health from nearby infected!"
 		"hu"			"{olive}{1}{mint} épp elnyeli az életerőt a közelben lévő fertőzőtektől!"
 	}
+
 	"Heal3"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is no longer absorbing health from nearby infected!"
 		"hu"			"{olive}{1}{mint} már nem nyeli az életerőt a közelben lévő fertőzőtektől!"
 	}
+
 	"HealAmmo"
 	{
 		"en"			"You've used up all your healing ability's ammo."
 		"hu"			"Elhasználtad a gyógyító képességed összes lőszerét."
 	}
+
 	"HealAmmo2"
 	{
 		"en"			"You've used up all your bad-health range ability's ammo."
 		"hu"			"Elhasználtad a távolsági rossz-életerő képességed összes lőszerét."
 	}
+
 	"HealDetails"
 	{
 		"en"			"You gain health from other nearby infected and set survivors to temporary health who will die when they reach 0 HP."
 		"hu"			"Életerőt nyelsz el a közelben lévő fertőzöttektől és ideiglenes életerőre állítod a túlélőket, akik meghalnak ha elérik a 0-át."
 	}
+
 	"HealHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your healing ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gyógyító képességedet!"
 	}
+
 	"HealHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bad-health range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rossz-életerő képességedet!"
 	}
+
 	"HealHuman3"
 	{
 		"en"			"Your bad-health range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rossz-életerő képességedet. Próbáld újra."
 	}
+
 	"HealHuman4"
 	{
 		"en"			"You already activated your healing ability."
 		"hu"			"Már aktiváltad a gyógyító képességedet."
 	}
+
 	"HealHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your healing ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A gyógyító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"HealHuman6"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your bad-health range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági rossz-életerő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"HealHuman7"
 	{
 		"en"			"There are no survivors nearby to use your bad-health range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági rossz-életerő képességedet."
 	}
+
 	"HealHuman8"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your healing ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A gyógyító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"HealHuman9"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your bad-health range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági rossz-életerő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"HealMenu"
 	{
 		"en"			"Heal Ability Information"
 		"hu"			"Gyógyító Képesség Információ"
 	}
+
 	"HitDetails"
 	{
 		"en"			"You only take damage on certain parts of your body."
 		"hu"			"Csak a tested bizonyos pontjain vagy sebezhető."
 	}
+
 	"HitMenu"
 	{
 		"en"			"Hit Ability Information"
 		"hu"			"Ütő Képesség Információ"
 	}
+
 	"Hurt"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is hurting{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} bántja{olive} {2}{mint}-t!"
 	}
+
 	"Hurt2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer hurting!"
 		"hu"			"{olive}{1}{mint} többé már nincs bántalmazás alatt!"
 	}
+
 	"HurtAmmo"
 	{
 		"en"			"You've used up all your hurt range ability's ammo."
 		"hu"			"Elhasználtad a távolsági bántalmazás képességed összes lőszerét."
 	}
+
 	"HurtDetails"
 	{
 		"en"			"You repeatedly hurt survivors."
 		"hu"			"Többször bántalmazod a túlélőket."
 	}
+
 	"HurtHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hurt range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági bántalmazó képességedet!"
 	}
+
 	"HurtHuman2"
 	{
 		"en"			"Your hurt range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bántalmazó képességedet. Próbáld újra."
 	}
+
 	"HurtHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your hurt range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági bántalmazó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"HurtHuman4"
 	{
 		"en"			"There are no survivors nearby to use your hurt range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági bántalmazó képességedet."
 	}
+
 	"HurtHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your hurt range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bántalmazó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"HurtMenu"
 	{
 		"en"			"Hurt Ability Information"
 		"hu"			"Bántalmazó Képesség Információ"
 	}
+
 	"Hypno"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} hypnotized{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} hipnotizálja{olive} {2}{mint}-t!"
 	}
+
 	"Hypno2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer hypnotized!"
 		"hu"			"{olive}{1}{mint} többé már nincs hipnotizálva!"
 	}
+
 	"HypnoAmmo"
 	{
 		"en"			"You've used up all your hypno range ability's ammo."
 		"hu"			"Elhasználtad a távolsági hipnotizáló képességed összes lőszerét."
 	}
+
 	"HypnoDetails"
 	{
 		"en"			"You hypnotize survivors to damage themselves or their teammates."
 		"hu"			"Hipnotizálod a túlélőket hogy sebezzék magukat vagy a társaikat."
 	}
+
 	"HypnoHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hypno range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hipnotizáló képességedet!"
 	}
+
 	"HypnoHuman2"
 	{
 		"en"			"Your hypno range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági hipnotizálás képességedet. Próbáld újra."
 	}
+
 	"HypnoHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your hypno range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági hipnotizálás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"HypnoHuman4"
 	{
 		"en"			"There are no survivors nearby to use your hypno range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági hipnotizálás képességedet."
 	}
+
 	"HypnoHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your hypno range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági hipnotizálás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"HypnoMenu"
 	{
 		"en"			"Hypno Ability Information"
 		"hu"			"Hipnotizáló Képesség Információ"
 	}
+
 	"Ice"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} froze{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lefagyasztotta{olive} {2}{mint}-t!"
 	}
+
 	"Ice2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is unfrozen!"
 		"hu"			"{olive}{1}{mint} felolvasztva!"
 	}
+
 	"IceAmmo"
 	{
 		"en"			"You've used up all your ice range ability's ammo."
 		"hu"			"Elhasználtad a távolsági fagyasztás képességed összes lőszerét."
 	}
+
 	"IceDetails"
 	{
 		"en"			"You freeze survivors."
 		"hu"			"Lefagyasztod a túlélőket."
 	}
+
 	"IceHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ice range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági fagyasztás képességedet!"
 	}
+
 	"IceHuman2"
 	{
 		"en"			"Your ice range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági fagyasztás képességedet. Próbáld újra."
 	}
+
 	"IceHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your ice range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági fagyasztás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"IceHuman4"
 	{
 		"en"			"There are no survivors nearby to use your ice range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági fagyasztás képességedet."
 	}
+
 	"IceHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your ice range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági fagyasztás képességed vége ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"IceMenu"
 	{
 		"en"			"Ice Ability Information"
 		"hu"			"Fagyasztás Képesség Információ"
 	}
+
 	"Idle"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} made{olive} {2}{mint} go idle!"
 		"hu"			"{olive}{1}{mint} kényszerítette{olive} {2}{mint} hogy szünetet tartson!"
 	}
+
 	"IdleAmmo"
 	{
 		"en"			"You've used up all your idle range ability's ammo."
 		"hu"			"Elhasználtad a távolsági szüneteltetés képességed összes lőszerét."
 	}
+
 	"IdleDetails"
 	{
 		"en"			"You force survivors to go idle."
 		"hu"			"Kényszeríted a túlélőket arra hogy szünetet tartsanak."
 	}
+
 	"IdleHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your idle range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági szüneteltetés képességedet!"
 	}
+
 	"IdleHuman2"
 	{
 		"en"			"Your idle range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági szüneteltetés képességedet. Próbáld újra."
 	}
+
 	"IdleHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your idle range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági szüneteltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"IdleHuman4"
 	{
 		"en"			"There are no survivors nearby to use your idle range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági szüneteltetés képességedet."
 	}
+
 	"IdleHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your idle range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági szüneteltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"IdleMenu"
 	{
 		"en"			"Idle Ability Information"
 		"hu"			"Szüneteltetés Képesség Információ"
 	}
+
 	"Invert"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} inverted{olive} {2}'s{mint} movement keys!"
 		"hu"			"{olive}{1}{mint} megfordította{olive} {2}{mint} gomb kiosztását!"
 	}
+
 	"Invert2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}'s{mint} keys are no longer inverted!"
 		"hu"			"{olive}{1}{mint} gomb kiosztása nincs többé megfordítva!"
 	}
+
 	"InvertAmmo"
 	{
 		"en"			"You've used up all your invert range ability's ammo."
 		"hu"			"Elhasználtad a távolsági megfordítás képességed összes lőszerét."
 	}
+
 	"InvertDetails"
 	{
 		"en"			"You invert the survivors' movement keys."
 		"hu"			"Megfordítod a túlélők gomb kiosztását."
 	}
+
 	"InvertHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your invert range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági megfordítás képességedet!"
 	}
+
 	"InvertHuman2"
 	{
 		"en"			"Your invert range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági megfordítás képességedet. Próbáld újra."
 	}
+
 	"InvertHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your invert range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági megfordítás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"InvertHuman4"
 	{
 		"en"			"There are no survivors nearby to use your invert range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági megfordítás képességedet."
 	}
+
 	"InvertHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your invert range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági megfordítás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"InvertMenu"
 	{
 		"en"			"Invert Ability Information"
 		"hu"			"Megfordítás Képesség Információ"
 	}
+
 	"Item"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} gave the survivors{yellow} items{mint}!"
 		"hu"			"{olive}{1}{mint} tételeket adott{yellow} a túlélőknek{mint}!"
 	}
+
 	"ItemDetails"
 	{
 		"en"			"You give survivors items upon death."
 		"hu"			"Tételeket adsz a túlélőknek halálod után."
 	}
+
 	"ItemHuman"
 	{
 		"en"			"You will give survivors items when you die!"
 		"hu"			"Tételeket adsz a túlélőknek miután meghalsz!"
 	}
+
 	"ItemHuman2"
 	{
 		"en"			"You will already give survivors items upon death."
 		"hu"			"Már adtál tételeket a túlélőknek a halálod után."
 	}
+
 	"ItemMenu"
 	{
 		"en"			"Item Ability Information"
 		"hu"			"Tétel Képesség Információ"
 	}
+
 	"Jump"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to jump uncontrollably!"
 		"hu"			"{olive}{1}{mint} kényszeríti{olive} {2}{mint} -t hogy kontrollálhatatlanul ugráljon!"
 	}
+
 	"Jump2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer being forced to jump!"
 		"hu"			"{olive}{1}{mint} többé már nincs kényszerítve arra hogy ugráljon!"
 	}
+
 	"Jump3"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} will jump periodically!"
 		"hu"			"{olive}{1}{mint} időszakosan ugrálni fog!"
 	}
+
 	"JumpAmmo"
 	{
 		"en"			"You've used up all your periodical jumping ability's ammo."
 		"hu"			"Elhasználtad az időszakos ugrálás képességed összes lőszerét."
 	}
+
 	"JumpAmmo2"
 	{
 		"en"			"You've used up all your jump range ability's ammo."
 		"hu"			"Elhasználtad a távolsági ugrás képességed összes lőszerét."
 	}
+
 	"JumpDetails"
 	{
 		"en"			"You jump periodically or sporadically and make survivors jump uncontrollably."
 		"hu"			"Időszakosan vagy szórványosan ugrálsz és kontrollálhatatlanul ugráltatod a túlélőket."
 	}
+
 	"JumpHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your periodical jumping ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik időszakos ugrálás képességedet!"
 	}
+
 	"JumpHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your jump range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági ugrás képességedet!"
 	}
+
 	"JumpHuman3"
 	{
 		"en"			"Your jump range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági ugrás képességedet. Próbáld újra."
 	}
+
 	"JumpHuman4"
 	{
 		"en"			"You already activated your periodical jumping ability."
 		"hu"			"Már aktiváltad az időszakos ugrás képességedet."
 	}
+
 	"JumpHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your periodical jumping ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az időszakos ugrás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"JumpHuman6"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your jump range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági ugrás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"JumpHuman7"
 	{
 		"en"			"There are no survivors nearby to use your jump range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági ugrás képességedet."
 	}
+
 	"JumpHuman8"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your periodical jumping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az időszakos ugrás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"JumpHuman9"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your jump range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági ugrás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"JumpMenu"
 	{
 		"en"			"Jump Ability Information"
 		"hu"			"Ugrás Képesség Információ"
 	}
+
 	"Kamikaze"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} just went kamikaze on{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} kamikazét adott {olive} {2}{mint}-nak!"
 	}
+
 	"KamikazeDetails"
 	{
 		"en"			"You kill yourself along with a survivor victim."
 		"hu"			"Megölöd magad és áldozatként viszed magaddal a túlélőket is."
 	}
+
 	"KamikazeHuman"
 	{
 		"en"			"You activated your kamikaze range ability!"
 		"hu"			"Aktiváltad a távolsági kamikaze képességedet!"
 	}
+
 	"KamikazeHuman2"
 	{
 		"en"			"Your kamikaze range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági kamikaze képességedet. Próbáld újra."
 	}
+
 	"KamikazeHuman3"
 	{
 		"en"			"There are no survivors nearby to use your kamikaze range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági kamikaze képességedet."
 	}
+
 	"KamikazeMenu"
 	{
 		"en"			"Kamikaze Ability Information"
 		"hu"			"Kamikaze Képesség Információ"
 	}
+
 	"Lag"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is making{olive} {2}{mint} lag!"
 		"hu"			"{olive}{1}{mint} késlelteti{olive} {2}{mint} -t!"
 	}
+
 	"Lag2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer lagging!"
 		"hu"			"{olive}{1}{mint} többé már nem késik!"
 	}
+
 	"LagAmmo"
 	{
 		"en"			"You've used up all your lag range ability's ammo."
 		"hu"			"Elhasználtad a távolsági késleltetés képességed összes lőszerét."
 	}
+
 	"LagDetails"
 	{
 		"en"			"You make survivors lag."
 		"hu"			"Késlelteted a túlélőket."
 	}
+
 	"LagHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lag range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági késleltetés képességedet!"
 	}
+
 	"LagHuman2"
 	{
 		"en"			"Your lag range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági késleltetés képességedet. Próbáld újra."
 	}
+
 	"LagHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your lag range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági késleltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"LagHuman4"
 	{
 		"en"			"There are no survivors nearby to use your lag range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági késleltetés képességedet."
 	}
+
 	"LagHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your lag range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági késleltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"LagMenu"
 	{
 		"en"			"Lag Ability Information"
 		"hu"			"Késleltetés Képesség Információ"
 	}
+
 	"Laser"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is shooting a laser at{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lézert lő{olive} {2}{mint}felé!"
 	}
+
 	"Laser2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is no longer shooting a laser!"
 		"hu"			"{olive}{1}{mint} többé már nem lő lézert!"
 	}
+
 	"LaserAmmo"
 	{
 		"en"			"You've used up all your laser ability's ammo."
 		"hu"			"Elhasználtad a lézer képességed összes lőszerét."
 	}
+
 	"LaserDetails"
 	{
 		"en"			"You shoot lasers at survivors."
 		"hu"			"Lézert lősz a túlélőkre."
 	}
+
 	"LaserHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your laser ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik lézer képességedet!"
 	}
+
 	"LaserHuman2"
 	{
 		"en"			"Your laser ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a lézer képességedet. Próbáld újra."
 	}
+
 	"LaserHuman3"
 	{
 		"en"			"You already activated your laser ability."
 		"hu"			"Már aktiváltad a lézer képességedet."
 	}
+
 	"LaserHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your laser ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A lézer képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"LaserHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your laser ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A lézer képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"LaserMenu"
 	{
 		"en"			"Laser Ability Information"
 		"hu"			"Lézer Képesség Információ"
 	}
+
 	"Leech"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is{yellow} leeching health{mint} off of{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} életet{yellow} szív{mint} el{olive} {2}{mint}-tól!"
 	}
+
 	"Leech2"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is no longer{yellow} leeching health{mint} off of{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} már nem szív{yellow} életet{mint} el{olive} {2}{mint}-tól!"
 	}
+
 	"LeechAmmo"
 	{
 		"en"			"You've used up all your leech range ability's ammo."
 		"hu"			"Elhasználtad a távolsági pióca képességed összes lőszerét."
 	}
+
 	"LeechDetails"
 	{
 		"en"			"You leech health off of survivors."
 		"hu"			"Elszívod az életet a túlélőktől."
 	}
+
 	"LeechHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your leech range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági pióca képességedet!"
 	}
+
 	"LeechHuman2"
 	{
 		"en"			"Your leech range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági pióca képességedet. Próbáld újra."
 	}
+
 	"LeechHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your leech range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági pióca képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"LeechHuman4"
 	{
 		"en"			"There are no survivors nearby to use your leech range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági pióca képességedet."
 	}
+
 	"LeechHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your leech range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági pióca képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"LeechMenu"
 	{
 		"en"			"Leech Ability Information"
 		"hu"			"Pióca Képesség Információ"
 	}
+
 	"Medic"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} just healed nearby special infected!"
 		"hu"			"{olive}{1}{mint} épp meggyógyította a közelben lévő speciális fertőzötteket!"
 	}
+
 	"Medic2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is healing nearby special infected!"
 		"hu"			"{olive}{1}{mint} gyógyítja a közelben lévő speciális fertőzötteket!"
 	}
+
 	"MedicAmmo"
 	{
 		"en"			"You've used up all your medic range ability's ammo."
 		"hu"			"Elhasználtad a távolsági medikus képességed összes lőszerét."
 	}
+
 	"MedicDetails"
 	{
 		"en"			"You heal special infected upon death."
 		"hu"			"Halálod pillanatában gyógyítod a speciális fertőzötteket."
 	}
+
 	"MedicHuman"
 	{
 		"en"			"You will heal nearby special infected when you die!"
 		"hu"			"Gyógyítod a közelben lévő speciális fertőzötteket miután meghalsz!"
 	}
+
 	"MedicHuman2"
 	{
 		"en"			"You will already heal nearby special infected upon death."
 		"hu"			"Azonnal gyógyítod a közelben lévő speciális fertőzötteket a halálod pillanatában."
 	}
+
 	"MedicHuman3"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your medic range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági medikus képességedet!"
 	}
+
 	"MedicHuman4"
 	{
 		"en"			"You already activated your medic range ability."
 		"hu"			"Már aktiváltad a távolsági medikus képességedet."
 	}
+
 	"MedicHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your medical range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági medikus képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"MedicHuman6"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your medical range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági medikus képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"MedicMenu"
 	{
 		"en"			"Medic Ability Information"
 		"hu"			"Medikus Képesség Információ"
 	}
+
 	"Meteor"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} started a{yellow} meteor shower{mint}!"
 		"hu"			"{olive}{1}{mint} Meteor záport{yellow} indított{mint}!"
 	}
+
 	"Meteor2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} meteor shower ended!"
 		"hu"			"{olive}{1}{mint} meteor zápora véget ért!"
 	}
+
 	"MeteorAmmo"
 	{
 		"en"			"You've used up all your meteor showers."
 		"hu"			"Elhasználtad az összes meteor záporodat."
 	}
+
 	"MeteorDetails"
 	{
 		"en"			"You create meteor showers."
 		"hu"			"Meteor záporokat hozol létre."
 	}
+
 	"MeteorHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your meteor showers!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik meteor záporodat!"
 	}
+
 	"MeteorHuman2"
 	{
 		"en"			"Your meteor shower failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a meteor záporodat. Próbáld újra."
 	}
+
 	"MeteorHuman3"
 	{
 		"en"			"You already activated your meteor shower."
 		"hu"			"Már aktiváltad a meteor záporodat."
 	}
+
 	"MeteorHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your meteor shower ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A meteor zápor képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"MeteorHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your meteor shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A meteor zápor képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"MeteorMenu"
 	{
 		"en"			"Meteor Ability Information"
 		"hu"			"Meteor Képesség Információ"
 	}
+
 	"Minion"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} summoned a{yellow} minion{mint}!"
 		"hu"			"{olive}{1}{mint} megidézett egy{yellow} minyont{mint}!"
 	}
+
 	"MinionAmmo"
 	{
 		"en"			"You've used up all your minions."
 		"hu"			"Elhasználtad az összes minyonodat."
 	}
+
 	"MinionDetails"
 	{
 		"en"			"You spawn minions."
 		"hu"			"Minyonokat hozol létre."
 	}
+
 	"MinionHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You created{olive} {1}{mint}/{olive}{2}{mint} minions!"
 		"hu"			"Készítettél{olive} {1}{mint}/{olive}{2}{mint} minyonokat!"
 	}
+
 	"MinionHuman2"
 	{
 		"en"			"You failed to create a minion. Try again."
 		"hu"			"Nem sikerült minyonokat létrehozni. Próbáld újra."
 	}
+
 	"MinionHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your minion spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A minyon létrehozó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"MinionHuman4"
 	{
 		"en"			"One of your minions just died."
 		"hu"			"Az egyik minyonod meghalt."
 	}
+
 	"MinionHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"All your minions died and your minion spawner ability needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az összes minyonod meghalt, a minyon létrehozó képességed újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"MinionMenu"
 	{
 		"en"			"Minion Ability Information"
 		"hu"			"Minyon Képesség Információ"
 	}
+
 	"Necro"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} resurrected nearby special infected!"
 		"hu"			"{olive}{1}{mint} visszahozta a közelben lévő speciális fertőzötteket!"
 	}
+
 	"NecroAmmo"
 	{
 		"en"			"You've used up all your necro ability's ammo."
 		"hu"			"Elhasználtad a haláli képességed összes lőszerét."
 	}
+
 	"NecroDetails"
 	{
 		"en"			"You resurrect nearby special infected that die."
 		"hu"			"Visszahozod a közelben lévő speciális fertőzötteket amikor meghalnak."
 	}
+
 	"NecroHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your necro ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik haláli képességedet!"
 	}
+
 	"NecroHuman2"
 	{
 		"en"			"Your necro ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a haláli képességedet. Próbáld újra."
 	}
+
 	"NecroHuman3"
 	{
 		"en"			"You already activated your necro ability."
 		"hu"			"Már aktiváltad a haláli képességedet."
 	}
+
 	"NecroHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your necro ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A haláli képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"NecroHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your necro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A haláli képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"NecroMenu"
 	{
 		"en"			"Necro Ability Information"
 		"hu"			"Haláli Képesség Információ"
 	}
+
 	"Nullify"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} temporarily nullified all of{olive} {2}'s{mint} damage!"
 		"hu"			"{olive}{1}{mint} hatástalanítja{olive} {2}{mint} összes sebzését!"
 	}
+
 	"Nullify2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}'s{mint} damage is no longer nullified!"
 		"hu"			"{olive}{1}{mint} sebzése többé már nincs hatástalanítva!"
 	}
+
 	"NullifyAmmo"
 	{
 		"en"			"You've used up all your nullify range ability's ammo."
 		"hu"			"Elhasználtad a távolsági hatástalanító képességed összes lőszerét."
 	}
+
 	"NullifyDetails"
 	{
 		"en"			"You nullify all of the survivors' damage."
 		"hu"			"Hatástalanítod a túlélők összes sebzését."
 	}
+
 	"NullifyHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your nullify range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hatástalanító képességedet!"
 	}
+
 	"NullifyHuman2"
 	{
 		"en"			"Your nullify range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági hatástalanító képességedet. Próbáld újra."
 	}
+
 	"NullifyHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your damage nullifier range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági hatástalanító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"NullifyHuman4"
 	{
 		"en"			"There are no survivors nearby to use your damage nullifier range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági hatástalanító képességedet."
 	}
+
 	"NullifyHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your damage nullifier range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági hatástalanító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"NullifyMenu"
 	{
 		"en"			"Nullify Ability Information"
 		"hu"			"Hatástalanító Képesség Információ"
 	}
+
 	"Omni"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} omni ability activated!"
 		"hu"			"{olive}{1}{mint} mindenség képessége aktiválva!"
 	}
+
 	"Omni2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} omni ability deactivated!"
 		"hu"			"{olive}{1}{mint} mindenség képessége deaktiválva!"
 	}
+
 	"OmniAmmo"
 	{
 		"en"			"You've used up all your omni ability's ammo."
 		"hu"			"Elhasználtad a mindenség képességed összes lőszerét."
 	}
+
 	"OmniDetails"
 	{
 		"en"			"You have omni-level access to other nearby Mutant Tanks' abilities."
 		"hu"			"Mindenség-szintű hozzáférésed van a többi közelben lévő Mutáns tank képességeihez."
 	}
+
 	"OmniHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your omni ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik mindenség képességedet!"
 	}
+
 	"OmniHuman2"
 	{
 		"en"			"Your omni ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a mindenség képességedet. Próbáld újra."
 	}
+
 	"OmniHuman3"
 	{
 		"en"			"You already activated your omni ability."
 		"hu"			"Már aktiváltad a mindenség képességedet."
 	}
+
 	"OmniHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your omni ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A mindenség képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"OmniHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your omni ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A mindenség képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"OmniMenu"
 	{
 		"en"			"Omni Ability Information"
 		"hu"			"Mindenség Képesség Információ"
 	}
+
 	"Panic"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} will start panic events periodically!"
 		"hu"			"{olive}{1}{mint} időszakosan pánikot indít!"
 	}
+
 	"Panic2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} started a{yellow} panic event{mint}!"
 		"hu"			"{olive}{1}{mint} pánikot{yellow} indított{mint}!"
 	}
+
 	"PanicAmmo"
 	{
 		"en"			"You've used up all your panic ability's ammo."
 		"hu"			"Elhasználtad a pánik képességed összes lőszerét."
 	}
+
 	"PanicDetails"
 	{
 		"en"			"You start panic events."
 		"hu"			"Pánikot indítasz."
 	}
+
 	"PanicHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your panic ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik pánik képességedet!"
 	}
+
 	"PanicHuman2"
 	{
 		"en"			"Your panic ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a pánik képességedet. Próbáld újra."
 	}
+
 	"PanicHuman3"
 	{
 		"en"			"You already activated your panic ability."
 		"hu"			"Már aktiváltad a pánik képességedet."
 	}
+
 	"PanicHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your panic ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A pánik képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"PanicHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your panic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A pánik képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"PanicMenu"
 	{
 		"en"			"Panic Ability Information"
 		"hu"			"Pánik Képesség Információ"
 	}
+
 	"Pimp"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is pimp slapping{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} csapdossa{olive} {2}{mint}-t!"
 	}
+
 	"Pimp2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer being pimp slapped!"
 		"hu"			"{olive}{1}{mint} többé már nincs csapdosva!"
 	}
+
 	"PimpAmmo"
 	{
 		"en"			"You've used up all your pimp range ability's ammo."
 		"hu"			"Elhasználtad a távolsági csapdosó képességed összes lőszerét."
 	}
+
 	"PimpDetails"
 	{
 		"en"			"You pimp slap survivors."
 		"hu"			"Lecsapod a túlélőket."
 	}
+
 	"PimpHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your pimp range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági csapdosó képességedet!"
 	}
+
 	"PimpHuman2"
 	{
 		"en"			"Your pimp range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági csapdosó képességedet. Próbáld újra."
 	}
+
 	"PimpHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your pimp slap range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági csapdosó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"PimpHuman4"
 	{
 		"en"			"There are no survivors nearby to use your pimp slap range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági csapdosó képességedet."
 	}
+
 	"PimpHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your pimp slap range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági csapdosó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"PimpMenu"
 	{
 		"en"			"Pimp Ability Information"
 		"hu"			"Csapdosó Képesség Információ"
 	}
+
 	"Puke"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} puked on{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lehányta{olive} {2}{mint}-t!"
 	}
+
 	"PukeAmmo"
 	{
 		"en"			"You've used up all your puke range ability's ammo."
 		"hu"			"Elhasználtad a távolsági hányás képességed összes lőszerét."
 	}
+
 	"PukeDetails"
 	{
 		"en"			"You puke on survivors."
 		"hu"			"Lehányod a túlélőket."
 	}
+
 	"PukeHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your puke range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hányás képességedet!"
 	}
+
 	"PukeHuman2"
 	{
 		"en"			"Your puke range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági hányás képességedet. Próbáld újra."
 	}
+
 	"PukeHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your puke range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági hányás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"PukeHuman4"
 	{
 		"en"			"There are no survivors nearby to use your puke range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági hányás képességedet."
 	}
+
 	"PukeHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your puke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági hányás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"PukeMenu"
 	{
 		"en"			"Puke Ability Information"
 		"hu"			"Hányás Képesség Információ"
 	}
+
 	"Pyro"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} ignited itself!"
 		"hu"			"{olive}{1}{mint} meggyújtotta önmagát!"
 	}
+
 	"Pyro2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is burning and running really fast!"
 		"hu"			"{olive}{1}{mint} ég és nagyon gyorsan fut!"
 	}
+
 	"Pyro3"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is no longer burning and is back to normal speed!"
 		"hu"			"{olive}{1}{mint} többé már nem ég és a sebessége is normális lett!"
 	}
+
 	"PyroAmmo"
 	{
 		"en"			"You've used up all your pyro ability's ammo."
 		"hu"			"Elhasználtad a piro képességed összes lőszerét."
 	}
+
 	"PyroDetails"
 	{
 		"en"			"You ignite yourself and gain a speed boost when on fire."
 		"hu"			"Meggyújtod önmagad, a sebességed gyorsabb lesz miközben égsz."
 	}
+
 	"PyroHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your pyro ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik piro képességedet!"
 	}
+
 	"PyroHuman2"
 	{
 		"en"			"Your pyro ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a piro képességedet. Próbáld újra."
 	}
+
 	"PyroHuman3"
 	{
 		"en"			"You already activated your pyro ability."
 		"hu"			"Már aktiváltad a piro képességedet."
 	}
+
 	"PyroHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your pyro ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A piro képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"PyroHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your pyro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A piro képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"PyroMenu"
 	{
 		"en"			"Pyro Ability Information"
 		"hu"			"Piro Képesség Információ"
 	}
+
 	"Quiet"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} silenced itself around{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lenémította magát{olive} {2}{mint}körül!"
 	}
+
 	"Quiet2"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is no longer quiet around{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} többé már nem csendes{olive} {2}{mint}körül!"
 	}
+
 	"QuietAmmo"
 	{
 		"en"			"You've used up all your quiet range ability's ammo."
 		"hu"			"Elhasználtad a távolsági csend képességed összes lőszerét."
 	}
+
 	"QuietDetails"
 	{
 		"en"			"You silence yourself around survivors."
 		"hu"			"Lenémítod magad a túlélők körül."
 	}
+
 	"QuietHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your quiet range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági csend képességedet!"
 	}
+
 	"QuietHuman2"
 	{
 		"en"			"Your quiet range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági csend képességedet. Próbáld újra."
 	}
+
 	"QuietHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your quiet range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági csend képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"QuietHuman4"
 	{
 		"en"			"There are no survivors nearby to use your quiet range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági csend képességedet."
 	}
+
 	"QuietHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your quiet range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági csend képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"QuietMenu"
 	{
 		"en"			"Quiet Ability Information"
 		"hu"			"Csend Képesség Információ"
 	}
+
 	"Recoil"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} gave{olive} {2}{mint} strong recoil!"
 		"hu"			"{olive}{1}{mint} erős visszarúgást adott{olive} {2}{mint} -nak!"
 	}
+
 	"Recoil2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} no longer has strong recoil!"
 		"hu"			"{olive}{1}{mint} -nak többé már nincs erős visszarúgása!"
 	}
+
 	"RecoilAmmo"
 	{
 		"en"			"You've used up all your recoil range ability's ammo."
 		"hu"			"Elhasználtad a távolsági visszarúgás képességed összes lőszerét."
 	}
+
 	"RecoilDetails"
 	{
 		"en"			"You give survivors strong gun recoil."
 		"hu"			"Erős fegyver visszarúgást adsz a túlélőknek."
 	}
+
 	"RecoilHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your recoil range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági visszarúgás képességedet!"
 	}
+
 	"RecoilHuman2"
 	{
 		"en"			"Your recoil range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági visszarúgás képességedet. Próbáld újra."
 	}
+
 	"RecoilHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your recoil range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági visszarúgás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"RecoilHuman4"
 	{
 		"en"			"There are no survivors nearby to use your recoil range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági visszarúgás képességedet."
 	}
+
 	"RecoilHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your recoil range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági visszarúgás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"RecoilMenu"
 	{
 		"en"			"Recoil Ability Information"
 		"hu"			"Visszarúgás Képesség Információ"
 	}
+
 	"Regen"
 	{
 		"#format"		"{1:s},{2:.2f}"
 		"en"			"{olive}{1}{mint} is regenerating health every{yellow} {2}{mint} second(s)!"
 		"hu"			"{olive}{1}{mint} regenerálja az életerejét minden{yellow} {2}{mint} másodpercben!"
 	}
+
 	"Regen2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} stopped regenerating health!"
 		"hu"			"{olive}{1}{mint} már nem regenerálja az életerejét!"
 	}
+
 	"RegenAmmo"
 	{
 		"en"			"You've used up all your regen ability's ammo."
 		"hu"			"Elhasználtad a regeneráló képességed összes lőszerét."
 	}
+
 	"RegenDetails"
 	{
 		"en"			"You regenerate health."
 		"hu"			"Regenerálod az életerődet."
 	}
+
 	"RegenHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your regen ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik regeneráló képességedet!"
 	}
+
 	"RegenHuman2"
 	{
 		"en"			"Your regen ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a regeneráló képességedet. Próbáld újra."
 	}
+
 	"RegenHuman3"
 	{
 		"en"			"You already activated your regen ability."
 		"hu"			"Már aktiváltad a regeneráló képességedet."
 	}
+
 	"RegenHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your regen ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A regeneráló képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"RegenHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your regen ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A regeneráló képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"RegenMenu"
 	{
 		"en"			"Regen Ability Information"
 		"hu"			"Regeneráló Képesség Információ"
 	}
+
 	"Respawn"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} just respawned itself!"
 		"hu"			"{olive}{1}{mint} visszahozta önmagát!"
 	}
+
 	"RespawnAmmo"
 	{
 		"en"			"You've used up all your rock showers."
 		"hu"			"Elhasználtad az összes szikla záporodat."
 	}
+
 	"RespawnDetails"
 	{
 		"en"			"You respawn upon death."
 		"hu"			"Újjászületsz a halálod pillanatában."
 	}
+
 	"RespawnHuman"
 	{
 		"en"			"You will respawn when you die!"
 		"hu"			"Újjászületsz miután meghalsz!"
 	}
+
 	"RespawnHuman2"
 	{
 		"en"			"You will already respawn upon death."
 		"hu"			"Azonnal újjászületsz a halálod pillanatában."
 	}
+
 	"RespawnHuman3"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your respawns!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik újjászületésedet!"
 	}
+
 	"RespawnMenu"
 	{
 		"en"			"Respawn Ability Information"
 		"hu"			"Újjászületés Képesség Információ"
 	}
+
 	"Restart"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} caused{olive} {2}{mint} to restart with a different loadout!"
 		"hu"			"{olive}{1}{mint} rávette{olive} {2}{mint} -t hogy újrakezdje egy eltérő felszereléssel!"
 	}
+
 	"RestartAmmo"
 	{
 		"en"			"You've used up all your restart range ability's ammo."
 		"hu"			"Elhasználtad a távolsági újrakezdő képességed összes lőszerét."
 	}
+
 	"RestartDetails"
 	{
 		"en"			"You force survivors to restart at the beginning of the map or near a teammate with a new loadout."
 		"hu"			"Ráveszed a túlélőket arra hogy eltérő felszereléssel kezdjenek a pálya elejétől vagy egy társuk közelében."
 	}
+
 	"RestartHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your restart range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági újrakezdő képességedet!"
 	}
+
 	"RestartHuman2"
 	{
 		"en"			"Your restart range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági újrakezdő képességedet. Próbáld újra."
 	}
+
 	"RestartHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your restart range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági újrakezdő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"RestartHuman4"
 	{
 		"en"			"There are no survivors nearby to use your restart range ability on."
 		"hu"			"Nincsenek túlélők az közelben ahhoz, hogy használni tudd a távolsági újrakezdő képességedet."
 	}
+
 	"RestartHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your restart range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági újrakezdő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"RestartMenu"
 	{
 		"en"			"Restart Ability Information"
 		"hu"			"Újrakezdő Képesség Információ"
 	}
+
 	"Rock"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} started a{yellow} rock shower{mint}!"
 		"hu"			"{olive}{1}{mint} szikla záport{yellow} indított{mint}!"
 	}
+
 	"Rock2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} rock shower ended!"
 		"hu"			"{olive}{1}{mint} szikla zápora véget ért!"
 	}
+
 	"RockAmmo"
 	{
 		"en"			"You've used up all your rock showers."
 		"hu"			"Elhasználtad az összes szikla záporodat."
 	}
+
 	"RockDetails"
 	{
 		"en"			"You create rock showers."
 		"hu"			"Szikla záporokat indítasz."
 	}
+
 	"RockHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rock showers!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik szikla záporodat!"
 	}
+
 	"RockHuman2"
 	{
 		"en"			"Your rock shower failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a szikla záporodat. Próbáld újra."
 	}
+
 	"RockHuman3"
 	{
 		"en"			"You already activated your rock shower."
 		"hu"			"Már aktiváltad a szikla záporodat."
 	}
+
 	"RockHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your rock shower ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A szikla zápor képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"RockHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your rock shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A szikla zápor képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"RockMenu"
 	{
 		"en"			"Rock Ability Information"
 		"hu"			"Szikla Képesség Információ"
 	}
+
 	"Rocket"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} sent{olive} {2}{mint} into space!"
 		"hu"			"{olive}{1}{mint} elküldte{olive} {2}{mint} -t az űrbe!"
 	}
+
 	"RocketAmmo"
 	{
 		"en"			"You've used up all your rocket range ability's ammo."
 		"hu"			"Elhasználtad a távolsági rakéta képességed összes lőszerét."
 	}
+
 	"RocketDetails"
 	{
 		"en"			"You send survivors into space."
 		"hu"			"Az űrbe küldöd a túlélőket."
 	}
+
 	"RocketHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rocket range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rakéta képességedet!"
 	}
+
 	"RocketHuman2"
 	{
 		"en"			"Your rocket range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rakéta képességedet. Próbáld újra."
 	}
+
 	"RocketHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your rocket range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági rakéta képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"RocketHuman4"
 	{
 		"en"			"There are no survivors nearby to use your rocket range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági rakéta képességedet."
 	}
+
 	"RocketHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your rocket range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági rakéta képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"RocketMenu"
 	{
 		"en"			"Rocket Ability Information"
 		"hu"			"Rakéta Képesség Információ"
 	}
+
 	"Shake"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is shaking{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} rázza{olive} {2}{mint}-t!"
 	}
+
 	"Shake2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is no longer shaking!"
 		"hu"			"{olive}{1}{mint} többé már nem rázkódik!"
 	}
+
 	"ShakeAmmo"
 	{
 		"en"			"You've used up all your shake range ability's ammo."
 		"hu"			"Elhasználtad a távolsági rázó képességed összes lőszerét."
 	}
+
 	"ShakeDetails"
 	{
 		"en"			"You shake the survivors' screens."
 		"hu"			"Rázod a túlélők képernyőjét."
 	}
+
 	"ShakeHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shake range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rázó képességedet!"
 	}
+
 	"ShakeHuman2"
 	{
 		"en"			"Your shake range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rázó képességedet. Próbáld újra."
 	}
+
 	"ShakeHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your shake range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági rázó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"ShakeHuman4"
 	{
 		"en"			"There are no survivors nearby to use your shake range ability on."
 		"hu"			"nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági rázó képességedet."
 	}
+
 	"ShakeHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your shake range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági rázó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"ShakeMenu"
 	{
 		"en"			"Shake Ability Information"
 		"hu"			"Rázó Képesség Információ"
 	}
+
 	"Shield"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} shield{yellow} activated{mint}!"
 		"hu"			"{olive}{1}{mint} pajzsa{yellow} aktiválva{mint}!"
 	}
+
 	"Shield2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} shield{yellow} deactivated{mint}!"
 		"hu"			"{olive}{1}{mint} pajzsa{yellow} deaktiválva{mint}!"
 	}
+
 	"ShieldAmmo"
 	{
 		"en"			"You've used up all your shields."
 		"hu"			"Elhasználtad az összes pajzsodat."
 	}
+
 	"ShieldDetails"
 	{
 		"en"			"You protect yourself with a shield and throw propane tanks or gas cans."
 		"hu"			"Megvéded magad egy pajzzsal, propán tartályt vagy benzines kannát dobsz."
 	}
+
 	"ShieldHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shields!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik pajzsodat!"
 	}
+
 	"ShieldHuman2"
 	{
 		"en"			"Your shield failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a pajzsodat. Próbáld újra."
 	}
+
 	"ShieldHuman3"
 	{
 		"en"			"You already activated your shield."
 		"hu"			"Már aktiváltad a pajzsodat."
 	}
+
 	"ShieldHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your shield still needs another{yellow} {1} second(s){mint} to regenerate."
 		"hu"			"A pajzsodnak még kell{yellow} {1} másodperc{mint} a regenerálódáshoz."
 	}
+
 	"ShieldHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your shield broke and needs to regenerate for{yellow} {1} second(s){mint}."
 		"hu"			"A pajzsod eltört, a regenerálódáshoz még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"ShieldMenu"
 	{
 		"en"			"Shield Ability Information"
 		"hu"			"Pajzs Képesség Információ"
 	}
+
 	"Shove"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is shoving{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lökdösi{olive} {2}{mint}-t!"
 	}
+
 	"Shove2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer being shoved!"
 		"hu"			"{olive}{1}{mint} többé már nincs lökdösve!"
 	}
+
 	"ShoveAmmo"
 	{
 		"en"			"You've used up all your shove range ability's ammo."
 		"hu"			"Elhasználtad a távolsági lökés képességed összes lőszerét."
 	}
+
 	"ShoveDetails"
 	{
 		"en"			"You repeatedly shove survivors."
 		"hu"			"Ismétlődően lököd a túlélőket."
 	}
+
 	"ShoveHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shove range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lökés képességedet!"
 	}
+
 	"ShoveHuman2"
 	{
 		"en"			"Your shove range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lökés képességedet. Próbáld újra."
 	}
+
 	"ShoveHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your shove range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lökés képességednek még kell{yellow} {1} másodperc{mint} sz újratöltéshez."
 	}
+
 	"ShoveHuman4"
 	{
 		"en"			"There are no survivors nearby to use your shove range ability on."
 		"hu"			"Nincsenek a közelben túlélők ahhoz, hogy használni tudd a távolsági lökés képességedet."
 	}
+
 	"ShoveHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your shove range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lökés képességed véget ért, Az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"ShoveMenu"
 	{
 		"en"			"Shove Ability Information"
 		"hu"			"Lökés Képesség Információ"
 	}
+
 	"Slow"
 	{
 		"#format"		"{1:s},{2:N},{3:.2f}"
 		"en"			"{olive}{1}{mint} slowed{olive} {2}{mint} down to{yellow} {3}{mint}!"
 		"hu"			"{olive}{1}{mint} éppen{olive} {2}{mint} lelassította{yellow} {3}{mint}-t!"
 	}
+
 	"Slow2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} is no longer slowed down!"
 		"hu"			"{olive}{1}{mint} többé már nincs lelassítva!"
 	}
+
 	"SlowAmmo"
 	{
 		"en"			"You've used up all your slow range ability's ammo."
 		"hu"			"Elhasználtad a távolsági lassító képességed összes lőszerét."
 	}
+
 	"SlowDetails"
 	{
 		"en"			"You slow and slow survivors down."
 		"hu"			"Lelassítod a túlélőket."
 	}
+
 	"SlowHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your slow range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lassító képességedet!"
 	}
+
 	"SlowHuman2"
 	{
 		"en"			"Your slow range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lassító képességedet. Próbáld újra."
 	}
+
 	"SlowHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your slow range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lassító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"SlowHuman4"
 	{
 		"en"			"There are no survivors nearby to use your slow range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági lassító képességedet."
 	}
+
 	"SlowHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your slow range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lassító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
+
 	"SlowMenu"
 	{
 		"en"			"Slow Ability Information"
 		"hu"			"Lassító Képesség Információ"
 	}
+
 	"Smash"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} smashed{olive} {2}{mint} to death!"
 		"hu"			"{olive}{1}{mint} halálra zúzta{olive} {2}{mint} -t!"
 	}
+
 	"SmashAmmo"
 	{
 		"en"			"You've used up all your smash range ability's ammo."
 		"hu"			"Elhasználtad a távolsági zúzó képességed összes lőszerét."
 	}
+
 	"SmashDetails"
 	{
 		"en"			"You smash survivors to death."
 		"hu"			"Halálra zúzod a túlélőket."
 	}
+
 	"SmashHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smash range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik zúzó képességedet!"
 	}
+
 	"SmashHuman2"
 	{
 		"en"			"Your smash range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági zúzó képességedet. Próbáld újra."
 	}
+
 	"SmashHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your smash range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági zúzó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"SmashHuman4"
 	{
 		"en"			"There are no survivors nearby to use your smash range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági zúzó képességedet."
 	}
+
 	"SmashHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your smash range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
+
 	"SmashMenu"
 	{
 		"en"			"Smash Ability Information"
 		"hu"			"Zúzó Képesség Információ"
 	}
+
 	"Smite"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} smited{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lesújtott{olive} {2}{mint}-ra!"
 	}
+
 	"SmiteAmmo"
 	{
 		"en"			"You've used up all your smite range ability's ammo."
 		"hu"			"Elhasználtad a távolsági lesújtó képességed összes lőszerét."
 	}
+
 	"SmiteDetails"
 	{
 		"en"			"You smite survivors."
 		"hu"			"Lesújtól a túlélőkre."
 	}
+
 	"SmiteHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smite range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lesújtó képességedet!"
 	}
+
 	"SmiteHuman2"
 	{
 		"en"			"Your smite range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lesújtó képességedet. Próbáld újra."
 	}
+
 	"SmiteHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your smite range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lesújtó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"SmiteHuman4"
 	{
 		"en"			"There are no survivors nearby to use your smite range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági lesújtó képességedet."
 	}
+
 	"SmiteHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your smite range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
+
 	"SmiteMenu"
 	{
 		"en"			"Smite Ability Information"
 		"hu"			"Lesújtó Képesség Információ"
 	}
+
 	"Spam"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is spamming rocks!"
 		"hu"			"{olive}{1}{mint} folyamatosan sziklákat dobál!"
 	}
+
 	"Spam2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is no longer spamming rocks!"
 		"hu"			"{olive}{1}{mint} többé már nem dobál folyamatosan sziklákat!"
 	}
+
 	"SpamAmmo"
 	{
 		"en"			"You've used up all your spam ability's ammo."
 		"hu"			"Elhasználtad a folyamatos képességed összes lőszerét."
 	}
+
 	"SpamDetails"
 	{
 		"en"			"You spam rocks at survivors."
 		"hu"			"Folyamatosan sziklákat dobálsz a túlélőkre."
 	}
+
 	"SpamHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your spam ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik folyamatos képességedet!"
 	}
+
 	"SpamHuman2"
 	{
 		"en"			"Your spam ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a folyamatos képességedet. Próbáld újra."
 	}
+
 	"SpamHuman3"
 	{
 		"en"			"You already activated your spam ability."
 		"hu"			"Már aktiváltad a folyamatos képességedet."
 	}
+
 	"SpamHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your rock spammer ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A folyamatos szikla képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"SpamHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your rock spammer ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A folyamatos szikla képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
+
 	"SpamMenu"
 	{
 		"en"			"Spam Ability Information"
 		"hu"			"Folyamatos Képesség Információ"
 	}
+
 	"Splash"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is splashing damage at nearby survivors!"
 		"hu"			"{olive}{1}{mint} sebzést fröcsköl a közelben lévő túlélőkre!"
 	}
+
 	"Splash2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is no longer splashing damage at nearby survivors!"
 		"hu"			"{olive}{1}{mint} többé már nem fröcsköl sebzést a túlélőkre!"
 	}
+
 	"SplashAmmo"
 	{
 		"en"			"You've used up all your splash ability's ammo."
 		"hu"			"Elhasználtad a fröcskölő képességed összes lőszerét."
 	}
+
 	"SplashDetails"
 	{
 		"en"			"You constantly deal splash damage to nearby survivors."
 		"hu"			"Folyamatosan sebzést fröcskölsz a közelben lévő túlélőkre."
 	}
+
 	"SplashHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your splash ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik fröcskölő képességedet!"
 	}
+
 	"SplashHuman2"
 	{
 		"en"			"Your splash ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a fröcskölő képességedet. Próbáld újra."
 	}
+
 	"SplashHuman3"
 	{
 		"en"			"You already activated your splash ability."
 		"hu"			"Már aktiváltad a fröcskölő képességedet."
 	}
+
 	"SplashHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your splash ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A fröcskölő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"SplashHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your splash ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A fröcskölő képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
+
 	"SplashMenu"
 	{
 		"en"			"Splash Ability Information"
 		"hu"			"Fröcskölő Képesség Információ"
 	}
+
 	"Throw"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} threw a car!"
 		"hu"			"{olive}{1}{mint} dobott egy autót!"
 	}
+
 	"Throw2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} threw a{yellow} special infected{mint}!"
 		"hu"			"{olive}{1}{mint} dobott egy{yellow} speciális fertőzöttet{mint}!"
 	}
+
 	"Throw3"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} threw itself!"
 		"hu"			"{olive}{1}{mint} eldobta magát!"
 	}
+
 	"Throw4"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} threw a Witch!"
 		"hu"			"{olive}{1}{mint} dobott egy boszorkát!"
 	}
+
 	"ThrowAmmo"
 	{
 		"en"			"You've used up all your throw ability's ammo."
 		"hu"			"Elhasználtad a dobó képességed összes lőszerét."
 	}
+
 	"ThrowDetails"
 	{
 		"en"			"You throw cars, special infected, Witches, or yourself."
 		"hu"			"Dobsz kocsikat, speciális fertőzötteket, boszorkákat, vagy saját magadat."
 	}
+
 	"ThrowHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your throw ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik dobó képességedet!"
 	}
+
 	"ThrowHuman2"
 	{
 		"en"			"You already activated your throw ability."
 		"hu"			"Már aktiváltad a dobó képességedet."
 	}
+
 	"ThrowHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your throw ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A dobó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"ThrowHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your throw ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A dobó képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
+
 	"ThrowMenu"
 	{
 		"en"			"Throw Ability Information"
 		"hu"			"Dobó Képesség Információ"
 	}
+
 	"Track"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} rock is{yellow} tracking{mint} a survivor!"
 		"hu"			"{olive}{1}{mint} sziklája{yellow} követ{mint} egy túlélőt!"
 	}
+
 	"TrackAmmo"
 	{
 		"en"			"You've used up all your track ability's ammo."
 		"hu"			"Elhasználtad a követő képességed összes lőszerét."
 	}
+
 	"TrackDetails"
 	{
 		"en"			"You throw heat-seeking rocks that will track down the nearest survivors."
 		"hu"			"Hőkereső sziklákat dobsz, ami követi a legközelebbi túlélőt."
 	}
+
 	"TrackHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your track ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik követő képességedet!"
 	}
+
 	"TrackHuman2"
 	{
 		"en"			"You already activated your track ability."
 		"hu"			"Már aktiváltad a követő képességedet."
 	}
+
 	"TrackHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your track ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A követő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"TrackHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your track ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A követő képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
+
 	"TrackMenu"
 	{
 		"en"			"Track Ability Information"
 		"hu"			"Követő Képesség Információ"
 	}
+
 	"Ultimate"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} activated ultimate mode!"
 		"hu"			"{olive}{1}{mint} aktiválta a végső módját!"
 	}
+
 	"Ultimate2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} deactivated ultimate mode!"
 		"hu"			"{olive}{1}{mint} deaktiválta a végső módját!"
 	}
+
 	"Ultimate3"
 	{
 		"#format"		"{1:.2f},{2:.2f}"
 		"en"			"You have dealt {yellow}{1}{mint}/{yellow}{2}{mint} damage to the survivors to unlock ultimate mode."
 		"hu"			"Ennyi sebzést {yellow}{1}{mint}/{yellow}{2}{mint} okoztál a túlélőknek ahhoz hogy felold a végső módodat."
 	}
+
 	"Ultimate4"
 	{
 		"en"			"You may now use ultimate mode!"
 		"hu"			"Ideje használni a végső módot!"
 	}
+
 	"UltimateAmmo"
 	{
 		"en"			"You've used up all your ultimate ability's ammo."
 		"hu"			"Elhasználtad a végső képességed összes lőszerét."
 	}
+
 	"UltimateDetails"
 	{
 		"en"			"You activate ultimate mode when low on health to gain temporary godmode and damage boost"
 		"hu"			"Aktiválod a végső módot, amikor már kevés az életerőd, hogy ideiglenesen sebezhetetlen legyél és sebzés növelést kapj."
 	}
+
 	"UltimateHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ultimate ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik végső képességedet!"
 	}
+
 	"UltimateHuman2"
 	{
 		"en"			"Your ultimate ability isn't ready yet."
 		"hu"			"Még nem áll készen a végső képességed."
 	}
+
 	"UltimateHuman3"
 	{
 		"en"			"You already activated your ultimate ability."
 		"hu"			"Már aktiváltad a végső képességedet."
 	}
+
 	"UltimateHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your ultimate ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A végső képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"UltimateHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your ultimate ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A végső képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
+
 	"UltimateMenu"
 	{
 		"en"			"Ultimate Ability Information"
 		"hu"			"Végső Képesség Információ"
 	}
+
 	"Undead"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} increased its lifespan!"
 		"hu"			"{olive}{1}{mint} növelte az élettartamát!"
 	}
+
 	"Undead2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is back to full health!"
 		"hu"			"{olive}{1}{mint} újra teljes életerőn van!"
 	}
+
 	"UndeadAmmo"
 	{
 		"en"			"You've used up all your undead ability's ammo."
 		"hu"			"Elhasználtad az élőholt képességed összes lőszerét."
 	}
+
 	"UndeadDetails"
 	{
 		"en"			"You cannot die."
 		"hu"			"Nem tudsz meghalni."
 	}
+
 	"UndeadHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your undead ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik élőholt képességedet!"
 	}
+
 	"UndeadHuman2"
 	{
 		"en"			"Your undead ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az élőholt képességedet. Próbáld újra."
 	}
+
 	"UndeadHuman3"
 	{
 		"en"			"You already activated your undead ability."
 		"hu"			"Már aktiváltad az élőholt képességedet."
 	}
+
 	"UndeadHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your undead ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az élőholt képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"UndeadHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your undead ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az élőholt képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
+
 	"UndeadMenu"
 	{
 		"en"			"Undead Ability Information"
 		"hu"			"Élőholt Képesség Információ"
 	}
+
 	"Vampire"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} életerőt lopott{olive} {2}{mint}-tol!"
 	}
+
 	"VampireDetails"
 	{
 		"en"			"You gain health from hurting survivors."
 		"hu"			"Életerőt kapsz ha bántod a túlélőket."
 	}
+
 	"VampireMenu"
 	{
 		"en"			"Vampire Ability Information"
 		"hu"			"Vámpír Képesség Információ"
 	}
+
 	"Vision"
 	{
 		"#format"		"{1:s},{2:N},{3:i}"
 		"en"			"{olive}{1}{mint} changed{olive} {2}'s{mint} vision to{yellow} {3}{mint} FOV!"
 		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} látómezejét{yellow} {3}{mint} -ra!"
 	}
+
 	"Vision2"
 	{
 		"#format"		"{1:N},{2:i}"
 		"en"			"{olive}{1}'s{mint} vision changed back to{yellow} {2}{mint} FOV!"
 		"hu"			"{olive}{1}{mint} látómezeje visszaállt{yellow} {2}{mint} -ra!"
 	}
+
 	"VisionAmmo"
 	{
 		"en"			"You've used up all your vision range ability's ammo."
 		"hu"			"Elhasználtad a távolsági látómező képességed összes lőszerét."
 	}
+
 	"VisionDetails"
 	{
 		"en"			"You change the survivors' field of view."
 		"hu"			"Megváltoztatod a túlélők látómezejét."
 	}
+
 	"VisionHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your vision range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági látómező képességedet!"
 	}
+
 	"VisionHuman2"
 	{
 		"en"			"Your vision range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági látómező képességedet. Próbáld újra."
 	}
+
 	"VisionHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your visual range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági látómező képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"VisionHuman4"
 	{
 		"en"			"There are no survivors nearby to use your vision range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági látómező képességedet."
 	}
+
 	"VisionHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your visual range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági látómező képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
+
 	"VisionMenu"
 	{
 		"en"			"Vision Ability Information"
 		"hu"			"Látómező Képesség Információ"
 	}
+
 	"Warp"
 	{
 		"#format"		"{1:s},{2:N},{3:N}"
 		"en"			"{olive}{1}{mint} warped{olive} {2}{mint} to{olive} {3}{mint}!"
 		"hu"			"{olive}{1}{mint} éppen{olive} {2}{mint} odateleportált{olive} {3}{mint}-hoz!"
 	}
+
 	"Warp2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} will warp to a survivor periodically!"
 		"hu"			"{olive}{1}{mint} időszakosan a túlélőkhöz teleportál!"
 	}
+
 	"Warp3"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} warped to a survivor!"
 		"hu"			"{olive}{1}{mint} egy túlélőhöz teleportált!"
 	}
+
 	"WarpAmmo"
 	{
 		"en"			"You've used up all your periodical warping ability's ammo."
 		"hu"			"Elhasználtad az időszakos teleportálás képességed összes lőszerét."
 	}
+
 	"WarpAmmo2"
 	{
 		"en"			"You've used up all your warp range ability's ammo."
 		"hu"			"Elhasználtad a távolsági teleportálás képességed összes lőszerét."
 	}
+
 	"WarpDetails"
 	{
 		"en"			"You warp to survivors and warp survivors to random teammates."
 		"hu"			"A túlélőkhöz teleportálsz vagy túlélőket teleportálsz véletlenszerűen a társaikhoz."
 	}
+
 	"WarpHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your periodical warping ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik időszakos teleportáló képességedet!"
 	}
+
 	"WarpHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your warp range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági teleportáló képességedet!"
 	}
+
 	"WarpHuman3"
 	{
 		"en"			"Your warp range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági teleportáló képességedet. Próbáld újra."
 	}
+
 	"WarpHuman4"
 	{
 		"en"			"You already activated your periodical warping ability."
 		"hu"			"Már aktiváltad a távolsági teleportáló képességedet."
 	}
+
 	"WarpHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your periodical warping ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az időszakos teleportálási képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"WarpHuman6"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your warp range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági teleportáló képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"WarpHuman7"
 	{
 		"en"			"There are no survivors nearby to use your warp range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági teleportáló képességedet."
 	}
+
 	"WarpHuman8"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your periodical warping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az időszakos teleportáló képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
+
 	"WarpHuman9"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your warp range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági teleportáló képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
+
 	"WarpMenu"
 	{
 		"en"			"Warp Ability Information"
 		"hu"			"Teleportáló Képesség Információ"
 	}
+
 	"Whirl"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} is making{olive} {2}{mint} whirl."
 		"hu"			"{olive}{1}{mint} éppen megpörgeti{olive} {2}{mint} -t."
 	}
+
 	"Whirl2"
 	{
 		"#format"		"{1:N}"
 		"en"			"{olive}{1}{mint} stopped whirling."
 		"hu"			"{olive}{1}{mint} többé már nem pörög."
 	}
+
 	"WhirlAmmo"
 	{
 		"en"			"You've used up all your whirl range ability's ammo."
 		"hu"			"Elhasználtad a távolsági megpörgető képességed összes lőszerét."
 	}
+
 	"WhirlDetails"
 	{
 		"en"			"You make survivors' screens whirl."
 		"hu"			"Megpörgeted a túlélők képernyőjét."
 	}
+
 	"WhirlHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your whirl range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik megpörgető képességedet!"
 	}
+
 	"WhirlHuman2"
 	{
 		"en"			"Your whirl range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági megpörgető képességedet. Próbáld újra."
 	}
+
 	"WhirlHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your whirl range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági megpörgető képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"WhirlHuman4"
 	{
 		"en"			"There are no survivors nearby to use your whirl range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tud a távolsági megpörgető képességedet."
 	}
+
 	"WhirlHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your whirl range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági megpörgető képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
+
 	"WhirlMenu"
 	{
 		"en"			"Whirl Ability Information"
 		"hu"			"Megpörgető Képesség Információ"
 	}
+
 	"Witch"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} converted some common infected into{olive} Witch minions{mint}!"
 		"hu"			"{olive}{1}{mint} átalakított pár közönséges fertőzöttet{olive} Boszorka minyonná{mint}!"
 	}
+
 	"WitchAmmo"
 	{
 		"en"			"You've used up all your witch ability's ammo."
 		"hu"			"Elhasználtad a boszorka képességed összes lőszerét."
 	}
+
 	"WitchDetails"
 	{
 		"en"			"You convert nearby common infected into Witch minions."
 		"hu"			"Átalakítod a közelben lévő közönséges fertőzöttet Boszorka minyonná."
 	}
+
 	"WitchHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your witch ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik boszorka képességedet!"
 	}
+
 	"WitchHuman2"
 	{
 		"en"			"Your witch ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a boszorka képességedet. Próbáld újra."
 	}
+
 	"WitchHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your witch spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A boszorka létrehozó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"WitchHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your witch spawner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A boszorka létrehozó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
+
 	"WitchMenu"
 	{
 		"en"			"Witch Ability Information"
 		"hu"			"Boszorka Képesség Információ"
 	}
+
 	"Xiphos"
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} ellopott egy kis életerőt{olive} {2}{mint}-tol!"
 	}
+
 	"Xiphos2"
 	{
 		"#format"		"{1:N},{2:s}"
 		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} ellopott egy kis életerőt{olive} {2}{mint}-tol!"
 	}
+
 	"XiphosDetails"
 	{
 		"en"			"You can steal health from survivors and vice-versa."
 		"hu"			"Életerőt tudsz lopni a túlélőktől, és fordítva."
 	}
+
 	"XiphosMenu"
 	{
 		"en"			"Xiphos Ability Information"
 		"hu"			"Xipho Képesség Információ"
 	}
+
 	"Yell"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} special speed activated!"
 		"hu"			"{olive}{1}{mint} speciális sebessége aktiválva!"
 	}
+
 	"Yell2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}'s{mint} special speed deactivated!"
 		"hu"			"{olive}{1}{mint} speciális sebessége deaktiválva!"
 	}
+
 	"YellAmmo"
 	{
 		"en"			"You've used up all your yell ability's ammo."
 		"hu"			"Elhasználtad az üvöltő képességed összes lőszerét."
 	}
+
 	"YellDetails"
 	{
 		"en"			"You yell to deafen survivors."
 		"hu"			"Rá üvöltesz a túlélőkre hogy megsüketítsd őket."
 	}
+
 	"YellHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your yell ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik üvöltő képességedet!"
 	}
+
 	"YellHuman2"
 	{
 		"en"			"Your yell ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az üvöltő képességedet. Próbáld újra."
 	}
+
 	"YellHuman3"
 	{
 		"en"			"You already activated your yell ability."
 		"hu"			"Már aktiváltad az üvöltő képességedet."
 	}
+
 	"YellHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your yell ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az üvöltő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"YellHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your yell ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az üvöltő képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
+
 	"YellMenu"
 	{
 		"en"			"Yell Ability Information"
 		"hu"			"Üvöltő Képesség Információ"
 	}
+
 	"Zombie"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} will spawn zombies periodically!"
 		"hu"			"{olive}{1}{mint} időszakosan zombikat hozz létre!"
 	}
+
 	"Zombie2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} spawned {yellow} zombies{mint}!"
 		"hu"			"{olive}{1}{mint} zombikat {yellow} hozott létre{mint}!"
 	}
+
 	"ZombieAmmo"
 	{
 		"en"			"You've used up all your zombie ability's ammo."
 		"hu"			"Elhasználtad a zombi képességed összes lőszerét."
 	}
+
 	"ZombieDetails"
 	{
 		"en"			"You spawn zombies."
 		"hu"			"Zombikat hozol létre."
 	}
+
 	"ZombieHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your zombie spawner ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik zombi létrehozó képességedet!"
 	}
+
 	"ZombieHuman2"
 	{
 		"en"			"Your zombie spawner ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a zombi létrehozó képességedet. Próbáld újra."
 	}
+
 	"ZombieHuman3"
 	{
 		"en"			"You already activated your zombie spawner ability."
 		"hu"			"Már aktiváltad a zombi létrehozó képességedet."
 	}
+
 	"ZombieHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your zombie spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A zombi létrehozó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
+
 	"ZombieHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your zombie spawner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A zombi létrehozó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
+
 	"ZombieMenu"
 	{
 		"en"			"Zombie Ability Information"
 		"hu"			"Zombi Képesség Információ"
 	}
+
 	"Tank #1"
 	{
 		"en"			"{mint}This Tank can absorb most of the damage it receives."
 		"hu"			"{mint}Ez a Tank elnyeli a sebzések nagy részét amit kap."
 	}
+
 	"Tank #2"
 	{
 		"en"			"{mint}This Tank can create acid puddles underneath survivors."
 		"hu"			"{mint}Ez a Tank savas pocsolyákat hozhat létre a túlélők alatt."
 	}
+
 	"Tank #3"
 	{
 		"en"			"{mint}This Tank can prevent survivors from aiming."
 		"hu"			"{mint}Ez a Tank megakadályozza a túlélőket a célzásban."
 	}
+
 	"Tank #4"
 	{
 		"en"			"{mint}This Tank can steal some or all of your ammunition."
 		"hu"			"{mint}Ez a Tank ellophat tőled egy kis lőszert, vagy az egészet."
 	}
+
 	"Tank #5"
 	{
 		"en"			"{mint}This Tank can blind survivors."
 		"hu"			"{mint}Ez a Tank megvakíthatja a túlélőket."
 	}
+
 	"Tank #6"
 	{
 		"en"			"{mint}This Tank can cause explosions and is immune to explosive damage."
 		"hu"			"{mint}Ez a Tank robbanásokat okozhat és immunis a robbanásokra."
 	}
+
 	"Tank #7"
 	{
 		"en"			"{mint}This Tank can spawn Boomers behind it and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank pukkancsokat hozhat létre, és dobhat is párat a túlélők felé."
 	}
+
 	"Tank #8"
 	{
 		"en"			"{mint}This Tank is immune to bullet damage."
 		"hu"			"{mint}Ez a Tank immunis a lőszer sebzésre."
 	}
+
 	"Tank #9"
 	{
 		"en"			"{mint}This Tank can bury survivors."
 		"hu"			"{mint}Ez a Tank eltemetheti a túlélőket."
 	}
+
 	"Tank #10"
 	{
 		"en"			"{mint}This Tank can throw cars at survivors. The cars disappear after 30 seconds."
 		"en"			"{mint}Ez a Tank autókat dobhat a túlélők felé. Az autók eltűnnek 30mp után"
 	}
+
 	"Tank #11"
 	{
 		"en"			"{mint}This Tank can spawn Chargers behind it and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank rohanókat hozhat létre, és dobhat is párat a túlélők felé."
 	}
+
 	"Tank #12"
 	{
 		"en"			"{mint}This Tank can choke survivors in the air."
 		"hu"			"{mint}Ez a Tank fojtogatja a túlélőket a levegőben."
 	}
+
 	"Tank #13"
 	{
 		"en"			"{mint}This Tank can spawn clones behind it and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank klónokat hozhat létre, és dobhat is párat a túlélők felé."
 	}
+
 	"Tank #14"
 	{
 		"en"			"{mint}This Tank can emit clouds of smoke that damage survivors caught in them."
 		"hu"			"{mint}Ez a Tank füstfelhőket hoz létre, ami sebzi a benne lévő túlélőket"
 	}
+
 	"Tank #15"
 	{
 		"en"			"{mint}This Tank can drop a random weapon upon death."
 		"hu"			"{mint}Ez a Tank véletlenszerű fegyvereket dob a halála után."
 	}
+
 	"Tank #16"
 	{
 		"en"			"{mint}This Tank can drug survivors."
 		"hu"			"{mint}Ez a Tank bedrogozhatja a túlélőket."
 	}
+
 	"Tank #17"
 	{
 		"en"			"{mint}This Tank can make survivors drunk."
 		"hu"			"{mint}Ez a Tank részeggé teheti a túlélőket."
 	}
+
 	"Tank #18"
 	{
 		"en"			"{mint}This Tank can electrocute survivors."
 		"hu"			"{mint}Ez a Tank megrázhatja a túlélőket."
 	}
+
 	"Tank #19"
 	{
 		"en"			"{mint}This Tank can force survivors to equip a specific weapon slot for a certain period of time."
 		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra hogy bizonyos fegyvereket használjanak egy bizonyos ideig."
 	}
+
 	"Tank #20"
 	{
 		"en"			"{mint}This Tank can run really fast like the Flash."
 		"hu"			"{mint}Ez a Tank olyan gyorsan fut mint Flash."
 	}
+
 	"Tank #21"
 	{
 		"en"			"{mint}This Tank can start fires and is immune to fire damage."
 		"hu"			"{mint}Ez a Tank tüzeket hozhat létre és immunis a tűzre."
 	}
+
 	"Tank #22"
 	{
 		"en"			"{mint}This Tank can fling survivors away or into the air."
 		"hu"			"{mint}Ez a Tank elhajítja a túlélőket a levegőbe."
 	}
+
 	"Tank #23"
 	{
 		"en"			"{mint}This Tank takes extra damage while dealing more damage and running faster."
 		"hu"			"{mint}Ez a Tank érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
 	}
+
 	"Tank #24"
 	{
 		"en"			"{mint}This Tank can cloak itself and disarm survivors."
 		"hu"			"{mint}Ez a Tank álcázhatja magát és lefegyverezheti a túlélőket."
 	}
+
 	"Tank #25"
 	{
 		"en"			"{mint}This Tank can gain temporary invincibility."
 		"hu"			"{mint}Ez a Tank ideiglenes legyőzhetetlenséget kaphat."
 	}
+
 	"Tank #26"
 	{
 		"en"			"{mint}This Tank can pull survivors and infected towards it and lower survivors' gravity."
 		"hu"			"{mint}Ez a Tank magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
 	}
+
 	"Tank #27"
 	{
 		"en"			"{mint}This Tank can give survivors temporary health, and it can absorb health from nearby infected."
 		"hu"			"{mint}Ez a Tank ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
 	}
+
 	"Tank #28"
 	{
 		"en"			"{mint}This Tank can only be damaged by headshots."
 		"hu"			"{mint}Ezt a Tankot csak a fejlövés sebzi."
 	}
+
 	"Tank #29"
 	{
 		"en"			"{mint}This Tank can spawn Hunters behind it and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank Vadászokat hozhat létre, és dobhat is párat a túlélők felé."
 	}
+
 	"Tank #30"
 	{
 		"en"			"{mint}This Tank can constantly hurt survivors for a certain period of time."
 		"hu"			"{mint}Ez a Tank folyamatosan bántja a túlélőket egy bizonyos időn belül."
 	}
+
 	"Tank #31"
 	{
 		"en"			"{mint}This Tank can hypnotize survivors to hurt themselves or their teammates."
 		"hu"			"{mint}Ez a Tank hipnotizálhatja a túlélőket, hogy magukat vagy a társaikat bántsák."
 	}
+
 	"Tank #32"
 	{
 		"en"			"{mint}This Tank can freeze survivors."
 		"hu"			"{mint}Ez a Tank megfagyasztja a túlélőket."
 	}
+
 	"Tank #33"
 	{
 		"en"			"{mint}This Tank can make survivors go idle. (This doesn't affect bots.)"
 		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
 	}
+
 	"Tank #34"
 	{
 		"en"			"{mint}This Tank can invert survivors' movement keys."
 		"hu"			"{mint}Ez a Tank felcserélheti a túlélők irányítási gombjait."
 	}
+
 	"Tank #35"
 	{
 		"en"			"{mint}This Tank can give survivors items upon death."
 		"hu"			"{mint}Ez a Tank árukat adhat a túlélőknek miután meghalt."
 	}
+
 	"Tank #36"
 	{
 		"en"			"{mint}This Tank can spawn Jockeys behind it and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank Zsokékat hozhat létre és dobhat egy párat a túlélők felé is."
 	}
+
 	"Tank #37"
 	{
 		"en"			"{mint}This Tank can jump periodically and make survivors jump uncontrollably."
 		"hu"			"{mint}Ez a Tank időszakosan ugrálhat és ráveheti a túlélőket a kontrollálhatatlan ugrálásra is."
 	}
+
 	"Tank #38"
 	{
 		"en"			"{mint}This Tank can kill itself along with a survivor victim."
 		"hu"			"{mint}Ez a Tank megölheti magát, vihet egy túlélő áldozatot is."
 	}
+
 	"Tank #39"
 	{
 		"en"			"{mint}This Tank can make survivors lag."
 		"hu"			"{mint}Ez a Tank késleltetheti a túlélőket."
 	}
+
 	"Tank #40"
 	{
 		"en"			"{mint}This Tank can shoot lasers at survivors."
 		"hu"			"{mint}Ez a Tank lézereket lőhet a túlélők felé."
 	}
+
 	"Tank #41"
 	{
 		"en"			"{mint}This Tank can leech off health from survivors."
 		"hu"			"{mint}Ez a Tank életet szívhat el a túlélőktől."
 	}
+
 	"Tank #42"
 	{
 		"en"			"{mint}This Tank can heal nearby special infected upon death."
 		"hu"			"{mint}Ez a Tank gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
 	}
+
 	"Tank #43"
 	{
 		"en"			"{mint}This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
 		"hu"			"{mint}Ez a Tank meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
 	}
+
 	"Tank #44"
 	{
 		"en"			"{mint}This Tank can resurrect dead special infected."
 		"hu"			"{mint}Ez a Tank visszahozhatja a halott speciális fertőzötteket."
 	}
+
 	"Tank #45"
 	{
 		"en"			"{mint}This Tank can nullify survivors' damage to protect itself from damage."
 		"hu"			"{mint}Ez a Tank hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
 	}
+
 	"Tank #46"
 	{
 		"en"			"{mint}This Tank can access other nearby Mutant Tanks' abilities."
 		"hu"			"{mint}Ez a Tank hozzáfér a többi közel lévő Mutáns Tank képességeihez."
 	}
+
 	"Tank #47"
 	{
 		"en"			"{mint}This Tank can start panic events with hordes of zombies."
 		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, sok hordányi zombival."
 	}
+
 	"Tank #48"
 	{
 		"en"			"{mint}This Tank can pimp slap survivors repeatedly to show them who's boss."
 		"hu"			"{mint}Ez a Tank folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
 	}
+
 	"Tank #49"
 	{
 		"en"			"{mint}This Tank is immune to melee damage."
 		"hu"			"{mint}Ez a Tank immunis a közelharci sebzésre."
 	}
+
 	"Tank #50"
 	{
 		"en"			"{mint}This Tank can puke on survivors."
 		"hu"			"{mint}Ez a Tank lehányhatja a túlélőket."
 	}
+
 	"Tank #51"
 	{
 		"en"			"{mint}This Tank gains a speed boost when set on fire."
 		"hu"			"{mint}Ez Tank gyorsabb lesz ha felgyújtják."
 	}
+
 	"Tank #52"
 	{
 		"en"			"{mint}This Tank can silence itself from survivors."
 		"hu"			"{mint}Ez a Tank lenémíthatja magát a túlélők elől."
 	}
+
 	"Tank #53"
 	{
 		"en"			"{mint}This Tank can give survivors high gun recoil."
 		"hu"			"{mint}Ez a Tank erős visszarúgást adhat a túlélőknek."
 	}
+
 	"Tank #54"
 	{
 		"en"			"{mint}This Tank regenerates health every second."
 		"hu"			"{mint}Ez a Tank életerőt regenerál minden másodpercben."
 	}
+
 	"Tank #55"
 	{
 		"en"			"{mint}This Tank can respawn upon death."
 		"hu"			"{mint}Ez a Tank újjászülethet a halála pillanatában."
 	}
+
 	"Tank #56"
 	{
 		"en"			"{mint}This Tank can force survivors to restart with a new loadout."
 		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
 	}
+
 	"Tank #57"
 	{
 		"en"			"{mint}This Tank can start rock showers."
 		"hu"			"{mint}Ez a Tank szikla záporokat indít."
 	}
+
 	"Tank #58"
 	{
 		"en"			"{mint}This Tank can send survivors into space."
 		"hu"			"{mint}Ez a Tank az űrbe küldheti a túlélőket."
 	}
+
 	"Tank #59"
 	{
 		"en"			"{mint}This Tank can throw itself towards survivors."
 		"hu"			"{mint}Ez a Tank eldobhatja magát a túlélők felé."
 	}
+
 	"Tank #60"
 	{
 		"en"			"{mint}This Tank can shake survivors' screens."
 		"hu"			"{mint}Ez a Tank megrázza a túlélők képernyőjét."
 	}
+
 	"Tank #61"
 	{
 		"en"			"{mint}This Tank spawns with a shield and throws propane tanks or gas cans which survivors can use to break the shield."
 		"hu"			"{mint}Ez a Tank egy pajzzsal születik, propán tartályokat vagy benzines kannákat dobál. Ezek segítségével a túlélők áttörhetnek a pajzson."
 	}
+
 	"Tank #62"
 	{
 		"en"			"{mint}This Tank can shove survivors around."
 		"hu"			"{mint}Ez a Tank mindenhova lökdösi a túlélőket."
 	}
+
 	"Tank #63"
 	{
 		"en"			"{mint}This Tank can slow survivors down."
 		"hu"			"{mint}Ez a Tank letudja lassítani a túlélőket."
 	}
+
 	"Tank #64"
 	{
 		"en"			"{mint}This Tank can smash survivors to death."
 		"hu"			"{mint}Ez a Tank a halálba tudja zúzni a túlélőket."
 	}
+
 	"Tank #65"
 	{
 		"en"			"{mint}This Tank can smite survivors for an instant kill."
 		"hu"			"{mint}Ez a Tank letudja csapni a túlélőket, ezzel azonnali halált okozva."
 	}
+
 	"Tank #66"
 	{
 		"en"			"{mint}This Tank can spawn Smokers behind it and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
 	}
+
 	"Tank #67"
 	{
 		"en"			"{mint}This Tank can spam rocks at survivors."
 		"hu"			"{mint}Ez a Tank folyamatosan sziklákat dobál a túlélők felé."
 	}
+
 	"Tank #68"
 	{
 		"en"			"{mint}This Tank can spawn random special infected behind it and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank tud létrehozni véletlenszerű speciális fertőzötteket, és dobni is egy párat a túlélők felé."
 	}
+
 	"Tank #69"
 	{
 		"en"			"{mint}This Tank can spawn Spitters behind it and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank tud Köpködőket létrehozni, és dobni is egy párat a túlélők felé."
 	}
+
 	"Tank #70"
 	{
 		"en"			"{mint}This Tank can release a splash of damage within a certain radius."
 		"hu"			"{mint}Ez a Tank sebzést fröcsköl egy bizonyos távolságon belül."
 	}
+
 	"Tank #71"
 	{
 		"en"			"{mint}This Tank can throw cars, special infected, Tanks, Witches, and itself!"
 		"hu"			"{mint}Ez a Tank tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
 	}
+
 	"Tank #72"
 	{
 		"en"			"{mint}This Tank throws rocks which can track nearby survivors."
 		"hu"			"{mint}Ez a Tank olyan sziklákat dob, ami követi a közelben lévő túlélőket."
 	}
+
 	"Tank #73"
 	{
 		"en"			"{mint}This Tank gains temporary godmode and damage boost when low on health."
 		"hu"			"{mint}Ez a Tank ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
 	}
+
 	"Tank #74"
 	{
 		"en"			"{mint}This Tank regains full HP when close to dying."
 		"hu"			"{mint}Ez a Tank visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
 	}
+
 	"Tank #75"
 	{
 		"en"			"{mint}This Tank can steal health from survivors."
 		"hu"			"{mint}Ez a Tank életerőt lophat a túlélőktől."
 	}
+
 	"Tank #76"
 	{
 		"en"			"{mint}This Tank can change the FOV of survivors."
 		"hu"			"{mint}Ez a Tank megváltoztatja a túlélők látómezejét."
 	}
+
 	"Tank #77"
 	{
 		"en"			"{mint}This Tank can warp to a random survivor."
 		"hu"			"{mint}Ez a Tank véletlenszerűen egy túlélőhöz teleportál."
 	}
+
 	"Tank #78"
 	{
 		"en"			"{mint}This Tank can make survivors whirl."
 		"hu"			"{mint}Ez a Tank megpörgeti a túlélőket."
 	}
+
 	"Tank #79"
 	{
 		"en"			"{mint}This Tank can convert nearby common infected into Witches and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank Boszorkává alakítja a közeli fertőzötteket, és dob is párat a túlélők felé."
 	}
+
 	"Tank #80"
 	{
 		"en"			"{mint}This Tank can steal health from survivors and vice-versa."
 		"hu"			"{mint}Ez a Tank tud életerőt lopni a túlélőktől és fordítva."
 	}
+
 	"Tank #81"
 	{
 		"en"			"{mint}This Tank can yell to defean survivors."
 		"hu"			"{mint}Ez a Tank tud üvölteni, így megsüketítve a túlélőket."
 	}
+
 	"Tank #82"
 	{
 		"en"			"{mint}This Tank can create a mob of zombies within the area."
 		"hu"			"{mint}Ez a Tank hordákat hoz létre."
 	}
+
 	"Tank #83"
 	{
 		"en"			"{mint}This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
 		"hu"			"{mint}Ez a Tank immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
 	}
+
 	"Tank #84"
 	{
 		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
 		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
 	}
+
 	"Tank #85"
 	{
 		"en"			"{mint}This Tank is immune to fire damage and can run really fast."
 		"hu"			"{mint}Ez a Tank immunis a tűzre és nagyon gyorsan fut."
 	}
+
 	"Tank #86"
 	{
 		"en"			"{mint}This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
 		"hu"			"{mint}Ez a Tank időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
 	}
+
 	"Tank #87"
 	{
 		"en"			"{mint}This Tank pushes survivors away."
 		"hu"			"{mint}Ez a Tank ellöki magától a túlélőket."
 	}
+
 	"Tank #88"
 	{
 		"en"			"{mint}This Tank can run really fast like the Flash and create speed mirages (clones) of itself."
 		"hu"			"{mint}Ez a Tank olyan gyorsan fut mint Flash és gyors délibábokat (klónokat) készít önmagáról."
 	}
+
 	"Tank #89"
 	{
 		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
 		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
 	}
+
 	"Tank #90"
 	{
 		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
 	}
+
 	"Tank #91"
 	{
 		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
 		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
 	}
+
 	"Tank #92"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
 	}
+
 	"Tank #93"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
 	}
+
 	"Tank #94"
 	{
 		"en"			"{mint}This Tank can give survivors temporary health, absorb health from nearby infected, jump really high, start meteor showers, spawn with a shield, and warp to survivors."
 		"hu"			"{mint}Ez a Tank ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, nagyon magasra ugrik, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
 	}
+
 	"Tank #95"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
 	}
+
 	"Tank #96"
 	{
 		"en"			"{mint}This Tank spawns zombies behind clouds of smoke within the area."
 		"hu"			"{mint}Ez a Tank zombikat hoz létre egy füstfelhő mögött."
 	}
+
 	"Tank #97"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
 	}
+
 	"Tank #98"
 	{
 		"en"			"{mint}This Tank can partially blind and drug survivors."
 		"hu"			"{mint}Ez a Tank részben megvakítja és bedrogozza a túlélőket."
 	}
+
 	"Tank #99"
 	{
 		"en"			"{mint}This Tank can partially drug and hurt survivors."
 		"hu"			"{mint}Ez a Tank részben bedrogozza és bántja a túlélőket."
 	}
+
 	"Tank #100"
 	{
 		"en"			"{mint}This Tank can start rock showers and spam rocks at survivors."
 		"hu"			"{mint}Ez a Tank szikla záporokat hoz létre, és folyamatosan sziklákat dobál a túlélőkre."
 	}
+
 	"Tank #101"
 	{
 		"en"			"{mint}This Tank does extra damage, runs really fast, clones itself, creates acid puddles, explosions, and fires, cloaks itself, starts rock showers, spams rocks at survivors, and throws rocks that track nearby survivors."
 		"hu"			"{mint}Ez a Tank többet sebez, nagyon gyorsan fut, klónozza magát, savas pocsolyákat, robbanásokat, és tüzet hoz létre, álcázza magát, szikla záport indít, folyamatosan sziklákat dobál a túlélőkre, sziklákat dob amik követik a közeli túlélőket."
 	}
+
 	"Tank #102"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
 	}
+
 	"Tank #103"
 	{
 		"en"			"{mint}It's Darth Vader... And he is... A Mutant Tank with the Force!"
 		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Tank az erővel!"
 	}
+
 	"Tank #104"
 	{
 		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
 	}
+
 	"Tank #105"
 	{
 		"en"			"{mint}This Tank can start panic events and spawn Boomers to help prolong them."
 		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, és segítségül Pukkancsokat hozhat létre."
 	}
+
 	"Tank #106"
 	{
 		"en"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
 		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Tanknak nagyrészt olyan képességei vannak mint Hulk-nak!"
 	}
+
 	"Tank #107"
 	{
 		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
 		"hu"			"{mint}Ez a Tank tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
 	}
+
 	"Tank #108"
 	{
 		"en"			"{mint}This Tank is too busy meditating to care about you."
 		"hu"			"{mint}Ez a Tank éppen meditál, túl elfoglalt hogy foglalkozzon veled."
 	}
+
 	"Tank #109"
 	{
 		"en"			"{mint}This Tank throws explosive rocks and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank robbanó sziklákat dob és időszakosan teleportál egy túlélőkhöz."
 	}
+
 	"Tank #110"
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, robbanó sziklákat dob, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
 	}
+
 	"Tank #111"
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, robbanó sziklákat dob, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
 	}
+
 	"Tank #112"
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, robbanó sziklákat dob, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
 	}
+
 	"Tank #113"
 	{
 		"en"			"{mint}This Tank randomly switches into different Mutant Tank types and deals increased damage. Be careful..."
 		"hu"			"{mint}Ez a tank véletlenszerűen átalakul egy másik típusú Mutáns Tankká, a sebzése megnő. Légy óvatos..."
 	}
+
 	"Tank #114"
 	{
 		"en"			"{mint}This Tank can shapeshift into different Mutant Tank types. Don't underestimate it..."
 		"hu"			"{mint}Ez a tank át tud alakulni egy másik típusú Mutáns Tankká. Ne becsüld le..."
 	}
-	//"STEAM_0:1:23456789" // This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
-	//"STEAM_0:1:23456789" // Ez egy valós Steam32ID. Ne töröld! Ez csak egy példa.
-	//{
+
+	// This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
+	// Ez egy valós Steam32ID. Ne töröld! Ez csak egy példa.
+	// "STEAM_0:1:23456789"
+	// {
 	//	"en"			"{mint}This Tank is controlled by someone."
 	//	"hu"			"{mint}Ezt a Tankot valaki irányítja."
-	//}
+	// }
 	// Add Tank Note phrases for your own Mutant Tanks below!
 	// Adj saját kifejezést a saját Mutáns Tankjaidnak lentebb!
 }
