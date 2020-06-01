@@ -37,7 +37,7 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 
 ### Requirements
 1. You must have at least `SourceMod 1.11.0.6511` or higher.
-2. Optional but highly recommended: [DHooks](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
+2. [DHooks](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Optional but highly recommended: [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
 
 ### Notes

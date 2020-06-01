@@ -42,22 +42,22 @@ Changes:
 11. The `Omni` ability now prevents the Tank from transforming into other types that also have the ability enabled. (This prevents numerous bugs from ever happening.)
 12. The `Pyro` ability now automatically activates when the Tank is taking fire damage.
 13. Added the `Regular Limit` setting under the `Waves` section to limit how many waves of Tanks are spawned on non-finale maps. (Requested by RDiver.)
-14. Moved the `Human Support` setting to its own section:
+14. Added extra checks for several abilities to avoid client index errors.
+15. Moved the `Human Support` setting to its own section:
 - `Tank #/General` to `Tank #/Human Support`
 - `STEAM_ID/General` to `STEAM_ID/Human Support`
-15. Added the `Rename Players` setting under the following sections:
+16. Added the `Rename Players` setting under the following sections:
 - `Plugin Settings/Human Support`
 - `Tank #/Human Support`
 - `STEAM_ID/Human Support`
-16. Replaced all cooldown timers by tracking `GetTime` instead.
-17. Replaced all `GetEngineTime` instances with `GetTime` for more accuracy.
-18. `RequestFrame` is now used instead of 0.1-second timers.
-19. The cooldowns for some abilities now start when the abilities end, not when they activate.
-20. Added sound effects for the `Absorb`, `Blind`, `Bomb`, `Fire`, `God`, `Gravity`, `Hurt`, `Shake`, and `Slow` abilities. (Requested by Tank Rush.)
-21. Added the `sm_mt_version` command which allows users to check the current version in-game.
-22. Added backwards compatibility for old natives.
-23. Updated/removed several phrases for each ability.
-24. DHooks is now optional. (Still needed for Left 4 DHooks Direct to work.)
+17. Replaced all cooldown timers by tracking `GetTime` instead.
+18. Replaced all `GetEngineTime` instances with `GetTime` for more accuracy.
+19. `RequestFrame` is now used instead of 0.1-second timers.
+20. The cooldowns for some abilities now start when the abilities end, not when they activate.
+21. Added sound effects for the `Absorb`, `Blind`, `Bomb`, `Fire`, `God`, `Gravity`, `Hurt`, `Shake`, and `Slow` abilities. (Requested by Tank Rush.)
+22. Added the `sm_mt_version` command which allows users to check the current version in-game.
+23. Added backwards compatibility for old natives.
+24. Updated/removed several phrases for each ability.
 25. Moved all redundant code to the core plugin's include file for universal usage.
 26. Changed how the administration system works. (Please read the `Administration System` section of the `README.md` file.)
 27. Optimized the code of all the plugins included.
