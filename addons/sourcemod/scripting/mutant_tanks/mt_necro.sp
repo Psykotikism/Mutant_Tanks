@@ -604,7 +604,7 @@ static void vNecro(int tank, float pos[3], const char[] type)
 		}
 	}
 
-	if (iInfected > 0)
+	if (bIsSpecialInfected(iInfected))
 	{
 		TeleportEntity(iInfected, pos, NULL_VECTOR, NULL_VECTOR);
 

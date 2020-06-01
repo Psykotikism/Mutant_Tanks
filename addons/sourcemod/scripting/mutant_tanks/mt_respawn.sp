@@ -552,15 +552,9 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 
 				break;
 			}
-			else
-			{
-				vRemoveRespawn(iTank);
-
-				break;
-			}
 		}
 
-		if (iNewTank > 0)
+		if (bIsTank(iNewTank))
 		{
 			SetEntProp(iNewTank, Prop_Send, "m_fFlags", iFlags);
 			SetEntProp(iNewTank, Prop_Data, "m_nSequence", iSequence);
@@ -572,6 +566,10 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 				MT_GetTankName(iTank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Respawn", sTankName);
 			}
+		}
+		else
+		{
+			vRemoveRespawn(iTank);
 		}
 	}
 	else

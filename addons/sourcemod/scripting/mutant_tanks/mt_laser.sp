@@ -549,7 +549,7 @@ static void vLaser(int tank)
 
 	static int iSurvivor;
 	iSurvivor = iGetNearestSurvivor(tank, flTankPos);
-	if (iSurvivor > 0)
+	if (bIsSurvivor(iSurvivor))
 	{
 		static float flSurvivorPos[3];
 		GetClientEyePosition(iSurvivor, flSurvivorPos);

@@ -593,7 +593,7 @@ static void vCloneAbility(int tank)
 							}
 						}
 
-						if (iSelectedType > 0)
+						if (bIsTank(iSelectedType))
 						{
 							TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
 

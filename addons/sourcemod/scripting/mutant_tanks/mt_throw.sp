@@ -595,7 +595,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 				{
 					static int iInfected;
 					iInfected = CreateFakeClient("Infected");
-					if (iInfected > 0)
+					if (bIsValidClient(iInfected))
 					{
 						static int iOptionCount, iOptions[7], iFlag;
 						iOptionCount = 0;

@@ -560,7 +560,7 @@ static void vMinionAbility(int tank)
 							}
 						}
 
-						if (iSelectedType > 0)
+						if (bIsInfected(iSelectedType))
 						{
 							TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
 

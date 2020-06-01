@@ -512,7 +512,7 @@ static void vTrackThink(int rock)
 
 			static int iTarget;
 			iTarget = iGetRockTarget(flPos, flVelocity, iTank);
-			if (iTarget > 0)
+			if (bIsSurvivor(iTarget))
 			{
 				static float flPos2[3], flVelocity2[3];
 				GetClientEyePosition(iTarget, flPos2);
@@ -563,7 +563,7 @@ static void vTrackThink(int rock)
 			bVisible = false;
 			flVector[0] = flVector[1] = flVector[2] = 0.0;
 
-			if (iTarget > 0)
+			if (bIsSurvivor(iTarget))
 			{
 				static float flPos2[3];
 				GetClientEyePosition(iTarget, flPos2);

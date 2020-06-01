@@ -12,11 +12,8 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <adminmenu>
+#include <dhooks>
 #include <mutant_tanks>
-
-#undef REQUIRE_EXTENSIONS
-#tryinclude <dhooks>
-#define REQUIRE_EXTENSIONS
 
 #undef REQUIRE_PLUGIN
 #tryinclude <left4dhooks>
@@ -148,7 +145,6 @@ enum struct esGeneral
 	ArrayList g_alPlugins;
 
 	bool g_bAbilityPlugin[MT_MAX_ABILITIES + 1];
-	bool g_bDHooksInstalled;
 	bool g_bPluginEnabled;
 	bool g_bHideNameChange;
 	bool g_bMapStarted;
@@ -686,27 +682,6 @@ public any aNative_SpawnTank(Handle plugin, int numParams)
 	}
 }
 
-public void OnAllPluginsLoaded()
-{
-	g_esGeneral.g_bDHooksInstalled = LibraryExists("dhooks");
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "dhooks", false))
-	{
-		g_esGeneral.g_bDHooksInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "dhooks", false))
-	{
-		g_esGeneral.g_bDHooksInstalled = false;
-	}
-}
-
 public void OnPluginStart()
 {
 	g_esGeneral.g_gfAbilityActivatedForward = new GlobalForward("MT_OnAbilityActivated", ET_Ignore, Param_Cell);
@@ -774,6 +749,29 @@ public void OnPluginStart()
 	}
 
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
+
+	GameData gdMutantTanks = new GameData("mutant_tanks");
+
+	switch (gdMutantTanks == null)
+	{
+		case true: LogError("Unable to load the \"mutant_tanks\" gamedata file.");
+		case false:
+		{
+			g_esGeneral.g_hLaunchDirectionDetour = DHookCreateFromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
+			if (g_esGeneral.g_hLaunchDirectionDetour == null)
+			{
+				LogError("Failed to find signature: CEnvRockLauncher::LaunchCurrentDir");
+			}
+
+			g_esGeneral.g_hTankRockDetour = DHookCreateFromConf(gdMutantTanks, "CTankRock::Create");
+			if (g_esGeneral.g_hTankRockDetour == null)
+			{
+				LogError("Failed to find signature: CTankRock::Create");
+			}
+
+			delete gdMutantTanks;
+		}
+	}
 
 	if (g_bLateLoad)
 	{
@@ -845,36 +843,6 @@ public void OnClientDisconnect_Post(int client)
 
 public void OnConfigsExecuted()
 {
-#if defined _dhooks_included
-	static bool bRead;
-	if (g_esGeneral.g_bDHooksInstalled && !bRead)
-	{
-		GameData gdMutantTanks = new GameData("mutant_tanks");
-		if (gdMutantTanks == null)
-		{
-			LogError("Unable to load the \"mutant_tanks\" gamedata file.");
-		}
-		else
-		{
-			g_esGeneral.g_hLaunchDirectionDetour = DHookCreateFromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
-			if (g_esGeneral.g_hLaunchDirectionDetour == null)
-			{
-				LogError("Failed to find signature: CEnvRockLauncher::LaunchCurrentDir");
-			}
-
-			g_esGeneral.g_hTankRockDetour = DHookCreateFromConf(gdMutantTanks, "CTankRock::Create");
-			if (g_esGeneral.g_hTankRockDetour == null)
-			{
-				LogError("Failed to find signature: CTankRock::Create");
-			}
-
-			delete gdMutantTanks;
-
-			bRead = true;
-		}
-	}
-#endif
-
 	g_esGeneral.g_iRegularCount = 0;
 	g_esGeneral.g_iType = 0;
 
@@ -3924,20 +3892,15 @@ static void vPluginStatus()
 
 				vHookEvents(true);
 
-#if defined _dhooks_included
-				if (g_esGeneral.g_bDHooksInstalled)
+				if (g_esGeneral.g_hLaunchDirectionDetour != null && !DHookEnableDetour(g_esGeneral.g_hLaunchDirectionDetour, false, mreLaunchDirection))
 				{
-					if (g_esGeneral.g_hLaunchDirectionDetour != null && !DHookEnableDetour(g_esGeneral.g_hLaunchDirectionDetour, false, mreLaunchDirection))
-					{
-						LogError("Failed to enable detour pre: CEnvRockLauncher::LaunchCurrentDir");
-					}
-
-					if (g_esGeneral.g_hTankRockDetour != null && !DHookEnableDetour(g_esGeneral.g_hTankRockDetour, true, mreTankRock))
-					{
-						LogError("Failed to enable detour post: CTankRock::Create");
-					}
+					LogError("Failed to enable detour pre: CEnvRockLauncher::LaunchCurrentDir");
 				}
-#endif
+
+				if (g_esGeneral.g_hTankRockDetour != null && !DHookEnableDetour(g_esGeneral.g_hTankRockDetour, true, mreTankRock))
+				{
+					LogError("Failed to enable detour post: CTankRock::Create");
+				}
 			}
 			case false:
 			{
@@ -3945,20 +3908,15 @@ static void vPluginStatus()
 
 				vHookEvents(false);
 
-#if defined _dhooks_included
-				if (g_esGeneral.g_bDHooksInstalled)
+				if (g_esGeneral.g_hLaunchDirectionDetour != null && !DHookDisableDetour(g_esGeneral.g_hLaunchDirectionDetour, false, mreLaunchDirection))
 				{
-					if (g_esGeneral.g_hLaunchDirectionDetour != null && !DHookDisableDetour(g_esGeneral.g_hLaunchDirectionDetour, false, mreLaunchDirection))
-					{
-						LogError("Failed to disable detour pre: CEnvRockLauncher::LaunchCurrentDir");
-					}
-
-					if (g_esGeneral.g_hTankRockDetour != null && !DHookDisableDetour(g_esGeneral.g_hTankRockDetour, true, mreTankRock))
-					{
-						LogError("Failed to disable detour post: CTankRock::Create");
-					}
+					LogError("Failed to disable detour pre: CEnvRockLauncher::LaunchCurrentDir");
 				}
-#endif
+
+				if (g_esGeneral.g_hTankRockDetour != null && !DHookDisableDetour(g_esGeneral.g_hTankRockDetour, true, mreTankRock))
+				{
+					LogError("Failed to disable detour post: CTankRock::Create");
+				}
 			}
 		}
 	}
@@ -5599,7 +5557,6 @@ public Action tTimerForceSpawnTank(Handle timer, int userid)
 }
 #endif
 
-#if defined _dhooks_included
 public MRESReturn mreTankRock(Handle hReturn)
 {
 	static int iRock;
@@ -5637,7 +5594,6 @@ public MRESReturn mreLaunchDirection(int pThis)
 
 	return MRES_Ignored;
 }
-#endif
 
 public void vFinaleHook(const char[] output, int caller, int activator, float delay)
 {

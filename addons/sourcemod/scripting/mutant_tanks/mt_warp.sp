@@ -884,7 +884,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 
 	static int iSurvivor;
 	iSurvivor = iGetRandomSurvivor(iTank);
-	if (iSurvivor > 0)
+	if (bIsSurvivor(iSurvivor))
 	{
 		static float flTankOrigin[3], flTankAngles[3];
 		GetClientAbsOrigin(iTank, flTankOrigin);
