@@ -13,10 +13,6 @@
 #include <sdkhooks>
 #include <mutant_tanks>
 
-#undef REQUIRE_PLUGIN
-#tryinclude <mt_clone>
-#define REQUIRE_PLUGIN
-
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -49,30 +45,46 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_ACID "Acid Ability"
 
-enum struct esGeneralSettings
+enum struct esGeneral
 {
-	bool g_bCloneInstalled;
-
 	Handle g_hSDKAcidPlayer;
 	Handle g_hSDKPukePlayer;
 }
 
-esGeneralSettings g_esGeneral;
+esGeneral g_esGeneral;
 
-enum struct esPlayerSettings
+enum struct esPlayer
 {
-	bool g_bAcid;
-	bool g_bAcid2;
-	bool g_bAcid3;
+	bool g_bFailed;
+	bool g_bNoAmmo;
 
-	int g_iAccessFlags2;
-	int g_iAcidCount;
-	int g_iImmunityFlags2;
+	float g_flAcidChance;
+	float g_flAcidDeathChance;
+	float g_flAcidDeathRange;
+	float g_flAcidRange;
+	float g_flAcidRangeChance;
+	float g_flAcidRockChance;
+
+	int g_iAccessFlags;
+	int g_iAcidAbility;
+	int g_iAcidDeath;
+	int g_iAcidEffect;
+	int g_iAcidHit;
+	int g_iAcidHitMode;
+	int g_iAcidMessage;
+	int g_iAcidRockBreak;
+	int g_iCooldown;
+	int g_iCount;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iImmunityFlags;
+	int g_iTankType;
 }
 
-esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+esPlayer g_esPlayer[MAXPLAYERS + 1];
 
-enum struct esAbilitySettings
+enum struct esAbility
 {
 	float g_flAcidChance;
 	float g_flAcidDeathChance;
@@ -80,7 +92,6 @@ enum struct esAbilitySettings
 	float g_flAcidRange;
 	float g_flAcidRangeChance;
 	float g_flAcidRockChance;
-	float g_flHumanCooldown;
 
 	int g_iAccessFlags;
 	int g_iAcidAbility;
@@ -92,31 +103,36 @@ enum struct esAbilitySettings
 	int g_iAcidRockBreak;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
+	int g_iHumanCooldown;
 	int g_iImmunityFlags;
 }
 
-esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
+esAbility g_esAbility[MT_MAXTYPES + 1];
 
-public void OnAllPluginsLoaded()
+enum struct esCache
 {
-	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
+	float g_flAcidChance;
+	float g_flAcidDeathChance;
+	float g_flAcidDeathRange;
+	float g_flAcidRange;
+	float g_flAcidRangeChance;
+	float g_flAcidRockChance;
+
+	int g_iAccessFlags;
+	int g_iAcidAbility;
+	int g_iAcidDeath;
+	int g_iAcidEffect;
+	int g_iAcidHit;
+	int g_iAcidHitMode;
+	int g_iAcidMessage;
+	int g_iAcidRockBreak;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iImmunityFlags;
 }
 
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_esGeneral.g_bCloneInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_esGeneral.g_bCloneInstalled = false;
-	}
-}
+esCache g_esCache[MAXPLAYERS + 1];
 
 public void OnPluginStart()
 {
@@ -126,7 +142,6 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_mt_acid", cmdAcidInfo, "View information about the Acid ability.");
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
-
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
@@ -139,9 +154,9 @@ public void OnPluginStart()
 		case true:
 		{
 			StartPrepSDKCall(SDKCall_Static);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CSpitterProjectile_Create"))
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CSpitterProjectile::Create"))
 			{
-				SetFailState("Failed to find signature: CSpitterProjectile_Create");
+				SetFailState("Failed to find signature: CSpitterProjectile::Create");
 			}
 
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
@@ -151,28 +166,28 @@ public void OnPluginStart()
 			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
-			g_esGeneral.g_hSDKAcidPlayer = EndPrepSDKCall();
 
+			g_esGeneral.g_hSDKAcidPlayer = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKAcidPlayer == null)
 			{
-				PrintToServer("%s Your \"CSpitterProjectile_Create\" signature is outdated.", MT_TAG);
+				PrintToServer("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
 			}
 		}
 		case false:
 		{
 			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer_OnVomitedUpon"))
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon"))
 			{
-				SetFailState("Failed to find signature: CTerrorPlayer_OnVomitedUpon");
+				SetFailState("Failed to find signature: CTerrorPlayer::OnVomitedUpon");
 			}
 
 			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-			g_esGeneral.g_hSDKPukePlayer = EndPrepSDKCall();
 
+			g_esGeneral.g_hSDKPukePlayer = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKPukePlayer == null)
 			{
-				PrintToServer("%s Your \"CTerrorPlayer_OnVomitedUpon\" signature is outdated.", MT_TAG);
+				PrintToServer("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
 			}
 		}
 	}
@@ -264,12 +279,12 @@ public int iAcidMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iAcidAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iAcidCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iAcidAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iCount, g_esCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AcidDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -281,47 +296,48 @@ public int iAcidMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[255];
 			Panel panel = view_as<Panel>(param2);
-			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "AcidMenu", param1);
+			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "AcidMenu", param1);
 			panel.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
 			char sMenuOption[255];
+
 			switch (param2)
 			{
 				case 0:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
@@ -349,30 +365,30 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
 	{
-		char sClassname[32];
+		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_esGeneral.g_bCloneInstalled) && (g_esAbility[MT_GetTankType(attacker)].g_iAcidHitMode == 0 || g_esAbility[MT_GetTankType(attacker)].g_iAcidHitMode == 1) && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker) && (g_esCache[attacker].g_iAcidHitMode == 0 || g_esCache[attacker].g_iAcidHitMode == 1) && bIsSurvivor(victim))
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, attacker))
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
 
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vAcidHit(victim, attacker, g_esAbility[MT_GetTankType(attacker)].g_flAcidChance, g_esAbility[MT_GetTankType(attacker)].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vAcidHit(victim, attacker, g_esCache[attacker].g_flAcidChance, g_esCache[attacker].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_esGeneral.g_bCloneInstalled) && (g_esAbility[MT_GetTankType(victim)].g_iAcidHitMode == 0 || g_esAbility[MT_GetTankType(victim)].g_iAcidHitMode == 2) && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim) && (g_esCache[victim].g_iAcidHitMode == 0 || g_esCache[victim].g_iAcidHitMode == 2) && bIsSurvivor(attacker))
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, victim))
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
 
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vAcidHit(attacker, victim, g_esAbility[MT_GetTankType(victim)].g_flAcidChance, g_esAbility[MT_GetTankType(victim)].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vAcidHit(attacker, victim, g_esCache[victim].g_flAcidChance, g_esCache[victim].g_iAcidHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -397,91 +413,149 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 
 public void MT_OnConfigsLoad(int mode)
 {
-	if (mode == 3)
+	switch (mode)
 	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		case 1:
 		{
-			if (bIsValidClient(iPlayer))
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
-				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
-				g_esPlayer[iPlayer].g_iImmunityFlags2 = 0;
+				g_esAbility[iIndex].g_iAccessFlags = 0;
+				g_esAbility[iIndex].g_iImmunityFlags = 0;
+				g_esAbility[iIndex].g_iHumanAbility = 0;
+				g_esAbility[iIndex].g_iHumanAmmo = 5;
+				g_esAbility[iIndex].g_iHumanCooldown = 30;
+				g_esAbility[iIndex].g_iAcidAbility = 0;
+				g_esAbility[iIndex].g_iAcidEffect = 0;
+				g_esAbility[iIndex].g_iAcidMessage = 0;
+				g_esAbility[iIndex].g_flAcidChance = 33.3;
+				g_esAbility[iIndex].g_iAcidDeath = 0;
+				g_esAbility[iIndex].g_flAcidDeathChance = 33.3;
+				g_esAbility[iIndex].g_flAcidDeathRange = 200.0;
+				g_esAbility[iIndex].g_iAcidHit = 0;
+				g_esAbility[iIndex].g_iAcidHitMode = 0;
+				g_esAbility[iIndex].g_flAcidRange = 150.0;
+				g_esAbility[iIndex].g_flAcidRangeChance = 15.0;
+				g_esAbility[iIndex].g_iAcidRockBreak = 0;
+				g_esAbility[iIndex].g_flAcidRockChance = 33.3;
 			}
 		}
-	}
-	else if (mode == 1)
-	{
-		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+		case 3:
 		{
-			g_esAbility[iIndex].g_iAccessFlags = 0;
-			g_esAbility[iIndex].g_iImmunityFlags = 0;
-			g_esAbility[iIndex].g_iHumanAbility = 0;
-			g_esAbility[iIndex].g_iHumanAmmo = 5;
-			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
-			g_esAbility[iIndex].g_iAcidAbility = 0;
-			g_esAbility[iIndex].g_iAcidEffect = 0;
-			g_esAbility[iIndex].g_iAcidMessage = 0;
-			g_esAbility[iIndex].g_flAcidChance = 33.3;
-			g_esAbility[iIndex].g_iAcidDeath = 0;
-			g_esAbility[iIndex].g_flAcidDeathChance = 33.3;
-			g_esAbility[iIndex].g_flAcidDeathRange = 200.0;
-			g_esAbility[iIndex].g_iAcidHit = 0;
-			g_esAbility[iIndex].g_iAcidHitMode = 0;
-			g_esAbility[iIndex].g_flAcidRange = 150.0;
-			g_esAbility[iIndex].g_flAcidRangeChance = 15.0;
-			g_esAbility[iIndex].g_iAcidRockBreak = 0;
-			g_esAbility[iIndex].g_flAcidRockChance = 33.3;
+			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+			{
+				if (bIsValidClient(iPlayer))
+				{
+					g_esPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esPlayer[iPlayer].g_iHumanAbility = 0;
+					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
+					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esPlayer[iPlayer].g_iAcidAbility = 0;
+					g_esPlayer[iPlayer].g_iAcidEffect = 0;
+					g_esPlayer[iPlayer].g_iAcidMessage = 0;
+					g_esPlayer[iPlayer].g_flAcidChance = 0.0;
+					g_esPlayer[iPlayer].g_iAcidDeath = 0;
+					g_esPlayer[iPlayer].g_flAcidDeathChance = 0.0;
+					g_esPlayer[iPlayer].g_flAcidDeathRange = 0.0;
+					g_esPlayer[iPlayer].g_iAcidHit = 0;
+					g_esPlayer[iPlayer].g_iAcidHitMode = 0;
+					g_esPlayer[iPlayer].g_flAcidRange = 0.0;
+					g_esPlayer[iPlayer].g_flAcidRangeChance = 0.0;
+					g_esPlayer[iPlayer].g_iAcidRockBreak = 0;
+					g_esPlayer[iPlayer].g_flAcidRockChance = 0.0;
+				}
+			}
 		}
 	}
 }
 
 public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
 {
-	if (mode == 3 && bIsValidClient(admin) && value[0] != '\0')
+	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iAcidAbility = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iAcidAbility, value, 0, 1);
+		g_esPlayer[admin].g_iAcidEffect = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iAcidEffect, value, 0, 7);
+		g_esPlayer[admin].g_iAcidMessage = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iAcidMessage, value, 0, 7);
+		g_esPlayer[admin].g_flAcidChance = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esPlayer[admin].g_flAcidChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iAcidDeath = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esPlayer[admin].g_iAcidDeath, value, 0, 1);
+		g_esPlayer[admin].g_flAcidDeathChance = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esPlayer[admin].g_flAcidDeathChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flAcidDeathRange = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esPlayer[admin].g_flAcidDeathRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iAcidHit = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esPlayer[admin].g_iAcidHit, value, 0, 1);
+		g_esPlayer[admin].g_iAcidHitMode = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esPlayer[admin].g_iAcidHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flAcidRange = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esPlayer[admin].g_flAcidRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flAcidRangeChance = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", g_esPlayer[admin].g_flAcidRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iAcidRockBreak = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esPlayer[admin].g_iAcidRockBreak, value, 0, 1);
+		g_esPlayer[admin].g_flAcidRockChance = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esPlayer[admin].g_flAcidRockChance, value, 0.0, 100.0);
+
 		if (StrEqual(subsection, "acidability", false) || StrEqual(subsection, "acid ability", false) || StrEqual(subsection, "acid_ability", false) || StrEqual(subsection, "acid", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
+				g_esPlayer[admin].g_iAccessFlags = ReadFlagString(value);
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_esPlayer[admin].g_iImmunityFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iImmunityFlags2;
+				g_esPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
-		g_esAbility[type].g_iAcidAbility = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iAcidAbility, value, 0, 1);
-		g_esAbility[type].g_iAcidEffect = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iAcidEffect, value, 0, 7);
-		g_esAbility[type].g_iAcidMessage = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iAcidMessage, value, 0, 7);
-		g_esAbility[type].g_flAcidChance = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAbility[type].g_flAcidChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iAcidDeath = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAbility[type].g_iAcidDeath, value, 0, 1);
-		g_esAbility[type].g_flAcidDeathChance = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAbility[type].g_flAcidDeathChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flAcidDeathRange = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAbility[type].g_flAcidDeathRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_iAcidHit = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAbility[type].g_iAcidHit, value, 0, 1);
-		g_esAbility[type].g_iAcidHitMode = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esAbility[type].g_iAcidHitMode, value, 0, 2);
-		g_esAbility[type].g_flAcidRange = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esAbility[type].g_flAcidRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flAcidRangeChance = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", g_esAbility[type].g_flAcidRangeChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iAcidRockBreak = iGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAbility[type].g_iAcidRockBreak, value, 0, 1);
-		g_esAbility[type].g_flAcidRockChance = flGetValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAbility[type].g_flAcidRockChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iAcidAbility = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iAcidAbility, value, 0, 1);
+		g_esAbility[type].g_iAcidEffect = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iAcidEffect, value, 0, 7);
+		g_esAbility[type].g_iAcidMessage = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iAcidMessage, value, 0, 7);
+		g_esAbility[type].g_flAcidChance = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidChance", "Acid Chance", "Acid_Chance", "chance", g_esAbility[type].g_flAcidChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iAcidDeath = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeath", "Acid Death", "Acid_Death", "death", g_esAbility[type].g_iAcidDeath, value, 0, 1);
+		g_esAbility[type].g_flAcidDeathChance = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeathChance", "Acid Death Chance", "Acid_Death_Chance", "deathchance", g_esAbility[type].g_flAcidDeathChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flAcidDeathRange = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidDeathRange", "Acid Death Range", "Acid_Death_Range", "deathrange", g_esAbility[type].g_flAcidDeathRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_iAcidHit = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidHit", "Acid Hit", "Acid_Hit", "hit", g_esAbility[type].g_iAcidHit, value, 0, 1);
+		g_esAbility[type].g_iAcidHitMode = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidHitMode", "Acid Hit Mode", "Acid_Hit_Mode", "hitmode", g_esAbility[type].g_iAcidHitMode, value, 0, 2);
+		g_esAbility[type].g_flAcidRange = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRange", "Acid Range", "Acid_Range", "range", g_esAbility[type].g_flAcidRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flAcidRangeChance = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRangeChance", "Acid Range Chance", "Acid_Range_Chance", "rangechance", g_esAbility[type].g_flAcidRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iAcidRockBreak = iGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRockBreak", "Acid Rock Break", "Acid_Rock_Break", "rock", g_esAbility[type].g_iAcidRockBreak, value, 0, 1);
+		g_esAbility[type].g_flAcidRockChance = flGetKeyValue(subsection, "acidability", "acid ability", "acid_ability", "acid", key, "AcidRockChance", "Acid Rock Chance", "Acid_Rock_Chance", "rockchance", g_esAbility[type].g_flAcidRockChance, value, 0.0, 100.0);
 
 		if (StrEqual(subsection, "acidability", false) || StrEqual(subsection, "acid ability", false) || StrEqual(subsection, "acid_ability", false) || StrEqual(subsection, "acid", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
+				g_esAbility[type].g_iAccessFlags = ReadFlagString(value);
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_esAbility[type].g_iImmunityFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iImmunityFlags;
+				g_esAbility[type].g_iImmunityFlags = ReadFlagString(value);
 			}
 		}
 	}
+}
+
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+{
+	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	g_esCache[tank].g_flAcidChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAcidChance, g_esAbility[type].g_flAcidChance);
+	g_esCache[tank].g_flAcidDeathChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAcidDeathChance, g_esAbility[type].g_flAcidDeathChance);
+	g_esCache[tank].g_flAcidDeathRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAcidDeathRange, g_esAbility[type].g_flAcidDeathRange);
+	g_esCache[tank].g_flAcidRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAcidRange, g_esAbility[type].g_flAcidRange);
+	g_esCache[tank].g_flAcidRangeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAcidRangeChance, g_esAbility[type].g_flAcidRangeChance);
+	g_esCache[tank].g_flAcidRockChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAcidRockChance, g_esAbility[type].g_flAcidRockChance);
+	g_esCache[tank].g_iAcidAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iAcidAbility, g_esAbility[type].g_iAcidAbility);
+	g_esCache[tank].g_iAcidDeath = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iAcidDeath, g_esAbility[type].g_iAcidDeath);
+	g_esCache[tank].g_iAcidEffect = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iAcidEffect, g_esAbility[type].g_iAcidEffect);
+	g_esCache[tank].g_iAcidHit = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iAcidHit, g_esAbility[type].g_iAcidHit);
+	g_esCache[tank].g_iAcidHitMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iAcidHitMode, g_esAbility[type].g_iAcidHitMode);
+	g_esCache[tank].g_iAcidMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iAcidMessage, g_esAbility[type].g_iAcidMessage);
+	g_esCache[tank].g_iAcidRockBreak = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iAcidRockBreak, g_esAbility[type].g_iAcidRockBreak);
+	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
+	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
+	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
+	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -492,53 +566,18 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveAcid(iTank);
-
-			if (bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(iTank)].g_iAcidDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(iTank)].g_flAcidDeathChance)
-			{
-				if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && ((MT_HasAdminAccess(iTank) && bHasAdminAccess(iTank)) || g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 0))
-				{
-					return;
-				}
-
-				switch (bIsValidGame())
-				{
-					case true: vAcid(iTank, iTank);
-					case false:
-					{
-						vAttachParticle(iTank, PARTICLE_BLOOD, 0.1, 0.0);
-
-						float flTankPos[3];
-						GetClientAbsOrigin(iTank, flTankPos);
-
-						for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-						{
-							if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, iTank))
-							{
-								float flSurvivorPos[3];
-								GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-								float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-								if (flDistance <= g_esAbility[MT_GetTankType(iTank)].g_flAcidDeathRange)
-								{
-									SDKCall(g_esGeneral.g_hSDKPukePlayer, iSurvivor, iTank, true);
-								}
-							}
-						}
-					}
-				}
-			}
 		}
 	}
 }
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iAcidAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank) && g_esCache[tank].g_iAcidAbility == 1)
 	{
 		vAcidAbility(tank);
 	}
@@ -546,20 +585,23 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
 		{
 			return;
 		}
 
-		if (button & MT_SUB_KEY == MT_SUB_KEY)
+		if (button & MT_SUB_KEY)
 		{
-			if (g_esAbility[MT_GetTankType(tank)].g_iAcidAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
+			if (g_esCache[tank].g_iAcidAbility == 1 && g_esCache[tank].g_iHumanAbility == 1)
 			{
-				switch (g_esPlayer[tank].g_bAcid)
+				static int iTime;
+				iTime = GetTime();
+
+				switch (g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime)
 				{
-					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidHuman3");
+					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidHuman3", g_esPlayer[tank].g_iCooldown - iTime);
 					case false: vAcidAbility(tank);
 				}
 			}
@@ -571,9 +613,9 @@ public void MT_OnChangeType(int tank, bool revert)
 {
 	vRemoveAcid(tank);
 
-	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && bIsValidGame() && g_esAbility[MT_GetTankType(tank)].g_iAcidAbility == 1)
+	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank) && bIsValidGame() && g_esCache[tank].g_iAcidAbility == 1)
 	{
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
+		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
 		{
 			return;
 		}
@@ -582,27 +624,65 @@ public void MT_OnChangeType(int tank, bool revert)
 	}
 }
 
+public void MT_OnPostTankSpawn(int tank)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iAcidDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flAcidDeathChance)
+	{
+		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((MT_HasAdminAccess(tank) && bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
+		{
+			return;
+		}
+
+		switch (bIsValidGame())
+		{
+			case true: vAcid(tank, tank);
+			case false:
+			{
+				vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
+
+				static float flTankPos[3];
+				GetClientAbsOrigin(tank, flTankPos);
+
+				static float flSurvivorPos[3], flDistance;
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				{
+					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
+					{
+						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+						flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+						if (flDistance <= g_esCache[tank].g_flAcidDeathRange)
+						{
+							SDKCall(g_esGeneral.g_hSDKPukePlayer, iSurvivor, tank, true);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 public void MT_OnRockBreak(int tank, int rock)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iAcidRockBreak == 1 && bIsValidGame())
+	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank) && g_esCache[tank].g_iAcidRockBreak == 1 && bIsValidGame())
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flAcidRockChance)
+		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flAcidRockChance)
 		{
-			float flOrigin[3], flAngles[3];
+			static float flOrigin[3], flAngles[3];
 			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
 			flOrigin[2] += 40.0;
 
 			SDKCall(g_esGeneral.g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, tank, 2.0);
 
-			if (g_esAbility[MT_GetTankType(tank)].g_iAcidMessage & MT_MESSAGE_SPECIAL)
+			if (g_esCache[tank].g_iAcidMessage & MT_MESSAGE_SPECIAL)
 			{
-				char sTankName[33];
-				MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
+				static char sTankName[33];
+				MT_GetTankName(tank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Acid2", sTankName);
 			}
 		}
@@ -611,12 +691,12 @@ public void MT_OnRockBreak(int tank, int rock)
 
 static void vAcid(int survivor, int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
 	{
 		return;
 	}
 
-	float flOrigin[3], flAngles[3];
+	static float flOrigin[3], flAngles[3];
 	GetClientAbsOrigin(survivor, flOrigin);
 	GetClientAbsAngles(survivor, flAngles);
 
@@ -625,31 +705,32 @@ static void vAcid(int survivor, int tank)
 
 static void vAcidAbility(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
 	{
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAcidCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
-		g_esPlayer[tank].g_bAcid2 = false;
-		g_esPlayer[tank].g_bAcid3 = false;
+		g_esPlayer[tank].g_bFailed = false;
+		g_esPlayer[tank].g_bNoAmmo = false;
 
-		float flTankPos[3];
+		static float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
-		int iSurvivorCount;
+		static float flSurvivorPos[3], flDistance;
+		static int iSurvivorCount;
+		iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, tank))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 			{
-				float flSurvivorPos[3];
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
-				float flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= g_esAbility[MT_GetTankType(tank)].g_flAcidRange)
+				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= g_esCache[tank].g_flAcidRange)
 				{
-					vAcidHit(iSurvivor, tank, g_esAbility[MT_GetTankType(tank)].g_flAcidRangeChance, g_esAbility[MT_GetTankType(tank)].g_iAcidAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+					vAcidHit(iSurvivor, tank, g_esCache[tank].g_flAcidRangeChance, g_esCache[tank].g_iAcidAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -658,13 +739,13 @@ static void vAcidAbility(int tank)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidHuman4");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidAmmo");
 	}
@@ -672,36 +753,34 @@ static void vAcidAbility(int tank)
 
 static void vAcidHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
-	if ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, tank))
+	if ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAcidCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0))
+		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
+			static int iTime;
+			iTime = GetTime();
 			if (GetRandomFloat(0.1, 100.0) <= chance)
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && !g_esPlayer[tank].g_bAcid)
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 				{
-					g_esPlayer[tank].g_bAcid = true;
-					g_esPlayer[tank].g_iAcidCount++;
+					g_esPlayer[tank].g_iCount++;
 
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidHuman", g_esPlayer[tank].g_iAcidCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
 
-					if (g_esPlayer[tank].g_iAcidCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+					g_esPlayer[tank].g_iCooldown = (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
+					if (g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime)
 					{
-						CreateTimer(g_esAbility[MT_GetTankType(tank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
-					}
-					else
-					{
-						g_esPlayer[tank].g_bAcid = false;
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidHuman5", g_esPlayer[tank].g_iCooldown - iTime);
 					}
 				}
 
-				char sTankName[33];
-				MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
+				static char sTankName[33];
+				MT_GetTankName(tank, sTankName);
 
 				switch (bIsValidGame())
 				{
@@ -709,7 +788,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 					{
 						vAcid(survivor, tank);
 
-						if (g_esAbility[MT_GetTankType(tank)].g_iAcidMessage & messages)
+						if (g_esCache[tank].g_iAcidMessage & messages)
 						{
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Acid", sTankName, survivor);
 						}
@@ -718,28 +797,28 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 					{
 						SDKCall(g_esGeneral.g_hSDKPukePlayer, survivor, tank, true);
 
-						if (g_esAbility[MT_GetTankType(tank)].g_iAcidMessage & messages)
+						if (g_esCache[tank].g_iAcidMessage & messages)
 						{
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
 						}
 					}
 				}
 
-				vEffect(survivor, tank, g_esAbility[MT_GetTankType(tank)].g_iAcidEffect, flags);
+				vEffect(survivor, tank, g_esCache[tank].g_iAcidEffect, flags);
 			}
-			else if ((flags & MT_ATTACK_RANGE) && !g_esPlayer[tank].g_bAcid)
+			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bAcid2)
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
 				{
-					g_esPlayer[tank].g_bAcid2 = true;
+					g_esPlayer[tank].g_bFailed = true;
 
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidHuman2");
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bAcid3)
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
 		{
-			g_esPlayer[tank].g_bAcid3 = true;
+			g_esPlayer[tank].g_bNoAmmo = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidAmmo");
 		}
@@ -748,10 +827,10 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 
 static void vRemoveAcid(int tank)
 {
-	g_esPlayer[tank].g_bAcid = false;
-	g_esPlayer[tank].g_bAcid2 = false;
-	g_esPlayer[tank].g_bAcid3 = false;
-	g_esPlayer[tank].g_iAcidCount = 0;
+	g_esPlayer[tank].g_bFailed = false;
+	g_esPlayer[tank].g_bNoAmmo = false;
+	g_esPlayer[tank].g_iCount = 0;
+	g_esPlayer[tank].g_iCooldown = -1;
 }
 
 static void vReset()
@@ -763,114 +842,4 @@ static void vReset()
 			vRemoveAcid(iPlayer);
 		}
 	}
-}
-
-static bool bHasAdminAccess(int admin)
-{
-	if (!bIsValidClient(admin, MT_CHECK_FAKECLIENT))
-	{
-		return true;
-	}
-
-	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
-	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
-	{
-		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
-	}
-
-	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
-	{
-		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
-	}
-
-	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
-	{
-		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
-	}
-
-	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
-	{
-		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-	}
-
-	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
-	{
-		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-	}
-
-	if (iAbilityFlags != 0)
-	{
-		return (!(GetUserFlagBits(admin) & iAbilityFlags)) ? false : true;
-	}
-
-	return true;
-}
-
-static bool bIsAdminImmune(int survivor, int tank)
-{
-	if (!bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
-	{
-		return false;
-	}
-
-	int iAbilityFlags = g_esAbility[MT_GetTankType(tank)].g_iImmunityFlags;
-	if (iAbilityFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iAbilityFlags))
-	{
-		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
-	}
-
-	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(tank));
-	if (iTypeFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iTypeFlags))
-	{
-		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
-	}
-
-	int iGlobalFlags = MT_GetImmunityFlags(1);
-	if (iGlobalFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iGlobalFlags))
-	{
-		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
-	}
-
-	int iClientTypeFlags = MT_GetImmunityFlags(4, MT_GetTankType(tank), survivor),
-		iClientTypeFlags2 = MT_GetImmunityFlags(4, MT_GetTankType(tank), tank);
-	if (iClientTypeFlags != 0 && iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
-	{
-		return (iClientTypeFlags2 != 0 && (iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
-	}
-
-	int iClientGlobalFlags = MT_GetImmunityFlags(3, 0, survivor),
-		iClientGlobalFlags2 = MT_GetImmunityFlags(3, 0, tank);
-	if (iClientGlobalFlags != 0 && iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
-	{
-		return (iClientGlobalFlags2 != 0 && (iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
-	}
-
-	int iSurvivorFlags = GetUserFlagBits(survivor), iTankFlags = GetUserFlagBits(tank);
-	if (iAbilityFlags != 0 && iSurvivorFlags != 0 && (iSurvivorFlags & iAbilityFlags))
-	{
-		return (iTankFlags != 0 && iSurvivorFlags <= iTankFlags) ? false : true;
-	}
-
-	return false;
-}
-
-public Action tTimerResetCooldown(Handle timer, int userid)
-{
-	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || !g_esPlayer[iTank].g_bAcid)
-	{
-		g_esPlayer[iTank].g_bAcid = false;
-
-		return Plugin_Stop;
-	}
-
-	g_esPlayer[iTank].g_bAcid = false;
-
-	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "AcidHuman5");
-
-	return Plugin_Continue;
 }

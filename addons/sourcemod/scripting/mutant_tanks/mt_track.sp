@@ -13,10 +13,6 @@
 #include <sdkhooks>
 #include <mutant_tanks>
 
-#undef REQUIRE_PLUGIN
-#tryinclude <mt_clone>
-#define REQUIRE_PLUGIN
-
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -43,57 +39,59 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_TRACK "Track Ability"
 
-bool g_bCloneInstalled;
-
-enum struct esPlayerSettings
+enum struct esPlayer
 {
-	bool g_bTrack;
-	bool g_bTrack2;
+	bool g_bActivated;
 
-	int g_iAccessFlags2;
-	int g_iImmunityFlags2;
-	int g_iTrackCount;
+	float g_flTrackChance;
+	float g_flTrackSpeed;
+
+	int g_iAccessFlags;
+	int g_iCooldown;
+	int g_iCount;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iImmunityFlags;
+	int g_iTankType;
+	int g_iTrackAbility;
+	int g_iTrackMessage;
+	int g_iTrackMode;
 }
 
-esPlayerSettings g_esPlayer[MAXPLAYERS + 1];
+esPlayer g_esPlayer[MAXPLAYERS + 1];
 
-enum struct esAbilitySettings
+enum struct esAbility
 {
-	float g_flHumanCooldown;
 	float g_flTrackChance;
 	float g_flTrackSpeed;
 
 	int g_iAccessFlags;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
+	int g_iHumanCooldown;
 	int g_iImmunityFlags;
 	int g_iTrackAbility;
 	int g_iTrackMessage;
 	int g_iTrackMode;
 }
 
-esAbilitySettings g_esAbility[MT_MAXTYPES + 1];
+esAbility g_esAbility[MT_MAXTYPES + 1];
 
-public void OnAllPluginsLoaded()
+enum struct esCache
 {
-	g_bCloneInstalled = LibraryExists("mt_clone");
+	float g_flTrackChance;
+	float g_flTrackSpeed;
+
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iTrackAbility;
+	int g_iTrackMessage;
+	int g_iTrackMode;
 }
 
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_bCloneInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_bCloneInstalled = false;
-	}
-}
+esCache g_esCache[MAXPLAYERS + 1];
 
 public void OnPluginStart()
 {
@@ -170,12 +168,12 @@ public int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			switch (param2)
 			{
-				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iTrackAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo - g_esPlayer[param1].g_iTrackCount, g_esAbility[MT_GetTankType(param1)].g_iHumanAmmo);
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iTrackAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iCount, g_esCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons4");
-				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esAbility[MT_GetTankType(param1)].g_flHumanCooldown);
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "TrackDetails");
-				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esAbility[MT_GetTankType(param1)].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -187,47 +185,48 @@ public int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param
 		{
 			char sMenuTitle[255];
 			Panel panel = view_as<Panel>(param2);
-			Format(sMenuTitle, sizeof(sMenuTitle), "%T", "TrackMenu", param1);
+			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "TrackMenu", param1);
 			panel.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
 			char sMenuOption[255];
+
 			switch (param2)
 			{
 				case 0:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 1:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 2:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 3:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 4:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
 				case 5:
 				{
-					Format(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
 
 					return RedrawMenuItem(sMenuOption);
 				}
@@ -255,7 +254,7 @@ public void Think(int rock)
 {
 	switch (bIsValidEntity(rock))
 	{
-		case true: vTrack(rock);
+		case true: vTrackThink(rock);
 		case false: SDKUnhook(rock, SDKHook_Think, Think);
 	}
 }
@@ -277,75 +276,109 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 
 public void MT_OnConfigsLoad(int mode)
 {
-	if (mode == 3)
+	switch (mode)
 	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		case 1:
 		{
-			if (bIsValidClient(iPlayer))
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
-				g_esPlayer[iPlayer].g_iAccessFlags2 = 0;
-				g_esPlayer[iPlayer].g_iImmunityFlags2 = 0;
+				g_esAbility[iIndex].g_iAccessFlags = 0;
+				g_esAbility[iIndex].g_iImmunityFlags = 0;
+				g_esAbility[iIndex].g_iHumanAbility = 0;
+				g_esAbility[iIndex].g_iHumanAmmo = 5;
+				g_esAbility[iIndex].g_iHumanCooldown = 30;
+				g_esAbility[iIndex].g_iTrackAbility = 0;
+				g_esAbility[iIndex].g_iTrackMessage = 0;
+				g_esAbility[iIndex].g_flTrackChance = 33.3;
+				g_esAbility[iIndex].g_iTrackMode = 1;
+				g_esAbility[iIndex].g_flTrackSpeed = 500.0;
 			}
 		}
-	}
-	else if (mode == 1)
-	{
-		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+		case 3:
 		{
-			g_esAbility[iIndex].g_iAccessFlags = 0;
-			g_esAbility[iIndex].g_iImmunityFlags = 0;
-			g_esAbility[iIndex].g_iHumanAbility = 0;
-			g_esAbility[iIndex].g_iHumanAmmo = 5;
-			g_esAbility[iIndex].g_flHumanCooldown = 30.0;
-			g_esAbility[iIndex].g_iTrackAbility = 0;
-			g_esAbility[iIndex].g_iTrackMessage = 0;
-			g_esAbility[iIndex].g_flTrackChance = 33.3;
-			g_esAbility[iIndex].g_iTrackMode = 1;
-			g_esAbility[iIndex].g_flTrackSpeed = 500.0;
+			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+			{
+				if (bIsValidClient(iPlayer))
+				{
+					g_esPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esPlayer[iPlayer].g_iHumanAbility = 0;
+					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
+					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esPlayer[iPlayer].g_iTrackAbility = 0;
+					g_esPlayer[iPlayer].g_iTrackMessage = 0;
+					g_esPlayer[iPlayer].g_flTrackChance = 0.0;
+					g_esPlayer[iPlayer].g_iTrackMode = 0;
+					g_esPlayer[iPlayer].g_flTrackSpeed = 0.0;
+				}
+			}
 		}
 	}
 }
 
 public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
 {
-	if (mode == 3 && bIsValidClient(admin) && value[0] != '\0')
+	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iTrackAbility = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iTrackAbility, value, 0, 1);
+		g_esPlayer[admin].g_iTrackMessage = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iTrackMessage, value, 0, 1);
+		g_esPlayer[admin].g_flTrackChance = flGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackChance", "Track Chance", "Track_Chance", "chance", g_esPlayer[admin].g_flTrackChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iTrackMode = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackMode", "Track Mode", "Track_Mode", "mode", g_esPlayer[admin].g_iTrackMode, value, 0, 1);
+		g_esPlayer[admin].g_flTrackSpeed = flGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackSpeed", "Track Speed", "Track_Speed", "speed", g_esPlayer[admin].g_flTrackSpeed, value, 0.1, 999999.0);
+
 		if (StrEqual(subsection, "trackability", false) || StrEqual(subsection, "track ability", false) || StrEqual(subsection, "track_ability", false) || StrEqual(subsection, "track", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_esPlayer[admin].g_iAccessFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iAccessFlags2;
+				g_esPlayer[admin].g_iAccessFlags = ReadFlagString(value);
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_esPlayer[admin].g_iImmunityFlags2 = (value[0] != '\0') ? ReadFlagString(value) : g_esPlayer[admin].g_iImmunityFlags2;
+				g_esPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
 			}
 		}
 	}
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetValue(subsection, "trackability", "track ability", "track_ability", "track", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetValue(subsection, "trackability", "track ability", "track_ability", "track", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_flHumanCooldown = flGetValue(subsection, "trackability", "track ability", "track_ability", "track", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_flHumanCooldown, value, 0.0, 999999.0);
-		g_esAbility[type].g_iTrackAbility = iGetValue(subsection, "trackability", "track ability", "track_ability", "track", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iTrackAbility, value, 0, 1);
-		g_esAbility[type].g_iTrackMessage = iGetValue(subsection, "trackability", "track ability", "track_ability", "track", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iTrackMessage, value, 0, 1);
-		g_esAbility[type].g_flTrackChance = flGetValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackChance", "Track Chance", "Track_Chance", "chance", g_esAbility[type].g_flTrackChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iTrackMode = iGetValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackMode", "Track Mode", "Track_Mode", "mode", g_esAbility[type].g_iTrackMode, value, 0, 1);
-		g_esAbility[type].g_flTrackSpeed = flGetValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackSpeed", "Track Speed", "Track_Speed", "speed", g_esAbility[type].g_flTrackSpeed, value, 0.1, 999999.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iTrackAbility = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iTrackAbility, value, 0, 1);
+		g_esAbility[type].g_iTrackMessage = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iTrackMessage, value, 0, 1);
+		g_esAbility[type].g_flTrackChance = flGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackChance", "Track Chance", "Track_Chance", "chance", g_esAbility[type].g_flTrackChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iTrackMode = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackMode", "Track Mode", "Track_Mode", "mode", g_esAbility[type].g_iTrackMode, value, 0, 1);
+		g_esAbility[type].g_flTrackSpeed = flGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackSpeed", "Track Speed", "Track_Speed", "speed", g_esAbility[type].g_flTrackSpeed, value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "trackability", false) || StrEqual(subsection, "track ability", false) || StrEqual(subsection, "track_ability", false) || StrEqual(subsection, "track", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
-				g_esAbility[type].g_iAccessFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iAccessFlags;
+				g_esAbility[type].g_iAccessFlags = ReadFlagString(value);
 			}
 			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
 			{
-				g_esAbility[type].g_iImmunityFlags = (value[0] != '\0') ? ReadFlagString(value) : g_esAbility[type].g_iImmunityFlags;
+				g_esAbility[type].g_iImmunityFlags = ReadFlagString(value);
 			}
 		}
 	}
+}
+
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+{
+	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	g_esCache[tank].g_flTrackChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flTrackChance, g_esAbility[type].g_flTrackChance);
+	g_esCache[tank].g_flTrackSpeed = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flTrackSpeed, g_esAbility[type].g_flTrackSpeed);
+	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
+	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
+	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
+	g_esCache[tank].g_iTrackAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iTrackAbility, g_esAbility[type].g_iTrackAbility);
+	g_esCache[tank].g_iTrackMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iTrackMessage, g_esAbility[type].g_iTrackMessage);
+	g_esCache[tank].g_iTrackMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iTrackMode, g_esAbility[type].g_iTrackMode);
+	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -362,38 +395,42 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
 		{
 			return;
 		}
 
-		if (button & MT_SPECIAL_KEY == MT_SPECIAL_KEY)
+		if (button & MT_SPECIAL_KEY)
 		{
-			if (g_esAbility[MT_GetTankType(tank)].g_iTrackAbility == 1 && g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 1)
+			if (g_esCache[tank].g_iTrackAbility == 1 && g_esCache[tank].g_iHumanAbility == 1)
 			{
-				if (!g_esPlayer[tank].g_bTrack && !g_esPlayer[tank].g_bTrack2)
+				static int iTime;
+				iTime = GetTime();
+				static bool bRecharging;
+				bRecharging = g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime;
+				if (!g_esPlayer[tank].g_bActivated && !bRecharging)
 				{
-					if (g_esPlayer[tank].g_iTrackCount < g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo > 0)
+					switch (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)
 					{
-						g_esPlayer[tank].g_bTrack = true;
-						g_esPlayer[tank].g_iTrackCount++;
+						case true:
+						{
+							g_esPlayer[tank].g_bActivated = true;
+							g_esPlayer[tank].g_iCount++;
 
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman", g_esPlayer[tank].g_iTrackCount, g_esAbility[MT_GetTankType(tank)].g_iHumanAmmo);
-					}
-					else
-					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackAmmo");
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+						}
+						case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackAmmo");
 					}
 				}
-				else if (g_esPlayer[tank].g_bTrack)
+				else if (g_esPlayer[tank].g_bActivated)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman2");
 				}
-				else if (g_esPlayer[tank].g_bTrack2)
+				else if (bRecharging)
 				{
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman3");
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman3", g_esPlayer[tank].g_iCooldown - iTime);
 				}
 			}
 		}
@@ -407,28 +444,28 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnRockThrow(int tank, int rock)
 {
-	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esAbility[MT_GetTankType(tank)].g_iTrackAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esAbility[MT_GetTankType(tank)].g_flTrackChance)
+	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank) && g_esCache[tank].g_iTrackAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flTrackChance)
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank))
+		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
 		{
 			return;
 		}
 
-		if ((!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esAbility[MT_GetTankType(tank)].g_iHumanAbility == 0) && !g_esPlayer[tank].g_bTrack)
+		if ((!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility == 0) && !g_esPlayer[tank].g_bActivated)
 		{
-			g_esPlayer[tank].g_bTrack = true;
+			g_esPlayer[tank].g_bActivated = true;
 		}
 
 		DataPack dpTrack;
 		CreateDataTimer(0.5, tTimerTrack, dpTrack, TIMER_FLAG_NO_MAPCHANGE);
 		dpTrack.WriteCell(EntIndexToEntRef(rock));
 		dpTrack.WriteCell(GetClientUserId(tank));
-		dpTrack.WriteCell(MT_GetTankType(tank));
+		dpTrack.WriteCell(g_esPlayer[tank].g_iTankType);
 
-		if (g_esAbility[MT_GetTankType(tank)].g_iTrackMessage == 1)
+		if (g_esCache[tank].g_iTrackMessage == 1)
 		{
-			char sTankName[33];
-			MT_GetTankName(tank, MT_GetTankType(tank), sTankName);
+			static char sTankName[33];
+			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Track", sTankName);
 		}
 	}
@@ -436,9 +473,9 @@ public void MT_OnRockThrow(int tank, int rock)
 
 static void vRemoveTrack(int tank)
 {
-	g_esPlayer[tank].g_bTrack = false;
-	g_esPlayer[tank].g_bTrack2 = false;
-	g_esPlayer[tank].g_iTrackCount = 0;
+	g_esPlayer[tank].g_bActivated = false;
+	g_esPlayer[tank].g_iCooldown = -1;
+	g_esPlayer[tank].g_iCount = 0;
 }
 
 static void vReset()
@@ -452,18 +489,20 @@ static void vReset()
 	}
 }
 
-static void vTrack(int rock)
+static void vTrackThink(int rock)
 {
-	int iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower");
-	switch (g_esAbility[MT_GetTankType(iTank)].g_iTrackMode)
+	static int iTank;
+	iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower");
+	switch (g_esCache[iTank].g_iTrackMode)
 	{
 		case 0:
 		{
-			float flPos[3], flVelocity[3];
+			static float flPos[3], flVelocity[3];
 			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
 			GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
 
-			float flVector = GetVectorLength(flVelocity);
+			static float flVector;
+			flVector = GetVectorLength(flVelocity);
 			if (flVector < 100.0)
 			{
 				return;
@@ -471,16 +510,18 @@ static void vTrack(int rock)
 
 			NormalizeVector(flVelocity, flVelocity);
 
-			int iTarget = iGetRockTarget(flPos, flVelocity, iTank);
-			if (iTarget > 0)
+			static int iTarget;
+			iTarget = iGetRockTarget(flPos, flVelocity, iTank);
+			if (bIsSurvivor(iTarget))
 			{
-				float flPos2[3], flVelocity2[3];
+				static float flPos2[3], flVelocity2[3];
 				GetClientEyePosition(iTarget, flPos2);
 				GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
 
-				bool bVisible = bVisiblePosition(flPos, flPos2, rock, 2);
-				float flDistance = GetVectorDistance(flPos, flPos2);
-
+				static bool bVisible;
+				bVisible = bVisiblePosition(flPos, flPos2, rock, 2);
+				static float flDistance;
+				flDistance = GetVectorDistance(flPos, flPos2);
 				if (!bVisible || flDistance > 500.0)
 				{
 					return;
@@ -488,7 +529,7 @@ static void vTrack(int rock)
 
 				SetEntityGravity(rock, 0.01);
 
-				float flDirection[3], flVelocity3[3];
+				static float flDirection[3], flVelocity3[3];
 				SubtractVectors(flPos2, flPos, flDirection);
 				NormalizeVector(flDirection, flDirection);
 
@@ -503,7 +544,7 @@ static void vTrack(int rock)
 		}
 		case 1:
 		{
-			float flPos[3], flVelocity[3];
+			static float flPos[3], flVelocity[3];
 			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
 			GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
 
@@ -514,15 +555,17 @@ static void vTrack(int rock)
 
 			NormalizeVector(flVelocity, flVelocity);
 
-			int iTarget = iGetRockTarget(flPos, flVelocity, iTank);
-			float flVelocity2[3], flVector[3], flAngles[3], flDistance = 1000.0;
-			bool bVisible;
-
+			static int iTarget;
+			iTarget = iGetRockTarget(flPos, flVelocity, iTank);
+			static float flVelocity2[3], flVector[3], flAngles[3], flDistance;
+			flDistance = 1000.0;
+			static bool bVisible;
+			bVisible = false;
 			flVector[0] = flVector[1] = flVector[2] = 0.0;
 
-			if (iTarget > 0)
+			if (bIsSurvivor(iTarget))
 			{
-				float flPos2[3];
+				static float flPos2[3];
 				GetClientEyePosition(iTarget, flPos2);
 				flDistance = GetVectorDistance(flPos, flPos2);
 				bVisible = bVisiblePosition(flPos, flPos2, rock, 1);
@@ -534,28 +577,31 @@ static void vTrack(int rock)
 
 			GetVectorAngles(flVelocity, flAngles);
 
-			float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
-				flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1 = 0.2, flFactor2 = 0.5, flBase = 1500.0;
-
+			static float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
+				flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1, flFactor2, flBase;
+			flFactor1 = 0.2;
+			flFactor2 = 0.5;
+			flBase = 1500.0;
 			flFront[0] = flFront[1] = flFront[2] = 0.0;
 
 			if (bVisible)
 			{
 				flBase = 80.0;
 
-				float flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, rock, 3),
-					flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, rock, 3),
-					flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, rock, 3),
-					flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, rock, 3),
-					flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, rock, 3),
-					flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, rock, 3),
-					flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, rock, 3),
-					flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, rock, 3),
-					flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, rock, 3),
-					flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, rock, 3),
-					flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, rock, 3),
-					flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, rock, 3),
-					flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, rock, 3);
+				static float flFront2, flDown2, flUp2, flLeft2, flRight2, flDistance2, flDistance3, flDistance4, flDistance5, flDistance6, flDistance7, flDistance8, flDistance9;
+				flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, rock, 3);
+				flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, rock, 3);
+				flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, rock, 3);
+				flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, rock, 3);
+				flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, rock, 3);
+				flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, rock, 3);
+				flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, rock, 3);
+				flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, rock, 3);
+				flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, rock, 3);
+				flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, rock, 3);
+				flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, rock, 3);
+				flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, rock, 3);
+				flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, rock, 3);
 
 				NormalizeVector(flFront, flFront);
 				NormalizeVector(flUp, flUp);
@@ -701,19 +747,20 @@ static void vTrack(int rock)
 				NormalizeVector(flFront, flFront);
 			}
 
-			float flAngles2 = flGetAngle(flFront, flVelocity), flVelocity3[3];
+			static float flAngles2, flVelocity3[3];
+			flAngles2 = flGetAngle(flFront, flVelocity);
 			ScaleVector(flFront, flAngles2);
 			AddVectors(flVelocity, flFront, flVelocity3);
 			NormalizeVector(flVelocity3, flVelocity3);
 
-			ScaleVector(flVelocity3, g_esAbility[MT_GetTankType(iTank)].g_flTrackSpeed);
+			ScaleVector(flVelocity3, g_esCache[iTank].g_flTrackSpeed);
 
 			SetEntityGravity(rock, 0.01);
 			TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 
 			if (MT_IsGlowEnabled(iTank) && bIsValidGame())
 			{
-				int iGlowColor[4];
+				static int iGlowColor[4];
 				MT_GetTankColors(iTank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
 				SetEntProp(rock, Prop_Send, "m_iGlowType", 3);
 				SetEntProp(rock, Prop_Send, "m_nGlowRange", 0);
@@ -725,12 +772,13 @@ static void vTrack(int rock)
 
 static int iGetRockTarget(float pos[3], float angle[3], int tank)
 {
-	float flMin = 4.0, flPos[3], flAngle;
+	static float flMin, flPos[3], flAngle;
+	flMin = 4.0;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
-			if (MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, tank))
+			if (MT_IsAdminImmune(iSurvivor, tank) || bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				continue;
 			}
@@ -751,113 +799,23 @@ static int iGetRockTarget(float pos[3], float angle[3], int tank)
 	return 0;
 }
 
-static bool bHasAdminAccess(int admin)
-{
-	if (!bIsValidClient(admin, MT_CHECK_FAKECLIENT))
-	{
-		return true;
-	}
-
-	int iAbilityFlags = g_esAbility[MT_GetTankType(admin)].g_iAccessFlags;
-	if (iAbilityFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
-	{
-		return (!(g_esPlayer[admin].g_iAccessFlags2 & iAbilityFlags)) ? false : true;
-	}
-
-	int iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
-	{
-		return (!(g_esPlayer[admin].g_iAccessFlags2 & iTypeFlags)) ? false : true;
-	}
-
-	int iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0 && g_esPlayer[admin].g_iAccessFlags2 != 0)
-	{
-		return (!(g_esPlayer[admin].g_iAccessFlags2 & iGlobalFlags)) ? false : true;
-	}
-
-	int iClientTypeFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	if (iClientTypeFlags != 0 && iAbilityFlags != 0)
-	{
-		return (!(iClientTypeFlags & iAbilityFlags)) ? false : true;
-	}
-
-	int iClientGlobalFlags = MT_GetAccessFlags(3, 0, admin);
-	if (iClientGlobalFlags != 0 && iAbilityFlags != 0)
-	{
-		return (!(iClientGlobalFlags & iAbilityFlags)) ? false : true;
-	}
-
-	if (iAbilityFlags != 0)
-	{
-		return (!(GetUserFlagBits(admin) & iAbilityFlags)) ? false : true;
-	}
-
-	return true;
-}
-
-static bool bIsAdminImmune(int survivor, int tank)
-{
-	if (!bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
-	{
-		return false;
-	}
-
-	int iAbilityFlags = g_esAbility[MT_GetTankType(tank)].g_iImmunityFlags;
-	if (iAbilityFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iAbilityFlags))
-	{
-		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
-	}
-
-	int iTypeFlags = MT_GetImmunityFlags(2, MT_GetTankType(tank));
-	if (iTypeFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iTypeFlags))
-	{
-		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
-	}
-
-	int iGlobalFlags = MT_GetImmunityFlags(1);
-	if (iGlobalFlags != 0 && g_esPlayer[survivor].g_iImmunityFlags2 != 0 && (g_esPlayer[survivor].g_iImmunityFlags2 & iGlobalFlags))
-	{
-		return (g_esPlayer[tank].g_iImmunityFlags2 != 0 && (g_esPlayer[tank].g_iImmunityFlags2 & iAbilityFlags) && g_esPlayer[survivor].g_iImmunityFlags2 <= g_esPlayer[tank].g_iImmunityFlags2) ? false : true;
-	}
-
-	int iClientTypeFlags = MT_GetImmunityFlags(4, MT_GetTankType(tank), survivor),
-		iClientTypeFlags2 = MT_GetImmunityFlags(4, MT_GetTankType(tank), tank);
-	if (iClientTypeFlags != 0 && iAbilityFlags != 0 && (iClientTypeFlags & iAbilityFlags))
-	{
-		return (iClientTypeFlags2 != 0 && (iClientTypeFlags2 & iAbilityFlags) && iClientTypeFlags <= iClientTypeFlags2) ? false : true;
-	}
-
-	int iClientGlobalFlags = MT_GetImmunityFlags(3, 0, survivor),
-		iClientGlobalFlags2 = MT_GetImmunityFlags(3, 0, tank);
-	if (iClientGlobalFlags != 0 && iAbilityFlags != 0 && (iClientGlobalFlags & iAbilityFlags))
-	{
-		return (iClientGlobalFlags2 != 0 && (iClientGlobalFlags2 & iAbilityFlags) && iClientGlobalFlags <= iClientGlobalFlags2) ? false : true;
-	}
-
-	int iSurvivorFlags = GetUserFlagBits(survivor), iTankFlags = GetUserFlagBits(tank);
-	if (iAbilityFlags != 0 && iSurvivorFlags != 0 && (iSurvivorFlags & iAbilityFlags))
-	{
-		return (iTankFlags != 0 && iSurvivorFlags <= iTankFlags) ? false : true;
-	}
-
-	return false;
-}
-
 public Action tTimerTrack(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iRock = EntRefToEntIndex(pack.ReadCell());
+	static int iRock;
+	iRock = EntRefToEntIndex(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
 	{
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank)) || !MT_IsTypeEnabled(MT_GetTankType(iTank)) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != MT_GetTankType(iTank) || g_esAbility[MT_GetTankType(iTank)].g_iTrackAbility == 0 || !g_esPlayer[iTank].g_bTrack)
+	static int iTank, iType;
+	iTank = GetClientOfUserId(pack.ReadCell());
+	iType = pack.ReadCell();
+	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iTrackAbility == 0 || !g_esPlayer[iTank].g_bActivated)
 	{
-		g_esPlayer[iTank].g_bTrack = false;
+		g_esPlayer[iTank].g_bActivated = false;
 
 		return Plugin_Stop;
 	}
@@ -865,39 +823,18 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 	SDKUnhook(iRock, SDKHook_Think, Think);
 	SDKHook(iRock, SDKHook_Think, Think);
 
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esAbility[MT_GetTankType(iTank)].g_iHumanAbility == 1 && !g_esPlayer[iTank].g_bTrack2)
+	static int iTime;
+	iTime = GetTime();
+	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iTime))
 	{
-		g_esPlayer[iTank].g_bTrack = false;
-		g_esPlayer[iTank].g_bTrack2 = true;
+		g_esPlayer[iTank].g_bActivated = false;
 
-		MT_PrintToChat(iTank, "%s %t", MT_TAG3, "TrackHuman4");
-
-		if (g_esPlayer[iTank].g_iTrackCount < g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo && g_esAbility[MT_GetTankType(iTank)].g_iHumanAmmo > 0)
+		g_esPlayer[iTank].g_iCooldown = (g_esPlayer[iTank].g_iCount < g_esCache[iTank].g_iHumanAmmo && g_esCache[iTank].g_iHumanAmmo > 0) ? (iTime + g_esCache[iTank].g_iHumanCooldown) : -1;
+		if (g_esPlayer[iTank].g_iCooldown != -1 && g_esPlayer[iTank].g_iCooldown > iTime)
 		{
-			CreateTimer(g_esAbility[MT_GetTankType(iTank)].g_flHumanCooldown, tTimerResetCooldown, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
-		}
-		else
-		{
-			g_esPlayer[iTank].g_bTrack2 = false;
+			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "TrackHuman4", g_esPlayer[iTank].g_iCooldown - iTime);
 		}
 	}
-
-	return Plugin_Continue;
-}
-
-public Action tTimerResetCooldown(Handle timer, int userid)
-{
-	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || !g_esPlayer[iTank].g_bTrack2)
-	{
-		g_esPlayer[iTank].g_bTrack2 = false;
-
-		return Plugin_Stop;
-	}
-
-	g_esPlayer[iTank].g_bTrack2 = false;
-
-	MT_PrintToChat(iTank, "%s %t", MT_TAG3, "TrackHuman5");
 
 	return Plugin_Continue;
 }

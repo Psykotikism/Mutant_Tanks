@@ -54,7 +54,7 @@
 				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
 				"windows"	"\x53\x8B\xD9\x83\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8D\x2A\x2A\x2A\x2A\x2A\x7E\x07\x5E\x32\xC0\x5B\xC2\x04\x00"
 			}
-			"CTerrorPlayer_OnVomitedUpon"
+			"CTerrorPlayer::OnVomitedUpon"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_bb"
@@ -66,7 +66,7 @@
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
 				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
 			}
-			"CTerrorPlayer_OnStaggered"
+			"CTerrorPlayer::OnStaggered"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
@@ -84,19 +84,25 @@
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter.constprop.123"
 				"windows"	"\x8B\x44\x24\x08\x53\x8B\x5C\x24\x08"
 			}
+			"CTankRock::Detonate"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankRock8DetonateEv"
+				"windows"	"\x83\xEC\x30\x53\x55\x56\x8B\xF1\x80\xBE\xD4\x08\x00\x00\x00"
+			}
 		}
 	}
 	"left4dead2"
 	{
 		"Signatures"
 		{
-			"CSpitterProjectile_Create"
+			"CSpitterProjectile::Create"
 			{
 				"library"	"server"
 				"linux"		"@_ZN18CSpitterProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57"
 			}
-			"CTerrorPlayer_Fling"
+			"CTerrorPlayer::Fling"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer5FlingERK6Vector17PlayerAnimEvent_tP20CBaseCombatCharacterf"
@@ -114,7 +120,7 @@
 				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
 				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x83\xBE\x2A\x2A\x2A\x2A\x00\x7E\x07\x32\xC0\x5E\x5D\xC2\x04\x00\x8B\x0D"
 			}
-			"CTerrorPlayer_OnVomitedUpon"
+			"CTerrorPlayer::OnVomitedUpon"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_b"
@@ -126,7 +132,7 @@
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
 				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
 			}
-			"CTerrorPlayer_OnStaggered"
+			"CTerrorPlayer::OnStaggered"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
@@ -143,6 +149,12 @@
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\xEC\x8B\x45\x0C\x8B\x4D\x08\x53"
+			}
+			"CTankRock::Detonate"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankRock8DetonateEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x34\x53\x56\x8B\xF1\x80\xBE\x9C\x1A\x00\x00\x00"
 			}
 		}
 	}

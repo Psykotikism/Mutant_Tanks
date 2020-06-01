@@ -1,5 +1,5 @@
 # Mutant Tanks
-Mutant Tanks takes [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752) to the next level by enabling full customization of Mutant Tanks to make gameplay more interesting.
+Originally an extended version of [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752), Mutant Tanks takes Tank fights to the next level by enabling full customization of different Tank types to make gameplay more interesting.
 
 ## License
 > The following license is also placed inside the source code of each plugin and include file.
@@ -791,6 +791,16 @@ forward void MT_OnRockBreak(int tank, int rock);
 forward void MT_OnRockThrow(int tank, int rock);
 
 /**
+ * Called when all settings are cached.
+ * Use this forward to cache settings for each player.
+ *
+ * @param tank			Client index of the Tank.
+ * @param apply			True if player is a Tank and has access to the Mutant Tank type, and needs settings to be applied, false otherwise.
+ * @param type			Mutant Tank type, 0 otherwise.
+ **/
+forward void MT_OnSettingsCached(int tank, bool apply, int type);
+
+/**
  * Called when a Mutant Tank type has been chosen.
  * Use this forward to check or change the chosen type.
  *
@@ -800,7 +810,7 @@ forward void MT_OnRockThrow(int tank, int rock);
  * @return			Plugin_Handled to choose another type, Plugin_Stop to prevent the Tank from mutating,
  *					Plugin_Changed to change the chosen type, Plugin_Continue to allow.
  */
-forward Action MT_OnTypeChosen(int &type, int tank = 0);
+forward Action MT_OnTypeChosen(int &type, int tank);
 ```
 
 Natives:
@@ -861,7 +871,7 @@ native int MT_GetMinType();
  * Returns the RGBA colors given to a Mutant Tank's props.
  *
  * @param tank			Client index of the Tank.
- * @param mode			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color,
+ * @param type			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color,
  *				4 = Rock color, 5 = Tire color, 6 = Propane tank color
  * @param red			Red color reference.
  * @param green			Green color reference.
@@ -869,7 +879,7 @@ native int MT_GetMinType();
  * @param alpha			Alpha color reference.
  * @error			Invalid client index.
  **/
-native void MT_GetPropColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
+native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
 /**
  * Returns a Mutant Tank's run speed.
@@ -884,24 +894,23 @@ native float MT_GetRunSpeed(int tank);
  * Returns the RGB colors given to a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
- * @param mode			1 = Skin color, 2 = Glow outline color
+ * @param type			1 = Skin color, 2 = Glow outline color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
  * @error			Invalid client index.
  **/
-native void MT_GetTankColors(int tank, int mode, int &red, int &green, int &blue, int &alpha);
+native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
 /**
  * Returns the custom name given to a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
- * @param type			Mutant Tank type.
  * @param buffer		Buffer to store the custom name in.
  * @error			Invalid client index.
  **/
-native void MT_GetTankName(int tank, int type, char[] buffer);
+native void MT_GetTankName(int tank, char[] buffer);
 
 /**
  * Returns the type of a Mutant Tank.
@@ -1118,6 +1127,7 @@ If you are a Tank:
 // Accessible by the developer and admins with "z" (Root) flag only.
 sm_mt_config - View a section of the config file.
 sm_mt_list - View a list of installed abilities.
+sm_mt_version - View a list of installed abilities.
 sm_tank2 - Spawn a Mutant Tank.
 
 // Accessible by all players.
@@ -1268,9 +1278,7 @@ The flags are used for two things:
 
 Currently, the system allows admins to each have a favorite/custom/personalized Mutant Tank type.
 
-Each custom admin setting will override the general settings. This is a powerful feature because each admin can have his/her own custom-made Mutant Tank type without tampering with the general Mutant Tank types.
-
-The only limitation is that admins cannot have custom/personalized ability settings. Whatever Mutant Tank type the admin spawns as, the admin will inherit that type's current abilities. This is a failsafe to prevent admins from using abilities that their assigned type doesn't have access to.
+Each custom admin setting will override its corresponding Mutant Tank type-specific setting or general setting. This is a powerful feature because each admin can have his/her own custom-made Mutant Tank type without tampering with the Mutant Tank type settings or general settings.
 
 Example:
 
@@ -1301,52 +1309,73 @@ It will sound complicated but here is the simplest way to explain it:
 Ability Overrides
 
 ```
-If an ability's access/immunity flags are defined for a player, it must contain a flag that is required by one of the following:
-- If a Mutant Tank type has the same ability, and that ability has access/immunity flags defined, those flags will be compared to the player's ability flags.
+If a player's ability flags have one of the access flags required for an ability or vice-versa, the player will have access to the ability.
+If a player's ability flags have one of the immunity flags required for an ability or vice-versa, the player will have immunity from the ability.
 
-OR ELSE
+OR
 
-- If a Mutant Tank type has access/immunity flags defined, those flags will be compared to the player's ability flags.
+If a player's type flags have one of the access flags required for an ability or vice-versa, the player will have access to the ability.
+If a player's type flags have one of the immunity flags required for an ability or vice-versa, the player will have immunity from the ability.
 
-OR ELSE
+OR
 
-- If the global access/immunity flags are defined, those flags will be compared to the player's ability flags.
+If a player's general MT flags have one of the access flags required for an ability or vice-versa, the player will have access to the ability.
+If a player's general MT flags have one of the immunity flags required for an ability or vice-versa, the player will have immunity from the ability.
 
-Note: If all 3 of these return false, the player will not have access to that ability.
+OR
+
+If a player's SM flags have one of the access flags required for an ability or vice-versa, the player will have access to the ability.
+If a player's SM flags have one of the immunity flags required for an ability or vice-versa, the player will have immunity from the ability.
+
+Note: If all 4 of these return false, the player will not have access to nor immunity from that ability.
 ```
 
 Type Overrides
 
 ```
-If a type's access/immunity flags are defined for a player, it must contain a flag that is required by one of the following:
-- If a Mutant Tank type's ability has access/immunity flags defined, those flags will be compared to the player's type flags.
+If a player's ability flags have one of the access flags required for a type or vice-versa, the player will have access to the ability of the type.
+If a player's ability flags have one of the immunity flags required for a type or vice-versa, the player will have immunity from the ability of the type.
 
-OR ELSE
+OR
 
-- If a Mutant Tank type has access/immunity flags defined, those flags will be compared to the player's type flags.
+If a player's type flags have one of the access flags required for a type or vice-versa, the player will have access to the type.
+If a player's type flags have one of the immunity flags required for a type or vice-versa, the player will have immunity from the type.
 
-OR ELSE
+OR
 
-- If the global access/immunity flags are defined, those flags will be compared to the player's type flags.
+If a player's general MT flags have one of the access flags required for a type or vice-versa, the player will have access to the type.
+If a player's general MT flags have one of the immunity flags required for a type or vice-versa, the player will have immunity from the type.
 
-Note: If all 3 of these return false, the player will not have access to that type.
+OR
+
+If a player's SM flags have one of the access flags required for a type or vice-versa, the player will have access to the type.
+If a player's SM flags have one of the immunity flags required for a type or vice-versa, the player will have immunity from the type.
+
+Note: If all 4 of these return false, the player will not have access to nor immunity from that type.
 ```
 
 Global Overrides
 
 ```
-If global access/immunity flags are defined for a player, it must contain a flag that is required by one of the following:
-- If a Mutant Tank type's ability has access/immunity flags defined, those flags will be compared to the player's global flags.
+If a player's ability flags have one of the access flags required globally or vice-versa, the player will have access to all abilities that require those flags.
+If a player's ability flags have one of the immunity flags required globally or vice-versa, the player will have immunity from all abilities that require those flags.
 
-OR ELSE
+OR
 
-- If a Mutant Tank type has access/immunity flags defined, those flags will be compared to the player's global flags.
+If a player's type flags have one of the access flags required globally or vice-versa, the player will have access to all types that require those flags.
+If a player's type flags have one of the immunity flags required globally or vice-versa, the player will have immunity from all types that require those flags.
 
-OR ELSE
+OR
 
-- If the global access/immunity flags are defined, those flags will be compared to the player's global flags.
+If a player's general MT flags have one of the access flags required globally or vice-versa, the player will have access to all types and abilities that require those flags.
+If a player's general MT flags have one of the immunity flags required globally or vice-versa, the player will have immunity from all types and abilities that require those flags.
 
-Note: If all 3 of these return false, the player will not have access to that type.
+OR
+
+If a player's SM flags have one of the access flags required globally or vice-versa, the player will have access to all types and abilities that require those flags.
+If a player's SM flags have one of the immunity flags required globally or vice-versa, the player will have immunity from all types and abilities that require those flags.
+
+Note: If all 4 of these return false, the player will not have access to nor immunity from anything.
 ```
 
 6. What is the `Allow Developer` setting for?
@@ -1436,7 +1465,7 @@ Example:
 	{
 		"Fast Ability"
 		{
-			"Human Cooldown"			"1"
+			"Human Cooldown"			"30"
 		}
 	}
 }
@@ -1569,7 +1598,7 @@ Examples:
 
 **Mi.Cura** - For reporting issues, suggesting ideas, and overall support.
 
-**KasperH** - For reporting issues, suggesting ideas, and overall support.
+**KasperH** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
@@ -1582,6 +1611,10 @@ Examples:
 **fig101** - For reporting issues.
 
 **BloodyBlade** - For reporting issues.
+
+**user2000** - For reporting issues.
+
+**MedicDTI** - For reporting issues.
 
 **AK978** - For reporting issues.
 
@@ -1605,9 +1638,13 @@ Examples:
 
 **zaviier** - For suggesting ideas.
 
+**RDiver** - For suggesting ideas.
+
 **Marttt** - For helping me with many things and the pull requests.
 
-**Dragokas** - For reporting issues and providing fixes.
+**Dragokas** - For reporting issues, suggesting ideas, and providing fixes.
+
+**BHaType** - For suggesting ideas and providing gamedata signatures.
 
 **Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (v8.66), and overall support.
 
@@ -1619,7 +1656,7 @@ Examples:
 If you wish to contact me for any questions, concerns, suggestions, or criticism, I can be found here:
 - [AlliedModders Forum](https://forums.alliedmods.net/member.php?u=181166) (Use this for just reporting bugs/issues or giving suggestions/ideas.)
 - [Steam](https://steamcommunity.com/profiles/76561198056665335) (Use this for getting to know me or wanting to be friends with me.)
-- Psyk0tik#7757 on Discord (Use this for pitching in new/better code.)
+- Psyk0tik#6898 on Discord (Use this for pitching in new/better code.)
 
 # 3rd-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files! I do not want to create confusion for end-users and it will avoid conflict and negative feedback on the official versions of my work. If you choose to keep the same file names for your revisions, it will cause users to assume that the official versions are the source of any problems your revisions may have. This is to protect you (the reviser) and me (the developer)! Thank you!
