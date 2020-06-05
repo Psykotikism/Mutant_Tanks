@@ -478,7 +478,7 @@ public any aNative_GetAccessFlags(Handle plugin, int numParams)
 		switch (iMode)
 		{
 			case 1: return g_esGeneral.g_iAccessFlags;
-			case 2: return iType > 0 ? g_esTank[iType].g_iAccessFlags : 0;
+			case 2: return (iType > 0) ? g_esTank[iType].g_iAccessFlags : 0;
 			case 3: return bIsValidClient(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) ? g_esPlayer[iAdmin].g_iAccessFlags : 0;
 			case 4: return (bIsValidClient(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && iType > 0) ? g_esAdmin[iType].g_iAccessFlags[iAdmin] : 0;
 		}
@@ -500,7 +500,7 @@ public any aNative_GetImmunityFlags(Handle plugin, int numParams)
 		switch (iMode)
 		{
 			case 1: return g_esGeneral.g_iImmunityFlags;
-			case 2: return iType > 0 ? g_esTank[iType].g_iImmunityFlags : 0;
+			case 2: return (iType > 0) ? g_esTank[iType].g_iImmunityFlags : 0;
 			case 3: return bIsValidClient(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) ? g_esPlayer[iAdmin].g_iImmunityFlags : 0;
 			case 4: return (bIsValidClient(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && iType > 0) ? g_esAdmin[iType].g_iImmunityFlags[iAdmin] : 0;
 		}
@@ -1820,7 +1820,7 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (IsCharNumeric(sType[0]) && !bIsDeveloper(client) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
+	if (IsCharNumeric(sType[0]) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		ReplyToCommand(client, "%s %s\x04 (Tank #%i)\x01 is disabled.", MT_TAG4, g_esTank[iType].g_sTankName, iType);
 
@@ -1891,7 +1891,7 @@ public Action cmdTank2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (IsCharNumeric(sType[0]) && !bIsDeveloper(client) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
+	if (IsCharNumeric(sType[0]) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		ReplyToCommand(client, "%s %s\x04 (Tank #%i)\x01 is disabled.", MT_TAG4, g_esTank[iType].g_sTankName, iType);
 
@@ -1956,7 +1956,7 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (IsCharNumeric(sType[0]) && !bIsDeveloper(client) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
+	if (IsCharNumeric(sType[0]) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		ReplyToCommand(client, "%s %s\x04 (Tank #%i)\x01 is disabled.", MT_TAG4, g_esTank[iType].g_sTankName, iType);
 
@@ -1978,7 +1978,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 			int iTypeCount, iTankTypes[MT_MAXTYPES + 1];
 			for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 			{
-				if (((g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || !bCanTypeSpawn(iIndex)) && !bIsDeveloper(admin)) || StrContains(g_esTank[iIndex].g_sTankName, type, false) == -1)
+				if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || !bCanTypeSpawn(iIndex) || StrContains(g_esTank[iIndex].g_sTankName, type, false) == -1)
 				{
 					continue;
 				}
@@ -2176,7 +2176,7 @@ static void vTankMenu(int admin, int item)
 	static char sMenuItem[46];
 	for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 	{
-		if ((g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || !bCanTypeSpawn(iIndex)) && !bIsDeveloper(admin))
+		if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || !bCanTypeSpawn(iIndex))
 		{
 			continue;
 		}
@@ -2228,7 +2228,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				{
 					for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 					{
-						if ((g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(param1, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, param1) || !bCanTypeSpawn(iIndex)) && !bIsDeveloper(param1))
+						if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(param1, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, param1) || !bCanTypeSpawn(iIndex))
 						{
 							continue;
 						}
@@ -2331,6 +2331,7 @@ public void OnGameFrame()
 						g_esCache[iTarget].g_sTankName = "Tank";
 					}
 
+					sHealthBar[0] = '\0';
 					iHealth = (g_esPlayer[iTarget].g_bDying) ? 0 : GetClientHealth(iTarget);
 					flPercentage = (float(iHealth) / float(g_esPlayer[iTarget].g_iTankHealth)) * 100;
 
@@ -3883,8 +3884,8 @@ static void vPluginStatus()
 {
 	if (g_esGeneral.g_cvMTPluginEnabled.BoolValue && g_esGeneral.g_iPluginEnabled == 1)
 	{
-		bool bIsPluginAllowed = bIsPluginEnabled();
-		switch (bIsPluginAllowed)
+		bool bPluginAllowed = bIsPluginEnabled();
+		switch (bPluginAllowed)
 		{
 			case true:
 			{
@@ -4259,7 +4260,8 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 {
 	if (bIsTank(tank))
 	{
-		if (g_esCache[tank].g_iRenamePlayers == 1)
+		bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+		if (!bHuman || (bHuman && g_esCache[tank].g_iRenamePlayers == 1))
 		{
 			g_esGeneral.g_bHideNameChange = true;
 			SetClientName(tank, name);
@@ -5126,13 +5128,7 @@ static void vThrowInterval(int tank)
 
 static bool bCanTypeSpawn(int type)
 {
-	switch (g_esTank[type].g_iFinaleTank)
-	{
-		case 1: return bIsFinaleMap() || g_esGeneral.g_iTankWave > 0;
-		case 2: return !bIsFinaleMap() || g_esGeneral.g_iTankWave <= 0;
-	}
-
-	return true;
+	return (g_esTank[type].g_iFinaleTank == 1) ? (bIsFinaleMap() || g_esGeneral.g_iTankWave > 0) : (!bIsFinaleMap() || g_esGeneral.g_iTankWave <= 0);
 }
 
 static bool bHasAbility(const char[] subsection, int index)
@@ -5148,15 +5144,14 @@ static bool bHasAbility(const char[] subsection, int index)
 				return false;
 			}
 
-			static char sSub[32], sSub2[32], sSub3[32], sSub4[32];
-			g_esGeneral.g_alAbilitySections[0].GetString(index, sSub, sizeof(sSub));
-			g_esGeneral.g_alAbilitySections[1].GetString(index, sSub2, sizeof(sSub2));
-			g_esGeneral.g_alAbilitySections[2].GetString(index, sSub3, sizeof(sSub3));
-			g_esGeneral.g_alAbilitySections[3].GetString(index, sSub4, sizeof(sSub4));
-
-			if (StrEqual(subsection, sSub, false) || StrEqual(subsection, sSub2, false) || StrEqual(subsection, sSub3, false) || StrEqual(subsection, sSub4, false))
+			static char sSub[4][32];
+			for (int iPos = 0; iPos < sizeof(sSub); iPos++)
 			{
-				return true;
+				g_esGeneral.g_alAbilitySections[iPos].GetString(index, sSub[iPos], sizeof(sSub[]));
+				if (StrEqual(subsection, sSub[iPos], false))
+				{
+					return true;
+				}
 			}
 		}
 	}
@@ -5171,48 +5166,17 @@ static bool bHasCoreAdminAccess(int admin, int type = 0)
 		return true;
 	}
 
-	static int iType;
+	static int iType, iTypePlayerFlags, iPlayerFlags, iAdminFlags, iTypeFlags, iGlobalFlags;
 	iType = type > 0 ? type : g_esPlayer[admin].g_iTankType;
-
-	static int iTypePlayerFlags, iPlayerFlags, iAdminFlags;
 	iTypePlayerFlags = g_esAdmin[iType].g_iAccessFlags[admin];
 	iPlayerFlags = g_esPlayer[admin].g_iAccessFlags;
 	iAdminFlags = GetUserFlagBits(admin);
-
-	static int iTypeFlags;
 	iTypeFlags = g_esTank[iType].g_iAccessFlags;
-	if (iTypeFlags != 0)
-	{
-		if (!(iTypeFlags & iTypePlayerFlags) && !(iTypePlayerFlags & iTypeFlags))
-		{
-			return false;
-		}
-		else if (!(iTypeFlags & iPlayerFlags) && !(iPlayerFlags & iTypeFlags))
-		{
-			return false;
-		}
-		else if (!(iTypeFlags & iAdminFlags) && !(iAdminFlags & iTypeFlags))
-		{
-			return false;
-		}
-	}
-
-	static int iGlobalFlags;
 	iGlobalFlags = g_esGeneral.g_iAccessFlags;
-	if (iGlobalFlags != 0)
+	if ((iTypeFlags != 0 && ((!(iTypeFlags & iTypePlayerFlags) && !(iTypePlayerFlags & iTypeFlags)) || (!(iTypeFlags & iPlayerFlags) && !(iPlayerFlags & iTypeFlags)) || (!(iTypeFlags & iAdminFlags) && !(iAdminFlags & iTypeFlags))))
+		|| (iGlobalFlags != 0 && ((!(iGlobalFlags & iTypePlayerFlags) && !(iTypePlayerFlags & iGlobalFlags)) || (!(iGlobalFlags & iPlayerFlags) && !(iPlayerFlags & iGlobalFlags)) || (!(iGlobalFlags & iAdminFlags) && !(iAdminFlags & iGlobalFlags)))))
 	{
-		if (!(iGlobalFlags & iTypePlayerFlags) && !(iTypePlayerFlags & iGlobalFlags))
-		{
-			return false;
-		}
-		else if (!(iGlobalFlags & iPlayerFlags) && !(iPlayerFlags & iGlobalFlags))
-		{
-			return false;
-		}
-		else if (!(iGlobalFlags & iAdminFlags) && !(iAdminFlags & iGlobalFlags))
-		{
-			return false;
-		}
+		return false;
 	}
 
 	return true;
@@ -5230,51 +5194,15 @@ static bool bIsCoreAdminImmune(int survivor, int tank)
 		return true;
 	}
 
-	static int iType;
+	static int iType, iTypePlayerFlags, iPlayerFlags, iAdminFlags, iTypeFlags, iGlobalFlags;
 	iType = g_esPlayer[tank].g_iTankType;
-
-	static int iTypePlayerFlags, iPlayerFlags, iAdminFlags;
 	iTypePlayerFlags = g_esAdmin[iType].g_iImmunityFlags[survivor];
 	iPlayerFlags = g_esPlayer[survivor].g_iImmunityFlags;
 	iAdminFlags = GetUserFlagBits(survivor);
-
-	static int iTypeFlags;
 	iTypeFlags = g_esTank[iType].g_iImmunityFlags;
-	if (iTypeFlags != 0)
-	{
-		if (iTypePlayerFlags != 0 && ((iTypeFlags & iTypePlayerFlags) || (iTypePlayerFlags & iTypeFlags)))
-		{
-			return true;
-		}
-		else if (iPlayerFlags != 0 && ((iTypeFlags & iPlayerFlags) || (iPlayerFlags & iTypeFlags)))
-		{
-			return true;
-		}
-		else if (iAdminFlags != 0 && ((iTypeFlags & iAdminFlags) || (iAdminFlags & iTypeFlags)))
-		{
-			return true;
-		}
-	}
-
-	static int iGlobalFlags;
 	iGlobalFlags = g_esGeneral.g_iImmunityFlags;
-	if (iGlobalFlags != 0)
-	{
-		if (iTypePlayerFlags != 0 && ((iGlobalFlags & iTypePlayerFlags) || (iTypePlayerFlags & iGlobalFlags)))
-		{
-			return true;
-		}
-		else if (iPlayerFlags != 0 && ((iGlobalFlags & iPlayerFlags) || (iPlayerFlags & iGlobalFlags)))
-		{
-			return true;
-		}
-		else if (iAdminFlags != 0 && ((iGlobalFlags & iAdminFlags) || (iAdminFlags & iGlobalFlags)))
-		{
-			return true;
-		}
-	}
-
-	return false;
+	return (iTypeFlags != 0 && ((iTypePlayerFlags != 0 && ((iTypeFlags & iTypePlayerFlags) || (iTypePlayerFlags & iTypeFlags))) || (iPlayerFlags != 0 && ((iTypeFlags & iPlayerFlags) || (iPlayerFlags & iTypeFlags))) || (iAdminFlags != 0 && ((iTypeFlags & iAdminFlags) || (iAdminFlags & iTypeFlags)))))
+		|| (iGlobalFlags != 0 && ((iTypePlayerFlags != 0 && ((iGlobalFlags & iTypePlayerFlags) || (iTypePlayerFlags & iGlobalFlags))) || (iPlayerFlags != 0 && ((iGlobalFlags & iPlayerFlags) || (iPlayerFlags & iGlobalFlags))) || (iAdminFlags != 0 && ((iGlobalFlags & iAdminFlags) || (iAdminFlags & iGlobalFlags)))));
 }
 
 static bool bIsDeveloper(int developer)
@@ -5282,12 +5210,11 @@ static bool bIsDeveloper(int developer)
 	if (g_esGeneral.g_iAllowDeveloper == 1)
 	{
 		static char sSteamID32[32], sSteam3ID[32];
-		if (GetClientAuthId(developer, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)) && GetClientAuthId(developer, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
+		GetClientAuthId(developer, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
+		GetClientAuthId(developer, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
+		if (StrEqual(sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(sSteam3ID, "[U:1:96399607]", false))
 		{
-			if (StrEqual(sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(sSteam3ID, "[U:1:96399607]", false))
-			{
-				return true;
-			}
+			return true;
 		}
 	}
 
@@ -5301,8 +5228,7 @@ static bool bIsPluginEnabled()
 		return false;
 	}
 
-	static int iMode;
-	iMode = g_esGeneral.g_iGameModeTypes;
+	int iMode = g_esGeneral.g_iGameModeTypes;
 	iMode = (iMode == 0) ? g_esGeneral.g_cvMTGameModeTypes.IntValue : iMode;
 	if (iMode != 0)
 	{
@@ -5313,8 +5239,7 @@ static bool bIsPluginEnabled()
 
 		g_esGeneral.g_iCurrentMode = 0;
 
-		static int iGameMode;
-		iGameMode = CreateEntityByName("info_gamemode");
+		int iGameMode = CreateEntityByName("info_gamemode");
 		if (bIsValidEntity(iGameMode))
 		{
 			DispatchSpawn(iGameMode);
@@ -5335,11 +5260,11 @@ static bool bIsPluginEnabled()
 		}
 	}
 
-	static char sFixedGameMode[32], sGameMode[32], sGameModes[513], sGameModesList[513];
+	char sFixed[32], sGameMode[32], sGameModes[513], sList[513];
 	g_esGeneral.g_cvMTGameMode.GetString(sGameMode, sizeof(sGameMode));
-	FormatEx(sFixedGameMode, sizeof(sFixedGameMode), ",%s,", sGameMode);
+	FormatEx(sFixed, sizeof(sFixed), ",%s,", sGameMode);
 
-	sGameModes = g_esGeneral.g_sEnabledGameModes;
+	strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sEnabledGameModes);
 	if (sGameModes[0] == '\0')
 	{
 		g_esGeneral.g_cvMTEnabledGameModes.GetString(sGameModes, sizeof(sGameModes));
@@ -5347,14 +5272,14 @@ static bool bIsPluginEnabled()
 
 	if (sGameModes[0] != '\0')
 	{
-		FormatEx(sGameModesList, sizeof(sGameModesList), ",%s,", sGameModes);
-		if (StrContains(sGameModes, sGameMode, false) == -1)
+		FormatEx(sList, sizeof(sList), ",%s,", sGameModes);
+		if (StrContains(sList, sGameMode, false) == -1)
 		{
 			return false;
 		}
 	}
 
-	sGameModes = g_esGeneral.g_sDisabledGameModes;
+	strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sDisabledGameModes);
 	if (sGameModes[0] == '\0')
 	{
 		g_esGeneral.g_cvMTDisabledGameModes.GetString(sGameModes, sizeof(sGameModes));
@@ -5362,8 +5287,8 @@ static bool bIsPluginEnabled()
 
 	if (sGameModes[0] != '\0')
 	{
-		FormatEx(sGameModesList, sizeof(sGameModesList), ",%s,", sGameModes);
-		if (StrContains(sGameModes, sGameMode, false) != -1)
+		FormatEx(sList, sizeof(sList), ",%s,", sGameModes);
+		if (StrContains(sList, sGameMode, false) != -1)
 		{
 			return false;
 		}
@@ -5374,12 +5299,7 @@ static bool bIsPluginEnabled()
 
 static bool bIsTankAllowed(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
 {
-	if (!bIsTank(tank, flags))
-	{
-		return false;
-	}
-
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanSupport == 0)
+	if (!bIsTank(tank, flags) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanSupport == 0))
 	{
 		return false;
 	}
@@ -5389,11 +5309,7 @@ static bool bIsTankAllowed(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|
 
 static bool bIsTypeAvailable(int type, int tank = 0)
 {
-	if (tank > 0 && g_esCache[tank].g_iDetectPlugins == 0)
-	{
-		return true;
-	}
-	else if (g_esGeneral.g_iDetectPlugins == 0 && g_esTank[type].g_iDetectPlugins == 0)
+	if ((tank > 0 && g_esCache[tank].g_iDetectPlugins == 0) || (g_esGeneral.g_iDetectPlugins == 0 && g_esTank[type].g_iDetectPlugins == 0))
 	{
 		return true;
 	}
@@ -5436,12 +5352,7 @@ static bool bIsTypeAvailable(int type, int tank = 0)
 
 static bool bTankChance(int type)
 {
-	if (GetRandomFloat(0.1, 100.0) <= g_esTank[type].g_flTankChance)
-	{
-		return true;
-	}
-
-	return false;
+	return GetRandomFloat(0.1, 100.0) <= g_esTank[type].g_flTankChance;
 }
 
 static int iChooseType(int exclude, int tank = 0)
@@ -5454,9 +5365,9 @@ static int iChooseType(int exclude, int tank = 0)
 	{
 		switch (exclude)
 		{
-			case 1: bCondition = (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank, iIndex) || g_esTank[iIndex].g_iSpawnEnabled == 0 || !bIsTypeAvailable(iIndex, tank) || !bCanTypeSpawn(iIndex) || !bTankChance(iIndex) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex) && !bIsDeveloper(tank);
+			case 1: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank, iIndex) || g_esTank[iIndex].g_iSpawnEnabled == 0 || !bIsTypeAvailable(iIndex, tank) || !bCanTypeSpawn(iIndex) || !bTankChance(iIndex) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
 			case 2: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || g_esTank[iIndex].g_iSpawnEnabled == 0 || !bIsTypeAvailable(iIndex) || !bCanTypeSpawn(iIndex);
-			case 3: bCondition = (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || !bCanTypeSpawn(iIndex)) && !bIsDeveloper(tank);
+			case 3: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || !bCanTypeSpawn(iIndex);
 		}
 
 		if (bCondition)

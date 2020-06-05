@@ -500,7 +500,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -740,7 +740,8 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	static int iSurvivor;
+	iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
@@ -749,7 +750,10 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
+	static int iTank, iType, iRocketEnabled;
+	iTank = GetClientOfUserId(pack.ReadCell());
+	iType = pack.ReadCell();
+	iRocketEnabled = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank) || iType != g_esPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) || iRocketEnabled == 0 || !g_esPlayer[iSurvivor].g_bAffected)
 	{
 		vReset2(iSurvivor);
@@ -757,7 +761,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	float flVelocity[3];
+	static float flVelocity[3];
 	flVelocity[0] = 0.0;
 	flVelocity[1] = 0.0;
 	flVelocity[2] = 800.0;
@@ -775,7 +779,8 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	static int iSurvivor;
+	iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
@@ -784,7 +789,10 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iTank = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell(), iRocketEnabled = pack.ReadCell();
+	static int iTank, iType, iRocketEnabled;
+	iTank = GetClientOfUserId(pack.ReadCell());
+	iType = pack.ReadCell();
+	iRocketEnabled = pack.ReadCell();
 	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank) || iType != g_esPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) || iRocketEnabled == 0 || !g_esPlayer[iSurvivor].g_bAffected)
 	{
 		vReset2(iSurvivor);
@@ -792,7 +800,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	float flPosition[3];
+	static float flPosition[3];
 	GetClientAbsOrigin(iSurvivor, flPosition);
 
 	TE_SetupExplosion(flPosition, g_iRocketSprite, 10.0, 1, 0, 600, 5000);
@@ -804,10 +812,11 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 	g_esPlayer[iSurvivor].g_bAffected = false;
 	g_esPlayer[iSurvivor].g_iOwner = 0;
 
-	int iMessage = pack.ReadCell();
+	static int iMessage;
+	iMessage = pack.ReadCell();
 	if (g_esCache[iTank].g_iRocketMessage & iMessage)
 	{
-		char sTankName[33];
+		static char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Rocket", sTankName, iSurvivor);
 	}

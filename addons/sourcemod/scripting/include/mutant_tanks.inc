@@ -21,7 +21,7 @@
 #define REQUIRE_PLUGIN
 
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
-#define MT_VERSION "8.68"
+#define MT_VERSION "8.69"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define MT_TAG "[MT]"
@@ -1047,7 +1047,7 @@ stock void MT_PrintToChat(int client, char[] message, any ...)
 	{
 		ThrowError("Invalid client index %i", client);
 	}
-	
+
 	if (!bIsValidClient(client, MT_CHECK_INGAME))
 	{
 		ThrowError("Client %i is not in game", client);
@@ -1089,41 +1089,14 @@ stock bool bHasAdminAccess(int admin, int flags, int flags2)
 		return true;
 	}
 
-	static int iTypePlayerFlags, iPlayerFlags, iAdminFlags;
+	static int iTypePlayerFlags, iPlayerFlags, iAdminFlags, iTypeFlags, iGlobalFlags;
 	iTypePlayerFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
 	iPlayerFlags = MT_GetAccessFlags(3, 0, admin);
 	iAdminFlags = GetUserFlagBits(admin);
-
-	if (flags != 0)
-	{
-		if (!(flags & flags2) && !(flags2 & flags))
-		{
-			return false;
-		}
-		else if (!(flags & iTypePlayerFlags) && !(iTypePlayerFlags & flags))
-		{
-			return false;
-		}
-		else if (!(flags & iPlayerFlags) && !(iPlayerFlags & flags))
-		{
-			return false;
-		}
-		else if (!(flags & iAdminFlags) && !(iAdminFlags & flags))
-		{
-			return false;
-		}
-	}
-
-	static int iTypeFlags;
 	iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	if (iTypeFlags != 0 && !(iTypeFlags & flags2) && !(flags2 & iTypeFlags))
-	{
-		return false;
-	}
-
-	static int iGlobalFlags;
 	iGlobalFlags = MT_GetAccessFlags(1);
-	if (iGlobalFlags != 0 && !(iGlobalFlags & flags2) && !(flags2 & iGlobalFlags))
+	if ((flags != 0 && ((!(flags & flags2) && !(flags2 & flags)) || (!(flags & iTypePlayerFlags) && !(iTypePlayerFlags & flags)) || (!(flags & iPlayerFlags) && !(iPlayerFlags & flags)) || (!(flags & iAdminFlags) && !(iAdminFlags & flags))))
+		|| (iTypeFlags != 0 && !(iTypeFlags & flags2) && !(flags2 & iTypeFlags)) || (iGlobalFlags != 0 && !(iGlobalFlags & flags2) && !(flags2 & iGlobalFlags)))
 	{
 		return false;
 	}
@@ -1160,46 +1133,15 @@ stock bool bIsAdminImmune(int admin, int type, int flags, int flags2)
 		return false;
 	}
 
-	static int iTypePlayerFlags, iPlayerFlags, iAdminFlags;
+	static int iTypePlayerFlags, iPlayerFlags, iAdminFlags, iTypeFlags, iGlobalFlags;
 	iTypePlayerFlags = MT_GetImmunityFlags(4, type, admin);
 	iPlayerFlags = MT_GetImmunityFlags(3, 0, admin);
 	iAdminFlags = GetUserFlagBits(admin);
-
-	if (flags != 0)
-	{
-		if (flags2 != 0 && ((flags & flags2) || (flags2 & flags)))
-		{
-			return true;
-		}
-		else if (iTypePlayerFlags != 0 && ((flags & iTypePlayerFlags) || (iTypePlayerFlags & flags)))
-		{
-			return true;
-		}
-		else if (iPlayerFlags != 0 && ((flags & iPlayerFlags) || (iPlayerFlags & flags)))
-		{
-			return true;
-		}
-		else if (iAdminFlags != 0 && ((flags & iAdminFlags) || (iAdminFlags & flags)))
-		{
-			return true;
-		}
-	}
-
-	static int iTypeFlags;
 	iTypeFlags = MT_GetImmunityFlags(2, type);
-	if (iTypeFlags != 0 && ((iTypeFlags & flags2) || (flags2 & iTypeFlags)))
-	{
-		return true;
-	}
-
-	static int iGlobalFlags;
 	iGlobalFlags = MT_GetImmunityFlags(1);
-	if (iGlobalFlags != 0 && ((iGlobalFlags & flags2) || (flags2 & iGlobalFlags)))
-	{
-		return true;
-	}
-
-	return false;
+	return (flags != 0 && ((flags2 != 0 && ((flags & flags2) || (flags2 & flags))) || (iTypePlayerFlags != 0 && ((flags & iTypePlayerFlags) || (iTypePlayerFlags & flags)))
+		|| (iPlayerFlags != 0 && ((flags & iPlayerFlags) || (iPlayerFlags & flags))) || (iAdminFlags != 0 && ((flags & iAdminFlags) || (iAdminFlags & flags)))))
+		|| (iTypeFlags != 0 && ((iTypeFlags & flags2) || (flags2 & iTypeFlags))) || (iGlobalFlags != 0 && ((iGlobalFlags & flags2) || (flags2 & iGlobalFlags)));
 }
 
 stock bool bIsBoomer(int boomer, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
@@ -1394,7 +1336,7 @@ stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGA
 			case 28, 29, 30, 31, 47, 48, 49, 50, 51, 73, 74, 75, 76, 77: return true;
 		}
 	}
-	
+
 	return false;
 }
 

@@ -52,7 +52,6 @@ enum struct esPlayer
 	int g_iRespawnAbility;
 	int g_iRespawnAmount;
 	int g_iRespawnMessage;
-	int g_iRespawnMode;
 	int g_iRespawnType;
 	int g_iTankType;
 }
@@ -69,7 +68,6 @@ enum struct esAbility
 	int g_iRespawnAbility;
 	int g_iRespawnAmount;
 	int g_iRespawnMessage;
-	int g_iRespawnMode;
 	int g_iRespawnType;
 }
 
@@ -84,7 +82,6 @@ enum struct esCache
 	int g_iRespawnAbility;
 	int g_iRespawnAmount;
 	int g_iRespawnMessage;
-	int g_iRespawnMode;
 	int g_iRespawnType;
 }
 
@@ -269,8 +266,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iRespawnMessage = 0;
 				g_esAbility[iIndex].g_iRespawnAmount = 1;
 				g_esAbility[iIndex].g_flRespawnChance = 33.3;
-				g_esAbility[iIndex].g_iRespawnMode = 0;
-				g_esAbility[iIndex].g_iRespawnType = 0;
+				g_esAbility[iIndex].g_iRespawnType = -1;
 			}
 		}
 		case 3:
@@ -286,8 +282,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iRespawnMessage = 0;
 					g_esPlayer[iPlayer].g_iRespawnAmount = 0;
 					g_esPlayer[iPlayer].g_flRespawnChance = 0.0;
-					g_esPlayer[iPlayer].g_iRespawnMode = 0;
-					g_esPlayer[iPlayer].g_iRespawnType = 0;
+					g_esPlayer[iPlayer].g_iRespawnType = -1;
 				}
 			}
 		}
@@ -304,8 +299,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iRespawnMessage = iGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iRespawnMessage, value, 0, 1);
 		g_esPlayer[admin].g_iRespawnAmount = iGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnAmount", "Respawn Amount", "Respawn_Amount", "amount", g_esPlayer[admin].g_iRespawnAmount, value, 1, 999999);
 		g_esPlayer[admin].g_flRespawnChance = flGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnChance", "Respawn Chance", "Respawn_Chance", "chance", g_esPlayer[admin].g_flRespawnChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iRespawnMode = iGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnMode", "Respawn Mode", "Respawn_Mode", "mode", g_esPlayer[admin].g_iRespawnMode, value, 0, 2);
-		g_esPlayer[admin].g_iRespawnType = iGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnType", "Respawn Type", "Respawn_Type", "type", g_esPlayer[admin].g_iRespawnType, value, 0, MT_MAXTYPES);
+		g_esPlayer[admin].g_iRespawnType = iGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnType", "Respawn Type", "Respawn_Type", "type", g_esPlayer[admin].g_iRespawnType, value, -1, MT_MAXTYPES);
 
 		if (StrEqual(subsection, "respawnability", false) || StrEqual(subsection, "respawn ability", false) || StrEqual(subsection, "respawn_ability", false) || StrEqual(subsection, "respawn", false))
 		{
@@ -324,8 +318,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iRespawnMessage = iGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iRespawnMessage, value, 0, 1);
 		g_esAbility[type].g_iRespawnAmount = iGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnAmount", "Respawn Amount", "Respawn_Amount", "amount", g_esAbility[type].g_iRespawnAmount, value, 1, 999999);
 		g_esAbility[type].g_flRespawnChance = flGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnChance", "Respawn Chance", "Respawn_Chance", "chance", g_esAbility[type].g_flRespawnChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iRespawnMode = iGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnMode", "Respawn Mode", "Respawn_Mode", "mode", g_esAbility[type].g_iRespawnMode, value, 0, 2);
-		g_esAbility[type].g_iRespawnType = iGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnType", "Respawn Type", "Respawn_Type", "type", g_esAbility[type].g_iRespawnType, value, 0, MT_MAXTYPES);
+		g_esAbility[type].g_iRespawnType = iGetKeyValue(subsection, "respawnability", "respawn ability", "respawn_ability", "respawn", key, "RespawnType", "Respawn Type", "Respawn_Type", "type", g_esAbility[type].g_iRespawnType, value, -1, MT_MAXTYPES);
 
 		if (StrEqual(subsection, "respawnability", false) || StrEqual(subsection, "respawn ability", false) || StrEqual(subsection, "respawn_ability", false) || StrEqual(subsection, "respawn", false))
 		{
@@ -346,7 +339,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iRespawnAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRespawnAbility, g_esAbility[type].g_iRespawnAbility);
 	g_esCache[tank].g_iRespawnAmount = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRespawnAmount, g_esAbility[type].g_iRespawnAmount);
 	g_esCache[tank].g_iRespawnMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRespawnMessage, g_esAbility[type].g_iRespawnMessage);
-	g_esCache[tank].g_iRespawnMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRespawnMode, g_esAbility[type].g_iRespawnMode);
 	g_esCache[tank].g_iRespawnType = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRespawnType, g_esAbility[type].g_iRespawnType);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
@@ -372,6 +364,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			DataPack dpRespawn;
 			CreateDataTimer(0.4, tTimerRespawn, dpRespawn, TIMER_FLAG_NO_MAPCHANGE);
 			dpRespawn.WriteCell(GetClientUserId(iTank));
+			dpRespawn.WriteCell(g_esPlayer[iTank].g_iTankType);
 			dpRespawn.WriteCell(iFlags);
 			dpRespawn.WriteCell(iSequence);
 			dpRespawn.WriteFloat(flPos[0]);
@@ -489,7 +482,8 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iFlags, iSequence;
+	static int iType, iFlags, iSequence;
+	iType = pack.ReadCell();
 	iFlags = pack.ReadCell();
 	iSequence = pack.ReadCell();
 
@@ -523,18 +517,11 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			}
 		}
 
-		switch (g_esCache[iTank].g_iRespawnMode)
+		switch (g_esCache[iTank].g_iRespawnType)
 		{
-			case 0: MT_SpawnTank(iTank, g_esPlayer[iTank].g_iTankType);
-			case 1:
-			{
-				switch (g_esCache[iTank].g_iRespawnType)
-				{
-					case 0: vRespawn(iTank);
-					default: MT_SpawnTank(iTank, g_esCache[iTank].g_iRespawnType);
-				}
-			}
-			case 2: vRespawn(iTank);
+			case -1: MT_SpawnTank(iTank, iType);
+			case 0: vRespawn(iTank);
+			default: MT_SpawnTank(iTank, g_esCache[iTank].g_iRespawnType);
 		}
 
 		static int iNewTank;
