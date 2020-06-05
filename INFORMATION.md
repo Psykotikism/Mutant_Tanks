@@ -307,7 +307,7 @@
 		"Game Modes"
 		{
 			// Enable Mutant Tanks in these game mode types.
-			// Note: This setting has a convar equivalent (mt_gamemodetypes).
+			// Note: This setting has a convar equivalent (mt_gamemodetypes), which is only checked if this setting is set to 0.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -322,7 +322,7 @@
 			"Game Mode Types"			"0"
 
 			// Enable Mutant Tanks in these game modes.
-			// Note: This setting has a convar equivalent (mt_enabledgamemodes).
+			// Note: This setting has a convar equivalent (mt_enabledgamemodes), which is only checked if this setting is left empty.
 			// --
 			// Separate game modes with commas (",").
 			// --
@@ -333,7 +333,7 @@
 			"Enabled Game Modes"			""
 
 			// Disable Mutant Tanks in these game modes.
-			// Note: This setting has a convar equivalent (mt_disabledgamemodes).
+			// Note: This setting has a convar equivalent (mt_disabledgamemodes), which is only checked if this setting is left empty.
 			// --
 			// Separate game modes with commas (",").
 			// --
