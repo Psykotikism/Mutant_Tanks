@@ -611,7 +611,7 @@ Example:
 		"item"		"sm_kick"
 		"item"		"sm_ban"
 		"item"		"sm_gag"
-		"item"		"sm_burn"		
+		"item"		"sm_burn"
 		"item"		"sm_beacon"
 		"item"		"sm_freeze"
 		"item"		"sm_timebomb"
@@ -637,6 +637,10 @@ Example:
 	"MutantTanks"
 	{
 		"item"		"sm_tank"
+		"item"		"sm_mt_config"
+		"item"		"sm_mt_info"
+		"item"		"sm_mt_list"
+		"item"		"sm_mt_version"
 	}
 }
 ```
