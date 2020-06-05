@@ -307,7 +307,7 @@
 		"Game Modes"
 		{
 			// Enable Mutant Tanks in these game mode types.
-			// Note: This setting has a convar equivalent (mt_gamemodetypes).
+			// Note: This setting has a convar equivalent (mt_gamemodetypes), which is only checked if this setting is set to 0.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -322,7 +322,7 @@
 			"Game Mode Types"			"0"
 
 			// Enable Mutant Tanks in these game modes.
-			// Note: This setting has a convar equivalent (mt_enabledgamemodes).
+			// Note: This setting has a convar equivalent (mt_enabledgamemodes), which is only checked if this setting is left empty.
 			// --
 			// Separate game modes with commas (",").
 			// --
@@ -333,7 +333,7 @@
 			"Enabled Game Modes"			""
 
 			// Disable Mutant Tanks in these game modes.
-			// Note: This setting has a convar equivalent (mt_disabledgamemodes).
+			// Note: This setting has a convar equivalent (mt_disabledgamemodes), which is only checked if this setting is left empty.
 			// --
 			// Separate game modes with commas (",").
 			// --
@@ -572,7 +572,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			"Glow Color"				"-1,-1,-1"
-			
+
 			// The Mutant Tank's glow outline will flash.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting can be overridden for specific players.
@@ -580,7 +580,7 @@
 			// 0: OFF
 			// 1: ON
 			"Glow Flashing"				"0"
-			
+
 			// The minimum range that a client can be away from the Mutant Tank until the glow outline starts to appear.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting can be overridden for specific players.
@@ -2334,6 +2334,14 @@
 			// 0: OFF
 			// 1: ON
 			"Clone Replace"				"1"
+
+			// The type that the Mutant Tank's clone.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// -1: OFF, use current type.
+			// 0: OFF, use the randomization feature.
+			// 1-1000: ON, the type of the clone.
+			"Clone Type"				"-1"
 		}
 	}
 }
@@ -7468,20 +7476,13 @@
 			// Maximum: 100.0 (Highest chance)
 			"Respawn Chance"			"33.3"
 
-			// The mode of the Mutant Tank's respawns.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// 0: The Mutant Tank respawns as the same type.
-			// 1: The Mutant Tank respawns as the type used in the "Respawn Type" setting.
-			// 2: The Mutant Tank respawns as a random type.
-			"Respawn Mode"				"0"
-
 			// The type that the Mutant Tank will respawn as.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// -1: OFF, use current type.
 			// 0: OFF, use the randomization feature.
 			// 1-1000: ON, the type to respawn as.
-			"Respawn Type"				"0"
+			"Respawn Type"				"-1"
 		}
 	}
 }

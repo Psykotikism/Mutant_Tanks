@@ -1,5 +1,25 @@
 # Changelog
 
+## Version 8.69 (June 5, 2020)
+
+Bug fixes:
+
+1. Fixed the Tank's healthbar not updating properly. (Thanks to Neptunia and Mi.Cura for reporting!)
+2. Fixed AI Tanks not being renamed due to the `Rename Players` setting not exempting bots. (Thanks to Mi.Cura for reporting!)
+3. Fixed the plugin and its modules not working when either the `Enabled Game Modes` or `Disabled Game Modes` setting is specified. (Thanks to Voevoda for reporting!)
+
+Changes:
+
+1. Removed the `Respawn Mode` setting and updated the `Respawn Type` setting for the `Respawn` ability.
+2. Added the `Clone Type` setting for the `Clone` ability. (Requested by Neptunia.)
+3. More code optimization.
+
+Files:
+
+1. Updated config files.
+2. Updated gamedata file.
+3. Updated include file.
+
 ## Version 8.68 (June 1, 2020)
 
 Bug fixes:

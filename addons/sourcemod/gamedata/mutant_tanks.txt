@@ -84,12 +84,6 @@
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter.constprop.123"
 				"windows"	"\x8B\x44\x24\x08\x53\x8B\x5C\x24\x08"
 			}
-			"CTankRock::Detonate"
-			{
-				"library"	"server"
-				"linux"		"@_ZN9CTankRock8DetonateEv"
-				"windows"	"\x83\xEC\x30\x53\x55\x56\x8B\xF1\x80\xBE\xD4\x08\x00\x00\x00"
-			}
 		}
 	}
 	"left4dead2"
@@ -149,12 +143,6 @@
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\xEC\x8B\x45\x0C\x8B\x4D\x08\x53"
-			}
-			"CTankRock::Detonate"
-			{
-				"library"	"server"
-				"linux"		"@_ZN9CTankRock8DetonateEv"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x34\x53\x56\x8B\xF1\x80\xBE\x9C\x1A\x00\x00\x00"
 			}
 		}
 	}
