@@ -19,13 +19,13 @@ You should have received a copy of the GNU General Public License along with thi
 Mutant Tanks will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
 ### What makes Mutant Tanks worth installing?
-Mutant Tanks enhances the experience and fun that players get from Tank fights by 1000. This plugin gives server owners an arsenal of Mutant Tanks to test players' skills and create a unique experience in every Tank fight.
+Mutant Tanks enhances the experience and fun that players get from Tank fights by 1,000. This plugin gives server owners an arsenal of Mutant Tanks to test players' skills and create a unique experience in every Tank fight.
 
 ## Features
 1. Enable/disable the plugin in all game modes.
 2. Supports custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
 3. Fully customize all Mutant Tanks.
-4. Store up to 1000 Mutant Tank types.
+4. Store up to 1,000 Mutant Tank types.
 5. Four different formats for the config file.
 6. Auto-reload the config file when you change settings mid-game.
 7. Choose which abilities to install.
@@ -415,7 +415,7 @@ It may be due to one or more of the following:
 - You didn't set up the Mutant Tank properly.
 - You are missing quotation marks.
 - You are missing curly braces.
-- You have more than 1000 Mutant Tanks in your config file.
+- You have more than 1,000 Mutant Tanks in your config file.
 - You didn't format your config file properly.
 
 5. How do I kill the Tanks depending on what abilities they have?
@@ -1045,19 +1045,19 @@ Stocks:
 ```
 stock void MT_PrintToChat(int client, char[] message, any ...)
 {
-	if (!bIsValidClient(client, "0"))
+	if (!bIsValidClient(client, MT_CHECK_INDEX))
 	{
-		ThrowError("Invalid client index %d", client);
-	}
-	
-	if (!bIsValidClient(client, "2"))
-	{
-		ThrowError("Client %d is not in game", client);
+		ThrowError("Invalid client index %i", client);
 	}
 
-	char sBuffer[255], sMessage[255];
+	if (!bIsValidClient(client, MT_CHECK_INGAME))
+	{
+		ThrowError("Client %i is not in game", client);
+	}
+
+	static char sBuffer[255], sMessage[255];
 	SetGlobalTransTarget(client);
-	Format(sBuffer, sizeof(sBuffer), "\x01%s", message);
+	FormatEx(sBuffer, sizeof(sBuffer), "\x01%s", message);
 	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);
 
 	ReplaceString(sMessage, sizeof(sMessage), "{default}", "\x01");
@@ -1070,10 +1070,10 @@ stock void MT_PrintToChat(int client, char[] message, any ...)
 
 stock void MT_PrintToChatAll(char[] message, any ...)
 {
-	char sBuffer[255];
+	static char sBuffer[255];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, "25"))
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 		{
 			SetGlobalTransTarget(iPlayer);
 			VFormat(sBuffer, sizeof(sBuffer), message, 2);
@@ -1107,7 +1107,7 @@ sm_tank - Spawn a Mutant Tank.
 
 Valid inputs:
 
-1. sm_tank <type 1*-1000*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is 1000 though.)
+1. sm_tank <type 1*-1000*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is "1000" though.)
 2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The plugin will attempt to match the name with any of the Mutant Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
 
 The command has 4 functions.
@@ -1619,6 +1619,8 @@ Examples:
 **AK978** - For reporting issues.
 
 **ricksfishin** - For reporting issues.
+
+**Voevoda** - For reporting issues.
 
 **Zytheus** - For reporting issues and suggesting ideas.
 
