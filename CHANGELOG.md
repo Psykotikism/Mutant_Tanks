@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 8.71 (June 10, 2020)
+
+Bug fixes:
+
+1. Fixed the Tank's health status not showing up when using `Display Health` and `Display Health Type`. (Thanks to Mi.Cura for reporting!)
+2. Fixed the plugin and its modules still not working when either the `Enabled Game Modes` or `Disabled Game Modes` setting is specified. (Thanks to Voevoda for reporting!)
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.70 (June 10, 2020)
 
 Bug fixes:
@@ -24,7 +35,7 @@ Changes:
 Files:
 
 1. Updated config files.
-2. Updated include files.
+2. Updated include file.
 3. Updated translation file.
 
 ## Version 8.69 (June 5, 2020)
