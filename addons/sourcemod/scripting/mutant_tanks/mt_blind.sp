@@ -568,14 +568,15 @@ static void vBlind(int survivor, int intensity)
 	iFlags = intensity == 0 ? (0x0001|0x0010) : (0x0002|0x0008);
 	iColor[3] = intensity;
 
-	static Handle hBlindTarget;
-	hBlindTarget = StartMessageEx(g_umFadeUserMsgId, iTargets, 1);
+	static Handle hTarget;
+	hTarget = StartMessageEx(g_umFadeUserMsgId, iTargets, 1);
+
 	switch (GetUserMessageType() == UM_Protobuf)
 	{
 		case true:
 		{
 			static Protobuf pbSet;
-			pbSet = UserMessageToProtobuf(hBlindTarget);
+			pbSet = UserMessageToProtobuf(hTarget);
 			pbSet.SetInt("duration", 1536);
 			pbSet.SetInt("hold_time", 1536);
 			pbSet.SetInt("flags", iFlags);
@@ -584,7 +585,7 @@ static void vBlind(int survivor, int intensity)
 		case false:
 		{
 			static BfWrite bfWrite;
-			bfWrite = UserMessageToBfWrite(hBlindTarget);
+			bfWrite = UserMessageToBfWrite(hTarget);
 			bfWrite.WriteShort(1536);
 			bfWrite.WriteShort(1536);
 			bfWrite.WriteShort(iFlags);

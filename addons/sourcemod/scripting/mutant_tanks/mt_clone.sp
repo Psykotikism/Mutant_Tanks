@@ -10,7 +10,6 @@
  **/
 
 #include <sourcemod>
-#include <mt_clone>
 #include <mutant_tanks>
 
 #pragma semicolon 1
@@ -111,7 +110,8 @@ public any aNative_IsCloneSupported(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1);
 	if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 	{
-		if (g_esCache[iTank].g_iCloneMode == 0 && g_esPlayer[iTank].g_bCloned)
+		int iOwner = g_esPlayer[iTank].g_iOwner;
+		if (g_esPlayer[iTank].g_iTankType == g_esPlayer[iOwner].g_iTankType && g_esCache[iOwner].g_iCloneMode == 0 && g_esPlayer[iTank].g_bCloned)
 		{
 			return false;
 		}
@@ -551,7 +551,7 @@ static void vClone(int tank)
 	iTypeCount = 0;
 	for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 	{
-		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || g_esPlayer[tank].g_iTankType == iIndex)
+		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || g_esAbility[iIndex].g_iCloneAbility == 1 || g_esPlayer[tank].g_iTankType == iIndex)
 		{
 			continue;
 		}
@@ -560,10 +560,9 @@ static void vClone(int tank)
 		iTypeCount++;
 	}
 
-	if (iTypeCount > 0)
-	{
-		MT_SpawnTank(tank, iTankTypes[GetRandomInt(1, iTypeCount)]);
-	}
+	static int iType;
+	iType = (iTypeCount > 0) ? iTankTypes[GetRandomInt(1, iTypeCount)] : g_esPlayer[tank].g_iTankType;
+	MT_SpawnTank(tank, iType);
 }
 
 static void vCloneAbility(int tank)
@@ -617,7 +616,12 @@ static void vCloneAbility(int tank)
 						{
 							case -1: MT_SpawnTank(tank, g_esPlayer[tank].g_iTankType);
 							case 0: vClone(tank);
-							default: MT_SpawnTank(tank, g_esCache[tank].g_iCloneType);
+							default:
+							{
+								static int iType;
+								iType = (g_esAbility[g_esCache[tank].g_iCloneType].g_iCloneAbility == 1) ? g_esPlayer[tank].g_iTankType : g_esCache[tank].g_iCloneType;
+								MT_SpawnTank(tank, iType);
+							}
 						}
 
 						static int iSelectedType;

@@ -3980,6 +3980,13 @@
 		"hu"			"Pajzs Képesség Információ"
 	}
 
+	"ShieldOwner"
+	{
+		"#format"		"{1:s}"
+		"en"			"{1}'s Shield"
+		"hu"			"{1} Pajzsa"
+	}
+
 	"Shove"
 	{
 		"#format"		"{1:s},{2:N}"

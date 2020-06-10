@@ -640,9 +640,11 @@ static void vReset3(int tank)
 
 static void vShake(int survivor, float duration = 1.0)
 {
-	Handle hShakeTarget = StartMessageOne("Shake", survivor);
+	static Handle hTarget;
+	hTarget = StartMessageOne("Shake", survivor);
 
-	BfWrite bfWrite = UserMessageToBfWrite(hShakeTarget);
+	static BfWrite bfWrite;
+	bfWrite = UserMessageToBfWrite(hTarget);
 	bfWrite.WriteByte(0);
 	bfWrite.WriteFloat(16.0);
 	bfWrite.WriteFloat(0.5);
