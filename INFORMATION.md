@@ -629,7 +629,6 @@
 		"Human Support"
 		{
 			// Allow players to play as the Mutant Tank.
-			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
 			// 1: ON, inform players about activating their abilities manually.

@@ -311,7 +311,6 @@ enum struct esPlayer
 	int g_iGlowMaxRange;
 	int g_iGlowMinRange;
 	int g_iGlowType;
-	int g_iHumanSupport;
 	int g_iIgnoreLevel;
 	int g_iImmunityFlags;
 	int g_iLastButtons;
@@ -444,7 +443,6 @@ enum struct esCache
 	int g_iGlowMaxRange;
 	int g_iGlowMinRange;
 	int g_iGlowType;
-	int g_iHumanSupport;
 	int g_iLightColor[4];
 	int g_iMeleeImmunity;
 	int g_iMultiHealth;
@@ -1625,7 +1623,7 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			{
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, (!g_esGeneral.g_cvMTPluginEnabled.BoolValue || !g_esGeneral.g_bPluginEnabled) ? "AbilityStatus1" : "AbilityStatus2");
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "GeneralDetails");
-				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iHumanSupport == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esTank[g_esPlayer[param1].g_iTankType].g_iHumanSupport == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
 			char sInfo[33];
@@ -2529,7 +2527,6 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iGlowMaxRange = iGetSettingValue(bHasAccess, bHuman, g_esPlayer[tank].g_iGlowMaxRange, g_esTank[iType].g_iGlowMaxRange);
 	g_esCache[tank].g_iGlowMinRange = iGetSettingValue(bHasAccess, bHuman, g_esPlayer[tank].g_iGlowMinRange, g_esTank[iType].g_iGlowMinRange);
 	g_esCache[tank].g_iGlowType = iGetSettingValue(bHasAccess, bHuman, g_esPlayer[tank].g_iGlowType, g_esTank[iType].g_iGlowType);
-	g_esCache[tank].g_iHumanSupport = iGetSettingValue(bHasAccess, bHuman, g_esPlayer[tank].g_iHumanSupport, g_esTank[iType].g_iHumanSupport);
 	g_esCache[tank].g_iMeleeImmunity = iGetSettingValue(bHasAccess, bHuman, g_esPlayer[tank].g_iMeleeImmunity, g_esTank[iType].g_iMeleeImmunity);
 	g_esCache[tank].g_iMultiHealth = iGetSettingValue(bHasAccess, true, g_esTank[iType].g_iMultiHealth, g_esGeneral.g_iMultiHealth);
 	g_esCache[tank].g_iMultiHealth = iGetSettingValue(bHasAccess, bHuman, g_esPlayer[tank].g_iMultiHealth, g_esCache[tank].g_iMultiHealth);
@@ -2811,7 +2808,6 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_iDisplayHealthType = 0;
 				g_esPlayer[iPlayer].g_sHealthCharacters[0] = '\0';
 				g_esPlayer[iPlayer].g_iMultiHealth = 0;
-				g_esPlayer[iPlayer].g_iHumanSupport = 0;
 				g_esPlayer[iPlayer].g_iRenamePlayers = 0;
 				g_esPlayer[iPlayer].g_iGlowEnabled = 0;
 				g_esPlayer[iPlayer].g_iGlowFlashing = 0;
@@ -3361,7 +3357,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esPlayer[iPlayer].g_iDisplayHealth, value, 0, 11);
 							g_esPlayer[iPlayer].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esPlayer[iPlayer].g_iDisplayHealthType, value, 0, 2);
 							g_esPlayer[iPlayer].g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esPlayer[iPlayer].g_iMultiHealth, value, 0, 3);
-							g_esPlayer[iPlayer].g_iHumanSupport = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanSupport", "Human Support", "Human_Support", "human", g_esPlayer[iPlayer].g_iHumanSupport, value, 0, 2);
 							g_esPlayer[iPlayer].g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esPlayer[iPlayer].g_iRenamePlayers, value, 0, 1);
 							g_esPlayer[iPlayer].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_esPlayer[iPlayer].g_iGlowEnabled, value, 0, 1);
 							g_esPlayer[iPlayer].g_iGlowFlashing = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "glowflashing", g_esPlayer[iPlayer].g_iGlowFlashing, value, 0, 1);
@@ -5018,7 +5013,7 @@ public void vTankSpawnFrame(DataPack pack)
 					}
 				}
 
-				if (bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanSupport == 1 && bHasCoreAdminAccess(iTank))
+				if (bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT) && g_esTank[g_esPlayer[iTank].g_iTankType].g_iHumanSupport == 1 && bHasCoreAdminAccess(iTank))
 				{
 					MT_PrintToChat(iTank, "%s %t", MT_TAG3, "SpawnMessage");
 					MT_PrintToChat(iTank, "%s %t", MT_TAG2, "AbilityButtons");
@@ -5232,7 +5227,7 @@ static bool bIsPluginEnabled()
 
 static bool bIsTankAllowed(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
 {
-	if (!bIsTank(tank, flags) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanSupport == 0))
+	if (!bIsTank(tank, flags) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esTank[g_esPlayer[tank].g_iTankType].g_iHumanSupport == 0))
 	{
 		return false;
 	}
