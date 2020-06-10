@@ -21,7 +21,7 @@
 #define REQUIRE_PLUGIN
 
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
-#define MT_VERSION "8.69"
+#define MT_VERSION "8.70"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define MT_TAG "[MT]"
@@ -780,7 +780,8 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 {
 	if (bIsValidClient(entity) || bIsValidEntity(entity))
 	{
-		int iParticle = CreateEntityByName("info_particle_system");
+		static int iParticle;
+		iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
 		{
 			static float flPos[3];
@@ -802,7 +803,8 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 
 stock void vAttachParticle2(float pos[3], float angle[3], const char[] particlename, float duration = 0.0)
 {
-	int iParticle = CreateEntityByName("info_particle_system");
+	static int iParticle;
+	iParticle = CreateEntityByName("info_particle_system");
 	if (bIsValidEntity(iParticle))
 	{
 		DispatchKeyValue(iParticle, "effect_name", particlename); 
@@ -873,18 +875,21 @@ stock void vDamageEntity(int victim, int attacker, float damage, const char[] da
 	}
 }
 
-stock void vDeleteEntity(int entity, float duration = 0.1)
+stock void vDeleteEntity(int ref, float duration = 0.1)
 {
-	if (bIsValidEntRef(entity))
+	if (bIsValidEntRef(ref))
 	{
 		static char sVariant[64];
 		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:ClearParent::%f:1", duration);
 		SetVariantString(sVariant);
-		AcceptEntityInput(entity, "AddOutput");
+
+		static int iObject;
+		iObject = EntRefToEntIndex(ref);
+		AcceptEntityInput(iObject, "AddOutput");
 		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:Kill::%f:1", duration + 0.1);
 		SetVariantString(sVariant);
-		AcceptEntityInput(entity, "AddOutput");
-		AcceptEntityInput(entity, "FireUser1");
+		AcceptEntityInput(iObject, "AddOutput");
+		AcceptEntityInput(iObject, "FireUser1");
 	}
 }
 

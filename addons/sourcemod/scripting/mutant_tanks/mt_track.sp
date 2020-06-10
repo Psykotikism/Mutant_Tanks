@@ -493,6 +493,7 @@ static void vTrackThink(int rock)
 {
 	static int iTank;
 	iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower");
+
 	switch (g_esCache[iTank].g_iTrackMode)
 	{
 		case 0:

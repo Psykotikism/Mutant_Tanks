@@ -651,71 +651,69 @@ static void vRocketHit(int survivor, int tank, float chance, int enabled, int me
 			{
 				static int iFlame;
 				iFlame = CreateEntityByName("env_steam");
-				if (!bIsValidEntity(iFlame))
+				if (bIsValidEntity(iFlame))
 				{
-					return;
-				}
+					g_esPlayer[survivor].g_bAffected = true;
+					g_esPlayer[survivor].g_iOwner = tank;
 
-				g_esPlayer[survivor].g_bAffected = true;
-				g_esPlayer[survivor].g_iOwner = tank;
-
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
-				{
-					g_esPlayer[tank].g_iCount++;
-
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
-
-					g_esPlayer[tank].g_iCooldown = (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
-					if (g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime)
+					if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman5", g_esPlayer[tank].g_iCooldown - iTime);
+						g_esPlayer[tank].g_iCount++;
+
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+
+						g_esPlayer[tank].g_iCooldown = (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
+						if (g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime)
+						{
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman5", g_esPlayer[tank].g_iCooldown - iTime);
+						}
 					}
+
+					static float flPosition[3], flAngles[3];
+					GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flPosition);
+					flPosition[2] += 30.0;
+					flAngles[0] = 90.0;
+					flAngles[1] = 0.0;
+					flAngles[2] = 0.0;
+
+					DispatchKeyValue(iFlame, "spawnflags", "1");
+					DispatchKeyValue(iFlame, "Type", "0");
+					DispatchKeyValue(iFlame, "InitialState", "1");
+					DispatchKeyValue(iFlame, "Spreadspeed", "10");
+					DispatchKeyValue(iFlame, "Speed", "800");
+					DispatchKeyValue(iFlame, "Startsize", "10");
+					DispatchKeyValue(iFlame, "EndSize", "250");
+					DispatchKeyValue(iFlame, "Rate", "15");
+					DispatchKeyValue(iFlame, "JetLength", "400");
+
+					SetEntityRenderColor(iFlame, 180, 70, 10, 180);
+
+					TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
+					DispatchSpawn(iFlame);
+					vSetEntityParent(iFlame, survivor);
+
+					iFlame = EntIndexToEntRef(iFlame);
+					vDeleteEntity(iFlame, 3.0);
+
+					EmitSoundToAll(SOUND_FIRE, survivor, _, _, _, 1.0);
+
+					DataPack dpRocketLaunch;
+					CreateDataTimer(g_esCache[tank].g_flRocketDelay, tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
+					dpRocketLaunch.WriteCell(GetClientUserId(survivor));
+					dpRocketLaunch.WriteCell(GetClientUserId(tank));
+					dpRocketLaunch.WriteCell(g_esPlayer[tank].g_iTankType);
+					dpRocketLaunch.WriteCell(enabled);
+
+					DataPack dpRocketDetonate;
+					CreateDataTimer(g_esCache[tank].g_flRocketDelay + 1.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
+					dpRocketDetonate.WriteCell(GetClientUserId(survivor));
+					dpRocketDetonate.WriteCell(GetClientUserId(tank));
+					dpRocketDetonate.WriteCell(g_esPlayer[tank].g_iTankType);
+					dpRocketDetonate.WriteCell(enabled);
+					dpRocketDetonate.WriteCell(messages);
+
+					vEffect(survivor, tank, g_esCache[tank].g_iRocketEffect, flags);
 				}
-
-				static float flPosition[3], flAngles[3];
-				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flPosition);
-				flPosition[2] += 30.0;
-				flAngles[0] = 90.0;
-				flAngles[1] = 0.0;
-				flAngles[2] = 0.0;
-
-				DispatchKeyValue(iFlame, "spawnflags", "1");
-				DispatchKeyValue(iFlame, "Type", "0");
-				DispatchKeyValue(iFlame, "InitialState", "1");
-				DispatchKeyValue(iFlame, "Spreadspeed", "10");
-				DispatchKeyValue(iFlame, "Speed", "800");
-				DispatchKeyValue(iFlame, "Startsize", "10");
-				DispatchKeyValue(iFlame, "EndSize", "250");
-				DispatchKeyValue(iFlame, "Rate", "15");
-				DispatchKeyValue(iFlame, "JetLength", "400");
-
-				SetEntityRenderColor(iFlame, 180, 70, 10, 180);
-
-				TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
-				DispatchSpawn(iFlame);
-				vSetEntityParent(iFlame, survivor);
-
-				iFlame = EntIndexToEntRef(iFlame);
-				vDeleteEntity(iFlame, 3.0);
-
-				EmitSoundToAll(SOUND_FIRE, survivor, _, _, _, 1.0);
-
-				DataPack dpRocketLaunch;
-				CreateDataTimer(g_esCache[tank].g_flRocketDelay, tTimerRocketLaunch, dpRocketLaunch, TIMER_FLAG_NO_MAPCHANGE);
-				dpRocketLaunch.WriteCell(GetClientUserId(survivor));
-				dpRocketLaunch.WriteCell(GetClientUserId(tank));
-				dpRocketLaunch.WriteCell(g_esPlayer[tank].g_iTankType);
-				dpRocketLaunch.WriteCell(enabled);
-
-				DataPack dpRocketDetonate;
-				CreateDataTimer(g_esCache[tank].g_flRocketDelay + 1.5, tTimerRocketDetonate, dpRocketDetonate, TIMER_FLAG_NO_MAPCHANGE);
-				dpRocketDetonate.WriteCell(GetClientUserId(survivor));
-				dpRocketDetonate.WriteCell(GetClientUserId(tank));
-				dpRocketDetonate.WriteCell(g_esPlayer[tank].g_iTankType);
-				dpRocketDetonate.WriteCell(enabled);
-				dpRocketDetonate.WriteCell(messages);
-
-				vEffect(survivor, tank, g_esCache[tank].g_iRocketEffect, flags);
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 			{

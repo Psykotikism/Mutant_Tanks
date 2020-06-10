@@ -677,82 +677,80 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, int mes
 			{
 				static int iCamera;
 				iCamera = CreateEntityByName("env_sprite");
-				if (!bIsValidEntity(iCamera))
+				if (bIsValidEntity(iCamera))
 				{
-					return;
-				}
+					g_esPlayer[survivor].g_bAffected = true;
+					g_esPlayer[survivor].g_iOwner = tank;
 
-				g_esPlayer[survivor].g_bAffected = true;
-				g_esPlayer[survivor].g_iOwner = tank;
-
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
-				{
-					g_esPlayer[tank].g_iCount++;
-
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "WhirlHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
-
-					g_esPlayer[tank].g_iCooldown = (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
-					if (g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime)
+					if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 					{
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "WhirlHuman5", g_esPlayer[tank].g_iCooldown - iTime);
-					}
-				}
+						g_esPlayer[tank].g_iCount++;
 
-				static float flEyePos[3], flAngles[3];
-				GetClientEyePosition(survivor, flEyePos);
-				GetClientEyeAngles(survivor, flAngles);
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "WhirlHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
 
-				SetEntityModel(iCamera, SPRITE_DOT);
-				SetEntityRenderMode(iCamera, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(iCamera, 0, 0, 0, 0);
-				DispatchSpawn(iCamera);
-
-				TeleportEntity(iCamera, flEyePos, flAngles, NULL_VECTOR);
-				TeleportEntity(survivor, NULL_VECTOR, flAngles, NULL_VECTOR);
-
-				vSetEntityParent(iCamera, survivor);
-				SetClientViewEntity(survivor, iCamera);
-
-				static int iAxis, iAxisCount, iAxes[3], iFlag;
-				iAxisCount = 0;
-				for (int iBit = 0; iBit < sizeof(iAxes); iBit++)
-				{
-					iFlag = (1 << iBit);
-					if (!(g_esCache[tank].g_iWhirlAxis & iFlag))
-					{
-						continue;
+						g_esPlayer[tank].g_iCooldown = (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
+						if (g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime)
+						{
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "WhirlHuman5", g_esPlayer[tank].g_iCooldown - iTime);
+						}
 					}
 
-					iAxes[iAxisCount] = iFlag;
-					iAxisCount++;
-				}
+					static float flEyePos[3], flAngles[3];
+					GetClientEyePosition(survivor, flEyePos);
+					GetClientEyeAngles(survivor, flAngles);
 
-				switch (iAxes[GetRandomInt(0, iAxisCount - 1)])
-				{
-					case 1: iAxis = 0;
-					case 2: iAxis = 1;
-					case 4: iAxis = 2;
-					default: iAxis = GetRandomInt(0, 2);
-				}
+					SetEntityModel(iCamera, SPRITE_DOT);
+					SetEntityRenderMode(iCamera, RENDER_TRANSCOLOR);
+					SetEntityRenderColor(iCamera, 0, 0, 0, 0);
+					DispatchSpawn(iCamera);
 
-				DataPack dpWhirl;
-				CreateDataTimer(0.1, tTimerWhirl, dpWhirl, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpWhirl.WriteCell(EntIndexToEntRef(iCamera));
-				dpWhirl.WriteCell(GetClientUserId(survivor));
-				dpWhirl.WriteCell(GetClientUserId(tank));
-				dpWhirl.WriteCell(g_esPlayer[tank].g_iTankType);
-				dpWhirl.WriteCell(messages);
-				dpWhirl.WriteCell(enabled);
-				dpWhirl.WriteCell(iAxis);
-				dpWhirl.WriteCell(GetTime());
+					TeleportEntity(iCamera, flEyePos, flAngles, NULL_VECTOR);
+					TeleportEntity(survivor, NULL_VECTOR, flAngles, NULL_VECTOR);
 
-				vEffect(survivor, tank, g_esCache[tank].g_iWhirlEffect, flags);
+					vSetEntityParent(iCamera, survivor);
+					SetClientViewEntity(survivor, iCamera);
 
-				if (g_esCache[tank].g_iWhirlMessage & messages)
-				{
-					static char sTankName[33];
-					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Whirl", sTankName, survivor);
+					static int iAxis, iAxisCount, iAxes[3], iFlag;
+					iAxisCount = 0;
+					for (int iBit = 0; iBit < sizeof(iAxes); iBit++)
+					{
+						iFlag = (1 << iBit);
+						if (!(g_esCache[tank].g_iWhirlAxis & iFlag))
+						{
+							continue;
+						}
+
+						iAxes[iAxisCount] = iFlag;
+						iAxisCount++;
+					}
+
+					switch (iAxes[GetRandomInt(0, iAxisCount - 1)])
+					{
+						case 1: iAxis = 0;
+						case 2: iAxis = 1;
+						case 4: iAxis = 2;
+						default: iAxis = GetRandomInt(0, 2);
+					}
+
+					DataPack dpWhirl;
+					CreateDataTimer(0.1, tTimerWhirl, dpWhirl, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					dpWhirl.WriteCell(EntIndexToEntRef(iCamera));
+					dpWhirl.WriteCell(GetClientUserId(survivor));
+					dpWhirl.WriteCell(GetClientUserId(tank));
+					dpWhirl.WriteCell(g_esPlayer[tank].g_iTankType);
+					dpWhirl.WriteCell(messages);
+					dpWhirl.WriteCell(enabled);
+					dpWhirl.WriteCell(iAxis);
+					dpWhirl.WriteCell(GetTime());
+
+					vEffect(survivor, tank, g_esCache[tank].g_iWhirlEffect, flags);
+
+					if (g_esCache[tank].g_iWhirlMessage & messages)
+					{
+						static char sTankName[33];
+						MT_GetTankName(tank, sTankName);
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Whirl", sTankName, survivor);
+					}
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))

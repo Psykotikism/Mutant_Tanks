@@ -739,6 +739,7 @@ static int iGetHealth(int tank, int infected)
 {
 	static int iClass;
 	iClass = GetEntProp(infected, Prop_Send, "m_zombieClass");
+
 	switch (iClass)
 	{
 		case 1: return g_esCache[tank].g_iMedicHealth[iClass - 1];
@@ -757,6 +758,7 @@ static int iGetMaxHealth(int tank, int infected)
 {
 	static int iClass;
 	iClass = GetEntProp(infected, Prop_Send, "m_zombieClass");
+
 	switch (iClass)
 	{
 		case 1: return g_esCache[tank].g_iMedicMaxHealth[iClass - 1];

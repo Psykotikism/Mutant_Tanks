@@ -364,7 +364,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			DataPack dpRespawn;
 			CreateDataTimer(0.4, tTimerRespawn, dpRespawn, TIMER_FLAG_NO_MAPCHANGE);
 			dpRespawn.WriteCell(GetClientUserId(iTank));
-			dpRespawn.WriteCell(g_esPlayer[iTank].g_iTankType);
 			dpRespawn.WriteCell(iFlags);
 			dpRespawn.WriteCell(iSequence);
 			dpRespawn.WriteFloat(flPos[0]);
@@ -446,7 +445,7 @@ static void vRespawn(int tank)
 	iTypeCount = 0;
 	for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 	{
-		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || g_esPlayer[tank].g_iTankType == iIndex)
+		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || g_esAbility[iIndex].g_iRespawnAbility == 1 || g_esPlayer[tank].g_iTankType == iIndex)
 		{
 			continue;
 		}
@@ -455,10 +454,9 @@ static void vRespawn(int tank)
 		iTypeCount++;
 	}
 
-	if (iTypeCount > 0)
-	{
-		MT_SpawnTank(tank, iTankTypes[GetRandomInt(1, iTypeCount)]);
-	}
+	static int iType;
+	iType = (iTypeCount > 0) ? iTankTypes[GetRandomInt(1, iTypeCount)] : g_esPlayer[tank].g_iTankType;
+	MT_SpawnTank(tank, iType);
 }
 
 public Action tTimerRespawn(Handle timer, DataPack pack)
@@ -482,8 +480,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iType, iFlags, iSequence;
-	iType = pack.ReadCell();
+	static int iFlags, iSequence;
 	iFlags = pack.ReadCell();
 	iSequence = pack.ReadCell();
 
@@ -519,9 +516,14 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 
 		switch (g_esCache[iTank].g_iRespawnType)
 		{
-			case -1: MT_SpawnTank(iTank, iType);
+			case -1: MT_SpawnTank(iTank, g_esPlayer[iTank].g_iTankType);
 			case 0: vRespawn(iTank);
-			default: MT_SpawnTank(iTank, g_esCache[iTank].g_iRespawnType);
+			default:
+			{
+				static int iType;
+				iType = (g_esAbility[g_esCache[iTank].g_iRespawnType].g_iRespawnAbility == 1) ? g_esPlayer[iTank].g_iTankType : g_esCache[iTank].g_iRespawnType;
+				MT_SpawnTank(iTank, iType);
+			}
 		}
 
 		static int iNewTank;

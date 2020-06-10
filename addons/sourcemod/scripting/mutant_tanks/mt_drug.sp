@@ -578,14 +578,15 @@ static void vDrug(int survivor, bool toggle, float angles[20])
 		}
 	}
 
-	static Handle hDrugTarget;
-	hDrugTarget = StartMessageEx(g_umFadeUserMsgId, iClients, 1);
+	static Handle hTarget;
+	hTarget = StartMessageEx(g_umFadeUserMsgId, iClients, 1);
+
 	switch (GetUserMessageType() == UM_Protobuf)
 	{
 		case true:
 		{
 			static Protobuf pbSet;
-			pbSet = UserMessageToProtobuf(hDrugTarget);
+			pbSet = UserMessageToProtobuf(hTarget);
 			pbSet.SetInt("duration", toggle ? 255: 1536);
 			pbSet.SetInt("hold_time", toggle ? 255 : 1536);
 			pbSet.SetInt("flags", iFlags);
@@ -594,7 +595,7 @@ static void vDrug(int survivor, bool toggle, float angles[20])
 		case false:
 		{
 			static BfWrite bfWrite;
-			bfWrite = UserMessageToBfWrite(hDrugTarget);
+			bfWrite = UserMessageToBfWrite(hTarget);
 			bfWrite.WriteShort(toggle ? 255 : 1536);
 			bfWrite.WriteShort(toggle ? 255 : 1536);
 			bfWrite.WriteShort(iFlags);

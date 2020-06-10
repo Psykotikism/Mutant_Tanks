@@ -53,7 +53,11 @@ enum struct esPlayer
 {
 	bool g_bActivated;
 
+	char g_sShieldHealthChars[4];
+
+	float g_flHealth;
 	float g_flShieldChance;
+	float g_flShieldHealth;
 
 	int g_iAccessFlags;
 	int g_iCooldown;
@@ -70,6 +74,8 @@ enum struct esPlayer
 	int g_iShieldAbility;
 	int g_iShieldColor[4];
 	int g_iShieldDelay;
+	int g_iShieldDisplayHP;
+	int g_iShieldDisplayHPType;
 	int g_iShieldMessage;
 	int g_iShieldType;
 	int g_iTankType;
@@ -79,7 +85,10 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 
 enum struct esAbility
 {
+	char g_sShieldHealthChars[4];
+
 	float g_flShieldChance;
+	float g_flShieldHealth;
 
 	int g_iAccessFlags;
 	int g_iHumanAbility;
@@ -91,6 +100,8 @@ enum struct esAbility
 	int g_iShieldAbility;
 	int g_iShieldColor[4];
 	int g_iShieldDelay;
+	int g_iShieldDisplayHP;
+	int g_iShieldDisplayHPType;
 	int g_iShieldMessage;
 	int g_iShieldType;
 }
@@ -99,7 +110,10 @@ esAbility g_esAbility[MT_MAXTYPES + 1];
 
 enum struct esCache
 {
+	char g_sShieldHealthChars[4];
+
 	float g_flShieldChance;
+	float g_flShieldHealth;
 
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
@@ -109,6 +123,8 @@ enum struct esCache
 	int g_iShieldAbility;
 	int g_iShieldColor[4];
 	int g_iShieldDelay;
+	int g_iShieldDisplayHP;
+	int g_iShieldDisplayHPType;
 	int g_iShieldMessage;
 	int g_iShieldType;
 }
@@ -308,6 +324,85 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 	}
 }
 
+public void OnGameFrame()
+{
+	if (MT_IsCorePluginEnabled())
+	{
+		static char sClassname[32], sHealthBar[51], sSet[2][2], sTankName[33];
+		static float flPercentage;
+		static int iTarget;
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+			{
+				iTarget = GetClientAimTarget(iPlayer, false);
+				if (bIsValidEntity(iTarget))
+				{
+					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
+					if (StrEqual(sClassname, "player") && bIsTank(iTarget) && g_esPlayer[iTarget].g_bActivated && g_esPlayer[iTarget].g_flHealth > 0.0 && g_esCache[iTarget].g_flShieldHealth > 0.0)
+					{
+						MT_GetTankName(iTarget, sTankName);
+
+						sHealthBar[0] = '\0';
+						flPercentage = (g_esPlayer[iTarget].g_flHealth / g_esCache[iTarget].g_flShieldHealth) * 100;
+
+						ReplaceString(g_esCache[iTarget].g_sShieldHealthChars, sizeof(esCache::g_sShieldHealthChars), " ", "");
+						ExplodeString(g_esCache[iTarget].g_sShieldHealthChars, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+						for (int iCount = 0; iCount < (g_esPlayer[iTarget].g_flHealth / g_esCache[iTarget].g_flShieldHealth) * sizeof(sHealthBar) - 1 && iCount < sizeof(sHealthBar) - 1; iCount++)
+						{
+							StrCat(sHealthBar, sizeof(sHealthBar), sSet[0]);
+						}
+
+						for (int iCount = 0; iCount < sizeof(sHealthBar) - 1; iCount++)
+						{
+							StrCat(sHealthBar, sizeof(sHealthBar), sSet[1]);
+						}
+
+						switch (g_esCache[iTarget].g_iShieldDisplayHPType)
+						{
+							case 1:
+							{
+								switch (g_esCache[iTarget].g_iShieldDisplayHP)
+								{
+									case 1: PrintHintText(iPlayer, "%t", "ShieldOwner", sTankName);
+									case 2: PrintHintText(iPlayer, "Shield: %.0f HP", g_esPlayer[iTarget].g_flHealth);
+									case 3: PrintHintText(iPlayer, "Shield: %.0f/%.0f HP (%.0f%s)", g_esPlayer[iTarget].g_flHealth, g_esCache[iTarget].g_flShieldHealth, flPercentage, "%%");
+									case 4: PrintHintText(iPlayer, "Shield\nHP: |-<%s>-|", sHealthBar);
+									case 5: PrintHintText(iPlayer, "%t (%.0f HP)", "ShieldOwner", sTankName, g_esPlayer[iTarget].g_flHealth);
+									case 6: PrintHintText(iPlayer, "%t [%.0f/%.0f HP (%.0f%s)]", "ShieldOwner", sTankName, g_esPlayer[iTarget].g_flHealth, g_esCache[iTarget].g_flShieldHealth, flPercentage, "%%");
+									case 7: PrintHintText(iPlayer, "%t\nHP: |-<%s>-|", "ShieldOwner", sTankName, sHealthBar);
+									case 8: PrintHintText(iPlayer, "Shield: %.0f HP\nHP: |-<%s>-|", g_esPlayer[iTarget].g_flHealth, sHealthBar);
+									case 9: PrintHintText(iPlayer, "Shield: %.0f/%.0f HP (%.0f%s)\nHP: |-<%s>-|", g_esPlayer[iTarget].g_flHealth, g_esCache[iTarget].g_flShieldHealth, flPercentage, "%%", sHealthBar);
+									case 10: PrintHintText(iPlayer, "%t (%.0f HP)\nHP: |-<%s>-|", "ShieldOwner", sTankName, g_esPlayer[iTarget].g_flHealth, sHealthBar);
+									case 11: PrintHintText(iPlayer, "%t [%.0f/%.0f HP (%.0f%s)]\nHP: |-<%s>-|", "ShieldOwner", sTankName, g_esPlayer[iTarget].g_flHealth, g_esCache[iTarget].g_flShieldHealth, flPercentage, "%%", sHealthBar);
+								}
+							}
+							case 2:
+							{
+								switch (g_esCache[iTarget].g_iShieldDisplayHP)
+								{
+									case 1: PrintCenterText(iPlayer, "%t", "ShieldOwner", sTankName);
+									case 2: PrintCenterText(iPlayer, "Shield: %.0f HP", g_esPlayer[iTarget].g_flHealth);
+									case 3: PrintCenterText(iPlayer, "Shield: %.0f/%.0f HP (%.0f%s)", g_esPlayer[iTarget].g_flHealth, g_esCache[iTarget].g_flShieldHealth, flPercentage, "%%");
+									case 4: PrintCenterText(iPlayer, "Shield\nHP: |-<%s>-|", sHealthBar);
+									case 5: PrintCenterText(iPlayer, "%t (%.0f HP)", "ShieldOwner", sTankName, g_esPlayer[iTarget].g_flHealth);
+									case 6: PrintCenterText(iPlayer, "%t [%.0f/%.0f HP (%.0f%s)]", "ShieldOwner", sTankName, g_esPlayer[iTarget].g_flHealth, g_esCache[iTarget].g_flShieldHealth, flPercentage, "%%");
+									case 7: PrintCenterText(iPlayer, "%t\nHP: |-<%s>-|", "ShieldOwner", sTankName, sHealthBar);
+									case 8: PrintCenterText(iPlayer, "Shield: %.0f HP\nHP: |-<%s>-|", g_esPlayer[iTarget].g_flHealth, sHealthBar);
+									case 9: PrintCenterText(iPlayer, "Shield: %.0f/%.0f HP (%.0f%s)\nHP: |-<%s>-|", g_esPlayer[iTarget].g_flHealth, g_esCache[iTarget].g_flShieldHealth, flPercentage, "%%", sHealthBar);
+									case 10: PrintCenterText(iPlayer, "%t (%.0f HP)\nHP: |-<%s>-|", "ShieldOwner", sTankName, g_esPlayer[iTarget].g_flHealth, sHealthBar);
+									case 11: PrintCenterText(iPlayer, "%t [%.0f/%.0f HP (%.0f%s)]\nHP: |-<%s>-|", "ShieldOwner", sTankName, g_esPlayer[iTarget].g_flHealth, g_esCache[iTarget].g_flShieldHealth, flPercentage, "%%", sHealthBar);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || (g_esPlayer[client].g_iDuration == -1 && g_esPlayer[client].g_iDuration2 == -1))
@@ -351,7 +446,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				|| (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iShieldType == 1) || ((damagetype & DMG_BURN) && g_esCache[victim].g_iShieldType == 2) || (((damagetype & DMG_SLASH)
 				|| (damagetype & DMG_CLUB)) && g_esCache[victim].g_iShieldType == 3))
 			{
-				vShieldAbility(victim, false);
+				g_esPlayer[victim].g_flHealth -= damage;
+				if (g_esCache[victim].g_flShieldHealth == 0.0 || g_esPlayer[victim].g_flHealth < 1.0)
+				{
+					vShieldAbility(victim, false);
+				}
 			}
 
 			return Plugin_Handled;
@@ -395,6 +494,10 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iShieldMessage = 0;
 				g_esAbility[iIndex].g_flShieldChance = 33.3;
 				g_esAbility[iIndex].g_iShieldDelay = 5;
+				g_esAbility[iIndex].g_iShieldDisplayHP = 11;
+				g_esAbility[iIndex].g_iShieldDisplayHPType = 2;
+				g_esAbility[iIndex].g_flShieldHealth = 0.0;
+				g_esAbility[iIndex].g_sShieldHealthChars = "],=";
 				g_esAbility[iIndex].g_iShieldType = 1;
 
 				for (int iPos = 0; iPos < sizeof(esAbility::g_iShieldColor); iPos++)
@@ -420,6 +523,10 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iShieldMessage = 0;
 					g_esPlayer[iPlayer].g_flShieldChance = 0.0;
 					g_esPlayer[iPlayer].g_iShieldDelay = 0;
+					g_esPlayer[iPlayer].g_iShieldDisplayHP = 0;
+					g_esPlayer[iPlayer].g_iShieldDisplayHPType = 0;
+					g_esPlayer[iPlayer].g_flShieldHealth = 0.0;
+					g_esPlayer[iPlayer].g_sShieldHealthChars[0] = '\0';
 					g_esPlayer[iPlayer].g_iShieldType = 0;
 
 					for (int iPos = 0; iPos < sizeof(esPlayer::g_iShieldColor); iPos++)
@@ -445,6 +552,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iShieldMessage = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iShieldMessage, value, 0, 1);
 		g_esPlayer[admin].g_flShieldChance = flGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldChance", "Shield Chance", "Shield_Chance", "chance", g_esPlayer[admin].g_flShieldChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iShieldDelay = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDelay", "Shield Delay", "Shield_Delay", "delay", g_esPlayer[admin].g_iShieldDelay, value, 1, 999999);
+		g_esPlayer[admin].g_iShieldDisplayHP = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDisplayHealth", "Shield Display Health", "Shield_Display_Health", "displayhp", g_esPlayer[admin].g_iShieldDisplayHP, value, 0, 11);
+		g_esPlayer[admin].g_iShieldDisplayHPType = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDisplayHealthType", "Shield Display Health Type", "Shield_Display_Health_Type", "displaytype", g_esPlayer[admin].g_iShieldDisplayHPType, value, 0, 2);
+		g_esPlayer[admin].g_flShieldHealth = flGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldHealth", "Shield Health", "Shield_Health", "health", g_esPlayer[admin].g_flShieldHealth, value, 0.0, 999999.0);
 		g_esPlayer[admin].g_iShieldType = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldType", "Shield Type", "Shield_Type", "type", g_esPlayer[admin].g_iShieldType, value, 0, 3);
 
 		if (StrEqual(subsection, "shieldability", false) || StrEqual(subsection, "shield ability", false) || StrEqual(subsection, "shield_ability", false) || StrEqual(subsection, "shield", false))
@@ -474,6 +584,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 					g_esPlayer[admin].g_iShieldColor[iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
 				}
 			}
+			else if (StrEqual(key, "ShieldHealthCharacters", false) || StrEqual(key, "Shield Health Characters", false) || StrEqual(key, "Shield_Characters", false) || StrEqual(key, "hpchars", false))
+			{
+				strcopy(g_esPlayer[admin].g_sShieldHealthChars, sizeof(esPlayer::g_sShieldHealthChars), value);
+			}
 		}
 	}
 
@@ -488,6 +602,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iShieldMessage = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iShieldMessage, value, 0, 1);
 		g_esAbility[type].g_flShieldChance = flGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldChance", "Shield Chance", "Shield_Chance", "chance", g_esAbility[type].g_flShieldChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iShieldDelay = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDelay", "Shield Delay", "Shield_Delay", "delay", g_esAbility[type].g_iShieldDelay, value, 1, 999999);
+		g_esAbility[type].g_iShieldDisplayHP = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDisplayHealth", "Shield Display Health", "Shield_Display_Health", "displayhp", g_esAbility[type].g_iShieldDisplayHP, value, 0, 11);
+		g_esAbility[type].g_iShieldDisplayHPType = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDisplayHealthType", "Shield Display Health Type", "Shield_Display_Health_Type", "displaytype", g_esAbility[type].g_iShieldDisplayHPType, value, 0, 2);
+		g_esAbility[type].g_flShieldHealth = flGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldHealth", "Shield Health", "Shield_Health", "health", g_esAbility[type].g_flShieldHealth, value, 0.0, 999999.0);
 		g_esAbility[type].g_iShieldType = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldType", "Shield Type", "Shield_Type", "type", g_esAbility[type].g_iShieldType, value, 0, 3);
 
 		if (StrEqual(subsection, "shieldability", false) || StrEqual(subsection, "shield ability", false) || StrEqual(subsection, "shield_ability", false) || StrEqual(subsection, "shield", false))
@@ -517,6 +634,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 					g_esAbility[type].g_iShieldColor[iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
 				}
 			}
+			else if (StrEqual(key, "ShieldHealthCharacters", false) || StrEqual(key, "Shield Health Characters", false) || StrEqual(key, "Shield_Characters", false) || StrEqual(key, "hpchars", false))
+			{
+				strcopy(g_esAbility[type].g_sShieldHealthChars, sizeof(esAbility::g_sShieldHealthChars), value);
+			}
 		}
 	}
 }
@@ -532,6 +653,10 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanMode, g_esAbility[type].g_iHumanMode);
 	g_esCache[tank].g_iShieldAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldAbility, g_esAbility[type].g_iShieldAbility);
 	g_esCache[tank].g_iShieldDelay = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldDelay, g_esAbility[type].g_iShieldDelay);
+	g_esCache[tank].g_iShieldDisplayHP = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldDisplayHP, g_esAbility[type].g_iShieldDisplayHP);
+	g_esCache[tank].g_iShieldDisplayHPType = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldDisplayHPType, g_esAbility[type].g_iShieldDisplayHPType);
+	g_esCache[tank].g_flShieldHealth = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flShieldHealth, g_esAbility[type].g_flShieldHealth);
+	vGetSettingValue(apply, bHuman, g_esCache[tank].g_sShieldHealthChars, sizeof(esCache::g_sShieldHealthChars), g_esPlayer[tank].g_sShieldHealthChars, g_esAbility[type].g_sShieldHealthChars);
 	g_esCache[tank].g_iShieldMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldMessage, g_esAbility[type].g_iShieldMessage);
 	g_esCache[tank].g_iShieldType = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldType, g_esAbility[type].g_iShieldType);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
@@ -748,6 +873,7 @@ static void vReset2(int tank, bool revert = false)
 		g_esPlayer[tank].g_bActivated = false;
 	}
 
+	g_esPlayer[tank].g_flHealth = 0.0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iDuration = -1;
 	g_esPlayer[tank].g_iDuration2 = -1;
@@ -795,6 +921,7 @@ static void vShieldAbility(int tank, bool shield)
 {
 	static int iTime;
 	iTime = GetTime();
+
 	switch (shield)
 	{
 		case true:
@@ -813,6 +940,7 @@ static void vShieldAbility(int tank, bool shield)
 					{
 						g_esPlayer[tank].g_bActivated = true;
 						g_esPlayer[tank].g_iDuration2 = -1;
+						g_esPlayer[tank].g_flHealth = g_esCache[tank].g_flShieldHealth;
 
 						vShield(tank);
 
@@ -848,6 +976,7 @@ static void vShieldAbility(int tank, bool shield)
 		{
 			g_esPlayer[tank].g_bActivated = false;
 			g_esPlayer[tank].g_iDuration = -1;
+			g_esPlayer[tank].g_flHealth = 0.0;
 
 			vRemoveShield(tank);
 
