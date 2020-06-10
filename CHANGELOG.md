@@ -1,5 +1,32 @@
 # Changelog
 
+## Version 8.70 (June 10, 2020)
+
+Bug fixes:
+
+1. Fixed the `NoItems` phrase not displaying properly. (Thanks to ben12398 for reporting!)
+2. Fixed some menus returning 0 items once finales have started. (Thanks to ben12398 for reporting!)
+3. Fixed non-finale Tank types being disabled once finales have started even when `Finale Tank` is set to 0. (Thanks to ben12398 and Mi.Cura for reporting!)
+4. Fixed the `Clone` ability preventing clones with different types from using their assigned/native abilities. (Thanks to ben12398 for reporting!)
+5. Fixed the `Cloud` ability's clouds not disappearing after a short period of time. (Thanks to Mi.Cura for reporting!)
+
+Changes:
+
+1. The `Shield` ability's shield can now start out with health. (Requested by Neptunia.)
+2. Added the following settings for the `Shield` Ability:
+- `Shield Display Health`
+- `Shield Display Health Type`
+- `Shield Health`
+- `Shield Health Characters`
+3. Added more options to the `Finales Only` and `Finale Tank` settings.
+4. Added an extra layer of security to the `Clone Type` and `Respawn Type` settings to make sure that users don't cause all kinds of bugs when choosing other types that also have the `Clone` or `Respawn` ability like their respective owners.
+
+Files:
+
+1. Updated config files.
+2. Updated include files.
+3. Updated translation file.
+
 ## Version 8.69 (June 5, 2020)
 
 Bug fixes:

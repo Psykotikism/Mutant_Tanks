@@ -110,10 +110,13 @@
 			// 2: ON, show in center text.
 			"Display Health Type"			"1"
 
-			// Enable Mutant Tanks in finales only.
+			// Spawn Mutant Tanks during finales only.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0: OFF, Mutant Tanks will spawn on any map.
+			// 1: ON, Mutant Tanks will only spawn on finale maps.
+			// 2: ON, Mutant Tanks will only spawn on non-finale maps.
+			// 3: ON, Mutant Tanks will only spawn on finale maps before the rescue vehicle is called.
+			// 4: ON, Mutant Tanks will only spawn on finale maps after the rescue vehicle is called.
 			"Finales Only"				"0"
 
 			// The characters used to represent the health bar of Mutant Tanks.
@@ -658,6 +661,8 @@
 			// 0: OFF, the Mutant Tank can appear on any map.
 			// 1: ON, the Mutant Tank can only appear on finale maps.
 			// 2: ON, the Mutant Tank can only appear on non-finale maps.
+			// 3: ON, the Mutant Tank can only appear on finale maps before the rescue vehicle is called.
+			// 4: ON, the Mutant Tank can only appear on finale maps after the rescue vehicle is called.
 			"Finale Tank"				"0"
 
 			// The health of bosses needed for each stage.
@@ -2335,7 +2340,8 @@
 			// 1: ON
 			"Clone Replace"				"1"
 
-			// The type that the Mutant Tank's clone.
+			// The type of the Mutant Tank's clone.
+			// Note: Chosen types that also have the Clone ability will be replaced with the Mutant Tank's own type to prevent bugs.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// -1: OFF, use current type.
@@ -7477,6 +7483,7 @@
 			"Respawn Chance"			"33.3"
 
 			// The type that the Mutant Tank will respawn as.
+			// Note: Chosen types that also have the Respawn ability will be replaced with the Mutant Tank's own type to prevent bugs.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// -1: OFF, use current type.
@@ -8133,6 +8140,54 @@
 			// Minimum: 1
 			// Maximum: 999999
 			"Shield Delay"				"5"
+
+			// Display the Mutant Tank's shield's health.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 11
+			// --
+			// 0: OFF
+			// 1: ON, show name only.
+			// 2: ON, show health only.
+			// 3: ON, show health percentage only.
+			// 4: ON, show healthbar only.
+			// 5: ON, show name and health only.
+			// 6: ON, show name and health percentage only.
+			// 7: ON, show name and healthbar only.
+			// 8: ON, show health and healthbar only.
+			// 9: ON, show health percentage and healthbar only.
+			// 10: ON, show name, health, and healthbar.
+			// 11: ON, show name, health percentage, and healthbar.
+			"Shield Display Health"			"11"
+
+			// Display type of the Mutant Tank's shield's health.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON, show in hint text.
+			// 2: ON, show in center text.
+			"Shield Display Health Type"		"2"
+
+			// The Mutant Tank's shield starts out with this much health.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1-999999: The shield has this much health.
+			"Shield Health"				"0"
+
+			// The characters used to represent the health bar of the Mutant Tank's shield.
+			// Note: This setting only takes effect when the "Shield Display Health" setting is enabled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate characters with commas (",").
+			// --
+			// Character limit: 2
+			// Character limit for each character: 1
+			// --
+			// 1st character = Health indicator
+			// 2nd character = Damage indicator
+			"Shield Health Characters"		"],="
 
 			// The type of the Mutant Tank's shield.
 			// Note: This setting can be overridden for specific players.
