@@ -2312,7 +2312,7 @@ public void OnEntityDestroyed(int entity)
 
 public void OnGameFrame()
 {
-	if (!g_esGeneral.g_cvMTPluginEnabled.BoolValue || !g_esGeneral.g_bPluginEnabled)
+	if (g_esGeneral.g_cvMTPluginEnabled.BoolValue && g_esGeneral.g_bPluginEnabled)
 	{
 		static char sClassname[32], sHealthBar[51], sSet[2][2];
 		static float flPercentage;
@@ -5206,7 +5206,7 @@ static bool bIsPluginEnabled()
 	if (sGameModes[0] != '\0')
 	{
 		FormatEx(sList, sizeof(sList), ",%s,", sGameModes);
-		if (StrContains(sList, sGameMode, false) == -1)
+		if (StrContains(sList, sFixed, false) == -1)
 		{
 			return false;
 		}
@@ -5221,7 +5221,7 @@ static bool bIsPluginEnabled()
 	if (sGameModes[0] != '\0')
 	{
 		FormatEx(sList, sizeof(sList), ",%s,", sGameModes);
-		if (StrContains(sList, sGameMode, false) != -1)
+		if (StrContains(sList, sFixed, false) != -1)
 		{
 			return false;
 		}

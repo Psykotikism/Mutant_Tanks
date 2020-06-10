@@ -21,7 +21,7 @@
 #define REQUIRE_PLUGIN
 
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
-#define MT_VERSION "8.70"
+#define MT_VERSION "8.71"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define MT_TAG "[MT]"
