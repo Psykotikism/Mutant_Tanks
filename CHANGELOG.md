@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 8.72 (June 10, 2020)
+
+Bug fixes:
+
+1. Fixed human players not turning into Mutant Tanks due to a cache fail. (Thanks to Voevoda for reporting!)
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.71 (June 10, 2020)
 
 Bug fixes:
