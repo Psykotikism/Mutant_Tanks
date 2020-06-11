@@ -2404,12 +2404,15 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		for (int iBit = 0; iBit < 26; iBit++)
 		{
 			iButton = (1 << iBit);
-			if ((buttons & iButton) && !(g_esPlayer[client].g_iLastButtons & iButton))
+			if (buttons & iButton)
 			{
-				Call_StartForward(g_esGeneral.g_gfButtonPressedForward);
-				Call_PushCell(client);
-				Call_PushCell(iButton);
-				Call_Finish();
+				if (!(g_esPlayer[client].g_iLastButtons & iButton))
+				{
+					Call_StartForward(g_esGeneral.g_gfButtonPressedForward);
+					Call_PushCell(client);
+					Call_PushCell(iButton);
+					Call_Finish();
+				}
 			}
 			else if (g_esPlayer[client].g_iLastButtons & iButton)
 			{
