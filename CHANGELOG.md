@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 8.73 (June 11, 2020)
+
+Bug fixes:
+
+1. Fixed buttons being auto-released when human-controlled Tanks activate their abilities. (Thanks to Voevoda for reporting!)
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.72 (June 10, 2020)
 
 Bug fixes:
