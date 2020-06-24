@@ -498,6 +498,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
+			vFireRange(iTank);
 			vRemoveFire(iTank);
 		}
 	}
@@ -561,17 +562,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnPostTankSpawn(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iFireDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flFireDeathChance)
-	{
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((MT_HasAdminAccess(tank) && bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
-		{
-			return;
-		}
-
-		static float flPos[3];
-		GetClientAbsOrigin(tank, flPos);
-		vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
-	}
+	vFireRange(tank);
 }
 
 public void MT_OnRockBreak(int tank, int rock)
@@ -705,6 +696,21 @@ static void vFireHit(int survivor, int tank, float chance, int enabled, int mess
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "FireAmmo");
 		}
+	}
+}
+
+static void vFireRange(int tank)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iFireDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flFireDeathChance)
+	{
+		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((MT_HasAdminAccess(tank) && bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
+		{
+			return;
+		}
+
+		static float flPos[3];
+		GetClientAbsOrigin(tank, flPos);
+		vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
 	}
 }
 

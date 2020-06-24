@@ -525,6 +525,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
+			vWarpRange(iTank);
 			vRemoveWarp(iTank);
 		}
 	}
@@ -645,14 +646,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnPostTankSpawn(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iWarpAbility == 1)
-	{
-		if (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
-		{
-			vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0, 0.0);
-			EmitSoundToAll(SOUND_ELECTRICITY, tank);
-		}
-	}
+	vWarpRange(tank);
 }
 
 static void vRemoveWarp(int tank)
@@ -854,6 +848,18 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, int mess
 			g_esPlayer[tank].g_bNoAmmo = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "WarpAmmo2");
+		}
+	}
+}
+
+static void vWarpRange(int tank)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iWarpAbility == 1)
+	{
+		if (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		{
+			vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0, 0.0);
+			EmitSoundToAll(SOUND_ELECTRICITY, tank);
 		}
 	}
 }

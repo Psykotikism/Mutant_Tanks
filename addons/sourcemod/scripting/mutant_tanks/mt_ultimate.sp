@@ -143,7 +143,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	vPrecacheParticle(PARTICLE_ELECTRICITY);
+	iPrecacheParticle(PARTICLE_ELECTRICITY);
 
 	PrecacheSound(SOUND_ELECTRICITY, true);
 	PrecacheSound(SOUND_EXPLOSION, true);

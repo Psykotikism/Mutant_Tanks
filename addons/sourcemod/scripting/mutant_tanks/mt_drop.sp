@@ -494,8 +494,6 @@ public void MT_OnAbilityActivated(int tank)
 
 	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank) && g_esCache[tank].g_iDropAbility == 1 && !g_esPlayer[tank].g_bActivated)
 	{
-		g_esPlayer[tank].g_bActivated = true;
-
 		RequestFrame(vDropFrame, GetClientUserId(tank));
 	}
 }
@@ -518,8 +516,6 @@ public void MT_OnButtonPressed(int tank, int button)
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "DropHuman2");
 					case false:
 					{
-						g_esPlayer[tank].g_bActivated = true;
-
 						RequestFrame(vDropFrame, GetClientUserId(tank));
 
 						MT_PrintToChat(tank, "%s %t", MT_TAG3, "DropHuman");
@@ -692,6 +688,8 @@ public void vDropFrame(int userid)
 
 		return;
 	}
+
+	g_esPlayer[iTank].g_bActivated = true;
 
 	vRemoveDrop(iTank);
 

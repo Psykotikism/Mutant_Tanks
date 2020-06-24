@@ -21,7 +21,7 @@
 #define REQUIRE_PLUGIN
 
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
-#define MT_VERSION "8.73"
+#define MT_VERSION "8.74"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define MT_TAG "[MT]"
@@ -879,17 +879,21 @@ stock void vDeleteEntity(int ref, float duration = 0.1)
 {
 	if (bIsValidEntRef(ref))
 	{
-		static char sVariant[64];
-		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:ClearParent::%f:1", duration);
-		SetVariantString(sVariant);
-
 		static int iObject;
 		iObject = EntRefToEntIndex(ref);
-		AcceptEntityInput(iObject, "AddOutput");
-		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:Kill::%f:1", duration + 0.1);
-		SetVariantString(sVariant);
-		AcceptEntityInput(iObject, "AddOutput");
-		AcceptEntityInput(iObject, "FireUser1");
+		if (bIsValidEntity(iObject))
+		{
+			static char sVariant[64];
+			FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:ClearParent::%f:-1", duration);
+			SetVariantString(sVariant);
+			AcceptEntityInput(iObject, "AddOutput");
+			AcceptEntityInput(iObject, "FireUser1");
+
+			FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:Kill::%f:-1", duration + 0.1);
+			SetVariantString(sVariant);
+			AcceptEntityInput(iObject, "AddOutput");
+			AcceptEntityInput(iObject, "FireUser1");
+		}
 	}
 }
 
@@ -964,22 +968,6 @@ stock void vMultiTargetFilters(int toggle)
 			AddMultiTargetFilter("@special", bSpecialFilter, "all Special Infected", false);
 			AddMultiTargetFilter("@infected", bInfectedFilter, "all Infected", false);
 		}
-	}
-}
-
-stock void vPrecacheParticle(const char[] particlename)
-{
-	int iParticle = CreateEntityByName("info_particle_system");
-	if (bIsValidEntity(iParticle))
-	{
-		DispatchKeyValue(iParticle, "effect_name", particlename);
-		vSetEntityParent(iParticle, iParticle);
-		DispatchSpawn(iParticle);
-		ActivateEntity(iParticle);
-		AcceptEntityInput(iParticle, "Start");
-
-		iParticle = EntIndexToEntRef(iParticle);
-		vDeleteEntity(iParticle);
 	}
 }
 
@@ -1871,6 +1859,26 @@ stock int iGetWitchCount()
 	return iWitchCount;
 }
 
+stock int iPrecacheParticle(const char[] particlename)
+{
+	static int iTable = INVALID_STRING_TABLE;
+	if (iTable == INVALID_STRING_TABLE)
+	{
+		iTable = FindStringTable("ParticleEffectNames");
+	}
+
+	int iIndex = FindStringIndex(iTable, particlename);
+	if (iIndex == INVALID_STRING_INDEX)
+	{
+		bool bSave = LockStringTables(false);
+		AddToStringTable(iTable, particlename);
+		LockStringTables(bSave);
+		iIndex = FindStringIndex(iTable, particlename);
+	}
+
+	return iIndex;
+}
+
 public SharedPlugin __pl_mutanttanks = 
 {
 	name = "mutant_tanks",
@@ -1903,6 +1911,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_IsCorePluginEnabled");
 	MarkNativeAsOptional("MT_IsFinaleType");
 	MarkNativeAsOptional("MT_IsGlowEnabled");
+	MarkNativeAsOptional("MT_IsNonFinaleType");
 	MarkNativeAsOptional("MT_IsTankSupported");
 	MarkNativeAsOptional("MT_IsTypeEnabled");
 	MarkNativeAsOptional("MT_SetTankType");

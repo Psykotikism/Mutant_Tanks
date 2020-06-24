@@ -534,6 +534,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
+			vShoveRange(iTank);
 			vRemoveShove(iTank);
 		}
 	}
@@ -585,31 +586,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnPostTankSpawn(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iShoveDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flShoveDeathChance)
-	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
-		{
-			return;
-		}
-
-		static float flTankPos[3];
-		GetClientAbsOrigin(tank, flTankPos);
-
-		static float flSurvivorPos[3], flDistance;
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
-			{
-				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= g_esCache[tank].g_flShoveDeathRange)
-				{
-					SDKCall(g_hSDKShovePlayer, iSurvivor, tank, flTankPos);
-				}
-			}
-		}
-	}
+	vShoveRange(tank);
 }
 
 static void vRemoveShove(int tank)
@@ -771,6 +748,35 @@ static void vShoveHit(int survivor, int tank, float chance, int enabled, int mes
 			g_esPlayer[tank].g_bNoAmmo = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShoveAmmo");
+		}
+	}
+}
+
+static void vShoveRange(int tank)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iShoveDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flShoveDeathChance)
+	{
+		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		{
+			return;
+		}
+
+		static float flTankPos[3];
+		GetClientAbsOrigin(tank, flTankPos);
+
+		static float flSurvivorPos[3], flDistance;
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
+			{
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+				if (flDistance <= g_esCache[tank].g_flShoveDeathRange)
+				{
+					SDKCall(g_hSDKShovePlayer, iSurvivor, tank, flTankPos);
+				}
+			}
 		}
 	}
 }

@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 8.74 (June 24, 2020)
+
+Bug fixes:
+
+1. Fixed the `Finale Types` setting being read incorrectly. (Thanks to Neptunia for reporting!)
+2. Fixed non-finale Tanks spawning on finale waves. (Thanks to Neptunia for reporting!)
+3. Fixed the finale waves not resetting on mission lost. (Thanks to Neptunia for reporting!)
+4. Fixed errors regarding detours. (Thanks to Voevoda for reporting and to Silvers for helping me figure out the cause!)
+5. Fixed the `Finale Waves` and `Regular Wave` settings having the wrong default values.
+6. Fixed the `MT_IsNonFinaleType` native not being optional.
+7. Fixed several upon-death abilities not working. (Thanks to ben12398 for reporting!)
+8. Fixed the regular wave spawner not working when the `Regular Amount` setting is off. (Thanks to ben12398 for reporting!)
+9. Fixed the `Cloud` ability spamming too many clouds. (Thanks to Mi.Cura for reporting!)
+10. Fixed the `Omni` ability not inheriting other Mutant Tank types' abilities when `Omni Mode` is set to `0`. (Thanks to Mi.Cura for reporting!)
+
+Changes:
+
+1. DHooks is now optional. (Still required when compiling/using the plugin and its modules with Left 4 DHooks.)
+2. Rewrote and improved the code for the finale waves and regular wave spawners.
+3. All settings are now automatically re-cached after changing a Tank's type with the `MT_SetTankType` native.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.73 (June 11, 2020)
 
 Bug fixes:
@@ -237,7 +262,7 @@ Changes:
 25. Added the `Propane Tank Color` setting under the `Props` section.
 26. The `MT_GetPropColors` native's `mode` parameter now accepts values as high as 6 to add support for the new propane tank prop.
 27. The `Regular Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
-28. The core plugin now uses Left 4 DHooks to check when Tanks enter ghost state and materializes them 1 second later. (This is optional but highly recommended.)
+28. The core plugin now uses Left 4 DHooks to check when Tanks enter ghost state and materializes them 1 second later.
 29. The `Restart` ability's plugin (`mt_restart.smx`) now uses Left 4 DHooks to check when a survivor is inside the starting safe area in order to get their "spawn coordinates" to be used when `Restart Mode` is set to `0`.
 30. Added the `mt_enabledgamemodes`, `mt_disabledgamemodes`, and `mt_gamemodetypes` cvars as cvar equivalents of the `Enabled Game Modes`, `Disabled Game Modes`, and `Game Mode Types` settings.
 31. The core plugin now requires DHooks and Left 4 DHooks.

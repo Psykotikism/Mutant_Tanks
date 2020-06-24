@@ -436,7 +436,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 static void vCacheOriginalSettings(int tank)
 {
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
-	int iType = g_esPlayer[tank].g_iOmniType > 0 ? g_esPlayer[tank].g_iOmniType : g_esPlayer[tank].g_iTankType;
+	int iType = (g_esPlayer[tank].g_iOmniType > 0) ? g_esPlayer[tank].g_iOmniType : g_esPlayer[tank].g_iTankType;
 	g_esOmni[tank].g_flOmniChance = flGetSettingValue(true, bHuman, g_esPlayer[tank].g_flOmniChance, g_esAbility[iType].g_flOmniChance);
 	g_esOmni[tank].g_flOmniRange = flGetSettingValue(true, bHuman, g_esPlayer[tank].g_flOmniRange, g_esAbility[iType].g_flOmniRange);
 	g_esOmni[tank].g_iAccessFlags = iGetSettingValue(true, bHuman, g_esPlayer[tank].g_iAccessFlags, g_esAbility[iType].g_iAccessFlags);
@@ -591,7 +591,7 @@ static void vOmni(int tank)
 			GetClientAbsOrigin(iTank, flTankPos2);
 
 			flDistance = GetVectorDistance(flTankPos, flTankPos2);
-			if (flDistance <= g_esCache[tank].g_flOmniRange && g_esCache[iTank].g_iOmniAbility == 0)
+			if (flDistance <= g_esOmni[tank].g_flOmniRange && g_esCache[iTank].g_iOmniAbility == 0)
 			{
 				iTypes[iTypeCount + 1] = g_esPlayer[iTank].g_iTankType;
 				iTypeCount++;
@@ -601,7 +601,7 @@ static void vOmni(int tank)
 
 	if (iTypeCount > 0)
 	{
-		MT_SetTankType(tank, iTypes[GetRandomInt(1, iTypeCount)], view_as<bool>(g_esCache[tank].g_iOmniMode));
+		MT_SetTankType(tank, iTypes[GetRandomInt(1, iTypeCount)], view_as<bool>(g_esOmni[tank].g_iOmniMode));
 	}
 	else
 	{
@@ -620,7 +620,7 @@ static void vOmni(int tank)
 
 		if (iTypeCount2 > 0)
 		{
-			MT_SetTankType(tank, iTypes2[GetRandomInt(1, iTypeCount2)], view_as<bool>(g_esCache[tank].g_iOmniMode));
+			MT_SetTankType(tank, iTypes2[GetRandomInt(1, iTypeCount2)], view_as<bool>(g_esOmni[tank].g_iOmniMode));
 		}
 	}
 }

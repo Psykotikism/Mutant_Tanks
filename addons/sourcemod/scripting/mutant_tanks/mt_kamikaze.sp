@@ -128,7 +128,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	vPrecacheParticle(PARTICLE_BLOOD);
+	iPrecacheParticle(PARTICLE_BLOOD);
 
 	if (bIsValidGame())
 	{
@@ -487,14 +487,11 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnPostTankSpawn(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iKamikazeAbility == 1)
 	{
-		if (bIsCloneAllowed(tank) && g_esCache[tank].g_iKamikazeAbility == 1)
+		if (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
 		{
-			if (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
-			{
-				vKamikaze(tank, tank);
-			}
+			vKamikaze(tank, tank);
 		}
 	}
 }

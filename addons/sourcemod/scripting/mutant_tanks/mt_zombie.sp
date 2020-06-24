@@ -399,6 +399,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
+			vZombieRange(iTank);
 			vRemoveZombie(iTank);
 		}
 	}
@@ -506,15 +507,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnPostTankSpawn(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iZombieAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flZombieChance)
-	{
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((MT_HasAdminAccess(tank) && bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
-		{
-			return;
-		}
-
-		vZombie(tank);
-	}
+	vZombieRange(tank);
 }
 
 static void vRemoveZombie(int tank)
@@ -611,6 +604,19 @@ static void vZombieAbility(int tank)
 	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ZombieAmmo");
+	}
+}
+
+static void vZombieRange(int tank)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iZombieAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flZombieChance)
+	{
+		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((MT_HasAdminAccess(tank) && bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
+		{
+			return;
+		}
+
+		vZombie(tank);
 	}
 }
 

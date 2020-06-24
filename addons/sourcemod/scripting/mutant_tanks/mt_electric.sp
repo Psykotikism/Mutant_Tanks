@@ -151,20 +151,20 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	vPrecacheParticle(PARTICLE_ELECTRICITY2);
-	vPrecacheParticle(PARTICLE_ELECTRICITY3);
+	iPrecacheParticle(PARTICLE_ELECTRICITY2);
+	iPrecacheParticle(PARTICLE_ELECTRICITY3);
 
 	switch (bIsValidGame())
 	{
 		case true:
 		{
-			vPrecacheParticle(PARTICLE_ELECTRICITY4);
-			vPrecacheParticle(PARTICLE_ELECTRICITY5);
+			iPrecacheParticle(PARTICLE_ELECTRICITY4);
+			iPrecacheParticle(PARTICLE_ELECTRICITY5);
 		}
 		case false:
 		{
-			vPrecacheParticle(PARTICLE_ELECTRICITY6);
-			vPrecacheParticle(PARTICLE_ELECTRICITY7);
+			iPrecacheParticle(PARTICLE_ELECTRICITY6);
+			iPrecacheParticle(PARTICLE_ELECTRICITY7);
 		}
 	}
 
@@ -524,6 +524,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
+			vElectricRange(iTank);
 			vRemoveElectric(iTank);
 		}
 	}
@@ -575,15 +576,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnPostTankSpawn(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iElectricAbility == 1)
-	{
-		if (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
-		{
-			static char sEffect[32];
-			vGetRandomParticle(sEffect, sizeof(sEffect));
-			vAttachParticle(tank, sEffect, 2.0, 30.0);
-		}
-	}
+	vElectricRange(tank);
 }
 
 static void vElectricAbility(int tank)
@@ -697,6 +690,19 @@ static void vElectricHit(int survivor, int tank, float chance, int enabled, int 
 			g_esPlayer[tank].g_bNoAmmo = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "ElectricAmmo");
+		}
+	}
+}
+
+static void vElectricRange(int tank)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iElectricAbility == 1)
+	{
+		if (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		{
+			static char sEffect[32];
+			vGetRandomParticle(sEffect, sizeof(sEffect));
+			vAttachParticle(tank, sEffect, 2.0, 30.0);
 		}
 	}
 }
