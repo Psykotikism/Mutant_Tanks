@@ -210,11 +210,13 @@
 		"Waves"
 		{
 			// Spawn this many Tanks on non-finale maps periodically.
+			// Note: Leave this off if you have a Multi-Tanks plugin installed that handles the limit.
+			// Note: This will not work unless "Regular Mode" is set to 1.
 			// --
 			// Minimum: 0
 			// Maximum: 16
 			// --
-			// 0: OFF, no limits.
+			// 0: OFF, no limit (only one Tank will spawn).
 			// 1-16: ON, the number of Tanks that will spawn.
 			"Regular Amount"			"0"
 
@@ -260,8 +262,8 @@
 			"Regular Type"				"0-0"
 
 			// Spawn Tanks on non-finale maps periodically.
-			// Note: This will not work unless "Regular Mode" is set to 1.
 			// Note: Leave this off if you want a generic spawn rate for Tanks or if you have a Multi-Tanks plugin installed.
+			// Note: This will not work unless "Regular Mode" is set to 1.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -303,7 +305,7 @@
 			// 2nd number = 2nd wave
 			// 3rd number = 3rd wave
 			// --
-			// 0: OFF, no limits.
+			// 0: OFF, no limit.
 			// 1-16: ON, the number of Tanks that will spawn.
 			"Finale Waves"				"0,0,0"
 		}
