@@ -45,7 +45,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esPlayer
 {
-	bool g_bActivated;
 	bool g_bAffected;
 	bool g_bFailed;
 	bool g_bNoAmmo;
@@ -595,7 +594,6 @@ static void vLagHit(int survivor, int tank, float chance, int enabled, int messa
 
 				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 				{
-					g_esPlayer[tank].g_bActivated = true;
 					g_esPlayer[tank].g_iCount++;
 
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
@@ -698,7 +696,6 @@ static void vReset2(int survivor, int tank, int messages)
 
 static void vReset3(int tank)
 {
-	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;

@@ -391,6 +391,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
+			vPanicRange(iTank);
 			vRemovePanic(iTank);
 		}
 	}
@@ -498,15 +499,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnPostTankSpawn(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iPanicAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPanicChance)
-	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
-		{
-			return;
-		}
-
-		vPanic2();
-	}
+	vPanicRange(tank);
 }
 
 static void vPanic(int tank)
@@ -572,6 +565,19 @@ static void vPanicAbility(int tank)
 	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "PanicAmmo");
+	}
+}
+
+static void vPanicRange(int tank)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iPanicAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPanicChance)
+	{
+		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		{
+			return;
+		}
+
+		vPanic2();
 	}
 }
 

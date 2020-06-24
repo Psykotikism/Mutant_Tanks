@@ -107,7 +107,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	vPrecacheParticle(PARTICLE_SMOKE);
+	iPrecacheParticle(PARTICLE_SMOKE);
 
 	vReset();
 }
@@ -418,7 +418,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank) && g_esCache[tank].g_iCloudAbility == 1 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < GetTime()))
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank) && g_esCache[tank].g_iCloudAbility == 1 && !g_esPlayer[tank].g_bActivated)
 	{
 		vCloudAbility(tank);
 	}

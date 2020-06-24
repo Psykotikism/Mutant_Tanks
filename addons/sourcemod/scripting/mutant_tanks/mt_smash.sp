@@ -137,7 +137,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	vPrecacheParticle(PARTICLE_BLOOD);
+	iPrecacheParticle(PARTICLE_BLOOD);
 
 	if (bIsValidGame())
 	{
