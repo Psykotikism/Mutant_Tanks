@@ -5150,7 +5150,7 @@
 	"Tank #10"
 	{
 		"en"			"{mint}This Tank can throw cars at survivors. The cars disappear after 30 seconds."
-		"en"			"{mint}Ez a Tank autókat dobhat a túlélők felé. Az autók eltűnnek 30mp után"
+		"hu"			"{mint}Ez a Tank autókat dobhat a túlélők felé. Az autók eltűnnek 30mp után"
 	}
 
 	"Tank #11"
