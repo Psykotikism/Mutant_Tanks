@@ -91,6 +91,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define PARTICLE_SPIT "spitter_projectile"
 
 #define SOUND_ELECTRICITY "items/suitchargeok1.wav"
+#define SOUND_MISSILE "player/tank/attack/thrown_missile_loop_1.wav"
 #define SOUND_SPIT "player/spitter/voice/warn/spitter_spit_02.wav"
 
 #define MT_MAX_ABILITIES 100
@@ -198,6 +199,7 @@ enum struct esGeneral
 	int g_iAnnounceArrival;
 	int g_iAnnounceDeath;
 	int g_iBaseHealth;
+	int g_iChosenType;
 	int g_iConfigCreate;
 	int g_iConfigEnable;
 	int g_iConfigExecute;
@@ -234,7 +236,6 @@ enum struct esGeneral
 	int g_iRenamePlayers;
 	int g_iSpawnMode;
 	int g_iTankWave;
-	int g_iType;
 
 	TopMenu g_tmMTMenu;
 }
@@ -404,7 +405,7 @@ enum struct esTank
 	int g_iTankNote;
 	int g_iTireColor[4];
 	int g_iTransformType[10];
-	int g_iTypeLimit;
+	int g_iChosenTypeLimit;
 }
 
 esTank g_esTank[MT_MAXTYPES + 1];
@@ -851,7 +852,7 @@ public void OnConfigsExecuted()
 	vSetupSignatures();
 
 	g_esGeneral.g_iRegularCount = 0;
-	g_esGeneral.g_iType = 0;
+	g_esGeneral.g_iChosenType = 0;
 
 	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 
@@ -1197,7 +1198,6 @@ public Action cmdMTConfig(int client, int args)
 		static char sSteamID32[32], sSteam3ID[32];
 		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-
 		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
 			ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
@@ -1700,7 +1700,6 @@ public Action cmdMTList(int client, int args)
 		static char sSteamID32[32], sSteam3ID[32];
 		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-
 		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
 			ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
@@ -1762,7 +1761,6 @@ public Action cmdMTVersion(int client, int args)
 		static char sSteamID32[32], sSteam3ID[32];
 		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-
 		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
 			ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
@@ -1854,7 +1852,6 @@ public Action cmdTank2(int client, int args)
 		static char sSteamID32[32], sSteam3ID[32];
 		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-
 		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
 			ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
@@ -1992,7 +1989,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 					continue;
 				}
 
-				g_esGeneral.g_iType = iIndex;
+				g_esGeneral.g_iChosenType = iIndex;
 				iTankTypes[iTypeCount + 1] = iIndex;
 				iTypeCount++;
 			}
@@ -2010,11 +2007,11 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 				{
 					MT_PrintToChat(admin, "%s %t", MT_TAG3, "MultipleMatches");
 
-					g_esGeneral.g_iType = iTankTypes[GetRandomInt(1, iTypeCount)];
+					g_esGeneral.g_iChosenType = iTankTypes[GetRandomInt(1, iTypeCount)];
 				}
 			}
 		}
-		default: g_esGeneral.g_iType = iClamp(iType, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
+		default: g_esGeneral.g_iChosenType = iClamp(iType, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 	}
 
 	switch (bIsTank(admin))
@@ -2027,13 +2024,12 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 				{
 					switch (spawn)
 					{
-						case true: vSpawnTank(admin, g_esGeneral.g_iType, amount, mode);
+						case true: vSpawnTank(admin, g_esGeneral.g_iChosenType, amount, mode);
 						case false:
 						{
 							char sSteamID32[32], sSteam3ID[32];
 							GetClientAuthId(admin, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 							GetClientAuthId(admin, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-
 							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || bIsDeveloper(admin)))
 							{
 								vChangeTank(admin, amount, mode);
@@ -2050,7 +2046,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 										g_esPlayer[admin].g_iCooldown = -1;
 
 										vNewTankSettings(admin);
-										vSetColor(admin, g_esGeneral.g_iType);
+										vSetColor(admin, g_esGeneral.g_iChosenType);
 
 										switch (g_esPlayer[admin].g_bNeedHealth)
 										{
@@ -2076,11 +2072,11 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 								}
 							}
 
-							g_esGeneral.g_iType = 0;
+							g_esGeneral.g_iChosenType = 0;
 						}
 					}
 				}
-				case false: vSpawnTank(admin, g_esGeneral.g_iType, amount, mode);
+				case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, amount, mode);
 			}
 		}
 		case false:
@@ -2088,7 +2084,6 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 			char sSteamID32[32], sSteam3ID[32];
 			GetClientAuthId(admin, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 			GetClientAuthId(admin, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-
 			if (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || bIsDeveloper(admin))
 			{
 				vChangeTank(admin, amount, mode);
@@ -2114,7 +2109,7 @@ static void vChangeTank(int admin, int amount, int mode)
 			if (bIsTank(iTarget) && StrEqual(sClassname, "player"))
 			{
 				vNewTankSettings(iTarget);
-				vSetColor(iTarget, g_esGeneral.g_iType);
+				vSetColor(iTarget, g_esGeneral.g_iChosenType);
 				vTankSpawn(iTarget, 5);
 
 				if (bIsTank(iTarget, MT_CHECK_FAKECLIENT))
@@ -2122,14 +2117,14 @@ static void vChangeTank(int admin, int amount, int mode)
 					vExternalView(iTarget, 1.5);
 				}
 
-				g_esGeneral.g_iType = 0;
+				g_esGeneral.g_iChosenType = 0;
 			}
 			else
 			{
-				vSpawnTank(admin, g_esGeneral.g_iType, amount, mode);
+				vSpawnTank(admin, g_esGeneral.g_iChosenType, amount, mode);
 			}
 		}
-		case false: vSpawnTank(admin, g_esGeneral.g_iType, amount, mode);
+		case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, amount, mode);
 	}
 }
 
@@ -2160,11 +2155,11 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 				if (iAmount < amount)
 				{
 					vCheatCommand(admin, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
-					g_esGeneral.g_iType = type;
+					g_esGeneral.g_iChosenType = type;
 				}
 				else if (iAmount == amount)
 				{
-					g_esGeneral.g_iType = 0;
+					g_esGeneral.g_iChosenType = 0;
 				}
 			}
 		}
@@ -2309,6 +2304,8 @@ public void OnEntityDestroyed(int entity)
 				Call_PushCell(entity);
 				Call_Finish();
 			}
+
+			StopSound(entity, SNDCHAN_BODY, SOUND_MISSILE);
 		}
 		else if (StrEqual(sClassname, "infected"))
 		{
@@ -2754,7 +2751,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iGlowType = 0;
 			g_esTank[iIndex].g_iAccessFlags = 0;
 			g_esTank[iIndex].g_iImmunityFlags = 0;
-			g_esTank[iIndex].g_iTypeLimit = 32;
+			g_esTank[iIndex].g_iChosenTypeLimit = 32;
 			g_esTank[iIndex].g_iFinaleTank = 0;
 			g_esTank[iIndex].g_iBossStages = 4;
 			g_esTank[iIndex].g_iRandomTank = 1;
@@ -3055,8 +3052,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					g_esGeneral.g_iMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 1, MT_MAXTYPES) : g_esGeneral.g_iMaxType;
 				}
 			}
-
-			if ((StrEqual(g_esGeneral.g_sCurrentSubSection, "Administration", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "admin", false)))
+			else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Administration", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "admin", false))
 			{
 				g_esGeneral.g_iAllowDeveloper = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Administration", "Administration", "Administration", "admin", key, "AllowDeveloper", "Allow Developer", "Allow_Developer", "developer", g_esGeneral.g_iAllowDeveloper, value, 0, 1);
 
@@ -3069,8 +3065,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					g_esGeneral.g_iImmunityFlags = ReadFlagString(value);
 				}
 			}
-
-			if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Waves", false))
+			else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Waves", false))
 			{
 				if (StrEqual(key, "RegularType", false) || StrEqual(key, "Regular Type", false) || StrEqual(key, "Regular_Type", false) || StrEqual(key, "regtype", false))
 				{
@@ -3176,7 +3171,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_esTank[iIndex].g_iGlowEnabled, value, 0, 1);
 						g_esTank[iIndex].g_iGlowFlashing = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "glowflashing", g_esTank[iIndex].g_iGlowFlashing, value, 0, 1);
 						g_esTank[iIndex].g_iGlowType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowType", "Glow Type", "Glow_Type", "glowtype", g_esTank[iIndex].g_iGlowType, value, 0, 1);
-						g_esTank[iIndex].g_iTypeLimit = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_esTank[iIndex].g_iTypeLimit, value, 0, 16);
+						g_esTank[iIndex].g_iChosenTypeLimit = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_esTank[iIndex].g_iChosenTypeLimit, value, 0, 16);
 						g_esTank[iIndex].g_iFinaleTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[iIndex].g_iFinaleTank, value, 0, 2);
 						g_esTank[iIndex].g_iBossStages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_esTank[iIndex].g_iBossStages, value, 1, 4);
 						g_esTank[iIndex].g_iRandomTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomTank", "Random Tank", "Random_Tank", "random", g_esTank[iIndex].g_iRandomTank, value, 0, 1);
@@ -3240,8 +3235,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								g_esTank[iIndex].g_iGlowMaxRange = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, 999999) : g_esTank[iIndex].g_iGlowMaxRange;
 							}
 						}
-
-						if ((StrEqual(g_esGeneral.g_sCurrentSubSection, "Administration", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "admin", false)))
+						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Administration", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "admin", false))
 						{
 							if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 							{
@@ -3252,8 +3246,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								g_esTank[iIndex].g_iImmunityFlags = ReadFlagString(value);
 							}
 						}
-
-						if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Spawn", false))
+						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Spawn", false))
 						{
 							if (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false))
 							{
@@ -3285,8 +3278,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 							}
 						}
-
-						if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Props", false))
+						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Props", false))
 						{
 							if (StrEqual(key, "PropsChance", false) || StrEqual(key, "Props Chance", false) || StrEqual(key, "Props_Chance", false) || StrEqual(key, "chance", false))
 							{
@@ -3437,8 +3429,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									g_esPlayer[iPlayer].g_iGlowMaxRange = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, 999999) : g_esPlayer[iPlayer].g_iGlowMaxRange;
 								}
 							}
-
-							if ((StrEqual(g_esGeneral.g_sCurrentSubSection, "Administration", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "admin", false)))
+							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Administration", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "admin", false))
 							{
 								if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 								{
@@ -3449,8 +3440,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									g_esPlayer[iPlayer].g_iImmunityFlags = ReadFlagString(value);
 								}
 							}
-
-							if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Spawn", false))
+							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Spawn", false))
 							{
 								if (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false))
 								{
@@ -3482,8 +3472,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									}
 								}
 							}
-
-							if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Props", false))
+							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Props", false))
 							{
 								if (StrEqual(key, "PropsChance", false) || StrEqual(key, "Props Chance", false) || StrEqual(key, "Props_Chance", false) || StrEqual(key, "chance", false))
 								{
@@ -3531,8 +3520,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									}
 								}
 							}
-
-							if (StrContains(g_esGeneral.g_sCurrentSubSection, "Tank#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank #", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank_#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSubSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]))
+							else if (StrContains(g_esGeneral.g_sCurrentSubSection, "Tank#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank #", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank_#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSubSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]))
 							{
 								for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 								{
@@ -3794,7 +3782,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					g_esPlayer[iTank].g_iTankType = 0;
 				}
 
-				switch (g_esGeneral.g_iType)
+				switch (g_esGeneral.g_iChosenType)
 				{
 					case 0:
 					{
@@ -4088,7 +4076,7 @@ static void vRemoveProps(int tank, int mode = 1)
 static void vReset()
 {
 	g_esGeneral.g_iRegularCount = 0;
-	g_esGeneral.g_iType = 0;
+	g_esGeneral.g_iChosenType = 0;
 
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -4772,7 +4760,7 @@ static void vMutateTank(int tank)
 	if (bCanTypeSpawn())
 	{
 		int iType;
-		if (g_esGeneral.g_iType <= 0 && g_esPlayer[tank].g_iTankType <= 0)
+		if (g_esGeneral.g_iChosenType <= 0 && g_esPlayer[tank].g_iTankType <= 0)
 		{
 			switch (bIsFinaleMap() && g_esGeneral.g_iTankWave > 0)
 			{
@@ -4782,18 +4770,16 @@ static void vMutateTank(int tank)
 		}
 		else
 		{
-			iType = (g_esGeneral.g_iType > 0) ? g_esGeneral.g_iType : g_esPlayer[tank].g_iTankType;
+			iType = (g_esGeneral.g_iChosenType > 0) ? g_esGeneral.g_iChosenType : g_esPlayer[tank].g_iTankType;
 			vSetColor(tank, iType);
 		}
 
-		g_esGeneral.g_iType = 0;
+		g_esGeneral.g_iChosenType = 0;
 
 		switch (g_esGeneral.g_iTankWave)
 		{
 			case 0: vTankCountCheck(tank, g_esGeneral.g_iRegularAmount);
-			case 1: vTankCountCheck(tank, g_esGeneral.g_iFinaleWave[0]);
-			case 2: vTankCountCheck(tank, g_esGeneral.g_iFinaleWave[1]);
-			case 3: vTankCountCheck(tank, g_esGeneral.g_iFinaleWave[2]);
+			default: vTankCountCheck(tank, g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1]);
 		}
 
 		vTankSpawn(tank);
@@ -4914,7 +4900,7 @@ public int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int pa
 
 static void vTankCountCheck(int tank, int amount)
 {
-	if (amount == 0 || iGetTankCount() == amount || (g_esGeneral.g_iTankWave == 0 && (g_esGeneral.g_iRegularMode == 1 || g_esGeneral.g_iRegularWave == 0)))
+	if (amount == 0 || iGetTankCount() == amount || (!bIsFinaleMap() && g_esGeneral.g_iTankWave == 0 && (g_esGeneral.g_iRegularMode == 0 || (g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 0))))
 	{
 		return;
 	}
@@ -5323,7 +5309,7 @@ static int iChooseType(int exclude, int tank = 0, int min = 0, int max = 0)
 	{
 		switch (exclude)
 		{
-			case 1: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank, iIndex) || g_esTank[iIndex].g_iSpawnEnabled == 0 || !bIsTypeAvailable(iIndex, tank) || !bCanTypeSpawn(iIndex) || !bTankChance(iIndex) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
+			case 1: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank, iIndex) || g_esTank[iIndex].g_iSpawnEnabled == 0 || !bIsTypeAvailable(iIndex, tank) || !bCanTypeSpawn(iIndex) || !bTankChance(iIndex) || (g_esTank[iIndex].g_iChosenTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iChosenTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
 			case 2: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || !bCanTypeSpawn(iIndex);
 		}
 
@@ -5991,15 +5977,7 @@ public Action tTimerSpawnTanks(Handle timer, int wave)
 		return Plugin_Stop;
 	}
 
-	for (int iTank = 1; iTank <= MaxClients; iTank++)
-	{
-		if (bIsValidClient(iTank, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
-		{
-			vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank auto");
-
-			break;
-		}
-	}
+	vRegularSpawn();
 
 	return Plugin_Continue;
 }

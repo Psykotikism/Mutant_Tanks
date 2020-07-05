@@ -318,7 +318,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
 		g_esPlayer[admin].g_iMinionAbility = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iMinionAbility, value, 0, 1);
 		g_esPlayer[admin].g_iMinionMessage = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iMinionMessage, value, 0, 1);
-		g_esPlayer[admin].g_iMinionAmount = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esPlayer[admin].g_iMinionAmount, value, 1, 25);
+		g_esPlayer[admin].g_iMinionAmount = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esPlayer[admin].g_iMinionAmount, value, 1, 15);
 		g_esPlayer[admin].g_flMinionChance = flGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esPlayer[admin].g_flMinionChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iMinionReplace = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esPlayer[admin].g_iMinionReplace, value, 0, 1);
 		g_esPlayer[admin].g_iMinionTypes = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esPlayer[admin].g_iMinionTypes, value, 0, 63);
@@ -339,7 +339,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
 		g_esAbility[type].g_iMinionAbility = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iMinionAbility, value, 0, 1);
 		g_esAbility[type].g_iMinionMessage = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iMinionMessage, value, 0, 1);
-		g_esAbility[type].g_iMinionAmount = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esAbility[type].g_iMinionAmount, value, 1, 25);
+		g_esAbility[type].g_iMinionAmount = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esAbility[type].g_iMinionAmount, value, 1, 15);
 		g_esAbility[type].g_flMinionChance = flGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esAbility[type].g_flMinionChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iMinionReplace = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esAbility[type].g_iMinionReplace, value, 0, 1);
 		g_esAbility[type].g_iMinionTypes = iGetKeyValue(subsection, "minionability", "minion ability", "minion_ability", "minion", key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esAbility[type].g_iMinionTypes, value, 0, 63);
@@ -500,7 +500,9 @@ static void vMinionAbility(int tank)
 					ScaleVector(flVector, -40.0);
 					AddVectors(flHitPosition, flVector, flHitPosition);
 
-					if (GetVectorDistance(flHitPosition, flPosition) < 200.0 && GetVectorDistance(flHitPosition, flPosition) > 40.0)
+					static float flDistance;
+					flDistance = GetVectorDistance(flHitPosition, flPosition);
+					if (40.0 < flDistance < 200.0)
 					{
 						bool[] bSpecialInfected = new bool[MaxClients + 1];
 						for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)

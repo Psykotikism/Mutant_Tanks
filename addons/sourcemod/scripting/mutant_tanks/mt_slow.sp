@@ -52,7 +52,6 @@ enum struct esPlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
-	float g_flOriginalSpeed;
 	float g_flSlowChance;
 	float g_flSlowDuration;
 	float g_flSlowRange;
@@ -505,15 +504,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveSlow(iTank);
 		}
 	}
-
-	if (StrEqual(name, "player_spawn"))
-	{
-		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_ALIVE))
-		{
-			g_esPlayer[iSurvivor].g_flOriginalSpeed = GetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue");
-		}
-	}
 }
 
 public void MT_OnAbilityActivated(int tank)
@@ -569,7 +559,7 @@ static void vRemoveSlow(int tank)
 			g_esPlayer[iSurvivor].g_bAffected = false;
 			g_esPlayer[iSurvivor].g_iOwner = 0;
 
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_esPlayer[iSurvivor].g_flOriginalSpeed);
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		}
 	}
 
@@ -592,7 +582,6 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
-	g_esPlayer[tank].g_flOriginalSpeed = 1.0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCount = 0;
 }
@@ -676,7 +665,6 @@ static void vSlowHit(int survivor, int tank, float chance, int enabled, int mess
 					}
 				}
 
-				g_esPlayer[survivor].g_flOriginalSpeed = GetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue");
 				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", g_esCache[tank].g_flSlowSpeed);
 
 				DataPack dpStopSlow;
@@ -733,7 +721,7 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;
 
-		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_esPlayer[iSurvivor].g_flOriginalSpeed);
+		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		EmitSoundToAll(SOUND_DRIP, iSurvivor);
 
 		return Plugin_Stop;
@@ -742,7 +730,7 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 	g_esPlayer[iSurvivor].g_bAffected = false;
 	g_esPlayer[iSurvivor].g_iOwner = 0;
 
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_esPlayer[iSurvivor].g_flOriginalSpeed);
+	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 	EmitSoundToAll(SOUND_DRIP, iSurvivor);
 
 	int iMessage = pack.ReadCell();

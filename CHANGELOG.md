@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 8.75 (July 5, 2020)
+
+Bug fixes:
+
+1. Fixed the `Drunk`, `Gravity`, and `Slow` abilities not resetting survivors speed/gravity to default (1.0). (Thanks to Mi.Cura for reporting!)
+2. Fixed the `Regular Wave` setting taking effect even when `Regular Mode` is set to `0`. (Thanks to Mi.Cura for reporting!)
+
+Changes:
+
+1. Added a `StopSound` check for the Tank's rocks to get rid of the loud wind sound. (Thanks to Electr000999 for suggesting!)
+2. More code optimization.
+
+Files:
+
+1. Updated include file.
+
 ## Version 8.74 (June 24, 2020)
 
 Bug fixes:
