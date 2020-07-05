@@ -57,7 +57,6 @@ enum struct esPlayer
 	float g_flGravityRange;
 	float g_flGravityRangeChance;
 	float g_flGravityValue;
-	float g_flOriginalGravity;
 
 	int g_iAccessFlags;
 	int g_iCooldown;
@@ -583,15 +582,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vReset2(iTank);
 		}
 	}
-
-	if (StrEqual(name, "player_spawn"))
-	{
-		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_ALIVE))
-		{
-			g_esPlayer[iSurvivor].g_flOriginalGravity = GetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue");
-		}
-	}
 }
 
 public void MT_OnAbilityActivated(int tank)
@@ -862,7 +852,6 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, int m
 					}
 				}
 
-				g_esPlayer[survivor].g_flOriginalGravity = GetEntityGravity(survivor);
 				SetEntityGravity(survivor, g_esCache[tank].g_flGravityValue);
 
 				DataPack dpStopGravity;
@@ -911,7 +900,7 @@ static void vRemoveGravity(int tank)
 			g_esPlayer[iSurvivor].g_bAffected = false;
 			g_esPlayer[iSurvivor].g_iOwner = 0;
 
-			SetEntityGravity(iSurvivor, g_esPlayer[iSurvivor].g_flOriginalGravity);
+			SetEntityGravity(iSurvivor, 1.0);
 		}
 	}
 }
@@ -953,7 +942,6 @@ static void vReset2(int tank, bool revert = false)
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
-	g_esPlayer[tank].g_flOriginalGravity = 1.0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCooldown2 = -1;
 	g_esPlayer[tank].g_iDuration = -1;
@@ -1006,7 +994,7 @@ public Action tTimerStopGravity2(Handle timer, DataPack pack)
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;
 
-		SetEntityGravity(iSurvivor, g_esPlayer[iSurvivor].g_flOriginalGravity);
+		SetEntityGravity(iSurvivor, 1.0);
 
 		return Plugin_Stop;
 	}
@@ -1014,7 +1002,7 @@ public Action tTimerStopGravity2(Handle timer, DataPack pack)
 	g_esPlayer[iSurvivor].g_bAffected = false;
 	g_esPlayer[iSurvivor].g_iOwner = 0;
 
-	SetEntityGravity(iSurvivor, g_esPlayer[iSurvivor].g_flOriginalGravity);
+	SetEntityGravity(iSurvivor, 1.0);
 
 	int iMessage = pack.ReadCell();
 	if (g_esCache[iTank].g_iGravityMessage & iMessage)

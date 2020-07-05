@@ -347,7 +347,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
 		g_esPlayer[admin].g_iCloneAbility = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iCloneAbility, value, 0, 1);
 		g_esPlayer[admin].g_iCloneMessage = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iCloneMessage, value, 0, 1);
-		g_esPlayer[admin].g_iCloneAmount = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esPlayer[admin].g_iCloneAmount, value, 1, 25);
+		g_esPlayer[admin].g_iCloneAmount = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esPlayer[admin].g_iCloneAmount, value, 1, 15);
 		g_esPlayer[admin].g_flCloneChance = flGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneChance", "Clone Chance", "Clone_Chance", "chance", g_esPlayer[admin].g_flCloneChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iCloneHealth = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esPlayer[admin].g_iCloneHealth, value, 1, MT_MAXHEALTH);
 		g_esPlayer[admin].g_iCloneMode = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esPlayer[admin].g_iCloneMode, value, 0, 1);
@@ -370,7 +370,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
 		g_esAbility[type].g_iCloneAbility = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iCloneAbility, value, 0, 1);
 		g_esAbility[type].g_iCloneMessage = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iCloneMessage, value, 0, 1);
-		g_esAbility[type].g_iCloneAmount = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esAbility[type].g_iCloneAmount, value, 1, 25);
+		g_esAbility[type].g_iCloneAmount = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esAbility[type].g_iCloneAmount, value, 1, 15);
 		g_esAbility[type].g_flCloneChance = flGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneChance", "Clone Chance", "Clone_Chance", "chance", g_esAbility[type].g_flCloneChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iCloneHealth = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esAbility[type].g_iCloneHealth, value, 1, MT_MAXHEALTH);
 		g_esAbility[type].g_iCloneMode = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esAbility[type].g_iCloneMode, value, 0, 1);
@@ -600,7 +600,7 @@ static void vCloneAbility(int tank)
 
 					static float flDistance;
 					flDistance = GetVectorDistance(flHitPosition, flPosition);
-					if (flDistance < 200.0 && flDistance > 40.0)
+					if (40.0 < flDistance < 200.0)
 					{
 						bool[] bTankBoss = new bool[MaxClients + 1];
 						for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)

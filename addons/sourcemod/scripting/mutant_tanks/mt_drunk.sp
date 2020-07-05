@@ -54,7 +54,6 @@ enum struct esPlayer
 	float g_flDrunkRangeChance;
 	float g_flDrunkSpeedInterval;
 	float g_flDrunkTurnInterval;
-	float g_flOriginalSpeed;
 
 	int g_iAccessFlags;
 	int g_iCooldown;
@@ -492,7 +491,7 @@ public void MT_OnPluginEnd()
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_esPlayer[iSurvivor].g_bAffected)
 		{
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_esPlayer[iSurvivor].g_flOriginalSpeed);
+			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		}
 	}
 }
@@ -505,15 +504,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveDrunk(iTank);
-		}
-	}
-
-	if (StrEqual(name, "player_spawn"))
-	{
-		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_ALIVE))
-		{
-			g_esPlayer[iSurvivor].g_flOriginalSpeed = GetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue");
 		}
 	}
 }
@@ -734,7 +724,6 @@ static void vReset3(int tank)
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
-	g_esPlayer[tank].g_flOriginalSpeed = 1.0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCount = 0;
 }
@@ -766,9 +755,7 @@ public Action tTimerDrunkSpeed(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	g_esPlayer[iSurvivor].g_flOriginalSpeed = GetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue");
 	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", GetRandomFloat(1.5, 3.0));
-
 	CreateTimer(GetRandomFloat(1.0, 3.0), tTimerStopDrunkSpeed, GetClientUserId(iSurvivor), TIMER_FLAG_NO_MAPCHANGE);
 
 	return Plugin_Continue;
@@ -833,7 +820,7 @@ public Action tTimerStopDrunkSpeed(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", g_esPlayer[iSurvivor].g_flOriginalSpeed);
+	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 
 	return Plugin_Continue;
 }
