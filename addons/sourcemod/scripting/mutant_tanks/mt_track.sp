@@ -493,279 +493,281 @@ static void vTrackThink(int rock)
 {
 	static int iTank;
 	iTank = GetEntPropEnt(rock, Prop_Data, "m_hThrower");
-
-	switch (g_esCache[iTank].g_iTrackMode)
+	if (bIsValidClient(iTank))
 	{
-		case 0:
+		switch (g_esCache[iTank].g_iTrackMode)
 		{
-			static float flPos[3], flVelocity[3];
-			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
-			GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
-
-			static float flVector;
-			flVector = GetVectorLength(flVelocity);
-			if (flVector < 100.0)
+			case 0:
 			{
-				return;
-			}
+				static float flPos[3], flVelocity[3];
+				GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
+				GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
 
-			NormalizeVector(flVelocity, flVelocity);
-
-			static int iTarget;
-			iTarget = iGetRockTarget(flPos, flVelocity, iTank);
-			if (bIsSurvivor(iTarget))
-			{
-				static float flPos2[3], flVelocity2[3];
-				GetClientEyePosition(iTarget, flPos2);
-				GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
-
-				static bool bVisible;
-				bVisible = bVisiblePosition(flPos, flPos2, rock, 2);
-				static float flDistance;
-				flDistance = GetVectorDistance(flPos, flPos2);
-				if (!bVisible || flDistance > 500.0)
+				static float flVector;
+				flVector = GetVectorLength(flVelocity);
+				if (flVector < 100.0)
 				{
 					return;
 				}
 
-				SetEntityGravity(rock, 0.01);
+				NormalizeVector(flVelocity, flVelocity);
 
-				static float flDirection[3], flVelocity3[3];
-				SubtractVectors(flPos2, flPos, flDirection);
-				NormalizeVector(flDirection, flDirection);
+				static int iTarget;
+				iTarget = iGetRockTarget(flPos, flVelocity, iTank);
+				if (bIsSurvivor(iTarget))
+				{
+					static float flPos2[3], flVelocity2[3];
+					GetClientEyePosition(iTarget, flPos2);
+					GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
 
-				ScaleVector(flDirection, 0.5);
-				AddVectors(flVelocity, flDirection, flVelocity3);
+					static bool bVisible;
+					bVisible = bVisiblePosition(flPos, flPos2, rock, 2);
+					static float flDistance;
+					flDistance = GetVectorDistance(flPos, flPos2);
+					if (!bVisible || flDistance > 500.0)
+					{
+						return;
+					}
 
+					SetEntityGravity(rock, 0.01);
+
+					static float flDirection[3], flVelocity3[3];
+					SubtractVectors(flPos2, flPos, flDirection);
+					NormalizeVector(flDirection, flDirection);
+
+					ScaleVector(flDirection, 0.5);
+					AddVectors(flVelocity, flDirection, flVelocity3);
+
+					NormalizeVector(flVelocity3, flVelocity3);
+					ScaleVector(flVelocity3, flVector);
+
+					TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
+				}
+			}
+			case 1:
+			{
+				static float flPos[3], flVelocity[3];
+				GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
+				GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
+
+				if (GetVectorLength(flVelocity) < 50.0)
+				{
+					return;
+				}
+
+				NormalizeVector(flVelocity, flVelocity);
+
+				static int iTarget;
+				iTarget = iGetRockTarget(flPos, flVelocity, iTank);
+				static float flVelocity2[3], flVector[3], flAngles[3], flDistance;
+				flDistance = 1000.0;
+				static bool bVisible;
+				bVisible = false;
+				flVector[0] = flVector[1] = flVector[2] = 0.0;
+
+				if (bIsSurvivor(iTarget))
+				{
+					static float flPos2[3];
+					GetClientEyePosition(iTarget, flPos2);
+					flDistance = GetVectorDistance(flPos, flPos2);
+					bVisible = bVisiblePosition(flPos, flPos2, rock, 1);
+
+					GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
+					AddVectors(flPos2, flVelocity2, flPos2);
+					MakeVectorFromPoints(flPos, flPos2, flVector);
+				}
+
+				GetVectorAngles(flVelocity, flAngles);
+
+				static float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
+					flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1, flFactor2, flBase;
+				flFactor1 = 0.2;
+				flFactor2 = 0.5;
+				flBase = 1500.0;
+				flFront[0] = flFront[1] = flFront[2] = 0.0;
+
+				if (bVisible)
+				{
+					flBase = 80.0;
+
+					static float flFront2, flDown2, flUp2, flLeft2, flRight2, flDistance2, flDistance3, flDistance4, flDistance5, flDistance6, flDistance7, flDistance8, flDistance9;
+					flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, rock, 3);
+					flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, rock, 3);
+					flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, rock, 3);
+					flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, rock, 3);
+					flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, rock, 3);
+					flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, rock, 3);
+					flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, rock, 3);
+					flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, rock, 3);
+					flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, rock, 3);
+					flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, rock, 3);
+					flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, rock, 3);
+					flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, rock, 3);
+					flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, rock, 3);
+
+					NormalizeVector(flFront, flFront);
+					NormalizeVector(flUp, flUp);
+					NormalizeVector(flDown, flDown);
+					NormalizeVector(flLeft, flLeft);
+					NormalizeVector(flRight, flRight);
+					NormalizeVector(flVector, flVector);
+					NormalizeVector(flVector1, flVector1);
+					NormalizeVector(flVector2, flVector2);
+					NormalizeVector(flVector3, flVector3);
+					NormalizeVector(flVector4, flVector4);
+					NormalizeVector(flVector5, flVector5);
+					NormalizeVector(flVector6, flVector6);
+					NormalizeVector(flVector7, flVector7);
+					NormalizeVector(flVector8, flVector8);
+
+					if (flFront2 > flBase)
+					{
+						flFront2 = flBase;
+					}
+
+					if (flUp2 > flBase)
+					{
+						flUp2 = flBase;
+					}
+
+					if (flDown2 > flBase)
+					{
+						flDown2 = flBase;
+					}
+
+					if (flLeft2 > flBase)
+					{
+						flLeft2 = flBase;
+					}
+
+					if (flRight2 > flBase)
+					{
+						flRight2 = flBase;
+					}
+
+					if (flDistance2 > flBase)
+					{
+						flDistance2 = flBase;
+					}
+
+					if (flDistance3 > flBase)
+					{
+						flDistance3 = flBase;
+					}
+
+					if (flDistance4 > flBase)
+					{
+						flDistance4 = flBase;
+					}
+
+					if (flDistance5 > flBase)
+					{
+						flDistance5 = flBase;
+					}
+
+					if (flDistance6 > flBase)
+					{
+						flDistance6 = flBase;
+					}
+
+					if (flDistance7 > flBase)
+					{
+						flDistance7 = flBase;
+					}
+
+					if (flDistance8 > flBase)
+					{
+						flDistance8 = flBase;
+					}
+
+					if (flDistance9 > flBase)
+					{
+						flDistance9 = flBase;
+					}
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flFront2) / flBase;
+					ScaleVector(flFront, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flUp2) / flBase;
+					ScaleVector(flUp, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flDown2) / flBase;
+					ScaleVector(flDown, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flLeft2) / flBase;
+					ScaleVector(flLeft, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flRight2) / flBase;
+					ScaleVector(flRight, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance2) / flDistance2;
+					ScaleVector(flVector1, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance3) / flDistance3;
+					ScaleVector(flVector2, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance4) / flDistance4;
+					ScaleVector(flVector3, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance5) / flDistance5;
+					ScaleVector(flVector4, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance6) / flDistance6;
+					ScaleVector(flVector5, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance7) / flDistance7;
+					ScaleVector(flVector6, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance8) / flDistance8;
+					ScaleVector(flVector7, flVector9);
+
+					flVector9 =- 1.0 * flFactor1 * (flBase - flDistance9) / flDistance9;
+					ScaleVector(flVector8, flVector9);
+
+					if (flDistance >= 500.0)
+					{
+						flDistance = 500.0;
+					}
+
+					flVector9 = 1.0 * flFactor2 * (1000.0 - flDistance) / 500.0;
+					ScaleVector(flVector, flVector9);
+
+					AddVectors(flFront, flUp, flFront);
+					AddVectors(flFront, flDown, flFront);
+					AddVectors(flFront, flLeft, flFront);
+					AddVectors(flFront, flRight, flFront);
+					AddVectors(flFront, flVector1, flFront);
+					AddVectors(flFront, flVector2, flFront);
+					AddVectors(flFront, flVector3, flFront);
+					AddVectors(flFront, flVector4, flFront);
+					AddVectors(flFront, flVector5, flFront);
+					AddVectors(flFront, flVector6, flFront);
+					AddVectors(flFront, flVector7, flFront);
+					AddVectors(flFront, flVector8, flFront);
+					AddVectors(flFront, flVector, flFront);
+
+					NormalizeVector(flFront, flFront);
+				}
+
+				static float flAngles2, flVelocity3[3];
+				flAngles2 = flGetAngle(flFront, flVelocity);
+				ScaleVector(flFront, flAngles2);
+				AddVectors(flVelocity, flFront, flVelocity3);
 				NormalizeVector(flVelocity3, flVelocity3);
-				ScaleVector(flVelocity3, flVector);
 
+				ScaleVector(flVelocity3, g_esCache[iTank].g_flTrackSpeed);
+
+				SetEntityGravity(rock, 0.01);
 				TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
-			}
-		}
-		case 1:
-		{
-			static float flPos[3], flVelocity[3];
-			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
-			GetEntPropVector(rock, Prop_Data, "m_vecVelocity", flVelocity);
 
-			if (GetVectorLength(flVelocity) < 50.0)
-			{
-				return;
-			}
-
-			NormalizeVector(flVelocity, flVelocity);
-
-			static int iTarget;
-			iTarget = iGetRockTarget(flPos, flVelocity, iTank);
-			static float flVelocity2[3], flVector[3], flAngles[3], flDistance;
-			flDistance = 1000.0;
-			static bool bVisible;
-			bVisible = false;
-			flVector[0] = flVector[1] = flVector[2] = 0.0;
-
-			if (bIsSurvivor(iTarget))
-			{
-				static float flPos2[3];
-				GetClientEyePosition(iTarget, flPos2);
-				flDistance = GetVectorDistance(flPos, flPos2);
-				bVisible = bVisiblePosition(flPos, flPos2, rock, 1);
-
-				GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
-				AddVectors(flPos2, flVelocity2, flPos2);
-				MakeVectorFromPoints(flPos, flPos2, flVector);
-			}
-
-			GetVectorAngles(flVelocity, flAngles);
-
-			static float flLeft[3], flRight[3], flUp[3], flDown[3], flFront[3], flVector1[3], flVector2[3], flVector3[3], flVector4[3],
-				flVector5[3], flVector6[3], flVector7[3], flVector8[3], flVector9, flFactor1, flFactor2, flBase;
-			flFactor1 = 0.2;
-			flFactor2 = 0.5;
-			flBase = 1500.0;
-			flFront[0] = flFront[1] = flFront[2] = 0.0;
-
-			if (bVisible)
-			{
-				flBase = 80.0;
-
-				static float flFront2, flDown2, flUp2, flLeft2, flRight2, flDistance2, flDistance3, flDistance4, flDistance5, flDistance6, flDistance7, flDistance8, flDistance9;
-				flFront2 = flGetDistance(flPos, flAngles, 0.0, 0.0, flFront, rock, 3);
-				flDown2 = flGetDistance(flPos, flAngles, 90.0, 0.0, flDown, rock, 3);
-				flUp2 = flGetDistance(flPos, flAngles, -90.0, 0.0, flUp, rock, 3);
-				flLeft2 = flGetDistance(flPos, flAngles, 0.0, 90.0, flLeft, rock, 3);
-				flRight2 = flGetDistance(flPos, flAngles, 0.0, -90.0, flRight, rock, 3);
-				flDistance2 = flGetDistance(flPos, flAngles, 30.0, 0.0, flVector1, rock, 3);
-				flDistance3 = flGetDistance(flPos, flAngles, 30.0, 45.0, flVector2, rock, 3);
-				flDistance4 = flGetDistance(flPos, flAngles, 0.0, 45.0, flVector3, rock, 3);
-				flDistance5 = flGetDistance(flPos, flAngles, -30.0, 45.0, flVector4, rock, 3);
-				flDistance6 = flGetDistance(flPos, flAngles, -30.0, 0.0, flVector5, rock, 3);
-				flDistance7 = flGetDistance(flPos, flAngles, -30.0, -45.0, flVector6, rock, 3);
-				flDistance8 = flGetDistance(flPos, flAngles, 0.0, -45.0, flVector7, rock, 3);
-				flDistance9 = flGetDistance(flPos, flAngles, 30.0, -45.0, flVector8, rock, 3);
-
-				NormalizeVector(flFront, flFront);
-				NormalizeVector(flUp, flUp);
-				NormalizeVector(flDown, flDown);
-				NormalizeVector(flLeft, flLeft);
-				NormalizeVector(flRight, flRight);
-				NormalizeVector(flVector, flVector);
-				NormalizeVector(flVector1, flVector1);
-				NormalizeVector(flVector2, flVector2);
-				NormalizeVector(flVector3, flVector3);
-				NormalizeVector(flVector4, flVector4);
-				NormalizeVector(flVector5, flVector5);
-				NormalizeVector(flVector6, flVector6);
-				NormalizeVector(flVector7, flVector7);
-				NormalizeVector(flVector8, flVector8);
-
-				if (flFront2 > flBase)
+				if (MT_IsGlowEnabled(iTank) && bIsValidGame())
 				{
-					flFront2 = flBase;
+					static int iGlowColor[4];
+					MT_GetTankColors(iTank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
+					SetEntProp(rock, Prop_Send, "m_iGlowType", 3);
+					SetEntProp(rock, Prop_Send, "m_nGlowRange", 0);
+					SetEntProp(rock, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
 				}
-
-				if (flUp2 > flBase)
-				{
-					flUp2 = flBase;
-				}
-
-				if (flDown2 > flBase)
-				{
-					flDown2 = flBase;
-				}
-
-				if (flLeft2 > flBase)
-				{
-					flLeft2 = flBase;
-				}
-
-				if (flRight2 > flBase)
-				{
-					flRight2 = flBase;
-				}
-
-				if (flDistance2 > flBase)
-				{
-					flDistance2 = flBase;
-				}
-
-				if (flDistance3 > flBase)
-				{
-					flDistance3 = flBase;
-				}
-
-				if (flDistance4 > flBase)
-				{
-					flDistance4 = flBase;
-				}
-
-				if (flDistance5 > flBase)
-				{
-					flDistance5 = flBase;
-				}
-
-				if (flDistance6 > flBase)
-				{
-					flDistance6 = flBase;
-				}
-
-				if (flDistance7 > flBase)
-				{
-					flDistance7 = flBase;
-				}
-
-				if (flDistance8 > flBase)
-				{
-					flDistance8 = flBase;
-				}
-
-				if (flDistance9 > flBase)
-				{
-					flDistance9 = flBase;
-				}
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flFront2) / flBase;
-				ScaleVector(flFront, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flUp2) / flBase;
-				ScaleVector(flUp, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flDown2) / flBase;
-				ScaleVector(flDown, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flLeft2) / flBase;
-				ScaleVector(flLeft, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flRight2) / flBase;
-				ScaleVector(flRight, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flDistance2) / flDistance2;
-				ScaleVector(flVector1, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flDistance3) / flDistance3;
-				ScaleVector(flVector2, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flDistance4) / flDistance4;
-				ScaleVector(flVector3, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flDistance5) / flDistance5;
-				ScaleVector(flVector4, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flDistance6) / flDistance6;
-				ScaleVector(flVector5, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flDistance7) / flDistance7;
-				ScaleVector(flVector6, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flDistance8) / flDistance8;
-				ScaleVector(flVector7, flVector9);
-
-				flVector9 =- 1.0 * flFactor1 * (flBase - flDistance9) / flDistance9;
-				ScaleVector(flVector8, flVector9);
-
-				if (flDistance >= 500.0)
-				{
-					flDistance = 500.0;
-				}
-
-				flVector9 = 1.0 * flFactor2 * (1000.0 - flDistance) / 500.0;
-				ScaleVector(flVector, flVector9);
-
-				AddVectors(flFront, flUp, flFront);
-				AddVectors(flFront, flDown, flFront);
-				AddVectors(flFront, flLeft, flFront);
-				AddVectors(flFront, flRight, flFront);
-				AddVectors(flFront, flVector1, flFront);
-				AddVectors(flFront, flVector2, flFront);
-				AddVectors(flFront, flVector3, flFront);
-				AddVectors(flFront, flVector4, flFront);
-				AddVectors(flFront, flVector5, flFront);
-				AddVectors(flFront, flVector6, flFront);
-				AddVectors(flFront, flVector7, flFront);
-				AddVectors(flFront, flVector8, flFront);
-				AddVectors(flFront, flVector, flFront);
-
-				NormalizeVector(flFront, flFront);
-			}
-
-			static float flAngles2, flVelocity3[3];
-			flAngles2 = flGetAngle(flFront, flVelocity);
-			ScaleVector(flFront, flAngles2);
-			AddVectors(flVelocity, flFront, flVelocity3);
-			NormalizeVector(flVelocity3, flVelocity3);
-
-			ScaleVector(flVelocity3, g_esCache[iTank].g_flTrackSpeed);
-
-			SetEntityGravity(rock, 0.01);
-			TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
-
-			if (MT_IsGlowEnabled(iTank) && bIsValidGame())
-			{
-				static int iGlowColor[4];
-				MT_GetTankColors(iTank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
-				SetEntProp(rock, Prop_Send, "m_iGlowType", 3);
-				SetEntProp(rock, Prop_Send, "m_nGlowRange", 0);
-				SetEntProp(rock, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
 			}
 		}
 	}
