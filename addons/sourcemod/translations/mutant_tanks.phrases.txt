@@ -1,6 +1,7 @@
 "Phrases"
 {
 	// MT Chat Color Placeholders
+	// Note: Not all phrases support these placeholders.
 	// --
 	// "{default}" Normal - \x01
 	// "{mint}" Sky-green - \x03
@@ -3056,7 +3057,7 @@
 
 	"NullifyAmmo"
 	{
-		"en"			"You've used up all your nullify range ability's ammo."
+		"en"			"You've used up all your damage nullifier range ability's ammo."
 		"hu"			"Elhasználtad a távolsági hatástalanító képességed összes lőszerét."
 	}
 
@@ -3069,13 +3070,13 @@
 	"NullifyHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your nullify range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your damage nullifier range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hatástalanító képességedet!"
 	}
 
 	"NullifyHuman2"
 	{
-		"en"			"Your nullify range ability failed to activate. Try again."
+		"en"			"Your damage nullifier range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági hatástalanító képességedet. Próbáld újra."
 	}
 
@@ -3251,7 +3252,7 @@
 
 	"PimpAmmo"
 	{
-		"en"			"You've used up all your pimp range ability's ammo."
+		"en"			"You've used up all your pimp slap range ability's ammo."
 		"hu"			"Elhasználtad a távolsági csapdosó képességed összes lőszerét."
 	}
 
@@ -3264,13 +3265,13 @@
 	"PimpHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your pimp range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your pimp slap range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági csapdosó képességedet!"
 	}
 
 	"PimpHuman2"
 	{
-		"en"			"Your pimp range ability failed to activate. Try again."
+		"en"			"Your pimp slap range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági csapdosó képességedet. Próbáld újra."
 	}
 
@@ -4262,19 +4263,19 @@
 	"SpamHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your spam ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rock spammer ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik folyamatos képességedet!"
 	}
 
 	"SpamHuman2"
 	{
-		"en"			"Your spam ability failed to activate. Try again."
+		"en"			"Your rock spammer ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a folyamatos képességedet. Próbáld újra."
 	}
 
 	"SpamHuman3"
 	{
-		"en"			"You already activated your spam ability."
+		"en"			"You already activated your rock spammer ability."
 		"hu"			"Már aktiváltad a folyamatos képességedet."
 	}
 
@@ -4666,7 +4667,7 @@
 
 	"VisionAmmo"
 	{
-		"en"			"You've used up all your vision range ability's ammo."
+		"en"			"You've used up all your visual range ability's ammo."
 		"hu"			"Elhasználtad a távolsági látómező képességed összes lőszerét."
 	}
 
@@ -4679,13 +4680,13 @@
 	"VisionHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your vision range ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your visual range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági látómező képességedet!"
 	}
 
 	"VisionHuman2"
 	{
-		"en"			"Your vision range ability failed to activate. Try again."
+		"en"			"Your visual range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági látómező képességedet. Próbáld újra."
 	}
 
@@ -4698,7 +4699,7 @@
 
 	"VisionHuman4"
 	{
-		"en"			"There are no survivors nearby to use your vision range ability on."
+		"en"			"There are no survivors nearby to use your visual range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági látómező képességedet."
 	}
 
@@ -4894,7 +4895,7 @@
 
 	"WitchAmmo"
 	{
-		"en"			"You've used up all your witch ability's ammo."
+		"en"			"You've used up all your witch spawner ability's ammo."
 		"hu"			"Elhasználtad a boszorka képességed összes lőszerét."
 	}
 
@@ -4907,13 +4908,13 @@
 	"WitchHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your witch ability!"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your witch spawner ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik boszorka képességedet!"
 	}
 
 	"WitchHuman2"
 	{
-		"en"			"Your witch ability failed to activate. Try again."
+		"en"			"Your witch spawner ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a boszorka képességedet. Próbáld újra."
 	}
 
@@ -5044,7 +5045,7 @@
 
 	"ZombieAmmo"
 	{
-		"en"			"You've used up all your zombie ability's ammo."
+		"en"			"You've used up all your zombie spawner ability's ammo."
 		"hu"			"Elhasználtad a zombi képességed összes lőszerét."
 	}
 

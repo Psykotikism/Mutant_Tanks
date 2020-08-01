@@ -211,9 +211,10 @@ enum struct esGeneral
 	int g_iDisplayHealthType;
 	int g_iFileTimeOld[6];
 	int g_iFileTimeNew[6];
-	int g_iFinalesOnly;
+	int g_iFinaleAmount;
 	int g_iFinaleMaxTypes[3];
 	int g_iFinaleMinTypes[3];
+	int g_iFinalesOnly;
 	int g_iFinaleWave[3];
 	int g_iGameModeTypes;
 	int g_iHumanCooldown;
@@ -2712,6 +2713,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iRegularMaxType = 0;
 		g_esGeneral.g_iRegularMode = 0;
 		g_esGeneral.g_iRegularWave = 0;
+		g_esGeneral.g_iFinaleAmount = 0;
 		g_esGeneral.g_iGameModeTypes = 0;
 		g_esGeneral.g_sEnabledGameModes[0] = '\0';
 		g_esGeneral.g_sDisabledGameModes[0] = '\0';
@@ -3035,6 +3037,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iRegularLimit = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularLimit", "Regular Limit", "Regular_Limit", "reglimit", g_esGeneral.g_iRegularLimit, value, 0, 999999);
 			g_esGeneral.g_iRegularMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularMode", "Regular Mode", "Regular_Mode", "regmode", g_esGeneral.g_iRegularMode, value, 0, 1);
 			g_esGeneral.g_iRegularWave = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularWave", "Regular Wave", "Regular_Wave", "regwave", g_esGeneral.g_iRegularWave, value, 0, 1);
+			g_esGeneral.g_iFinaleAmount = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "FinaleAmount", "Finale Amount", "Finale_Amount", "finamount", g_esGeneral.g_iFinaleAmount, value, 0, 16);
 
 			if (StrEqual(g_esGeneral.g_sCurrentSubSection, "General", false))
 			{
@@ -4779,7 +4782,11 @@ static void vMutateTank(int tank)
 		switch (g_esGeneral.g_iTankWave)
 		{
 			case 0: vTankCountCheck(tank, g_esGeneral.g_iRegularAmount);
-			default: vTankCountCheck(tank, g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1]);
+			default:
+			{
+				vTankCountCheck(tank, g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1]);
+				vTankCountCheck(tank, g_esGeneral.g_iFinaleAmount);
+			}
 		}
 
 		vTankSpawn(tank);
