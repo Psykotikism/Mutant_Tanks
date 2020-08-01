@@ -270,6 +270,16 @@
 			// 1: ON
 			"Regular Wave"				"0"
 
+			// Allow this many Tanks on finale maps to spawn regardless of the current wave.
+			// Note: This is checked after "Finale Waves" as the overall limit.
+			// --
+			// Minimum: 0
+			// Maximum: 16
+			// --
+			// 0: OFF, no limit (no Tanks will be kicked by this setting).
+			// 1-16: ON, the number of Tanks that are allowed to spawn (unless the limit for "Finale Waves" is lower).
+			"Finale Amount"				"0"
+
 			// The types of Mutant Tanks that can spawn in each wave.
 			// Note: If the chosen type is not available, a random type will be chosen in its place.
 			// --

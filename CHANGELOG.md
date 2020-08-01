@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 8.76 (August 1, 2020)
+
+Bug fixes:
+
+1. Fixed client index errors for the `Track` ability. (Thanks to AK978 and Mi.Cura for reporting!)
+
+Changes:
+
+1. Added the `Finale Amount` setting to limit the number of Tanks during finales regardless of the current wave. (Requested by Neptunia.)
+
+Files:
+
+1. Updated config files.
+2. Updated include file.
+3. Updated translation file.
+
 ## Version 8.75 (July 5, 2020)
 
 Bug fixes:

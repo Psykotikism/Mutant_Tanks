@@ -439,19 +439,23 @@ Here's an example:
 "Finale Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
 ```
 
-7. How can I decide whether to display each Tank's health?
+7. How can I change the amount of Tanks that can spawn on finale maps?
+
+Set the value in `Finale Amount`.
+
+8. How can I decide whether to display each Tank's health?
 
 Set the value in `Display Health`.
 
-8. Why do some Tanks spawn with different props?
+9. Why do some Tanks spawn with different props?
 
 Each prop has X out of 100.0% chance to appear on Mutant Tanks when they spawn. Configure the chances for each prop in the `Props Chance` setting.
 
-9. Why are the Tanks spawning with more than the extra health given to them?
+10. Why are the Tanks spawning with more than the extra health given to them?
 
 Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
-10. How do I add more Mutant Tanks?
+11. How do I add more Mutant Tanks?
 
 - Add a new entry in the config file.
 - Raise the maximum value of the `Type Range` setting.
@@ -478,7 +482,7 @@ Example:
 }
 ```
 
-11. How do I filter out certain Mutant Tanks that I made without deleting them?
+12. How do I filter out certain Mutant Tanks that I made without deleting them?
 
 Enable/disable them with the `Tank Enabled` setting.
 
@@ -522,7 +526,7 @@ Example:
 }
 ```
 
-12. Can I create temporary Tanks without removing or replacing them?
+13. Can I create temporary Tanks without removing or replacing them?
 
 Yes, you can do that with custom configs.
 
@@ -594,7 +598,7 @@ Output: When the current difficulty is Expert mode (impossible), the Idiot Tank 
 These are basically temporary Tanks that you can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
 ```
 
-13. How can I move the Mutant Tanks category around on the admin menu?
+14. How can I move the Mutant Tanks category around on the admin menu?
 
 - You have to open up addons/sourcemod/configs/adminmenu_sorting.txt.
 - Enter the `MutantTanks` category.
@@ -645,7 +649,7 @@ Example:
 }
 ```
 
-14. Are there any developer/tester features available in the plugin?
+15. Are there any developer/tester features available in the plugin?
 
 Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Mutant Tank.
 
