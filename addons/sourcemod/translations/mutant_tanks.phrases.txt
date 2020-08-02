@@ -3058,7 +3058,7 @@
 	"NullifyAmmo"
 	{
 		"en"			"You've used up all your damage nullifier range ability's ammo."
-		"hu"			"Elhasználtad a távolsági hatástalanító képességed összes lőszerét."
+		"hu"			"Elhasználtad a távolsági sebzés hatástalanító képességed összes lőszerét."
 	}
 
 	"NullifyDetails"
@@ -3071,13 +3071,13 @@
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your damage nullifier range ability!"
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hatástalanító képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági sebzés hatástalanító képességedet!"
 	}
 
 	"NullifyHuman2"
 	{
 		"en"			"Your damage nullifier range ability failed to activate. Try again."
-		"hu"			"Nem sikerült aktiválni a távolsági hatástalanító képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a távolsági sebzés hatástalanító képességedet. Próbáld újra."
 	}
 
 	"NullifyHuman3"
@@ -4264,19 +4264,19 @@
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rock spammer ability!"
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik folyamatos képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik folyamatos szikla képességedet!"
 	}
 
 	"SpamHuman2"
 	{
 		"en"			"Your rock spammer ability failed to activate. Try again."
-		"hu"			"Nem sikerült aktiválni a folyamatos képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a folyamatos szikla képességedet. Próbáld újra."
 	}
 
 	"SpamHuman3"
 	{
 		"en"			"You already activated your rock spammer ability."
-		"hu"			"Már aktiváltad a folyamatos képességedet."
+		"hu"			"Már aktiváltad a folyamatos szikla képességedet."
 	}
 
 	"SpamHuman4"
@@ -4303,65 +4303,65 @@
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is splashing damage at nearby survivors!"
-		"hu"			"{olive}{1}{mint} sebzést fröcsköl a közelben lévő túlélőkre!"
+		"hu"			"{olive}{1}{mint} területi sebzést okoz a közelben lévő túlélőkre!"
 	}
 
 	"Splash2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} is no longer splashing damage at nearby survivors!"
-		"hu"			"{olive}{1}{mint} többé már nem fröcsköl sebzést a túlélőkre!"
+		"hu"			"{olive}{1}{mint} többé már nem okoz területi sebzést a túlélőkre!"
 	}
 
 	"SplashAmmo"
 	{
 		"en"			"You've used up all your splash ability's ammo."
-		"hu"			"Elhasználtad a fröcskölő képességed összes lőszerét."
+		"hu"			"Elhasználtad a területi sebzés képességed összes lőszerét."
 	}
 
 	"SplashDetails"
 	{
 		"en"			"You constantly deal splash damage to nearby survivors."
-		"hu"			"Folyamatosan sebzést fröcskölsz a közelben lévő túlélőkre."
+		"hu"			"Folyamatosan területi sebzést okozol a közelben lévő túlélőkre."
 	}
 
 	"SplashHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your splash ability!"
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik fröcskölő képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik területi sebzés képességedet!"
 	}
 
 	"SplashHuman2"
 	{
 		"en"			"Your splash ability failed to activate. Try again."
-		"hu"			"Nem sikerült aktiválni a fröcskölő képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a területi képességedet. Próbáld újra."
 	}
 
 	"SplashHuman3"
 	{
 		"en"			"You already activated your splash ability."
-		"hu"			"Már aktiváltad a fröcskölő képességedet."
+		"hu"			"Már aktiváltad a területi képességedet."
 	}
 
 	"SplashHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your splash ability still needs another{yellow} {1} second(s){mint} to recharge."
-		"hu"			"A fröcskölő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			"A területi képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"SplashHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your splash ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-		"hu"			"A fröcskölő képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
+		"hu"			"A területi képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
 	"SplashMenu"
 	{
 		"en"			"Splash Ability Information"
-		"hu"			"Fröcskölő Képesség Információ"
+		"hu"			"Területi Képesség Információ"
 	}
 
 	"Throw"
@@ -4668,7 +4668,7 @@
 	"VisionAmmo"
 	{
 		"en"			"You've used up all your visual range ability's ammo."
-		"hu"			"Elhasználtad a távolsági látómező képességed összes lőszerét."
+		"hu"			"Elhasználtad a távolsági vizuális képességed összes lőszerét."
 	}
 
 	"VisionDetails"
@@ -4681,13 +4681,13 @@
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your visual range ability!"
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági látómező képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági vizuális képességedet!"
 	}
 
 	"VisionHuman2"
 	{
 		"en"			"Your visual range ability failed to activate. Try again."
-		"hu"			"Nem sikerült aktiválni a távolsági látómező képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a távolsági vizuális képességedet. Próbáld újra."
 	}
 
 	"VisionHuman3"
@@ -4700,7 +4700,7 @@
 	"VisionHuman4"
 	{
 		"en"			"There are no survivors nearby to use your visual range ability on."
-		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági látómező képességedet."
+		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági vizuális képességedet."
 	}
 
 	"VisionHuman5"
@@ -4896,7 +4896,7 @@
 	"WitchAmmo"
 	{
 		"en"			"You've used up all your witch spawner ability's ammo."
-		"hu"			"Elhasználtad a boszorka képességed összes lőszerét."
+		"hu"			"Elhasználtad a boszorka létrehozás képességed összes lőszerét."
 	}
 
 	"WitchDetails"
@@ -4909,13 +4909,13 @@
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your witch spawner ability!"
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik boszorka képességedet!"
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik boszorka létrehozó képességedet!"
 	}
 
 	"WitchHuman2"
 	{
 		"en"			"Your witch spawner ability failed to activate. Try again."
-		"hu"			"Nem sikerült aktiválni a boszorka képességedet. Próbáld újra."
+		"hu"			"Nem sikerült aktiválni a boszorka létrehozó képességedet. Próbáld újra."
 	}
 
 	"WitchHuman3"
@@ -5046,7 +5046,7 @@
 	"ZombieAmmo"
 	{
 		"en"			"You've used up all your zombie spawner ability's ammo."
-		"hu"			"Elhasználtad a zombi képességed összes lőszerét."
+		"hu"			"Elhasználtad a zombi létrehozó képességed összes lőszerét."
 	}
 
 	"ZombieDetails"
