@@ -453,6 +453,11 @@
 		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变坦克类型."
 	}
 
+	"HumanTag"
+	{
+		"en"			"[HUMAN]"
+	}
+
 	"MultipleMatches"
 	{
 		"en"			"Multiple{olive} Tank types{mint} matched that name. Selecting a random match..."
