@@ -206,12 +206,14 @@
 	{
 		"#format"		"{1:s}"
 		"en"			"{1}{olive} is installed."
+		"hu"			"{1}{olive} telepítve."
 	}
 
 	"AbilityInstalled2"
 	{
 		"#format"		"{1:s}"
 		"en"			"{1} is installed."
+		"hu"			"{1} telepítve."
 	}
 
 	"AbilityStatus1"
@@ -318,17 +320,20 @@
 	"CheckConsole"
 	{
 		"en"			"See console for full output."
+		"hu"			"Nézd meg a konzolban a teljes kimenetett."
 	}
 
 	"CommandUsage"
 	{
 		"#format"		"{1:s},{2:i},{3:i}"
 		"en"			"Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>"
+		"hu"			"Használat: {1} <írd {2}-{3}> <mennyíség: 1-32> <0: születés célkeresztnél|1: születés automatikusan>"
 	}
 
 	"CompletedParsing"
 	{
 		"en"			"Parsing complete..."
+		"hu"			"Elemzés befejezve..."
 	}
 
 	"Death1"
@@ -415,6 +420,7 @@
 	{
 		"#format"		"{1:s},{2:s}"
 		"en"			"Error while parsing the \"{1}\" file. Error Message: {2}."
+		"hu"			"Hiba a fájl elemzésekor \"{1}\" Hiba üzenet: {2}."
 	}
 
 	"Evolved"
@@ -429,6 +435,7 @@
 	{
 		"#format"		"{1:s}"
 		"en"			"Failed to parse the \"{1}\" file."
+		"hu"			"Nem sikerült elemezni a \"{1}\" fájlt."
 	}
 
 	"FavoriteUnused"
@@ -456,6 +463,7 @@
 	"HumanTag"
 	{
 		"en"			"[HUMAN]"
+		"hu"			"[EMBER]"
 	}
 
 	"MultipleMatches"
@@ -468,6 +476,7 @@
 	"NoAbilities"
 	{
 		"en"			"No abilities were found."
+		"hu"			"Nem találtunk képességeket."
 	}
 
 	"NoCommandAccess"
@@ -515,11 +524,13 @@
 	"StartParsing"
 	{
 		"en"			"Parsing the config file..."
+		"hu"			"Konfig fájl ellenőrzése..."
 	}
 
 	"PluginDisabled"
 	{
 		"en"			"Mutant Tanks{default} is disabled."
+		"hu"			"Mutáns Tankok{default} letiltva."
 	}
 
 	"Randomized"
@@ -534,6 +545,7 @@
 	{
 		"#format"		"{1:s}"
 		"en"			"Reloading config file \"{1}\" file..."
+		"hu"			"Konfig fájl újratöltése \"{1}\" fájl..."
 	}
 
 	"RequestFailed"
@@ -560,6 +572,7 @@
 	"StillParsing"
 	{
 		"en"			"The plugin is still parsing the config file."
+		"hu"			"A plugin még elemzi a konfig fájlt."
 	}
 
 	"Transformed"
@@ -589,6 +602,7 @@
 	{
 		"#format"		"{1:s},{2:i}"
 		"en"			"{1}{yellow} (Tank #{2}){default} is disabled."
+		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
 	}
 
 	"Absorb"
@@ -669,6 +683,7 @@
 	"AbsorbMenu2"
 	{
 		"en"			"Absorb Ability"
+		"hu"			"Elnyelő Képesség"
 	}
 
 	"Acid"
@@ -749,6 +764,7 @@
 	"AcidMenu2"
 	{
 		"en"			"Acid Ability"
+		"hu"			"Sav Képesség"
 	}
 
 	"Aimless"
@@ -829,6 +845,7 @@
 	"AimlessMenu2"
 	{
 		"en"			"Aimless Ability"
+		"hu"			"Céltalan Képesség"
 	}
 
 	"Ammo"
@@ -901,6 +918,7 @@
 	"AmmoMenu2"
 	{
 		"en"			"Ammo Ability"
+		"hu"			"Lőszer Képesség"
 	}
 
 	"Blind"
@@ -981,6 +999,7 @@
 	"BlindMenu2"
 	{
 		"en"			"Blind Ability"
+		"hu"			"Vakító Képesség"
 	}
 
 	"Bomb"
@@ -1061,6 +1080,7 @@
 	"BombMenu2"
 	{
 		"en"			"Bomb Ability"
+		"hu"			"Bomba Képesség"
 	}
 
 	"Bury"
@@ -1141,6 +1161,7 @@
 	"BuryMenu2"
 	{
 		"en"			"Bury Ability"
+		"hu"			"Eltemetés Képesség"
 	}
 
 	"Car"
@@ -1221,6 +1242,7 @@
 	"CarMenu2"
 	{
 		"en"			"Car Ability"
+		"hu"			"Autó Képesség"
 	}
 
 	"Choke"
@@ -1301,6 +1323,7 @@
 	"ChokeMenu2"
 	{
 		"en"			"Choke Ability"
+		"hu"			"Fojtógató Képesség"
 	}
 
 	"Clone"
@@ -1380,6 +1403,7 @@
 	"CloneMenu2"
 	{
 		"en"			"Clone Ability"
+		"hu"			"Klonozó Képesség"
 	}
 
 	"Cloud"
@@ -1460,6 +1484,7 @@
 	"CloudMenu2"
 	{
 		"en"			"Cloud Ability"
+		"hu"			"Felhő Képesség"
 	}
 
 	"Drop"
@@ -1509,6 +1534,7 @@
 	"DropMenu2"
 	{
 		"en"			"Drop Ability"
+		"hu"			"Dobás Képesség"
 	}
 
 	"Drug"
@@ -1589,6 +1615,7 @@
 	"DrugMenu2"
 	{
 		"en"			"Drug Ability"
+		"hu"			"Bedrogozás Képesség"
 	}
 
 	"Drunk"
@@ -1669,6 +1696,7 @@
 	"DrunkMenu2"
 	{
 		"en"			"Drunk Ability"
+		"hu"			"Részeg Képesség"
 	}
 
 	"Electric"
@@ -1749,6 +1777,7 @@
 	"ElectricMenu2"
 	{
 		"en"			"Electric Ability"
+		"hu"			"Elektromos Képesség"
 	}
 
 	"Enforce"
@@ -1829,6 +1858,7 @@
 	"EnforceMenu2"
 	{
 		"en"			"Enforce Ability"
+		"hu"			"Kényszerítő Képesség"
 	}
 
 	"Fast"
@@ -1909,6 +1939,7 @@
 	"FastMenu2"
 	{
 		"en"			"Fast Ability"
+		"hu"			"Gyorsaság Képesség"
 	}
 
 	"Fire"
@@ -1989,6 +2020,7 @@
 	"FireMenu2"
 	{
 		"en"			"Fire Ability"
+		"hu"			"Tűz Képesség"
 	}
 
 	"Fling"
@@ -2061,6 +2093,7 @@
 	"FlingMenu2"
 	{
 		"en"			"Fling Ability"
+		"hu"			"Dobás Képesség"
 	}
 
 	"Fragile"
@@ -2141,6 +2174,7 @@
 	"FragileMenu2"
 	{
 		"en"			"Fragile Ability"
+		"hu"			"Érzékeny Képesség"
 	}
 
 	"Ghost"
@@ -2267,6 +2301,7 @@
 	"GhostMenu2"
 	{
 		"en"			"Ghost Ability"
+		"hu"			"Szellem Képesség"
 	}
 
 	"God"
@@ -2347,6 +2382,7 @@
 	"GodMenu2"
 	{
 		"en"			"God Ability"
+		"hu"			"Isteni Képesség"
 	}
 
 	"Gravity"
@@ -2481,6 +2517,7 @@
 	"GravityMenu2"
 	{
 		"en"			"Gravity Ability"
+		"hu"			"Gravitációs Képesség"
 	}
 
 	"Heal"
@@ -2607,6 +2644,7 @@
 	"HealMenu2"
 	{
 		"en"			"Heal Ability"
+		"hu"			"Gyógyító Képesség"
 	}
 
 	"HitDetails"
@@ -2626,6 +2664,7 @@
 	"HitMenu2"
 	{
 		"en"			"Hit Ability"
+		"hu"			"Ütő Képesség"
 	}
 
 	"Hurt"
@@ -2706,6 +2745,7 @@
 	"HurtMenu2"
 	{
 		"en"			"Hurt Ability"
+		"hu"			"Bántalmazó Képesség"
 	}
 
 	"Hypno"
@@ -2786,6 +2826,7 @@
 	"HypnoMenu2"
 	{
 		"en"			"Hypno Ability"
+		"hu"			"Hipnotizáló Képesség"
 	}
 
 	"Ice"
@@ -2866,6 +2907,7 @@
 	"IceMenu2"
 	{
 		"en"			"Ice Ability"
+		"hu"			"Fagyasztás Képesség"
 	}
 
 	"Idle"
@@ -2938,6 +2980,7 @@
 	"IdleMenu2"
 	{
 		"en"			"Idle Ability"
+		"hu"			"Szüneteltetés Képesség"
 	}
 
 	"Invert"
@@ -3018,6 +3061,7 @@
 	"InvertMenu2"
 	{
 		"en"			"Invert Ability"
+		"hu"			"Megfordítás Képesség"
 	}
 
 	"Item"
@@ -3059,6 +3103,7 @@
 	"ItemMenu2"
 	{
 		"en"			"Item Ability"
+		"hu"			"Tétel Képesség"
 	}
 
 	"Jump"
@@ -3185,6 +3230,7 @@
 	"JumpMenu2"
 	{
 		"en"			"Jump Ability"
+		"hu"			"Ugrás Képesség"
 	}
 
 	"Kamikaze"
@@ -3233,6 +3279,7 @@
 	"KamikazeMenu2"
 	{
 		"en"			"Kamikaze Ability"
+		"hu"			"Kamikaze Képesség"
 	}
 
 	"Lag"
@@ -3313,6 +3360,7 @@
 	"LagMenu2"
 	{
 		"en"			"Lag Ability"
+		"hu"			"Késleltetés Képesség"
 	}
 
 	"Laser"
@@ -3393,6 +3441,7 @@
 	"LaserMenu2"
 	{
 		"en"			"Laser Ability"
+		"hu"			"Lézer Képesség"
 	}
 
 	"Leech"
@@ -3473,6 +3522,7 @@
 	"LeechMenu2"
 	{
 		"en"			"Leech Ability"
+		"hu"			"Pióca Képesség"
 	}
 
 	"Medic"
@@ -3560,6 +3610,7 @@
 	"MedicMenu2"
 	{
 		"en"			"Medic Ability"
+		"hu"			"Medikus Képesség"
 	}
 
 	"Meteor"
@@ -3640,6 +3691,7 @@
 	"MeteorMenu2"
 	{
 		"en"			"Meteor Ability"
+		"hu"			"Meteor Képesség"
 	}
 
 	"Minion"
@@ -3712,6 +3764,7 @@
 	"MinionMenu2"
 	{
 		"en"			"Minion Ability"
+		"hu"			"Minyon Képesség"
 	}
 
 	"Necro"
@@ -3784,6 +3837,7 @@
 	"NecroMenu2"
 	{
 		"en"			"Necro Ability"
+		"hu"			"Haláli Képesség"
 	}
 
 	"Nullify"
@@ -3864,6 +3918,7 @@
 	"NullifyMenu2"
 	{
 		"en"			"Nullify Ability"
+		"hu"			"Hatástalanító Képesség"
 	}
 
 	"Omni"
@@ -3944,6 +3999,7 @@
 	"OmniMenu2"
 	{
 		"en"			"Omni Ability"
+		"hu"			"Mindenség Képesség"
 	}
 
 	"Panic"
@@ -4024,6 +4080,7 @@
 	"PanicMenu2"
 	{
 		"en"			"Panic Ability"
+		"hu"			"Pánik Képesség"
 	}
 
 	"Pimp"
@@ -4104,6 +4161,7 @@
 	"PimpMenu2"
 	{
 		"en"			"Pimp Ability"
+		"hu"			"Csapdosó Képesség"
 	}
 
 	"Puke"
@@ -4176,6 +4234,7 @@
 	"PukeMenu2"
 	{
 		"en"			"Puke Ability"
+		"hu"			"Hányás Képesség"
 	}
 
 	"Pyro"
@@ -4264,6 +4323,7 @@
 	"PyroMenu2"
 	{
 		"en"			"Pyro Ability"
+		"hu"			"Piro Képesség"
 	}
 
 	"Quiet"
@@ -4344,6 +4404,7 @@
 	"QuietMenu2"
 	{
 		"en"			"Quiet Ability"
+		"hu"			"Csend Képesség"
 	}
 
 	"Recoil"
@@ -4424,6 +4485,7 @@
 	"RecoilMenu2"
 	{
 		"en"			"Recoil Ability"
+		"hu"			"Visszarúgás Képesség"
 	}
 
 	"Regen"
@@ -4504,6 +4566,7 @@
 	"RegenMenu2"
 	{
 		"en"			"Regen Ability"
+		"hu"			"Regeneráló Képesség"
 	}
 
 	"Respawn"
@@ -4560,6 +4623,7 @@
 	"RespawnMenu2"
 	{
 		"en"			"Respawn Ability"
+		"hu"			"Újjászületés Képesség"
 	}
 
 	"Restart"
@@ -4632,6 +4696,7 @@
 	"RestartMenu2"
 	{
 		"en"			"Restart Ability"
+		"hu"			"Újrakezdő Képesség"
 	}
 
 	"Rock"
@@ -4712,6 +4777,7 @@
 	"RockMenu2"
 	{
 		"en"			"Rock Ability"
+		"hu"			"Szikla Képesség"
 	}
 
 	"Rocket"
@@ -4784,6 +4850,7 @@
 	"RocketMenu2"
 	{
 		"en"			"Rocket Ability"
+		"hu"			"Rakéta Képesség"
 	}
 
 	"Shake"
@@ -4864,6 +4931,7 @@
 	"ShakeMenu2"
 	{
 		"en"			"Shake Ability"
+		"hu"			"Rázó Képesség"
 	}
 
 	"Shield"
@@ -4944,6 +5012,7 @@
 	"ShieldMenu2"
 	{
 		"en"			"Shield Ability"
+		"hu"			"Pajzs Képesség"
 	}
 
 	"ShieldOwner"
@@ -5032,6 +5101,7 @@
 	"ShoveMenu2"
 	{
 		"en"			"Shove Ability"
+		"hu"			"Lökés Képesség"
 	}
 
 	"Slow"
@@ -5112,6 +5182,7 @@
 	"SlowMenu2"
 	{
 		"en"			"Slow Ability"
+		"hu"			"Lassító Képesség"
 	}
 
 	"Smash"
@@ -5184,6 +5255,7 @@
 	"SmashMenu2"
 	{
 		"en"			"Smash Ability"
+		"hu"			"Zúzó Képesség"
 	}
 
 	"Smite"
@@ -5256,6 +5328,7 @@
 	"SmiteMenu2"
 	{
 		"en"			"Smite Ability"
+		"hu"			"Lesújtó Képesség"
 	}
 
 	"Spam"
@@ -5336,6 +5409,7 @@
 	"SpamMenu2"
 	{
 		"en"			"Spam Ability"
+		"hu"			"Folyamatos Képesség"
 	}
 
 	"Splash"
@@ -5416,6 +5490,7 @@
 	"SplashMenu2"
 	{
 		"en"			"Splash Ability"
+		"hu"			"Területi Képesség"
 	}
 
 	"Throw"
@@ -5505,6 +5580,7 @@
 	"ThrowMenu2"
 	{
 		"en"			"Throw Ability"
+		"hu"			"Dobó Képesség"
 	}
 
 	"Track"
@@ -5570,6 +5646,7 @@
 	"TrackMenu2"
 	{
 		"en"			"Track Ability"
+		"hu"			"Követő Képesség"
 	}
 
 	"Ultimate"
@@ -5665,6 +5742,7 @@
 	"UltimateMenu2"
 	{
 		"en"			"Ultimate Ability"
+		"hu"			"Végső Képesség"
 	}
 
 	"Undead"
@@ -5745,6 +5823,7 @@
 	"UndeadMenu2"
 	{
 		"en"			"Undead Ability"
+		"hu"			"Élőholt Képesség"
 	}
 
 	"Vampire"
@@ -5772,6 +5851,7 @@
 	"VampireMenu2"
 	{
 		"en"			"Vampire Ability"
+		"hu"			"Vámpír Képesség"
 	}
 
 	"Vision"
@@ -5852,6 +5932,7 @@
 	"VisionMenu2"
 	{
 		"en"			"Vision Ability"
+		"hu"			"Látómező Képesség"
 	}
 
 	"Warp"
@@ -5978,6 +6059,7 @@
 	"WarpMenu2"
 	{
 		"en"			"Warp Ability"
+		"hu"			"Teleportáló Képesség"
 	}
 
 	"Whirl"
@@ -6058,6 +6140,7 @@
 	"WhirlMenu2"
 	{
 		"en"			"Whirl Ability"
+		"hu"			"Megpörgető Képesség"
 	}
 
 	"Witch"
@@ -6123,6 +6206,7 @@
 	"WitchMenu2"
 	{
 		"en"			"Witch Ability"
+		"hu"			"Boszorka Képesség"
 	}
 
 	"Xiphos"
@@ -6158,6 +6242,7 @@
 	"XiphosMenu2"
 	{
 		"en"			"Xiphos Ability"
+		"hu"			"Xipho Képesség"
 	}
 
 	"Yell"
@@ -6238,6 +6323,7 @@
 	"YellMenu2"
 	{
 		"en"			"Yell Ability"
+		"hu"			"Üvöltő Képesség"
 	}
 
 	"Zombie"
@@ -6318,6 +6404,7 @@
 	"ZombieMenu2"
 	{
 		"en"			"Zombie Ability"
+		"hu"			"Zombi Képesség"
 	}
 
 	"Tank #1"
