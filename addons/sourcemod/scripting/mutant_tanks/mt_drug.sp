@@ -16,6 +16,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#file "Drug Ability v8.77"
+
 public Plugin myinfo =
 {
 	name = "[MT] Drug Ability",
@@ -168,21 +170,21 @@ public Action cmdDrugInfo(int client, int args)
 {
 	if (!MT_IsCorePluginEnabled())
 	{
-		ReplyToCommand(client, "%s Mutant Tanks\x01 is disabled.", MT_TAG4);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		ReplyToCommand(client, "%s This command is to be used only in-game.", MT_TAG);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
 		return Plugin_Handled;
 	}
 
 	switch (IsVoteInProgress())
 	{
-		case true: ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
 		case false: vDrugMenu(client, 0);
 	}
 
@@ -298,6 +300,14 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 	if (StrEqual(info, MT_MENU_DRUG, false))
 	{
 		vDrugMenu(client, 0);
+	}
+}
+
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+{
+	if (StrEqual(info, MT_MENU_DRUG, false))
+	{
+		FormatEx(buffer, size, "%T", "DrugMenu2", client);
 	}
 }
 

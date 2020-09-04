@@ -1,12 +1,22 @@
 "Phrases"
 {
 	// MT Chat Color Placeholders
+	// MT 的 聊天框文本颜色占位符
+	// --
 	// Note: Not all phrases support these placeholders.
+	// 注意: 并不是所有的短语文本都支持这些占位符.
 	// --
 	// "{default}" Normal - \x01
+	// "{default}" 普通颜色 - \x01
+	// --
 	// "{mint}" Sky-green - \x03
+	// "{mint}" 天青色 - \x03
+	// --
 	// "{yellow}" Yellow-orange - \x04
+	// "{yellow}" 橘黄色 - \x04
+	// --
 	// "{olive}" Yellow-green - \x05
+	// "{olive}" 黄绿色 - \x05
 
 	"MTMenu"
 	{
@@ -207,6 +217,7 @@
 		"#format"		"{1:s}"
 		"en"			"{1}{olive} is installed."
 		"hu"			"{1}{olive} telepítve."
+		"chi"			"{1}{olive} 已安装."
 	}
 
 	"AbilityInstalled2"
@@ -214,6 +225,7 @@
 		"#format"		"{1:s}"
 		"en"			"{1} is installed."
 		"hu"			"{1} telepítve."
+		"chi"			"{1} 已安装."
 	}
 
 	"AbilityStatus1"
@@ -321,6 +333,7 @@
 	{
 		"en"			"See console for full output."
 		"hu"			"Nézd meg a konzolban a teljes kimenetett."
+		"chi"			"完整的输出信息请查看控制台."
 	}
 
 	"CommandUsage"
@@ -328,12 +341,14 @@
 		"#format"		"{1:s},{2:i},{3:i}"
 		"en"			"Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>"
 		"hu"			"Használat: {1} <írd {2}-{3}> <mennyíség: 1-32> <0: születés célkeresztnél|1: születés automatikusan>"
+		"chi"			"用法: {1} <类型 {2}-{3}> <数量: 1-32> <0: 在十字准星处生成|1: 自动生成>"
 	}
 
 	"CompletedParsing"
 	{
 		"en"			"Parsing complete..."
 		"hu"			"Elemzés befejezve..."
+		"chi"			"解析完成..."
 	}
 
 	"Death1"
@@ -421,6 +436,7 @@
 		"#format"		"{1:s},{2:s}"
 		"en"			"Error while parsing the \"{1}\" file. Error Message: {2}."
 		"hu"			"Hiba a fájl elemzésekor \"{1}\" Hiba üzenet: {2}."
+		"chi"			"解析文件 \"{1}\" 时出错.错误信息: {2}."
 	}
 
 	"Evolved"
@@ -436,6 +452,7 @@
 		"#format"		"{1:s}"
 		"en"			"Failed to parse the \"{1}\" file."
 		"hu"			"Nem sikerült elemezni a \"{1}\" fájlt."
+		"chi"			"无法解析文件 \"{1}\" ."
 	}
 
 	"FavoriteUnused"
@@ -464,6 +481,7 @@
 	{
 		"en"			"[HUMAN]"
 		"hu"			"[EMBER]"
+		"chi"			"[玩家控制]"
 	}
 
 	"MultipleMatches"
@@ -477,6 +495,7 @@
 	{
 		"en"			"No abilities were found."
 		"hu"			"Nem találtunk képességeket."
+		"chi"			"找不到此能力."
 	}
 
 	"NoCommandAccess"
@@ -525,12 +544,14 @@
 	{
 		"en"			"Parsing the config file..."
 		"hu"			"Konfig fájl ellenőrzése..."
+		"chi"			"正在解析配置文件..."
 	}
 
 	"PluginDisabled"
 	{
 		"en"			"Mutant Tanks{default} is disabled."
 		"hu"			"Mutáns Tankok{default} letiltva."
+		"chi"			"突变坦克{default} 已禁用."
 	}
 
 	"Randomized"
@@ -546,6 +567,7 @@
 		"#format"		"{1:s}"
 		"en"			"Reloading config file \"{1}\" file..."
 		"hu"			"Konfig fájl újratöltése \"{1}\" fájl..."
+		"chi"			"正在重新加载配置文件 \"{1}\" ..."
 	}
 
 	"RequestFailed"
@@ -573,6 +595,7 @@
 	{
 		"en"			"The plugin is still parsing the config file."
 		"hu"			"A plugin még elemzi a konfig fájlt."
+		"chi"			"插件还在解析配置文件."
 	}
 
 	"Transformed"
@@ -603,6 +626,7 @@
 		"#format"		"{1:s},{2:i}"
 		"en"			"{1}{yellow} (Tank #{2}){default} is disabled."
 		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
+		"chi"			"{1}{yellow} (Tank #{2}){default} 已禁用."
 	}
 
 	"Absorb"
@@ -684,6 +708,7 @@
 	{
 		"en"			"Absorb Ability"
 		"hu"			"Elnyelő Képesség"
+		"chi"			"吸收 能力"
 	}
 
 	"Acid"
@@ -765,6 +790,7 @@
 	{
 		"en"			"Acid Ability"
 		"hu"			"Sav Képesség"
+		"chi"			"酸液 能力"
 	}
 
 	"Aimless"
@@ -846,6 +872,7 @@
 	{
 		"en"			"Aimless Ability"
 		"hu"			"Céltalan Képesség"
+		"chi"			"禁瞄 能力"
 	}
 
 	"Ammo"
@@ -919,6 +946,7 @@
 	{
 		"en"			"Ammo Ability"
 		"hu"			"Lőszer Képesség"
+		"chi"			"掠弹 能力"
 	}
 
 	"Blind"
@@ -1000,6 +1028,7 @@
 	{
 		"en"			"Blind Ability"
 		"hu"			"Vakító Képesség"
+		"chi"			"致盲 能力"
 	}
 
 	"Bomb"
@@ -1081,6 +1110,7 @@
 	{
 		"en"			"Bomb Ability"
 		"hu"			"Bomba Képesség"
+		"chi"			"爆炸 能力"
 	}
 
 	"Bury"
@@ -1162,6 +1192,7 @@
 	{
 		"en"			"Bury Ability"
 		"hu"			"Eltemetés Képesség"
+		"chi"			"埋葬 能力"
 	}
 
 	"Car"
@@ -1236,13 +1267,14 @@
 	{
 		"en"			"Car Ability Information"
 		"hu"			"Autó Képesség Információ"
-		"chi"			"车雨 能力信息"
+		"chi"			"汽车雨 能力信息"
 	}
 
 	"CarMenu2"
 	{
 		"en"			"Car Ability"
 		"hu"			"Autó Képesség"
+		"chi"			"汽车雨 能力"
 	}
 
 	"Choke"
@@ -1324,6 +1356,7 @@
 	{
 		"en"			"Choke Ability"
 		"hu"			"Fojtógató Képesség"
+		"chi"			"窒息 能力"
 	}
 
 	"Clone"
@@ -1404,6 +1437,7 @@
 	{
 		"en"			"Clone Ability"
 		"hu"			"Klonozó Képesség"
+		"chi"			"克隆 能力"
 	}
 
 	"Cloud"
@@ -1485,6 +1519,7 @@
 	{
 		"en"			"Cloud Ability"
 		"hu"			"Felhő Képesség"
+		"chi"			"毒云 能力"
 	}
 
 	"Drop"
@@ -1535,6 +1570,7 @@
 	{
 		"en"			"Drop Ability"
 		"hu"			"Dobás Képesség"
+		"chi"			"掉落 能力"
 	}
 
 	"Drug"
@@ -1616,6 +1652,7 @@
 	{
 		"en"			"Drug Ability"
 		"hu"			"Bedrogozás Képesség"
+		"chi"			"中毒 能力"
 	}
 
 	"Drunk"
@@ -1697,6 +1734,7 @@
 	{
 		"en"			"Drunk Ability"
 		"hu"			"Részeg Képesség"
+		"chi"			"醉酒 能力"
 	}
 
 	"Electric"
@@ -1778,6 +1816,7 @@
 	{
 		"en"			"Electric Ability"
 		"hu"			"Elektromos Képesség"
+		"chi"			"电击 能力"
 	}
 
 	"Enforce"
@@ -1859,6 +1898,7 @@
 	{
 		"en"			"Enforce Ability"
 		"hu"			"Kényszerítő Képesség"
+		"chi"			"迫用 能力"
 	}
 
 	"Fast"
@@ -1940,6 +1980,7 @@
 	{
 		"en"			"Fast Ability"
 		"hu"			"Gyorsaság Képesség"
+		"chi"			"迅速 能力"
 	}
 
 	"Fire"
@@ -2021,6 +2062,7 @@
 	{
 		"en"			"Fire Ability"
 		"hu"			"Tűz Képesség"
+		"chi"			"火焰 能力"
 	}
 
 	"Fling"
@@ -2094,6 +2136,7 @@
 	{
 		"en"			"Fling Ability"
 		"hu"			"Dobás Képesség"
+		"chi"			"抛空 能力"
 	}
 
 	"Fragile"
@@ -2175,6 +2218,7 @@
 	{
 		"en"			"Fragile Ability"
 		"hu"			"Érzékeny Képesség"
+		"chi"			"脆弱 能力"
 	}
 
 	"Ghost"
@@ -2302,6 +2346,7 @@
 	{
 		"en"			"Ghost Ability"
 		"hu"			"Szellem Képesség"
+		"chi"			"幽灵 能力"
 	}
 
 	"God"
@@ -2383,6 +2428,7 @@
 	{
 		"en"			"God Ability"
 		"hu"			"Isteni Képesség"
+		"chi"			"上帝 能力"
 	}
 
 	"Gravity"
@@ -2518,6 +2564,7 @@
 	{
 		"en"			"Gravity Ability"
 		"hu"			"Gravitációs Képesség"
+		"chi"			"重力 能力"
 	}
 
 	"Heal"
@@ -2645,6 +2692,7 @@
 	{
 		"en"			"Heal Ability"
 		"hu"			"Gyógyító Képesség"
+		"chi"			"生命 能力"
 	}
 
 	"HitDetails"
@@ -2665,6 +2713,7 @@
 	{
 		"en"			"Hit Ability"
 		"hu"			"Ütő Képesség"
+		"chi"			"狙击 能力"
 	}
 
 	"Hurt"
@@ -2746,6 +2795,7 @@
 	{
 		"en"			"Hurt Ability"
 		"hu"			"Bántalmazó Képesség"
+		"chi"			"创伤 能力"
 	}
 
 	"Hypno"
@@ -2827,6 +2877,7 @@
 	{
 		"en"			"Hypno Ability"
 		"hu"			"Hipnotizáló Képesség"
+		"chi"			"催眠 能力"
 	}
 
 	"Ice"
@@ -2908,6 +2959,7 @@
 	{
 		"en"			"Ice Ability"
 		"hu"			"Fagyasztás Képesség"
+		"chi"			"冻结 能力"
 	}
 
 	"Idle"
@@ -2981,6 +3033,7 @@
 	{
 		"en"			"Idle Ability"
 		"hu"			"Szüneteltetés Képesség"
+		"chi"			"闲置 能力"
 	}
 
 	"Invert"
@@ -3062,6 +3115,7 @@
 	{
 		"en"			"Invert Ability"
 		"hu"			"Megfordítás Képesség"
+		"chi"			"反向 能力"
 	}
 
 	"Item"
@@ -3104,6 +3158,7 @@
 	{
 		"en"			"Item Ability"
 		"hu"			"Tétel Képesség"
+		"chi"			"赠物 能力"
 	}
 
 	"Jump"
@@ -3231,6 +3286,7 @@
 	{
 		"en"			"Jump Ability"
 		"hu"			"Ugrás Képesség"
+		"chi"			"跳跃 能力"
 	}
 
 	"Kamikaze"
@@ -3280,6 +3336,7 @@
 	{
 		"en"			"Kamikaze Ability"
 		"hu"			"Kamikaze Képesség"
+		"chi"			"神风 能力"
 	}
 
 	"Lag"
@@ -3361,6 +3418,7 @@
 	{
 		"en"			"Lag Ability"
 		"hu"			"Késleltetés Képesség"
+		"chi"			"滞后 能力"
 	}
 
 	"Laser"
@@ -3442,6 +3500,7 @@
 	{
 		"en"			"Laser Ability"
 		"hu"			"Lézer Képesség"
+		"chi"			"激光 能力"
 	}
 
 	"Leech"
@@ -3523,6 +3582,7 @@
 	{
 		"en"			"Leech Ability"
 		"hu"			"Pióca Képesség"
+		"chi"			"水蛭 能力"
 	}
 
 	"Medic"
@@ -3611,6 +3671,7 @@
 	{
 		"en"			"Medic Ability"
 		"hu"			"Medikus Képesség"
+		"chi"			"医生 能力"
 	}
 
 	"Meteor"
@@ -3685,13 +3746,14 @@
 	{
 		"en"			"Meteor Ability Information"
 		"hu"			"Meteor Képesség Információ"
-		"chi"			"流星 能力信息"
+		"chi"			"流星雨 能力信息"
 	}
 
 	"MeteorMenu2"
 	{
 		"en"			"Meteor Ability"
 		"hu"			"Meteor Képesség"
+		"chi"			"流星雨 能力"
 	}
 
 	"Minion"
@@ -3765,6 +3827,7 @@
 	{
 		"en"			"Minion Ability"
 		"hu"			"Minyon Képesség"
+		"chi"			"仆从 能力"
 	}
 
 	"Necro"
@@ -3838,6 +3901,7 @@
 	{
 		"en"			"Necro Ability"
 		"hu"			"Haláli Képesség"
+		"chi"			"死灵 能力"
 	}
 
 	"Nullify"
@@ -3919,6 +3983,7 @@
 	{
 		"en"			"Nullify Ability"
 		"hu"			"Hatástalanító Képesség"
+		"chi"			"无效化 能力"
 	}
 
 	"Omni"
@@ -4000,6 +4065,7 @@
 	{
 		"en"			"Omni Ability"
 		"hu"			"Mindenség Képesség"
+		"chi"			"全能 能力"
 	}
 
 	"Panic"
@@ -4081,6 +4147,7 @@
 	{
 		"en"			"Panic Ability"
 		"hu"			"Pánik Képesség"
+		"chi"			"唤潮 能力"
 	}
 
 	"Pimp"
@@ -4162,6 +4229,7 @@
 	{
 		"en"			"Pimp Ability"
 		"hu"			"Csapdosó Képesség"
+		"chi"			"鞭挞 能力"
 	}
 
 	"Puke"
@@ -4235,6 +4303,7 @@
 	{
 		"en"			"Puke Ability"
 		"hu"			"Hányás Képesség"
+		"chi"			"呕吐 能力"
 	}
 
 	"Pyro"
@@ -4324,6 +4393,7 @@
 	{
 		"en"			"Pyro Ability"
 		"hu"			"Piro Képesség"
+		"chi"			"火速 能力"
 	}
 
 	"Quiet"
@@ -4405,6 +4475,7 @@
 	{
 		"en"			"Quiet Ability"
 		"hu"			"Csend Képesség"
+		"chi"			"沉默 能力"
 	}
 
 	"Recoil"
@@ -4486,6 +4557,7 @@
 	{
 		"en"			"Recoil Ability"
 		"hu"			"Visszarúgás Képesség"
+		"chi"			"后坐力 能力"
 	}
 
 	"Regen"
@@ -4567,6 +4639,7 @@
 	{
 		"en"			"Regen Ability"
 		"hu"			"Regeneráló Képesség"
+		"chi"			"自愈 能力"
 	}
 
 	"Respawn"
@@ -4624,6 +4697,7 @@
 	{
 		"en"			"Respawn Ability"
 		"hu"			"Újjászületés Képesség"
+		"chi"			"重生 能力"
 	}
 
 	"Restart"
@@ -4697,6 +4771,7 @@
 	{
 		"en"			"Restart Ability"
 		"hu"			"Újrakezdő Képesség"
+		"chi"			"重来 能力"
 	}
 
 	"Rock"
@@ -4778,6 +4853,7 @@
 	{
 		"en"			"Rock Ability"
 		"hu"			"Szikla Képesség"
+		"chi"			"岩石雨 能力"
 	}
 
 	"Rocket"
@@ -4851,6 +4927,7 @@
 	{
 		"en"			"Rocket Ability"
 		"hu"			"Rakéta Képesség"
+		"chi"			"火箭"
 	}
 
 	"Shake"
@@ -4932,6 +5009,7 @@
 	{
 		"en"			"Shake Ability"
 		"hu"			"Rázó Képesség"
+		"chi"			"震动"
 	}
 
 	"Shield"
@@ -5013,6 +5091,7 @@
 	{
 		"en"			"Shield Ability"
 		"hu"			"Pajzs Képesség"
+		"chi"			"护盾 能力"
 	}
 
 	"ShieldOwner"
@@ -5102,6 +5181,7 @@
 	{
 		"en"			"Shove Ability"
 		"hu"			"Lökés Képesség"
+		"chi"			"推挤 能力"
 	}
 
 	"Slow"
@@ -5183,6 +5263,7 @@
 	{
 		"en"			"Slow Ability"
 		"hu"			"Lassító Képesség"
+		"chi"			"减速 能力"
 	}
 
 	"Smash"
@@ -5256,6 +5337,7 @@
 	{
 		"en"			"Smash Ability"
 		"hu"			"Zúzó Képesség"
+		"chi"			"粉碎 能力"
 	}
 
 	"Smite"
@@ -5329,6 +5411,7 @@
 	{
 		"en"			"Smite Ability"
 		"hu"			"Lesújtó Képesség"
+		"chi"			"重击 能力"
 	}
 
 	"Spam"
@@ -5410,6 +5493,7 @@
 	{
 		"en"			"Spam Ability"
 		"hu"			"Folyamatos Képesség"
+		"chi"			"连投 能力"
 	}
 
 	"Splash"
@@ -5491,6 +5575,7 @@
 	{
 		"en"			"Splash Ability"
 		"hu"			"Területi Képesség"
+		"chi"			"溅射 能力"
 	}
 
 	"Throw"
@@ -5581,6 +5666,7 @@
 	{
 		"en"			"Throw Ability"
 		"hu"			"Dobó Képesség"
+		"chi"			"投掷 能力"
 	}
 
 	"Track"
@@ -5647,6 +5733,7 @@
 	{
 		"en"			"Track Ability"
 		"hu"			"Követő Képesség"
+		"chi"			"追踪 能力"
 	}
 
 	"Ultimate"
@@ -5743,6 +5830,7 @@
 	{
 		"en"			"Ultimate Ability"
 		"hu"			"Végső Képesség"
+		"chi"			"终极 能力"
 	}
 
 	"Undead"
@@ -5824,6 +5912,7 @@
 	{
 		"en"			"Undead Ability"
 		"hu"			"Élőholt Képesség"
+		"chi"			"不死 能力"
 	}
 
 	"Vampire"
@@ -5852,6 +5941,7 @@
 	{
 		"en"			"Vampire Ability"
 		"hu"			"Vámpír Képesség"
+		"chi"			"吸血 能力"
 	}
 
 	"Vision"
@@ -5933,6 +6023,7 @@
 	{
 		"en"			"Vision Ability"
 		"hu"			"Látómező Képesség"
+		"chi"			"视觉 能力"
 	}
 
 	"Warp"
@@ -6060,6 +6151,7 @@
 	{
 		"en"			"Warp Ability"
 		"hu"			"Teleportáló Képesség"
+		"chi"			"传送 能力"
 	}
 
 	"Whirl"
@@ -6141,6 +6233,7 @@
 	{
 		"en"			"Whirl Ability"
 		"hu"			"Megpörgető Képesség"
+		"chi"			"翻转 能力"
 	}
 
 	"Witch"
@@ -6207,6 +6300,7 @@
 	{
 		"en"			"Witch Ability"
 		"hu"			"Boszorka Képesség"
+		"chi"			"女巫 能力"
 	}
 
 	"Xiphos"
@@ -6243,6 +6337,7 @@
 	{
 		"en"			"Xiphos Ability"
 		"hu"			"Xipho Képesség"
+		"chi"			"双刃剑 能力"
 	}
 
 	"Yell"
@@ -6324,6 +6419,7 @@
 	{
 		"en"			"Yell Ability"
 		"hu"			"Üvöltő Képesség"
+		"chi"			"战吼 能力"
 	}
 
 	"Zombie"
@@ -6405,6 +6501,7 @@
 	{
 		"en"			"Zombie Ability"
 		"hu"			"Zombi Képesség"
+		"chi"			"僵尸 能力"
 	}
 
 	"Tank #1"
@@ -7125,7 +7222,7 @@
 	{
 		"en"			"{mint}It's Darth Vader... And he is... A Mutant Tank with the Force!"
 		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Tank az erővel!"
-		"chi"			"{mint}是..时达斯·维达..它..它是帝国的突变坦克!"
+		"chi"			"{mint}是..是达斯·维达..它..它是帝国的突变坦克!"
 	}
 
 	"Tank #104"
@@ -7207,11 +7304,14 @@
 
 	// This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
 	// Ez egy valós Steam32ID. Ne töröld! Ez csak egy példa.
+	// 这实际上是一个有效的 Steam32ID ,所以请不要取消注释,这只是一个示例
 	// "STEAM_0:1:23456789"
 	// {
 	//	"en"			"{mint}This Tank is controlled by someone."
 	//	"hu"			"{mint}Ezt a Tankot valaki irányítja."
+	//	"chi"			"{mint}这个坦克是某某某在控制的."
 	// }
 	// Add Tank Note phrases for your own Mutant Tanks below!
 	// Adj saját kifejezést a saját Mutáns Tankjaidnak lentebb!
+	// 给你自己所控的突变坦克添加坦克注释短语文本!
 }

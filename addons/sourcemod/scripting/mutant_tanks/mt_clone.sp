@@ -15,6 +15,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#file "Clone Ability v8.77"
+
 public Plugin myinfo =
 {
 	name = "[MT] Clone Ability",
@@ -152,21 +154,21 @@ public Action cmdCloneInfo(int client, int args)
 {
 	if (!MT_IsCorePluginEnabled())
 	{
-		ReplyToCommand(client, "%s Mutant Tanks\x01 is disabled.", MT_TAG4);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		ReplyToCommand(client, "%s This command is to be used only in-game.", MT_TAG);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
 		return Plugin_Handled;
 	}
 
 	switch (IsVoteInProgress())
 	{
-		case true: ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
 		case false: vCloneMenu(client, 0);
 	}
 
@@ -274,6 +276,14 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 	if (StrEqual(info, MT_MENU_CLONE, false))
 	{
 		vCloneMenu(client, 0);
+	}
+}
+
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+{
+	if (StrEqual(info, MT_MENU_CLONE, false))
+	{
+		FormatEx(buffer, size, "%T", "CloneMenu2", client);
 	}
 }
 
@@ -410,7 +420,11 @@ public void MT_OnPluginEnd()
 	{
 		if (bIsTank(iClone, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_esPlayer[iClone].g_bCloned)
 		{
-			!bIsValidClient(iClone, MT_CHECK_FAKECLIENT) ? KickClient(iClone) : ForcePlayerSuicide(iClone);
+			switch (bIsValidClient(iClone, MT_CHECK_FAKECLIENT))
+			{
+				case true: ForcePlayerSuicide(iClone);
+				case false: KickClient(iClone);
+			}
 		}
 	}
 }
