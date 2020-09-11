@@ -2225,7 +2225,7 @@ static void vTankMenu(int admin, int item)
 			continue;
 		}
 
-		FormatEx(sMenuItem, sizeof(sMenuItem), "%t", "TankMenuItem", g_esTank[iIndex].g_sTankName, iIndex);
+		FormatEx(sMenuItem, sizeof(sMenuItem), "%t", "MTTankItem", g_esTank[iIndex].g_sTankName, iIndex);
 		mTankMenu.AddItem(g_esTank[iIndex].g_sTankName, sMenuItem);
 		iCount++;
 	}
