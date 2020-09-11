@@ -32,6 +32,13 @@
 		"chi"			"配置信息解析"
 	}
 
+	"MTDefaultItem"
+	{
+		"en"			"Default Tank"
+		"hu"			"Alapértelmezett Tank"
+		"chi"			"默认坦克"
+	}
+
 	"MTFavoriteMenu"
 	{
 		"en"			"Use your favorite Mutant Tank type?"
@@ -51,6 +58,21 @@
 		"en"			"Mutant Tanks Abilities"
 		"hu"			"Mutáns Tank Képességek"
 		"chi"			"突变坦克能力"
+	}
+
+	"MTSettingsItem"
+	{
+		"en"			"Plugin Settings"
+		"hu"			"Plugin Beállítások"
+		"chi"			"插件设置"
+	}
+
+	"MTTankItem"
+	{
+		"#format"		"{1:s},{2:i}"
+		"en"			"{1} (Tank #{2})"
+		"hu"			"{1} (Tank #{2})"
+		"chi"			"{1} (Tank #{2})"
 	}
 
 	"MTVersionMenu"
