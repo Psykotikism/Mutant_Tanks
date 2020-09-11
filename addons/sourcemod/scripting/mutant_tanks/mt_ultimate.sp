@@ -245,14 +245,14 @@ public int iUltimateMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		}
 		case MenuAction_Display:
 		{
-			char sMenuTitle[255];
+			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel panel = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "UltimateMenu", param1);
 			panel.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
-			char sMenuOption[255];
+			char sMenuOption[PLATFORM_MAX_PATH];
 
 			switch (param2)
 			{

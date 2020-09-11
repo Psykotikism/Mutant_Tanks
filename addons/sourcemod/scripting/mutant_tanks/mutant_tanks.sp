@@ -1476,7 +1476,7 @@ public void SMCParseEnd2(SMCParser smc, bool halted, bool failed)
 
 static void vConfigMenu(int admin, int item)
 {
-	Menu mConfigMenu = new Menu(iConfigMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
+	Menu mConfigMenu = new Menu(iConfigMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
 	mConfigMenu.SetTitle("Config Parser Menu");
 
 	static int iCount;
@@ -1491,7 +1491,7 @@ static void vConfigMenu(int admin, int item)
 	static char sMenuItem[46];
 	for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 	{
-		FormatEx(sMenuItem, sizeof(sMenuItem), "%s (Tank #%i)", g_esTank[iIndex].g_sTankName, iIndex);
+		FormatEx(sMenuItem, sizeof(sMenuItem), "%t", "MTTankItem", g_esTank[iIndex].g_sTankName, iIndex);
 		mConfigMenu.AddItem(g_esTank[iIndex].g_sTankName, sMenuItem);
 		iCount++;
 	}
@@ -1574,10 +1574,21 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 		}
 		case MenuAction_Display:
 		{
-			char sMenuTitle[255];
+			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel panel = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTConfigMenu", param1);
 			panel.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			char sMenuOption[PLATFORM_MAX_PATH], sInfo[33];
+			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			if (StrEqual(sInfo, "Plugin Settings", false))
+			{
+				FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "MTSettingsItem", param1);
+
+				return RedrawMenuItem(sMenuOption);
+			}
 		}
 	}
 
@@ -2194,7 +2205,7 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 
 static void vTankMenu(int admin, int item)
 {
-	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display);
+	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
 	mTankMenu.SetTitle("Mutant Tanks Menu");
 
 	static int iCount;
@@ -2214,7 +2225,7 @@ static void vTankMenu(int admin, int item)
 			continue;
 		}
 
-		FormatEx(sMenuItem, sizeof(sMenuItem), "%s (Tank #%i)", g_esTank[iIndex].g_sTankName, iIndex);
+		FormatEx(sMenuItem, sizeof(sMenuItem), "%t", "TankMenuItem", g_esTank[iIndex].g_sTankName, iIndex);
 		mTankMenu.AddItem(g_esTank[iIndex].g_sTankName, sMenuItem);
 		iCount++;
 	}
@@ -2288,6 +2299,17 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			Panel panel = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTMenu", param1);
 			panel.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			char sMenuOption[PLATFORM_MAX_PATH], sInfo[33];
+			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			if (StrEqual(sInfo, "Default Tank", false))
+			{
+				FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "MTDefaultItem", param1);
+
+				return RedrawMenuItem(sMenuOption);
+			}
 		}
 	}
 
