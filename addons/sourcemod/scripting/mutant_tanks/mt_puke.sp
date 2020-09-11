@@ -16,6 +16,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#file "Puke Ability v8.77"
+
 public Plugin myinfo =
 {
 	name = "[MT] Puke Ability",
@@ -194,21 +196,21 @@ public Action cmdPukeInfo(int client, int args)
 {
 	if (!MT_IsCorePluginEnabled())
 	{
-		ReplyToCommand(client, "%s Mutant Tanks\x01 is disabled.", MT_TAG4);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		ReplyToCommand(client, "%s This command is to be used only in-game.", MT_TAG);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
 		return Plugin_Handled;
 	}
 
 	switch (IsVoteInProgress())
 	{
-		case true: ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
 		case false: vPukeMenu(client, 0);
 	}
 
@@ -252,14 +254,14 @@ public int iPukeMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		}
 		case MenuAction_Display:
 		{
-			char sMenuTitle[255];
+			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel panel = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "PukeMenu", param1);
 			panel.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
-			char sMenuOption[255];
+			char sMenuOption[PLATFORM_MAX_PATH];
 
 			switch (param2)
 			{
@@ -316,6 +318,14 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 	if (StrEqual(info, MT_MENU_PUKE, false))
 	{
 		vPukeMenu(client, 0);
+	}
+}
+
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+{
+	if (StrEqual(info, MT_MENU_PUKE, false))
+	{
+		FormatEx(buffer, size, "%T", "PukeMenu2", client);
 	}
 }
 

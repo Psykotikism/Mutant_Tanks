@@ -131,9 +131,19 @@
 			// 2nd character = Damage indicator
 			"Health Characters"			"|,-"
 
+			// The number of human survivors required for "Multiply Health" to take effect.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// Minimum: 1
+			// Maximum: 32
+			// --
+			// 1: OFF, no health multiplication. (Health * 1)
+			// 2-32: ON, the number of human survivors required to multiply Tank health. (Health * X)
+			"Minimum Humans"			"2"
+
 			// Multiply Mutant Tanks' health.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
-			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
+			// Note: Health multiplication only occurs when the requirement for "Minimum Humans" is met.
 			// --
 			// 0: No changes to health.
 			// 1: Multiply original health only.
@@ -550,9 +560,20 @@
 			// 2nd character = Damage indicator
 			"Health Characters"			"|,-"
 
+			// The number of human survivors required for "Multiply Health" to take effect.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 32
+			// --
+			// 1: OFF, no health multiplication. (Health * 1)
+			// 2-32: ON, the number of human survivors required to multiply Tank health. (Health * X)
+			"Minimum Humans"			"0"
+
 			// Multiply the Mutant Tank's health.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: Health changes only occur when there are at least 2 alive non-idle human survivors.
+			// Note: Health multiplication only occurs when the requirement for "Minimum Humans" is met.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: No changes to health.

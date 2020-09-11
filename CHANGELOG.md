@@ -1,5 +1,25 @@
 # Changelog
 
+## Version 8.77 (September 11, 2020)
+
+Bug fixes:
+
+1. Fixed some messages not converting chat color placeholders properly.
+2. Fixed an invalid entity index error for the `Ammo` ability. (Thanks to ur5efj for reporting!)
+
+Changes:
+
+1. Added multi-lingual support for all messages provided by Mutant Tanks. (Requested by yuzumi.)
+2. Added Simplified Chinese translations. (Thanks to yuzumi!)
+3. Added the `MT_OnMenuItemDisplayed` forward to allow developers to translate menu items.
+4. Added the `Minimum Humans` setting to determine how many human survivors must be present before `Multiply Health` can take effect. (Thanks to SilentBr for suggesting!)
+
+Files:
+
+1. Updated config files.
+2. Updated include file.
+3. Updated translation file.
+
 ## Version 8.76 (August 1, 2020)
 
 Bug fixes:

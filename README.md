@@ -749,6 +749,17 @@ forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 forward void MT_OnHookEvent(bool mode);
 
 /**
+ * Called when an item from the "Mutant Tanks Information" menu is displayed.
+ * Use this forward to translate an item. The menu callback will redraw the item after this forward is called if the buffer isn't empty.
+ *
+ * @param client		Client index of the player the item is being displayed to.
+ * @param info			String containing the name of the item.
+ * @param buffer		String to store the translated item.
+ * @param size			Size of the buffer.
+ **/
+forward void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size);
+
+/**
  * Called when a player selects an item from the "Mutant Tanks Information" menu.
  * Use this forward to do anything when an item is selected.
  *
@@ -1090,6 +1101,31 @@ stock void MT_PrintToChatAll(char[] message, any ...)
 		}
 	}
 }
+
+stock void MT_ReplyToCommand(int client, char[] message, any ...)
+{
+	static char sBuffer[255];
+	SetGlobalTransTarget(client);
+	VFormat(sBuffer, sizeof(sBuffer), message, 3);
+
+	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
+	{
+		ReplaceString(sBuffer, sizeof(sBuffer), "{default}", "");
+		ReplaceString(sBuffer, sizeof(sBuffer), "{mint}", "");
+		ReplaceString(sBuffer, sizeof(sBuffer), "{yellow}", "");
+		ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
+
+		switch (client == 0)
+		{
+			case true: PrintToServer("%s", sBuffer);
+			case false: PrintToConsole(client, "%s", sBuffer);
+		}
+	}
+	else
+	{
+		MT_PrintToChat(client, "%s", sBuffer);
+	}
+}
 ```
 
 Target filters:
@@ -1182,7 +1218,7 @@ sm_mt_meteor - View information about the Meteor ability.
 sm_mt_minion - View information about the Minion ability.
 sm_mt_necro - View information about the Necro ability.
 sm_mt_nullify - View information about the Nullify ability.
-sm_mt_octal - View information about the Octal ability.
+sm_mt_omni - View information about the Omni ability.
 sm_mt_panic - View information about the Panic ability.
 sm_mt_pimp - View information about the Pimp ability.
 sm_mt_puke - View information about the Puke ability.
@@ -1197,11 +1233,11 @@ sm_mt_rocket - View information about the Rocket ability.
 sm_mt_shake - View information about the Shake ability.
 sm_mt_shield - View information about the Shield ability.
 sm_mt_shove - View information about the Shove ability.
+sm_mt_slow - View information about the Slow ability.
 sm_mt_smash - View information about the Smash ability.
 sm_mt_smite - View information about the Smite ability.
 sm_mt_spam - View information about the Spam ability.
 sm_mt_splash - View information about the Splash ability.
-sm_mt_slow - View information about the Slow ability.
 sm_mt_throw - View information about the Throw ability.
 sm_mt_track - View information about the Track ability.
 sm_mt_ultimate - View information about the Ultimate ability.
@@ -1612,6 +1648,8 @@ Examples:
 
 **ReCreator** - For reporting issues and suggesting ideas.
 
+**SilentBr** - For reporting issues and suggesting ideas.
+
 **Princess LadyRain** - For reporting issues.
 
 **Nekrob** - For reporting issues.
@@ -1632,6 +1670,8 @@ Examples:
 
 **Voevoda** - For reporting issues.
 
+**ur5efj** - For reporting issues.
+
 **Zytheus** - For reporting issues and suggesting ideas.
 
 **huwong** - For reporting issues and suggesting ideas.
@@ -1645,6 +1685,8 @@ Examples:
 **sxslmk** - For suggesting ideas.
 
 **Neptunia** - For suggesting ideas.
+
+**yuzumi** - For suggesting ideas.
 
 **Tank Rush** - For suggesting ideas.
 

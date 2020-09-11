@@ -16,6 +16,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#file "Ammo Ability v8.77"
+
 public Plugin myinfo =
 {
 	name = "[MT] Ammo Ability",
@@ -157,21 +159,21 @@ public Action cmdAmmoInfo(int client, int args)
 {
 	if (!MT_IsCorePluginEnabled())
 	{
-		ReplyToCommand(client, "%s Mutant Tanks\x01 is disabled.", MT_TAG4);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		ReplyToCommand(client, "%s This command is to be used only in-game.", MT_TAG);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
 		return Plugin_Handled;
 	}
 
 	switch (IsVoteInProgress())
 	{
-		case true: ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
 		case false: vAmmoMenu(client, 0);
 	}
 
@@ -215,14 +217,14 @@ public int iAmmoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		}
 		case MenuAction_Display:
 		{
-			char sMenuTitle[255];
+			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel panel = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "AmmoMenu", param1);
 			panel.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
-			char sMenuOption[255];
+			char sMenuOption[PLATFORM_MAX_PATH];
 
 			switch (param2)
 			{
@@ -279,6 +281,14 @@ public void MT_OnMenuItemSelected(int client, const char[] info)
 	if (StrEqual(info, MT_MENU_AMMO, false))
 	{
 		vAmmoMenu(client, 0);
+	}
+}
+
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+{
+	if (StrEqual(info, MT_MENU_AMMO, false))
+	{
+		FormatEx(buffer, size, "%T", "AmmoMenu2", client);
 	}
 }
 
@@ -591,12 +601,12 @@ static void vAmmoHit(int survivor, int tank, float chance, int enabled, int mess
 					}
 				}
 
-				static char sWeapon[32];
 				static int iActiveWeapon;
 				iActiveWeapon = GetEntPropEnt(survivor, Prop_Data, "m_hActiveWeapon");
-				GetEntityClassname(iActiveWeapon, sWeapon, sizeof(sWeapon));
 				if (bIsValidEntity(iActiveWeapon))
 				{
+					static char sWeapon[32];
+					GetEntityClassname(iActiveWeapon, sWeapon, sizeof(sWeapon));
 					if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_sg552"))
 					{
 						SetEntProp(survivor, Prop_Data, "m_iAmmo", g_esCache[tank].g_iAmmoAmount, _, 3);

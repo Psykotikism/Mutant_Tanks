@@ -21,7 +21,7 @@
 #define REQUIRE_PLUGIN
 
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
-#define MT_VERSION "8.76"
+#define MT_VERSION "8.77"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define MT_TAG "[MT]"
@@ -150,6 +150,17 @@ forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
  * @param hooked		True if event was hooked, false otherwise.
  **/
 forward void MT_OnHookEvent(bool hooked);
+
+/**
+ * Called when an item from the "Mutant Tanks Information" menu is displayed.
+ * Use this forward to translate an item. The menu callback will redraw the item after this forward is called if the buffer isn't empty.
+ *
+ * @param client		Client index of the player the item is being displayed to.
+ * @param info			String containing the name of the item.
+ * @param buffer		String to store the translated item.
+ * @param size			Size of the buffer.
+ **/
+forward void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size);
 
 /**
  * Called when a player selects an item from the "Mutant Tanks Information" menu.
@@ -1071,6 +1082,31 @@ stock void MT_PrintToChatAll(char[] message, any ...)
 
 			MT_PrintToChat(iPlayer, sBuffer);
 		}
+	}
+}
+
+stock void MT_ReplyToCommand(int client, char[] message, any ...)
+{
+	static char sBuffer[255];
+	SetGlobalTransTarget(client);
+	VFormat(sBuffer, sizeof(sBuffer), message, 3);
+
+	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
+	{
+		ReplaceString(sBuffer, sizeof(sBuffer), "{default}", "");
+		ReplaceString(sBuffer, sizeof(sBuffer), "{mint}", "");
+		ReplaceString(sBuffer, sizeof(sBuffer), "{yellow}", "");
+		ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
+
+		switch (client == 0)
+		{
+			case true: PrintToServer("%s", sBuffer);
+			case false: PrintToConsole(client, "%s", sBuffer);
+		}
+	}
+	else
+	{
+		MT_PrintToChat(client, "%s", sBuffer);
 	}
 }
 
