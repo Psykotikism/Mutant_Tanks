@@ -5,7 +5,7 @@
 > Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file and recompile at your own risk.)
-- Ability count: 73 (Suggest more if you want; we always needs more.)
+- Ability count: 75 (Suggest more if you want; we always needs more.)
 
 ## Sections
 - Plugin Settings
@@ -2547,6 +2547,14 @@
 			// 1: Guns only.
 			// 2: Melee weapons only. (Only available in Left 4 Dead 2.)
 			"Drop Mode"				"0"
+
+			// The console name of the Mutant Tank's weapon.
+			// Note: Leave this empty if you want a random weapon to be chosen.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Weapon limit: 1
+			// Character limit: 40
+			"Drop Weapon Name"			""
 
 			// The Mutant Tank's weapon size is multiplied by this value.
 			// Note: Default weapon size x Drop weapon scale
@@ -6273,6 +6281,21 @@
 }
 ```
 
+##### Mud Ability
+
+```
+"Mutant Tanks"
+{
+	"Tank #1"
+	{
+		"Mud Ability"
+		{
+			// Coming soon...
+		}
+	}
+}
+```
+
 ##### Necro Ability
 
 ```
@@ -8992,6 +9015,21 @@
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Splash Range"				"500.0"
+		}
+	}
+}
+```
+
+##### Swap Ability
+
+```
+"Mutant Tanks"
+{
+	"Tank #1"
+	{
+		"Swap Ability"
+		{
+			// Coming soon...
 		}
 	}
 }

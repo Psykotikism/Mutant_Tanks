@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 8.78 (TBA)
+
+Bug fixes:
+
+1. Fixed the `Fast`, `Ghost`, and `Item` abilities' settings not being read when using one of the other config formats.
+2. Fixed props not showing up on Tanks sometimes regardless of settings. (Thanks to Mi.Cura for reporting!)
+
+Changes:
+
+1. Added the `Drop Weapon Name` setting for the `Drop` ability. (Requested by Tank Rush.)
+2. Added the `Mud` ability. (Suggested by Tank Rush.)
+3. Added the `Swap` ability.
+
+Files:
+
+1. Updated config file.
+2. Updated include file.
+3. Updated translation file.
+
 ## Version 8.77 (September 11, 2020)
 
 Bug fixes:
