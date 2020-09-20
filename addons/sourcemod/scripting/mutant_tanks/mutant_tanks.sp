@@ -22,7 +22,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Mutant Tanks v8.77"
+#file "Mutant Tanks v8.78"
 
 public Plugin myinfo =
 {
@@ -4367,10 +4367,16 @@ static void vSetProps(int tank)
 					SDKUnhook(g_esPlayer[tank].g_iLight[iLight], SDKHook_SetTransmit, SetTransmit);
 					RemoveEntity(g_esPlayer[tank].g_iLight[iLight]);
 
-					if (g_esCache[tank].g_iPropsAttached & MT_PROP_LIGHT)
+					/*if (g_esCache[tank].g_iPropsAttached & MT_PROP_LIGHT)
 					{
 						vLightProp(tank, iLight, flOrigin, flAngles);
-					}
+					}*/
+				}
+
+				g_esPlayer[tank].g_iLight[iLight] = INVALID_ENT_REFERENCE;
+				if (g_esCache[tank].g_iPropsAttached & MT_PROP_LIGHT)
+				{
+					vLightProp(tank, iLight, flOrigin, flAngles);
 				}
 			}
 		}
@@ -4460,7 +4466,7 @@ static void vSetProps(int tank)
 			else if (bIsValidEntRef(g_esPlayer[tank].g_iOzTank[iOzTank]))
 			{
 				g_esPlayer[tank].g_iOzTank[iOzTank] = EntRefToEntIndex(g_esPlayer[tank].g_iOzTank[iOzTank]);
-				if (bIsValidEntity(g_esPlayer[tank].g_iOzTank[iOzTank]))
+				/*if (bIsValidEntity(g_esPlayer[tank].g_iOzTank[iOzTank]))
 				{
 					if (g_esCache[tank].g_iPropsAttached & MT_PROP_OXYGENTANK)
 					{
@@ -4473,12 +4479,26 @@ static void vSetProps(int tank)
 
 						g_esPlayer[tank].g_iOzTank[iOzTank] = INVALID_ENT_REFERENCE;
 					}
+				}*/
+				if (g_esCache[tank].g_iPropsAttached & MT_PROP_OXYGENTANK)
+				{
+					SetEntityRenderColor(g_esPlayer[tank].g_iOzTank[iOzTank], g_esCache[tank].g_iOzTankColor[0], g_esCache[tank].g_iOzTankColor[1], g_esCache[tank].g_iOzTankColor[2], g_esCache[tank].g_iOzTankColor[3]);
+				}
+				else
+				{
+					if (bIsValidEntity(g_esPlayer[tank].g_iOzTank[iOzTank]))
+					{
+						SDKUnhook(g_esPlayer[tank].g_iOzTank[iOzTank], SDKHook_SetTransmit, SetTransmit);
+						RemoveEntity(g_esPlayer[tank].g_iOzTank[iOzTank]);
+					}
+
+					g_esPlayer[tank].g_iOzTank[iOzTank] = INVALID_ENT_REFERENCE;
 				}
 
 				if (bIsValidEntRef(g_esPlayer[tank].g_iFlame[iOzTank]))
 				{
 					g_esPlayer[tank].g_iFlame[iOzTank] = EntRefToEntIndex(g_esPlayer[tank].g_iFlame[iOzTank]);
-					if (bIsValidEntity(g_esPlayer[tank].g_iFlame[iOzTank]))
+					/*if (bIsValidEntity(g_esPlayer[tank].g_iFlame[iOzTank]))
 					{
 						if (g_esCache[tank].g_iPropsAttached & MT_PROP_FLAME)
 						{
@@ -4491,6 +4511,20 @@ static void vSetProps(int tank)
 
 							g_esPlayer[tank].g_iFlame[iOzTank] = INVALID_ENT_REFERENCE;
 						}
+					}*/
+					if (g_esCache[tank].g_iPropsAttached & MT_PROP_FLAME)
+					{
+						SetEntityRenderColor(g_esPlayer[tank].g_iFlame[iOzTank], g_esCache[tank].g_iFlameColor[0], g_esCache[tank].g_iFlameColor[1], g_esCache[tank].g_iFlameColor[2], g_esCache[tank].g_iFlameColor[3]);
+					}
+					else
+					{
+						if (bIsValidEntity(g_esPlayer[tank].g_iFlame[iOzTank]))
+						{
+							SDKUnhook(g_esPlayer[tank].g_iFlame[iOzTank], SDKHook_SetTransmit, SetTransmit);
+							RemoveEntity(g_esPlayer[tank].g_iFlame[iOzTank]);
+						}
+
+						g_esPlayer[tank].g_iFlame[iOzTank] = INVALID_ENT_REFERENCE;
 					}
 				}
 			}
@@ -4548,7 +4582,7 @@ static void vSetProps(int tank)
 			else if (bIsValidEntRef(g_esPlayer[tank].g_iRock[iRock]))
 			{
 				g_esPlayer[tank].g_iRock[iRock] = EntRefToEntIndex(g_esPlayer[tank].g_iRock[iRock]);
-				if (bIsValidEntity(g_esPlayer[tank].g_iRock[iRock]))
+				/*if (bIsValidEntity(g_esPlayer[tank].g_iRock[iRock]))
 				{
 					if (g_esCache[tank].g_iPropsAttached & MT_PROP_ROCK)
 					{
@@ -4562,6 +4596,21 @@ static void vSetProps(int tank)
 
 						g_esPlayer[tank].g_iRock[iRock] = INVALID_ENT_REFERENCE;
 					}
+				}*/
+				if (g_esCache[tank].g_iPropsAttached & MT_PROP_ROCK)
+				{
+					SetEntityRenderColor(g_esPlayer[tank].g_iRock[iRock], g_esCache[tank].g_iRockColor[0], g_esCache[tank].g_iRockColor[1], g_esCache[tank].g_iRockColor[2], g_esCache[tank].g_iRockColor[3]);
+					vSetRockModel(tank, g_esPlayer[tank].g_iRock[iRock]);
+				}
+				else
+				{
+					if (bIsValidEntity(g_esPlayer[tank].g_iRock[iRock]))
+					{
+						SDKUnhook(g_esPlayer[tank].g_iRock[iRock], SDKHook_SetTransmit, SetTransmit);
+						RemoveEntity(g_esPlayer[tank].g_iRock[iRock]);
+					}
+
+					g_esPlayer[tank].g_iRock[iRock] = INVALID_ENT_REFERENCE;
 				}
 			}
 		}
@@ -4609,7 +4658,7 @@ static void vSetProps(int tank)
 			else if (bIsValidEntRef(g_esPlayer[tank].g_iTire[iTire]))
 			{
 				g_esPlayer[tank].g_iTire[iTire] = EntRefToEntIndex(g_esPlayer[tank].g_iTire[iTire]);
-				if (bIsValidEntity(g_esPlayer[tank].g_iTire[iTire]))
+				/*if (bIsValidEntity(g_esPlayer[tank].g_iTire[iTire]))
 				{
 					if (g_esCache[tank].g_iPropsAttached & MT_PROP_TIRE)
 					{
@@ -4622,6 +4671,20 @@ static void vSetProps(int tank)
 
 						g_esPlayer[tank].g_iTire[iTire] = INVALID_ENT_REFERENCE;
 					}
+				}*/
+				if (g_esCache[tank].g_iPropsAttached & MT_PROP_TIRE)
+				{
+					SetEntityRenderColor(g_esPlayer[tank].g_iTire[iTire], g_esCache[tank].g_iTireColor[0], g_esCache[tank].g_iTireColor[1], g_esCache[tank].g_iTireColor[2], g_esCache[tank].g_iTireColor[3]);
+				}
+				else
+				{
+					if (bIsValidEntity(g_esPlayer[tank].g_iTire[iTire]))
+					{
+						SDKUnhook(g_esPlayer[tank].g_iTire[iTire], SDKHook_SetTransmit, SetTransmit);
+						RemoveEntity(g_esPlayer[tank].g_iTire[iTire]);
+					}
+
+					g_esPlayer[tank].g_iTire[iTire] = INVALID_ENT_REFERENCE;
 				}
 			}
 		}
@@ -4663,7 +4726,7 @@ static void vSetProps(int tank)
 		else if (bIsValidEntRef(g_esPlayer[tank].g_iPropaneTank))
 		{
 			g_esPlayer[tank].g_iPropaneTank = EntRefToEntIndex(g_esPlayer[tank].g_iPropaneTank);
-			if (bIsValidEntity(g_esPlayer[tank].g_iPropaneTank))
+			/*if (bIsValidEntity(g_esPlayer[tank].g_iPropaneTank))
 			{
 				if (g_esCache[tank].g_iPropsAttached & MT_PROP_PROPANETANK)
 				{
@@ -4676,6 +4739,20 @@ static void vSetProps(int tank)
 
 					g_esPlayer[tank].g_iPropaneTank = INVALID_ENT_REFERENCE;
 				}
+			}*/
+			if (g_esCache[tank].g_iPropsAttached & MT_PROP_PROPANETANK)
+			{
+				SetEntityRenderColor(g_esPlayer[tank].g_iPropaneTank, g_esCache[tank].g_iPropTankColor[0], g_esCache[tank].g_iPropTankColor[1], g_esCache[tank].g_iPropTankColor[2], g_esCache[tank].g_iPropTankColor[3]);
+			}
+			else
+			{
+				if (bIsValidEntity(g_esPlayer[tank].g_iPropaneTank))
+				{
+					SDKUnhook(g_esPlayer[tank].g_iPropaneTank, SDKHook_SetTransmit, SetTransmit);
+					RemoveEntity(g_esPlayer[tank].g_iPropaneTank);
+				}
+
+				g_esPlayer[tank].g_iPropaneTank = INVALID_ENT_REFERENCE;
 			}
 		}
 	}

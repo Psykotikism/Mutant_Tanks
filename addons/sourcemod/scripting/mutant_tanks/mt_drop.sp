@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Drop Ability v8.77"
+#file "Drop Ability v8.78"
 
 public Plugin myinfo =
 {
@@ -98,6 +98,8 @@ enum struct esPlayer
 {
 	bool g_bActivated;
 
+	char g_sDropWeaponName[32];
+
 	float g_flDropChance;
 	float g_flDropClipChance;
 	float g_flDropWeaponScale;
@@ -117,6 +119,8 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 
 enum struct esAbility
 {
+	char g_sDropWeaponName[32];
+
 	float g_flDropChance;
 	float g_flDropClipChance;
 	float g_flDropWeaponScale;
@@ -133,6 +137,8 @@ esAbility g_esAbility[MT_MAXTYPES + 1];
 
 enum struct esCache
 {
+	char g_sDropWeaponName[32];
+
 	float g_flDropChance;
 	float g_flDropClipChance;
 	float g_flDropWeaponScale;
@@ -377,6 +383,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_flDropClipChance = 33.3;
 				g_esAbility[iIndex].g_iDropHandPosition = 0;
 				g_esAbility[iIndex].g_iDropMode = 0;
+				g_esAbility[iIndex].g_sDropWeaponName[0] = '\0';
 				g_esAbility[iIndex].g_flDropWeaponScale = 1.0;
 			}
 		}
@@ -394,6 +401,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_flDropClipChance = 0.0;
 					g_esPlayer[iPlayer].g_iDropHandPosition = 0;
 					g_esPlayer[iPlayer].g_iDropMode = 0;
+					g_esPlayer[iPlayer].g_sDropWeaponName[0] = '\0';
 					g_esPlayer[iPlayer].g_flDropWeaponScale = 0.0;
 				}
 			}
@@ -420,6 +428,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			{
 				g_esPlayer[admin].g_iAccessFlags = ReadFlagString(value);
 			}
+			else if (StrEqual(key, "DropWeaponName", false) || StrEqual(key, "Drop Weapon Name", false) || StrEqual(key, "Drop_Weapon_Name", false) || StrEqual(key, "weaponname", false))
+			{
+				strcopy(g_esPlayer[admin].g_sDropWeaponName, sizeof(esPlayer::g_sDropWeaponName), value);
+			}
 		}
 	}
 
@@ -440,6 +452,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			{
 				g_esAbility[type].g_iAccessFlags = ReadFlagString(value);
 			}
+			else if (StrEqual(key, "DropWeaponName", false) || StrEqual(key, "Drop Weapon Name", false) || StrEqual(key, "Drop_Weapon_Name", false) || StrEqual(key, "weaponname", false))
+			{
+				strcopy(g_esAbility[type].g_sDropWeaponName, sizeof(esAbility::g_sDropWeaponName), value);
+			}
 		}
 	}
 }
@@ -447,6 +463,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	vGetSettingValue(apply, bHuman, g_esCache[tank].g_sDropWeaponName, sizeof(esCache::g_sDropWeaponName), g_esPlayer[tank].g_sDropWeaponName, g_esAbility[type].g_sDropWeaponName);
 	g_esCache[tank].g_flDropChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flDropChance, g_esAbility[type].g_flDropChance);
 	g_esCache[tank].g_flDropClipChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flDropClipChance, g_esAbility[type].g_flDropClipChance);
 	g_esCache[tank].g_flDropWeaponScale = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flDropWeaponScale, g_esAbility[type].g_flDropWeaponScale);
@@ -688,6 +705,44 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_iWeaponIndex = 0;
 }
 
+static int iGetNamedWeapon(int tank)
+{
+	if (g_esCache[tank].g_sDropWeaponName[0] == '\0')
+	{
+		return -1;
+	}
+
+	static char sName[40], sSet[2][20];
+	static int iSize;
+	iSize = bIsValidGame() ? sizeof(g_sWeaponClasses2) : sizeof(g_sWeaponClasses);
+	for (int iPos = 0; iPos < iSize; iPos++)
+	{
+		strcopy(sName, sizeof(sName), (bIsValidGame() ? g_sWeaponClasses2[iPos] : g_sWeaponClasses[iPos]));
+		ExplodeString(sName, "eapon_", sSet, sizeof(sSet), sizeof(sSet[]));
+		if (StrEqual(sSet[1], g_esCache[tank].g_sDropWeaponName, false))
+		{
+			return iPos;
+		}
+	}
+
+	return -1;
+}
+
+static int iGetRandomWeapon(int tank)
+{
+	static int iDropValue;
+	iDropValue = 0;
+
+	switch (g_esCache[tank].g_iDropMode)
+	{
+		case 0: iDropValue = GetRandomInt(0, 30);
+		case 1: iDropValue = GetRandomInt(0, 18);
+		case 2: iDropValue = GetRandomInt(19, 30);
+	}
+
+	return bIsValidGame() ? iDropValue : GetRandomInt(0, 5);
+}
+
 public void vDropFrame(int userid)
 {
 	static int iTank;
@@ -703,24 +758,19 @@ public void vDropFrame(int userid)
 
 	vRemoveDrop(iTank);
 
-	static int iDropValue, iPosition;
-	iDropValue = 0;
-	iPosition = g_esCache[iTank].g_iDropHandPosition;
-	iPosition = 0 < iPosition < 3 ? iPosition : GetRandomInt(1, 2);
+	static int iPosition, iWeapon;
+	iPosition = 0 < g_esCache[iTank].g_iDropHandPosition < 3 ? g_esCache[iTank].g_iDropHandPosition : GetRandomInt(1, 2);
 
-	switch (g_esCache[iTank].g_iDropMode)
+	iWeapon = iGetNamedWeapon(iTank);
+	if (iWeapon == -1)
 	{
-		case 0: iDropValue = GetRandomInt(0, 30);
-		case 1: iDropValue = GetRandomInt(0, 18);
-		case 2: iDropValue = GetRandomInt(19, 30);
+		iWeapon = iGetRandomWeapon(iTank);
 	}
 
 	g_esPlayer[iTank].g_iWeapon = CreateEntityByName("prop_dynamic_override");
 	if (bIsValidEntity(g_esPlayer[iTank].g_iWeapon))
 	{
 		static float flPos[3], flAngles[3], flScale;
-		static int iWeapon;
-		iWeapon = bIsValidGame() ? iDropValue : GetRandomInt(0, 5);
 
 		SetEntityModel(g_esPlayer[iTank].g_iWeapon, (bIsValidGame() ? g_sWeaponModelsWorld2[iWeapon] : g_sWeaponModelsWorld[iWeapon]));
 		TeleportEntity(g_esPlayer[iTank].g_iWeapon, flPos, flAngles, NULL_VECTOR);

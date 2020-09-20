@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Shield Ability v8.77"
+#file "Shield Ability v8.78"
 
 public Plugin myinfo =
 {
