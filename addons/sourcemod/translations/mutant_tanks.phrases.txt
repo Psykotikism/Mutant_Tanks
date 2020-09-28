@@ -1843,7 +1843,7 @@
 
 	"Enforce"
 	{
-		"#format"		"{1:s},{2:N},{3:s}"
+		"#format"		"{1:s},{2:N},{3:i}"
 		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to only use their weapon slot{yellow} #{3}{mint}!"
 		"hu"			"{olive}{1}{mint} kényszeríti{olive} {2}{mint} hogy csak a{yellow} #{3} slottot használja{mint}!"
 		"chi"			"{olive}{1}{mint} 强迫{olive} {2}{mint} 只能使用{yellow} #{3}{mint}号武器槽位!"
