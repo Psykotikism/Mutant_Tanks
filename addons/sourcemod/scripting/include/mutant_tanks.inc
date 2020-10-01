@@ -411,6 +411,15 @@ native bool MT_IsGlowEnabled(int tank);
 native bool MT_IsNonFinaleType(int type);
 
 /**
+ * Returns if a Tank is in stasis (idle).
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the Tank is in stasis, false otherwise.
+ * @error			Invalid client index.
+ **/
+native bool MT_IsTankIdle(int tank);
+
+/**
  * Returns if a Tank is allowed to be a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
@@ -418,7 +427,7 @@ native bool MT_IsNonFinaleType(int type);
  *					MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
  *					MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
  *				Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE
- * @return			True if Tank is allowed to be a Mutant Tank, false otherwise.
+ * @return			True if the Tank is allowed to be a Mutant Tank, false otherwise.
  * @error			Invalid client index.
  **/
 native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE);
@@ -1948,6 +1957,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_IsFinaleType");
 	MarkNativeAsOptional("MT_IsGlowEnabled");
 	MarkNativeAsOptional("MT_IsNonFinaleType");
+	MarkNativeAsOptional("MT_IsTankIdle");
 	MarkNativeAsOptional("MT_IsTankSupported");
 	MarkNativeAsOptional("MT_IsTypeEnabled");
 	MarkNativeAsOptional("MT_SetTankType");

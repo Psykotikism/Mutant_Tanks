@@ -43,7 +43,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 char g_sMeleeScripts[][] =
 {
 	"scripts/melee/fireaxe.txt", "scripts/melee/baseball_bat.txt", "scripts/melee/cricket_bat.txt", "scripts/melee/crowbar.txt", "scripts/melee/golfclub.txt", "scripts/melee/electric_guitar.txt",
-	"scripts/melee/katana.txt", "scripts/melee/knife.txt", "scripts/melee/machete.txt", "scripts/melee/frying_pan.txt", "scripts/melee/tonfa.txt"
+	"scripts/melee/katana.txt", "scripts/melee/knife.txt", "scripts/melee/machete.txt", "scripts/melee/frying_pan.txt", "scripts/melee/tonfa.txt", "scripts/melee/pitchfork.txt", "scripts/melee/shovel.txt"
 }, g_sWeaponClasses[][] =
 {
 	"weapon_autoshotgun", "weapon_hunting_rifle", "weapon_rifle", "weapon_pistol", "weapon_pumpshotgun", "weapon_smg"
@@ -60,7 +60,7 @@ char g_sMeleeScripts[][] =
 	"weapon_rifle_ak47", "weapon_autoshotgun", "weapon_sniper_awp", "weapon_shotgun_chrome", "weapon_rifle_desert", "weapon_grenade_launcher", "weapon_hunting_rifle", "weapon_rifle",
 	"weapon_rifle_m60", "weapon_pistol_magnum", "weapon_sniper_military", "weapon_smg_mp5", "weapon_pistol", "weapon_pumpshotgun", "weapon_sniper_scout", "weapon_rifle_sg552",
 	"weapon_smg_silenced", "weapon_smg", "weapon_shotgun_spas", "fireaxe", "baseball_bat", "weapon_chainsaw", "cricket_bat", "crowbar", "golfclub", "electric_guitar", "katana", "knife",
-	"machete", "frying_pan", "tonfa"
+	"machete", "frying_pan", "tonfa", "pitchfork", "shovel"
 }, g_sWeaponModelsView2[][] =
 {
 	"models/v_models/weapons/v_rifle_ak47.mdl", "models/v_models/weapons/v_autoshot_m4super.mdl", "models/v_models/weapons/v_sniper_awp.mdl", "models/v_models/weapons/v_shotgun.mdl",
@@ -69,7 +69,8 @@ char g_sMeleeScripts[][] =
 	"models/v_models/weapons/v_pistol_a.mdl", "models/v_models/weapons/v_pumpshotgun_a.mdl", "models/v_models/weapons/v_sniper_scout.mdl", "models/v_models/weapons/v_rifle_sg552.mdl",
 	"models/v_models/weapons/v_smg_a.mdl", "models/v_models/weapons/v_smg_uzi.mdl", "models/v_models/weapons/v_shotgun_spas.mdl", "models/weapons/melee/v_fireaxe.mdl", "models/weapons/melee/v_bat.mdl",
 	"models/weapons/melee/v_chainsaw.mdl", "models/weapons/melee/v_cricket_bat.mdl", "models/weapons/melee/v_crowbar.mdl", "models/weapons/melee/v_golfclub.mdl", "models/weapons/melee/v_electric_guitar.mdl",
-	"models/weapons/melee/v_katana.mdl", "models/v_models/v_knife_t.mdl", "models/weapons/melee/v_machete.mdl", "models/weapons/melee/v_frying_pan.mdl", "models/weapons/melee/v_tonfa.mdl"
+	"models/weapons/melee/v_katana.mdl", "models/v_models/v_knife_t.mdl", "models/weapons/melee/v_machete.mdl", "models/weapons/melee/v_frying_pan.mdl", "models/weapons/melee/v_tonfa.mdl",
+	"models/weapons/melee/v_pitchfork.mdl", "models/weapons/melee/v_shovel.mdl"
 }, g_sWeaponModelsWorld2[][] =
 {
 	"models/w_models/weapons/w_rifle_ak47.mdl", "models/w_models/weapons/w_autoshot_m4super.mdl", "models/w_models/weapons/w_sniper_awp.mdl", "models/w_models/weapons/w_shotgun.mdl",
@@ -78,7 +79,8 @@ char g_sMeleeScripts[][] =
 	"models/w_models/weapons/w_pistol_a.mdl", "models/w_models/weapons/w_pumpshotgun_a.mdl", "models/w_models/weapons/w_sniper_scout.mdl", "models/w_models/weapons/w_rifle_sg552.mdl",
 	"models/w_models/weapons/w_smg_a.mdl", "models/w_models/weapons/w_smg_uzi.mdl", "models/w_models/weapons/w_shotgun_spas.mdl", "models/weapons/melee/w_fireaxe.mdl", "models/weapons/melee/w_bat.mdl",
 	"models/weapons/melee/w_chainsaw.mdl", "models/weapons/melee/w_cricket_bat.mdl", "models/weapons/melee/w_crowbar.mdl", "models/weapons/melee/w_golfclub.mdl", "models/weapons/melee/w_electric_guitar.mdl",
-	"models/weapons/melee/w_katana.mdl", "models/w_models/weapons/w_knife_t.mdl", "models/weapons/melee/w_machete.mdl", "models/weapons/melee/w_frying_pan.mdl", "models/weapons/melee/w_tonfa.mdl"
+	"models/weapons/melee/w_katana.mdl", "models/w_models/weapons/w_knife_t.mdl", "models/weapons/melee/w_machete.mdl", "models/weapons/melee/w_frying_pan.mdl", "models/weapons/melee/w_tonfa.mdl",
+	"models/weapons/melee/w_pitchfork.mdl", "models/weapons/melee/w_shovel.mdl"
 };
 
 enum struct esGeneral
@@ -420,7 +422,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_flDropClipChance = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropClipChance", "Drop Clip Chance", "Drop_Clip_Chance", "clipchance", g_esPlayer[admin].g_flDropClipChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iDropHandPosition = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esPlayer[admin].g_iDropHandPosition, value, 0, 3);
 		g_esPlayer[admin].g_iDropMode = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esPlayer[admin].g_iDropMode, value, 0, 2);
-		g_esPlayer[admin].g_flDropWeaponScale = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esPlayer[admin].g_flDropWeaponScale, value, 1.0, 2.0);
+		g_esPlayer[admin].g_flDropWeaponScale = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esPlayer[admin].g_flDropWeaponScale, value, 0.1, 2.0);
 
 		if (StrEqual(subsection, "dropability", false) || StrEqual(subsection, "drop ability", false) || StrEqual(subsection, "drop_ability", false) || StrEqual(subsection, "drop", false))
 		{
@@ -444,7 +446,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_flDropClipChance = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropClipChance", "Drop Clip Chance", "Drop_Clip_Chance", "clipchance", g_esAbility[type].g_flDropClipChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iDropHandPosition = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esAbility[type].g_iDropHandPosition, value, 0, 3);
 		g_esAbility[type].g_iDropMode = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esAbility[type].g_iDropMode, value, 0, 2);
-		g_esAbility[type].g_flDropWeaponScale = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esAbility[type].g_flDropWeaponScale, value, 1.0, 2.0);
+		g_esAbility[type].g_flDropWeaponScale = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esAbility[type].g_flDropWeaponScale, value, 0.1, 2.0);
 
 		if (StrEqual(subsection, "dropability", false) || StrEqual(subsection, "drop ability", false) || StrEqual(subsection, "drop_ability", false) || StrEqual(subsection, "drop", false))
 		{
@@ -718,8 +720,15 @@ static int iGetNamedWeapon(int tank)
 	for (int iPos = 0; iPos < iSize; iPos++)
 	{
 		strcopy(sName, sizeof(sName), (bIsValidGame() ? g_sWeaponClasses2[iPos] : g_sWeaponClasses[iPos]));
-		ExplodeString(sName, "eapon_", sSet, sizeof(sSet), sizeof(sSet[]));
-		if (StrEqual(sSet[1], g_esCache[tank].g_sDropWeaponName, false))
+		if (StrContains(sName, "_", false) != -1)
+		{
+			ExplodeString(sName, "_", sSet, sizeof(sSet), sizeof(sSet[]));
+			if (StrEqual(sSet[1], g_esCache[tank].g_sDropWeaponName, false))
+			{
+				return iPos;
+			}
+		}
+		else if (StrEqual(sName, g_esCache[tank].g_sDropWeaponName, false))
 		{
 			return iPos;
 		}
@@ -747,7 +756,7 @@ public void vDropFrame(int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank) || g_esCache[iTank].g_iDropAbility == 0 || !g_esPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank) || g_esCache[iTank].g_iDropAbility == 0 || g_esPlayer[iTank].g_bActivated)
 	{
 		g_esPlayer[iTank].g_bActivated = false;
 
@@ -841,19 +850,7 @@ public void vDropFrame(int userid)
 					}
 				}
 
-				flScale = 2.5;
-
-				switch (iWeapon)
-				{
-					case 28: flScale = 2.0;
-					case 20: flScale = 1.7;
-					case 29: flScale = 2.3;
-					case 25: flScale = 3.0;
-					case 21: flScale = 4.0;
-					case 26: flScale = 3.5;
-				}
-
-				flScale *= g_esCache[iTank].g_flDropWeaponScale;
+				flScale = 1.5 * g_esCache[iTank].g_flDropWeaponScale;
 			}
 			case false:
 			{
