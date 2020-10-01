@@ -1019,17 +1019,26 @@ native bool MT_IsGlowEnabled(int tank);
 native bool MT_IsNonFinaleType(int type);
 
 /**
+ * Returns if a Tank is in stasis (idle).
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the Tank is in stasis, false otherwise.
+ * @error			Invalid client index.
+ **/
+native bool MT_IsTankIdle(int tank);
+
+/**
  * Returns if a Tank is allowed to be a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
  * @param flags			Checks to run.
- *				MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
- *				MT_CHECK_ALIVE = life state, MT_CHECK_KICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
- *				Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE
- * @return			True if Tank is allowed to be a Mutant Tank, false otherwise.
+ *					MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
+ *					MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
+ *				Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE
+ * @return			True if the Tank is allowed to be a Mutant Tank, false otherwise.
  * @error			Invalid client index.
  **/
-native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_KICKQUEUE);
+native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE);
 
 /**
  * Returns if a certain Mutant Tank type is enabled.
@@ -1216,7 +1225,6 @@ sm_mt_leech - View information about the Leech ability.
 sm_mt_medic - View information about the Medic ability.
 sm_mt_meteor - View information about the Meteor ability.
 sm_mt_minion - View information about the Minion ability.
-//sm_mt_mud - View information about the Mud ability.
 sm_mt_necro - View information about the Necro ability.
 sm_mt_nullify - View information about the Nullify ability.
 sm_mt_omni - View information about the Omni ability.
@@ -1239,7 +1247,6 @@ sm_mt_smash - View information about the Smash ability.
 sm_mt_smite - View information about the Smite ability.
 sm_mt_spam - View information about the Spam ability.
 sm_mt_splash - View information about the Splash ability.
-//sm_mt_swap - View information about the Swap ability.
 sm_mt_throw - View information about the Throw ability.
 sm_mt_track - View information about the Track ability.
 sm_mt_ultimate - View information about the Ultimate ability.

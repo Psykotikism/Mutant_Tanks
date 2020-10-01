@@ -56,15 +56,6 @@
 			// 1: ON
 			"Announce Death"			"1"
 
-			// Base health given to all Mutant Tanks.
-			// Note: Tank's health limit on any difficulty is 65,535.
-			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
-			// --
-			// Minimum: 0 (OFF)
-			// Maximum: 65535
-			"Base Health"				"0"
-
 			// Mutant Tanks revert back to default Tanks upon death.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// Note: This feature is simply for cosmetic purposes. You do not need to worry about this setting.
@@ -81,6 +72,46 @@
 			// 0: OFF
 			// 1: ON
 			"Detect Plugins"			"0"
+
+			// Spawn Mutant Tanks during finales only.
+			// --
+			// 0: OFF, Mutant Tanks will spawn on any map.
+			// 1: ON, Mutant Tanks will only spawn on finale maps.
+			// 2: ON, Mutant Tanks will only spawn on non-finale maps.
+			// 3: ON, Mutant Tanks will only spawn on finale maps before the rescue vehicle is called.
+			// 4: ON, Mutant Tanks will only spawn on finale maps after the rescue vehicle is called.
+			"Finales Only"				"0"
+
+			// Kill Mutant Tanks that are idle for this many seconds.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0
+			"Idle Check"				"15.0"
+
+			// The range of types to check for.
+			// --
+			// Separate values with "-".
+			// --
+			// Value limit: 2
+			// Character limit for each value: 4
+			// --
+			// Minimum number for each value: 1
+			// Maximum number for each value: 1000
+			// --
+			// 1st number = Minimum value
+			// 2nd number = Maximum value
+			"Type Range"				"1-1000"
+		}
+		"Health"
+		{
+			// Base health given to all Mutant Tanks.
+			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Disable this setting if it conflicts with other plugins.
+			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// --
+			// Minimum: 0 (OFF)
+			// Maximum: 65535
+			"Base Health"				"0"
 
 			// Display Mutant Tanks' names and health.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
@@ -109,15 +140,6 @@
 			// 1: ON, show in hint text.
 			// 2: ON, show in center text.
 			"Display Health Type"			"1"
-
-			// Spawn Mutant Tanks during finales only.
-			// --
-			// 0: OFF, Mutant Tanks will spawn on any map.
-			// 1: ON, Mutant Tanks will only spawn on finale maps.
-			// 2: ON, Mutant Tanks will only spawn on non-finale maps.
-			// 3: ON, Mutant Tanks will only spawn on finale maps before the rescue vehicle is called.
-			// 4: ON, Mutant Tanks will only spawn on finale maps after the rescue vehicle is called.
-			"Finales Only"				"0"
 
 			// The characters used to represent the health bar of Mutant Tanks.
 			// Note: This setting only takes effect when the "Display Health" setting is enabled.
@@ -150,20 +172,6 @@
 			// 2: Multiply extra health only.
 			// 3: Multiply both.
 			"Multiply Health"			"0"
-
-			// The range of types to check for.
-			// --
-			// Separate values with "-".
-			// --
-			// Value limit: 2
-			// Character limit for each value: 4
-			// --
-			// Minimum number for each value: 1
-			// Maximum number for each value: 1000
-			// --
-			// 1st number = Minimum value
-			// 2nd number = Maximum value
-			"Type Range"				"1-1000"
 		}
 		"Administration"
 		{
@@ -516,72 +524,6 @@
 			// 1: ON
 			"Detect Plugins"			"0"
 
-			// Display the Mutant Tank's name and health.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 0
-			// Maximum: 11
-			// --
-			// 0: OFF
-			// 1: ON, show name only.
-			// 2: ON, show health only.
-			// 3: ON, show health percentage only.
-			// 4: ON, show healthbar only.
-			// 5: ON, show name and health only.
-			// 6: ON, show name and health percentage only.
-			// 7: ON, show name and healthbar only.
-			// 8: ON, show health and healthbar only.
-			// 9: ON, show health percentage and healthbar only.
-			// 10: ON, show name, health, and healthbar.
-			// 11: ON, show name, health percentage, and healthbar.
-			"Display Health"			"11"
-
-			// Display type of the Mutant Tank's names and health.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// 0: OFF
-			// 1: ON, show in hint text.
-			// 2: ON, show in center text.
-			"Display Health Type"			"1"
-
-			// The characters used to represent the health bar of the Mutant Tank.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting only takes effect when the "Display Health" setting is enabled.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Separate characters with commas (",").
-			// --
-			// Character limit: 2
-			// Character limit for each character: 1
-			// --
-			// 1st character = Health indicator
-			// 2nd character = Damage indicator
-			"Health Characters"			"|,-"
-
-			// The number of human survivors required for "Multiply Health" to take effect.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 32
-			// --
-			// 1: OFF, no health multiplication. (Health * 1)
-			// 2-32: ON, the number of human survivors required to multiply Tank health. (Health * X)
-			"Minimum Humans"			"0"
-
-			// Multiply the Mutant Tank's health.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: Health multiplication only occurs when the requirement for "Minimum Humans" is met.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// 0: No changes to health.
-			// 1: Multiply original health only.
-			// 2: Multiply extra health only.
-			// 3: Multiply both.
-			"Multiply Health"			"0"
-
 			// These are the RGBA values of the Mutant Tank's skin color.
 			// Note: Any value less than 0 will output a random color.
 			// Note: This setting can be overridden for specific players.
@@ -641,6 +583,87 @@
 			// 0: Glow outline visible only on sight.
 			// 1: Glow outline visible through the walls.
 			"Glow Type"				"0"
+		}
+		"Health"
+		{
+			// Display the Mutant Tank's name and health.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 11
+			// --
+			// 0: OFF
+			// 1: ON, show name only.
+			// 2: ON, show health only.
+			// 3: ON, show health percentage only.
+			// 4: ON, show healthbar only.
+			// 5: ON, show name and health only.
+			// 6: ON, show name and health percentage only.
+			// 7: ON, show name and healthbar only.
+			// 8: ON, show health and healthbar only.
+			// 9: ON, show health percentage and healthbar only.
+			// 10: ON, show name, health, and healthbar.
+			// 11: ON, show name, health percentage, and healthbar.
+			"Display Health"			"11"
+
+			// Display type of the Mutant Tank's names and health.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON, show in hint text.
+			// 2: ON, show in center text.
+			"Display Health Type"			"1"
+
+			// Extra health given to the Mutant Tank.
+			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Disable this setting if it conflicts with other plugins.
+			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: -65535
+			// Maximum: 65535
+			// --
+			// Positive numbers: Current health + Extra health
+			// Negative numbers: Current health - Extra health
+			"Extra Health"				"0"
+
+			// The characters used to represent the health bar of the Mutant Tank.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting only takes effect when the "Display Health" setting is enabled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate characters with commas (",").
+			// --
+			// Character limit: 2
+			// Character limit for each character: 1
+			// --
+			// 1st character = Health indicator
+			// 2nd character = Damage indicator
+			"Health Characters"			"|,-"
+
+			// The number of human survivors required for "Multiply Health" to take effect.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 32
+			// --
+			// 1: OFF, no health multiplication. (Health * 1)
+			// 2-32: ON, the number of human survivors required to multiply Tank health. (Health * X)
+			"Minimum Humans"			"0"
+
+			// Multiply the Mutant Tank's health.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: Health multiplication only occurs when the requirement for "Minimum Humans" is met.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: No changes to health.
+			// 1: Multiply original health only.
+			// 2: Multiply extra health only.
+			// 3: Multiply both.
+			"Multiply Health"			"0"
 		}
 		"Administration"
 		{
@@ -952,19 +975,6 @@
 			// Minimum: 0.0
 			// Maximum: 999999.0
 			"Claw Damage"				"-1.0"
-
-			// Extra health given to the Mutant Tank.
-			// Note: Tank's health limit on any difficulty is 65,535.
-			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: -65535
-			// Maximum: 65535
-			// --
-			// Positive numbers: Current health + Extra health
-			// Negative numbers: Current health - Extra health
-			"Extra Health"				"0"
 
 			// The Mutant Tank's rock throws do this much damage.
 			// Note: This setting can be overridden for specific players.
@@ -2557,10 +2567,10 @@
 			"Drop Weapon Name"			""
 
 			// The Mutant Tank's weapon size is multiplied by this value.
-			// Note: Default weapon size x Drop weapon scale
+			// Note: Default weapon size (1.5) x Drop weapon scale
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.0
+			// Minimum: 0.1
 			// Maximum: 2.0
 			"Drop Weapon Scale"			"1.0"
 		}
@@ -6281,21 +6291,6 @@
 }
 ```
 
-##### Mud Ability
-
-```
-"Mutant Tanks"
-{
-	"Tank #1"
-	{
-		"Mud Ability"
-		{
-			// Coming soon...
-		}
-	}
-}
-```
-
 ##### Necro Ability
 
 ```
@@ -9015,21 +9010,6 @@
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Splash Range"				"500.0"
-		}
-	}
-}
-```
-
-##### Swap Ability
-
-```
-"Mutant Tanks"
-{
-	"Tank #1"
-	{
-		"Swap Ability"
-		{
-			// Coming soon...
 		}
 	}
 }

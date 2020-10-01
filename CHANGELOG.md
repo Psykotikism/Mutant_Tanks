@@ -1,23 +1,43 @@
 # Changelog
 
-## Version 8.78 (TBA)
+## Version 8.78 (October 1, 2020)
 
 Bug fixes:
 
 1. Fixed the `Fast`, `Ghost`, and `Item` abilities' settings not being read when using one of the other config formats.
 2. Fixed props not showing up on Tanks sometimes regardless of settings. (Thanks to Mi.Cura for reporting!)
+3. Fixed the `Drop` ability not creating any weapons.
 
 Changes:
 
 1. Added the `Drop Weapon Name` setting for the `Drop` ability. (Requested by Tank Rush.)
-2. Added the `Mud` ability. (Suggested by Tank Rush.)
-3. Added the `Swap` ability.
+2. The `Drop` ability now supports the two new melee weapons from The Last Stand update.
+3. Changed the minimum value of the `Drop` ability's `Drop Weapon Scale` from `1.0` to `0.1`.
+4. Set a fixed default size (`1.5`) for weapons attached to Tanks by the `Drop` ability.
+5. Added the `Idle Check` setting under `Plugin Settings/General` section.
+6. Added the `MT_IsTankIdle` native.
+7. Idle Tanks will no longer activate their passive abilities.
+8. Moved the following settings to the `Plugin Settings/Health` section:
+- `Base Health`
+- `Display Health`
+- `Display Health Type`
+- `Health Characters`
+- `Minimum Humans`
+- `Multiply Health`
+9. Moved the following settings to the `Tank #/Health` and `STEAM_ID/Health` sections:
+- `Display Health`
+- `Display Health Type`
+- `Extra Health`
+- `Health Characters`
+- `Minimum Humans`
+- `Multiply Health`
 
 Files:
 
 1. Updated config file.
-2. Updated include file.
-3. Updated translation file.
+2. Updated gamedata file.
+3. Updated include file.
+4. Updated translation file.
 
 ## Version 8.77 (September 11, 2020)
 
