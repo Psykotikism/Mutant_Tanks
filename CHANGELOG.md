@@ -31,7 +31,7 @@ Changes:
 - `Health Characters`
 - `Minimum Humans`
 - `Multiply Health`
-10. Added `finale_configs` as an option for the `Create Config Types` and `Execute Config Types` settings.
+10. Added `Finale stages` as an option for the `Create Config Types` and `Execute Config Types` settings.
 
 Files:
 

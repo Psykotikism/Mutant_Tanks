@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License along with thi
 Mutant Tanks will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
 
 ### What makes Mutant Tanks worth installing?
-Mutant Tanks enhances the experience and fun that players get from Tank fights by 1,000. This plugin gives server owners an arsenal of Mutant Tanks to test players' skills and create a unique experience in every Tank fight.
+Mutant Tanks enhances the experience and fun that players get from Tank fights by 1,000. This plugin gives server owners an arsenal of Mutant Tanks to test players' skills with and create a unique experience in every Tank fight.
 
 ## Features
 1. Enable/disable the plugin in all game modes.
