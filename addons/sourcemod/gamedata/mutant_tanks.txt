@@ -2,14 +2,6 @@
 {
 	"#default"
 	{
-		"Offsets"
-		{
-			"CBaseEntity::IsInStasis"
-			{
-				"windows"	"8"
-				"linux"		"8"
-			}
-		}
 		"Functions"
 		{
 			"CEnvRockLauncher::LaunchCurrentDir"
@@ -48,6 +40,26 @@
 	}
 	"left4dead"
 	{
+		"Offsets"
+		{
+			"GetIntentionInterfaceSpecial"
+			{
+				"windows"	"11924"
+				"linux"		"11940"
+			}
+
+			"FirstContainedResponder"
+			{
+				"windows"	"1"
+				"linux"		"2"
+			}
+
+			"ActionGetName"
+			{
+				"windows"	"35"
+				"linux"		"36"
+			}
+		}
 		"Signatures"
 		{
 			"CTerrorPlayer::GoAwayFromKeyboard"
@@ -98,10 +110,22 @@
 	{
 		"Offsets"
 		{
-			"CBaseEntity::IsInStasis"
+			"GetIntentionInterfaceSpecial"
 			{
-				"windows"	"39"
-				"linux"		"40"
+				"windows"	"17236"
+				"linux"		"17208"
+			}
+
+			"FirstContainedResponder"
+			{
+				"windows"	"1"
+				"linux"		"2"
+			}
+
+			"ActionGetName"
+			{
+				"windows"	"40"
+				"linux"		"41"
 			}
 		}
 		"Signatures"

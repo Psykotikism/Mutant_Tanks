@@ -110,6 +110,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_GAMEMODE (1 << 2) // l4d_map_configs/l4d2_map_configs
 #define MT_CONFIG_DAY (1 << 3) // daily_configs
 #define MT_CONFIG_COUNT (1 << 4) // playercount_configs
+#define MT_CONFIG_FINALE (1 << 5) // finale_configs
 
 #define MT_PARTICLE_BLOOD (1 << 0) // blood particle
 #define MT_PARTICLE_ELECTRICITY (1 << 1) // electric particle
@@ -197,7 +198,8 @@ enum struct esGeneral
 	GlobalForward g_gfTypeChosenForward;
 
 	Handle g_hLaunchDirectionDetour;
-	Handle g_hSDKStasis;
+	Handle g_hSDKActionGetName;
+	Handle g_hSDKFirstContainedResponder;
 	Handle g_hTankRockDetour;
 
 	int g_iAccessFlags;
@@ -226,6 +228,7 @@ enum struct esGeneral
 	int g_iHumanCooldown;
 	int g_iIgnoreLevel;
 	int g_iImmunityFlags;
+	int g_iIntentionOffset;
 	int g_iLauncher;
 	int g_iMasterControl;
 	int g_iMaxType;
@@ -243,7 +246,6 @@ enum struct esGeneral
 	int g_iRegularWave;
 	int g_iRenamePlayers;
 	int g_iSpawnMode;
-	int g_iStasisOffset;
 	int g_iTankWave;
 
 	TopMenu g_tmMTMenu;
@@ -802,26 +804,30 @@ public void OnPluginStart()
 		case true: LogError("Unable to load the \"mutant_tanks\" gamedata file.");
 		case false:
 		{
-			g_esGeneral.g_iStasisOffset = GameConfGetOffset(gdMutantTanks, "CBaseEntity::IsInStasis");
-			if (g_esGeneral.g_iStasisOffset == -1)
+			g_esGeneral.g_iIntentionOffset = GameConfGetOffset(gdMutantTanks, "GetIntentionInterfaceSpecial");
+			if (g_esGeneral.g_iIntentionOffset == -1)
 			{
-				LogError("Failed to load \"CBaseEntity::IsInStasis\" offset.");
+				LogError("Failed to load offset: GetIntentionInterfaceSpecial");
 			}
 
-			if (bIsValidGame())
+			int iOffset = GameConfGetOffset(gdMutantTanks, "FirstContainedResponder");
+			StartPrepSDKCall(SDKCall_Raw);
+			PrepSDKCall_SetVirtual(iOffset);
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_esGeneral.g_hSDKFirstContainedResponder = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKFirstContainedResponder == null)
 			{
-				StartPrepSDKCall(SDKCall_Player);
-				if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseEntity::IsInStasis"))
-				{
-					LogError("Failed to find offset: CBaseEntity::IsInStasis");
-				}
+				PrintToServer("%s Your \"FirstContainedResponder\" offset is outdated.", MT_TAG);
+			}
 
-				PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-				g_esGeneral.g_hSDKStasis = EndPrepSDKCall();
-				if (g_esGeneral.g_hSDKStasis == null)
-				{
-					PrintToServer("Failed to create SDKCall: CBaseEntity::IsInStasis");
-				}
+			iOffset = GameConfGetOffset(gdMutantTanks, "ActionGetName");
+			StartPrepSDKCall(SDKCall_Raw);
+			PrepSDKCall_SetVirtual(iOffset);
+			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Plain);
+			g_esGeneral.g_hSDKActionGetName = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKActionGetName == null)
+			{
+				PrintToServer("%s Your \"ActionGetName\" offset is outdated.", MT_TAG);
 			}
 
 			delete gdMutantTanks;
@@ -878,8 +884,6 @@ public void OnClientPutInServer(int client)
 	vReset3(client);
 	vCacheSettings(client);
 	vResetCore(client);
-
-	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -890,12 +894,16 @@ public void OnClientPostAdminCheck(int client)
 
 		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
 	}
+
+	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 }
 
 public void OnClientDisconnect_Post(int client)
 {
 	vReset3(client);
 	vResetCore(client);
+
+	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 }
 
 public void OnConfigsExecuted()
@@ -993,17 +1001,17 @@ public void OnConfigsExecuted()
 		CreateDirectory(sSMPath, 511);
 
 		char sWeekday[32];
-		for (int iDay = 0; iDay <= 6; iDay++)
+		for (int iDay = 0; iDay < 7; iDay++)
 		{
 			switch (iDay)
 			{
-				case 1: sWeekday = "monday";
-				case 2: sWeekday = "tuesday";
-				case 3: sWeekday = "wednesday";
-				case 4: sWeekday = "thursday";
-				case 5: sWeekday = "friday";
-				case 6: sWeekday = "saturday";
-				default: sWeekday = "sunday";
+				case 0: sWeekday = "monday";
+				case 1: sWeekday = "tuesday";
+				case 2: sWeekday = "wednesday";
+				case 3: sWeekday = "thursday";
+				case 4: sWeekday = "friday";
+				case 5: sWeekday = "saturday";
+				case 6: sWeekday = "sunday";
 			}
 
 			vCreateConfigFile("daily_configs/", sWeekday);
@@ -1021,6 +1029,35 @@ public void OnConfigsExecuted()
 		{
 			IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
 			vCreateConfigFile("playercount_configs/", sPlayerCount);
+		}
+	}
+
+	if ((g_esGeneral.g_iConfigCreate & MT_CONFIG_FINALE) && g_esGeneral.g_iConfigEnable == 1)
+	{
+		char sSMPath[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/finale_configs/");
+		CreateDirectory(sSMPath, 511);
+
+		char sEvent[32];
+		int iAmount = bIsValidGame() ? 11 : 8;
+		for (int iType = 0; iType < iAmount; iType++)
+		{
+			switch (iType)
+			{
+				case 0: sEvent = "finale_start";
+				case 1: sEvent = "finale_escape_start";
+				case 2: sEvent = "finale_vehicle_ready";
+				case 3: sEvent = "finale_vehicle_leaving";
+				case 4: sEvent = "finale_rush";
+				case 5: sEvent = "finale_radio_start";
+				case 6: sEvent = "finale_radio_damaged";
+				case 7: sEvent = "finale_win";
+				case 8: sEvent = "finale_vehicle_incoming";
+				case 9: sEvent = "finale_bridge_lowering";
+				case 10: sEvent = "gauntlet_finale_start";
+			}
+
+			vCreateConfigFile((bIsValidGame() ? "l4d2_finale_configs/" : "l4d_finale_configs/"), sEvent);
 		}
 	}
 
@@ -2791,7 +2828,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iDeathRevert = 0;
 		g_esGeneral.g_iDetectPlugins = 0;
 		g_esGeneral.g_iFinalesOnly = 0;
-		g_esGeneral.g_flIdleCheck = 15.0;
+		g_esGeneral.g_flIdleCheck = 0.0;
 		g_esGeneral.g_iMinType = 1;
 		g_esGeneral.g_iMaxType = MT_MAXTYPES;
 		g_esGeneral.g_iBaseHealth = 0;
@@ -3223,8 +3260,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			{
 				g_esGeneral.g_iGameModeTypes = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "GameModes", "Game Modes", "Game_Modes", "modes", key, "GameModeTypes", "Game Mode Types", "Game_Mode_Types", "types", g_esGeneral.g_iGameModeTypes, value, 0, 15);
 				g_esGeneral.g_iConfigEnable = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "EnableCustomConfigs", "Enable Custom Configs", "Enable_Custom_Configs", "enabled", g_esGeneral.g_iConfigEnable, value, 0, 1);
-				g_esGeneral.g_iConfigCreate = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_esGeneral.g_iConfigCreate, value, 0, 31);
-				g_esGeneral.g_iConfigExecute = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_esGeneral.g_iConfigExecute, value, 0, 31);
+				g_esGeneral.g_iConfigCreate = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_esGeneral.g_iConfigCreate, value, 0, 63);
+				g_esGeneral.g_iConfigExecute = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_esGeneral.g_iConfigExecute, value, 0, 63);
 
 				if (StrEqual(g_esGeneral.g_sCurrentSubSection, "GameModes", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "Game Modes", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "Game_Modes", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "modes", false))
 				{
@@ -3764,13 +3801,21 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				vCacheSettings(iBot);
 			}
 		}
-		else if (StrEqual(name, "finale_escape_start") || StrEqual(name, "finale_vehicle_ready") || StrEqual(name, "finale_vehicle_leaving"))
+		else if (StrEqual(name, "finale_escape_start") || StrEqual(name, "finale_vehicle_incoming") || StrEqual(name, "finale_vehicle_ready") || StrEqual(name, "finale_vehicle_leaving") || StrEqual(name, "finale_win"))
 		{
 			g_esGeneral.g_iTankWave = 3;
+
+			vExecuteFinaleConfigs(name);
 		}
-		else if (StrEqual(name, "finale_start"))
+		else if (StrEqual(name, "finale_start") || StrEqual(name, "gauntlet_finale_start"))
 		{
 			g_esGeneral.g_iTankWave = 1;
+
+			vExecuteFinaleConfigs(name);
+		}
+		else if (StrEqual(name, "finale_rush") || StrEqual(name, "finale_radio_start") || StrEqual(name, "finale_radio_damaged") || StrEqual(name, "finale_bridge_lowering"))
+		{
+			vExecuteFinaleConfigs(name);
 		}
 		else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
 		{
@@ -3936,6 +3981,21 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
+static void vExecuteFinaleConfigs(const char[] filename)
+{
+	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_FINALE) && g_esGeneral.g_iConfigEnable == 1)
+	{
+		static char sFilePath[PLATFORM_MAX_PATH], sFinaleConfig[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "data/mutant_tanks/finale_configs/");
+		FormatEx(sFilePath, sizeof(sFilePath), "%s%s.cfg", sFinaleConfig, filename);
+		if (FileExists(sFilePath, true))
+		{
+			vLoadConfigs(sFilePath, 2);
+			vPluginStatus();
+		}
+	}
+}
+
 static void vPluginStatus()
 {
 	bool bPluginAllowed = g_esGeneral.g_cvMTPluginEnabled.BoolValue && g_esGeneral.g_iPluginEnabled == 1, bPluginEnabled = bIsPluginEnabled();
@@ -3996,6 +4056,10 @@ static void vHookEvents(bool hook)
 		HookEvent("finale_start", vEventHandler, EventHookMode_Pre);
 		HookEvent("finale_vehicle_leaving", vEventHandler);
 		HookEvent("finale_vehicle_ready", vEventHandler);
+		HookEvent("finale_rush", vEventHandler);
+		HookEvent("finale_radio_start", vEventHandler);
+		HookEvent("finale_radio_damaged", vEventHandler);
+		HookEvent("finale_win", vEventHandler);
 		HookEvent("mission_lost", vEventHandler);
 		HookEvent("player_bot_replace", vEventHandler);
 		HookEvent("player_death", vEventHandler, EventHookMode_Pre);
@@ -4003,6 +4067,13 @@ static void vHookEvents(bool hook)
 		HookEvent("player_spawn", vEventHandler);
 		HookEvent("player_now_it", vEventHandler);
 		HookEvent("player_no_longer_it", vEventHandler);
+
+		if (bIsValidGame())
+		{
+			HookEvent("finale_vehicle_incoming", vEventHandler);
+			HookEvent("finale_bridge_lowering", vEventHandler);
+			HookEvent("gauntlet_finale_start", vEventHandler);
+		}
 
 		vHookEventForward(true);
 	}
@@ -4016,6 +4087,10 @@ static void vHookEvents(bool hook)
 		UnhookEvent("finale_start", vEventHandler, EventHookMode_Pre);
 		UnhookEvent("finale_vehicle_leaving", vEventHandler);
 		UnhookEvent("finale_vehicle_ready", vEventHandler);
+		UnhookEvent("finale_rush", vEventHandler);
+		UnhookEvent("finale_radio_start", vEventHandler);
+		UnhookEvent("finale_radio_damaged", vEventHandler);
+		UnhookEvent("finale_win", vEventHandler);
 		UnhookEvent("mission_lost", vEventHandler);
 		UnhookEvent("player_bot_replace", vEventHandler);
 		UnhookEvent("player_death", vEventHandler, EventHookMode_Pre);
@@ -4023,6 +4098,13 @@ static void vHookEvents(bool hook)
 		UnhookEvent("player_spawn", vEventHandler);
 		UnhookEvent("player_now_it", vEventHandler);
 		UnhookEvent("player_no_longer_it", vEventHandler);
+
+		if (bIsValidGame())
+		{
+			UnhookEvent("finale_vehicle_incoming", vEventHandler);
+			UnhookEvent("finale_bridge_lowering", vEventHandler);
+			UnhookEvent("gauntlet_finale_start", vEventHandler);
+		}
 
 		vHookEventForward(false);
 	}
@@ -4910,7 +4992,11 @@ static void vMutateTank(int tank)
 
 		CreateTimer(0.1, tTimerCheckView, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(1.0, tTimerTankUpdate, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		CreateTimer(g_esGeneral.g_flIdleCheck, tTimerKillIdleTank, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+
+		if (g_esGeneral.g_flIdleCheck > 0.0)
+		{
+			CreateTimer(g_esGeneral.g_flIdleCheck, tTimerKillIdleTank, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		}
 
 		switch (g_esTank[g_esPlayer[tank].g_iTankType].g_iSpawnMode)
 		{
@@ -5354,19 +5440,49 @@ static bool bIsTankAllowed(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|
 
 static bool bIsTankIdle(int tank)
 {
-	if (!bIsTank(tank))
+	if (!bIsTank(tank) || bIsTank(tank, MT_CHECK_FAKECLIENT))
 	{
 		return false;
 	}
 
-	static bool bIdle;
-	bIdle = GetEntData(tank, g_esGeneral.g_iStasisOffset, 1) != 0;
-	if (bIsValidGame())
+	Address adTank = GetEntityAddress(tank);
+	if (adTank == Address_Null)
 	{
-		return SDKCall(g_esGeneral.g_hSDKStasis, tank) || bIdle;
+		return false;
 	}
 
-	return bIdle;
+	Address adIntention = view_as<Address>(iDereference(adTank, g_esGeneral.g_iIntentionOffset));
+	if (adIntention == Address_Null)
+	{
+		return false;
+	}
+
+	Address adBehavior = adGetFirstContainedResponder(adIntention);
+	if (adBehavior == Address_Null)
+	{
+		return false;
+	}
+
+	Address adAction = adGetFirstContainedResponder(adBehavior);
+	if (adAction == Address_Null)
+	{
+		return false;
+	}
+
+	Address adChildAction;
+	while ((adChildAction = adGetFirstContainedResponder(adAction)) != Address_Null)
+	{
+		adAction = adChildAction;
+	}
+
+	char sAction[64];
+	SDKCall(g_esGeneral.g_hSDKActionGetName, adAction, sAction, sizeof(sAction));
+	if (StrEqual(sAction, "TankIdle"))
+	{
+		return true;
+	}
+
+	return false;
 }
 
 static bool bIsTypeAvailable(int type, int tank = 0)
@@ -5472,6 +5588,16 @@ static int iChooseType(int exclude, int tank = 0, int min = 0, int max = 0)
 	return 0;
 }
 
+static int iDereference(Address address, int offset = 0)
+{
+	if (address == Address_Null)
+	{
+		return -1;
+	}
+
+	return LoadFromAddress(address + view_as<Address>(offset), NumberType_Int32);
+}
+
 static int iGetRealType(int type, int exclude = 0, int tank = 0, int min = 0, int max = 0)
 {
 	static Action aResult;
@@ -5522,6 +5648,11 @@ static int iGetTypeCount(int type)
 	}
 
 	return iTypeCount;
+}
+
+static Address adGetFirstContainedResponder(Address address)
+{
+	return view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, address));
 }
 
 #if defined _l4dh_included
@@ -5860,7 +5991,7 @@ public Action tTimerIceEffect(Handle timer, int userid)
 public Action tTimerKillIdleTank(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || !bIsTankIdle(iTank))
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT) || !bIsTankIdle(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -6237,7 +6368,9 @@ public Action tTimerRefreshConfigs(Handle timer)
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_COUNT) && g_esGeneral.g_iConfigEnable == 1)
 	{
 		static char sCountConfig[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iGetPlayerCount());
+		static int iCount;
+		iCount = iGetPlayerCount();
+		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iCount);
 		g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
 		if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5])
 		{
@@ -6246,17 +6379,14 @@ public Action tTimerRefreshConfigs(Handle timer)
 			vPluginStatus();
 			g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
 		}
-	}
 
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_COUNT) && g_esGeneral.g_iPlayerCount[0] != g_esGeneral.g_iPlayerCount[1])
-	{
-		g_esGeneral.g_iPlayerCount[1] = iGetPlayerCount();
-
-		static char sCountConfig[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", g_esGeneral.g_iPlayerCount[1]);
-		vLoadConfigs(sCountConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+		if (g_esGeneral.g_iPlayerCount[0] != g_esGeneral.g_iPlayerCount[1])
+		{
+			g_esGeneral.g_iPlayerCount[1] = iCount;
+			vLoadConfigs(sCountConfig, 2);
+			vPluginStatus();
+			g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+		}
 	}
 
 	return Plugin_Continue;
