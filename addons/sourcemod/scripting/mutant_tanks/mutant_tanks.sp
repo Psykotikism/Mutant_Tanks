@@ -107,7 +107,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_CONFIG_DIFFICULTY (1 << 0) // difficulty_configs
 #define MT_CONFIG_MAP (1 << 1) // l4d_map_configs/l4d2_map_configs
-#define MT_CONFIG_GAMEMODE (1 << 2) // l4d_map_configs/l4d2_map_configs
+#define MT_CONFIG_GAMEMODE (1 << 2) // l4d_gamemode_configs/l4d2_gamemode_configs
 #define MT_CONFIG_DAY (1 << 3) // daily_configs
 #define MT_CONFIG_COUNT (1 << 4) // playercount_configs
 #define MT_CONFIG_FINALE (1 << 5) // finale_configs
@@ -1076,8 +1076,7 @@ public void OnConfigsExecuted()
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
 		if (FileExists(sDifficultyConfig, true))
 		{
-			vLoadConfigs(sDifficultyConfig, 2);
-			vPluginStatus();
+			vCustomConfig(sDifficultyConfig);
 			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 		}
 	}
@@ -1087,11 +1086,10 @@ public void OnConfigsExecuted()
 		char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
 		GetCurrentMap(sMap, sizeof(sMap));
 
-		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_map_configs/%s.cfg" : "data/mutant_tanks/l4d_map_configs/%s.cfg"), sMap);
+		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
 		if (FileExists(sMapConfig, true))
 		{
-			vLoadConfigs(sMapConfig, 2);
-			vPluginStatus();
+			vCustomConfig(sMapConfig);
 			g_esGeneral.g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 		}
 	}
@@ -1101,11 +1099,10 @@ public void OnConfigsExecuted()
 		char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 		g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
 
-		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_gamemode_configs/%s.cfg" : "data/mutant_tanks/l4d_gamemode_configs/%s.cfg"), sMode);
+		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
 		if (FileExists(sModeConfig, true))
 		{
-			vLoadConfigs(sModeConfig, 2);
-			vPluginStatus();
+			vCustomConfig(sModeConfig);
 			g_esGeneral.g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 		}
 	}
@@ -1131,8 +1128,7 @@ public void OnConfigsExecuted()
 		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
 		if (FileExists(sDayConfig, true))
 		{
-			vLoadConfigs(sDayConfig, 2);
-			vPluginStatus();
+			vCustomConfig(sDayConfig);
 			g_esGeneral.g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
 		}
 	}
@@ -1143,8 +1139,7 @@ public void OnConfigsExecuted()
 		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iGetPlayerCount());
 		if (FileExists(sCountConfig, true))
 		{
-			vLoadConfigs(sCountConfig, 2);
-			vPluginStatus();
+			vCustomConfig(sCountConfig);
 			g_esGeneral.g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
 		}
 	}
@@ -2764,6 +2759,13 @@ static void vClearPluginList()
 	}
 }
 
+static void vCustomConfig(const char[] savepath)
+{
+	DataPack dpConfig;
+	CreateDataTimer(3.0, tTimerExecuteCustomConfig, dpConfig, TIMER_FLAG_NO_MAPCHANGE);
+	dpConfig.WriteString(savepath);
+}
+
 static void vLoadConfigs(const char[] savepath, int mode)
 {
 	vClearPluginList();
@@ -3185,7 +3187,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esGeneral.g_iAnnounceDeath, value, 0, 1);
 			g_esGeneral.g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esGeneral.g_iDeathRevert, value, 0, 1);
 			g_esGeneral.g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esGeneral.g_iDetectPlugins, value, 0, 1);
-			g_esGeneral.g_iFinalesOnly = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esGeneral.g_iFinalesOnly, value, 0, 2);
+			g_esGeneral.g_iFinalesOnly = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esGeneral.g_iFinalesOnly, value, 0, 4);
 			g_esGeneral.g_flIdleCheck = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "IdleCheck", "Idle Check", "Idle_Check", "idle", g_esGeneral.g_flIdleCheck, value, 0.0, 999999.0);
 			g_esGeneral.g_iBaseHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "BaseHealth", "Base Health", "Base_Health", "health", g_esGeneral.g_iBaseHealth, value, 0, MT_MAXHEALTH);
 			g_esGeneral.g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esGeneral.g_iDisplayHealth, value, 0, 11);
@@ -3344,7 +3346,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iHumanSupport = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanSupport", "Human Support", "Human_Support", "human", g_esTank[iIndex].g_iHumanSupport, value, 0, 2);
 						g_esTank[iIndex].g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esTank[iIndex].g_iRenamePlayers, value, 0, 1);
 						g_esTank[iIndex].g_iChosenTypeLimit = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_esTank[iIndex].g_iChosenTypeLimit, value, 0, 16);
-						g_esTank[iIndex].g_iFinaleTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[iIndex].g_iFinaleTank, value, 0, 2);
+						g_esTank[iIndex].g_iFinaleTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[iIndex].g_iFinaleTank, value, 0, 4);
 						g_esTank[iIndex].g_iBossStages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_esTank[iIndex].g_iBossStages, value, 1, 4);
 						g_esTank[iIndex].g_iRandomTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomTank", "Random Tank", "Random_Tank", "random", g_esTank[iIndex].g_iRandomTank, value, 0, 1);
 						g_esTank[iIndex].g_flRandomInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_esTank[iIndex].g_flRandomInterval, value, 0.1, 999999.0);
@@ -4012,8 +4014,7 @@ static void vExecuteFinaleConfigs(const char[] filename)
 		FormatEx(sFilePath, sizeof(sFilePath), "%s%s.cfg", sFinaleConfig, filename);
 		if (FileExists(sFilePath, true))
 		{
-			vLoadConfigs(sFilePath, 2);
-			vPluginStatus();
+			vCustomConfig(sFilePath);
 		}
 	}
 }
@@ -5829,8 +5830,7 @@ public void vMTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
 		if (FileExists(sDifficultyConfig, true))
 		{
-			vLoadConfigs(sDifficultyConfig, 2);
-			vPluginStatus();
+			vCustomConfig(sDifficultyConfig);
 			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 			g_esGeneral.g_iFileTimeNew[1] = g_esGeneral.g_iFileTimeOld[1];
 		}
@@ -6307,6 +6307,21 @@ public Action tTimerTankWave(Handle timer)
 	return Plugin_Continue;
 }
 
+public Action tTimerExecuteCustomConfig(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	char sSavePath[PLATFORM_MAX_PATH];
+	pack.ReadString(sSavePath, sizeof(sSavePath));
+	if (sSavePath[0] != '\0')
+	{
+		vLoadConfigs(sSavePath, 2);
+		vPluginStatus();
+	}
+
+	return Plugin_Continue;
+}
+
 public Action tTimerRefreshConfigs(Handle timer)
 {
 	if (FileExists(g_esGeneral.g_sSavePath, true))
@@ -6332,8 +6347,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1])
 			{
 				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDifficultyConfig);
-				vLoadConfigs(sDifficultyConfig, 2);
-				vPluginStatus();
+				vCustomConfig(sDifficultyConfig);
 				g_esGeneral.g_iFileTimeOld[1] = g_esGeneral.g_iFileTimeNew[1];
 			}
 		}
@@ -6343,15 +6357,14 @@ public Action tTimerRefreshConfigs(Handle timer)
 	{
 		static char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
 		GetCurrentMap(sMap, sizeof(sMap));
-		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_map_configs/%s.cfg" : "data/mutant_tanks/l4d_map_configs/%s.cfg"), sMap);
+		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
 		if (FileExists(sMapConfig, true))
 		{
 			g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2])
 			{
 				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sMapConfig);
-				vLoadConfigs(sMapConfig, 2);
-				vPluginStatus();
+				vCustomConfig(sMapConfig);
 				g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
 			}
 		}
@@ -6361,15 +6374,14 @@ public Action tTimerRefreshConfigs(Handle timer)
 	{
 		static char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 		g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_gamemode_configs/%s.cfg" : "data/mutant_tanks/l4d_gamemode_configs/%s.cfg"), sMode);
+		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
 		if (FileExists(sModeConfig, true))
 		{
 			g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3])
 			{
 				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sModeConfig);
-				vLoadConfigs(sModeConfig, 2);
-				vPluginStatus();
+				vCustomConfig(sModeConfig);
 				g_esGeneral.g_iFileTimeOld[3] = g_esGeneral.g_iFileTimeNew[3];
 			}
 		}
@@ -6400,8 +6412,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4])
 			{
 				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDayConfig);
-				vLoadConfigs(sDayConfig, 2);
-				vPluginStatus();
+				vCustomConfig(sDayConfig);
 				g_esGeneral.g_iFileTimeOld[4] = g_esGeneral.g_iFileTimeNew[4];
 			}
 		}
@@ -6419,16 +6430,15 @@ public Action tTimerRefreshConfigs(Handle timer)
 			if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5])
 			{
 				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sCountConfig);
-				vLoadConfigs(sCountConfig, 2);
-				vPluginStatus();
+				vCustomConfig(sCountConfig);
 				g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
-			}
-
-			if (g_esGeneral.g_iPlayerCount[0] != g_esGeneral.g_iPlayerCount[1])
-			{
 				g_esGeneral.g_iPlayerCount[1] = iCount;
-				vLoadConfigs(sCountConfig, 2);
-				vPluginStatus();
+				g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+			}
+			else if (g_esGeneral.g_iPlayerCount[0] != g_esGeneral.g_iPlayerCount[1])
+			{
+				vCustomConfig(sCountConfig);
+				g_esGeneral.g_iPlayerCount[1] = iCount;
 				g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
 			}
 		}
