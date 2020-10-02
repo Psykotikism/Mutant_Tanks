@@ -6,7 +6,7 @@ Bug fixes:
 
 1. Fixed the `Fast`, `Ghost`, and `Item` abilities' settings not being read when using one of the other config formats.
 2. Fixed props not showing up on Tanks sometimes regardless of settings. (Thanks to Mi.Cura for reporting!)
-3. Fixed the `Drop` ability not creating any weapons.
+3. Fixed the `Drop` ability not creating nor dropping any weapons.
 
 Changes:
 

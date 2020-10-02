@@ -23,7 +23,7 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 
 ## Features
 1. Enable/disable the plugin in all game modes.
-2. Supports custom configurations, whether per difficulty, per map, per game mode, per day, per player count, or per finale stage.
+2. Supports custom configurations whether per difficulty, per map, per game mode, per day, per player count, or per finale stage.
 3. Fully customize all Mutant Tanks.
 4. Store up to 1,000 Mutant Tank types.
 5. Four different formats for the config file.

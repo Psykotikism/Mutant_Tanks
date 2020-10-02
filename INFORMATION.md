@@ -83,7 +83,7 @@
 			"Finales Only"				"0"
 
 			// Kill Mutant Tanks that are idle for this many seconds.
-			// Note: It is recommended to use this in finale stage configs only since idle Tanks are only an issue during finales.
+			// Note: It is recommended to use this in finale stage configs only since idle Tanks can prevent finales from advancing. On non-finale maps, they are only idle until survivors finally encounter them.
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0
