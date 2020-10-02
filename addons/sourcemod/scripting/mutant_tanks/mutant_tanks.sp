@@ -784,8 +784,15 @@ public void OnPluginStart()
 	BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/");
 	CreateDirectory(sSMPath, 511);
 	FormatEx(g_esGeneral.g_sSavePath, sizeof(esGeneral::g_sSavePath), "%smutant_tanks.cfg", sSMPath);
-	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
-	g_esGeneral.g_iFileTimeOld[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
+	if (FileExists(g_esGeneral.g_sSavePath, true))
+	{
+		vLoadConfigs(g_esGeneral.g_sSavePath, 1);
+		g_esGeneral.g_iFileTimeOld[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
+	}
+	else
+	{
+		SetFailState("Unable to load config file: %s", g_esGeneral.g_sSavePath);
+	}
 
 	HookEvent("round_start", vEventHandler);
 
@@ -807,7 +814,7 @@ public void OnPluginStart()
 			g_esGeneral.g_iIntentionOffset = GameConfGetOffset(gdMutantTanks, "GetIntentionInterfaceSpecial");
 			if (g_esGeneral.g_iIntentionOffset == -1)
 			{
-				LogError("Failed to load offset: GetIntentionInterfaceSpecial");
+				PrintToServer("Failed to load offset: GetIntentionInterfaceSpecial");
 			}
 
 			int iOffset = GameConfGetOffset(gdMutantTanks, "FirstContainedResponder");
@@ -1067,9 +1074,12 @@ public void OnConfigsExecuted()
 		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
 
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
-		vLoadConfigs(sDifficultyConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+		if (FileExists(sDifficultyConfig, true))
+		{
+			vLoadConfigs(sDifficultyConfig, 2);
+			vPluginStatus();
+			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+		}
 	}
 
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && g_esGeneral.g_iConfigEnable == 1)
@@ -1078,9 +1088,12 @@ public void OnConfigsExecuted()
 		GetCurrentMap(sMap, sizeof(sMap));
 
 		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_map_configs/%s.cfg" : "data/mutant_tanks/l4d_map_configs/%s.cfg"), sMap);
-		vLoadConfigs(sMapConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+		if (FileExists(sMapConfig, true))
+		{
+			vLoadConfigs(sMapConfig, 2);
+			vPluginStatus();
+			g_esGeneral.g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+		}
 	}
 
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE) && g_esGeneral.g_iConfigEnable == 1)
@@ -1089,9 +1102,12 @@ public void OnConfigsExecuted()
 		g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
 
 		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_gamemode_configs/%s.cfg" : "data/mutant_tanks/l4d_gamemode_configs/%s.cfg"), sMode);
-		vLoadConfigs(sModeConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
+		if (FileExists(sModeConfig, true))
+		{
+			vLoadConfigs(sModeConfig, 2);
+			vPluginStatus();
+			g_esGeneral.g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
+		}
 	}
 
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DAY) && g_esGeneral.g_iConfigEnable == 1)
@@ -1113,18 +1129,24 @@ public void OnConfigsExecuted()
 		}
 
 		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
-		vLoadConfigs(sDayConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
+		if (FileExists(sDayConfig, true))
+		{
+			vLoadConfigs(sDayConfig, 2);
+			vPluginStatus();
+			g_esGeneral.g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
+		}
 	}
 
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_COUNT) && g_esGeneral.g_iConfigEnable == 1)
 	{
 		char sCountConfig[PLATFORM_MAX_PATH];
 		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iGetPlayerCount());
-		vLoadConfigs(sCountConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+		if (FileExists(sCountConfig, true))
+		{
+			vLoadConfigs(sCountConfig, 2);
+			vPluginStatus();
+			g_esGeneral.g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+		}
 	}
 }
 
@@ -5700,13 +5722,13 @@ static void vSetupSignatures()
 				g_esGeneral.g_hLaunchDirectionDetour = DHookCreateFromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
 				if (g_esGeneral.g_hLaunchDirectionDetour == null)
 				{
-					LogError("Failed to find signature: CEnvRockLauncher::LaunchCurrentDir");
+					PrintToServer("Failed to find signature: CEnvRockLauncher::LaunchCurrentDir");
 				}
 
 				g_esGeneral.g_hTankRockDetour = DHookCreateFromConf(gdMutantTanks, "CTankRock::Create");
 				if (g_esGeneral.g_hTankRockDetour == null)
 				{
-					LogError("Failed to find signature: CTankRock::Create");
+					PrintToServer("Failed to find signature: CTankRock::Create");
 				}
 
 				delete gdMutantTanks;
@@ -5805,8 +5827,13 @@ public void vMTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
 
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
-		vLoadConfigs(sDifficultyConfig, 2);
-		vPluginStatus();
+		if (FileExists(sDifficultyConfig, true))
+		{
+			vLoadConfigs(sDifficultyConfig, 2);
+			vPluginStatus();
+			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+			g_esGeneral.g_iFileTimeNew[1] = g_esGeneral.g_iFileTimeOld[1];
+		}
 	}
 }
 
@@ -6282,13 +6309,16 @@ public Action tTimerTankWave(Handle timer)
 
 public Action tTimerRefreshConfigs(Handle timer)
 {
-	g_esGeneral.g_iFileTimeNew[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
-	if (g_esGeneral.g_iFileTimeOld[0] != g_esGeneral.g_iFileTimeNew[0])
+	if (FileExists(g_esGeneral.g_sSavePath, true))
 	{
-		PrintToServer("%s %t", MT_TAG, "ReloadingConfig", g_esGeneral.g_sSavePath);
-		vLoadConfigs(g_esGeneral.g_sSavePath, 1);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[0] = g_esGeneral.g_iFileTimeNew[0];
+		g_esGeneral.g_iFileTimeNew[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
+		if (g_esGeneral.g_iFileTimeOld[0] != g_esGeneral.g_iFileTimeNew[0])
+		{
+			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", g_esGeneral.g_sSavePath);
+			vLoadConfigs(g_esGeneral.g_sSavePath, 1);
+			vPluginStatus();
+			g_esGeneral.g_iFileTimeOld[0] = g_esGeneral.g_iFileTimeNew[0];
+		}
 	}
 
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_iConfigEnable == 1 && g_esGeneral.g_cvMTDifficulty != null)
@@ -6296,13 +6326,16 @@ public Action tTimerRefreshConfigs(Handle timer)
 		static char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
-		g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
-		if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1])
+		if (FileExists(sDifficultyConfig, true))
 		{
-			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDifficultyConfig);
-			vLoadConfigs(sDifficultyConfig, 2);
-			vPluginStatus();
-			g_esGeneral.g_iFileTimeOld[1] = g_esGeneral.g_iFileTimeNew[1];
+			g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+			if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1])
+			{
+				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDifficultyConfig);
+				vLoadConfigs(sDifficultyConfig, 2);
+				vPluginStatus();
+				g_esGeneral.g_iFileTimeOld[1] = g_esGeneral.g_iFileTimeNew[1];
+			}
 		}
 	}
 
@@ -6311,13 +6344,16 @@ public Action tTimerRefreshConfigs(Handle timer)
 		static char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
 		GetCurrentMap(sMap, sizeof(sMap));
 		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_map_configs/%s.cfg" : "data/mutant_tanks/l4d_map_configs/%s.cfg"), sMap);
-		g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
-		if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2])
+		if (FileExists(sMapConfig, true))
 		{
-			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sMapConfig);
-			vLoadConfigs(sMapConfig, 2);
-			vPluginStatus();
-			g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
+			g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+			if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2])
+			{
+				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sMapConfig);
+				vLoadConfigs(sMapConfig, 2);
+				vPluginStatus();
+				g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
+			}
 		}
 	}
 
@@ -6326,13 +6362,16 @@ public Action tTimerRefreshConfigs(Handle timer)
 		static char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 		g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
 		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_gamemode_configs/%s.cfg" : "data/mutant_tanks/l4d_gamemode_configs/%s.cfg"), sMode);
-		g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
-		if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3])
+		if (FileExists(sModeConfig, true))
 		{
-			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sModeConfig);
-			vLoadConfigs(sModeConfig, 2);
-			vPluginStatus();
-			g_esGeneral.g_iFileTimeOld[3] = g_esGeneral.g_iFileTimeNew[3];
+			g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
+			if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3])
+			{
+				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sModeConfig);
+				vLoadConfigs(sModeConfig, 2);
+				vPluginStatus();
+				g_esGeneral.g_iFileTimeOld[3] = g_esGeneral.g_iFileTimeNew[3];
+			}
 		}
 	}
 
@@ -6355,13 +6394,16 @@ public Action tTimerRefreshConfigs(Handle timer)
 		}
 
 		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
-		g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
-		if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4])
+		if (FileExists(sDayConfig, true))
 		{
-			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDayConfig);
-			vLoadConfigs(sDayConfig, 2);
-			vPluginStatus();
-			g_esGeneral.g_iFileTimeOld[4] = g_esGeneral.g_iFileTimeNew[4];
+			g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
+			if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4])
+			{
+				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDayConfig);
+				vLoadConfigs(sDayConfig, 2);
+				vPluginStatus();
+				g_esGeneral.g_iFileTimeOld[4] = g_esGeneral.g_iFileTimeNew[4];
+			}
 		}
 	}
 
@@ -6371,21 +6413,24 @@ public Action tTimerRefreshConfigs(Handle timer)
 		static int iCount;
 		iCount = iGetPlayerCount();
 		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iCount);
-		g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
-		if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5])
+		if (FileExists(sCountConfig, true))
 		{
-			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sCountConfig);
-			vLoadConfigs(sCountConfig, 2);
-			vPluginStatus();
-			g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
-		}
+			g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+			if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5])
+			{
+				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sCountConfig);
+				vLoadConfigs(sCountConfig, 2);
+				vPluginStatus();
+				g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
+			}
 
-		if (g_esGeneral.g_iPlayerCount[0] != g_esGeneral.g_iPlayerCount[1])
-		{
-			g_esGeneral.g_iPlayerCount[1] = iCount;
-			vLoadConfigs(sCountConfig, 2);
-			vPluginStatus();
-			g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+			if (g_esGeneral.g_iPlayerCount[0] != g_esGeneral.g_iPlayerCount[1])
+			{
+				g_esGeneral.g_iPlayerCount[1] = iCount;
+				vLoadConfigs(sCountConfig, 2);
+				vPluginStatus();
+				g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+			}
 		}
 	}
 
