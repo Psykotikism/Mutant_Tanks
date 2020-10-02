@@ -8,6 +8,8 @@ Bug fixes:
 2. Fixed props not showing up on Tanks sometimes regardless of settings. (Thanks to Mi.Cura for reporting!)
 3. Fixed the `Drop` ability not creating nor dropping any weapons.
 4. Fixed difficulty configs not updating their file time changes when the `z_difficulty` setting is updated.
+5. Fixed the maximum value of the `Finales Only` and `Finale Tank` settings. (Thanks to Tank Rush for testing!)
+6. Fixed the main config overlapping the custom configs by adding a 3-second delay. (Thanks to Tank Rush for testing!)
 
 Changes:
 
