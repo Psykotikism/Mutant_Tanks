@@ -20,7 +20,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Restart Ability v8.77"
+#file "Restart Ability v8.78"
 
 public Plugin myinfo =
 {

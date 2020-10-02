@@ -40,6 +40,26 @@
 	}
 	"left4dead"
 	{
+		"Offsets"
+		{
+			"GetIntentionInterfaceSpecial"
+			{
+				"windows"	"11924"
+				"linux"		"11940"
+			}
+
+			"FirstContainedResponder"
+			{
+				"windows"	"1"
+				"linux"		"2"
+			}
+
+			"ActionGetName"
+			{
+				"windows"	"35"
+				"linux"		"36"
+			}
+		}
 		"Signatures"
 		{
 			"CTerrorPlayer::GoAwayFromKeyboard"
@@ -88,6 +108,26 @@
 	}
 	"left4dead2"
 	{
+		"Offsets"
+		{
+			"GetIntentionInterfaceSpecial"
+			{
+				"windows"	"17236"
+				"linux"		"17208"
+			}
+
+			"FirstContainedResponder"
+			{
+				"windows"	"1"
+				"linux"		"2"
+			}
+
+			"ActionGetName"
+			{
+				"windows"	"40"
+				"linux"		"41"
+			}
+		}
 		"Signatures"
 		{
 			"CSpitterProjectile::Create"

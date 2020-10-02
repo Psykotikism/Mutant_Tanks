@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Item Ability v8.77"
+#file "Item Ability v8.78"
 
 public Plugin myinfo =
 {
@@ -267,7 +267,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iItemAbility = 0;
 				g_esAbility[iIndex].g_iItemMessage = 0;
 				g_esAbility[iIndex].g_flItemChance = 33.3;
-				g_esAbility[iIndex].g_sItemLoadout = "rifle,pistol,firmt_aid_kit,pain_pills";
+				g_esAbility[iIndex].g_sItemLoadout = "rifle,pistol,first_aid_kit,pain_pills";
 				g_esAbility[iIndex].g_iItemMode = 0;
 			}
 		}

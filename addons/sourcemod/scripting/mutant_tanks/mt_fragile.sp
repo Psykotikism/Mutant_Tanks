@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Fragile Ability v8.77"
+#file "Fragile Ability v8.78"
 
 public Plugin myinfo =
 {

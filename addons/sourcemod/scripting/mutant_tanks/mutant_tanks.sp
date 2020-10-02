@@ -22,7 +22,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Mutant Tanks v8.77"
+#file "Mutant Tanks v8.78"
 
 public Plugin myinfo =
 {
@@ -63,6 +63,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MT_IsFinaleType", aNative_IsFinaleType);
 	CreateNative("MT_IsGlowEnabled", aNative_IsGlowEnabled);
 	CreateNative("MT_IsNonFinaleType", aNative_IsNonFinaleType);
+	CreateNative("MT_IsTankIdle", aNative_IsTankIdle);
 	CreateNative("MT_IsTankSupported", aNative_IsTankSupported);
 	CreateNative("MT_IsTypeEnabled", aNative_IsTypeEnabled);
 	CreateNative("MT_SetTankType", aNative_SetTankType);
@@ -106,9 +107,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_CONFIG_DIFFICULTY (1 << 0) // difficulty_configs
 #define MT_CONFIG_MAP (1 << 1) // l4d_map_configs/l4d2_map_configs
-#define MT_CONFIG_GAMEMODE (1 << 2) // l4d_map_configs/l4d2_map_configs
+#define MT_CONFIG_GAMEMODE (1 << 2) // l4d_gamemode_configs/l4d2_gamemode_configs
 #define MT_CONFIG_DAY (1 << 3) // daily_configs
 #define MT_CONFIG_COUNT (1 << 4) // playercount_configs
+#define MT_CONFIG_FINALE (1 << 5) // finale_configs
 
 #define MT_PARTICLE_BLOOD (1 << 0) // blood particle
 #define MT_PARTICLE_ELECTRICITY (1 << 1) // electric particle
@@ -172,6 +174,7 @@ enum struct esGeneral
 	ConVar g_cvMTGameTypes;
 	ConVar g_cvMTPluginEnabled;
 
+	float g_flIdleCheck;
 	float g_flRegularInterval;
 
 	GlobalForward g_gfAbilityActivatedForward;
@@ -195,6 +198,8 @@ enum struct esGeneral
 	GlobalForward g_gfTypeChosenForward;
 
 	Handle g_hLaunchDirectionDetour;
+	Handle g_hSDKActionGetName;
+	Handle g_hSDKFirstContainedResponder;
 	Handle g_hTankRockDetour;
 
 	int g_iAccessFlags;
@@ -223,6 +228,7 @@ enum struct esGeneral
 	int g_iHumanCooldown;
 	int g_iIgnoreLevel;
 	int g_iImmunityFlags;
+	int g_iIntentionOffset;
 	int g_iLauncher;
 	int g_iMasterControl;
 	int g_iMaxType;
@@ -651,6 +657,11 @@ public any aNative_IsNonFinaleType(Handle plugin, int numParams)
 	return iType > 0 && g_esTank[iType].g_iFinaleTank == 2;
 }
 
+public any aNative_IsTankIdle(Handle plugin, int numParams)
+{
+	return bIsTankIdle(GetNativeCell(1));
+}
+
 public any aNative_IsTankSupported(Handle plugin, int numParams)
 {
 	return bIsTankAllowed(GetNativeCell(1), GetNativeCell(2));
@@ -773,8 +784,15 @@ public void OnPluginStart()
 	BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/");
 	CreateDirectory(sSMPath, 511);
 	FormatEx(g_esGeneral.g_sSavePath, sizeof(esGeneral::g_sSavePath), "%smutant_tanks.cfg", sSMPath);
-	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
-	g_esGeneral.g_iFileTimeOld[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
+	if (FileExists(g_esGeneral.g_sSavePath, true))
+	{
+		vLoadConfigs(g_esGeneral.g_sSavePath, 1);
+		g_esGeneral.g_iFileTimeOld[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
+	}
+	else
+	{
+		SetFailState("Unable to load config file: %s", g_esGeneral.g_sSavePath);
+	}
 
 	HookEvent("round_start", vEventHandler);
 
@@ -785,6 +803,43 @@ public void OnPluginStart()
 	}
 
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
+
+	GameData gdMutantTanks = new GameData("mutant_tanks");
+
+	switch (gdMutantTanks == null)
+	{
+		case true: LogError("Unable to load the \"mutant_tanks\" gamedata file.");
+		case false:
+		{
+			g_esGeneral.g_iIntentionOffset = GameConfGetOffset(gdMutantTanks, "GetIntentionInterfaceSpecial");
+			if (g_esGeneral.g_iIntentionOffset == -1)
+			{
+				PrintToServer("Failed to load offset: GetIntentionInterfaceSpecial");
+			}
+
+			int iOffset = GameConfGetOffset(gdMutantTanks, "FirstContainedResponder");
+			StartPrepSDKCall(SDKCall_Raw);
+			PrepSDKCall_SetVirtual(iOffset);
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_esGeneral.g_hSDKFirstContainedResponder = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKFirstContainedResponder == null)
+			{
+				PrintToServer("%s Your \"FirstContainedResponder\" offset is outdated.", MT_TAG);
+			}
+
+			iOffset = GameConfGetOffset(gdMutantTanks, "ActionGetName");
+			StartPrepSDKCall(SDKCall_Raw);
+			PrepSDKCall_SetVirtual(iOffset);
+			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Plain);
+			g_esGeneral.g_hSDKActionGetName = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKActionGetName == null)
+			{
+				PrintToServer("%s Your \"ActionGetName\" offset is outdated.", MT_TAG);
+			}
+
+			delete gdMutantTanks;
+		}
+	}
 
 	vSetupSignatures();
 
@@ -836,8 +891,6 @@ public void OnClientPutInServer(int client)
 	vReset3(client);
 	vCacheSettings(client);
 	vResetCore(client);
-
-	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 }
 
 public void OnClientPostAdminCheck(int client)
@@ -848,12 +901,16 @@ public void OnClientPostAdminCheck(int client)
 
 		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
 	}
+
+	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 }
 
 public void OnClientDisconnect_Post(int client)
 {
 	vReset3(client);
 	vResetCore(client);
+
+	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 }
 
 public void OnConfigsExecuted()
@@ -951,17 +1008,17 @@ public void OnConfigsExecuted()
 		CreateDirectory(sSMPath, 511);
 
 		char sWeekday[32];
-		for (int iDay = 0; iDay <= 6; iDay++)
+		for (int iDay = 0; iDay < 7; iDay++)
 		{
 			switch (iDay)
 			{
-				case 1: sWeekday = "monday";
-				case 2: sWeekday = "tuesday";
-				case 3: sWeekday = "wednesday";
-				case 4: sWeekday = "thursday";
-				case 5: sWeekday = "friday";
-				case 6: sWeekday = "saturday";
-				default: sWeekday = "sunday";
+				case 0: sWeekday = "monday";
+				case 1: sWeekday = "tuesday";
+				case 2: sWeekday = "wednesday";
+				case 3: sWeekday = "thursday";
+				case 4: sWeekday = "friday";
+				case 5: sWeekday = "saturday";
+				case 6: sWeekday = "sunday";
 			}
 
 			vCreateConfigFile("daily_configs/", sWeekday);
@@ -982,15 +1039,46 @@ public void OnConfigsExecuted()
 		}
 	}
 
+	if ((g_esGeneral.g_iConfigCreate & MT_CONFIG_FINALE) && g_esGeneral.g_iConfigEnable == 1)
+	{
+		char sSMPath[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/finale_configs/");
+		CreateDirectory(sSMPath, 511);
+
+		char sEvent[32];
+		int iAmount = bIsValidGame() ? 11 : 8;
+		for (int iType = 0; iType < iAmount; iType++)
+		{
+			switch (iType)
+			{
+				case 0: sEvent = "finale_start";
+				case 1: sEvent = "finale_escape_start";
+				case 2: sEvent = "finale_vehicle_ready";
+				case 3: sEvent = "finale_vehicle_leaving";
+				case 4: sEvent = "finale_rush";
+				case 5: sEvent = "finale_radio_start";
+				case 6: sEvent = "finale_radio_damaged";
+				case 7: sEvent = "finale_win";
+				case 8: sEvent = "finale_vehicle_incoming";
+				case 9: sEvent = "finale_bridge_lowering";
+				case 10: sEvent = "gauntlet_finale_start";
+			}
+
+			vCreateConfigFile((bIsValidGame() ? "l4d2_finale_configs/" : "l4d_finale_configs/"), sEvent);
+		}
+	}
+
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_iConfigEnable == 1 && g_esGeneral.g_cvMTDifficulty != null)
 	{
 		char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
 
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
-		vLoadConfigs(sDifficultyConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+		if (FileExists(sDifficultyConfig, true))
+		{
+			vCustomConfig(sDifficultyConfig);
+			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+		}
 	}
 
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && g_esGeneral.g_iConfigEnable == 1)
@@ -998,10 +1086,12 @@ public void OnConfigsExecuted()
 		char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
 		GetCurrentMap(sMap, sizeof(sMap));
 
-		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_map_configs/%s.cfg" : "data/mutant_tanks/l4d_map_configs/%s.cfg"), sMap);
-		vLoadConfigs(sMapConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
+		if (FileExists(sMapConfig, true))
+		{
+			vCustomConfig(sMapConfig);
+			g_esGeneral.g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+		}
 	}
 
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE) && g_esGeneral.g_iConfigEnable == 1)
@@ -1009,10 +1099,12 @@ public void OnConfigsExecuted()
 		char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 		g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
 
-		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_gamemode_configs/%s.cfg" : "data/mutant_tanks/l4d_gamemode_configs/%s.cfg"), sMode);
-		vLoadConfigs(sModeConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
+		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
+		if (FileExists(sModeConfig, true))
+		{
+			vCustomConfig(sModeConfig);
+			g_esGeneral.g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
+		}
 	}
 
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DAY) && g_esGeneral.g_iConfigEnable == 1)
@@ -1034,18 +1126,22 @@ public void OnConfigsExecuted()
 		}
 
 		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
-		vLoadConfigs(sDayConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
+		if (FileExists(sDayConfig, true))
+		{
+			vCustomConfig(sDayConfig);
+			g_esGeneral.g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
+		}
 	}
 
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_COUNT) && g_esGeneral.g_iConfigEnable == 1)
 	{
 		char sCountConfig[PLATFORM_MAX_PATH];
 		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iGetPlayerCount());
-		vLoadConfigs(sCountConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+		if (FileExists(sCountConfig, true))
+		{
+			vCustomConfig(sCountConfig);
+			g_esGeneral.g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+		}
 	}
 }
 
@@ -2345,7 +2441,7 @@ public void OnEntityDestroyed(int entity)
 		{
 			static int iThrower;
 			iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-			if (bIsTankAllowed(iThrower) && bHasCoreAdminAccess(iThrower) && g_esTank[g_esPlayer[iThrower].g_iTankType].g_iTankEnabled == 1)
+			if (bIsTankAllowed(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esTank[g_esPlayer[iThrower].g_iTankType].g_iTankEnabled == 1)
 			{
 				Call_StartForward(g_esGeneral.g_gfRockBreakForward);
 				Call_PushCell(iThrower);
@@ -2544,7 +2640,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 public Action SetTransmit(int entity, int client)
 {
 	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (g_esGeneral.g_bPluginEnabled && iOwner == client && !bIsTankThirdPerson(client) && !g_esPlayer[client].g_bThirdPerson)
+	if (g_esGeneral.g_bPluginEnabled && bIsValidClient(iOwner) && bIsValidClient(client) && iOwner == client && !bIsTankThirdPerson(client) && !g_esPlayer[client].g_bThirdPerson)
 	{
 		return Plugin_Handled;
 	}
@@ -2554,8 +2650,11 @@ public Action SetTransmit(int entity, int client)
 
 static void vCacheSettings(int tank)
 {
-	bool bAccess = bIsTankAllowed(tank) && bHasCoreAdminAccess(tank), bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	int iType = g_esPlayer[tank].g_iTankType;
+	static bool bAccess, bHuman;
+	bAccess = bIsTankAllowed(tank) && bHasCoreAdminAccess(tank);
+	bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	static int iType;
+	iType = g_esPlayer[tank].g_iTankType;
 	vGetSettingValue(bAccess, true, g_esCache[tank].g_sHealthCharacters, sizeof(esCache::g_sHealthCharacters), g_esTank[iType].g_sHealthCharacters, g_esGeneral.g_sHealthCharacters);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sHealthCharacters, sizeof(esCache::g_sHealthCharacters), g_esPlayer[tank].g_sHealthCharacters, g_esCache[tank].g_sHealthCharacters);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sTankName, sizeof(esCache::g_sTankName), g_esPlayer[tank].g_sTankName, g_esTank[iType].g_sTankName);
@@ -2660,6 +2759,13 @@ static void vClearPluginList()
 	}
 }
 
+static void vCustomConfig(const char[] savepath)
+{
+	DataPack dpConfig;
+	CreateDataTimer(3.0, tTimerExecuteCustomConfig, dpConfig, TIMER_FLAG_NO_MAPCHANGE);
+	dpConfig.WriteString(savepath);
+}
+
 static void vLoadConfigs(const char[] savepath, int mode)
 {
 	vClearPluginList();
@@ -2743,17 +2849,18 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iPluginEnabled = 0;
 		g_esGeneral.g_iAnnounceArrival = 31;
 		g_esGeneral.g_iAnnounceDeath = 1;
-		g_esGeneral.g_iBaseHealth = 0;
 		g_esGeneral.g_iDeathRevert = 0;
 		g_esGeneral.g_iDetectPlugins = 0;
+		g_esGeneral.g_iFinalesOnly = 0;
+		g_esGeneral.g_flIdleCheck = 0.0;
+		g_esGeneral.g_iMinType = 1;
+		g_esGeneral.g_iMaxType = MT_MAXTYPES;
+		g_esGeneral.g_iBaseHealth = 0;
 		g_esGeneral.g_iDisplayHealth = 11;
 		g_esGeneral.g_iDisplayHealthType = 1;
-		g_esGeneral.g_iFinalesOnly = 0;
 		g_esGeneral.g_sHealthCharacters = "|,-";
 		g_esGeneral.g_iMinimumHumans = 2;
 		g_esGeneral.g_iMultiHealth = 0;
-		g_esGeneral.g_iMinType = 1;
-		g_esGeneral.g_iMaxType = MT_MAXTYPES;
 		g_esGeneral.g_iAllowDeveloper = 1;
 		g_esGeneral.g_iAccessFlags = 0;
 		g_esGeneral.g_iImmunityFlags = 0;
@@ -2797,6 +2904,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iDetectPlugins = 0;
 			g_esTank[iIndex].g_iDisplayHealth = 0;
 			g_esTank[iIndex].g_iDisplayHealthType = 0;
+			g_esTank[iIndex].g_iExtraHealth = 0;
 			g_esTank[iIndex].g_sHealthCharacters[0] = '\0';
 			g_esTank[iIndex].g_iMinimumHumans = 0;
 			g_esTank[iIndex].g_iMultiHealth = 0;
@@ -2822,7 +2930,6 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iRockEffects = 0;
 			g_esTank[iIndex].g_iRockModel = 2;
 			g_esTank[iIndex].g_flClawDamage = -1.0;
-			g_esTank[iIndex].g_iExtraHealth = 0;
 			g_esTank[iIndex].g_flRockDamage = -1.0;
 			g_esTank[iIndex].g_flRunSpeed = -1.0;
 			g_esTank[iIndex].g_flThrowInterval = -1.0;
@@ -2875,6 +2982,7 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_iDetectPlugins = 0;
 				g_esPlayer[iPlayer].g_iDisplayHealth = 0;
 				g_esPlayer[iPlayer].g_iDisplayHealthType = 0;
+				g_esPlayer[iPlayer].g_iExtraHealth = 0;
 				g_esPlayer[iPlayer].g_sHealthCharacters[0] = '\0';
 				g_esPlayer[iPlayer].g_iMinimumHumans = 0;
 				g_esPlayer[iPlayer].g_iMultiHealth = 0;
@@ -2897,7 +3005,6 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_iRockEffects = 0;
 				g_esPlayer[iPlayer].g_iRockModel = 0;
 				g_esPlayer[iPlayer].g_flClawDamage = -1.0;
-				g_esPlayer[iPlayer].g_iExtraHealth = 0;
 				g_esPlayer[iPlayer].g_flRockDamage = -1.0;
 				g_esPlayer[iPlayer].g_flRunSpeed = -1.0;
 				g_esPlayer[iPlayer].g_flThrowInterval = -1.0;
@@ -3078,14 +3185,15 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iPluginEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "PluginEnabled", "Plugin Enabled", "Plugin_Enabled", "enabled", g_esGeneral.g_iPluginEnabled, value, 0, 1);
 			g_esGeneral.g_iAnnounceArrival = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esGeneral.g_iAnnounceArrival, value, 0, 31);
 			g_esGeneral.g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esGeneral.g_iAnnounceDeath, value, 0, 1);
-			g_esGeneral.g_iBaseHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "BaseHealth", "Base Health", "Base_Health", "health", g_esGeneral.g_iBaseHealth, value, 0, MT_MAXHEALTH);
 			g_esGeneral.g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esGeneral.g_iDeathRevert, value, 0, 1);
 			g_esGeneral.g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esGeneral.g_iDetectPlugins, value, 0, 1);
-			g_esGeneral.g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esGeneral.g_iDisplayHealth, value, 0, 11);
-			g_esGeneral.g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esGeneral.g_iDisplayHealthType, value, 0, 2);
-			g_esGeneral.g_iFinalesOnly = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esGeneral.g_iFinalesOnly, value, 0, 2);
-			g_esGeneral.g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esGeneral.g_iMinimumHumans, value, 1, 32);
-			g_esGeneral.g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esGeneral.g_iMultiHealth, value, 0, 3);
+			g_esGeneral.g_iFinalesOnly = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esGeneral.g_iFinalesOnly, value, 0, 4);
+			g_esGeneral.g_flIdleCheck = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "IdleCheck", "Idle Check", "Idle_Check", "idle", g_esGeneral.g_flIdleCheck, value, 0.0, 999999.0);
+			g_esGeneral.g_iBaseHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "BaseHealth", "Base Health", "Base_Health", "health", g_esGeneral.g_iBaseHealth, value, 0, MT_MAXHEALTH);
+			g_esGeneral.g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esGeneral.g_iDisplayHealth, value, 0, 11);
+			g_esGeneral.g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esGeneral.g_iDisplayHealthType, value, 0, 2);
+			g_esGeneral.g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esGeneral.g_iMinimumHumans, value, 1, 32);
+			g_esGeneral.g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esGeneral.g_iMultiHealth, value, 0, 3);
 			g_esGeneral.g_iHumanCooldown = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "cooldown", g_esGeneral.g_iHumanCooldown, value, 0, 999999);
 			g_esGeneral.g_iMasterControl = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "MasterControl", "Master Control", "Master_Control", "master", g_esGeneral.g_iMasterControl, value, 0, 1);
 			g_esGeneral.g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esGeneral.g_iRenamePlayers, value, 0, 1);
@@ -3099,11 +3207,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 			if (StrEqual(g_esGeneral.g_sCurrentSubSection, "General", false))
 			{
-				if (StrEqual(key, "HealthCharacters", false) || StrEqual(key, "Health Characters", false) || StrEqual(key, "Health_Characters", false) || StrEqual(key, "hpchars", false))
-				{
-					strcopy(g_esGeneral.g_sHealthCharacters, sizeof(esGeneral::g_sHealthCharacters), value);
-				}
-				else if (StrEqual(key, "TypeRange", false) || StrEqual(key, "Type Range", false) || StrEqual(key, "Type_Range", false) || StrEqual(key, "types", false))
+				if (StrEqual(key, "TypeRange", false) || StrEqual(key, "Type Range", false) || StrEqual(key, "Type_Range", false) || StrEqual(key, "types", false))
 				{
 					strcopy(sValue, sizeof(sValue), value);
 					ReplaceString(sValue, sizeof(sValue), " ", "");
@@ -3111,6 +3215,13 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 					g_esGeneral.g_iMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 1, MT_MAXTYPES) : g_esGeneral.g_iMinType;
 					g_esGeneral.g_iMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 1, MT_MAXTYPES) : g_esGeneral.g_iMaxType;
+				}
+			}
+			if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Health", false))
+			{
+				if (StrEqual(key, "HealthCharacters", false) || StrEqual(key, "Health Characters", false) || StrEqual(key, "Health_Characters", false) || StrEqual(key, "hpchars", false))
+				{
+					strcopy(g_esGeneral.g_sHealthCharacters, sizeof(esGeneral::g_sHealthCharacters), value);
 				}
 			}
 			else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Administration", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "admin", false))
@@ -3173,8 +3284,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			{
 				g_esGeneral.g_iGameModeTypes = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "GameModes", "Game Modes", "Game_Modes", "modes", key, "GameModeTypes", "Game Mode Types", "Game_Mode_Types", "types", g_esGeneral.g_iGameModeTypes, value, 0, 15);
 				g_esGeneral.g_iConfigEnable = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "EnableCustomConfigs", "Enable Custom Configs", "Enable_Custom_Configs", "enabled", g_esGeneral.g_iConfigEnable, value, 0, 1);
-				g_esGeneral.g_iConfigCreate = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_esGeneral.g_iConfigCreate, value, 0, 31);
-				g_esGeneral.g_iConfigExecute = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_esGeneral.g_iConfigExecute, value, 0, 31);
+				g_esGeneral.g_iConfigCreate = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_esGeneral.g_iConfigCreate, value, 0, 63);
+				g_esGeneral.g_iConfigExecute = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Custom", "Custom", "Custom", "Custom", key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_esGeneral.g_iConfigExecute, value, 0, 63);
 
 				if (StrEqual(g_esGeneral.g_sCurrentSubSection, "GameModes", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "Game Modes", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "Game_Modes", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "modes", false))
 				{
@@ -3224,17 +3335,18 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esTank[iIndex].g_iAnnounceDeath, value, 0, 1);
 						g_esTank[iIndex].g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esTank[iIndex].g_iDeathRevert, value, 0, 1);
 						g_esTank[iIndex].g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esTank[iIndex].g_iDetectPlugins, value, 0, 1);
-						g_esTank[iIndex].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esTank[iIndex].g_iDisplayHealth, value, 0, 11);
-						g_esTank[iIndex].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esTank[iIndex].g_iDisplayHealthType, value, 0, 2);
-						g_esTank[iIndex].g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esTank[iIndex].g_iMinimumHumans, value, 1, 32);
-						g_esTank[iIndex].g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esTank[iIndex].g_iMultiHealth, value, 0, 3);
-						g_esTank[iIndex].g_iHumanSupport = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanSupport", "Human Support", "Human_Support", "human", g_esTank[iIndex].g_iHumanSupport, value, 0, 2);
-						g_esTank[iIndex].g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esTank[iIndex].g_iRenamePlayers, value, 0, 1);
 						g_esTank[iIndex].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_esTank[iIndex].g_iGlowEnabled, value, 0, 1);
 						g_esTank[iIndex].g_iGlowFlashing = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "glowflashing", g_esTank[iIndex].g_iGlowFlashing, value, 0, 1);
 						g_esTank[iIndex].g_iGlowType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowType", "Glow Type", "Glow_Type", "glowtype", g_esTank[iIndex].g_iGlowType, value, 0, 1);
+						g_esTank[iIndex].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esTank[iIndex].g_iDisplayHealth, value, 0, 11);
+						g_esTank[iIndex].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esTank[iIndex].g_iDisplayHealthType, value, 0, 2);
+						g_esTank[iIndex].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_esTank[iIndex].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+						g_esTank[iIndex].g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esTank[iIndex].g_iMinimumHumans, value, 1, 32);
+						g_esTank[iIndex].g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esTank[iIndex].g_iMultiHealth, value, 0, 3);
+						g_esTank[iIndex].g_iHumanSupport = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanSupport", "Human Support", "Human_Support", "human", g_esTank[iIndex].g_iHumanSupport, value, 0, 2);
+						g_esTank[iIndex].g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esTank[iIndex].g_iRenamePlayers, value, 0, 1);
 						g_esTank[iIndex].g_iChosenTypeLimit = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_esTank[iIndex].g_iChosenTypeLimit, value, 0, 16);
-						g_esTank[iIndex].g_iFinaleTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[iIndex].g_iFinaleTank, value, 0, 2);
+						g_esTank[iIndex].g_iFinaleTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[iIndex].g_iFinaleTank, value, 0, 4);
 						g_esTank[iIndex].g_iBossStages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_esTank[iIndex].g_iBossStages, value, 1, 4);
 						g_esTank[iIndex].g_iRandomTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomTank", "Random Tank", "Random_Tank", "random", g_esTank[iIndex].g_iRandomTank, value, 0, 1);
 						g_esTank[iIndex].g_flRandomInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_esTank[iIndex].g_flRandomInterval, value, 0.1, 999999.0);
@@ -3246,7 +3358,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iBodyEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_esTank[iIndex].g_iBodyEffects, value, 0, 127);
 						g_esTank[iIndex].g_iRockEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esTank[iIndex].g_iRockEffects, value, 0, 15);
 						g_esTank[iIndex].g_flClawDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esTank[iIndex].g_flClawDamage, value, -1.0, 999999.0);
-						g_esTank[iIndex].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_esTank[iIndex].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 						g_esTank[iIndex].g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esTank[iIndex].g_flRockDamage, value, -1.0, 999999.0);
 						g_esTank[iIndex].g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTank[iIndex].g_flRunSpeed, value, -1.0, 3.0);
 						g_esTank[iIndex].g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esTank[iIndex].g_flThrowInterval, value, -1.0, 999999.0);
@@ -3260,10 +3371,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							if (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false))
 							{
 								strcopy(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), value);
-							}
-							else if (StrEqual(key, "HealthCharacters", false) || StrEqual(key, "Health Characters", false) || StrEqual(key, "Health_Characters", false) || StrEqual(key, "hpchars", false))
-							{
-								strcopy(g_esTank[iIndex].g_sHealthCharacters, sizeof(esTank::g_sHealthCharacters), value);
 							}
 							else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 							{
@@ -3295,6 +3402,13 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 								g_esTank[iIndex].g_iGlowMinRange = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, 999999) : g_esTank[iIndex].g_iGlowMinRange;
 								g_esTank[iIndex].g_iGlowMaxRange = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, 999999) : g_esTank[iIndex].g_iGlowMaxRange;
+							}
+						}
+						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Health", false))
+						{
+							if (StrEqual(key, "HealthCharacters", false) || StrEqual(key, "Health Characters", false) || StrEqual(key, "Health_Characters", false) || StrEqual(key, "hpchars", false))
+							{
+								strcopy(g_esTank[iIndex].g_sHealthCharacters, sizeof(esTank::g_sHealthCharacters), value);
 							}
 						}
 						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Administration", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "admin", false))
@@ -3422,14 +3536,15 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esPlayer[iPlayer].g_iAnnounceDeath, value, 0, 1);
 							g_esPlayer[iPlayer].g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esPlayer[iPlayer].g_iDeathRevert, value, 0, 1);
 							g_esPlayer[iPlayer].g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esPlayer[iPlayer].g_iDetectPlugins, value, 0, 1);
-							g_esPlayer[iPlayer].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esPlayer[iPlayer].g_iDisplayHealth, value, 0, 11);
-							g_esPlayer[iPlayer].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esPlayer[iPlayer].g_iDisplayHealthType, value, 0, 2);
-							g_esPlayer[iPlayer].g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esPlayer[iPlayer].g_iMinimumHumans, value, 1, 32);
-							g_esPlayer[iPlayer].g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esPlayer[iPlayer].g_iMultiHealth, value, 0, 3);
-							g_esPlayer[iPlayer].g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esPlayer[iPlayer].g_iRenamePlayers, value, 0, 1);
 							g_esPlayer[iPlayer].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_esPlayer[iPlayer].g_iGlowEnabled, value, 0, 1);
 							g_esPlayer[iPlayer].g_iGlowFlashing = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "glowflashing", g_esPlayer[iPlayer].g_iGlowFlashing, value, 0, 1);
 							g_esPlayer[iPlayer].g_iGlowType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowType", "Glow Type", "Glow_Type", "glowtype", g_esPlayer[iPlayer].g_iGlowType, value, 0, 1);
+							g_esPlayer[iPlayer].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esPlayer[iPlayer].g_iDisplayHealth, value, 0, 11);
+							g_esPlayer[iPlayer].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esPlayer[iPlayer].g_iDisplayHealthType, value, 0, 2);
+							g_esPlayer[iPlayer].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_esPlayer[iPlayer].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+							g_esPlayer[iPlayer].g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esPlayer[iPlayer].g_iMinimumHumans, value, 1, 32);
+							g_esPlayer[iPlayer].g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esPlayer[iPlayer].g_iMultiHealth, value, 0, 3);
+							g_esPlayer[iPlayer].g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esPlayer[iPlayer].g_iRenamePlayers, value, 0, 1);
 							g_esPlayer[iPlayer].g_iBossStages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_esPlayer[iPlayer].g_iBossStages, value, 1, 4);
 							g_esPlayer[iPlayer].g_iRandomTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomTank", "Random Tank", "Random_Tank", "random", g_esPlayer[iPlayer].g_iRandomTank, value, 0, 1);
 							g_esPlayer[iPlayer].g_flRandomInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_esPlayer[iPlayer].g_flRandomInterval, value, 0.1, 999999.0);
@@ -3440,7 +3555,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_iBodyEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_esPlayer[iPlayer].g_iBodyEffects, value, 0, 127);
 							g_esPlayer[iPlayer].g_iRockEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esPlayer[iPlayer].g_iRockEffects, value, 0, 15);
 							g_esPlayer[iPlayer].g_flClawDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esPlayer[iPlayer].g_flClawDamage, value, -1.0, 999999.0);
-							g_esPlayer[iPlayer].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_esPlayer[iPlayer].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 							g_esPlayer[iPlayer].g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esPlayer[iPlayer].g_flRockDamage, value, -1.0, 999999.0);
 							g_esPlayer[iPlayer].g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esPlayer[iPlayer].g_flRunSpeed, value, -1.0, 3.0);
 							g_esPlayer[iPlayer].g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esPlayer[iPlayer].g_flThrowInterval, value, -1.0, 999999.0);
@@ -3455,10 +3569,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								if (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false))
 								{
 									strcopy(g_esPlayer[iPlayer].g_sTankName, sizeof(esPlayer::g_sTankName), value);
-								}
-								else if (StrEqual(key, "HealthCharacters", false) || StrEqual(key, "Health Characters", false) || StrEqual(key, "Health_Characters", false) || StrEqual(key, "hpchars", false))
-								{
-									strcopy(g_esPlayer[iPlayer].g_sHealthCharacters, sizeof(esPlayer::g_sHealthCharacters), value);
 								}
 								else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 								{
@@ -3490,6 +3600,13 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 									g_esPlayer[iPlayer].g_iGlowMinRange = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, 999999) : g_esPlayer[iPlayer].g_iGlowMinRange;
 									g_esPlayer[iPlayer].g_iGlowMaxRange = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, 999999) : g_esPlayer[iPlayer].g_iGlowMaxRange;
+								}
+							}
+							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Health", false))
+							{
+								if (StrEqual(key, "HealthCharacters", false) || StrEqual(key, "Health Characters", false) || StrEqual(key, "Health_Characters", false) || StrEqual(key, "hpchars", false))
+								{
+									strcopy(g_esPlayer[iPlayer].g_sHealthCharacters, sizeof(esPlayer::g_sHealthCharacters), value);
 								}
 							}
 							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Administration", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "admin", false))
@@ -3708,13 +3825,21 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				vCacheSettings(iBot);
 			}
 		}
-		else if (StrEqual(name, "finale_escape_start") || StrEqual(name, "finale_vehicle_ready") || StrEqual(name, "finale_vehicle_leaving"))
+		else if (StrEqual(name, "finale_escape_start") || StrEqual(name, "finale_vehicle_incoming") || StrEqual(name, "finale_vehicle_ready") || StrEqual(name, "finale_vehicle_leaving") || StrEqual(name, "finale_win"))
 		{
 			g_esGeneral.g_iTankWave = 3;
+
+			vExecuteFinaleConfigs(name);
 		}
-		else if (StrEqual(name, "finale_start"))
+		else if (StrEqual(name, "finale_start") || StrEqual(name, "gauntlet_finale_start"))
 		{
 			g_esGeneral.g_iTankWave = 1;
+
+			vExecuteFinaleConfigs(name);
+		}
+		else if (StrEqual(name, "finale_rush") || StrEqual(name, "finale_radio_start") || StrEqual(name, "finale_radio_damaged") || StrEqual(name, "finale_bridge_lowering"))
+		{
+			vExecuteFinaleConfigs(name);
 		}
 		else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
 		{
@@ -3880,6 +4005,20 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
+static void vExecuteFinaleConfigs(const char[] filename)
+{
+	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_FINALE) && g_esGeneral.g_iConfigEnable == 1)
+	{
+		static char sFilePath[PLATFORM_MAX_PATH], sFinaleConfig[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "data/mutant_tanks/finale_configs/");
+		FormatEx(sFilePath, sizeof(sFilePath), "%s%s.cfg", sFinaleConfig, filename);
+		if (FileExists(sFilePath, true))
+		{
+			vCustomConfig(sFilePath);
+		}
+	}
+}
+
 static void vPluginStatus()
 {
 	bool bPluginAllowed = g_esGeneral.g_cvMTPluginEnabled.BoolValue && g_esGeneral.g_iPluginEnabled == 1, bPluginEnabled = bIsPluginEnabled();
@@ -3940,6 +4079,10 @@ static void vHookEvents(bool hook)
 		HookEvent("finale_start", vEventHandler, EventHookMode_Pre);
 		HookEvent("finale_vehicle_leaving", vEventHandler);
 		HookEvent("finale_vehicle_ready", vEventHandler);
+		HookEvent("finale_rush", vEventHandler);
+		HookEvent("finale_radio_start", vEventHandler);
+		HookEvent("finale_radio_damaged", vEventHandler);
+		HookEvent("finale_win", vEventHandler);
 		HookEvent("mission_lost", vEventHandler);
 		HookEvent("player_bot_replace", vEventHandler);
 		HookEvent("player_death", vEventHandler, EventHookMode_Pre);
@@ -3947,6 +4090,13 @@ static void vHookEvents(bool hook)
 		HookEvent("player_spawn", vEventHandler);
 		HookEvent("player_now_it", vEventHandler);
 		HookEvent("player_no_longer_it", vEventHandler);
+
+		if (bIsValidGame())
+		{
+			HookEvent("finale_vehicle_incoming", vEventHandler);
+			HookEvent("finale_bridge_lowering", vEventHandler);
+			HookEvent("gauntlet_finale_start", vEventHandler);
+		}
 
 		vHookEventForward(true);
 	}
@@ -3960,6 +4110,10 @@ static void vHookEvents(bool hook)
 		UnhookEvent("finale_start", vEventHandler, EventHookMode_Pre);
 		UnhookEvent("finale_vehicle_leaving", vEventHandler);
 		UnhookEvent("finale_vehicle_ready", vEventHandler);
+		UnhookEvent("finale_rush", vEventHandler);
+		UnhookEvent("finale_radio_start", vEventHandler);
+		UnhookEvent("finale_radio_damaged", vEventHandler);
+		UnhookEvent("finale_win", vEventHandler);
 		UnhookEvent("mission_lost", vEventHandler);
 		UnhookEvent("player_bot_replace", vEventHandler);
 		UnhookEvent("player_death", vEventHandler, EventHookMode_Pre);
@@ -3967,6 +4121,13 @@ static void vHookEvents(bool hook)
 		UnhookEvent("player_spawn", vEventHandler);
 		UnhookEvent("player_now_it", vEventHandler);
 		UnhookEvent("player_no_longer_it", vEventHandler);
+
+		if (bIsValidGame())
+		{
+			UnhookEvent("finale_vehicle_incoming", vEventHandler);
+			UnhookEvent("finale_bridge_lowering", vEventHandler);
+			UnhookEvent("gauntlet_finale_start", vEventHandler);
+		}
 
 		vHookEventForward(false);
 	}
@@ -4366,11 +4527,12 @@ static void vSetProps(int tank)
 				{
 					SDKUnhook(g_esPlayer[tank].g_iLight[iLight], SDKHook_SetTransmit, SetTransmit);
 					RemoveEntity(g_esPlayer[tank].g_iLight[iLight]);
+				}
 
-					if (g_esCache[tank].g_iPropsAttached & MT_PROP_LIGHT)
-					{
-						vLightProp(tank, iLight, flOrigin, flAngles);
-					}
+				g_esPlayer[tank].g_iLight[iLight] = INVALID_ENT_REFERENCE;
+				if (g_esCache[tank].g_iPropsAttached & MT_PROP_LIGHT)
+				{
+					vLightProp(tank, iLight, flOrigin, flAngles);
 				}
 			}
 		}
@@ -4460,37 +4622,37 @@ static void vSetProps(int tank)
 			else if (bIsValidEntRef(g_esPlayer[tank].g_iOzTank[iOzTank]))
 			{
 				g_esPlayer[tank].g_iOzTank[iOzTank] = EntRefToEntIndex(g_esPlayer[tank].g_iOzTank[iOzTank]);
-				if (bIsValidEntity(g_esPlayer[tank].g_iOzTank[iOzTank]))
+				if (g_esCache[tank].g_iPropsAttached & MT_PROP_OXYGENTANK)
 				{
-					if (g_esCache[tank].g_iPropsAttached & MT_PROP_OXYGENTANK)
-					{
-						SetEntityRenderColor(g_esPlayer[tank].g_iOzTank[iOzTank], g_esCache[tank].g_iOzTankColor[0], g_esCache[tank].g_iOzTankColor[1], g_esCache[tank].g_iOzTankColor[2], g_esCache[tank].g_iOzTankColor[3]);
-					}
-					else
+					SetEntityRenderColor(g_esPlayer[tank].g_iOzTank[iOzTank], g_esCache[tank].g_iOzTankColor[0], g_esCache[tank].g_iOzTankColor[1], g_esCache[tank].g_iOzTankColor[2], g_esCache[tank].g_iOzTankColor[3]);
+				}
+				else
+				{
+					if (bIsValidEntity(g_esPlayer[tank].g_iOzTank[iOzTank]))
 					{
 						SDKUnhook(g_esPlayer[tank].g_iOzTank[iOzTank], SDKHook_SetTransmit, SetTransmit);
 						RemoveEntity(g_esPlayer[tank].g_iOzTank[iOzTank]);
-
-						g_esPlayer[tank].g_iOzTank[iOzTank] = INVALID_ENT_REFERENCE;
 					}
+
+					g_esPlayer[tank].g_iOzTank[iOzTank] = INVALID_ENT_REFERENCE;
 				}
 
 				if (bIsValidEntRef(g_esPlayer[tank].g_iFlame[iOzTank]))
 				{
 					g_esPlayer[tank].g_iFlame[iOzTank] = EntRefToEntIndex(g_esPlayer[tank].g_iFlame[iOzTank]);
-					if (bIsValidEntity(g_esPlayer[tank].g_iFlame[iOzTank]))
+					if (g_esCache[tank].g_iPropsAttached & MT_PROP_FLAME)
 					{
-						if (g_esCache[tank].g_iPropsAttached & MT_PROP_FLAME)
-						{
-							SetEntityRenderColor(g_esPlayer[tank].g_iFlame[iOzTank], g_esCache[tank].g_iFlameColor[0], g_esCache[tank].g_iFlameColor[1], g_esCache[tank].g_iFlameColor[2], g_esCache[tank].g_iFlameColor[3]);
-						}
-						else
+						SetEntityRenderColor(g_esPlayer[tank].g_iFlame[iOzTank], g_esCache[tank].g_iFlameColor[0], g_esCache[tank].g_iFlameColor[1], g_esCache[tank].g_iFlameColor[2], g_esCache[tank].g_iFlameColor[3]);
+					}
+					else
+					{
+						if (bIsValidEntity(g_esPlayer[tank].g_iFlame[iOzTank]))
 						{
 							SDKUnhook(g_esPlayer[tank].g_iFlame[iOzTank], SDKHook_SetTransmit, SetTransmit);
 							RemoveEntity(g_esPlayer[tank].g_iFlame[iOzTank]);
-
-							g_esPlayer[tank].g_iFlame[iOzTank] = INVALID_ENT_REFERENCE;
 						}
+
+						g_esPlayer[tank].g_iFlame[iOzTank] = INVALID_ENT_REFERENCE;
 					}
 				}
 			}
@@ -4548,20 +4710,20 @@ static void vSetProps(int tank)
 			else if (bIsValidEntRef(g_esPlayer[tank].g_iRock[iRock]))
 			{
 				g_esPlayer[tank].g_iRock[iRock] = EntRefToEntIndex(g_esPlayer[tank].g_iRock[iRock]);
-				if (bIsValidEntity(g_esPlayer[tank].g_iRock[iRock]))
+				if (g_esCache[tank].g_iPropsAttached & MT_PROP_ROCK)
 				{
-					if (g_esCache[tank].g_iPropsAttached & MT_PROP_ROCK)
-					{
-						SetEntityRenderColor(g_esPlayer[tank].g_iRock[iRock], g_esCache[tank].g_iRockColor[0], g_esCache[tank].g_iRockColor[1], g_esCache[tank].g_iRockColor[2], g_esCache[tank].g_iRockColor[3]);
-						vSetRockModel(tank, g_esPlayer[tank].g_iRock[iRock]);
-					}
-					else
+					SetEntityRenderColor(g_esPlayer[tank].g_iRock[iRock], g_esCache[tank].g_iRockColor[0], g_esCache[tank].g_iRockColor[1], g_esCache[tank].g_iRockColor[2], g_esCache[tank].g_iRockColor[3]);
+					vSetRockModel(tank, g_esPlayer[tank].g_iRock[iRock]);
+				}
+				else
+				{
+					if (bIsValidEntity(g_esPlayer[tank].g_iRock[iRock]))
 					{
 						SDKUnhook(g_esPlayer[tank].g_iRock[iRock], SDKHook_SetTransmit, SetTransmit);
 						RemoveEntity(g_esPlayer[tank].g_iRock[iRock]);
-
-						g_esPlayer[tank].g_iRock[iRock] = INVALID_ENT_REFERENCE;
 					}
+
+					g_esPlayer[tank].g_iRock[iRock] = INVALID_ENT_REFERENCE;
 				}
 			}
 		}
@@ -4609,19 +4771,19 @@ static void vSetProps(int tank)
 			else if (bIsValidEntRef(g_esPlayer[tank].g_iTire[iTire]))
 			{
 				g_esPlayer[tank].g_iTire[iTire] = EntRefToEntIndex(g_esPlayer[tank].g_iTire[iTire]);
-				if (bIsValidEntity(g_esPlayer[tank].g_iTire[iTire]))
+				if (g_esCache[tank].g_iPropsAttached & MT_PROP_TIRE)
 				{
-					if (g_esCache[tank].g_iPropsAttached & MT_PROP_TIRE)
-					{
-						SetEntityRenderColor(g_esPlayer[tank].g_iTire[iTire], g_esCache[tank].g_iTireColor[0], g_esCache[tank].g_iTireColor[1], g_esCache[tank].g_iTireColor[2], g_esCache[tank].g_iTireColor[3]);
-					}
-					else
+					SetEntityRenderColor(g_esPlayer[tank].g_iTire[iTire], g_esCache[tank].g_iTireColor[0], g_esCache[tank].g_iTireColor[1], g_esCache[tank].g_iTireColor[2], g_esCache[tank].g_iTireColor[3]);
+				}
+				else
+				{
+					if (bIsValidEntity(g_esPlayer[tank].g_iTire[iTire]))
 					{
 						SDKUnhook(g_esPlayer[tank].g_iTire[iTire], SDKHook_SetTransmit, SetTransmit);
 						RemoveEntity(g_esPlayer[tank].g_iTire[iTire]);
-
-						g_esPlayer[tank].g_iTire[iTire] = INVALID_ENT_REFERENCE;
 					}
+
+					g_esPlayer[tank].g_iTire[iTire] = INVALID_ENT_REFERENCE;
 				}
 			}
 		}
@@ -4663,19 +4825,19 @@ static void vSetProps(int tank)
 		else if (bIsValidEntRef(g_esPlayer[tank].g_iPropaneTank))
 		{
 			g_esPlayer[tank].g_iPropaneTank = EntRefToEntIndex(g_esPlayer[tank].g_iPropaneTank);
-			if (bIsValidEntity(g_esPlayer[tank].g_iPropaneTank))
+			if (g_esCache[tank].g_iPropsAttached & MT_PROP_PROPANETANK)
 			{
-				if (g_esCache[tank].g_iPropsAttached & MT_PROP_PROPANETANK)
-				{
-					SetEntityRenderColor(g_esPlayer[tank].g_iPropaneTank, g_esCache[tank].g_iPropTankColor[0], g_esCache[tank].g_iPropTankColor[1], g_esCache[tank].g_iPropTankColor[2], g_esCache[tank].g_iPropTankColor[3]);
-				}
-				else
+				SetEntityRenderColor(g_esPlayer[tank].g_iPropaneTank, g_esCache[tank].g_iPropTankColor[0], g_esCache[tank].g_iPropTankColor[1], g_esCache[tank].g_iPropTankColor[2], g_esCache[tank].g_iPropTankColor[3]);
+			}
+			else
+			{
+				if (bIsValidEntity(g_esPlayer[tank].g_iPropaneTank))
 				{
 					SDKUnhook(g_esPlayer[tank].g_iPropaneTank, SDKHook_SetTransmit, SetTransmit);
 					RemoveEntity(g_esPlayer[tank].g_iPropaneTank);
-
-					g_esPlayer[tank].g_iPropaneTank = INVALID_ENT_REFERENCE;
 				}
+
+				g_esPlayer[tank].g_iPropaneTank = INVALID_ENT_REFERENCE;
 			}
 		}
 	}
@@ -4853,6 +5015,11 @@ static void vMutateTank(int tank)
 
 		CreateTimer(0.1, tTimerCheckView, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(1.0, tTimerTankUpdate, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+
+		if (g_esGeneral.g_flIdleCheck > 0.0)
+		{
+			CreateTimer(g_esGeneral.g_flIdleCheck, tTimerKillIdleTank, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+		}
 
 		switch (g_esTank[g_esPlayer[tank].g_iTankType].g_iSpawnMode)
 		{
@@ -5294,6 +5461,53 @@ static bool bIsTankAllowed(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|
 	return true;
 }
 
+static bool bIsTankIdle(int tank)
+{
+	if (!bIsTank(tank) || bIsTank(tank, MT_CHECK_FAKECLIENT))
+	{
+		return false;
+	}
+
+	Address adTank = GetEntityAddress(tank);
+	if (adTank == Address_Null)
+	{
+		return false;
+	}
+
+	Address adIntention = view_as<Address>(iDereference(adTank, g_esGeneral.g_iIntentionOffset));
+	if (adIntention == Address_Null)
+	{
+		return false;
+	}
+
+	Address adBehavior = adGetFirstContainedResponder(adIntention);
+	if (adBehavior == Address_Null)
+	{
+		return false;
+	}
+
+	Address adAction = adGetFirstContainedResponder(adBehavior);
+	if (adAction == Address_Null)
+	{
+		return false;
+	}
+
+	Address adChildAction;
+	while ((adChildAction = adGetFirstContainedResponder(adAction)) != Address_Null)
+	{
+		adAction = adChildAction;
+	}
+
+	char sAction[64];
+	SDKCall(g_esGeneral.g_hSDKActionGetName, adAction, sAction, sizeof(sAction));
+	if (StrEqual(sAction, "TankIdle"))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 static bool bIsTypeAvailable(int type, int tank = 0)
 {
 	if ((tank > 0 && g_esCache[tank].g_iDetectPlugins == 0) || (g_esGeneral.g_iDetectPlugins == 0 && g_esTank[type].g_iDetectPlugins == 0))
@@ -5397,6 +5611,16 @@ static int iChooseType(int exclude, int tank = 0, int min = 0, int max = 0)
 	return 0;
 }
 
+static int iDereference(Address address, int offset = 0)
+{
+	if (address == Address_Null)
+	{
+		return -1;
+	}
+
+	return LoadFromAddress(address + view_as<Address>(offset), NumberType_Int32);
+}
+
 static int iGetRealType(int type, int exclude = 0, int tank = 0, int min = 0, int max = 0)
 {
 	static Action aResult;
@@ -5449,6 +5673,11 @@ static int iGetTypeCount(int type)
 	return iTypeCount;
 }
 
+static Address adGetFirstContainedResponder(Address address)
+{
+	return view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, address));
+}
+
 #if defined _l4dh_included
 public void L4D_OnEnterGhostState(int client)
 {
@@ -5494,13 +5723,13 @@ static void vSetupSignatures()
 				g_esGeneral.g_hLaunchDirectionDetour = DHookCreateFromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
 				if (g_esGeneral.g_hLaunchDirectionDetour == null)
 				{
-					LogError("Failed to find signature: CEnvRockLauncher::LaunchCurrentDir");
+					PrintToServer("Failed to find signature: CEnvRockLauncher::LaunchCurrentDir");
 				}
 
 				g_esGeneral.g_hTankRockDetour = DHookCreateFromConf(gdMutantTanks, "CTankRock::Create");
 				if (g_esGeneral.g_hTankRockDetour == null)
 				{
-					LogError("Failed to find signature: CTankRock::Create");
+					PrintToServer("Failed to find signature: CTankRock::Create");
 				}
 
 				delete gdMutantTanks;
@@ -5599,8 +5828,12 @@ public void vMTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
 
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
-		vLoadConfigs(sDifficultyConfig, 2);
-		vPluginStatus();
+		if (FileExists(sDifficultyConfig, true))
+		{
+			vCustomConfig(sDifficultyConfig);
+			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+			g_esGeneral.g_iFileTimeNew[1] = g_esGeneral.g_iFileTimeOld[1];
+		}
 	}
 }
 
@@ -5782,6 +6015,19 @@ public Action tTimerIceEffect(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
+public Action tTimerKillIdleTank(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT) || !bIsTankIdle(iTank))
+	{
+		return Plugin_Stop;
+	}
+
+	ForcePlayerSuicide(iTank);
+
+	return Plugin_Continue;
+}
+
 public Action tTimerKillStuckTank(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
@@ -5915,7 +6161,7 @@ public Action tTimerTankUpdate(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsCloneAllowed(iTank) || g_esPlayer[iTank].g_iTankType <= 0)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsCloneAllowed(iTank) || bIsTankIdle(iTank) || g_esPlayer[iTank].g_iTankType <= 0)
 	{
 		return Plugin_Stop;
 	}
@@ -5984,7 +6230,7 @@ public void vRockThrowFrame(int ref)
 	{
 		static int iThrower;
 		iThrower = GetEntPropEnt(iRock, Prop_Data, "m_hThrower");
-		if (bIsTankAllowed(iThrower) && bHasCoreAdminAccess(iThrower) && g_esTank[g_esPlayer[iThrower].g_iTankType].g_iTankEnabled == 1)
+		if (bIsTankAllowed(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esTank[g_esPlayer[iThrower].g_iTankType].g_iTankEnabled == 1)
 		{
 			SetEntityRenderColor(iRock, g_esCache[iThrower].g_iRockColor[0], g_esCache[iThrower].g_iRockColor[1], g_esCache[iThrower].g_iRockColor[2], g_esCache[iThrower].g_iRockColor[3]);
 			vSetRockModel(iThrower, iRock);
@@ -6061,15 +6307,33 @@ public Action tTimerTankWave(Handle timer)
 	return Plugin_Continue;
 }
 
+public Action tTimerExecuteCustomConfig(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	char sSavePath[PLATFORM_MAX_PATH];
+	pack.ReadString(sSavePath, sizeof(sSavePath));
+	if (sSavePath[0] != '\0')
+	{
+		vLoadConfigs(sSavePath, 2);
+		vPluginStatus();
+	}
+
+	return Plugin_Continue;
+}
+
 public Action tTimerRefreshConfigs(Handle timer)
 {
-	g_esGeneral.g_iFileTimeNew[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
-	if (g_esGeneral.g_iFileTimeOld[0] != g_esGeneral.g_iFileTimeNew[0])
+	if (FileExists(g_esGeneral.g_sSavePath, true))
 	{
-		PrintToServer("%s %t", MT_TAG, "ReloadingConfig", g_esGeneral.g_sSavePath);
-		vLoadConfigs(g_esGeneral.g_sSavePath, 1);
-		vPluginStatus();
-		g_esGeneral.g_iFileTimeOld[0] = g_esGeneral.g_iFileTimeNew[0];
+		g_esGeneral.g_iFileTimeNew[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
+		if (g_esGeneral.g_iFileTimeOld[0] != g_esGeneral.g_iFileTimeNew[0])
+		{
+			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", g_esGeneral.g_sSavePath);
+			vLoadConfigs(g_esGeneral.g_sSavePath, 1);
+			vPluginStatus();
+			g_esGeneral.g_iFileTimeOld[0] = g_esGeneral.g_iFileTimeNew[0];
+		}
 	}
 
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_iConfigEnable == 1 && g_esGeneral.g_cvMTDifficulty != null)
@@ -6077,13 +6341,15 @@ public Action tTimerRefreshConfigs(Handle timer)
 		static char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
-		g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
-		if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1])
+		if (FileExists(sDifficultyConfig, true))
 		{
-			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDifficultyConfig);
-			vLoadConfigs(sDifficultyConfig, 2);
-			vPluginStatus();
-			g_esGeneral.g_iFileTimeOld[1] = g_esGeneral.g_iFileTimeNew[1];
+			g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+			if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1])
+			{
+				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDifficultyConfig);
+				vCustomConfig(sDifficultyConfig);
+				g_esGeneral.g_iFileTimeOld[1] = g_esGeneral.g_iFileTimeNew[1];
+			}
 		}
 	}
 
@@ -6091,14 +6357,16 @@ public Action tTimerRefreshConfigs(Handle timer)
 	{
 		static char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
 		GetCurrentMap(sMap, sizeof(sMap));
-		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_map_configs/%s.cfg" : "data/mutant_tanks/l4d_map_configs/%s.cfg"), sMap);
-		g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
-		if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2])
+		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
+		if (FileExists(sMapConfig, true))
 		{
-			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sMapConfig);
-			vLoadConfigs(sMapConfig, 2);
-			vPluginStatus();
-			g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
+			g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+			if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2])
+			{
+				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sMapConfig);
+				vCustomConfig(sMapConfig);
+				g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
+			}
 		}
 	}
 
@@ -6106,14 +6374,16 @@ public Action tTimerRefreshConfigs(Handle timer)
 	{
 		static char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 		g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), (bIsValidGame() ? "data/mutant_tanks/l4d2_gamemode_configs/%s.cfg" : "data/mutant_tanks/l4d_gamemode_configs/%s.cfg"), sMode);
-		g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
-		if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3])
+		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
+		if (FileExists(sModeConfig, true))
 		{
-			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sModeConfig);
-			vLoadConfigs(sModeConfig, 2);
-			vPluginStatus();
-			g_esGeneral.g_iFileTimeOld[3] = g_esGeneral.g_iFileTimeNew[3];
+			g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
+			if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3])
+			{
+				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sModeConfig);
+				vCustomConfig(sModeConfig);
+				g_esGeneral.g_iFileTimeOld[3] = g_esGeneral.g_iFileTimeNew[3];
+			}
 		}
 	}
 
@@ -6136,39 +6406,42 @@ public Action tTimerRefreshConfigs(Handle timer)
 		}
 
 		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
-		g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
-		if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4])
+		if (FileExists(sDayConfig, true))
 		{
-			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDayConfig);
-			vLoadConfigs(sDayConfig, 2);
-			vPluginStatus();
-			g_esGeneral.g_iFileTimeOld[4] = g_esGeneral.g_iFileTimeNew[4];
+			g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
+			if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4])
+			{
+				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDayConfig);
+				vCustomConfig(sDayConfig);
+				g_esGeneral.g_iFileTimeOld[4] = g_esGeneral.g_iFileTimeNew[4];
+			}
 		}
 	}
 
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_COUNT) && g_esGeneral.g_iConfigEnable == 1)
 	{
 		static char sCountConfig[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iGetPlayerCount());
-		g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
-		if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5])
+		static int iCount;
+		iCount = iGetPlayerCount();
+		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iCount);
+		if (FileExists(sCountConfig, true))
 		{
-			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sCountConfig);
-			vLoadConfigs(sCountConfig, 2);
-			vPluginStatus();
-			g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
+			g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+			if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5])
+			{
+				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sCountConfig);
+				vCustomConfig(sCountConfig);
+				g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
+				g_esGeneral.g_iPlayerCount[1] = iCount;
+				g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+			}
+			else if (g_esGeneral.g_iPlayerCount[0] != g_esGeneral.g_iPlayerCount[1])
+			{
+				vCustomConfig(sCountConfig);
+				g_esGeneral.g_iPlayerCount[1] = iCount;
+				g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+			}
 		}
-	}
-
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_COUNT) && g_esGeneral.g_iPlayerCount[0] != g_esGeneral.g_iPlayerCount[1])
-	{
-		g_esGeneral.g_iPlayerCount[1] = iGetPlayerCount();
-
-		static char sCountConfig[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", g_esGeneral.g_iPlayerCount[1]);
-		vLoadConfigs(sCountConfig, 2);
-		vPluginStatus();
-		g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
 	}
 
 	return Plugin_Continue;
