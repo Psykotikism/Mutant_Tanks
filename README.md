@@ -23,7 +23,7 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 
 ## Features
 1. Enable/disable the plugin in all game modes.
-2. Supports custom configurations, whether per difficulty, per map, per game mode, per day, or per player count.
+2. Supports custom configurations, whether per difficulty, per map, per game mode, per day, per player count, or per finale stage.
 3. Fully customize all Mutant Tanks.
 4. Store up to 1,000 Mutant Tank types.
 5. Four different formats for the config file.
@@ -121,10 +121,11 @@ By default, Mutant Tanks can create and execute the following types of configura
 3. Game mode - Files are created/executed based on the current game mode. (Example: If the current game mode is Versus, then `versus.cfg` is executed (or created if it doesn't exist already).
 4. Daily - Files are created/executed based on the current day. (Example: If the current day is Friday, then `friday.cfg` is executed (or created if it doesn't exist already).
 5. Player count - Files are created/executed based on the current number of human players. (Example: If the current number is 8, then `8.cfg` is executed (or created if it doesn't exist already).
+6. Finale stages - Files are created/executed based on the finale stages called by the game. (Example: If the finale starts, then `finale_start.cfg` is executed (or created if it doesn't exist already)).
 
 #### Features
-1. Create custom config files (can be based on difficulty, map, game mode, day, player count, or custom name).
-2. Execute custom config files (can be based on difficulty, map, game mode, day, player count, or custom name).
+1. Create custom config files (can be based on difficulty, map, game mode, day, player count, or finale stage).
+2. Execute custom config files (can be based on difficulty, map, game mode, day, player count, or finale stage).
 3. Automatically generate config files for up to 66 players, all difficulties specified by `z_difficulty`, maps installed on the server, game modes specified by `sv_gametypes` and `mp_gamemode`, and days.
 
 ## Questions You May Have
@@ -1480,7 +1481,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 32-35 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines 36-39 of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
@@ -1574,6 +1575,7 @@ Examples:
 "Create Config Types" "7" // Creates the folders and config files for each difficulty, map, and game mode.
 "Create Config Types" "8" // Creates the folder and config files for each day.
 "Create Config Types" "31" // Creates the folders and config files for each difficulty, map, game mode, day, and player count.
+"Create Config Types" "63" // Creates the folders and config files for each difficulty, map, game mode, day, player count, and finale stage.
 ```
 
 3. How do I tell the plugin to only execute certain custom config files?
@@ -1586,6 +1588,7 @@ Examples:
 "Execute Config Types" "7" // Executes the config file for the current difficulty, map, and game mode.
 "Execute Config Types" "8" // Executes the config file for the current day.
 "Execute Config Types" "31" // Executes the config file for the current difficulty, map, game mode, day, and player count.
+"Execute Config Types" "63" // Executes the config file for the current difficulty, map, game mode, day, player count, and finale stage.
 ```
 
 ## Credits

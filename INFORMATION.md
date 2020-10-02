@@ -5,7 +5,7 @@
 > Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file and recompile at your own risk.)
-- Ability count: 75 (Suggest more if you want; we always needs more.)
+- Ability count: 73 (Suggest more if you want; we always needs more.)
 
 ## Sections
 - Plugin Settings
@@ -83,10 +83,11 @@
 			"Finales Only"				"0"
 
 			// Kill Mutant Tanks that are idle for this many seconds.
+			// Note: It is recommended to use this in finale stage configs only since idle Tanks do not spawn once finales have started.
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0
-			"Idle Check"				"15.0"
+			"Idle Check"				"0.0"
 
 			// The range of types to check for.
 			// --
@@ -390,7 +391,7 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
-			// Maximum: 31
+			// Maximum: 63
 			// --
 			// 0: OFF
 			// 1: Difficulties
@@ -398,6 +399,7 @@
 			// 4: Game modes
 			// 8: Days
 			// 16: Player count
+			// 32: Finale stages
 			"Create Config Types"			"0"
 
 			// The type of custom config that Mutant Tanks executes.
@@ -405,7 +407,7 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
-			// Maximum: 31
+			// Maximum: 63
 			// --
 			// 0: OFF
 			// 1: Difficulties
@@ -413,6 +415,7 @@
 			// 4: Game modes
 			// 8: Days
 			// 16: Player count
+			// 32: Finale stages
 			"Execute Config Types"			"0"
 		}
 	}

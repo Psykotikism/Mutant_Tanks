@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.78 (October 1, 2020)
+## Version 8.78 (October 2, 2020)
 
 Bug fixes:
 
@@ -31,6 +31,7 @@ Changes:
 - `Health Characters`
 - `Minimum Humans`
 - `Multiply Health`
+10. Added `finale_configs` as an option for the `Create Config Types` and `Execute Config Types` settings.
 
 Files:
 
