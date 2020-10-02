@@ -404,6 +404,7 @@
 			"Create Config Types"			"0"
 
 			// The type of custom config that Mutant Tanks executes.
+			// Note: Custom config files that do not exist will not be executed.
 			// --
 			// Add up numbers together for different results.
 			// --

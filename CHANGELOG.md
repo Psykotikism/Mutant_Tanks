@@ -7,11 +7,12 @@ Bug fixes:
 1. Fixed the `Fast`, `Ghost`, and `Item` abilities' settings not being read when using one of the other config formats.
 2. Fixed props not showing up on Tanks sometimes regardless of settings. (Thanks to Mi.Cura for reporting!)
 3. Fixed the `Drop` ability not creating nor dropping any weapons.
+4. Fixed difficulty configs not updating their file time changes when the `z_difficulty` setting is updated.
 
 Changes:
 
 1. Added the `Drop Weapon Name` setting for the `Drop` ability. (Requested by Tank Rush.)
-2. The `Drop` ability now supports the two new melee weapons from The Last Stand update.
+2. The `Drop` ability now supports the two new melee weapons from `The Last Stand` update.
 3. Changed the minimum value of the `Drop` ability's `Drop Weapon Scale` from `1.0` to `0.1`.
 4. Set a fixed default size (`1.5`) for weapons attached to Tanks by the `Drop` ability.
 5. Added the `Idle Check` setting under `Plugin Settings/General` section.
@@ -32,6 +33,8 @@ Changes:
 - `Minimum Humans`
 - `Multiply Health`
 10. Added `Finale stages` as an option for the `Create Config Types` and `Execute Config Types` settings.
+11. The core plugin will no longer work if the main config file does not exist.
+12. Custom config files are no longer executed if they do not exist.
 
 Files:
 
@@ -167,7 +170,7 @@ Changes:
 - `Shield Health`
 - `Shield Health Characters`
 3. Added more options to the `Finales Only` and `Finale Tank` settings.
-4. Added an extra layer of security to the `Clone Type` and `Respawn Type` settings to make sure that users don't cause all kinds of bugs when choosing other types that also have the `Clone` or `Respawn` ability like their respective owners.
+4. Added an extra layer of security to the `Clone Type` and `Respawn Type` settings to make sure that users do not cause all kinds of bugs when choosing other types that also have the `Clone` or `Respawn` ability like their respective owners.
 
 Files:
 
@@ -1028,7 +1031,7 @@ Changes:
 
 1. Added support for dynamic loading to the modules. (Thanks Lux!)
 2. Switched `RemoveEntity(entity)` back to `AcceptEntityInput(entity, "Kill")` just to be courteous to those who prefer to still use SM 1.8.
-3. Removed `IsDedicatedServer()` just to be courteous to those who do not have dedicated servers. (Please don't report bugs if you're playing on a local/listen server. :/)
+3. Removed `IsDedicatedServer()` just to be courteous to those who do not have dedicated servers. (Please do not report bugs if you're playing on a local/listen server. :/)
 
 ## Version 8.36 (August 20, 2018)
 

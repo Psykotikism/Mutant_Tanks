@@ -126,7 +126,7 @@ By default, Mutant Tanks can create and execute the following types of configura
 #### Features
 1. Create custom config files (can be based on difficulty, map, game mode, day, player count, or finale stage).
 2. Execute custom config files (can be based on difficulty, map, game mode, day, player count, or finale stage).
-3. Automatically generate config files for up to 66 players, all difficulties specified by `z_difficulty`, maps installed on the server, game modes specified by `sv_gametypes` and `mp_gamemode`, and days.
+3. Automatically generate config files for up to 66 players, all difficulties specified by `z_difficulty`, maps installed on the server, game modes specified by `sv_gametypes` and `mp_gamemode`, days of the `week`, and all possible `finale stages`.
 
 ## Questions You May Have
 > If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140).
