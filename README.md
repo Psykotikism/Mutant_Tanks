@@ -1179,7 +1179,7 @@ If you are a Tank:
 
 ```
 // Accessible by the developer and admins with "z" (Root) flag only.
-sm_mt_config - View a section of the config file.
+sm_mt_config - View a section of a config file.
 sm_mt_list - View a list of installed abilities.
 sm_mt_version - View a list of installed abilities.
 sm_tank2 - Spawn a Mutant Tank.

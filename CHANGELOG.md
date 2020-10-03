@@ -1,5 +1,22 @@
 # Changelog
 
+## Version 8.79 (October 31, 2020)
+
+Bug fixes:
+
+1. Fixed the plugin creating the wrong folder for finale stage configs.
+
+Changes:
+
+1. The `sm_mt_config` now allows users to choose from a list of config file paths.
+2. Added new options for the `Warp` ability's `Warp Mode` setting.
+
+Files:
+
+1. Updated config file.
+2. Updated include file.
+3. Updated translation file.
+
 ## Version 8.78 (October 2, 2020)
 
 Bug fixes:

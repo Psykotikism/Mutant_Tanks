@@ -469,7 +469,7 @@
 			// 1: ON
 			"Tank Note"				"0"
 
-			// The game can spawn the Mutant Tank.
+			// The Mutant Tank can spawn.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: The Mutant Tank will still appear on the Mutant Tanks menu and other Mutant Tanks can still transform into the Mutant Tank.
 			// --
@@ -9746,6 +9746,8 @@
 			// --
 			// 0: The Mutant Tank warps to a random survivor.
 			// 1: The Mutant Tank switches places with a random survivor.
+			// 2: The Mutant Tank warps to a random Tank.
+			// 3: The Mutant Tank switches places with a random Tank.
 			"Warp Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
