@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Slow Ability v8.78"
+#file "Slow Ability v8.79"
 
 public Plugin myinfo =
 {

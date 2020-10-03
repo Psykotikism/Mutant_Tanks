@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Leech Ability v8.78"
+#file "Leech Ability v8.79"
 
 public Plugin myinfo =
 {

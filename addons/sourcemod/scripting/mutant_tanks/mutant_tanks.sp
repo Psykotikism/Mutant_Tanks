@@ -22,7 +22,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Mutant Tanks v8.78"
+#file "Mutant Tanks v8.79"
 
 public Plugin myinfo =
 {
@@ -110,7 +110,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_GAMEMODE (1 << 2) // l4d_gamemode_configs/l4d2_gamemode_configs
 #define MT_CONFIG_DAY (1 << 3) // daily_configs
 #define MT_CONFIG_COUNT (1 << 4) // playercount_configs
-#define MT_CONFIG_FINALE (1 << 5) // finale_configs
+#define MT_CONFIG_FINALE (1 << 5) // l4d_finale_configs/l4d2_finale_configs
 
 #define MT_PARTICLE_BLOOD (1 << 0) // blood particle
 #define MT_PARTICLE_ELECTRICITY (1 << 1) // electric particle
@@ -147,6 +147,7 @@ enum struct esGeneral
 {
 	ArrayList g_alAbilitySections[4];
 	ArrayList g_alAdmins;
+	ArrayList g_alFilePaths;
 	ArrayList g_alPlugins;
 
 	bool g_bAbilityPlugin[MT_MAX_ABILITIES + 1];
@@ -162,7 +163,6 @@ enum struct esGeneral
 	char g_sEnabledGameModes[513];
 	char g_sHealthCharacters[4];
 	char g_sSavePath[PLATFORM_MAX_PATH];
-	char g_sUsedPath[PLATFORM_MAX_PATH];
 
 	ConfigState g_csState;
 
@@ -282,6 +282,7 @@ enum struct esPlayer
 	bool g_bTransformed;
 	bool g_bUsedParser;
 
+	char g_sChosenPath[PLATFORM_MAX_PATH];
 	char g_sHealthCharacters[4];
 	char g_sOriginalName[33];
 	char g_sSection[128];
@@ -843,6 +844,8 @@ public void OnPluginStart()
 
 	vSetupSignatures();
 
+	g_esGeneral.g_alFilePaths = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -1042,7 +1045,7 @@ public void OnConfigsExecuted()
 	if ((g_esGeneral.g_iConfigCreate & MT_CONFIG_FINALE) && g_esGeneral.g_iConfigEnable == 1)
 	{
 		char sSMPath[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/finale_configs/");
+		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_finale_configs/" : "l4d_finale_configs/"));
 		CreateDirectory(sSMPath, 511);
 
 		char sEvent[32];
@@ -1163,6 +1166,13 @@ public void OnPluginEnd()
 {
 	vMultiTargetFilters(0);
 
+	if (g_esGeneral.g_alFilePaths != null)
+	{
+		g_esGeneral.g_alFilePaths.Clear();
+
+		delete g_esGeneral.g_alFilePaths;
+	}
+
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
 		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
@@ -1247,12 +1257,12 @@ public void vMTConfigMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject o
 {
 	switch (action)
 	{
-		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTConfigMenu", param);
+		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTPathMenu", param);
 		case TopMenuAction_SelectOption:
 		{
 			g_esPlayer[param].g_bAdminMenu = true;
 
-			vConfigMenu(param, 0);
+			vPathMenu(param, 0);
 		}
 	}
 }
@@ -1322,7 +1332,7 @@ public Action cmdMTConfig(int client, int args)
 		switch (IsVoteInProgress())
 		{
 			case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-			case false: vConfigMenu(client, 0);
+			case false: vPathMenu(client, 0);
 		}
 
 		return Plugin_Handled;
@@ -1334,6 +1344,7 @@ public Action cmdMTConfig(int client, int args)
 		g_esPlayer[client].g_iSection = StringToInt(g_esPlayer[client].g_sSection);
 	}
 
+	BuildPath(Path_SM, g_esPlayer[client].g_sChosenPath, sizeof(esPlayer::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
 	vParseConfig(client);
 
 	return Plugin_Handled;
@@ -1351,23 +1362,23 @@ static void vParseConfig(int client)
 		smcParser.OnKeyValue = SMCKeyValues2;
 		smcParser.OnLeaveSection = SMCEndSection2;
 		smcParser.OnEnd = SMCParseEnd2;
-		SMCError smcError = smcParser.ParseFile(g_esGeneral.g_sUsedPath);
+		SMCError smcError = smcParser.ParseFile(g_esPlayer[client].g_sChosenPath);
 
 		if (smcError != SMCError_Okay)
 		{
 			char sSmcError[64];
 			smcParser.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
 
-			PrintToServer("%s %t", MT_TAG, "ErrorParsing", g_esGeneral.g_sUsedPath, sSmcError);
-			LogError("%t", "ErrorParsing", g_esGeneral.g_sUsedPath, sSmcError);
+			PrintToServer("%s %t", MT_TAG, "ErrorParsing", g_esPlayer[client].g_sChosenPath, sSmcError);
+			LogError("%t", "ErrorParsing", g_esPlayer[client].g_sChosenPath, sSmcError);
 		}
 
 		delete smcParser;
 	}
 	else
 	{
-		PrintToServer("%s %t", MT_TAG, "FailedParsing", g_esGeneral.g_sUsedPath);
-		LogError("%t", "FailedParsing", g_esGeneral.g_sUsedPath);
+		PrintToServer("%s %t", MT_TAG, "FailedParsing", g_esPlayer[client].g_sChosenPath);
+		LogError("%t", "FailedParsing", g_esPlayer[client].g_sChosenPath);
 	}
 }
 
@@ -1570,6 +1581,87 @@ public void SMCParseEnd2(SMCParser smc, bool halted, bool failed)
 	}
 }
 
+static void vPathMenu(int admin, int item)
+{
+	Menu mPathMenu = new Menu(iPathMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mPathMenu.SetTitle("File Path Menu");
+
+	static int iCount;
+	iCount = 0;
+
+	if (g_esGeneral.g_alFilePaths != null)
+	{
+		static int iListSize;
+		iListSize = (g_esGeneral.g_alFilePaths.Length > 0) ? g_esGeneral.g_alFilePaths.Length : 0;
+		if (iListSize > 0)
+		{
+			static char sFilePath[PLATFORM_MAX_PATH], sMenuName[64];
+			static int iIndex;
+			for (int iPos = 0; iPos < iListSize; iPos++)
+			{
+				g_esGeneral.g_alFilePaths.GetString(iPos, sFilePath, sizeof(sFilePath));
+				iIndex = StrContains(sFilePath, "mutant_tanks", false);
+				FormatEx(sMenuName, sizeof(sMenuName), "%s", sFilePath[iIndex + 13]);
+				mPathMenu.AddItem(sFilePath, sMenuName);
+				iCount++;
+			}
+		}
+	}
+
+	mPathMenu.ExitBackButton = g_esPlayer[admin].g_bAdminMenu;
+
+	if (iCount > 0)
+	{
+		mPathMenu.DisplayAt(admin, item, MENU_TIME_FOREVER);
+	}
+	else
+	{
+		MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoItems");
+
+		delete mPathMenu;
+	}
+}
+
+public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Cancel:
+		{
+			if (g_esPlayer[param1].g_bAdminMenu)
+			{
+				g_esPlayer[param1].g_bAdminMenu = false;
+
+				if (param2 == MenuCancel_ExitBack && g_esGeneral.g_tmMTMenu != null)
+				{
+					g_esGeneral.g_tmMTMenu.Display(param1, TopMenuPosition_LastCategory);
+				}
+			}
+		}
+		case MenuAction_Select:
+		{
+			char sInfo[PLATFORM_MAX_PATH];
+			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			strcopy(g_esPlayer[param1].g_sChosenPath, sizeof(esPlayer::g_sChosenPath), sInfo);
+
+			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			{
+				vConfigMenu(param1, 0);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[PLATFORM_MAX_PATH];
+			Panel panel = view_as<Panel>(param2);
+			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTPathMenu", param1);
+			panel.SetTitle(sMenuTitle);
+		}
+	}
+
+	return 0;
+}
+
 static void vConfigMenu(int admin, int item)
 {
 	Menu mConfigMenu = new Menu(iConfigMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
@@ -1608,7 +1700,7 @@ static void vConfigMenu(int admin, int item)
 		}
 	}
 
-	mConfigMenu.ExitBackButton = g_esPlayer[admin].g_bAdminMenu;
+	mConfigMenu.ExitBackButton = true;
 
 	if (iCount > 0)
 	{
@@ -1629,14 +1721,9 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 		case MenuAction_End: delete menu;
 		case MenuAction_Cancel:
 		{
-			if (g_esPlayer[param1].g_bAdminMenu)
+			if (param2 == MenuCancel_ExitBack)
 			{
-				g_esPlayer[param1].g_bAdminMenu = false;
-
-				if (param2 == MenuCancel_ExitBack && g_esGeneral.g_tmMTMenu != null)
-				{
-					g_esGeneral.g_tmMTMenu.Display(param1, TopMenuPosition_LastCategory);
-				}
+				vPathMenu(param1, 0);
 			}
 		}
 		case MenuAction_Select:
@@ -2807,7 +2894,37 @@ static void vLoadConfigs(const char[] savepath, int mode)
 
 	g_esGeneral.g_iConfigMode = mode;
 	g_esGeneral.g_bSettingsFound = false;
-	strcopy(g_esGeneral.g_sUsedPath, sizeof(esGeneral::g_sUsedPath), savepath);
+	
+	if (g_esGeneral.g_alFilePaths != null)
+	{
+		static int iListSize;
+		iListSize = (g_esGeneral.g_alFilePaths.Length > 0) ? g_esGeneral.g_alFilePaths.Length : 0;
+		if (iListSize > 0)
+		{
+			static bool bAdd;
+			bAdd = true;
+			static char sFilePath[PLATFORM_MAX_PATH];
+			for (int iPos = 0; iPos < iListSize; iPos++)
+			{
+				g_esGeneral.g_alFilePaths.GetString(iPos, sFilePath, sizeof(sFilePath));
+				if (StrEqual(savepath, sFilePath, false))
+				{
+					bAdd = false;
+
+					break;
+				}
+			}
+
+			if (bAdd)
+			{
+				g_esGeneral.g_alFilePaths.PushString(savepath);
+			}
+		}
+		else
+		{
+			g_esGeneral.g_alFilePaths.PushString(savepath);
+		}
+	}
 
 	SMCParser smcLoader = new SMCParser();
 	if (smcLoader != null)
@@ -4010,7 +4127,7 @@ static void vExecuteFinaleConfigs(const char[] filename)
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_FINALE) && g_esGeneral.g_iConfigEnable == 1)
 	{
 		static char sFilePath[PLATFORM_MAX_PATH], sFinaleConfig[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "data/mutant_tanks/finale_configs/");
+		BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_finale_configs/" : "l4d_finale_configs/"));
 		FormatEx(sFilePath, sizeof(sFilePath), "%s%s.cfg", sFinaleConfig, filename);
 		if (FileExists(sFilePath, true))
 		{

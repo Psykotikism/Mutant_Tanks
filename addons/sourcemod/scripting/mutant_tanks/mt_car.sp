@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Car Ability v8.78"
+#file "Car Ability v8.79"
 
 public Plugin myinfo =
 {

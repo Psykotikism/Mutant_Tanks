@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Omni Ability v8.78"
+#file "Omni Ability v8.79"
 
 public Plugin myinfo =
 {

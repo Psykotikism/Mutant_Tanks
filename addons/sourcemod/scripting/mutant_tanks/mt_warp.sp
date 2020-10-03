@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Warp Ability v8.78"
+#file "Warp Ability v8.79"
 
 public Plugin myinfo =
 {
@@ -458,7 +458,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iWarpHit = iGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esPlayer[admin].g_iWarpHit, value, 0, 1);
 		g_esPlayer[admin].g_iWarpHitMode = iGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esPlayer[admin].g_iWarpHitMode, value, 0, 2);
 		g_esPlayer[admin].g_flWarpInterval = flGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esPlayer[admin].g_flWarpInterval, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iWarpMode = iGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esPlayer[admin].g_iWarpMode, value, 0, 1);
+		g_esPlayer[admin].g_iWarpMode = iGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esPlayer[admin].g_iWarpMode, value, 0, 3);
 		g_esPlayer[admin].g_flWarpRange = flGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esPlayer[admin].g_flWarpRange, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flWarpRangeChance = flGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esPlayer[admin].g_flWarpRangeChance, value, 0.0, 100.0);
 
@@ -489,7 +489,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iWarpHit = iGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpHit", "Warp Hit", "Warp_Hit", "hit", g_esAbility[type].g_iWarpHit, value, 0, 1);
 		g_esAbility[type].g_iWarpHitMode = iGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpHitMode", "Warp Hit Mode", "Warp_Hit_Mode", "hitmode", g_esAbility[type].g_iWarpHitMode, value, 0, 2);
 		g_esAbility[type].g_flWarpInterval = flGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpInterval", "Warp Interval", "Warp_Interval", "interval", g_esAbility[type].g_flWarpInterval, value, 0.1, 999999.0);
-		g_esAbility[type].g_iWarpMode = iGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esAbility[type].g_iWarpMode, value, 0, 1);
+		g_esAbility[type].g_iWarpMode = iGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpMode", "Warp Mode", "Warp_Mode", "mode", g_esAbility[type].g_iWarpMode, value, 0, 3);
 		g_esAbility[type].g_flWarpRange = flGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpRange", "Warp Range", "Warp_Range", "range", g_esAbility[type].g_flWarpRange, value, 1.0, 999999.0);
 		g_esAbility[type].g_flWarpRangeChance = flGetKeyValue(subsection, "warpability", "warp ability", "warp_ability", "warp", key, "WarpRangeChance", "Warp Range Chance", "Warp_Range_Chance", "rangechance", g_esAbility[type].g_flWarpRangeChance, value, 0.0, 100.0);
 
@@ -707,6 +707,35 @@ static void vWarp(int tank)
 	dpWarp.WriteCell(GetTime());
 }
 
+static void vWarp2(int tank, int other)
+{
+	static float flTankOrigin[3], flTankAngles[3];
+	GetClientAbsOrigin(tank, flTankOrigin);
+	GetClientAbsAngles(tank, flTankAngles);
+
+	static float flOtherOrigin[3], flOtherAngles[3];
+	GetClientAbsOrigin(other, flOtherOrigin);
+	GetClientAbsAngles(other, flOtherAngles);
+
+	vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0, 0.0);
+	EmitSoundToAll(SOUND_ELECTRICITY, tank);
+	TeleportEntity(tank, flOtherOrigin, flOtherAngles, NULL_VECTOR);
+
+	if (g_esCache[tank].g_iWarpMode == 1 || g_esCache[tank].g_iWarpMode == 3)
+	{
+		vAttachParticle(other, PARTICLE_ELECTRICITY, 1.0, 0.0);
+		EmitSoundToAll(SOUND_ELECTRICITY2, other);
+		TeleportEntity(other, flTankOrigin, flTankAngles, NULL_VECTOR);
+	}
+
+	if (g_esCache[tank].g_iWarpMessage & MT_MESSAGE_SPECIAL)
+	{
+		static char sTankName[33];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Warp3", sTankName, other);
+	}
+}
+
 static void vWarpAbility(int tank, bool main)
 {
 	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
@@ -898,34 +927,25 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iSurvivor;
-	iSurvivor = iGetRandomSurvivor(iTank);
-	if (bIsSurvivor(iSurvivor))
+	switch (g_esCache[iTank].g_iWarpMode)
 	{
-		static float flTankOrigin[3], flTankAngles[3];
-		GetClientAbsOrigin(iTank, flTankOrigin);
-		GetClientAbsAngles(iTank, flTankAngles);
-
-		static float flSurvivorOrigin[3], flSurvivorAngles[3];
-		GetClientAbsOrigin(iSurvivor, flSurvivorOrigin);
-		GetClientAbsAngles(iSurvivor, flSurvivorAngles);
-
-		vAttachParticle(iTank, PARTICLE_ELECTRICITY, 1.0, 0.0);
-		EmitSoundToAll(SOUND_ELECTRICITY, iTank);
-		TeleportEntity(iTank, flSurvivorOrigin, flSurvivorAngles, NULL_VECTOR);
-
-		if (g_esCache[iTank].g_iWarpMode == 1)
+		case 0, 1:
 		{
-			vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 1.0, 0.0);
-			EmitSoundToAll(SOUND_ELECTRICITY2, iSurvivor);
-			TeleportEntity(iSurvivor, flTankOrigin, flTankAngles, NULL_VECTOR);
+			static int iSurvivor;
+			iSurvivor = iGetRandomSurvivor(iTank);
+			if (bIsSurvivor(iSurvivor))
+			{
+				vWarp2(iTank, iSurvivor);
+			}
 		}
-
-		if (g_esCache[iTank].g_iWarpMessage & MT_MESSAGE_SPECIAL)
+		case 2, 3:
 		{
-			static char sTankName[33];
-			MT_GetTankName(iTank, sTankName);
-			MT_PrintToChatAll("%s %t", MT_TAG2, "Warp3", sTankName);
+			static int iTank2;
+			iTank2 = iGetRandomTank(iTank);
+			if (bIsTank(iTank2))
+			{
+				vWarp2(iTank, iTank2);
+			}
 		}
 	}
 

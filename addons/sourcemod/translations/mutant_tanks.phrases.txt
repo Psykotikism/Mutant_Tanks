@@ -60,6 +60,13 @@
 		"chi"			"突变坦克能力"
 	}
 
+	"MTPathMenu"
+	{
+		"en"			"File Path Menu"
+		"hu"			"Fájl elérési Menü"
+		"chi"			"文件路径菜单"
+	}
+
 	"MTSettingsItem"
 	{
 		"en"			"Plugin Settings"
@@ -6066,10 +6073,10 @@
 
 	"Warp3"
 	{
-		"#format"		"{1:s}"
-		"en"			"{olive}{1}{mint} warped to a survivor!"
-		"hu"			"{olive}{1}{mint} egy túlélőhöz teleportált!"
-		"chi"			"{olive}{1}{mint} 传送到一名幸存者身边!"
+		"#format"		"{1:s},{2:N}"
+		"en"			"{olive}{1}{mint} warped to{olive} {2}{mint}!"
+		"hu"			"{olive}{1}{mint} éppen odateleportált{olive} {2}{mint}-hoz!"
+		"chi"			"{olive}{1}{mint} 传送到{olive} {2}{mint} 身边!"
 	}
 
 	"WarpAmmo"

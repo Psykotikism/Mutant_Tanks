@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Smash Ability v8.78"
+#file "Smash Ability v8.79"
 
 public Plugin myinfo =
 {

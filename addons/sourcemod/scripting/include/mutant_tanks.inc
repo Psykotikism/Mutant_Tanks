@@ -21,7 +21,7 @@
 #define REQUIRE_PLUGIN
 
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
-#define MT_VERSION "8.78"
+#define MT_VERSION "8.79"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define MT_TAG "[MT]"
@@ -1822,6 +1822,21 @@ stock int iGetRandomSurvivor(int tank)
 	}
 
 	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
+}
+
+stock int iGetRandomTank(int tank)
+{
+	static int iTankCount, iTanks[MAXPLAYERS + 1];
+	iTankCount = 0;
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && iTank != tank)
+		{
+			iTanks[iTankCount++] = iTank;
+		}
+	}
+
+	return iTanks[GetRandomInt(0, iTankCount - 1)];
 }
 
 stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false, int trace)

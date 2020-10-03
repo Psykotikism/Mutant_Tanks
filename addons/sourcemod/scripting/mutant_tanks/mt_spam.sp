@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Spam Ability v8.78"
+#file "Spam Ability v8.79"
 
 public Plugin myinfo =
 {
