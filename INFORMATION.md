@@ -5,7 +5,7 @@
 > Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file and recompile at your own risk.)
-- Ability count: 73 (Suggest more if you want; we always needs more.)
+- Ability count: 74 (Suggest more if you want; limit is 100.)
 
 ## Sections
 - Plugin Settings
@@ -9015,6 +9015,118 @@
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Splash Range"				"500.0"
+		}
+	}
+}
+```
+
+##### Splatter Ability
+
+```
+"Mutant Tanks"
+{
+	"Tank #1"
+	{
+		// The Mutant Tank covers everyone's screens with splatters.
+		// Requires "mt_splatter.smx" to be installed.
+		// Note: Only available in Left 4 Dead 2.
+		"Splatter Ability"
+		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 999999
+			"Human Duration"			"5"
+
+			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"			"0"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Splatter Chance"			"33.3"
+
+			// The Mutant Tank covers everyone's screens with splatters every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Splatter Interval"			"5.0"
+
+			// The type of the Mutant Tank's splatter.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Random
+			// 1: Adrenaline
+			// 2: Adrenaline #2
+			// 3: Hurt
+			// 4: Hurt #2
+			// 5: Blood
+			// 6: Blood #2
+			// 7: Blood #3
+			// 8: Blood #4
+			// 9: Blood #5
+			// 10: Blood #6
+			// 11: Smoker
+			// 12: Smoker #2
+			// 13: Mud
+			// 14: Mud #2
+			// 15: Bashed
+			// 16: Bashed #2
+			// 17: Bashed #3
+			// 18: Burning
+			// 19: Lightning
+			"Splatter Type"				"0"
 		}
 	}
 }

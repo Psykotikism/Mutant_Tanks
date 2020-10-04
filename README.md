@@ -1257,6 +1257,7 @@ sm_mt_smash - View information about the Smash ability.
 sm_mt_smite - View information about the Smite ability.
 sm_mt_spam - View information about the Spam ability.
 sm_mt_splash - View information about the Splash ability.
+sm_mt_splatter - View information about the Splatter ability.
 sm_mt_throw - View information about the Throw ability.
 sm_mt_track - View information about the Track ability.
 sm_mt_ultimate - View information about the Ultimate ability.

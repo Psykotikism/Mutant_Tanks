@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.79 (October 31, 2020)
+## Version 8.79 (October 10, 2020)
 
 Bug fixes:
 
@@ -14,6 +14,7 @@ Changes:
 4. Added new options for the `Warp` ability's `Warp Mode` setting.
 5. Added the `MT_OnResetTimers` forward to allow developers to reset repeating timers with intervals set by config files.
 6. The timer for spawning Tanks periodically on non-finale maps now resets when `Regular Interval` is changed. (Thanks to Tank Rush for testing!)
+7. Added the `Splatter` ability which is exclusive to Left 4 Dead 2. (Requested by Tank Rush and thanks to Silvers for the code.)
 
 Files:
 
