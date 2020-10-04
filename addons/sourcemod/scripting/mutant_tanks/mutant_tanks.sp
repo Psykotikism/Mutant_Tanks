@@ -4549,7 +4549,7 @@ static void vKillRegularWavesTimer()
 static void vResetTimers()
 {
 	vKillRegularWavesTimer();
-	g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, _, TIMER_REPEAT);
 
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
@@ -5275,7 +5275,7 @@ static void vRandomize(int tank)
 	if (g_esPlayer[tank].g_bRandomized)
 	{
 		vKillRandomizeTimer(tank);
-		g_esPlayer[tank].g_hRandomizeTimer = CreateTimer(g_esCache[tank].g_flRandomInterval, tTimerRandomize, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		g_esPlayer[tank].g_hRandomizeTimer = CreateTimer(g_esCache[tank].g_flRandomInterval, tTimerRandomize, GetClientUserId(tank), TIMER_REPEAT);
 	}
 }
 
