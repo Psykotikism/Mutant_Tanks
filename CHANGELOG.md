@@ -5,24 +5,27 @@
 Bug fixes:
 
 1. Fixed the plugin creating the wrong folder for finale stage configs.
+2. Fixed the `sm_mt_config` command causing errors when multiple players are using it.
 
 Changes:
 
 1. The `sm_mt_config` now allows users to choose from a list of config file paths.
 2. Only one player may use the `sm_mt_config` command at a time to avoid spamming and overlapping parses.
-3. Each config file path provided by the `sm_mt_config` command now generates its own list of section names available in its corresponding config file.
-4. Added new options for the `Warp` ability's `Warp Mode` setting.
-5. Added the `MT_OnResetTimers` forward to allow developers to reset repeating timers with intervals set by config files.
-6. The timer for spawning Tanks periodically on non-finale maps now resets when `Regular Interval` is changed. (Thanks to Tank Rush for testing!)
-7. Added the `Splatter` ability which is exclusive to Left 4 Dead 2. (Requested by Tank Rush and thanks to Silvers for the code.)
-8. Added two new default Mutant Tanks in the config file to showcase the `Splatter` ability.
-9. All the default Mutant Tanks that come with the main config file are now off by default. Users can enable them as needed.
+3. Each config file that is executed by the core plugin can now be viewed by players.
+4. Each config file path provided by the `sm_mt_config` command now generates its own list of section names available in its corresponding config file.
+5. Added new options for the `Warp` ability's `Warp Mode` setting.
+6. Added the `MT_OnResetTimers` forward to allow developers to reset repeating timers with intervals set by config files.
+7. The timer for spawning Tanks periodically on non-finale maps now resets when `Regular Interval` is changed. (Thanks to Tank Rush for testing!)
+8. Added the `Splatter` ability which is exclusive to Left 4 Dead 2. (Requested by Tank Rush and thanks to Silvers for the code.)
+9. Added two new default Mutant Tanks in the config file to showcase the `Splatter` ability.
+10. All the default Mutant Tanks that come with the main config file are now off by default. Users can enable them as needed.
 
 Files:
 
 1. Updated config file.
-2. Updated include file.
-3. Updated translation file.
+2. Updated gamedata file.
+3. Updated include file.
+4. Updated translation file.
 
 ## Version 8.78 (October 2, 2020)
 

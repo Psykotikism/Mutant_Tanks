@@ -42,18 +42,21 @@
 	{
 		"Offsets"
 		{
+			"GetIntentionInterfaceCommon"
+			{
+				"windows"	"3456"
+				"linux"		"3476"
+			}
 			"GetIntentionInterfaceSpecial"
 			{
 				"windows"	"11924"
 				"linux"		"11940"
 			}
-
 			"FirstContainedResponder"
 			{
 				"windows"	"1"
 				"linux"		"2"
 			}
-
 			"ActionGetName"
 			{
 				"windows"	"35"
@@ -110,18 +113,21 @@
 	{
 		"Offsets"
 		{
+			"GetIntentionInterfaceCommon"
+			{
+				"windows"	"7368"
+				"linux"		"7364"
+			}
 			"GetIntentionInterfaceSpecial"
 			{
 				"windows"	"17236"
 				"linux"		"17208"
 			}
-
 			"FirstContainedResponder"
 			{
 				"windows"	"1"
 				"linux"		"2"
 			}
-
 			"ActionGetName"
 			{
 				"windows"	"40"
