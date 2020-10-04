@@ -195,6 +195,15 @@ forward void MT_OnPluginEnd();
 forward void MT_OnPostTankSpawn(int tank);
 
 /**
+ * Called when timers have been reset.
+ * Use this forward for resetting repeating timers that use intervals set by config files. 
+ *
+ * @param mode			0 = No client index required, 1 = Client index required
+ * @param tank			Client index of a Tank.
+ **/
+forward void MT_OnResetTimers(int mode, int tank);
+
+/**
  * Called when a Mutant Tank's rock breaks.
  * Use this forward for any after-effects.
  *

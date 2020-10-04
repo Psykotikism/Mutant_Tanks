@@ -146,25 +146,28 @@ enum ConfigState
 enum struct esGeneral
 {
 	ArrayList g_alAbilitySections[4];
-	ArrayList g_alAdmins;
 	ArrayList g_alFilePaths;
 	ArrayList g_alPlugins;
+	ArrayList g_alSections;
 
 	bool g_bAbilityPlugin[MT_MAX_ABILITIES + 1];
 	bool g_bDHooksInstalled;
 	bool g_bPluginEnabled;
 	bool g_bHideNameChange;
 	bool g_bMapStarted;
-	bool g_bSettingsFound;
+	bool g_bUsedParser;
 
+	char g_sChosenPath[PLATFORM_MAX_PATH];
 	char g_sCurrentSection[128];
 	char g_sCurrentSubSection[128];
 	char g_sDisabledGameModes[513];
 	char g_sEnabledGameModes[513];
 	char g_sHealthCharacters[4];
 	char g_sSavePath[PLATFORM_MAX_PATH];
+	char g_sSection[128];
 
 	ConfigState g_csState;
+	ConfigState g_csState2;
 
 	ConVar g_cvMTEnabledGameModes;
 	ConVar g_cvMTDifficulty;
@@ -192,12 +195,14 @@ enum struct esGeneral
 	GlobalForward g_gfPluginCheckForward;
 	GlobalForward g_gfPluginEndForward;
 	GlobalForward g_gfPostTankSpawnForward;
+	GlobalForward g_gfResetTimersForward;
 	GlobalForward g_gfRockBreakForward;
 	GlobalForward g_gfRockThrowForward;
 	GlobalForward g_gfSettingsCachedForward;
 	GlobalForward g_gfTypeChosenForward;
 
 	Handle g_hLaunchDirectionDetour;
+	Handle g_hRegularWavesTimer;
 	Handle g_hSDKActionGetName;
 	Handle g_hSDKFirstContainedResponder;
 	Handle g_hTankRockDetour;
@@ -227,6 +232,7 @@ enum struct esGeneral
 	int g_iGameModeTypes;
 	int g_iHumanCooldown;
 	int g_iIgnoreLevel;
+	int g_iIgnoreLevel2;
 	int g_iImmunityFlags;
 	int g_iIntentionOffset;
 	int g_iLauncher;
@@ -235,6 +241,7 @@ enum struct esGeneral
 	int g_iMinType;
 	int g_iMinimumHumans;
 	int g_iMultiHealth;
+	int g_iParserViewer;
 	int g_iPlayerCount[2];
 	int g_iPluginEnabled;
 	int g_iRegularAmount;
@@ -245,6 +252,7 @@ enum struct esGeneral
 	int g_iRegularMode;
 	int g_iRegularWave;
 	int g_iRenamePlayers;
+	int g_iSection;
 	int g_iSpawnMode;
 	int g_iTankWave;
 
@@ -280,15 +288,10 @@ enum struct esPlayer
 	bool g_bSpit;
 	bool g_bThirdPerson;
 	bool g_bTransformed;
-	bool g_bUsedParser;
 
-	char g_sChosenPath[PLATFORM_MAX_PATH];
 	char g_sHealthCharacters[4];
 	char g_sOriginalName[33];
-	char g_sSection[128];
 	char g_sTankName[33];
-
-	ConfigState g_csState;
 
 	float g_flClawDamage;
 	float g_flPropsChance[7];
@@ -298,6 +301,8 @@ enum struct esPlayer
 	float g_flThrowInterval;
 	float g_flTransformDelay;
 	float g_flTransformDuration;
+
+	Handle g_hRandomizeTimer;
 
 	int g_iAccessFlags;
 	int g_iAnnounceArrival;
@@ -325,7 +330,6 @@ enum struct esPlayer
 	int g_iGlowMaxRange;
 	int g_iGlowMinRange;
 	int g_iGlowType;
-	int g_iIgnoreLevel;
 	int g_iImmunityFlags;
 	int g_iLastButtons;
 	int g_iLight[3];
@@ -344,7 +348,6 @@ enum struct esPlayer
 	int g_iRockColor[4];
 	int g_iRockEffects;
 	int g_iRockModel;
-	int g_iSection;
 	int g_iSkinColor[4];
 	int g_iTankHealth;
 	int g_iTankModel;
@@ -744,6 +747,7 @@ public void OnPluginStart()
 	g_esGeneral.g_gfPluginCheckForward = new GlobalForward("MT_OnPluginCheck", ET_Ignore, Param_Array);
 	g_esGeneral.g_gfPluginEndForward = new GlobalForward("MT_OnPluginEnd", ET_Ignore);
 	g_esGeneral.g_gfPostTankSpawnForward = new GlobalForward("MT_OnPostTankSpawn", ET_Ignore, Param_Cell);
+	g_esGeneral.g_gfResetTimersForward = new GlobalForward("MT_OnResetTimers", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfRockBreakForward = new GlobalForward("MT_OnRockBreak", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfRockThrowForward = new GlobalForward("MT_OnRockThrow", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfSettingsCachedForward = new GlobalForward("MT_OnSettingsCached", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
@@ -842,7 +846,9 @@ public void OnPluginStart()
 		}
 	}
 
+#if defined _dhooks_included
 	vSetupSignatures();
+#endif
 
 	g_esGeneral.g_alFilePaths = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 
@@ -918,7 +924,9 @@ public void OnClientDisconnect_Post(int client)
 
 public void OnConfigsExecuted()
 {
+#if defined _dhooks_included
 	vSetupSignatures();
+#endif
 
 	g_esGeneral.g_iRegularCount = 0;
 	g_esGeneral.g_iChosenType = 0;
@@ -930,8 +938,8 @@ public void OnConfigsExecuted()
 	if (IsMapValid(sMapName))
 	{
 		vPluginStatus();
+		vResetTimers();
 
-		CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		CreateTimer(1.0, tTimerRefreshConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 
@@ -1153,18 +1161,12 @@ public void OnMapEnd()
 	g_esGeneral.g_bMapStarted = false;
 
 	vReset();
-
-	if (g_esGeneral.g_alAdmins != null)
-	{
-		g_esGeneral.g_alAdmins.Clear();
-
-		delete g_esGeneral.g_alAdmins;
-	}
 }
 
 public void OnPluginEnd()
 {
 	vMultiTargetFilters(0);
+	vClearSectionList();
 
 	if (g_esGeneral.g_alFilePaths != null)
 	{
@@ -1301,7 +1303,7 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 
 public Action cmdMTConfig(int client, int args)
 {
-	if (g_esPlayer[client].g_bUsedParser)
+	if (g_esGeneral.g_bUsedParser)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "StillParsing");
 
@@ -1338,13 +1340,13 @@ public Action cmdMTConfig(int client, int args)
 		return Plugin_Handled;
 	}
 
-	GetCmdArg(1, g_esPlayer[client].g_sSection, sizeof(esPlayer::g_sSection));
-	if (IsCharNumeric(g_esPlayer[client].g_sSection[0]))
+	GetCmdArg(1, g_esGeneral.g_sSection, sizeof(esGeneral::g_sSection));
+	if (IsCharNumeric(g_esGeneral.g_sSection[0]))
 	{
-		g_esPlayer[client].g_iSection = StringToInt(g_esPlayer[client].g_sSection);
+		g_esGeneral.g_iSection = StringToInt(g_esGeneral.g_sSection);
 	}
 
-	BuildPath(Path_SM, g_esPlayer[client].g_sChosenPath, sizeof(esPlayer::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+	BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
 	vParseConfig(client);
 
 	return Plugin_Handled;
@@ -1352,7 +1354,8 @@ public Action cmdMTConfig(int client, int args)
 
 static void vParseConfig(int client)
 {
-	g_esPlayer[client].g_bUsedParser = true;
+	g_esGeneral.g_bUsedParser = true;
+	g_esGeneral.g_iParserViewer = client;
 
 	SMCParser smcParser = new SMCParser();
 	if (smcParser != null)
@@ -1362,125 +1365,119 @@ static void vParseConfig(int client)
 		smcParser.OnKeyValue = SMCKeyValues2;
 		smcParser.OnLeaveSection = SMCEndSection2;
 		smcParser.OnEnd = SMCParseEnd2;
-		SMCError smcError = smcParser.ParseFile(g_esPlayer[client].g_sChosenPath);
+		SMCError smcError = smcParser.ParseFile(g_esGeneral.g_sChosenPath);
 
 		if (smcError != SMCError_Okay)
 		{
 			char sSmcError[64];
 			smcParser.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
 
-			PrintToServer("%s %t", MT_TAG, "ErrorParsing", g_esPlayer[client].g_sChosenPath, sSmcError);
-			LogError("%t", "ErrorParsing", g_esPlayer[client].g_sChosenPath, sSmcError);
+			PrintToServer("%s %t", MT_TAG, "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
+			LogError("%t", "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
 		}
 
 		delete smcParser;
 	}
 	else
 	{
-		PrintToServer("%s %t", MT_TAG, "FailedParsing", g_esPlayer[client].g_sChosenPath);
-		LogError("%t", "FailedParsing", g_esPlayer[client].g_sChosenPath);
+		PrintToServer("%s %t", MT_TAG, "FailedParsing", g_esGeneral.g_sChosenPath);
+		LogError("%t", "FailedParsing", g_esGeneral.g_sChosenPath);
 	}
 }
 
 public void SMCParseStart2(SMCParser smc)
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		if (g_esPlayer[iPlayer].g_bUsedParser && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
-		{
-			g_esPlayer[iPlayer].g_csState = ConfigState_None;
-			g_esPlayer[iPlayer].g_iIgnoreLevel = 0;
+		g_esGeneral.g_csState2 = ConfigState_None;
+		g_esGeneral.g_iIgnoreLevel2 = 0;
 
-			MT_PrintToChat(iPlayer, "%s %t", MT_TAG2, "StartParsing");
-		}
+		MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t", MT_TAG2, "StartParsing");
 	}
 }
 
 public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quotes)
 {
 	static char sTankName[8][33], sType[5];
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		if (g_esPlayer[iPlayer].g_bUsedParser && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+		if (g_esGeneral.g_iIgnoreLevel2)
 		{
-			if (g_esPlayer[iPlayer].g_iIgnoreLevel)
+			g_esGeneral.g_iIgnoreLevel2++;
+
+			return SMCParse_Continue;
+		}
+
+		if (g_esGeneral.g_csState2 == ConfigState_None)
+		{
+			if (StrEqual(name, "MutantTanks", false) || StrEqual(name, "Mutant Tanks", false) || StrEqual(name, "Mutant_Tanks", false) || StrEqual(name, "MT", false))
 			{
-				g_esPlayer[iPlayer].g_iIgnoreLevel++;
+				g_esGeneral.g_csState2 = ConfigState_Start;
 
-				return SMCParse_Continue;
-			}
-
-			if (g_esPlayer[iPlayer].g_csState == ConfigState_None)
-			{
-				if (StrEqual(name, "MutantTanks", false) || StrEqual(name, "Mutant Tanks", false) || StrEqual(name, "Mutant_Tanks", false) || StrEqual(name, "MT", false))
-				{
-					g_esPlayer[iPlayer].g_csState = ConfigState_Start;
-
-					MT_PrintToChat(iPlayer, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
-				}
-				else
-				{
-					g_esPlayer[iPlayer].g_iIgnoreLevel++;
-				}
-			}
-			else if (g_esPlayer[iPlayer].g_csState == ConfigState_Start)
-			{
-				if ((StrEqual(name, "PluginSettings", false) || StrEqual(name, "Plugin Settings", false) || StrEqual(name, "Plugin_Settings", false) || StrEqual(name, "settings", false)) && StrContains(name, g_esPlayer[iPlayer].g_sSection, false) != -1)
-				{
-					g_esPlayer[iPlayer].g_csState = ConfigState_Settings;
-
-					MT_PrintToChat(iPlayer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-				}
-				else if (g_esPlayer[iPlayer].g_iSection > 0 && (StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#' || IsCharNumeric(name[0])))
-				{
-					FormatEx(sTankName[0], sizeof(sTankName[]), "Tank#%i", g_esPlayer[iPlayer].g_iSection);
-					FormatEx(sTankName[1], sizeof(sTankName[]), "Tank #%i", g_esPlayer[iPlayer].g_iSection);
-					FormatEx(sTankName[2], sizeof(sTankName[]), "Tank_#%i", g_esPlayer[iPlayer].g_iSection);
-					FormatEx(sTankName[3], sizeof(sTankName[]), "Tank%i", g_esPlayer[iPlayer].g_iSection);
-					FormatEx(sTankName[4], sizeof(sTankName[]), "Tank %i", g_esPlayer[iPlayer].g_iSection);
-					FormatEx(sTankName[5], sizeof(sTankName[]), "Tank_%i", g_esPlayer[iPlayer].g_iSection);
-					FormatEx(sTankName[6], sizeof(sTankName[]), "#%i", g_esPlayer[iPlayer].g_iSection);
-					FormatEx(sTankName[7], sizeof(sTankName[]), "%i", g_esPlayer[iPlayer].g_iSection);
-
-					IntToString(g_esPlayer[iPlayer].g_iSection, sType, sizeof(sType));
-					if (StrContains(name, sType) != -1)
-					{
-						for (int iType = 0; iType < sizeof(sTankName); iType++)
-						{
-							if (StrEqual(name, sTankName[iType], false))
-							{
-								g_esPlayer[iPlayer].g_csState = ConfigState_Type;
-
-								MT_PrintToChat(iPlayer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-							}
-						}
-					}
-					else
-					{
-						g_esPlayer[iPlayer].g_iIgnoreLevel++;
-					}
-				}
-				else if ((StrContains(name, "STEAM_", false) == 0 || strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']')) && StrContains(name, g_esPlayer[iPlayer].g_sSection, false) != -1)
-				{
-					g_esPlayer[iPlayer].g_csState = ConfigState_Admin;
-
-					MT_PrintToChat(iPlayer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-				}
-				else
-				{
-					g_esPlayer[iPlayer].g_iIgnoreLevel++;
-				}
-			}
-			else if (g_esPlayer[iPlayer].g_csState == ConfigState_Settings || g_esPlayer[iPlayer].g_csState == ConfigState_Type || g_esPlayer[iPlayer].g_csState == ConfigState_Admin)
-			{
-				g_esPlayer[iPlayer].g_csState = ConfigState_Specific;
-
-				MT_PrintToChat(iPlayer, (opt_quotes) ? ("%20s \"%s\"\n%20s {") : ("%20s %s\n%20s {"), "", name, "");
+				MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
 			}
 			else
 			{
-				g_esPlayer[iPlayer].g_iIgnoreLevel++;
+				g_esGeneral.g_iIgnoreLevel2++;
 			}
+		}
+		else if (g_esGeneral.g_csState2 == ConfigState_Start)
+		{
+			if ((StrEqual(name, "PluginSettings", false) || StrEqual(name, "Plugin Settings", false) || StrEqual(name, "Plugin_Settings", false) || StrEqual(name, "settings", false)) && StrContains(name, g_esGeneral.g_sSection, false) != -1)
+			{
+				g_esGeneral.g_csState2 = ConfigState_Settings;
+
+				MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+			}
+			else if (g_esGeneral.g_iSection > 0 && (StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#' || IsCharNumeric(name[0])))
+			{
+				FormatEx(sTankName[0], sizeof(sTankName[]), "Tank#%i", g_esGeneral.g_iSection);
+				FormatEx(sTankName[1], sizeof(sTankName[]), "Tank #%i", g_esGeneral.g_iSection);
+				FormatEx(sTankName[2], sizeof(sTankName[]), "Tank_#%i", g_esGeneral.g_iSection);
+				FormatEx(sTankName[3], sizeof(sTankName[]), "Tank%i", g_esGeneral.g_iSection);
+				FormatEx(sTankName[4], sizeof(sTankName[]), "Tank %i", g_esGeneral.g_iSection);
+				FormatEx(sTankName[5], sizeof(sTankName[]), "Tank_%i", g_esGeneral.g_iSection);
+				FormatEx(sTankName[6], sizeof(sTankName[]), "#%i", g_esGeneral.g_iSection);
+				FormatEx(sTankName[7], sizeof(sTankName[]), "%i", g_esGeneral.g_iSection);
+
+				IntToString(g_esGeneral.g_iSection, sType, sizeof(sType));
+				if (StrContains(name, sType) != -1)
+				{
+					for (int iType = 0; iType < sizeof(sTankName); iType++)
+					{
+						if (StrEqual(name, sTankName[iType], false))
+						{
+							g_esGeneral.g_csState2 = ConfigState_Type;
+
+							MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+						}
+					}
+				}
+				else
+				{
+					g_esGeneral.g_iIgnoreLevel2++;
+				}
+			}
+			else if ((StrContains(name, "STEAM_", false) == 0 || strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']')) && StrContains(name, g_esGeneral.g_sSection, false) != -1)
+			{
+				g_esGeneral.g_csState2 = ConfigState_Admin;
+
+				MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+			}
+			else
+			{
+				g_esGeneral.g_iIgnoreLevel2++;
+			}
+		}
+		else if (g_esGeneral.g_csState2 == ConfigState_Settings || g_esGeneral.g_csState2 == ConfigState_Type || g_esGeneral.g_csState2 == ConfigState_Admin)
+		{
+			g_esGeneral.g_csState2 = ConfigState_Specific;
+
+			MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%20s \"%s\"\n%20s {") : ("%20s %s\n%20s {"), "", name, "");
+		}
+		else
+		{
+			g_esGeneral.g_iIgnoreLevel2++;
 		}
 	}
 
@@ -1490,21 +1487,18 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
 	static char sKey[64], sValue[384];
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		if (g_esPlayer[iPlayer].g_bUsedParser && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+		if (g_esGeneral.g_iIgnoreLevel2)
 		{
-			if (g_esPlayer[iPlayer].g_iIgnoreLevel)
-			{
-				return SMCParse_Continue;
-			}
+			return SMCParse_Continue;
+		}
 
-			if (g_esPlayer[iPlayer].g_csState == ConfigState_Specific)
-			{
-				FormatEx(sKey, sizeof(sKey), ((key_quotes) ? ("\"%s\"") : ("%s")), key);
-				FormatEx(sValue, sizeof(sValue), ((value_quotes) ? ("\"%s\"") : ("%s")), value);
-				MT_PrintToChat(iPlayer, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
-			}
+		if (g_esGeneral.g_csState2 == ConfigState_Specific)
+		{
+			FormatEx(sKey, sizeof(sKey), ((key_quotes) ? ("\"%s\"") : ("%s")), key);
+			FormatEx(sValue, sizeof(sValue), ((value_quotes) ? ("\"%s\"") : ("%s")), value);
+			MT_PrintToChat(g_esGeneral.g_iParserViewer, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
 		}
 	}
 
@@ -1513,50 +1507,47 @@ public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] val
 
 public SMCResult SMCEndSection2(SMCParser smc)
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		if (g_esPlayer[iPlayer].g_bUsedParser && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+		if (g_esGeneral.g_iIgnoreLevel2)
 		{
-			if (g_esPlayer[iPlayer].g_iIgnoreLevel)
+			g_esGeneral.g_iIgnoreLevel2--;
+
+			return SMCParse_Continue;
+		}
+
+		if (g_esGeneral.g_csState2 == ConfigState_Specific)
+		{
+			if (StrEqual(g_esGeneral.g_sSection, "PluginSettings", false) || StrEqual(g_esGeneral.g_sSection, "Plugin Settings", false) || StrEqual(g_esGeneral.g_sSection, "Plugin_Settings", false) || StrEqual(g_esGeneral.g_sSection, "settings", false))
 			{
-				g_esPlayer[iPlayer].g_iIgnoreLevel--;
+				g_esGeneral.g_csState2 = ConfigState_Settings;
 
-				return SMCParse_Continue;
+				MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
 			}
-
-			if (g_esPlayer[iPlayer].g_csState == ConfigState_Specific)
+			else if (g_esGeneral.g_iSection > 0 && (StrContains(g_esGeneral.g_sSection, "Tank#", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank #", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank_#", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank", false) != -1 || g_esGeneral.g_sSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sSection[0])))
 			{
-				if (StrEqual(g_esPlayer[iPlayer].g_sSection, "PluginSettings", false) || StrEqual(g_esPlayer[iPlayer].g_sSection, "Plugin Settings", false) || StrEqual(g_esPlayer[iPlayer].g_sSection, "Plugin_Settings", false) || StrEqual(g_esPlayer[iPlayer].g_sSection, "settings", false))
-				{
-					g_esPlayer[iPlayer].g_csState = ConfigState_Settings;
+				g_esGeneral.g_csState2 = ConfigState_Type;
 
-					MT_PrintToChat(iPlayer, "%20s }", "");
-				}
-				else if (g_esPlayer[iPlayer].g_iSection > 0 && (StrContains(g_esPlayer[iPlayer].g_sSection, "Tank#", false) != -1 || StrContains(g_esPlayer[iPlayer].g_sSection, "Tank #", false) != -1 || StrContains(g_esPlayer[iPlayer].g_sSection, "Tank_#", false) != -1 || StrContains(g_esPlayer[iPlayer].g_sSection, "Tank", false) != -1 || g_esPlayer[iPlayer].g_sSection[0] == '#' || IsCharNumeric(g_esPlayer[iPlayer].g_sSection[0])))
-				{
-					g_esPlayer[iPlayer].g_csState = ConfigState_Type;
-
-					MT_PrintToChat(iPlayer, "%20s }", "");
-				}
-				else if (StrContains(g_esPlayer[iPlayer].g_sSection, "STEAM_", false) == 0 || strncmp("0:", g_esPlayer[iPlayer].g_sSection, 2) == 0 || strncmp("1:", g_esPlayer[iPlayer].g_sSection, 2) == 0 || (!strncmp(g_esPlayer[iPlayer].g_sSection, "[U:", 3) && g_esPlayer[iPlayer].g_sSection[strlen(g_esPlayer[iPlayer].g_sSection) - 1] == ']'))
-				{
-					g_esPlayer[iPlayer].g_csState = ConfigState_Admin;
-
-					MT_PrintToChat(iPlayer, "%20s }", "");
-				}
+				MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
 			}
-			else if (g_esPlayer[iPlayer].g_csState == ConfigState_Settings || g_esPlayer[iPlayer].g_csState == ConfigState_Type || g_esPlayer[iPlayer].g_csState == ConfigState_Admin)
+			else if (StrContains(g_esGeneral.g_sSection, "STEAM_", false) == 0 || strncmp("0:", g_esGeneral.g_sSection, 2) == 0 || strncmp("1:", g_esGeneral.g_sSection, 2) == 0 || (!strncmp(g_esGeneral.g_sSection, "[U:", 3) && g_esGeneral.g_sSection[strlen(g_esGeneral.g_sSection) - 1] == ']'))
 			{
-				g_esPlayer[iPlayer].g_csState = ConfigState_Start;
+				g_esGeneral.g_csState2 = ConfigState_Admin;
 
-				MT_PrintToChat(iPlayer, "%10s }", "");
+				MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
 			}
-			else if (g_esPlayer[iPlayer].g_csState == ConfigState_Start)
-			{
-				g_esPlayer[iPlayer].g_csState = ConfigState_None;
+		}
+		else if (g_esGeneral.g_csState2 == ConfigState_Settings || g_esGeneral.g_csState2 == ConfigState_Type || g_esGeneral.g_csState2 == ConfigState_Admin)
+		{
+			g_esGeneral.g_csState2 = ConfigState_Start;
 
-				MT_PrintToChat(iPlayer, "}");
-			}
+			MT_PrintToChat(g_esGeneral.g_iParserViewer, "%10s }", "");
+		}
+		else if (g_esGeneral.g_csState2 == ConfigState_Start)
+		{
+			g_esGeneral.g_csState2 = ConfigState_None;
+
+			MT_PrintToChat(g_esGeneral.g_iParserViewer, "}");
 		}
 	}
 
@@ -1565,24 +1556,25 @@ public SMCResult SMCEndSection2(SMCParser smc)
 
 public void SMCParseEnd2(SMCParser smc, bool halted, bool failed)
 {
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	if (bIsValidClient(g_esGeneral.g_iParserViewer))
 	{
-		if (g_esPlayer[iPlayer].g_bUsedParser && bIsValidClient(iPlayer))
-		{
-			g_esPlayer[iPlayer].g_bUsedParser = false;
-			g_esPlayer[iPlayer].g_csState = ConfigState_None;
-			g_esPlayer[iPlayer].g_iIgnoreLevel = 0;
-			g_esPlayer[iPlayer].g_iSection = 0;
-			g_esPlayer[iPlayer].g_sSection[0] = '\0';
-
-			MT_PrintToChat(iPlayer, "\n\n\n\n\n\n%s %t", MT_TAG2, "CompletedParsing");
-			MT_PrintToChat(iPlayer, "%s %t", MT_TAG2, "CheckConsole");
-		}
+		MT_PrintToChat(g_esGeneral.g_iParserViewer, "\n\n\n\n\n\n%s %t", MT_TAG2, "CompletedParsing");
+		MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t", MT_TAG2, "CheckConsole");
 	}
+
+	g_esGeneral.g_bUsedParser = false;
+	g_esGeneral.g_csState2 = ConfigState_None;
+	g_esGeneral.g_iIgnoreLevel2 = 0;
+	g_esGeneral.g_iParserViewer = 0;
+	g_esGeneral.g_iSection = 0;
+	g_esGeneral.g_sSection[0] = '\0';
 }
 
 static void vPathMenu(int admin, int item)
 {
+	g_esGeneral.g_bUsedParser = true;
+	g_esGeneral.g_iParserViewer = admin;
+
 	Menu mPathMenu = new Menu(iPathMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
 	mPathMenu.SetTitle("File Path Menu");
 
@@ -1643,7 +1635,7 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sInfo[PLATFORM_MAX_PATH];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			strcopy(g_esPlayer[param1].g_sChosenPath, sizeof(esPlayer::g_sChosenPath), sInfo);
+			g_esGeneral.g_sChosenPath = sInfo;
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 			{
@@ -1664,40 +1656,72 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 static void vConfigMenu(int admin, int item)
 {
+	g_esGeneral.g_bUsedParser = true;
+	g_esGeneral.g_iParserViewer = admin;
+
 	Menu mConfigMenu = new Menu(iConfigMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
 	mConfigMenu.SetTitle("Config Parser Menu");
 
 	static int iCount;
 	iCount = 0;
 
-	if (g_esGeneral.g_bSettingsFound)
+	vClearSectionList();
+	g_esGeneral.g_alSections = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+	if (g_esGeneral.g_alSections != null)
 	{
-		mConfigMenu.AddItem("Plugin Settings", "Plugin Settings");
-		iCount++;
-	}
-
-	static char sMenuItem[46];
-	for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
-	{
-		FormatEx(sMenuItem, sizeof(sMenuItem), "%t", "MTTankItem", g_esTank[iIndex].g_sTankName, iIndex);
-		mConfigMenu.AddItem(g_esTank[iIndex].g_sTankName, sMenuItem);
-		iCount++;
-	}
-
-	if (g_esGeneral.g_alAdmins != null)
-	{
-		static int iAdminSize;
-		iAdminSize = (g_esGeneral.g_alAdmins.Length > 0) ? g_esGeneral.g_alAdmins.Length : 0;
-		if (iAdminSize > 0)
+		SMCParser smcConfig = new SMCParser();
+		if (smcConfig != null)
 		{
-			static char sAdmins[32];
-			for (int iPos = 0; iPos < iAdminSize; iPos++)
+			smcConfig.OnStart = SMCParseStart3;
+			smcConfig.OnEnterSection = SMCNewSection3;
+			smcConfig.OnKeyValue = SMCKeyValues3;
+			smcConfig.OnLeaveSection = SMCEndSection3;
+			smcConfig.OnEnd = SMCParseEnd3;
+			SMCError smcError = smcConfig.ParseFile(g_esGeneral.g_sChosenPath);
+
+			if (smcError != SMCError_Okay)
 			{
-				g_esGeneral.g_alAdmins.GetString(iPos, sAdmins, sizeof(sAdmins));
-				mConfigMenu.AddItem(sAdmins, sAdmins);
-				iCount++;
+				char sSmcError[64];
+				smcConfig.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
+
+				PrintToServer("%s %t", MT_TAG, "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
+				LogError("%t", "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
+
+				delete smcConfig;
+				delete mConfigMenu;
+
+				return;
+			}
+
+			delete smcConfig;
+		}
+		else
+		{
+			PrintToServer("%s %t", MT_TAG, "FailedParsing", g_esGeneral.g_sChosenPath);
+			LogError("%t", "FailedParsing", g_esGeneral.g_sChosenPath);
+
+			delete mConfigMenu;
+
+			return;
+		}
+
+		static int iListSize;
+		iListSize = (g_esGeneral.g_alSections.Length > 0) ? g_esGeneral.g_alSections.Length : 0;
+		if (iListSize > 0)
+		{
+			static char sSection[PLATFORM_MAX_PATH];
+			for (int iPos = 0; iPos < iListSize; iPos++)
+			{
+				g_esGeneral.g_alSections.GetString(iPos, sSection, sizeof(sSection));
+				if (sSection[0] != '\0')
+				{
+					mConfigMenu.AddItem(sSection, sSection);
+					iCount++;
+				}
 			}
 		}
+
+		vClearSectionList();
 	}
 
 	mConfigMenu.ExitBackButton = true;
@@ -1732,16 +1756,18 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
 			if (StrContains(sInfo, "Plugin", false) != -1 || StrContains(sInfo, "settings", false) != -1 || StrContains(sInfo, "STEAM_", false) == 0 || (!strncmp(sInfo, "[U:", 3) && sInfo[strlen(sInfo) - 1] == ']'))
 			{
-				g_esPlayer[param1].g_sSection = sInfo;
+				g_esGeneral.g_sSection = sInfo;
 			}
 			else
 			{
+				char sIndex[5];
 				for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 				{
-					if (StrEqual(sInfo, g_esTank[iIndex].g_sTankName, false))
+					IntToString(iIndex, sIndex, sizeof(sIndex));
+					if (StrEqual(sInfo[6], sIndex, false))
 					{
-						IntToString(iIndex, g_esPlayer[param1].g_sSection, sizeof(esPlayer::g_sSection));
-						g_esPlayer[param1].g_iSection = iIndex;
+						g_esGeneral.g_sSection = sIndex;
+						g_esGeneral.g_iSection = iIndex;
 
 						break;
 					}
@@ -1776,6 +1802,38 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 	}
 
 	return 0;
+}
+
+public void SMCParseStart3(SMCParser smc)
+{
+	return;
+}
+
+public SMCResult SMCNewSection3(SMCParser smc, const char[] name, bool opt_quotes)
+{
+	if (StrContains(name, "Mutant", false) == -1 && (StrEqual(name, "PluginSettings", false) || StrEqual(name, "Plugin Settings", false) || StrEqual(name, "Plugin_Settings", false) || StrEqual(name, "settings", false)
+		|| StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#'
+		|| IsCharNumeric(name[0]) || StrContains(name, "STEAM_", false) == 0 || strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']')))
+	{
+		g_esGeneral.g_alSections.PushString(name);
+	}
+
+	return SMCParse_Continue;
+}
+
+public SMCResult SMCKeyValues3(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
+{
+	return SMCParse_Continue;
+}
+
+public SMCResult SMCEndSection3(SMCParser smc)
+{
+	return SMCParse_Continue;
+}
+
+public void SMCParseEnd3(SMCParser smc, bool halted, bool failed)
+{
+	return;
 }
 
 public Action cmdMTInfo(int client, int args)
@@ -2846,6 +2904,16 @@ static void vClearPluginList()
 	}
 }
 
+static void vClearSectionList()
+{
+	if (g_esGeneral.g_alSections != null)
+	{
+		g_esGeneral.g_alSections.Clear();
+
+		delete g_esGeneral.g_alSections;
+	}
+}
+
 static void vCustomConfig(const char[] savepath)
 {
 	DataPack dpConfig;
@@ -2893,7 +2961,6 @@ static void vLoadConfigs(const char[] savepath, int mode)
 	}
 
 	g_esGeneral.g_iConfigMode = mode;
-	g_esGeneral.g_bSettingsFound = false;
 	
 	if (g_esGeneral.g_alFilePaths != null)
 	{
@@ -3165,11 +3232,6 @@ public void SMCParseStart(SMCParser smc)
 				}
 			}
 		}
-
-		if (g_esGeneral.g_alAdmins == null)
-		{
-			g_esGeneral.g_alAdmins = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
-		}
 	}
 
 	Call_StartForward(g_esGeneral.g_gfConfigsLoadForward);
@@ -3201,7 +3263,6 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 	{
 		if (StrEqual(name, "PluginSettings", false) || StrEqual(name, "Plugin Settings", false) || StrEqual(name, "Plugin_Settings", false) || StrEqual(name, "settings", false))
 		{
-			g_esGeneral.g_bSettingsFound = true;
 			g_esGeneral.g_csState = ConfigState_Settings;
 
 			strcopy(g_esGeneral.g_sCurrentSection, sizeof(esGeneral::g_sCurrentSection), name);
@@ -3236,37 +3297,6 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 			g_esGeneral.g_csState = ConfigState_Admin;
 
 			strcopy(g_esGeneral.g_sCurrentSection, sizeof(esGeneral::g_sCurrentSection), name);
-
-			if (g_esGeneral.g_alAdmins != null)
-			{
-				static int iAdminSize;
-				iAdminSize = (g_esGeneral.g_alAdmins.Length > 0) ? g_esGeneral.g_alAdmins.Length : 0;
-				if (iAdminSize > 0)
-				{
-					static bool bAdd;
-					bAdd = true;
-					static char sAdmin[32];
-					for (int iPos = 0; iPos < iAdminSize; iPos++)
-					{
-						g_esGeneral.g_alAdmins.GetString(iPos, sAdmin, sizeof(sAdmin));
-						if (StrEqual(name, sAdmin, false))
-						{
-							bAdd = false;
-
-							break;
-						}
-					}
-
-					if (bAdd)
-					{
-						g_esGeneral.g_alAdmins.PushString(name);
-					}
-				}
-				else
-				{
-					g_esGeneral.g_alAdmins.PushString(name);
-				}
-			}
 		}
 		else
 		{
@@ -4416,8 +4446,10 @@ static void vRemoveProps(int tank, int mode = 1)
 
 static void vReset()
 {
-	g_esGeneral.g_iRegularCount = 0;
+	g_esGeneral.g_bUsedParser = false;
 	g_esGeneral.g_iChosenType = 0;
+	g_esGeneral.g_iParserViewer = 0;
+	g_esGeneral.g_iRegularCount = 0;
 
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -4427,11 +4459,13 @@ static void vReset()
 			vReset3(iPlayer);
 			vCacheSettings(iPlayer);
 			vResetCore(iPlayer);
+			vKillRandomizeTimer(iPlayer);
 		}
 	}
 
 	vClearAbilityList();
 	vClearPluginList();
+	vKillRegularWavesTimer();
 }
 
 static void vReset2(int tank, int mode = 1)
@@ -4464,7 +4498,6 @@ static void vResetCore(int client)
 	g_esPlayer[client].g_bDied = false;
 	g_esPlayer[client].g_bDying = false;
 	g_esPlayer[client].g_bThirdPerson = false;
-	g_esPlayer[client].g_csState = ConfigState_None;
 	g_esPlayer[client].g_iLastButtons = 0;
 	g_esPlayer[client].g_sOriginalName[0] = '\0';
 }
@@ -4493,6 +4526,49 @@ static void vResetTank(int tank)
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	vResetSpeed(tank, true);
+}
+
+static void vKillRandomizeTimer(int tank)
+{
+	if (g_esPlayer[tank].g_hRandomizeTimer != null)
+	{
+		KillTimer(g_esPlayer[tank].g_hRandomizeTimer);
+		g_esPlayer[tank].g_hRandomizeTimer = null;
+	}
+}
+
+static void vKillRegularWavesTimer()
+{
+	if (g_esGeneral.g_hRegularWavesTimer != null)
+	{
+		KillTimer(g_esGeneral.g_hRegularWavesTimer);
+		g_esGeneral.g_hRegularWavesTimer = null;
+	}
+}
+
+static void vResetTimers()
+{
+	vKillRegularWavesTimer();
+	g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTankAllowed(iTank))
+		{
+			vRandomize(iTank);
+			vResetTimersForward(1, iTank);
+		}
+	}
+
+	vResetTimersForward();
+}
+
+static void vResetTimersForward(int mode = 0, int tank = 0)
+{
+	Call_StartForward(g_esGeneral.g_gfResetTimersForward);
+	Call_PushCell(mode);
+	Call_PushCell(tank);
+	Call_Finish();
 }
 
 static void vRevertName(int tank)
@@ -5163,8 +5239,7 @@ static void vMutateTank(int tank)
 				if (!g_esPlayer[tank].g_bRandomized)
 				{
 					vSpawnModes(tank, true);
-
-					CreateTimer(g_esCache[tank].g_flRandomInterval, tTimerRandomize, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					vRandomize(tank);
 				}
 			}
 			case 3:
@@ -5192,6 +5267,15 @@ static void vMutateTank(int tank)
 		{
 			g_esPlayer[tank].g_bKeepCurrentType = false;
 		}
+	}
+}
+
+static void vRandomize(int tank)
+{
+	if (g_esPlayer[tank].g_bRandomized)
+	{
+		vKillRandomizeTimer(tank);
+		g_esPlayer[tank].g_hRandomizeTimer = CreateTimer(g_esCache[tank].g_flRandomInterval, tTimerRandomize, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 }
 
@@ -5824,9 +5908,9 @@ public Action tTimerForceSpawnTank(Handle timer, int userid)
 }
 #endif
 
+#if defined _dhooks_included
 static void vSetupSignatures()
 {
-#if defined _dhooks_included
 	static bool bSetup;
 	if (!bSetup && g_esGeneral.g_bDHooksInstalled)
 	{
@@ -5855,10 +5939,8 @@ static void vSetupSignatures()
 			}
 		}
 	}
-#endif
 }
 
-#if defined _dhooks_included
 public MRESReturn mreTankRock(Handle hReturn)
 {
 	static int iRock;
@@ -6434,6 +6516,7 @@ public Action tTimerExecuteCustomConfig(Handle timer, DataPack pack)
 	{
 		vLoadConfigs(sSavePath, 2);
 		vPluginStatus();
+		vResetTimers();
 	}
 
 	return Plugin_Continue;
@@ -6449,6 +6532,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", g_esGeneral.g_sSavePath);
 			vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 			vPluginStatus();
+			vResetTimers();
 			g_esGeneral.g_iFileTimeOld[0] = g_esGeneral.g_iFileTimeNew[0];
 		}
 	}
