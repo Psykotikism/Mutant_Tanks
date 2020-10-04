@@ -9,7 +9,11 @@ Bug fixes:
 Changes:
 
 1. The `sm_mt_config` now allows users to choose from a list of config file paths.
-2. Added new options for the `Warp` ability's `Warp Mode` setting.
+2. Only one player may use the `sm_mt_config` command at a time to avoid overlapping parses.
+3. Each config file path provided by the `sm_mt_config` command now generates its own list of section names available in its corresponding config file.
+4. Added new options for the `Warp` ability's `Warp Mode` setting.
+5. Added the `MT_OnResetTimers` forward to allow developers to reset repeating timers with intervals set by config files.
+6. The timer for spawning Tanks periodically on non-finale maps now resets when `Regular Interval` is changed. (Thanks to Tank Rush for testing!)
 
 Files:
 
