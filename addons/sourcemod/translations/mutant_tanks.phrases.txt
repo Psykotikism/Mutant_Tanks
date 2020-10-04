@@ -6075,7 +6075,7 @@
 	{
 		"#format"		"{1:s},{2:N}"
 		"en"			"{olive}{1}{mint} warped to{olive} {2}{mint}!"
-		"hu"			"{olive}{1}{mint} éppen odateleportált{olive} {2}{mint}-hoz!"
+		"hu"			"{olive}{1}{mint} odateleportált{olive} {2}{mint}-hoz!"
 		"chi"			"{olive}{1}{mint} 传送到{olive} {2}{mint} 身边!"
 	}
 
