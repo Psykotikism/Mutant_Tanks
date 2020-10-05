@@ -11,11 +11,8 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <left4dhooks>
 #include <mutant_tanks>
-
-#undef REQUIRE_PLUGIN
-#tryinclude <left4dhooks>
-#define REQUIRE_PLUGIN
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -43,7 +40,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 
 	MarkNativeAsOptional("MT_IsCloneSupported");
-	MarkNativeAsOptional("L4D_IsInFirstCheckpoint");
 
 	g_bLateLoad = late;
 
@@ -54,8 +50,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esGeneral
 {
-	bool g_bL4DHInstalled;
-
 	Handle g_hSDKRespawnPlayer;
 }
 
@@ -135,27 +129,6 @@ enum struct esCache
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
-
-public void OnAllPluginsLoaded()
-{
-	g_esGeneral.g_bL4DHInstalled = LibraryExists("left4dhooks");
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks", false))
-	{
-		g_esGeneral.g_bL4DHInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks", false))
-	{
-		g_esGeneral.g_bL4DHInstalled = false;
-	}
-}
 
 public void OnPluginStart()
 {
@@ -790,12 +763,10 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, int m
 
 static bool bMustBeRecorded(int survivor)
 {
-#if defined _l4dh_included
-	if (!g_esPlayer[survivor].g_bRecorded && (!g_esGeneral.g_bL4DHInstalled || (g_esGeneral.g_bL4DHInstalled && L4D_IsInFirstCheckpoint(survivor))))
+	if (!g_esPlayer[survivor].g_bRecorded && L4D_IsInFirstCheckpoint(survivor))
 	{
 		return true;
 	}
-#endif
 
 	return !g_esPlayer[survivor].g_bRecorded;
 }
