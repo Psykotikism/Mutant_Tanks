@@ -82,7 +82,7 @@
 			// 4: ON, Mutant Tanks will only spawn on finale maps after the rescue vehicle is called.
 			"Finales Only"				"0"
 
-			// Kill Mutant Tanks that are idle for this many seconds.
+			// Check if Mutant Tanks are idle every time this many seconds passes and kill them if idle.
 			// Note: It is recommended to use this in finale stage configs only since idle Tanks can prevent finales from ending.
 			// Note: On non-finale maps, Tanks are only idle until survivors finally encounter them.
 			// --
@@ -235,10 +235,10 @@
 			// Note: This will not work unless "Regular Mode" is set to 1.
 			// --
 			// Minimum: 0
-			// Maximum: 16
+			// Maximum: 32
 			// --
 			// 0: OFF, no limit (only one Tank will spawn).
-			// 1-16: ON, the number of Tanks that will spawn.
+			// 1-32: ON, the number of Tanks that will spawn.
 			"Regular Amount"			"0"
 
 			// Spawn Tanks on non-finale maps every time this many seconds passes.
@@ -294,10 +294,10 @@
 			// Note: This is checked after "Finale Waves" as the overall limit.
 			// --
 			// Minimum: 0
-			// Maximum: 16
+			// Maximum: 32
 			// --
 			// 0: OFF, no limit (no Tanks will be kicked by this setting).
-			// 1-16: ON, the number of Tanks that are allowed to spawn (unless the limit for "Finale Waves" is lower).
+			// 1-32: ON, the number of Tanks that are allowed to spawn (unless the limit for "Finale Waves" is lower).
 			"Finale Amount"				"0"
 
 			// The types of Mutant Tanks that can spawn in each wave.
@@ -330,14 +330,14 @@
 			// Character limit for each wave: 3
 			// --
 			// Minimum value for each wave: 1
-			// Maximum value for each wave: 16
+			// Maximum value for each wave: 32
 			// --
 			// 1st number = 1st wave
 			// 2nd number = 2nd wave
 			// 3rd number = 3rd wave
 			// --
 			// 0: OFF, no limit.
-			// 1-16: ON, the number of Tanks that will spawn.
+			// 1-32: ON, the number of Tanks that will spawn.
 			"Finale Waves"				"0,0,0"
 		}
 		"Game Modes"
@@ -712,7 +712,7 @@
 			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected. 
 			// --
 			// Minimum: 0 (OFF)
-			// Maximum: 16
+			// Maximum: 32
 			"Type Limit"				"0"
 
 			// The Mutant Tank will only spawn on finale maps.

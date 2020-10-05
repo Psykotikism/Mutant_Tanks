@@ -1698,6 +1698,8 @@ Examples:
 
 **huwong** - For reporting issues and suggesting ideas.
 
+**Tank Rush** - For reporting issues and suggesting ideas.
+
 **Electr000999** - For suggesting ideas.
 
 **foquaxticity** - For suggesting ideas.
@@ -1709,8 +1711,6 @@ Examples:
 **Neptunia** - For suggesting ideas.
 
 **yuzumi** - For suggesting ideas.
-
-**Tank Rush** - For suggesting ideas.
 
 **FatalOE71** - For suggesting ideas.
 

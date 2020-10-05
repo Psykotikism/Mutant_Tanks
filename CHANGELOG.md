@@ -21,8 +21,14 @@ Changes:
 8. Added the `Splatter` ability which is exclusive to Left 4 Dead 2. (Requested by Tank Rush and thanks to Silvers for the code.)
 9. Added two new default Mutant Tanks in the config file to showcase the `Splatter` ability.
 10. All the default Mutant Tanks that come with the main config file are now off by default. Users can enable them as needed.
-11. DHooks is now mandatory.
-12. Left 4 DHooks is now mandatory.
+11. DHooks and Left 4 DHooks are now mandatory.
+12. The core plugin now constantly checks if Tanks are idle or not moving (no action). Use the `Idle Check` setting to determine the interval between each check.
+13. The `Regular Amount` setting now works without the `Regular Mode` setting being set to `1`.
+14. Raised the limit from `16` to `32` for the following settings (Requested by Tank Rush.):
+- `Regular Amount`
+- `Finale Amount`
+- `Finale Waves`
+- `Type Limit`
 
 Files:
 
