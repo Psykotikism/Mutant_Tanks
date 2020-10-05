@@ -5701,7 +5701,7 @@ static bool bIsTankIdle(int tank)
 
 	char sAction[64];
 	SDKCall(g_esGeneral.g_hSDKActionGetName, adAction, sAction, sizeof(sAction));
-	if (StrEqual(sAction, "TankIdle") || StrEqual(sAction, "TankBehavior"))
+	if (StrEqual(sAction, "TankIdle") || StrEqual(sAction, "TankBehavior") || adAction == adBehavior)
 	{
 		return true;
 	}
