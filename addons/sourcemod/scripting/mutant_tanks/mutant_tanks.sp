@@ -950,7 +950,7 @@ public void OnConfigsExecuted()
 		CreateDirectory(sSMPath, 511);
 
 		char sMap[128];
-		ArrayList alMaps = new ArrayList(16);
+		ArrayList alMaps = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 		if (alMaps != null)
 		{
 			int iSerial = -1;
@@ -960,9 +960,9 @@ public void OnConfigsExecuted()
 			int iMapCount = (alMaps.Length > 0) ? alMaps.Length : 0;
 			if (iMapCount > 0)
 			{
-				for (int iMap = 0; iMap < iMapCount; iMap++)
+				for (int iPos = 0; iPos < iMapCount; iPos++)
 				{
-					alMaps.GetString(iMap, sMap, sizeof(sMap));
+					alMaps.GetString(iPos, sMap, sizeof(sMap));
 					vCreateConfigFile((bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMap);
 				}
 			}
@@ -3324,12 +3324,12 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iMasterControl = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "MasterControl", "Master Control", "Master_Control", "master", g_esGeneral.g_iMasterControl, value, 0, 1);
 			g_esGeneral.g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esGeneral.g_iRenamePlayers, value, 0, 1);
 			g_esGeneral.g_iSpawnMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "spawnmode", g_esGeneral.g_iSpawnMode, value, 0, 1);
-			g_esGeneral.g_iRegularAmount = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularAmount", "Regular Amount", "Regular_Amount", "regamount", g_esGeneral.g_iRegularAmount, value, 0, 16);
+			g_esGeneral.g_iRegularAmount = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularAmount", "Regular Amount", "Regular_Amount", "regamount", g_esGeneral.g_iRegularAmount, value, 0, 32);
 			g_esGeneral.g_flRegularInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularInterval", "Regular Interval", "Regular_Interval", "reginterval", g_esGeneral.g_flRegularInterval, value, 0.1, 999999.0);
 			g_esGeneral.g_iRegularLimit = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularLimit", "Regular Limit", "Regular_Limit", "reglimit", g_esGeneral.g_iRegularLimit, value, 0, 999999);
 			g_esGeneral.g_iRegularMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularMode", "Regular Mode", "Regular_Mode", "regmode", g_esGeneral.g_iRegularMode, value, 0, 1);
 			g_esGeneral.g_iRegularWave = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularWave", "Regular Wave", "Regular_Wave", "regwave", g_esGeneral.g_iRegularWave, value, 0, 1);
-			g_esGeneral.g_iFinaleAmount = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "FinaleAmount", "Finale Amount", "Finale_Amount", "finamount", g_esGeneral.g_iFinaleAmount, value, 0, 16);
+			g_esGeneral.g_iFinaleAmount = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "FinaleAmount", "Finale Amount", "Finale_Amount", "finamount", g_esGeneral.g_iFinaleAmount, value, 0, 32);
 
 			if (StrEqual(g_esGeneral.g_sCurrentSubSection, "General", false))
 			{
@@ -3401,7 +3401,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 					for (int iPos = 0; iPos < sizeof(esGeneral::g_iFinaleWave); iPos++)
 					{
-						g_esGeneral.g_iFinaleWave[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 16) : g_esGeneral.g_iFinaleWave[iPos];
+						g_esGeneral.g_iFinaleWave[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 32) : g_esGeneral.g_iFinaleWave[iPos];
 					}
 				}
 			}
@@ -3471,7 +3471,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esTank[iIndex].g_iMultiHealth, value, 0, 3);
 						g_esTank[iIndex].g_iHumanSupport = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanSupport", "Human Support", "Human_Support", "human", g_esTank[iIndex].g_iHumanSupport, value, 0, 2);
 						g_esTank[iIndex].g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esTank[iIndex].g_iRenamePlayers, value, 0, 1);
-						g_esTank[iIndex].g_iChosenTypeLimit = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_esTank[iIndex].g_iChosenTypeLimit, value, 0, 16);
+						g_esTank[iIndex].g_iChosenTypeLimit = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_esTank[iIndex].g_iChosenTypeLimit, value, 0, 32);
 						g_esTank[iIndex].g_iFinaleTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[iIndex].g_iFinaleTank, value, 0, 4);
 						g_esTank[iIndex].g_iBossStages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_esTank[iIndex].g_iBossStages, value, 1, 4);
 						g_esTank[iIndex].g_iRandomTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomTank", "Random Tank", "Random_Tank", "random", g_esTank[iIndex].g_iRandomTank, value, 0, 1);
@@ -5180,7 +5180,7 @@ static void vMutateTank(int tank)
 
 		if (g_esGeneral.g_flIdleCheck > 0.0)
 		{
-			CreateTimer(g_esGeneral.g_flIdleCheck, tTimerKillIdleTank, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_esGeneral.g_flIdleCheck, tTimerKillIdleTank, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		switch (g_esTank[g_esPlayer[tank].g_iTankType].g_iSpawnMode)
@@ -5304,7 +5304,7 @@ public int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int pa
 
 static void vTankCountCheck(int tank, int amount)
 {
-	if (amount == 0 || iGetTankCount() == amount || (!bIsFinaleMap() && g_esGeneral.g_iTankWave == 0 && (g_esGeneral.g_iRegularMode == 0 || (g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 0))))
+	if (amount == 0 || iGetTankCount() == amount || (!bIsFinaleMap() && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
 	{
 		return;
 	}
@@ -6155,14 +6155,19 @@ public Action tTimerIceEffect(Handle timer, int userid)
 public Action tTimerKillIdleTank(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT) || !bIsTankIdle(iTank))
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsTankAllowed(iTank, MT_CHECK_ALIVE) || bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT))
 	{
 		return Plugin_Stop;
 	}
 
+	if (!bIsTankIdle(iTank))
+	{
+		return Plugin_Continue;
+	}
+
 	ForcePlayerSuicide(iTank);
 
-	return Plugin_Continue;
+	return Plugin_Stop;
 }
 
 public Action tTimerKillStuckTank(Handle timer, int userid)
@@ -6414,12 +6419,9 @@ public Action tTimerRegularWaves(Handle timer)
 		case 0: vRegularSpawn();
 		default:
 		{
-			for (int iAmount = 0; iAmount <= g_esGeneral.g_iRegularAmount; iAmount++)
+			for (int iAmount = iGetTankCount(); iAmount < g_esGeneral.g_iRegularAmount; iAmount++)
 			{
-				if (iAmount < g_esGeneral.g_iRegularAmount && iGetTankCount() < g_esGeneral.g_iRegularAmount)
-				{
-					vRegularSpawn();
-				}
+				vRegularSpawn();
 			}
 
 			g_esGeneral.g_iRegularCount++;
