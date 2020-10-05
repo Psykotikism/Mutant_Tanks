@@ -6,6 +6,8 @@ Bug fixes:
 
 1. Fixed the plugin creating the wrong folder for finale stage configs.
 2. Fixed the `sm_mt_config` command causing errors when multiple players are using it.
+3. Fixed the `Game Mode Types` setting and `mt_gamemodetypes` convar causing errors when set to anything higher than `0`. (Thanks to KasperH/Ladis for testing and reporting!)
+4. Fixed the idle check for Tanks not detecting every type of idle mode.
 
 Changes:
 
@@ -288,7 +290,7 @@ Changes:
 25. Moved all redundant code to the core plugin's include file for universal usage.
 26. Changed how the administration system works. (Please read the `Administration System` section of the `README.md` file.)
 27. Optimized the code of all the plugins included.
-28. Added Hungarian translations. (Thanks to KasperH!)
+28. Added Hungarian translations. (Thanks to KasperH/Ladis!)
 
 Files:
 
@@ -1732,7 +1734,7 @@ Bug fixes:
 
 ## Version 6.5 (November 24, 2017)
 
-1. Fixed the SetConVarInt errors reported by KasperH here.
+1. Fixed the SetConVarInt errors reported by KasperH/Ladis here.
 
 ## Version 6.0 (November 24, 2017)
 

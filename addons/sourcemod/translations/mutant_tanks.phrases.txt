@@ -1,28 +1,28 @@
 "Phrases"
 {
 	// MT Chat Color Placeholders
-	// MT 的 聊天框文本颜色占位符
 	// MT Chat Színek helyőrzői
+	// MT 的 聊天框文本颜色占位符
 	// --
 	// Note: Not all phrases support these placeholders.
-	// 注意: 并不是所有的短语文本都支持这些占位符.
 	// Megjegyzés: Nem mindegyik kifejezés támogatja ezeket a helyőrzőket.
+	// 注意: 并不是所有的短语文本都支持这些占位符.
 	// --
 	// "{default}" Normal - \x01
-	// "{default}" 普通颜色 - \x01
 	// "{default}" Normál - \x01
+	// "{default}" 普通颜色 - \x01
 	// --
 	// "{mint}" Sky-green - \x03
-	// "{mint}" 天青色 - \x03
 	// "{mint}" Ég zöld - \x03
+	// "{mint}" 天青色 - \x03
 	// --
 	// "{yellow}" Yellow-orange - \x04
-	// "{yellow}" 橘黄色 - \x04
 	// "{yellow}" Sárgás narancs - \x04
+	// "{yellow}" 橘黄色 - \x04
 	// --
 	// "{olive}" Yellow-green - \x05
-	// "{olive}" 黄绿色 - \x05
 	// "{olive}" Sárgászöld - \x05
+	// "{olive}" 黄绿色 - \x05
 
 	"MTMenu"
 	{

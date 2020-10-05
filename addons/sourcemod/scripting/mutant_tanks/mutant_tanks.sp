@@ -5590,8 +5590,13 @@ static bool bIsPluginEnabled()
 
 	int iMode = g_esGeneral.g_iGameModeTypes;
 	iMode = (iMode == 0) ? g_esGeneral.g_cvMTGameModeTypes.IntValue : iMode;
-	if (iMode != 0 && g_esGeneral.g_bMapStarted)
+	if (iMode != 0)
 	{
+		if (!g_esGeneral.g_bMapStarted)
+		{
+			return false;
+		}
+
 		g_esGeneral.g_iCurrentMode = 0;
 
 		int iGameMode = CreateEntityByName("info_gamemode");
