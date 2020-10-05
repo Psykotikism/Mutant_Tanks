@@ -2,21 +2,27 @@
 {
 	// MT Chat Color Placeholders
 	// MT 的 聊天框文本颜色占位符
+	// MT Chat Színek helyőrzői
 	// --
 	// Note: Not all phrases support these placeholders.
 	// 注意: 并不是所有的短语文本都支持这些占位符.
+	// Megjegyzés: Nem mindegyik kifejezés támogatja ezeket a helyőrzőket.
 	// --
 	// "{default}" Normal - \x01
 	// "{default}" 普通颜色 - \x01
+	// "{default}" Normál - \x01
 	// --
 	// "{mint}" Sky-green - \x03
 	// "{mint}" 天青色 - \x03
+	// "{mint}" Ég zöld - \x03
 	// --
 	// "{yellow}" Yellow-orange - \x04
 	// "{yellow}" 橘黄色 - \x04
+	// "{yellow}" Sárgás narancs - \x04
 	// --
 	// "{olive}" Yellow-green - \x05
 	// "{olive}" 黄绿色 - \x05
+	// "{olive}" Sárgászöld - \x05
 
 	"MTMenu"
 	{
@@ -5611,7 +5617,7 @@
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} will cover everyone's screens with splatters periodically!"
-		"hu"			""
+		"hu"			"{olive}{1}{mint} időszakosan mindenki képernyőjét befröcsköli!"
 		"chi"			"{olive}{1}{mint} 会定期用飞溅覆盖每个人的屏幕!"
 	}
 
@@ -5619,21 +5625,21 @@
 	{
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} covered everyone's screens with{yellow} splatters{mint}!"
-		"hu"			""
+		"hu"			"{olive}{1}{mint} mindenki képernyőjét{yellow} befröcskölte{mint}!"
 		"chi"			"{olive}{1}{mint} 用{yellow} 飞溅{mint} 覆盖了每个人的屏幕!"
 	}
 
 	"SplatterAmmo"
 	{
 		"en"			"You've used up all your splatter ability's ammo."
-		"hu"			""
+		"hu"			"Elhasználtad a Fröcskölő képességed összes lőszerét."
 		"chi"			"您已经用完了所有飞溅能力的弹药."
 	}
 
 	"SplatterDetails"
 	{
 		"en"			"You cover everyone's screens with splatters."
-		"hu"			""
+		"hu"			"Mindenki képernyőjét befröcskölöd."
 		"chi"			"您会用飞溅覆盖每个人的屏幕."
 	}
 
@@ -5641,21 +5647,21 @@
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your splatter ability!"
-		"hu"			""
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} fröcskölő képességedet!"
 		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 的飞溅能力!"
 	}
 
 	"SplatterHuman2"
 	{
 		"en"			"Your splatter ability failed to activate. Try again."
-		"hu"			""
+		"hu"			"Nem sikerült aktiválni a fröcskölő képességedet. Próbáld újra."
 		"chi"			"您的飞溅技能无法激活. 再试一次."
 	}
 
 	"SplatterHuman3"
 	{
 		"en"			"You already activated your splatter ability."
-		"hu"			""
+		"hu"			"Már aktiváltad a fröcskölő képességedet."
 		"chi"			"您已经激活了飞溅功能."
 	}
 
@@ -5663,7 +5669,7 @@
 	{
 		"#format"		"{1:i}"
 		"en"			"Your splatter ability still needs another{yellow} {1} second(s){mint} to recharge."
-		"hu"			""
+		"hu"			"A fröcskölő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"您的飞溅能力仍然需要另外{yellow} {1} 秒{mint}来补充."
 	}
 
@@ -5671,21 +5677,21 @@
 	{
 		"#format"		"{1:i}"
 		"en"			"Your splatter ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-		"hu"			""
+		"hu"			"A fröcskölő képességed véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
 		"chi"			"您的飞溅能力结束，需要{yellow} {1} 秒{mint}补充能量."
 	}
 
 	"SplatterMenu"
 	{
 		"en"			"Splatter Ability Information"
-		"hu"			""
+		"hu"			"Fröcskölő Képesség Információ"
 		"chi"			"飞溅 能力信息"
 	}
 
 	"SplatterMenu2"
 	{
 		"en"			"Splatter Ability"
-		"hu"			""
+		"hu"			"Fröcskölő Képesség"
 		"chi"			"飞溅 能力"
 	}
 
@@ -7108,7 +7114,7 @@
 	"Tank #71"
 	{
 		"en"			"{mint}This Tank can cover everyone's screens with splatters."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank mindenki képernyőjét befröcsköli."
 		"chi"			"{mint}该坦克可以用飞溅覆盖每个人的屏幕."
 	}
 
@@ -7423,7 +7429,7 @@
 	"Tank #116"
 	{
 		"en"			"{mint}This Tank is as annoying as any mudman."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank ugyanolyan bosszantó mint bármelyik sárember."
 		"chi"			"{mint}这辆坦克像任何泥人一样令人讨厌."
 	}
 
