@@ -5701,7 +5701,7 @@ static bool bIsTankIdle(int tank)
 
 	char sAction[64];
 	SDKCall(g_esGeneral.g_hSDKActionGetName, adAction, sAction, sizeof(sAction));
-	if (StrEqual(sAction, "TankIdle"))
+	if (StrEqual(sAction, "TankIdle") || StrEqual(sAction, "TankBehavior"))
 	{
 		return true;
 	}
@@ -6262,6 +6262,8 @@ public Action tTimerRandomize(Handle timer, int userid)
 	iTank = GetClientOfUserId(userid);
 	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCloneAllowed(iTank) || !g_esPlayer[iTank].g_bRandomized)
 	{
+		g_esPlayer[iTank].g_hRandomizeTimer = null;
+
 		vSpawnModes(iTank, false);
 
 		return Plugin_Stop;
@@ -6271,7 +6273,12 @@ public Action tTimerRandomize(Handle timer, int userid)
 	iType = iChooseTank(iTank, 2, _, _, false);
 	switch (iType)
 	{
-		case 0: return Plugin_Stop;
+		case 0:
+		{
+			g_esPlayer[iTank].g_hRandomizeTimer = null;
+
+			return Plugin_Stop;
+		}
 		default:
 		{
 			vNewTankSettings(iTank);
@@ -6454,6 +6461,8 @@ public Action tTimerRegularWaves(Handle timer)
 {
 	if (!bCanTypeSpawn() || bIsFinaleMap() || g_esGeneral.g_iTankWave > 0 || (g_esGeneral.g_iRegularLimit > 0 && g_esGeneral.g_iRegularCount >= g_esGeneral.g_iRegularLimit))
 	{
+		g_esGeneral.g_hRegularWavesTimer = null;
+
 		return Plugin_Stop;
 	}
 
