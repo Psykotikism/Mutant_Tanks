@@ -21,6 +21,8 @@ Changes:
 8. Added the `Splatter` ability which is exclusive to Left 4 Dead 2. (Requested by Tank Rush and thanks to Silvers for the code.)
 9. Added two new default Mutant Tanks in the config file to showcase the `Splatter` ability.
 10. All the default Mutant Tanks that come with the main config file are now off by default. Users can enable them as needed.
+11. DHooks is now mandatory.
+12. Left 4 DHooks is now mandatory.
 
 Files:
 
