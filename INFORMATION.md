@@ -71,7 +71,7 @@
 			// --
 			// 0: OFF
 			// 1: ON
-			"Detect Plugins"			"0"
+			"Detect Plugins"			"1"
 
 			// Spawn Mutant Tanks during finales only.
 			// --
@@ -856,7 +856,7 @@
 			// 16: Attach rocks only.
 			// 32: Attach tires only.
 			// 64: Attach a propane tank only.
-			"Props Attached"			"126"
+			"Props Attached"			"126" // Default is "78" on Left 4 Dead 1.
 
 			// Each prop has this many chances out of 100.0% to appear when the Mutant Tank appears.
 			// Note: This setting can be overridden for specific players.

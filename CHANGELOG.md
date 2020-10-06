@@ -25,8 +25,10 @@ Changes:
 12. The core plugin now constantly checks if Tanks are idle or not moving (no action). Use the `Idle Check` setting to determine the interval between each check.
 13. Added the `Idle Check Mode` setting under `Plugin Settings/General` section.
 14. Changed the default value of the `Idle Check` setting from `0.0` to `10.0`.
-15. The `Regular Amount` setting now works without the `Regular Mode` setting being set to `1`.
-16. Raised the limit from `16` to `32` for the following settings (Requested by Tank Rush.):
+15. Changed the default value of the `Props Attached` setting from `126` to `78` for L4D1 to disable huge props.
+16. Changed the default value of the `Detect Plugins` setting from `0` to `1`.
+17. The `Regular Amount` setting now works without the `Regular Mode` setting being set to `1`.
+18. Raised the limit from `16` to `32` for the following settings (Requested by Tank Rush.):
 - `Regular Amount`
 - `Finale Amount`
 - `Finale Waves`
@@ -1738,8 +1740,8 @@ Bug fixes:
 
 ## Version 7.0 (November 24, 2017)
 
-1. Disabled Ice Tank for L4D version.
-2. Only 28/40 are available for the L4D version now.
+1. Disabled Ice Tank for L4D1 version.
+2. Only 28/40 are available for the L4D1 version now.
 3. Fixed Shield Tank and other Tank types with shields not having their shields shattered by explosions.
 
 ## Version 6.5 (November 24, 2017)
@@ -1748,10 +1750,10 @@ Bug fixes:
 
 ## Version 6.0 (November 24, 2017)
 
-1. Added support for L4D.
-2. L4D version only includes 29/40 Tank types.
-3. L4D version excludes prop attachments (concrete chunk and beam spotlight).
-4. L4D version excludes glow outlines.
+1. Added support for L4D1.
+2. L4D1 version only includes 29/40 Tank types.
+3. L4D1 version excludes prop attachments (concrete chunk and beam spotlight).
+4. L4D1 version excludes glow outlines.
 5. Changed the l4d2_ prefix to l4d_ for the plugin and config files.
 
 ## Version 5.5 (October 23, 2017)
