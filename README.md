@@ -1722,7 +1722,7 @@ Examples:
 
 **Dragokas** - For reporting issues, suggesting ideas, and providing fixes.
 
-**BHaType** - For suggesting ideas and providing gamedata signatures.
+**BHaType** - For suggesting ideas.
 
 **Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (v8.66), and overall support.
 
