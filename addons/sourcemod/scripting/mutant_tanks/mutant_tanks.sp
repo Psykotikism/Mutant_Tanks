@@ -3014,7 +3014,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iAnnounceArrival = 31;
 		g_esGeneral.g_iAnnounceDeath = 1;
 		g_esGeneral.g_iDeathRevert = 0;
-		g_esGeneral.g_iDetectPlugins = 0;
+		g_esGeneral.g_iDetectPlugins = 1;
 		g_esGeneral.g_iFinalesOnly = 0;
 		g_esGeneral.g_flIdleCheck = 0.0;
 		g_esGeneral.g_iIdleCheckMode = 2;
@@ -3090,7 +3090,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_flTransformDelay = 10.0;
 			g_esTank[iIndex].g_flTransformDuration = 10.0;
 			g_esTank[iIndex].g_iSpawnMode = 0;
-			g_esTank[iIndex].g_iPropsAttached = 126;
+			g_esTank[iIndex].g_iPropsAttached = bIsValidGame() ? 126 : 78;
 			g_esTank[iIndex].g_iBodyEffects = 0;
 			g_esTank[iIndex].g_iRockEffects = 0;
 			g_esTank[iIndex].g_iRockModel = 2;
