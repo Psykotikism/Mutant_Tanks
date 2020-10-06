@@ -84,11 +84,20 @@
 
 			// Check if Mutant Tanks are idle every time this many seconds passes and kill them if idle.
 			// Note: It is recommended to use this in finale stage configs only since idle Tanks can prevent finales from ending.
-			// Note: On non-finale maps, Tanks are only idle until survivors finally encounter them.
+			// Note: On non-finale maps, Tanks are only idle until survivors finally encounter them, but Tanks with no behavior can spawn on any map.
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0
 			"Idle Check"				"0.0"
+
+			// The type of idle mode to check for.
+			// Note: It is recommended to set this to "2" on non-finale maps and "0" on finale maps.
+			// Note: There is a rare bug where a Tank spawns with no behavior even though they look "idle" to survivors. Set this setting to "0" or "2" to detect this bug.
+			// --
+			// 0: Both
+			// 1: Only check for idle Tanks.
+			// 2: Only check for Tanks with no behavior (rare bug).
+			"Idle Check Mode"			"2"
 
 			// The range of types to check for.
 			// --
