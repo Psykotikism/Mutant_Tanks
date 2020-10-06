@@ -227,6 +227,7 @@ enum struct esGeneral
 	int g_iFinaleWave[3];
 	int g_iGameModeTypes;
 	int g_iHumanCooldown;
+	int g_iIdleCheckMode;
 	int g_iIgnoreLevel;
 	int g_iIgnoreLevel2;
 	int g_iImmunityFlags;
@@ -3016,6 +3017,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iDetectPlugins = 0;
 		g_esGeneral.g_iFinalesOnly = 0;
 		g_esGeneral.g_flIdleCheck = 0.0;
+		g_esGeneral.g_iIdleCheckMode = 2;
 		g_esGeneral.g_iMinType = 1;
 		g_esGeneral.g_iMaxType = MT_MAXTYPES;
 		g_esGeneral.g_iBaseHealth = 0;
@@ -3315,6 +3317,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esGeneral.g_iDetectPlugins, value, 0, 1);
 			g_esGeneral.g_iFinalesOnly = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esGeneral.g_iFinalesOnly, value, 0, 4);
 			g_esGeneral.g_flIdleCheck = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "IdleCheck", "Idle Check", "Idle_Check", "idle", g_esGeneral.g_flIdleCheck, value, 0.0, 999999.0);
+			g_esGeneral.g_iIdleCheckMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "IdleCheckMode", "Idle Check Mode", "Idle_Check_Mode", "idlemode", g_esGeneral.g_iIdleCheckMode, value, 0, 2);
 			g_esGeneral.g_iBaseHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "BaseHealth", "Base Health", "Base_Health", "health", g_esGeneral.g_iBaseHealth, value, 0, MT_MAXHEALTH);
 			g_esGeneral.g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esGeneral.g_iDisplayHealth, value, 0, 11);
 			g_esGeneral.g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esGeneral.g_iDisplayHealthType, value, 0, 2);
@@ -5675,7 +5678,7 @@ static bool bIsTankIdle(int tank)
 
 	char sAction[64];
 	SDKCall(g_esGeneral.g_hSDKActionGetName, adAction, sAction, sizeof(sAction));
-	if (StrEqual(sAction, "TankIdle") || StrEqual(sAction, "TankBehavior") || adAction == adBehavior)
+	if ((g_esGeneral.g_iIdleCheckMode != 2 && StrEqual(sAction, "TankIdle")) || (g_esGeneral.g_iIdleCheckMode != 1 && (StrEqual(sAction, "TankBehavior") || adAction == adBehavior)))
 	{
 		return true;
 	}
