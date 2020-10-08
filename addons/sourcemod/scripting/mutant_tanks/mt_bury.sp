@@ -11,6 +11,7 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <left4dhooks>
 #include <mutant_tanks>
 
 #pragma semicolon 1
@@ -734,6 +735,7 @@ static void vStopBury(int survivor, int tank)
 	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 
 	SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
+	L4D_ReviveSurvivor(survivor);
 
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{

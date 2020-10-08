@@ -10,6 +10,7 @@
  **/
 
 #include <sourcemod>
+#include <left4dhooks>
 #include <mutant_tanks>
 
 #pragma semicolon 1
@@ -699,6 +700,8 @@ static void vYellAbility(int tank)
 					{
 						g_esPlayer[iSurvivor].g_bAffected = true;
 						g_esPlayer[iSurvivor].g_iOwner = tank;
+
+						L4D_Deafen(iSurvivor);
 
 						iSurvivorCount++;
 					}

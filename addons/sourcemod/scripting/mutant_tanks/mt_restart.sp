@@ -534,7 +534,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_spawn"))
 	{
 		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor) && bMustBeRecorded(iSurvivor))
+		if (bIsSurvivor(iSurvivor) && !g_esPlayer[iSurvivor].g_bRecorded && L4D_IsInFirstCheckpoint(iSurvivor))
 		{
 			g_esPlayer[iSurvivor].g_bRecorded = true;
 
@@ -759,14 +759,4 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, int m
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RestartAmmo");
 		}
 	}
-}
-
-static bool bMustBeRecorded(int survivor)
-{
-	if (!g_esPlayer[survivor].g_bRecorded && L4D_IsInFirstCheckpoint(survivor))
-	{
-		return true;
-	}
-
-	return !g_esPlayer[survivor].g_bRecorded;
 }
