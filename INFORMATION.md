@@ -20,8 +20,8 @@
 {
 	// These are the general plugin settings.
 	// Note: The following settings will not work in custom config files:
-	// Any setting under the "Game Modes" section.
-	// Any setting under the "Custom" section.
+	// - Any setting under the "Game Modes" section.
+	// - Any setting under the "Custom" section.
 	"Plugin Settings"
 	{
 		"General"
@@ -85,6 +85,7 @@
 			// Check if Mutant Tanks are idle every time this many seconds passes and kill them if idle.
 			// Note: It is recommended to use this in finale stage configs only since idle Tanks can prevent finales from ending.
 			// Note: On non-finale maps, Tanks are only idle until survivors finally encounter them, but Tanks with no behavior can spawn on any map.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0
@@ -1921,6 +1922,7 @@
 		// - "Bury Chance"
 		// - "Bury Hit Mode"
 		// Requires "mt_bury.smx" to be installed.
+		// Requires Left 4 DHooks to be installed.
 		"Bury Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7576,6 +7578,7 @@
 		// - "Restart Chance"
 		// - "Restart Hit Mode"
 		// Requires "mt_restart.smx" to be installed.
+		// Requires Left 4 DHooks to be installed.
 		"Restart Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -10219,6 +10222,7 @@
 	{
 		// The Mutant Tank yells to deafen survivors.
 		// Requires "mt_yell.smx" to be installed.
+		// Requires Left 4 DHooks to be installed.
 		"Yell Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.

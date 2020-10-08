@@ -28,7 +28,9 @@ Changes:
 15. Changed the default value of the `Props Attached` setting from `126` to `78` for L4D1 to disable huge props.
 16. Changed the default value of the `Detect Plugins` setting from `0` to `1`.
 17. The `Regular Amount` setting now works without the `Regular Mode` setting being set to `1`.
-18. Raised the limit from `16` to `32` for the following settings (Requested by Tank Rush.):
+18. The `Bury` ability's plugin (`mt_bury.smx`) now uses Left 4 DHooks to revive survivors.
+19. The `Yell` ability's plugin (`mt_yell.smx`) now uses Left 4 DHooks to deafen survivors.
+20. Raised the limit from `16` to `32` for the following settings (Requested by Tank Rush.):
 - `Regular Amount`
 - `Finale Amount`
 - `Finale Waves`
