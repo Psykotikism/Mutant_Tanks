@@ -476,7 +476,7 @@ public void MT_OnRockThrow(int tank, int rock)
 		{
 			static char sTankName[33];
 			MT_GetTankName(tank, sTankName);
-			MT_PrintToChatAll("%s %t", MT_TAG2, "Track", sTankName);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Track", sTankName);
 		}
 	}
 }

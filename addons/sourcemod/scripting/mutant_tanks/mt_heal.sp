@@ -807,7 +807,7 @@ static void vHealAbility(int tank, bool main)
 					{
 						static char sTankName[33];
 						MT_GetTankName(tank, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Heal2", sTankName);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Heal2", sTankName);
 					}
 				}
 				else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -864,7 +864,7 @@ static void vHealHit(int survivor, int tank, float chance, int enabled, int mess
 					{
 						static char sTankName[33];
 						MT_GetTankName(tank, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Heal", sTankName, survivor);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Heal", sTankName, survivor);
 					}
 				}
 			}
@@ -918,7 +918,7 @@ static void vReset2(int tank)
 	{
 		static char sTankName[33];
 		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Heal3", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Heal3", sTankName);
 	}
 }
 

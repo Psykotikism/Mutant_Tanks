@@ -143,7 +143,7 @@ public void OnPluginStart()
 	g_esGeneral.g_hSDKIdlePlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKIdlePlayer == null)
 	{
-		PrintToServer("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", MT_TAG);
+		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", MT_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -157,7 +157,7 @@ public void OnPluginStart()
 	g_esGeneral.g_hSDKSpecPlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKSpecPlayer == null)
 	{
-		PrintToServer("%s Your \"SetHumanSpec\" signature is outdated.", MT_TAG);
+		MT_LogMessage(MT_LOG_SERVER, "%s Your \"SetHumanSpec\" signature is outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
@@ -687,7 +687,7 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 					{
 						static char sTankName[33];
 						MT_GetTankName(tank, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Idle", sTankName, survivor);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Idle", sTankName, survivor);
 					}
 				}
 			}

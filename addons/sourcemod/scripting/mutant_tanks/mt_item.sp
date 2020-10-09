@@ -436,17 +436,7 @@ static void vItemAbility(int tank)
 		{
 			switch (g_esCache[tank].g_iItemMode)
 			{
-				case 0:
-				{
-					switch (GetRandomInt(1, 5))
-					{
-						case 1: vCheatCommand(iSurvivor, "give", sItems[0]);
-						case 2: vCheatCommand(iSurvivor, "give", sItems[1]);
-						case 3: vCheatCommand(iSurvivor, "give", sItems[2]);
-						case 4: vCheatCommand(iSurvivor, "give", sItems[3]);
-						case 5: vCheatCommand(iSurvivor, "give", sItems[4]);
-					}
-				}
+				case 0: vCheatCommand(iSurvivor, "give", sItems[GetRandomInt(1, 5) - 1]);
 				case 1:
 				{
 					for (int iItem = 0; iItem < sizeof(sItems); iItem++)
@@ -465,7 +455,7 @@ static void vItemAbility(int tank)
 	{
 		static char sTankName[33];
 		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Item", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Item", sTankName);
 	}
 }
 

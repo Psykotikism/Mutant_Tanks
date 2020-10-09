@@ -638,7 +638,7 @@ static void vSplatterAbility(int tank)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Splatter", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Splatter", sTankName);
 			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -695,7 +695,7 @@ public Action tTimerSplatter(Handle timer, DataPack pack)
 	{
 		static char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Splatter2", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Splatter2", sTankName);
 	}
 
 	return Plugin_Continue;

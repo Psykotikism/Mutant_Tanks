@@ -63,6 +63,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MT_IsTankIdle", aNative_IsTankIdle);
 	CreateNative("MT_IsTankSupported", aNative_IsTankSupported);
 	CreateNative("MT_IsTypeEnabled", aNative_IsTypeEnabled);
+	CreateNative("MT_LogMessage", aNative_LogMessage);
 	CreateNative("MT_SetTankType", aNative_SetTankType);
 	CreateNative("MT_SpawnTank", aNative_SpawnTank);
 
@@ -153,6 +154,7 @@ enum struct esGeneral
 	bool g_bPluginEnabled;
 	bool g_bUsedParser;
 
+	char g_sChatFile[128];
 	char g_sChosenPath[PLATFORM_MAX_PATH];
 	char g_sCurrentSection[128];
 	char g_sCurrentSubSection[128];
@@ -186,6 +188,7 @@ enum struct esGeneral
 	GlobalForward g_gfDisplayMenuForward;
 	GlobalForward g_gfEventFiredForward;
 	GlobalForward g_gfHookEventForward;
+	GlobalForward g_gfLogMessageForward;
 	GlobalForward g_gfMenuItemDisplayedForward;
 	GlobalForward g_gfMenuItemSelectedForward;
 	GlobalForward g_gfPluginCheckForward;
@@ -233,6 +236,7 @@ enum struct esGeneral
 	int g_iImmunityFlags;
 	int g_iIntentionOffset;
 	int g_iLauncher;
+	int g_iLogMessages;
 	int g_iMasterControl;
 	int g_iMaxType;
 	int g_iMinType;
@@ -660,7 +664,7 @@ public any aNative_IsNonFinaleType(Handle plugin, int numParams)
 
 public any aNative_IsTankIdle(Handle plugin, int numParams)
 {
-	return bIsTankIdle(GetNativeCell(1));
+	return bIsTankIdle(GetNativeCell(1), GetNativeCell(2));
 }
 
 public any aNative_IsTankSupported(Handle plugin, int numParams)
@@ -672,6 +676,22 @@ public any aNative_IsTypeEnabled(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
 	return iType > 0 && g_esTank[iType].g_iTankEnabled == 1 && bIsTypeAvailable(iType);
+}
+
+public any aNative_LogMessage(Handle plugin, int numParams)
+{
+	int iType = GetNativeCell(1);
+	if (g_esGeneral.g_iLogMessages & iType)
+	{
+		char sBuffer[255];
+		int iSize = 0, iResult = FormatNativeString(0, 2, 3, sizeof(sBuffer), iSize, sBuffer);
+
+		switch (iResult)
+		{
+			case SP_ERROR_NONE: vLogMessage(iType, sBuffer);
+			default: ThrowNativeError(iResult, "MT_LogMessage native failed with error code: %i", iResult);
+		}
+	}
 }
 
 public any aNative_SetTankType(Handle plugin, int numParams)
@@ -718,6 +738,7 @@ public void OnPluginStart()
 	g_esGeneral.g_gfDisplayMenuForward = new GlobalForward("MT_OnDisplayMenu", ET_Ignore, Param_Cell);
 	g_esGeneral.g_gfEventFiredForward = new GlobalForward("MT_OnEventFired", ET_Ignore, Param_Cell, Param_String, Param_Cell);
 	g_esGeneral.g_gfHookEventForward = new GlobalForward("MT_OnHookEvent", ET_Ignore, Param_Cell);
+	g_esGeneral.g_gfLogMessageForward = new GlobalForward("MT_OnLogMessage", ET_Event, Param_Cell, Param_String);
 	g_esGeneral.g_gfMenuItemDisplayedForward = new GlobalForward("MT_OnMenuItemDisplayed", ET_Ignore, Param_Cell, Param_String, Param_String, Param_Cell);
 	g_esGeneral.g_gfMenuItemSelectedForward = new GlobalForward("MT_OnMenuItemSelected", ET_Ignore, Param_Cell, Param_String);
 	g_esGeneral.g_gfPluginCheckForward = new GlobalForward("MT_OnPluginCheck", ET_Ignore, Param_Array);
@@ -795,7 +816,7 @@ public void OnPluginStart()
 			g_esGeneral.g_iIntentionOffset = GameConfGetOffset(gdMutantTanks, "GetIntentionInterfaceSpecial");
 			if (g_esGeneral.g_iIntentionOffset == -1)
 			{
-				PrintToServer("Failed to load offset: GetIntentionInterfaceSpecial");
+				vLogMessage(MT_LOG_SERVER, "Failed to load offset: GetIntentionInterfaceSpecial");
 			}
 
 			int iOffset = GameConfGetOffset(gdMutantTanks, "FirstContainedResponder");
@@ -805,7 +826,7 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKFirstContainedResponder = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKFirstContainedResponder == null)
 			{
-				PrintToServer("%s Your \"FirstContainedResponder\" offset is outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, "%s Your \"FirstContainedResponder\" offset is outdated.", MT_TAG);
 			}
 
 			iOffset = GameConfGetOffset(gdMutantTanks, "ActionGetName");
@@ -815,19 +836,19 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKActionGetName = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKActionGetName == null)
 			{
-				PrintToServer("%s Your \"ActionGetName\" offset is outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, "%s Your \"ActionGetName\" offset is outdated.", MT_TAG);
 			}
 
 			g_esGeneral.g_hLaunchDirectionDetour = DHookCreateFromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
 			if (g_esGeneral.g_hLaunchDirectionDetour == null)
 			{
-				PrintToServer("Failed to find signature: CEnvRockLauncher::LaunchCurrentDir");
+				vLogMessage(MT_LOG_SERVER, "Failed to find signature: CEnvRockLauncher::LaunchCurrentDir");
 			}
 
 			g_esGeneral.g_hTankRockDetour = DHookCreateFromConf(gdMutantTanks, "CTankRock::Create");
 			if (g_esGeneral.g_hTankRockDetour == null)
 			{
-				PrintToServer("Failed to find signature: CTankRock::Create");
+				vLogMessage(MT_LOG_SERVER, "Failed to find signature: CTankRock::Create");
 			}
 
 			delete gdMutantTanks;
@@ -835,6 +856,11 @@ public void OnPluginStart()
 	}
 
 	g_esGeneral.g_alFilePaths = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+
+	char sDate[32];
+
+	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
+	BuildPath(Path_SM, g_esGeneral.g_sChatFile, sizeof(esGeneral::g_sChatFile), "logs/mutant_tanks_%s.log", sDate);
 
 	if (g_bLateLoad)
 	{
@@ -875,6 +901,8 @@ public void OnMapStart()
 	PrecacheSound(SOUND_SPIT, true);
 
 	vReset();
+
+	vToggleLogging();
 }
 
 public void OnClientPutInServer(int client)
@@ -1174,7 +1202,7 @@ public Action umNameChange(UserMsg msg_id, BfRead msg, const int[] players, int 
 		return Plugin_Continue;
 	}
 
-	static char sMessage[256];
+	static char sMessage[255];
 
 	msg.ReadByte();
 	msg.ReadByte();
@@ -1352,16 +1380,14 @@ static void vParseConfig(int client)
 			char sSmcError[64];
 			smcParser.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
 
-			PrintToServer("%s %t", MT_TAG, "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
-			LogError("%t", "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
+			vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
 		}
 
 		delete smcParser;
 	}
 	else
 	{
-		PrintToServer("%s %t", MT_TAG, "FailedParsing", g_esGeneral.g_sChosenPath);
-		LogError("%t", "FailedParsing", g_esGeneral.g_sChosenPath);
+		vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "FailedParsing", g_esGeneral.g_sChosenPath);
 	}
 }
 
@@ -1664,8 +1690,7 @@ static void vConfigMenu(int admin, int item)
 				char sSmcError[64];
 				smcConfig.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
 
-				PrintToServer("%s %t", MT_TAG, "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
-				LogError("%t", "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
+				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
 
 				delete smcConfig;
 				delete mConfigMenu;
@@ -1677,8 +1702,7 @@ static void vConfigMenu(int admin, int item)
 		}
 		else
 		{
-			PrintToServer("%s %t", MT_TAG, "FailedParsing", g_esGeneral.g_sChosenPath);
-			LogError("%t", "FailedParsing", g_esGeneral.g_sChosenPath);
+			vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "FailedParsing", g_esGeneral.g_sChosenPath);
 
 			delete mConfigMenu;
 
@@ -2988,16 +3012,14 @@ static void vLoadConfigs(const char[] savepath, int mode)
 			char sSmcError[64];
 			smcLoader.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
 
-			PrintToServer("%s %t", MT_TAG, "ErrorParsing", savepath, sSmcError);
-			LogError("%t", "ErrorParsing", savepath, sSmcError);
+			vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ErrorParsing", savepath, sSmcError);
 		}
 
 		delete smcLoader;
 	}
 	else
 	{
-		PrintToServer("%s %t", MT_TAG, "FailedParsing", savepath);
-		LogError("%t", "FailedParsing", savepath);
+		vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "FailedParsing", savepath);
 	}
 }
 
@@ -3018,6 +3040,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iFinalesOnly = 0;
 		g_esGeneral.g_flIdleCheck = 0.0;
 		g_esGeneral.g_iIdleCheckMode = 2;
+		g_esGeneral.g_iLogMessages = 0;
 		g_esGeneral.g_iMinType = 1;
 		g_esGeneral.g_iMaxType = MT_MAXTYPES;
 		g_esGeneral.g_iBaseHealth = 0;
@@ -3318,6 +3341,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iFinalesOnly = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esGeneral.g_iFinalesOnly, value, 0, 4);
 			g_esGeneral.g_flIdleCheck = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "IdleCheck", "Idle Check", "Idle_Check", "idle", g_esGeneral.g_flIdleCheck, value, 0.0, 999999.0);
 			g_esGeneral.g_iIdleCheckMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "IdleCheckMode", "Idle Check Mode", "Idle_Check_Mode", "idlemode", g_esGeneral.g_iIdleCheckMode, value, 0, 2);
+			g_esGeneral.g_iLogMessages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "LogMessages", "Log Messages", "Log_Messages", "log", g_esGeneral.g_iLogMessages, value, 0, 31);
 			g_esGeneral.g_iBaseHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "BaseHealth", "Base Health", "Base_Health", "health", g_esGeneral.g_iBaseHealth, value, 0, MT_MAXHEALTH);
 			g_esGeneral.g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esGeneral.g_iDisplayHealth, value, 0, 11);
 			g_esGeneral.g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esGeneral.g_iDisplayHealthType, value, 0, 2);
@@ -4018,16 +4042,16 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 					switch (GetRandomInt(1, 10))
 					{
-						case 1: MT_PrintToChatAll("%s %t", MT_TAG2, "Death1", g_esCache[iTank].g_sTankName);
-						case 2: MT_PrintToChatAll("%s %t", MT_TAG2, "Death2", g_esCache[iTank].g_sTankName);
-						case 3: MT_PrintToChatAll("%s %t", MT_TAG2, "Death3", g_esCache[iTank].g_sTankName);
-						case 4: MT_PrintToChatAll("%s %t", MT_TAG2, "Death4", g_esCache[iTank].g_sTankName);
-						case 5: MT_PrintToChatAll("%s %t", MT_TAG2, "Death5", g_esCache[iTank].g_sTankName);
-						case 6: MT_PrintToChatAll("%s %t", MT_TAG2, "Death6", g_esCache[iTank].g_sTankName);
-						case 7: MT_PrintToChatAll("%s %t", MT_TAG2, "Death7", g_esCache[iTank].g_sTankName);
-						case 8: MT_PrintToChatAll("%s %t", MT_TAG2, "Death8", g_esCache[iTank].g_sTankName);
-						case 9: MT_PrintToChatAll("%s %t", MT_TAG2, "Death9", g_esCache[iTank].g_sTankName);
-						case 10: MT_PrintToChatAll("%s %t", MT_TAG2, "Death10", g_esCache[iTank].g_sTankName);
+						case 1: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death1", g_esCache[iTank].g_sTankName);
+						case 2: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death2", g_esCache[iTank].g_sTankName);
+						case 3: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death3", g_esCache[iTank].g_sTankName);
+						case 4: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death4", g_esCache[iTank].g_sTankName);
+						case 5: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death5", g_esCache[iTank].g_sTankName);
+						case 6: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death6", g_esCache[iTank].g_sTankName);
+						case 7: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death7", g_esCache[iTank].g_sTankName);
+						case 8: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death8", g_esCache[iTank].g_sTankName);
+						case 9: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death9", g_esCache[iTank].g_sTankName);
+						case 10: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death10", g_esCache[iTank].g_sTankName);
 					}
 				}
 
@@ -4257,6 +4281,81 @@ static void vHookEventForward(bool mode)
 	Call_StartForward(g_esGeneral.g_gfHookEventForward);
 	Call_PushCell(mode);
 	Call_Finish();
+}
+
+static void vLogMessage(int type, const char[] message, any ...)
+{
+	static char sBuffer[255];
+	VFormat(sBuffer, sizeof(sBuffer), message, 3);
+
+	if (!(type & MT_LOG_SERVER) && !(type & MT_LOG_CUSTOM))
+	{
+		MT_PrintToChatAll(sBuffer);
+	}
+
+	if (g_esGeneral.g_iLogMessages & type)
+	{
+		static Action aResult;
+		aResult = Plugin_Continue;
+
+		Call_StartForward(g_esGeneral.g_gfLogMessageForward);
+		Call_PushCell(type);
+		Call_PushString(message);
+		Call_Finish(aResult);
+
+		switch (aResult)
+		{
+			case Plugin_Handled: return;
+			case Plugin_Continue:
+			{
+				ReplaceString(sBuffer, sizeof(sBuffer), "{default}", "");
+				ReplaceString(sBuffer, sizeof(sBuffer), "\x01", "");
+				ReplaceString(sBuffer, sizeof(sBuffer), "{mint}", "");
+				ReplaceString(sBuffer, sizeof(sBuffer), "\x03", "");
+				ReplaceString(sBuffer, sizeof(sBuffer), "{yellow}", "");
+				ReplaceString(sBuffer, sizeof(sBuffer), "\x04", "");
+				ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
+				ReplaceString(sBuffer, sizeof(sBuffer), "\x05", "");
+
+				static char sMessage[255], sTime[32];
+				FormatTime(sTime, sizeof(sTime), "%Y-%m-%d - %H:%M:%S", GetTime());
+				FormatEx(sMessage, sizeof(sMessage), "[%s] %s", sTime, sBuffer);
+
+				PrintToServer(sMessage);
+				vSaveMessage(sMessage);
+			}
+		}
+	}	
+}
+
+static void vToggleLogging()
+{
+	char sMessage[255], sMap[128], sTime[32], sDate[32];
+
+	GetCurrentMap(sMap, sizeof(sMap));
+	FormatTime(sTime, sizeof(sTime), "%m/%d/%Y %H:%M:%S", GetTime());
+	FormatEx(sMessage, sizeof(sMessage), "[%s] --- NEW MAP STARTED: %s ---", sTime, sMap);
+
+	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
+	BuildPath(Path_SM, g_esGeneral.g_sChatFile, sizeof(esGeneral::g_sChatFile), "logs/mutant_tanks_%s.log", sDate);
+
+	static int iType;
+	if (g_esGeneral.g_iLogMessages != iType)
+	{
+		iType = g_esGeneral.g_iLogMessages;
+
+		vSaveMessage("--=================================================================--");
+		vSaveMessage(sMessage);
+		vSaveMessage("--=================================================================--");
+	}
+}
+
+static void vSaveMessage(const char[] message)
+{
+	File fLog = OpenFile(g_esGeneral.g_sChatFile, "a");
+	fLog.WriteLine(message);
+
+	delete fLog;
 }
 
 static void vBoss(int tank, int limit, int stages, int type, int stage)
@@ -4615,28 +4714,28 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			{
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_BOSS)
 				{
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Evolved", oldname, name, g_esPlayer[tank].g_iBossStageCount + 1);
+					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Evolved", oldname, name, g_esPlayer[tank].g_iBossStageCount + 1);
 				}
 			}
 			case 2:
 			{
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_RANDOM)
 				{
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Randomized", oldname, name);
+					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Randomized", oldname, name);
 				}
 			}
 			case 3:
 			{
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_TRANSFORM)
 				{
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Transformed", oldname, name);
+					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Transformed", oldname, name);
 				}
 			}
 			case 4:
 			{
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_REVERT)
 				{
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Untransformed", oldname, name);
+					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Untransformed", oldname, name);
 				}
 			}
 			case 5:
@@ -4657,8 +4756,8 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 			switch (TranslationPhraseExists(sTankNote))
 			{
-				case true: MT_PrintToChatAll("%s %t", MT_TAG3, sTankNote);
-				case false: MT_PrintToChatAll("%s %t", MT_TAG3, "NoNote");
+				case true: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG3, sTankNote);
+				case false: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG3, "NoNote");
 			}
 		}
 	}
@@ -5024,16 +5123,16 @@ static void vAnnounceArrival(int tank, const char[] name)
 	{
 		switch (GetRandomInt(1, 10))
 		{
-			case 1: MT_PrintToChatAll("%s %t", MT_TAG2, "Arrival1", name);
-			case 2: MT_PrintToChatAll("%s %t", MT_TAG2, "Arrival2", name);
-			case 3: MT_PrintToChatAll("%s %t", MT_TAG2, "Arrival3", name);
-			case 4: MT_PrintToChatAll("%s %t", MT_TAG2, "Arrival4", name);
-			case 5: MT_PrintToChatAll("%s %t", MT_TAG2, "Arrival5", name);
-			case 6: MT_PrintToChatAll("%s %t", MT_TAG2, "Arrival6", name);
-			case 7: MT_PrintToChatAll("%s %t", MT_TAG2, "Arrival7", name);
-			case 8: MT_PrintToChatAll("%s %t", MT_TAG2, "Arrival8", name);
-			case 9: MT_PrintToChatAll("%s %t", MT_TAG2, "Arrival9", name);
-			case 10: MT_PrintToChatAll("%s %t", MT_TAG2, "Arrival10", name);
+			case 1: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival1", name);
+			case 2: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival2", name);
+			case 3: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival3", name);
+			case 4: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival4", name);
+			case 5: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival5", name);
+			case 6: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival6", name);
+			case 7: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival7", name);
+			case 8: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival8", name);
+			case 9: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival9", name);
+			case 10: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival10", name);
 		}
 	}
 }
@@ -5639,7 +5738,7 @@ static bool bIsTankAllowed(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|
 	return true;
 }
 
-static bool bIsTankIdle(int tank)
+static bool bIsTankIdle(int tank, int type = 0)
 {
 	if (!bIsTank(tank) || bIsTank(tank, MT_CHECK_FAKECLIENT))
 	{
@@ -5678,7 +5777,7 @@ static bool bIsTankIdle(int tank)
 
 	char sAction[64];
 	SDKCall(g_esGeneral.g_hSDKActionGetName, adAction, sAction, sizeof(sAction));
-	if ((g_esGeneral.g_iIdleCheckMode != 2 && StrEqual(sAction, "TankIdle")) || (g_esGeneral.g_iIdleCheckMode != 1 && (StrEqual(sAction, "TankBehavior") || adAction == adBehavior)))
+	if ((type != 2 && StrEqual(sAction, "TankIdle")) || (type != 1 && (StrEqual(sAction, "TankBehavior") || adAction == adBehavior)))
 	{
 		return true;
 	}
@@ -6163,7 +6262,7 @@ public Action tTimerKillIdleTank(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if (!bIsTankIdle(iTank))
+	if (!bIsTankIdle(iTank, g_esGeneral.g_iIdleCheckMode))
 	{
 		return Plugin_Continue;
 	}
@@ -6469,6 +6568,7 @@ public Action tTimerExecuteCustomConfig(Handle timer, DataPack pack)
 		vLoadConfigs(sSavePath, 2);
 		vPluginStatus();
 		vResetTimers();
+		vToggleLogging();
 	}
 
 	return Plugin_Continue;
@@ -6481,10 +6581,11 @@ public Action tTimerRefreshConfigs(Handle timer)
 		g_esGeneral.g_iFileTimeNew[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
 		if (g_esGeneral.g_iFileTimeOld[0] != g_esGeneral.g_iFileTimeNew[0])
 		{
-			PrintToServer("%s %t", MT_TAG, "ReloadingConfig", g_esGeneral.g_sSavePath);
+			vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", g_esGeneral.g_sSavePath);
 			vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 			vPluginStatus();
 			vResetTimers();
+			vToggleLogging();
 			g_esGeneral.g_iFileTimeOld[0] = g_esGeneral.g_iFileTimeNew[0];
 		}
 	}
@@ -6499,7 +6600,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1])
 			{
-				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDifficultyConfig);
+				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", sDifficultyConfig);
 				vCustomConfig(sDifficultyConfig);
 				g_esGeneral.g_iFileTimeOld[1] = g_esGeneral.g_iFileTimeNew[1];
 			}
@@ -6516,7 +6617,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2])
 			{
-				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sMapConfig);
+				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", sMapConfig);
 				vCustomConfig(sMapConfig);
 				g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
 			}
@@ -6533,7 +6634,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3])
 			{
-				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sModeConfig);
+				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", sModeConfig);
 				vCustomConfig(sModeConfig);
 				g_esGeneral.g_iFileTimeOld[3] = g_esGeneral.g_iFileTimeNew[3];
 			}
@@ -6564,7 +6665,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4])
 			{
-				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sDayConfig);
+				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", sDayConfig);
 				vCustomConfig(sDayConfig);
 				g_esGeneral.g_iFileTimeOld[4] = g_esGeneral.g_iFileTimeNew[4];
 			}
@@ -6582,7 +6683,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5])
 			{
-				PrintToServer("%s %t", MT_TAG, "ReloadingConfig", sCountConfig);
+				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", sCountConfig);
 				vCustomConfig(sCountConfig);
 				g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
 				g_esGeneral.g_iPlayerCount[1] = iCount;

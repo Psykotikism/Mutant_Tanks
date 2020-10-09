@@ -364,7 +364,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 						static char sTankName[33];
 						MT_GetTankName(victim, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro2", sTankName);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Pyro2", sTankName);
 					}
 				}
 			}
@@ -676,7 +676,7 @@ static void vPyroAbility(int tank)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Pyro", sTankName);
 			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -723,7 +723,7 @@ static void vReset2(int tank)
 	{
 		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro3", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Pyro3", sTankName);
 	}
 }
 

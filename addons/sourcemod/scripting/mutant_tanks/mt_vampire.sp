@@ -256,7 +256,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					{
 						static char sTankName[33];
 						MT_GetTankName(attacker, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Vampire", sTankName, victim);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Vampire", sTankName, victim);
 					}
 				}
 			}

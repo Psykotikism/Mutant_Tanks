@@ -684,7 +684,7 @@ static void vEnforceHit(int survivor, int tank, float chance, int enabled, int m
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Enforce", sTankName, survivor, g_esPlayer[survivor].g_iEnforceSlot + 1);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Enforce", sTankName, survivor, g_esPlayer[survivor].g_iEnforceSlot + 1);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -776,7 +776,7 @@ public Action tTimerStopEnforce(Handle timer, DataPack pack)
 	int iMessage = pack.ReadCell();
 	if (g_esCache[iTank].g_iEnforceMessage & iMessage)
 	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Enforce2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Enforce2", iSurvivor);
 	}
 
 	return Plugin_Continue;

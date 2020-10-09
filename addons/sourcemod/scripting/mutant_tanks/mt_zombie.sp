@@ -603,7 +603,7 @@ static void vZombieAbility(int tank)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Zombie", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Zombie", sTankName);
 			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -660,7 +660,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 	{
 		static char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Zombie2", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Zombie2", sTankName);
 	}
 
 	return Plugin_Continue;

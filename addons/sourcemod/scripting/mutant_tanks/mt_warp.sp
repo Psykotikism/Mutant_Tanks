@@ -732,7 +732,7 @@ static void vWarp2(int tank, int other)
 	{
 		static char sTankName[33];
 		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Warp3", sTankName, other);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Warp3", sTankName, other);
 	}
 }
 
@@ -811,7 +811,7 @@ static void vWarpAbility(int tank, bool main)
 					{
 						static char sTankName[33];
 						MT_GetTankName(tank, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Warp2", sTankName);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Warp2", sTankName);
 					}
 				}
 				else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)

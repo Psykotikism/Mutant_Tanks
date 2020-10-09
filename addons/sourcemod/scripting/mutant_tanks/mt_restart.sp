@@ -154,7 +154,7 @@ public void OnPluginStart()
 	g_esGeneral.g_hSDKRespawnPlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKRespawnPlayer == null)
 	{
-		PrintToServer("%s Your \"RoundRespawn\" signature is outdated.", MT_TAG);
+		MT_LogMessage(MT_LOG_SERVER, "%s Your \"RoundRespawn\" signature is outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
@@ -739,7 +739,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, int m
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Restart", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Restart", sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))

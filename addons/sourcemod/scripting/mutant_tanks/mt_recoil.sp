@@ -649,7 +649,7 @@ static void vRecoilHit(int survivor, int tank, float chance, int enabled, int me
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Recoil", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Recoil", sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -735,7 +735,7 @@ public Action tTimerStopRecoil(Handle timer, DataPack pack)
 	int iMessage = pack.ReadCell();
 	if (g_esCache[iTank].g_iRecoilMessage & iMessage)
 	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Recoil2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Recoil2", iSurvivor);
 	}
 
 	return Plugin_Continue;

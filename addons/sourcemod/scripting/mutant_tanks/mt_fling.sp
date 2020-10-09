@@ -164,7 +164,7 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKFlingPlayer = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKFlingPlayer == null)
 			{
-				PrintToServer("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
+				MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
 			}
 		}
 		case false:
@@ -181,7 +181,7 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKPukePlayer = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKPukePlayer == null)
 			{
-				PrintToServer("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
+				MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
 			}
 		}
 	}
@@ -727,7 +727,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 
 						if (g_esCache[tank].g_iFlingMessage & messages)
 						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Fling", sTankName, survivor);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Fling", sTankName, survivor);
 						}
 					}
 					case false:
@@ -736,7 +736,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 
 						if (g_esCache[tank].g_iFlingMessage & messages)
 						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Puke", sTankName, survivor);
 						}
 					}
 				}

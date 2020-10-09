@@ -622,7 +622,7 @@ static void vNecro(int tank, float pos[3], const char[] type)
 		{
 			static char sTankName[33];
 			MT_GetTankName(tank, sTankName);
-			MT_PrintToChatAll("%s %t", MT_TAG2, "Necro", sTankName);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Necro", sTankName);
 		}
 	}
 }

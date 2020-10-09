@@ -818,7 +818,7 @@ static void vGravityAbility(int tank, bool main)
 						{
 							static char sTankName[33];
 							MT_GetTankName(tank, sTankName);
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity3", sTankName);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Gravity3", sTankName);
 						}
 					}
 				}
@@ -877,7 +877,7 @@ static void vGravityHit(int survivor, int tank, float chance, int enabled, int m
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity", sTankName, survivor, g_esCache[tank].g_flGravityValue);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Gravity", sTankName, survivor, g_esCache[tank].g_flGravityValue);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))
@@ -971,7 +971,7 @@ static void vReset3(int tank)
 	{
 		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity4", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Gravity4", sTankName);
 	}
 }
 
@@ -1017,7 +1017,7 @@ public Action tTimerStopGravity2(Handle timer, DataPack pack)
 	int iMessage = pack.ReadCell();
 	if (g_esCache[iTank].g_iGravityMessage & iMessage)
 	{
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Gravity2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Gravity2", iSurvivor);
 	}
 
 	return Plugin_Continue;

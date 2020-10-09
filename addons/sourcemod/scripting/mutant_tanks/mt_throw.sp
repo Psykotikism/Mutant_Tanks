@@ -597,7 +597,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						{
 							static char sTankName[33];
 							MT_GetTankName(iTank, sTankName);
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Throw", sTankName);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Throw", sTankName);
 						}
 					}
 				}
@@ -658,7 +658,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						{
 							static char sTankName[33];
 							MT_GetTankName(iTank, sTankName);
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Throw2", sTankName);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Throw2", sTankName);
 						}
 					}
 				}
@@ -677,7 +677,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					{
 						static char sTankName[33];
 						MT_GetTankName(iTank, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Throw3", sTankName);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Throw3", sTankName);
 					}
 				}
 				case 8:
@@ -704,7 +704,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					{
 						static char sTankName[33];
 						MT_GetTankName(iTank, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Throw4", sTankName);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Throw4", sTankName);
 					}
 				}
 			}

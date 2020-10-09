@@ -563,7 +563,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			{
 				static char sTankName[33];
 				MT_GetTankName(iTank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Respawn", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Respawn", sTankName);
 			}
 		}
 		else

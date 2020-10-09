@@ -51,6 +51,13 @@
 #define MT_ATTACK_MELEE (1 << 1) // weapon_melee
 #define MT_ATTACK_RANGE (1 << 2) // range ability
 
+// Logging flags
+#define MT_LOG_LIFE (1 << 0) // spawned or died
+#define MT_LOG_CHANGE (1 << 1) // mutant type changed
+#define MT_LOG_ABILITY (1 << 2) // ability activated
+#define MT_LOG_SERVER (1 << 3) // server notifications/confirmations
+#define MT_LOG_CUSTOM (1 << 4) // custom message
+
 // Message flags
 #define MT_MESSAGE_MELEE (1 << 0) // weapon_tank_claw/tank_rock/weapon_melee
 #define MT_MESSAGE_RANGE (1 << 1) // range ability
@@ -150,6 +157,17 @@ forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
  * @param hooked		True if event was hooked, false otherwise.
  **/
 forward void MT_OnHookEvent(bool hooked);
+
+/**
+ * Called when a message is about to be logged.
+ * Use this forward to intercept a message.
+ *
+ * @param message		Buffer containing the message.
+ * @param type			Type of message being logged.
+ *
+ * @return			Plugin_Handled to prevent the message from being logged, Plugin_Continue to allow.
+ **/
+forward Action MT_OnLogMessage(int type, const char[] message);
 
 /**
  * Called when an item from the "Mutant Tanks Information" menu is displayed.
@@ -420,13 +438,14 @@ native bool MT_IsGlowEnabled(int tank);
 native bool MT_IsNonFinaleType(int type);
 
 /**
- * Returns if a Tank is in stasis (idle).
+ * Returns if a Tank is idle.
  *
  * @param tank			Client index of the Tank.
- * @return			True if the Tank is in stasis, false otherwise.
+ * @param type			Idle mode of the Tank. 0 = Both, 1 = Idle (waiting for survivors), 2 = Bugged (no behavior)
+ * @return			True if the Tank is idle, false otherwise.
  * @error			Invalid client index.
  **/
-native bool MT_IsTankIdle(int tank);
+native bool MT_IsTankIdle(int tank, int type = 0);
 
 /**
  * Returns if a Tank is allowed to be a Mutant Tank.
@@ -449,6 +468,16 @@ native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_ING
  * @error			Type is 0.
  **/
 native bool MT_IsTypeEnabled(int type);
+
+/**
+ * Logs a message.
+ *
+ * @param type			Type of message to be logged.
+ * @param message		Buffer to store the message.
+ * @param size			Size of the buffer.
+ * @param ...			Variable number of format parameters.
+ **/
+native void MT_LogMessage(int type = MT_LOG_CUSTOM, char[] message, any ...);
 
 /**
  * Sets a Tank's Mutant Tank type.
@@ -1063,7 +1092,7 @@ stock void vStopSound(int client, const char[] sound)
 }
 
 // Chat
-stock void MT_PrintToChat(int client, char[] message, any ...)
+stock void MT_PrintToChat(int client, const char[] message, any ...)
 {
 	if (!bIsValidClient(client, MT_CHECK_INDEX))
 	{
@@ -1088,7 +1117,7 @@ stock void MT_PrintToChat(int client, char[] message, any ...)
 	PrintToChat(client, sMessage);
 }
 
-stock void MT_PrintToChatAll(char[] message, any ...)
+stock void MT_PrintToChatAll(const char[] message, any ...)
 {
 	static char sBuffer[255];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -1103,7 +1132,7 @@ stock void MT_PrintToChatAll(char[] message, any ...)
 	}
 }
 
-stock void MT_ReplyToCommand(int client, char[] message, any ...)
+stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
 	static char sBuffer[255];
 	SetGlobalTransTarget(client);
@@ -1118,13 +1147,13 @@ stock void MT_ReplyToCommand(int client, char[] message, any ...)
 
 		switch (client == 0)
 		{
-			case true: PrintToServer("%s", sBuffer);
-			case false: PrintToConsole(client, "%s", sBuffer);
+			case true: PrintToServer(sBuffer);
+			case false: PrintToConsole(client, sBuffer);
 		}
 	}
 	else
 	{
-		MT_PrintToChat(client, "%s", sBuffer);
+		MT_PrintToChat(client, sBuffer);
 	}
 }
 
@@ -1984,6 +2013,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_IsTankIdle");
 	MarkNativeAsOptional("MT_IsTankSupported");
 	MarkNativeAsOptional("MT_IsTypeEnabled");
+	MarkNativeAsOptional("MT_LogMessage");
 	MarkNativeAsOptional("MT_SetTankType");
 	MarkNativeAsOptional("MT_SpawnTank");
 }

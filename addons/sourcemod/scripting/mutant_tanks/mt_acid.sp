@@ -172,7 +172,7 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKAcidPlayer = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKAcidPlayer == null)
 			{
-				PrintToServer("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
+				MT_LogMessage(MT_LOG_SERVER, "%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
 			}
 		}
 		case false:
@@ -189,7 +189,7 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKPukePlayer = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKPukePlayer == null)
 			{
-				PrintToServer("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
+				MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
 			}
 		}
 	}
@@ -661,7 +661,7 @@ public void MT_OnRockBreak(int tank, int rock)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Acid2", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Acid2", sTankName);
 			}
 		}
 	}
@@ -768,7 +768,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 
 						if (g_esCache[tank].g_iAcidMessage & messages)
 						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Acid", sTankName, survivor);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Acid", sTankName, survivor);
 						}
 					}
 					case false:
@@ -777,7 +777,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 
 						if (g_esCache[tank].g_iAcidMessage & messages)
 						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Puke", sTankName, survivor);
 						}
 					}
 				}
