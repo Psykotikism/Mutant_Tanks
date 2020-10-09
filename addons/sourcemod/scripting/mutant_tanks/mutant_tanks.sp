@@ -154,7 +154,7 @@ enum struct esGeneral
 	bool g_bPluginEnabled;
 	bool g_bUsedParser;
 
-	char g_sChatFile[128];
+	char g_sChatFile[PLATFORM_MAX_PATH];
 	char g_sChosenPath[PLATFORM_MAX_PATH];
 	char g_sCurrentSection[128];
 	char g_sCurrentSubSection[128];
@@ -4334,7 +4334,6 @@ static void vToggleLogging()
 
 	GetCurrentMap(sMap, sizeof(sMap));
 	FormatTime(sTime, sizeof(sTime), "%m/%d/%Y %H:%M:%S", GetTime());
-	FormatEx(sMessage, sizeof(sMessage), "[%s] --- NEW MAP STARTED: %s ---", sTime, sMap);
 
 	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
 	BuildPath(Path_SM, g_esGeneral.g_sChatFile, sizeof(esGeneral::g_sChatFile), "logs/mutant_tanks_%s.log", sDate);
@@ -4343,6 +4342,12 @@ static void vToggleLogging()
 	if (g_esGeneral.g_iLogMessages != iType)
 	{
 		iType = g_esGeneral.g_iLogMessages;
+
+		switch (iType)
+		{
+			case 0: FormatEx(sMessage, sizeof(sMessage), "[%s] --- LOG ENDED ON MAP: %s ---", sTime, sMap);
+			default: FormatEx(sMessage, sizeof(sMessage), "[%s] --- LOG STARTED ON MAP: %s ---", sTime, sMap);
+		}
 
 		vSaveMessage("--=================================================================--");
 		vSaveMessage(sMessage);
