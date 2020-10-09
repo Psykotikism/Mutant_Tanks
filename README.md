@@ -997,6 +997,14 @@ native void MT_HideEntity(int entity, bool mode);
 native bool MT_IsAdminImmune(int survivor, int tank);
 
 /**
+ * Returns if the clone can use abilities.
+ *
+ * @param tank				Client index of the Tank.
+ * @return				True if clone can use abilities, false otherwise.
+ **/
+native bool MT_IsCloneSupported(int tank);
+
+/**
  * Returns if the core plugin is enabled.
  *
  * @return			True if core plugin is enabled, false otherwise.
