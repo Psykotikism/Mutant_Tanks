@@ -30,11 +30,17 @@ Changes:
 17. The `Regular Amount` setting now works without the `Regular Mode` setting being set to `1`.
 18. The `Bury` ability's plugin (`mt_bury.smx`) now uses Left 4 DHooks to revive survivors.
 19. The `Yell` ability's plugin (`mt_yell.smx`) now uses Left 4 DHooks to deafen survivors.
-20. Raised the limit from `16` to `32` for the following settings (Requested by Tank Rush.):
+20. Updated the `MT_IsTankIdle` native with an extra parameter to determine what idle mode to check for.
+21. Chat messages can now be logged.
+22. Added the `Log Messages` setting to allow different types of messages to be logged.
+23. Added the `MT_OnLogMessage` forward to allow developers to intercept the logging feature.
+24. Added the `MT_LogMessage` native to allow developers to log messages.
+25. Raised the limit from `16` to `32` for the following settings (Requested by Tank Rush.):
 - `Regular Amount`
 - `Finale Amount`
 - `Finale Waves`
 - `Type Limit`
+26. Optimized some of the code.
 
 Files:
 
@@ -61,7 +67,7 @@ Changes:
 3. Changed the minimum value of the `Drop` ability's `Drop Weapon Scale` from `1.0` to `0.1`.
 4. Set a fixed default size (`1.5`) for weapons attached to Tanks by the `Drop` ability.
 5. Added the `Idle Check` setting under `Plugin Settings/General` section.
-6. Added the `MT_IsTankIdle` native.
+6. Added the `MT_IsTankIdle` native which allows developers to check if a Tank is idle.
 7. Idle Tanks will no longer activate their passive abilities.
 8. Moved the following settings to the `Plugin Settings/Health` section:
 - `Base Health`

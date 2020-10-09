@@ -724,7 +724,7 @@ forward void MT_OnConfigsLoad(int mode);
 forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode);
 
 /**
- * Called when a player uses the "sm_mt_info" command.
+ * Called when a player uses the "sm_st_info" command.
  * Use this forward to add menu items.
  *
  * @param menu			Handle to the menu.
@@ -745,9 +745,20 @@ forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
  * Called when the core plugin is hooking/unhooking events.
  * Use this forward to hook/unhook events.
  *
- * @param mode			True if event was hooked, false otherwise.
+ * @param hooked		True if event was hooked, false otherwise.
  **/
-forward void MT_OnHookEvent(bool mode);
+forward void MT_OnHookEvent(bool hooked);
+
+/**
+ * Called when a message is about to be logged.
+ * Use this forward to intercept a message.
+ *
+ * @param message		Buffer containing the message.
+ * @param type			Type of message being logged.
+ *
+ * @return			Plugin_Handled to prevent the message from being logged, Plugin_Continue to allow.
+ **/
+forward Action MT_OnLogMessage(int type, const char[] message);
 
 /**
  * Called when an item from the "Mutant Tanks Information" menu is displayed.
@@ -900,8 +911,8 @@ native int MT_GetMinType();
  * Returns the RGBA colors given to a Mutant Tank's props.
  *
  * @param tank			Client index of the Tank.
- * @param type			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color,
- *				4 = Rock color, 5 = Tire color, 6 = Propane tank color
+ * @param type			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color, 4 = Rock color,
+ *				5 = Tire color, 6 = Propane tank color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.
@@ -986,15 +997,6 @@ native void MT_HideEntity(int entity, bool mode);
 native bool MT_IsAdminImmune(int survivor, int tank);
 
 /**
- * Returns if the clone can use abilities.
- *
- * @param tank				Client index of the Tank.
- * @param clone				Checks whether "mt_clone.smx" is installed.
- * @return				True if clone can use abilities, false otherwise.
- **/
-native bool MT_IsCloneSupported(int tank, bool clone);
-
-/**
  * Returns if the core plugin is enabled.
  *
  * @return			True if core plugin is enabled, false otherwise.
@@ -1060,6 +1062,16 @@ native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_ING
 native bool MT_IsTypeEnabled(int type);
 
 /**
+ * Logs a message.
+ *
+ * @param type			Type of message to be logged.
+ * @param message		Buffer to store the message.
+ * @param size			Size of the buffer.
+ * @param ...			Variable number of format parameters.
+ **/
+native void MT_LogMessage(int type = MT_LOG_CUSTOM, char[] message, int size, any ...);
+
+/**
  * Sets a Tank's Mutant Tank type.
  *
  * @param tank			Client index of the Tank.
@@ -1081,7 +1093,7 @@ native void MT_SpawnTank(int tank, int type);
 Stocks:
 
 ```
-stock void MT_PrintToChat(int client, char[] message, any ...)
+stock void MT_PrintToChat(int client, const char[] message, any ...)
 {
 	if (!bIsValidClient(client, MT_CHECK_INDEX))
 	{
@@ -1106,7 +1118,7 @@ stock void MT_PrintToChat(int client, char[] message, any ...)
 	PrintToChat(client, sMessage);
 }
 
-stock void MT_PrintToChatAll(char[] message, any ...)
+stock void MT_PrintToChatAll(const char[] message, any ...)
 {
 	static char sBuffer[255];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -1121,7 +1133,7 @@ stock void MT_PrintToChatAll(char[] message, any ...)
 	}
 }
 
-stock void MT_ReplyToCommand(int client, char[] message, any ...)
+stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
 	static char sBuffer[255];
 	SetGlobalTransTarget(client);

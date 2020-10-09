@@ -101,6 +101,21 @@
 			// 2: Only check for Tanks with no behavior (rare bug).
 			"Idle Check Mode"			"2"
 
+			// Log all global messages displayed by Mutant Tanks.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0: OFF
+			// 1: Arrival and death announcements
+			// 2: Boss evolution, randomization, and transformation announcements
+			// 4: Ability activations
+			// 8: Server notifications/confirmations
+			// 16: Custom messages
+			"Log Messages"				"0"
+
 			// The range of types to check for.
 			// --
 			// Separate values with "-".
