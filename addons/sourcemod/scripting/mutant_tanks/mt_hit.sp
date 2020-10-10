@@ -54,6 +54,7 @@ enum struct esPlayer
 	int g_iHitGroup;
 	int g_iHumanAbility;
 	int g_iImmunityFlags;
+	int g_iRequiresHumans;
 	int g_iTankType;
 }
 
@@ -68,6 +69,7 @@ enum struct esAbility
 	int g_iHitGroup;
 	int g_iHumanAbility;
 	int g_iImmunityFlags;
+	int g_iRequiresHumans;
 }
 
 esAbility g_esAbility[MT_MAXTYPES + 1];
@@ -79,6 +81,7 @@ enum struct esCache
 	int g_iHitAbility;
 	int g_iHitGroup;
 	int g_iHumanAbility;
+	int g_iRequiresHumans;
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
@@ -228,7 +231,7 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
 	{
 		if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim) && g_esCache[victim].g_iHitAbility == 1 && bIsSurvivor(attacker))
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags) || g_esCache[victim].g_iHumanAbility == 0)
+			if (MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (g_esCache[victim].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags) || g_esCache[victim].g_iHumanAbility == 0)
 			{
 				return Plugin_Continue;
 			}
@@ -268,6 +271,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
+				g_esAbility[iIndex].g_iRequiresHumans = 1;
 				g_esAbility[iIndex].g_iHitAbility = 0;
 				g_esAbility[iIndex].g_flHitDamageMultiplier = 1.5;
 				g_esAbility[iIndex].g_iHitGroup = 1;
@@ -282,6 +286,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
+					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iHitAbility = 0;
 					g_esPlayer[iPlayer].g_flHitDamageMultiplier = 0.0;
 					g_esPlayer[iPlayer].g_iHitGroup = 0;
@@ -296,6 +301,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (mode == 3 && bIsValidClient(admin))
 	{
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
 		g_esPlayer[admin].g_iHitAbility = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iHitAbility, value, 0, 1);
 		g_esPlayer[admin].g_flHitDamageMultiplier = flGetKeyValue(subsection, "Hit Ability", "Hit Ability", "Hit_Ability", "hit", key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_esPlayer[admin].g_flHitDamageMultiplier, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_iHitGroup = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esPlayer[admin].g_iHitGroup, value, 1, 127);
@@ -316,6 +322,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (mode < 3 && type > 0)
 	{
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
 		g_esAbility[type].g_iHitAbility = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iHitAbility, value, 0, 1);
 		g_esAbility[type].g_flHitDamageMultiplier = flGetKeyValue(subsection, "Hit Ability", "Hit Ability", "Hit_Ability", "hit", key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_esAbility[type].g_flHitDamageMultiplier, value, 1.0, 999999.0);
 		g_esAbility[type].g_iHitGroup = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esAbility[type].g_iHitGroup, value, 1, 127);
@@ -341,6 +348,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHitAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHitAbility, g_esAbility[type].g_iHitAbility);
 	g_esCache[tank].g_iHitGroup = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHitGroup, g_esAbility[type].g_iHitGroup);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
+	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 

@@ -56,6 +56,7 @@ enum struct esPlayer
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
+	int g_iRequiresHumans;
 	int g_iTankType;
 	int g_iZombieAbility;
 	int g_iZombieAmount;
@@ -75,6 +76,7 @@ enum struct esAbility
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
+	int g_iRequiresHumans;
 	int g_iZombieAbility;
 	int g_iZombieAmount;
 	int g_iZombieMessage;
@@ -92,6 +94,7 @@ enum struct esCache
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
+	int g_iRequiresHumans;
 	int g_iZombieAbility;
 	int g_iZombieAmount;
 	int g_iZombieMessage;
@@ -309,6 +312,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
 				g_esAbility[iIndex].g_iHumanDuration = 5;
 				g_esAbility[iIndex].g_iHumanMode = 1;
+				g_esAbility[iIndex].g_iRequiresHumans = 0;
 				g_esAbility[iIndex].g_iZombieAbility = 0;
 				g_esAbility[iIndex].g_iZombieMessage = 0;
 				g_esAbility[iIndex].g_iZombieAmount = 10;
@@ -328,6 +332,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
 					g_esPlayer[iPlayer].g_iHumanDuration = 0;
 					g_esPlayer[iPlayer].g_iHumanMode = 0;
+					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iZombieAbility = 0;
 					g_esPlayer[iPlayer].g_iZombieMessage = 0;
 					g_esPlayer[iPlayer].g_iZombieAmount = 0;
@@ -348,6 +353,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPlayer[admin].g_iHumanDuration, value, 1, 999999);
 		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
 		g_esPlayer[admin].g_iZombieAbility = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iZombieAbility, value, 0, 1);
 		g_esPlayer[admin].g_iZombieMessage = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iZombieMessage, value, 0, 1);
 		g_esPlayer[admin].g_iZombieAmount = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esPlayer[admin].g_iZombieAmount, value, 1, 100);
@@ -370,6 +376,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
 		g_esAbility[type].g_iHumanDuration = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_iHumanDuration, value, 1, 999999);
 		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
 		g_esAbility[type].g_iZombieAbility = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iZombieAbility, value, 0, 1);
 		g_esAbility[type].g_iZombieMessage = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iZombieMessage, value, 0, 1);
 		g_esAbility[type].g_iZombieAmount = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esAbility[type].g_iZombieAmount, value, 1, 100);
@@ -396,6 +403,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
 	g_esCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanDuration, g_esAbility[type].g_iHumanDuration);
 	g_esCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanMode, g_esAbility[type].g_iHumanMode);
+	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esCache[tank].g_iZombieAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iZombieAbility, g_esAbility[type].g_iZombieAbility);
 	g_esCache[tank].g_iZombieAmount = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iZombieAmount, g_esAbility[type].g_iZombieAmount);
 	g_esCache[tank].g_iZombieMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iZombieMessage, g_esAbility[type].g_iZombieMessage);
@@ -432,7 +440,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -552,20 +560,23 @@ static void vReset2(int tank)
 
 static void vZombie(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
 	for (int iZombie = 1; iZombie <= g_esCache[tank].g_iZombieAmount; iZombie++)
 	{
-		vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "zombie area");
+		if (bIsValidClient(tank))
+		{
+			vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "zombie area");
+		}
 	}
 }
 
 static void vZombie2(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -579,7 +590,7 @@ static void vZombie2(int tank)
 
 static void vZombieAbility(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -621,7 +632,7 @@ static void vZombieRange(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iZombieAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flZombieChance)
 	{
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((MT_HasAdminAccess(tank) && bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -637,7 +648,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 	static int iTank, iType;
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCorePluginEnabled() || !bIsCloneAllowed(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iZombieAbility == 0 || !g_esPlayer[iTank].g_bActivated)
+	if (!MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCorePluginEnabled() || !bIsCloneAllowed(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iZombieAbility == 0 || !g_esPlayer[iTank].g_bActivated)
 	{
 		g_esPlayer[iTank].g_bActivated = false;
 

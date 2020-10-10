@@ -79,6 +79,7 @@ enum struct esPlayer
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
+	int g_iRequiresHumans;
 	int g_iSplatterAbility;
 	int g_iSplatterMessage;
 	int g_iSplatterType;
@@ -98,6 +99,7 @@ enum struct esAbility
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
+	int g_iRequiresHumans;
 	int g_iSplatterAbility;
 	int g_iSplatterMessage;
 	int g_iSplatterType;
@@ -115,6 +117,7 @@ enum struct esCache
 	int g_iHumanCooldown;
 	int g_iHumanDuration;
 	int g_iHumanMode;
+	int g_iRequiresHumans;
 	int g_iSplatterAbility;
 	int g_iSplatterMessage;
 	int g_iSplatterType;
@@ -337,6 +340,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
 				g_esAbility[iIndex].g_iHumanDuration = 5;
 				g_esAbility[iIndex].g_iHumanMode = 1;
+				g_esAbility[iIndex].g_iRequiresHumans = 1;
 				g_esAbility[iIndex].g_iSplatterAbility = 0;
 				g_esAbility[iIndex].g_iSplatterMessage = 0;
 				g_esAbility[iIndex].g_flSplatterChance = 33.3;
@@ -356,6 +360,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
 					g_esPlayer[iPlayer].g_iHumanDuration = 0;
 					g_esPlayer[iPlayer].g_iHumanMode = 0;
+					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iSplatterAbility = 0;
 					g_esPlayer[iPlayer].g_iSplatterMessage = 0;
 					g_esPlayer[iPlayer].g_flSplatterChance = 0.0;
@@ -376,6 +381,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPlayer[admin].g_iHumanDuration, value, 1, 999999);
 		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
 		g_esPlayer[admin].g_iSplatterAbility = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iSplatterAbility, value, 0, 3);
 		g_esPlayer[admin].g_iSplatterMessage = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSplatterMessage, value, 0, 1);
 		g_esPlayer[admin].g_flSplatterChance = flGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esPlayer[admin].g_flSplatterChance, value, 0.0, 100.0);
@@ -398,6 +404,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
 		g_esAbility[type].g_iHumanDuration = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_iHumanDuration, value, 1, 999999);
 		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
 		g_esAbility[type].g_iSplatterAbility = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iSplatterAbility, value, 0, 3);
 		g_esAbility[type].g_iSplatterMessage = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSplatterMessage, value, 0, 1);
 		g_esAbility[type].g_flSplatterChance = flGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esAbility[type].g_flSplatterChance, value, 0.0, 100.0);
@@ -424,6 +431,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
 	g_esCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanDuration, g_esAbility[type].g_iHumanDuration);
 	g_esCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanMode, g_esAbility[type].g_iHumanMode);
+	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esCache[tank].g_iSplatterAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSplatterAbility, g_esAbility[type].g_iSplatterAbility);
 	g_esCache[tank].g_iSplatterMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSplatterMessage, g_esAbility[type].g_iSplatterMessage);
 	g_esCache[tank].g_iSplatterType = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSplatterType, g_esAbility[type].g_iSplatterType);
@@ -460,7 +468,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -580,7 +588,7 @@ static void vReset2(int tank)
 
 static void vSplatter(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -614,7 +622,7 @@ static void vSplatter2(int tank)
 
 static void vSplatterAbility(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -656,7 +664,7 @@ static void vSplatterRange(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank) && g_esCache[tank].g_iSplatterAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flSplatterChance)
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -672,7 +680,7 @@ public Action tTimerSplatter(Handle timer, DataPack pack)
 	static int iTank, iType;
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iSplatterAbility == 0 || !g_esPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iSplatterAbility == 0 || !g_esPlayer[iTank].g_bActivated)
 	{
 		g_esPlayer[iTank].g_bActivated = false;
 

@@ -272,6 +272,15 @@ forward Action MT_OnTypeChosen(int &type, int tank);
 native bool MT_CanTypeSpawn(int type);
 
 /**
+ * Returns if a certain Mutant Tank type requires human-controlled survivors to be present to be effective.
+ *
+ * @param type			Mutant Tank type.
+ * @return			True if the type requires human-controlled survivors to be present, false otherwise.
+ * @error			Type is 0.
+ **/
+native bool MT_DoesTypeRequireHumans(int type);
+
+/**
  * Returns the current access flags set by the core plugin.
  *
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
@@ -1992,6 +2001,7 @@ public SharedPlugin __pl_mutanttanks =
 public void __pl_mutanttanks_SetNTVOptional()
 {
 	MarkNativeAsOptional("MT_CanTypeSpawn");
+	MarkNativeAsOptional("MT_DoesTypeRequireHumans")
 	MarkNativeAsOptional("MT_GetAccessFlags");
 	MarkNativeAsOptional("MT_GetCurrentFinaleWave");
 	MarkNativeAsOptional("MT_GetImmunityFlags");
