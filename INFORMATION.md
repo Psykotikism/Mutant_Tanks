@@ -116,6 +116,13 @@
 			// 16: Custom messages
 			"Log Messages"				"0"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// The range of types to check for.
 			// --
 			// Separate values with "-".
@@ -614,6 +621,13 @@
 			// 0: Glow outline visible only on sight.
 			// 1: Glow outline visible through the walls.
 			"Glow Type"				"0"
+
+			// The Mutant Tank is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 		}
 		"Health"
 		{
@@ -1115,6 +1129,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -1244,6 +1265,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Acid Hit" setting.
@@ -1413,6 +1441,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Aimless Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -1547,6 +1582,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Ammo Hit" setting.
@@ -1683,6 +1725,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Blind Hit" setting.
@@ -1828,6 +1877,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Bomb Hit" setting.
@@ -1975,6 +2031,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Bury Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -2112,6 +2175,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2221,6 +2291,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Choke Hit" setting.
@@ -2365,6 +2442,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2489,6 +2573,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2545,6 +2636,13 @@
 			// 1: ON, players can use buttons to activate abilities.
 			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -2661,6 +2759,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Drug Hit" setting.
@@ -2804,6 +2909,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Drunk Hit" setting.
@@ -2953,6 +3065,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Electric Hit" setting.
@@ -3104,6 +3223,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Enforce Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -3250,6 +3376,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -3343,6 +3476,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Fire Hit" setting.
@@ -3491,6 +3631,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Fling Hit" setting.
@@ -3644,6 +3791,13 @@
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -3818,6 +3972,13 @@
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Ghost Hit" setting.
@@ -4012,6 +4173,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -4106,6 +4274,13 @@
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Gravity Hit" setting.
@@ -4283,6 +4458,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Heal Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -4444,6 +4626,13 @@
 			// 1: ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -4533,6 +4722,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Hurt Hit" setting.
@@ -4683,6 +4879,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Hypno Hit" setting.
@@ -4867,6 +5070,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Ice Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -5003,6 +5213,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Idle Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -5132,6 +5349,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Invert Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -5247,6 +5471,13 @@
 			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -5354,6 +5585,13 @@
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Jump Hit" setting.
@@ -5518,6 +5756,13 @@
 			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Kamikaze Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -5646,6 +5891,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Lag Hit" setting.
@@ -5783,6 +6035,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -5887,6 +6146,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Leech Hit" setting.
@@ -6034,6 +6300,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6168,6 +6441,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6266,6 +6546,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -6377,6 +6664,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6460,6 +6754,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Nullify Hit" setting.
@@ -6590,6 +6891,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6690,6 +6998,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6773,6 +7088,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Pimp Hit" setting.
@@ -6927,6 +7249,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Puke Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -7072,6 +7401,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -7181,6 +7517,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Quiet Hit" setting.
@@ -7317,6 +7660,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Recoil Hit" setting.
@@ -7455,6 +7805,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -7535,6 +7892,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -7630,6 +7994,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Restart Hit" setting.
@@ -7771,6 +8142,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -7874,6 +8252,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Rocket Hit" setting.
@@ -8012,6 +8397,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Shake Hit" setting.
@@ -8187,6 +8579,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -8340,6 +8739,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Shove Hit" setting.
@@ -8506,6 +8912,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Slow Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -8649,6 +9062,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Smash Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -8778,6 +9198,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Smite Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -8901,6 +9328,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9001,6 +9435,13 @@
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -9103,6 +9544,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9198,6 +9646,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -9318,6 +9773,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9403,6 +9865,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -9503,6 +9972,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9564,6 +10040,13 @@
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -9649,6 +10132,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Vision Hit" setting.
@@ -9812,6 +10302,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting does not affect the "Warp Hit" setting.
 			// Note: This setting can be overridden for specific players.
@@ -9959,6 +10456,13 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Whirl Hit" setting.
@@ -10111,6 +10615,13 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -10186,6 +10697,13 @@
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -10282,6 +10800,13 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"1"
+
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -10374,6 +10899,13 @@
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON 
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.

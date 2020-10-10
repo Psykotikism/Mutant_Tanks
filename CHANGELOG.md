@@ -8,6 +8,8 @@ Bug fixes:
 2. Fixed the `sm_mt_config` command causing errors when multiple players are using it.
 3. Fixed the `Game Mode Types` setting and `mt_gamemodetypes` convar causing errors when set to anything higher than `0`. (Thanks to KasperH/Ladis for testing and reporting!)
 4. Fixed the idle check for Tanks not detecting every type of idle mode.
+5. Fixed some abilities' range attacks not working.
+6. Fixed client index errors for the `Zombie` ability.
 
 Changes:
 
@@ -35,12 +37,14 @@ Changes:
 22. Added the `Log Messages` setting to allow different types of messages to be logged.
 23. Added the `MT_OnLogMessage` forward to allow developers to intercept the logging feature.
 24. Added the `MT_LogMessage` native to allow developers to log messages.
-25. Raised the limit from `16` to `32` for the following settings (Requested by Tank Rush.):
+25. Added the `Requires Humans` setting to filter out certain types and abilities from being used when there are zero human survivors present.
+26. Added the `MT_DoesTypeRequireHumans` native to allow developers to check if a certain type requires human survivors to be present.
+27. Config files now support multiple Mutant Tank types using comma separation.
+28. Raised the limit from `16` to `32` for the following settings (Requested by Tank Rush.):
 - `Regular Amount`
 - `Finale Amount`
 - `Finale Waves`
 - `Type Limit`
-26. Optimized some of the code.
 
 Files:
 
@@ -208,7 +212,7 @@ Bug fixes:
 
 1. Fixed the `NoItems` phrase not displaying properly. (Thanks to ben12398 for reporting!)
 2. Fixed some menus returning 0 items once finales have started. (Thanks to ben12398 for reporting!)
-3. Fixed non-finale Tank types being disabled once finales have started even when `Finale Tank` is set to 0. (Thanks to ben12398 and Mi.Cura for reporting!)
+3. Fixed non-finale Mutant Tank types being disabled once finales have started even when `Finale Tank` is set to 0. (Thanks to ben12398 and Mi.Cura for reporting!)
 4. Fixed the `Clone` ability preventing clones with different types from using their assigned/native abilities. (Thanks to ben12398 for reporting!)
 5. Fixed the `Cloud` ability's clouds not disappearing after a short period of time. (Thanks to Mi.Cura for reporting!)
 
@@ -1750,7 +1754,7 @@ Bug fixes:
 
 1. Disabled Ice Tank for L4D1 version.
 2. Only 28/40 are available for the L4D1 version now.
-3. Fixed Shield Tank and other Tank types with shields not having their shields shattered by explosions.
+3. Fixed Shield Tank and other Super Tank types with shields not having their shields shattered by explosions.
 
 ## Version 6.5 (November 24, 2017)
 
@@ -1759,7 +1763,7 @@ Bug fixes:
 ## Version 6.0 (November 24, 2017)
 
 1. Added support for L4D1.
-2. L4D1 version only includes 29/40 Tank types.
+2. L4D1 version only includes 29/40 Super Tank types.
 3. L4D1 version excludes prop attachments (concrete chunk and beam spotlight).
 4. L4D1 version excludes glow outlines.
 5. Changed the l4d2_ prefix to l4d_ for the plugin and config files.

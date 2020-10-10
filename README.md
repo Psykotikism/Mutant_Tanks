@@ -865,6 +865,15 @@ Natives:
 native bool MT_CanTypeSpawn(int type);
 
 /**
+ * Returns if a certain Mutant Tank type requires human-controlled survivors to be present to be effective.
+ *
+ * @param type			Mutant Tank type.
+ * @return			True if the type requires human-controlled survivors to be present, false otherwise.
+ * @error			Type is 0.
+ **/
+native bool MT_DoesTypeRequireHumans(int type);
+
+/**
  * Returns the current access flags set by the core plugin.
  *
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
@@ -1744,7 +1753,7 @@ Examples:
 
 **BHaType** - For suggesting ideas.
 
-**Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (v8.66), and overall support.
+**Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (v8.66), helping to set up the wiki pages, and overall support.
 
 **Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
 
