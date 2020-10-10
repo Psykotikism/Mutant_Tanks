@@ -1,10 +1,26 @@
 # Changelog
 
+## Version 8.80 (December 31, 2020) [FINAL]
+
+Bug fixes:
+
+1. Fixed the core plugin creating log files even when `Log Messages` is disabled. (Thanks to KasperH/Ladis for reporting!)
+2. Fixed clones created by the `Clone` ability being kicked by restrictions from settings.
+
+Changes:
+
+1. Added the `MT_IsTankClone` native to allow developers to check if a Tank is a clone.
+2. The `mt_clone` include file is now used by all plugins related to Mutant Tanks.
+
+Files:
+
+1. Updated include files.
+
 ## Version 8.79 (October 10, 2020)
 
 Bug fixes:
 
-1. Fixed the plugin creating the wrong folder for finale stage configs.
+1. Fixed the core plugin creating the wrong folder for finale stage configs.
 2. Fixed the `sm_mt_config` command causing errors when multiple players are using it.
 3. Fixed the `Game Mode Types` setting and `mt_gamemodetypes` convar causing errors when set to anything higher than `0`. (Thanks to KasperH/Ladis for testing and reporting!)
 4. Fixed the idle check for Tanks not detecting every type of idle mode.

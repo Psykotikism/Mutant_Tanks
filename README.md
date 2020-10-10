@@ -129,7 +129,7 @@ By default, Mutant Tanks can create and execute the following types of configura
 3. Automatically generate config files for up to 66 players, all difficulties specified by `z_difficulty`, maps installed on the server, game modes specified by `sv_gametypes` and `mp_gamemode`, days of the `week`, and all possible `finale stages`.
 
 ## Questions You May Have
-> If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140).
+> If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140). Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 
 ### Main Features
 1. How do I make my own Mutant Tank?
@@ -1008,8 +1008,8 @@ native bool MT_IsAdminImmune(int survivor, int tank);
 /**
  * Returns if the clone can use abilities.
  *
- * @param tank				Client index of the Tank.
- * @return				True if clone can use abilities, false otherwise.
+ * @param tank			Client index of the Tank.
+ * @return			True if clone can use abilities, false otherwise.
  **/
 native bool MT_IsCloneSupported(int tank);
 
@@ -1048,13 +1048,23 @@ native bool MT_IsGlowEnabled(int tank);
 native bool MT_IsNonFinaleType(int type);
 
 /**
- * Returns if a Tank is in stasis (idle).
+ * Returns if a Tank is a clone.
  *
  * @param tank			Client index of the Tank.
- * @return			True if the Tank is in stasis, false otherwise.
+ * @return			True if the Tank is a clone, false otherwise.
  * @error			Invalid client index.
  **/
-native bool MT_IsTankIdle(int tank);
+native bool MT_IsTankClone(int tank);
+
+/**
+ * Returns if a Tank is idle.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			Idle mode of the Tank. 0 = Both, 1 = Idle (waiting for survivors), 2 = Bugged (no behavior)
+ * @return			True if the Tank is idle, false otherwise.
+ * @error			Invalid client index.
+ **/
+native bool MT_IsTankIdle(int tank, int type = 0);
 
 /**
  * Returns if a Tank is allowed to be a Mutant Tank.
@@ -1086,7 +1096,7 @@ native bool MT_IsTypeEnabled(int type);
  * @param size			Size of the buffer.
  * @param ...			Variable number of format parameters.
  **/
-native void MT_LogMessage(int type = MT_LOG_CUSTOM, char[] message, int size, any ...);
+native void MT_LogMessage(int type = MT_LOG_CUSTOM, char[] message, any ...);
 
 /**
  * Sets a Tank's Mutant Tank type.
@@ -1165,13 +1175,13 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 
 		switch (client == 0)
 		{
-			case true: PrintToServer("%s", sBuffer);
-			case false: PrintToConsole(client, "%s", sBuffer);
+			case true: PrintToServer(sBuffer);
+			case false: PrintToConsole(client, sBuffer);
 		}
 	}
 	else
 	{
-		MT_PrintToChat(client, "%s", sBuffer);
+		MT_PrintToChat(client, sBuffer);
 	}
 }
 ```
