@@ -1342,6 +1342,53 @@ mutanttanks // 2nd format
 }
 ```
 
+4. Is it possible to configure more than one type in one section?
+
+Yes, you can either apply global settings for all types to use or specify certain types to use them.
+
+Example:
+
+```
+"Mutant Tanks"
+{
+	// Applies to every type.
+	"All"
+	{
+		"Health"
+		{
+			"Extra Health"				"1000"
+		}
+	}
+
+	// Applies to types 1 and 10.
+	"1,10"
+	{
+		"Health"
+		{
+			"Extra Health"				"1000"
+		}
+	}
+
+	// Applies to types 11 through 20.
+	"11-20"
+	{
+		"Health"
+		{
+			"Extra Health"				"1000"
+		}
+	}
+
+	// Applies to types 21 through 30 and types 31 through 40.
+	"21-30,31-40"
+	{
+		"Health"
+		{
+			"Extra Health"				"1000"
+		}
+	}
+}
+```
+
 ### Administration System
 1. How does the system work?
 

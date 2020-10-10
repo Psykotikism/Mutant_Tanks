@@ -4,7 +4,8 @@
 ## Information
 > Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
-- Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file and recompile at your own risk.)
+- Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 33 and 34 and recompile at your own risk.)
+- Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 32 and recompile at your own risk.)
 - Ability count: 74 (Suggest more if you want; limit is 100.)
 
 ## Sections

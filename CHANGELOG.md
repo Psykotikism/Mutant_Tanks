@@ -8,7 +8,7 @@ Bug fixes:
 2. Fixed the `sm_mt_config` command causing errors when multiple players are using it.
 3. Fixed the `Game Mode Types` setting and `mt_gamemodetypes` convar causing errors when set to anything higher than `0`. (Thanks to KasperH/Ladis for testing and reporting!)
 4. Fixed the idle check for Tanks not detecting every type of idle mode.
-5. Fixed some abilities' range attacks not working.
+5. Fixed some abilities' range attacks not working due to admin access.
 6. Fixed client index errors for the `Zombie` ability.
 
 Changes:
