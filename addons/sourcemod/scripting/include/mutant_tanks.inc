@@ -15,13 +15,14 @@
 #define _mutanttanks_included
 
 #include <sdktools>
+#include <mt_clone>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
 
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
-#define MT_VERSION "8.79"
+#define MT_VERSION "8.80"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 #define MT_TAG "[MT]"
@@ -1256,12 +1257,10 @@ stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT
 
 stock bool bIsCloneAllowed(int tank)
 {
-#if defined _mutanttankscloneability_included
 	if (LibraryExists("mt_clone") && !MT_IsCloneSupported(tank))
 	{
 		return false;
 	}
-#endif
 
 	return true;
 }

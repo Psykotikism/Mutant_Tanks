@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Invert Ability v8.79"
+#file "Invert Ability v8.80"
 
 public Plugin myinfo =
 {

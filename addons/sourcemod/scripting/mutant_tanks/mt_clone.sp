@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Clone Ability v8.79"
+#file "Clone Ability v8.80"
 
 public Plugin myinfo =
 {
@@ -36,6 +36,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 
 	CreateNative("MT_IsCloneSupported", aNative_IsCloneSupported);
+	CreateNative("MT_IsTankClone", aNative_IsTankClone);
 
 	RegPluginLibrary("mt_clone");
 
@@ -123,6 +124,12 @@ public any aNative_IsCloneSupported(Handle plugin, int numParams)
 	}
 
 	return true;
+}
+
+public any aNative_IsTankClone(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	return MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esPlayer[iTank].g_bCloned;
 }
 
 public void OnPluginStart()

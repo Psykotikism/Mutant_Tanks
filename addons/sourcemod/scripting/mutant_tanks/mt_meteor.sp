@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Meteor Ability v8.79"
+#file "Meteor Ability v8.80"
 
 public Plugin myinfo =
 {

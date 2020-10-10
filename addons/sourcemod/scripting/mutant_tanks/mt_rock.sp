@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Rock Ability v8.79"
+#file "Rock Ability v8.80"
 
 public Plugin myinfo =
 {
@@ -745,7 +745,7 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	AddVectors(flPos, flVector, flHitPos);
 
 	if (flDistance > 300.0)
-	{ 
+	{
 		static float flAngles2[3];
 		if (bIsValidEntity(iLauncher))
 		{

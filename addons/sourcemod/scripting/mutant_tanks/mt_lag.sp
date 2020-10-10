@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Lag Ability v8.79"
+#file "Lag Ability v8.80"
 
 public Plugin myinfo =
 {

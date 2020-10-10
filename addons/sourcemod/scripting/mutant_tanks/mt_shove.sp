@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Shove Ability v8.79"
+#file "Shove Ability v8.80"
 
 public Plugin myinfo =
 {

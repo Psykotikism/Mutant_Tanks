@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Yell Ability v8.79"
+#file "Yell Ability v8.80"
 
 public Plugin myinfo =
 {

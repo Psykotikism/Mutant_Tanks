@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Necro Ability v8.79"
+#file "Necro Ability v8.80"
 
 public Plugin myinfo =
 {

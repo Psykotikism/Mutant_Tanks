@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Rocket Ability v8.79"
+#file "Rocket Ability v8.80"
 
 public Plugin myinfo =
 {

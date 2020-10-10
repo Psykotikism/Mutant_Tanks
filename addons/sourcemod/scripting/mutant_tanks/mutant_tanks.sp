@@ -19,7 +19,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Mutant Tanks v8.79"
+#file "Mutant Tanks v8.80"
 
 public Plugin myinfo =
 {
@@ -4391,16 +4391,17 @@ static void vLogMessage(int type, const char[] message, any ...)
 				static char sMessage[255], sTime[32];
 				FormatTime(sTime, sizeof(sTime), "%Y-%m-%d - %H:%M:%S", GetTime());
 				FormatEx(sMessage, sizeof(sMessage), "[%s] %s", sTime, sBuffer);
+
 				PrintToServer(sBuffer);
 				vSaveMessage(sMessage);
 			}
 		}
-	}	
+	}
 }
 
 static void vToggleLogging(int type = -1)
 {
-	char sMessage[255], sMap[128], sTime[32], sDate[32];
+	static char sMessage[255], sMap[128], sTime[32], sDate[32];
 
 	GetCurrentMap(sMap, sizeof(sMap));
 	FormatTime(sTime, sizeof(sTime), "%m/%d/%Y %H:%M:%S", GetTime());
@@ -4408,19 +4409,36 @@ static void vToggleLogging(int type = -1)
 	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
 	BuildPath(Path_SM, g_esGeneral.g_sChatFile, sizeof(esGeneral::g_sChatFile), "logs/mutant_tanks_%s.log", sDate);
 
+	static bool bLog;
+	bLog = false;
 	static int iType;
-	if (g_esGeneral.g_iLogMessages != iType || type != -1)
+
+	switch (type)
 	{
-		iType = (type != -1) ? type : g_esGeneral.g_iLogMessages;
-
-		switch (iType)
+		case -1:
 		{
-			case 0: FormatEx(sMessage, sizeof(sMessage), "[%s] --- LOG ENDED ON MAP: %s ---", sTime, sMap);
-			default: FormatEx(sMessage, sizeof(sMessage), "[%s] --- LOG STARTED ON MAP: %s ---", sTime, sMap);
+			if (g_esGeneral.g_iLogMessages != iType)
+			{
+				bLog = true;
+				iType = g_esGeneral.g_iLogMessages;
+
+				FormatEx(sMessage, sizeof(sMessage), "[%s] --- %s: %s ---", sTime, ((iType != 0) ? "LOG STARTED ON MAP" : "LOG ENDED ON MAP"), sMap);
+			}
 		}
+		case 0, 1:
+		{
+			if (g_esGeneral.g_iLogMessages != 0)
+			{
+				bLog = true;
+				iType = g_esGeneral.g_iLogMessages;
 
-		iType = g_esGeneral.g_iLogMessages;
+				FormatEx(sMessage, sizeof(sMessage), "[%s] --- %s: %s ---", sTime, ((type == 1) ? "LOG STARTED ON MAP" : "LOG ENDED ON MAP"), sMap);
+			}
+		}
+	}
 
+	if (bLog)
+	{
 		vSaveMessage("--=================================================================--");
 		vSaveMessage(sMessage);
 		vSaveMessage("--=================================================================--");
@@ -5492,7 +5510,7 @@ static void vTankCountCheck(int tank, int amount)
 	{
 		CreateTimer(3.0, tTimerSpawnTanks, amount, TIMER_FLAG_NO_MAPCHANGE);
 	}
-	else if (iGetTankCount() > amount)
+	else if (iGetTankCount() > amount && !MT_IsTankClone(tank))
 	{
 		switch (bIsValidClient(tank, MT_CHECK_FAKECLIENT))
 		{
@@ -6066,7 +6084,7 @@ static int iGetTankCount()
 	iTankCount = 0;
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsTankClone(iTank))
 		{
 			iTankCount++;
 		}
