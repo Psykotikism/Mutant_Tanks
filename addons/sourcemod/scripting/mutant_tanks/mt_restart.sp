@@ -11,16 +11,13 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <left4dhooks>
 #include <mutant_tanks>
-
-#undef REQUIRE_PLUGIN
-#tryinclude <left4dhooks>
-#define REQUIRE_PLUGIN
 
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Restart Ability v8.78"
+#file "Restart Ability v8.79"
 
 public Plugin myinfo =
 {
@@ -43,7 +40,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 
 	MarkNativeAsOptional("MT_IsCloneSupported");
-	MarkNativeAsOptional("L4D_IsInFirstCheckpoint");
 
 	g_bLateLoad = late;
 
@@ -54,8 +50,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esGeneral
 {
-	bool g_bL4DHInstalled;
-
 	Handle g_hSDKRespawnPlayer;
 }
 
@@ -81,6 +75,7 @@ enum struct esPlayer
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iImmunityFlags;
+	int g_iRequiresHumans;
 	int g_iRestartAbility;
 	int g_iRestartEffect;
 	int g_iRestartHit;
@@ -105,6 +100,7 @@ enum struct esAbility
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iImmunityFlags;
+	int g_iRequiresHumans;
 	int g_iRestartAbility;
 	int g_iRestartEffect;
 	int g_iRestartHit;
@@ -132,30 +128,10 @@ enum struct esCache
 	int g_iRestartHitMode;
 	int g_iRestartMessage;
 	int g_iRestartMode;
+	int g_iRequiresHumans;
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
-
-public void OnAllPluginsLoaded()
-{
-	g_esGeneral.g_bL4DHInstalled = LibraryExists("left4dhooks");
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks", false))
-	{
-		g_esGeneral.g_bL4DHInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "left4dhooks", false))
-	{
-		g_esGeneral.g_bL4DHInstalled = false;
-	}
-}
 
 public void OnPluginStart()
 {
@@ -181,7 +157,7 @@ public void OnPluginStart()
 	g_esGeneral.g_hSDKRespawnPlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKRespawnPlayer == null)
 	{
-		PrintToServer("%s Your \"RoundRespawn\" signature is outdated.", MT_TAG);
+		MT_LogMessage(MT_LOG_SERVER, "%s Your \"RoundRespawn\" signature is outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
@@ -422,6 +398,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
+				g_esAbility[iIndex].g_iRequiresHumans = 0;
 				g_esAbility[iIndex].g_iRestartAbility = 0;
 				g_esAbility[iIndex].g_iRestartEffect = 0;
 				g_esAbility[iIndex].g_iRestartMessage = 0;
@@ -445,6 +422,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iRestartAbility = 0;
 					g_esPlayer[iPlayer].g_iRestartEffect = 0;
 					g_esPlayer[iPlayer].g_iRestartMessage = 0;
@@ -468,6 +446,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
 		g_esPlayer[admin].g_iRestartAbility = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iRestartAbility, value, 0, 1);
 		g_esPlayer[admin].g_iRestartEffect = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iRestartEffect, value, 0, 7);
 		g_esPlayer[admin].g_iRestartMessage = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iRestartMessage, value, 0, 3);
@@ -500,6 +479,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
 		g_esAbility[type].g_iRestartAbility = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iRestartAbility, value, 0, 1);
 		g_esAbility[type].g_iRestartEffect = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iRestartEffect, value, 0, 7);
 		g_esAbility[type].g_iRestartMessage = iGetKeyValue(subsection, "restartability", "restart ability", "restart_ability", "restart", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iRestartMessage, value, 0, 3);
@@ -538,6 +518,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
+	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esCache[tank].g_iRestartAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRestartAbility, g_esAbility[type].g_iRestartAbility);
 	g_esCache[tank].g_iRestartEffect = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRestartEffect, g_esAbility[type].g_iRestartEffect);
 	g_esCache[tank].g_iRestartHit = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRestartHit, g_esAbility[type].g_iRestartHit);
@@ -561,7 +542,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_spawn"))
 	{
 		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor) && bMustBeRecorded(iSurvivor))
+		if (bIsSurvivor(iSurvivor) && !g_esPlayer[iSurvivor].g_bRecorded && L4D_IsInFirstCheckpoint(iSurvivor))
 		{
 			g_esPlayer[iSurvivor].g_bRecorded = true;
 
@@ -587,7 +568,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -646,7 +627,7 @@ static void vReset()
 
 static void vRestartAbility(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -694,7 +675,7 @@ static void vRestartAbility(int tank)
 
 static void vRestartHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
-	if ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[survivor].g_iImmunityFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -766,7 +747,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, int m
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Restart", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Restart", sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -786,16 +767,4 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, int m
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RestartAmmo");
 		}
 	}
-}
-
-static bool bMustBeRecorded(int survivor)
-{
-#if defined _l4dh_included
-	if (!g_esPlayer[survivor].g_bRecorded && (!g_esGeneral.g_bL4DHInstalled || (g_esGeneral.g_bL4DHInstalled && L4D_IsInFirstCheckpoint(survivor))))
-	{
-		return true;
-	}
-#endif
-
-	return !g_esPlayer[survivor].g_bRecorded;
 }

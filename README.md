@@ -37,8 +37,8 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 
 ### Requirements
 1. You must have at least `SourceMod 1.11.0.6511` or higher.
-2. Optional but highly recommended: [DHooks](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Optional but highly recommended: [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
+2. Required: [DHooks](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
+3. Required: [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
 
 ### Notes
 1. I do not provide support for listen servers but the plugin and its modules should still work properly on them.
@@ -724,7 +724,7 @@ forward void MT_OnConfigsLoad(int mode);
 forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode);
 
 /**
- * Called when a player uses the "sm_mt_info" command.
+ * Called when a player uses the "sm_st_info" command.
  * Use this forward to add menu items.
  *
  * @param menu			Handle to the menu.
@@ -745,9 +745,20 @@ forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
  * Called when the core plugin is hooking/unhooking events.
  * Use this forward to hook/unhook events.
  *
- * @param mode			True if event was hooked, false otherwise.
+ * @param hooked		True if event was hooked, false otherwise.
  **/
-forward void MT_OnHookEvent(bool mode);
+forward void MT_OnHookEvent(bool hooked);
+
+/**
+ * Called when a message is about to be logged.
+ * Use this forward to intercept a message.
+ *
+ * @param message		Buffer containing the message.
+ * @param type			Type of message being logged.
+ *
+ * @return			Plugin_Handled to prevent the message from being logged, Plugin_Continue to allow.
+ **/
+forward Action MT_OnLogMessage(int type, const char[] message);
 
 /**
  * Called when an item from the "Mutant Tanks Information" menu is displayed.
@@ -791,6 +802,15 @@ forward void MT_OnPluginEnd();
  * @param tank			Client index of the Tank.
  **/
 forward void MT_OnPostTankSpawn(int tank);
+
+/**
+ * Called when timers have been reset.
+ * Use this forward for resetting repeating timers that use intervals set by config files. 
+ *
+ * @param mode			0 = No client index required, 1 = Client index required
+ * @param tank			Client index of a Tank.
+ **/
+forward void MT_OnResetTimers(int mode, int tank);
 
 /**
  * Called when a Mutant Tank's rock breaks.
@@ -845,6 +865,15 @@ Natives:
 native bool MT_CanTypeSpawn(int type);
 
 /**
+ * Returns if a certain Mutant Tank type requires human-controlled survivors to be present to be effective.
+ *
+ * @param type			Mutant Tank type.
+ * @return			True if the type requires human-controlled survivors to be present, false otherwise.
+ * @error			Type is 0.
+ **/
+native bool MT_DoesTypeRequireHumans(int type);
+
+/**
  * Returns the current access flags set by the core plugin.
  *
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
@@ -891,8 +920,8 @@ native int MT_GetMinType();
  * Returns the RGBA colors given to a Mutant Tank's props.
  *
  * @param tank			Client index of the Tank.
- * @param type			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color,
- *				4 = Rock color, 5 = Tire color, 6 = Propane tank color
+ * @param type			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color, 4 = Rock color,
+ *				5 = Tire color, 6 = Propane tank color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.
@@ -980,10 +1009,9 @@ native bool MT_IsAdminImmune(int survivor, int tank);
  * Returns if the clone can use abilities.
  *
  * @param tank				Client index of the Tank.
- * @param clone				Checks whether "mt_clone.smx" is installed.
  * @return				True if clone can use abilities, false otherwise.
  **/
-native bool MT_IsCloneSupported(int tank, bool clone);
+native bool MT_IsCloneSupported(int tank);
 
 /**
  * Returns if the core plugin is enabled.
@@ -1051,6 +1079,16 @@ native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_ING
 native bool MT_IsTypeEnabled(int type);
 
 /**
+ * Logs a message.
+ *
+ * @param type			Type of message to be logged.
+ * @param message		Buffer to store the message.
+ * @param size			Size of the buffer.
+ * @param ...			Variable number of format parameters.
+ **/
+native void MT_LogMessage(int type = MT_LOG_CUSTOM, char[] message, int size, any ...);
+
+/**
  * Sets a Tank's Mutant Tank type.
  *
  * @param tank			Client index of the Tank.
@@ -1072,7 +1110,7 @@ native void MT_SpawnTank(int tank, int type);
 Stocks:
 
 ```
-stock void MT_PrintToChat(int client, char[] message, any ...)
+stock void MT_PrintToChat(int client, const char[] message, any ...)
 {
 	if (!bIsValidClient(client, MT_CHECK_INDEX))
 	{
@@ -1097,7 +1135,7 @@ stock void MT_PrintToChat(int client, char[] message, any ...)
 	PrintToChat(client, sMessage);
 }
 
-stock void MT_PrintToChatAll(char[] message, any ...)
+stock void MT_PrintToChatAll(const char[] message, any ...)
 {
 	static char sBuffer[255];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -1112,7 +1150,7 @@ stock void MT_PrintToChatAll(char[] message, any ...)
 	}
 }
 
-stock void MT_ReplyToCommand(int client, char[] message, any ...)
+stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
 	static char sBuffer[255];
 	SetGlobalTransTarget(client);
@@ -1179,7 +1217,7 @@ If you are a Tank:
 
 ```
 // Accessible by the developer and admins with "z" (Root) flag only.
-sm_mt_config - View a section of the config file.
+sm_mt_config - View a section of a config file.
 sm_mt_list - View a list of installed abilities.
 sm_mt_version - View a list of installed abilities.
 sm_tank2 - Spawn a Mutant Tank.
@@ -1248,6 +1286,7 @@ sm_mt_smash - View information about the Smash ability.
 sm_mt_smite - View information about the Smite ability.
 sm_mt_spam - View information about the Spam ability.
 sm_mt_splash - View information about the Splash ability.
+sm_mt_splatter - View information about the Splatter ability.
 sm_mt_throw - View information about the Throw ability.
 sm_mt_track - View information about the Track ability.
 sm_mt_ultimate - View information about the Ultimate ability.
@@ -1298,6 +1337,53 @@ mutanttanks // 2nd format
 		game_modes // 3rd format
 		{
 			"Game Mode Types"			0 // original format
+		}
+	}
+}
+```
+
+4. Is it possible to configure more than one type in one section?
+
+Yes, you can either apply global settings for all types to use or specify certain types to use them.
+
+Example:
+
+```
+"Mutant Tanks"
+{
+	// Applies to every type.
+	"All"
+	{
+		"Health"
+		{
+			"Extra Health"				"1000"
+		}
+	}
+
+	// Applies to types 1 and 10.
+	"1,10"
+	{
+		"Health"
+		{
+			"Extra Health"				"1000"
+		}
+	}
+
+	// Applies to types 11 through 20.
+	"11-20"
+	{
+		"Health"
+		{
+			"Extra Health"				"1000"
+		}
+	}
+
+	// Applies to types 21 through 30 and types 31 through 40.
+	"21-30,31-40"
+	{
+		"Health"
+		{
+			"Extra Health"				"1000"
 		}
 	}
 }
@@ -1688,6 +1774,8 @@ Examples:
 
 **huwong** - For reporting issues and suggesting ideas.
 
+**Tank Rush** - For reporting issues and suggesting ideas.
+
 **Electr000999** - For suggesting ideas.
 
 **foquaxticity** - For suggesting ideas.
@@ -1700,8 +1788,6 @@ Examples:
 
 **yuzumi** - For suggesting ideas.
 
-**Tank Rush** - For suggesting ideas.
-
 **FatalOE71** - For suggesting ideas.
 
 **zaviier** - For suggesting ideas.
@@ -1712,9 +1798,9 @@ Examples:
 
 **Dragokas** - For reporting issues, suggesting ideas, and providing fixes.
 
-**BHaType** - For suggesting ideas and providing gamedata signatures.
+**BHaType** - For suggesting ideas.
 
-**Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (v8.66), and overall support.
+**Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (v8.66), helping to set up the wiki pages, and overall support.
 
 **Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
 

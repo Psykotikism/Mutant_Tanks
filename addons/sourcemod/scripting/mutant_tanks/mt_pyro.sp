@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Pyro Ability v8.78"
+#file "Pyro Ability v8.79"
 
 public Plugin myinfo =
 {
@@ -66,6 +66,7 @@ enum struct esPlayer
 	int g_iPyroDuration;
 	int g_iPyroMessage;
 	int g_iPyroMode;
+	int g_iRequiresHumans;
 	int g_iTankType;
 }
 
@@ -86,6 +87,7 @@ enum struct esAbility
 	int g_iPyroDuration;
 	int g_iPyroMessage;
 	int g_iPyroMode;
+	int g_iRequiresHumans;
 }
 
 esAbility g_esAbility[MT_MAXTYPES + 1];
@@ -104,6 +106,7 @@ enum struct esCache
 	int g_iPyroDuration;
 	int g_iPyroMessage;
 	int g_iPyroMode;
+	int g_iRequiresHumans;
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
@@ -364,7 +367,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 						static char sTankName[33];
 						MT_GetTankName(victim, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro2", sTankName);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Pyro2", sTankName);
 					}
 				}
 			}
@@ -428,6 +431,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
 				g_esAbility[iIndex].g_iHumanMode = 1;
+				g_esAbility[iIndex].g_iRequiresHumans = 0;
 				g_esAbility[iIndex].g_iPyroAbility = 0;
 				g_esAbility[iIndex].g_iPyroMessage = 0;
 				g_esAbility[iIndex].g_flPyroChance = 33.3;
@@ -448,6 +452,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
 					g_esPlayer[iPlayer].g_iHumanMode = 0;
+					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iPyroAbility = 0;
 					g_esPlayer[iPlayer].g_iPyroMessage = 0;
 					g_esPlayer[iPlayer].g_flPyroChance = 0.0;
@@ -469,6 +474,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
 		g_esPlayer[admin].g_iPyroAbility = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iPyroAbility, value, 0, 1);
 		g_esPlayer[admin].g_iPyroMessage = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iPyroMessage, value, 0, 1);
 		g_esPlayer[admin].g_flPyroChance = flGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "PyroChance", "Pyro Chance", "Pyro_Chance", "chance", g_esPlayer[admin].g_flPyroChance, value, 0.0, 100.0);
@@ -492,6 +498,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
 		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
 		g_esAbility[type].g_iPyroAbility = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iPyroAbility, value, 0, 1);
 		g_esAbility[type].g_iPyroMessage = iGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iPyroMessage, value, 0, 1);
 		g_esAbility[type].g_flPyroChance = flGetKeyValue(subsection, "pyroability", "pyro ability", "pyro_ability", "pyro", key, "PyroChance", "Pyro Chance", "Pyro_Chance", "chance", g_esAbility[type].g_flPyroChance, value, 0.0, 100.0);
@@ -524,6 +531,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iPyroDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iPyroDuration, g_esAbility[type].g_iPyroDuration);
 	g_esCache[tank].g_iPyroMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iPyroMessage, g_esAbility[type].g_iPyroMessage);
 	g_esCache[tank].g_iPyroMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iPyroMode, g_esAbility[type].g_iPyroMode);
+	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
@@ -567,7 +575,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -651,7 +659,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 static void vPyroAbility(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -676,7 +684,7 @@ static void vPyroAbility(int tank)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Pyro", sTankName);
 			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -723,7 +731,7 @@ static void vReset2(int tank)
 	{
 		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro3", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Pyro3", sTankName);
 	}
 }
 

@@ -10,12 +10,13 @@
  **/
 
 #include <sourcemod>
+#include <left4dhooks>
 #include <mutant_tanks>
 
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Yell Ability v8.78"
+#file "Yell Ability v8.79"
 
 public Plugin myinfo =
 {
@@ -69,6 +70,7 @@ enum struct esPlayer
 	int g_iHumanCooldown;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
+	int g_iRequiresHumans;
 	int g_iTankType;
 	int g_iYellAbility;
 	int g_iYellDuration;
@@ -89,6 +91,7 @@ enum struct esAbility
 	int g_iHumanCooldown;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
+	int g_iRequiresHumans;
 	int g_iYellAbility;
 	int g_iYellDuration;
 	int g_iYellMessage;
@@ -105,6 +108,7 @@ enum struct esCache
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanMode;
+	int g_iRequiresHumans;
 	int g_iYellAbility;
 	int g_iYellDuration;
 	int g_iYellMessage;
@@ -384,6 +388,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
 				g_esAbility[iIndex].g_iHumanMode = 1;
+				g_esAbility[iIndex].g_iRequiresHumans = 1;
 				g_esAbility[iIndex].g_iYellAbility = 0;
 				g_esAbility[iIndex].g_iYellMessage = 0;
 				g_esAbility[iIndex].g_flYellChance = 33.3;
@@ -403,6 +408,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
 					g_esPlayer[iPlayer].g_iHumanMode = 0;
+					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iYellAbility = 0;
 					g_esPlayer[iPlayer].g_iYellMessage = 0;
 					g_esPlayer[iPlayer].g_flYellChance = 0.0;
@@ -422,6 +428,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
 		g_esPlayer[admin].g_iYellAbility = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iYellAbility, value, 0, 1);
 		g_esPlayer[admin].g_iYellMessage = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iYellMessage, value, 0, 3);
 		g_esPlayer[admin].g_flYellChance = flGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esPlayer[admin].g_flYellChance, value, 0.0, 100.0);
@@ -447,6 +454,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
 		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
 		g_esAbility[type].g_iYellAbility = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iYellAbility, value, 0, 1);
 		g_esAbility[type].g_iYellMessage = iGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iYellMessage, value, 0, 3);
 		g_esAbility[type].g_flYellChance = flGetKeyValue(subsection, "yellability", "yell ability", "yell_ability", "yell", key, "YellChance", "Yell Chance", "Yell_Chance", "chance", g_esAbility[type].g_flYellChance, value, 0.0, 100.0);
@@ -476,6 +484,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
 	g_esCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanMode, g_esAbility[type].g_iHumanMode);
+	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esCache[tank].g_iYellAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iYellAbility, g_esAbility[type].g_iYellAbility);
 	g_esCache[tank].g_iYellDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iYellDuration, g_esAbility[type].g_iYellDuration);
 	g_esCache[tank].g_iYellMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iYellMessage, g_esAbility[type].g_iYellMessage);
@@ -511,7 +520,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -630,7 +639,7 @@ static void vReset2(int tank)
 	{
 		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Yell2", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Yell2", sTankName);
 	}
 }
 
@@ -658,6 +667,11 @@ static void vReset4(int tank)
 
 static void vYell(int tank)
 {
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+	{
+		return;
+	}
+
 	EmitSoundToAll(SOUND_YELL, tank);
 	EmitSoundToAll(SOUND_YELL2, tank);
 	EmitSoundToAll(SOUND_YELL3, tank);
@@ -673,7 +687,7 @@ static void vYell(int tank)
 
 static void vYellAbility(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -700,6 +714,8 @@ static void vYellAbility(int tank)
 						g_esPlayer[iSurvivor].g_bAffected = true;
 						g_esPlayer[iSurvivor].g_iOwner = tank;
 
+						L4D_Deafen(iSurvivor);
+
 						iSurvivorCount++;
 					}
 				}
@@ -723,7 +739,7 @@ static void vYellAbility(int tank)
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Yell", sTankName);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Yell", sTankName);
 				}
 			}
 		}

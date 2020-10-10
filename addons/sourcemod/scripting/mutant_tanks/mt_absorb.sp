@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Absorb Ability v8.78"
+#file "Absorb Ability v8.79"
 
 public Plugin myinfo =
 {
@@ -69,6 +69,7 @@ enum struct esPlayer
 	int g_iHumanCooldown;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
+	int g_iRequiresHumans;
 	int g_iTankType;
 }
 
@@ -91,6 +92,7 @@ enum struct esAbility
 	int g_iHumanCooldown;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
+	int g_iRequiresHumans;
 }
 
 esAbility g_esAbility[MT_MAXTYPES + 1];
@@ -110,6 +112,7 @@ enum struct esCache
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanMode;
+	int g_iRequiresHumans;
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
@@ -400,6 +403,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
 				g_esAbility[iIndex].g_iHumanMode = 1;
+				g_esAbility[iIndex].g_iRequiresHumans = 0;
 				g_esAbility[iIndex].g_iAbsorbAbility = 0;
 				g_esAbility[iIndex].g_iAbsorbMessage = 0;
 				g_esAbility[iIndex].g_flAbsorbBulletDivisor = 20.0;
@@ -422,6 +426,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
 					g_esPlayer[iPlayer].g_iHumanMode = 0;
+					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iAbsorbAbility = 0;
 					g_esPlayer[iPlayer].g_iAbsorbMessage = 0;
 					g_esPlayer[iPlayer].g_flAbsorbBulletDivisor = 0.0;
@@ -444,6 +449,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
 		g_esPlayer[admin].g_iAbsorbAbility = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iAbsorbAbility, value, 0, 1);
 		g_esPlayer[admin].g_iAbsorbMessage = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iAbsorbMessage, value, 0, 1);
 		g_esPlayer[admin].g_flAbsorbBulletDivisor = flGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_esPlayer[admin].g_flAbsorbBulletDivisor, value, 0.1, 999999.0);
@@ -472,6 +478,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
 		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
 		g_esAbility[type].g_iAbsorbAbility = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iAbsorbAbility, value, 0, 1);
 		g_esAbility[type].g_iAbsorbMessage = iGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iAbsorbMessage, value, 0, 1);
 		g_esAbility[type].g_flAbsorbBulletDivisor = flGetKeyValue(subsection, "absorbability", "absorb ability", "absorb_ability", "absorb", key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_esAbility[type].g_flAbsorbBulletDivisor, value, 0.1, 999999.0);
@@ -510,6 +517,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
 	g_esCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanMode, g_esAbility[type].g_iHumanMode);
+	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
@@ -542,7 +550,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -626,7 +634,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 static void vAbsorbAbility(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -649,7 +657,7 @@ static void vAbsorbAbility(int tank)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Absorb", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Absorb", sTankName);
 			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -691,7 +699,7 @@ static void vReset2(int tank)
 	{
 		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Absorb2", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Absorb2", sTankName);
 	}
 }
 

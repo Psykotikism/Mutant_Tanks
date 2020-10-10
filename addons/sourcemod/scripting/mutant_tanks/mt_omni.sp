@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Omni Ability v8.78"
+#file "Omni Ability v8.79"
 
 public Plugin myinfo =
 {
@@ -60,6 +60,7 @@ enum struct esPlayer
 	int g_iOmniMessage;
 	int g_iOmniMode;
 	int g_iOmniType;
+	int g_iRequiresHumans;
 	int g_iTankType;
 }
 
@@ -79,6 +80,7 @@ enum struct esAbility
 	int g_iOmniDuration;
 	int g_iOmniMessage;
 	int g_iOmniMode;
+	int g_iRequiresHumans;
 }
 
 esAbility g_esAbility[MT_MAXTYPES + 1];
@@ -96,6 +98,7 @@ enum struct esCache
 	int g_iOmniDuration;
 	int g_iOmniMessage;
 	int g_iOmniMode;
+	int g_iRequiresHumans;
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
@@ -114,6 +117,7 @@ enum struct esOmni
 	int g_iOmniDuration;
 	int g_iOmniMessage;
 	int g_iOmniMode;
+	int g_iRequiresHumans;
 }
 
 esOmni g_esOmni[MAXPLAYERS + 1];
@@ -349,6 +353,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
 				g_esAbility[iIndex].g_iHumanMode = 1;
+				g_esAbility[iIndex].g_iRequiresHumans = 0;
 				g_esAbility[iIndex].g_iOmniAbility = 0;
 				g_esAbility[iIndex].g_iOmniMessage = 0;
 				g_esAbility[iIndex].g_flOmniChance = 33.3;
@@ -368,6 +373,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
 					g_esPlayer[iPlayer].g_iHumanMode = 0;
+					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iOmniAbility = 0;
 					g_esPlayer[iPlayer].g_iOmniMessage = 0;
 					g_esPlayer[iPlayer].g_flOmniChance = 0.0;
@@ -388,6 +394,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
 		g_esPlayer[admin].g_iOmniAbility = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iOmniAbility, value, 0, 1);
 		g_esPlayer[admin].g_iOmniMessage = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iOmniMessage, value, 0, 1);
 		g_esPlayer[admin].g_flOmniChance = flGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "OmniChance", "Omni Chance", "Omni_Chance", "chance", g_esPlayer[admin].g_flOmniChance, value, 0.0, 100.0);
@@ -410,6 +417,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
 		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
 		g_esAbility[type].g_iOmniAbility = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iOmniAbility, value, 0, 1);
 		g_esAbility[type].g_iOmniMessage = iGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iOmniMessage, value, 0, 1);
 		g_esAbility[type].g_flOmniChance = flGetKeyValue(subsection, "omniability", "omni ability", "omni_ability", "omni", key, "OmniChance", "Omni Chance", "Omni_Chance", "chance", g_esAbility[type].g_flOmniChance, value, 0.0, 100.0);
@@ -440,6 +448,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iOmniDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iOmniDuration, g_esAbility[type].g_iOmniDuration);
 	g_esCache[tank].g_iOmniMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iOmniMessage, g_esAbility[type].g_iOmniMessage);
 	g_esCache[tank].g_iOmniMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iOmniMode, g_esAbility[type].g_iOmniMode);
+	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
@@ -458,6 +467,7 @@ static void vCacheOriginalSettings(int tank)
 	g_esOmni[tank].g_iOmniDuration = iGetSettingValue(true, bHuman, g_esPlayer[tank].g_iOmniDuration, g_esAbility[iType].g_iOmniDuration);
 	g_esOmni[tank].g_iOmniMessage = iGetSettingValue(true, bHuman, g_esPlayer[tank].g_iOmniMessage, g_esAbility[iType].g_iOmniMessage);
 	g_esOmni[tank].g_iOmniMode = iGetSettingValue(true, bHuman, g_esPlayer[tank].g_iOmniMode, g_esAbility[iType].g_iOmniMode);
+	g_esOmni[tank].g_iRequiresHumans = iGetSettingValue(true, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[iType].g_iRequiresHumans);
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -489,7 +499,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmni[tank].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -580,7 +590,7 @@ public void MT_OnPostTankSpawn(int tank)
 
 static void vOmni(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -619,7 +629,7 @@ static void vOmni(int tank)
 		iTypeCount2 = 0;
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
-			if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || g_esPlayer[tank].g_iOmniType == iIndex)
+			if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex) || g_esPlayer[tank].g_iOmniType == iIndex)
 			{
 				continue;
 			}
@@ -637,7 +647,7 @@ static void vOmni(int tank)
 
 static void vOmniAbility(int tank)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -662,7 +672,7 @@ static void vOmniAbility(int tank)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Omni", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Omni", sTankName);
 			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -708,7 +718,7 @@ static void vReset2(int tank)
 	{
 		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
-		MT_PrintToChatAll("%s %t", MT_TAG2, "Omni2", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Omni2", sTankName);
 	}
 }
 
