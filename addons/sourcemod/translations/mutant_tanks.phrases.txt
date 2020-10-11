@@ -572,7 +572,7 @@
 		"#format"		"{1:N},{2:s}"
 		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!"
 		"hu"			""
-		"chi"			"{olive}{2}{default} 已在{mint}{1}{default} 手中灭亡!"
+		"chi"			"{olive}{2}{default} 已在{mint} {1}{default} 手中灭亡!"
 	}
 
 	"Killer8"
@@ -580,15 +580,15 @@
 		"#format"		"{1:N},{2:s}"
 		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!"
 		"hu"			""
-		"chi"			"哎呀!{olive} {2}{default} 死了，这要感谢{mint}{1} {default}!"
+		"chi"			"哎呀!{olive} {2}{default} 死了，这要感谢{mint} {1}{default}!"
 	}
 
 	"Killer9"
 	{
 		"#format"		"{1:N},{2:s}"
-		"en"			"{mint}{1}{default} made{olive}{2}{default} ragequit..."
+		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit..."
 		"hu"			""
-		"chi"			"{mint}{1}{default} 变成了{olive}{2}{default} 流行语..."
+		"chi"			"{mint}{1}{default} 变成了{olive} {2}{default} 流行语..."
 	}
 
 	"Killer10"
