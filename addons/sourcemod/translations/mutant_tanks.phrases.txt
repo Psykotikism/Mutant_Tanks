@@ -399,7 +399,7 @@
 		"#format"		"{1:s}"
 		"en"			"The survivors defeated{olive} {1}{default}!"
 		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!"
-		"chi"			"幸存者消灭了 {olive}{1}{default} !"
+		"chi"			"幸存者消灭了 {olive}{1}{default}!"
 	}
 
 	"Death3"
@@ -517,6 +517,86 @@
 		"en"			"[HUMAN]"
 		"hu"			"[EMBER]"
 		"chi"			"[玩家控制]"
+	}
+
+	"Killer1"
+	{
+		"#format"		"{1:N},{2:s}"
+		"en"			"{mint}{1}{default} finished off{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{mint}{1}{default} 完成了{olive} {2}{default}!"
+	}
+
+	"Killer2"
+	{
+		"#format"		"{1:N},{2:s}"
+		"en"			"{mint}{1}{default} defeated{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{mint}{1}{default} 被击败了{olive} {2}{default}!"
+	}
+
+	"Killer3"
+	{
+		"#format"		"{1:N},{2:s}"
+		"en"			"{mint}{1}{default} sent{olive} {2}{default} to hell!"
+		"hu"			""
+		"chi"			"{mint}{1}{default} 发送了{olive} {2}{default}到地狱!"
+	}
+
+	"Killer4"
+	{
+		"#format"		"{1:N},{2:s}"
+		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?"
+		"hu"			""
+		"chi"			"{mint}{1}{default} 实际上杀死了{olive} {2}{default}...吗?"
+	}
+
+	"Killer5"
+	{
+		"#format"		"{1:N},{2:s}"
+		"en"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!"
+		"hu"			""
+		"chi"			"{olive}{2}{default} 输掉了对{mint} {1}{default}的挑战!"
+	}
+
+	"Killer6"
+	{
+		"#format"		"{1:N},{2:s}"
+		"en"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!"
+		"hu"			""
+		"chi"			"{olive}{2}{default} 无法杀死{mint} {1}{default}!"
+	}
+
+	"Killer7"
+	{
+		"#format"		"{1:N},{2:s}"
+		"en"			"{olive}{2}{default} has met their demise in the hands of{mint} {1}{default}!"
+		"hu"			""
+		"chi"			"{olive}{2}{default} 已在{mint}{1}{default} 手中灭亡!"
+	}
+
+	"Killer8"
+	{
+		"#format"		"{1:N},{2:s}"
+		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!"
+		"hu"			""
+		"chi"			"哎呀!{olive} {2}{default} 死了，这要感谢{mint}{1} {default}!"
+	}
+
+	"Killer9"
+	{
+		"#format"		"{1:N},{2:s}"
+		"en"			"{mint}{1}{default} made{olive}{2}{default} ragequit..."
+		"hu"			""
+		"chi"			"{mint}{1}{default} 变成了{olive}{2}{default} 流行语..."
+	}
+
+	"Killer10"
+	{
+		"#format"		"{1:N},{2:s}"
+		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all..."
+		"hu"			""
+		"chi"			"看来{olive} {2}{default} 毕竟无法击败{mint} {1}{default}..."
 	}
 
 	"MultipleMatches"
@@ -1399,7 +1479,7 @@
 		"#format"		"{1:s}"
 		"en"			"{olive}{1}{mint} created a clone of itself!"
 		"hu"			"{olive}{1}{mint} klónozta magát!"
-		"chi"			"{olive}{1}{mint} 创造了自己的 克隆体 !"
+		"chi"			"{olive}{1}{mint} 创造了自己的 克隆体!"
 	}
 
 	"CloneAmmo"

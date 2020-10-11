@@ -225,10 +225,10 @@ enum struct esGeneral
 	int g_iFileTimeOld[6];
 	int g_iFileTimeNew[6];
 	int g_iFinaleAmount;
-	int g_iFinaleMaxTypes[3];
-	int g_iFinaleMinTypes[3];
+	int g_iFinaleMaxTypes[10];
+	int g_iFinaleMinTypes[10];
 	int g_iFinalesOnly;
-	int g_iFinaleWave[3];
+	int g_iFinaleWave[10];
 	int g_iGameModeTypes;
 	int g_iHumanCooldown;
 	int g_iIdleCheckMode;
@@ -3386,12 +3386,12 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 	if (g_esGeneral.g_csState == ConfigState_Specific && value[0] != '\0')
 	{
-		static char sRange[3][10], sValue[50], sSet[10][6], sTankName[7][33];
+		static char sRange[10][10], sValue[50], sSet[10][6], sTankName[7][33];
 		if (g_esGeneral.g_iConfigMode < 3 && (StrEqual(g_esGeneral.g_sCurrentSection, "PluginSettings", false) || StrEqual(g_esGeneral.g_sCurrentSection, "Plugin Settings", false) || StrEqual(g_esGeneral.g_sCurrentSection, "Plugin_Settings", false) || StrEqual(g_esGeneral.g_sCurrentSection, "settings", false)))
 		{
 			g_esGeneral.g_iPluginEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "PluginEnabled", "Plugin Enabled", "Plugin_Enabled", "enabled", g_esGeneral.g_iPluginEnabled, value, 0, 1);
 			g_esGeneral.g_iAnnounceArrival = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esGeneral.g_iAnnounceArrival, value, 0, 31);
-			g_esGeneral.g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esGeneral.g_iAnnounceDeath, value, 0, 1);
+			g_esGeneral.g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esGeneral.g_iAnnounceDeath, value, 0, 2);
 			g_esGeneral.g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esGeneral.g_iDeathRevert, value, 0, 1);
 			g_esGeneral.g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esGeneral.g_iDetectPlugins, value, 0, 1);
 			g_esGeneral.g_iFinalesOnly = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esGeneral.g_iFinalesOnly, value, 0, 4);
@@ -3548,7 +3548,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iSpawnEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_esTank[iIndex].g_iSpawnEnabled, value, 0, 1);
 						g_esTank[iIndex].g_iMenuEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "MenuEnabled", "Menu Enabled", "Menu_Enabled", "menu", g_esTank[iIndex].g_iMenuEnabled, value, 0, 1);
 						g_esTank[iIndex].g_iAnnounceArrival = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esTank[iIndex].g_iAnnounceArrival, value, 0, 31);
-						g_esTank[iIndex].g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esTank[iIndex].g_iAnnounceDeath, value, 0, 1);
+						g_esTank[iIndex].g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esTank[iIndex].g_iAnnounceDeath, value, 0, 2);
 						g_esTank[iIndex].g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esTank[iIndex].g_iDeathRevert, value, 0, 1);
 						g_esTank[iIndex].g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esTank[iIndex].g_iDetectPlugins, value, 0, 1);
 						g_esTank[iIndex].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_esTank[iIndex].g_iGlowEnabled, value, 0, 1);
@@ -3750,7 +3750,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						{
 							g_esPlayer[iPlayer].g_iTankNote = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "TankNote", "Tank Note", "Tank_Note", "note", g_esPlayer[iPlayer].g_iTankNote, value, 0, 1);
 							g_esPlayer[iPlayer].g_iAnnounceArrival = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esPlayer[iPlayer].g_iAnnounceArrival, value, 0, 31);
-							g_esPlayer[iPlayer].g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esPlayer[iPlayer].g_iAnnounceDeath, value, 0, 1);
+							g_esPlayer[iPlayer].g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esPlayer[iPlayer].g_iAnnounceDeath, value, 0, 2);
 							g_esPlayer[iPlayer].g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esPlayer[iPlayer].g_iDeathRevert, value, 0, 1);
 							g_esPlayer[iPlayer].g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esPlayer[iPlayer].g_iDetectPlugins, value, 0, 1);
 							g_esPlayer[iPlayer].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_esPlayer[iPlayer].g_iGlowEnabled, value, 0, 1);
@@ -4104,25 +4104,51 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					vRevertName(iTank);
 				}
 
-				if (g_esCache[iTank].g_iAnnounceDeath == 1 && bIsCloneAllowed(iTank))
+				if (bIsCloneAllowed(iTank))
 				{
 					if (g_esCache[iTank].g_sTankName[0] == '\0')
 					{
 						g_esCache[iTank].g_sTankName = "Tank";
 					}
 
-					switch (GetRandomInt(1, 10))
+					switch (g_esCache[iTank].g_iAnnounceDeath)
 					{
-						case 1: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death1", g_esCache[iTank].g_sTankName);
-						case 2: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death2", g_esCache[iTank].g_sTankName);
-						case 3: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death3", g_esCache[iTank].g_sTankName);
-						case 4: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death4", g_esCache[iTank].g_sTankName);
-						case 5: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death5", g_esCache[iTank].g_sTankName);
-						case 6: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death6", g_esCache[iTank].g_sTankName);
-						case 7: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death7", g_esCache[iTank].g_sTankName);
-						case 8: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death8", g_esCache[iTank].g_sTankName);
-						case 9: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death9", g_esCache[iTank].g_sTankName);
-						case 10: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death10", g_esCache[iTank].g_sTankName);
+						case 1:
+						{
+							switch (GetRandomInt(1, 10))
+							{
+								case 1: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death1", g_esCache[iTank].g_sTankName);
+								case 2: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death2", g_esCache[iTank].g_sTankName);
+								case 3: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death3", g_esCache[iTank].g_sTankName);
+								case 4: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death4", g_esCache[iTank].g_sTankName);
+								case 5: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death5", g_esCache[iTank].g_sTankName);
+								case 6: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death6", g_esCache[iTank].g_sTankName);
+								case 7: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death7", g_esCache[iTank].g_sTankName);
+								case 8: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death8", g_esCache[iTank].g_sTankName);
+								case 9: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death9", g_esCache[iTank].g_sTankName);
+								case 10: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death10", g_esCache[iTank].g_sTankName);
+							}
+						}
+						case 2:
+						{
+							int iSurvivor = GetClientOfUserId(event.GetInt("attacker"));
+							if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+							{
+								switch (GetRandomInt(1, 10))
+								{
+									case 1: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer1", iSurvivor, g_esCache[iTank].g_sTankName);
+									case 2: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer2", iSurvivor, g_esCache[iTank].g_sTankName);
+									case 3: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer3", iSurvivor, g_esCache[iTank].g_sTankName);
+									case 4: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer4", iSurvivor, g_esCache[iTank].g_sTankName);
+									case 5: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer5", iSurvivor, g_esCache[iTank].g_sTankName);
+									case 6: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer6", iSurvivor, g_esCache[iTank].g_sTankName);
+									case 7: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer7", iSurvivor, g_esCache[iTank].g_sTankName);
+									case 8: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer8", iSurvivor, g_esCache[iTank].g_sTankName);
+									case 9: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer9", iSurvivor, g_esCache[iTank].g_sTankName);
+									case 10: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer10", iSurvivor, g_esCache[iTank].g_sTankName);
+								}
+							}
+						}
 					}
 				}
 
@@ -6078,13 +6104,13 @@ static int iGetRealType(int type, int exclude = 0, int tank = 0, int min = 0, in
 	return type;
 }
 
-static int iGetTankCount()
+static int iGetTankCount(bool include = false)
 {
 	static int iTankCount;
 	iTankCount = 0;
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsTankClone(iTank))
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && (include || !MT_IsTankClone(iTank)))
 		{
 			iTankCount++;
 		}
@@ -6705,7 +6731,7 @@ public Action tTimerSpawnTanks(Handle timer, int wave)
 
 public Action tTimerTankWave(Handle timer)
 {
-	if (iGetTankCount() > 0 || !(0 < g_esGeneral.g_iTankWave < 3))
+	if (iGetTankCount(true) > 0 || !(0 < g_esGeneral.g_iTankWave < 10))
 	{
 		return Plugin_Stop;
 	}
