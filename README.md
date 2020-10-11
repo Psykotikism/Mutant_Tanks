@@ -437,7 +437,7 @@ The following abilities require different strategies:
 Here's an example:
 
 ```
-"Finale Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
+"Finale Waves" "1,2,3,4,5,6,7,8,9,10" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, 4 Tanks on the 3rd wave, etc.
 ```
 
 7. How can I change the amount of Tanks that can spawn on finale maps?
@@ -1780,6 +1780,8 @@ Examples:
 
 **ur5efj** - For reporting issues.
 
+**3aljiyavslgazana** - For reporting issues.
+
 **Zytheus** - For reporting issues and suggesting ideas.
 
 **huwong** - For reporting issues and suggesting ideas.
@@ -1804,11 +1806,11 @@ Examples:
 
 **RDiver** - For suggesting ideas.
 
+**BHaType** - For suggesting ideas.
+
 **Marttt** - For helping me with many things and the pull requests.
 
 **Dragokas** - For reporting issues, suggesting ideas, and providing fixes.
-
-**BHaType** - For suggesting ideas.
 
 **Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (v8.66), helping to set up the wiki pages, and overall support.
 

@@ -54,7 +54,8 @@
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: ON, announce deaths only.
+			// 2: ON, announce deaths and killers.
 			"Announce Death"			"1"
 
 			// Mutant Tanks revert back to default Tanks upon death.
@@ -340,7 +341,7 @@
 			// Separate types per wave with commas (",").
 			// Separate values with "-".
 			// --
-			// Wave limit: 3
+			// Wave limit: 10
 			// Character limit for each wave: 10
 			// --
 			// Minimum value for each wave: 0 (OFF)
@@ -351,7 +352,7 @@
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-1000: ON, the type that will spawn.
-			"Finale Types"				"0-0,0-0,0-0"
+			"Finale Types"				"0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0"
 
 			// Number of Tanks to spawn for each finale wave.
 			// Note: This setting does not seem to work on the official Left 4 Dead 1 campaigns' finale maps in Left 4 Dead 2. They have their own finale scripts which limit the number of Tanks to 1 for each wave.
@@ -360,7 +361,7 @@
 			// --
 			// Separate waves with commas (",").
 			// --
-			// Wave limit: 3
+			// Wave limit: 10
 			// Character limit for each wave: 3
 			// --
 			// Minimum value for each wave: 1
@@ -369,10 +370,17 @@
 			// 1st number = 1st wave
 			// 2nd number = 2nd wave
 			// 3rd number = 3rd wave
+			// 4th number = 4th wave
+			// 5th number = 5th wave
+			// 6th number = 6th wave
+			// 7th number = 7th wave
+			// 8th number = 8th wave
+			// 9th number = 9th wave
+			// 10th number = 10th wave
 			// --
 			// 0: OFF, no limit.
 			// 1-32: ON, the number of Tanks that will spawn.
-			"Finale Waves"				"0,0,0"
+			"Finale Waves"				"0,0,0,0,0,0,0,0,0,0"
 		}
 		"Game Modes"
 		{

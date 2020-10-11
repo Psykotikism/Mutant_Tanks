@@ -1,20 +1,25 @@
 # Changelog
 
-## Version 8.80 (December 31, 2020) [FINAL]
+## Version 8.80 (December 31, 2020)
 
 Bug fixes:
 
 1. Fixed the core plugin creating log files even when `Log Messages` is disabled. (Thanks to KasperH/Ladis for reporting!)
-2. Fixed clones created by the `Clone` ability being kicked by restrictions from settings.
+2. Fixed clones created by the `Clone` ability being detected by the `Finale Amount` and `Finale Waves` settings.
+3. Fixed some of the default Mutant Tanks that use the `Boss` and `Transformation` features turning into the wrong Mutant Tank types.
 
 Changes:
 
 1. Added the `MT_IsTankClone` native to allow developers to check if a Tank is a clone.
 2. The `mt_clone` include file is now used by all plugins related to Mutant Tanks.
+3. The `Finale Waves` and `Finale Types` settings now support up to `10` waves. (Thanks to 3aljiyavslgazana for testing and reporting!)
+4. Added a new option for the `Announce Death` setting.
 
 Files:
 
-1. Updated include files.
+1. Updated config files.
+2. Updated include files.
+3. Updated translation file.
 
 ## Version 8.79 (October 10, 2020)
 
