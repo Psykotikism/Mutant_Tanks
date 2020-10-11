@@ -374,7 +374,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
-				g_esAbility[iIndex].g_iRequiresHumans = 1;
+				g_esAbility[iIndex].g_iRequiresHumans = 0;
 				g_esAbility[iIndex].g_iDrunkAbility = 0;
 				g_esAbility[iIndex].g_iDrunkEffect = 0;
 				g_esAbility[iIndex].g_iDrunkMessage = 0;
