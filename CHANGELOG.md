@@ -7,6 +7,10 @@ Bug fixes:
 1. Fixed the core plugin creating log files even when `Log Messages` is disabled. (Thanks to KasperH/Ladis for reporting!)
 2. Fixed clones created by the `Clone` ability being detected by the `Finale Amount` and `Finale Waves` settings.
 3. Fixed some of the default Mutant Tanks that use the `Boss` and `Transformation` features turning into the wrong Mutant Tank types.
+4. Fixed the `Blind` ability being enabled by default. (Thanks to Mi.Cura for reporting!)
+5. Fixed the `Drug` ability not requiring human survivors to be present by default.
+6. Fixed the `Drunk` ability requiring human survivors to be present by default.
+7. Fixed the `Drop Weapon Name` setting not reading non-melee weapon names properly.
 
 Changes:
 
