@@ -570,7 +570,7 @@
 	"Killer7"
 	{
 		"#format"		"{1:N},{2:s}"
-		"en"			"{olive}{2}{default} has met their demise in the hands of{mint} {1}{default}!"
+		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!"
 		"hu"			""
 		"chi"			"{olive}{2}{default} 已在{mint}{1}{default} 手中灭亡!"
 	}
