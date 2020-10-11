@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Warp Ability v8.80"
+//#file "Warp Ability v8.80"
 
 public Plugin myinfo =
 {

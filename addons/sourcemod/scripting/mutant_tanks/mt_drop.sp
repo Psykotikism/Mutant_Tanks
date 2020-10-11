@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Drop Ability v8.80"
+//#file "Drop Ability v8.80"
 
 public Plugin myinfo =
 {
@@ -728,9 +728,9 @@ static int iGetNamedWeapon(int tank)
 	for (int iPos = 0; iPos < iSize; iPos++)
 	{
 		strcopy(sName, sizeof(sName), (bIsValidGame() ? g_sWeaponClasses2[iPos] : g_sWeaponClasses[iPos]));
-		if (StrContains(sName, "_") != -1)
+		if (StrContains(sName, "weapon_") != -1)
 		{
-			ExplodeString(sName, "_", sSet, sizeof(sSet), sizeof(sSet[]));
+			ExplodeString(sName, "eapon_", sSet, sizeof(sSet), sizeof(sSet[]));
 			if (StrEqual(sSet[1], g_esCache[tank].g_sDropWeaponName, false))
 			{
 				return iPos;

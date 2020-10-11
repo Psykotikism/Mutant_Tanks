@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Drunk Ability v8.80"
+//#file "Drunk Ability v8.80"
 
 public Plugin myinfo =
 {

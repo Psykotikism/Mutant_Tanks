@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Clone Ability v8.80"
+//#file "Clone Ability v8.80"
 
 public Plugin myinfo =
 {

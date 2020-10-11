@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Panic Ability v8.80"
+//#file "Panic Ability v8.80"
 
 public Plugin myinfo =
 {

@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Throw Ability v8.80"
+//#file "Throw Ability v8.80"
 
 public Plugin myinfo =
 {

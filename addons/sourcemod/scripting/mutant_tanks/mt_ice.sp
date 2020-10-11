@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Ice Ability v8.80"
+//#file "Ice Ability v8.80"
 
 public Plugin myinfo =
 {

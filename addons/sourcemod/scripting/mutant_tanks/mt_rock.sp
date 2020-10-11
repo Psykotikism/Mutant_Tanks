@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Rock Ability v8.80"
+//#file "Rock Ability v8.80"
 
 public Plugin myinfo =
 {

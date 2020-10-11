@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Quiet Ability v8.80"
+//#file "Quiet Ability v8.80"
 
 public Plugin myinfo =
 {

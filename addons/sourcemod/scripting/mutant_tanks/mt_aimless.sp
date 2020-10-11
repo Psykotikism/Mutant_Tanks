@@ -16,7 +16,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Aimless Ability v8.80"
+//#file "Aimless Ability v8.80"
 
 public Plugin myinfo =
 {

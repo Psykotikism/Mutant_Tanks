@@ -15,7 +15,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Respawn Ability v8.80"
+//#file "Respawn Ability v8.80"
 
 public Plugin myinfo =
 {
