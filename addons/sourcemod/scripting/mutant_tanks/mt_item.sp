@@ -301,7 +301,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (mode == 3 && bIsValidClient(admin))
 	{
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esPlayer[admin].g_iItemAbility = iGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iItemAbility, value, 0, 1);
 		g_esPlayer[admin].g_iItemMessage = iGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iItemMessage, value, 0, 1);
 		g_esPlayer[admin].g_flItemChance = flGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esPlayer[admin].g_flItemChance, value, 0.0, 100.0);
@@ -327,7 +327,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (mode < 3 && type > 0)
 	{
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esAbility[type].g_iItemAbility = iGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iItemAbility, value, 0, 1);
 		g_esAbility[type].g_iItemMessage = iGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iItemMessage, value, 0, 1);
 		g_esAbility[type].g_flItemChance = flGetKeyValue(subsection, "itemability", "item ability", "item_ability", "item", key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esAbility[type].g_flItemChance, value, 0.0, 100.0);
@@ -393,7 +393,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (0 < iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -434,7 +434,7 @@ static void vItemAbility(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
 
-	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (0 < iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}

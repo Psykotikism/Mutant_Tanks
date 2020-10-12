@@ -238,7 +238,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker) && g_esCache[attacker].g_iVampireAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[attacker].g_flVampireChance && bIsSurvivor(victim))
 			{
-				if (MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (g_esCache[victim].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
+				if (MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (0 < iGetHumanCount() < g_esCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
 				{
 					return Plugin_Continue;
 				}
@@ -327,7 +327,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (mode == 3 && bIsValidClient(admin))
 	{
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esPlayer[admin].g_iVampireAbility = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iVampireAbility, value, 0, 1);
 		g_esPlayer[admin].g_iVampireEffect = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iVampireEffect, value, 0, 1);
 		g_esPlayer[admin].g_iVampireMessage = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iVampireMessage, value, 0, 1);
@@ -349,7 +349,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 	if (mode < 3 && type > 0)
 	{
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esAbility[type].g_iVampireAbility = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iVampireAbility, value, 0, 1);
 		g_esAbility[type].g_iVampireEffect = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iVampireEffect, value, 0, 1);
 		g_esAbility[type].g_iVampireMessage = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iVampireMessage, value, 0, 1);

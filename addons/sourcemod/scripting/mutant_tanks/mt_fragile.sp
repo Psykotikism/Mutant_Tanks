@@ -479,7 +479,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esPlayer[admin].g_iFragileAbility = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iFragileAbility, value, 0, 1);
 		g_esPlayer[admin].g_iFragileMessage = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iFragileMessage, value, 0, 1);
 		g_esPlayer[admin].g_flFragileBulletMultiplier = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esPlayer[admin].g_flFragileBulletMultiplier, value, 1.0, 999999.0);
@@ -511,7 +511,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
 		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esAbility[type].g_iFragileAbility = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iFragileAbility, value, 0, 1);
 		g_esAbility[type].g_iFragileMessage = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iFragileMessage, value, 0, 1);
 		g_esAbility[type].g_flFragileBulletMultiplier = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esAbility[type].g_flFragileBulletMultiplier, value, 1.0, 999999.0);
@@ -587,7 +587,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (0 < iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -671,7 +671,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 static void vFragileAbility(int tank)
 {
-	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (0 < iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}

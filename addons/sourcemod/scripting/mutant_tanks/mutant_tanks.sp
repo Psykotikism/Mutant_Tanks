@@ -771,7 +771,9 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_mt_list", cmdMTList, "View a list of installed abilities.");
 	RegConsoleCmd("sm_mt_version", cmdMTVersion, "Find out the current version of Mutant Tanks.");
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Mutant Tank.");
+	RegAdminCmd("sm_mt_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Mutant Tank.");
 	RegConsoleCmd("sm_tank2", cmdTank2, "Spawn a Mutant Tank.");
+	RegConsoleCmd("sm_mt_tank2", cmdTank2, "Spawn a Mutant Tank.");
 	RegConsoleCmd("sm_mutanttank", cmdMutantTank, "Choose a Mutant Tank.");
 
 	g_esGeneral.g_cvMTDisabledGameModes = CreateConVar("mt_disabledgamemodes", "", "Disable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: None\nNot empty: Disabled only in these game modes.");
@@ -1244,7 +1246,7 @@ public void OnAdminMenuReady(Handle topmenu)
 	TopMenuObject tmoCommands = g_esGeneral.g_tmMTMenu.AddCategory("MutantTanks", iMTAdminMenuHandler);
 	if (tmoCommands != INVALID_TOPMENUOBJECT)
 	{
-		g_esGeneral.g_tmMTMenu.AddItem("sm_tank", vMutantTanksMenu, tmoCommands, "sm_tank", ADMFLAG_ROOT);
+		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_tank", vMutantTanksMenu, tmoCommands, "sm_mt_tank", ADMFLAG_ROOT);
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_config", vMTConfigMenu, tmoCommands, "sm_mt_config", ADMFLAG_GENERIC);
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_info", vMTInfoMenu, tmoCommands, "sm_mt_info", ADMFLAG_GENERIC);
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_list", vMTListMenu, tmoCommands, "sm_mt_list", ADMFLAG_ROOT);
@@ -1336,7 +1338,7 @@ public Action cmdMTConfig(int client, int args)
 		static char sSteamID32[32], sSteam3ID[32];
 		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
+		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
 			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -2024,7 +2026,7 @@ public Action cmdMTList(int client, int args)
 		static char sSteamID32[32], sSteam3ID[32];
 		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
+		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
 			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -2085,7 +2087,7 @@ public Action cmdMTVersion(int client, int args)
 		static char sSteamID32[32], sSteam3ID[32];
 		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
+		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
 			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -2131,7 +2133,8 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	static char sType[5];
+	static char sCmd[12], sType[5];
+	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
@@ -2145,7 +2148,7 @@ public Action cmdTank(int client, int args)
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", "sm_tank", g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 
 		return Plugin_Handled;
 	}
@@ -2176,7 +2179,7 @@ public Action cmdTank2(int client, int args)
 		static char sSteamID32[32], sSteam3ID[32];
 		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
+		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
 			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -2201,7 +2204,8 @@ public Action cmdTank2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	static char sType[5];
+	static char sCmd[12], sType[5];
+	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
@@ -2215,7 +2219,7 @@ public Action cmdTank2(int client, int args)
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", "sm_tank2", g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 
 		return Plugin_Handled;
 	}
@@ -2241,7 +2245,7 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (g_esGeneral.g_iSpawnMode == 1 && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
+	if (g_esGeneral.g_iSpawnMode == 1 && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -2266,7 +2270,8 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	static char sType[5];
+	static char sCmd[12], sType[5];
+	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
@@ -2280,7 +2285,7 @@ public Action cmdMutantTank(int client, int args)
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", "sm_mutanttank", g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 
 		return Plugin_Handled;
 	}
@@ -2354,7 +2359,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 							char sSteamID32[32], sSteam3ID[32];
 							GetClientAuthId(admin, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 							GetClientAuthId(admin, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || bIsDeveloper(admin)))
+							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT) || bIsDeveloper(admin)))
 							{
 								vChangeTank(admin, amount, mode);
 							}
@@ -2408,7 +2413,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 			char sSteamID32[32], sSteam3ID[32];
 			GetClientAuthId(admin, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
 			GetClientAuthId(admin, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-			if (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || bIsDeveloper(admin))
+			if (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT) || bIsDeveloper(admin))
 			{
 				vChangeTank(admin, amount, mode);
 			}
@@ -3085,7 +3090,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iDeathRevert = 0;
 		g_esGeneral.g_iDetectPlugins = 1;
 		g_esGeneral.g_iFinalesOnly = 0;
-		g_esGeneral.g_flIdleCheck = 0.0;
+		g_esGeneral.g_flIdleCheck = 10.0;
 		g_esGeneral.g_iIdleCheckMode = 2;
 		g_esGeneral.g_iLogMessages = 0;
 		g_esGeneral.g_iMinType = 1;
@@ -3398,7 +3403,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_flIdleCheck = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "IdleCheck", "Idle Check", "Idle_Check", "idle", g_esGeneral.g_flIdleCheck, value, 0.0, 999999.0);
 			g_esGeneral.g_iIdleCheckMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "IdleCheckMode", "Idle Check Mode", "Idle_Check_Mode", "idlemode", g_esGeneral.g_iIdleCheckMode, value, 0, 2);
 			g_esGeneral.g_iLogMessages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "LogMessages", "Log Messages", "Log_Messages", "log", g_esGeneral.g_iLogMessages, value, 0, 31);
-			g_esGeneral.g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGeneral.g_iRequiresHumans, value, 0, 1);
+			g_esGeneral.g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGeneral.g_iRequiresHumans, value, 0, 32);
 			g_esGeneral.g_iBaseHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "BaseHealth", "Base Health", "Base_Health", "health", g_esGeneral.g_iBaseHealth, value, 0, MT_MAXHEALTH);
 			g_esGeneral.g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esGeneral.g_iDisplayHealth, value, 0, 11);
 			g_esGeneral.g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esGeneral.g_iDisplayHealthType, value, 0, 2);
@@ -3554,7 +3559,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_esTank[iIndex].g_iGlowEnabled, value, 0, 1);
 						g_esTank[iIndex].g_iGlowFlashing = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "glowflashing", g_esTank[iIndex].g_iGlowFlashing, value, 0, 1);
 						g_esTank[iIndex].g_iGlowType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowType", "Glow Type", "Glow_Type", "glowtype", g_esTank[iIndex].g_iGlowType, value, 0, 1);
-						g_esTank[iIndex].g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esTank[iIndex].g_iRequiresHumans, value, 0, 1);
+						g_esTank[iIndex].g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esTank[iIndex].g_iRequiresHumans, value, 0, 32);
 						g_esTank[iIndex].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esTank[iIndex].g_iDisplayHealth, value, 0, 11);
 						g_esTank[iIndex].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esTank[iIndex].g_iDisplayHealthType, value, 0, 2);
 						g_esTank[iIndex].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_esTank[iIndex].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
@@ -3756,7 +3761,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_esPlayer[iPlayer].g_iGlowEnabled, value, 0, 1);
 							g_esPlayer[iPlayer].g_iGlowFlashing = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "glowflashing", g_esPlayer[iPlayer].g_iGlowFlashing, value, 0, 1);
 							g_esPlayer[iPlayer].g_iGlowType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowType", "Glow Type", "Glow_Type", "glowtype", g_esPlayer[iPlayer].g_iGlowType, value, 0, 1);
-							g_esPlayer[iPlayer].g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[iPlayer].g_iRequiresHumans, value, 0, 1);
+							g_esPlayer[iPlayer].g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[iPlayer].g_iRequiresHumans, value, 0, 32);
 							g_esPlayer[iPlayer].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esPlayer[iPlayer].g_iDisplayHealth, value, 0, 11);
 							g_esPlayer[iPlayer].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esPlayer[iPlayer].g_iDisplayHealthType, value, 0, 2);
 							g_esPlayer[iPlayer].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_esPlayer[iPlayer].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
@@ -5668,7 +5673,9 @@ static void vThrowInterval(int tank)
 
 static bool bAreHumansRequired(int type, int tank = 0)
 {
-	return ((tank > 0 && g_esCache[tank].g_iRequiresHumans == 1) || g_esTank[type].g_iRequiresHumans == 1 || g_esGeneral.g_iRequiresHumans == 1) && iGetHumanCount() == 0;
+	static int iCount;
+	iCount = iGetHumanCount();
+	return (tank > 0 && (0 < iCount < g_esCache[tank].g_iRequiresHumans)) || (0 < iCount < g_esTank[type].g_iRequiresHumans) || (0 < iCount < g_esGeneral.g_iRequiresHumans);
 }
 
 static bool bCanTypeSpawn(int type = 0)

@@ -52,6 +52,7 @@ enum struct esPlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
+	float g_flBuryBuffer;
 	float g_flBuryChance;
 	float g_flBuryDuration;
 	float g_flBuryHeight;
@@ -79,6 +80,7 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 
 enum struct esAbility
 {
+	float g_flBuryBuffer;
 	float g_flBuryChance;
 	float g_flBuryDuration;
 	float g_flBuryHeight;
@@ -102,6 +104,7 @@ esAbility g_esAbility[MT_MAXTYPES + 1];
 
 enum struct esCache
 {
+	float g_flBuryBuffer;
 	float g_flBuryChance;
 	float g_flBuryDuration;
 	float g_flBuryHeight;
@@ -376,6 +379,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iBuryAbility = 0;
 				g_esAbility[iIndex].g_iBuryEffect = 0;
 				g_esAbility[iIndex].g_iBuryMessage = 0;
+				g_esAbility[iIndex].g_flBuryBuffer = 100.0;
 				g_esAbility[iIndex].g_flBuryChance = 33.3;
 				g_esAbility[iIndex].g_flBuryDuration = 5.0;
 				g_esAbility[iIndex].g_flBuryHeight = 50.0;
@@ -400,6 +404,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iBuryAbility = 0;
 					g_esPlayer[iPlayer].g_iBuryEffect = 0;
 					g_esPlayer[iPlayer].g_iBuryMessage = 0;
+					g_esPlayer[iPlayer].g_flBuryBuffer = 0.0;
 					g_esPlayer[iPlayer].g_flBuryChance = 0.0;
 					g_esPlayer[iPlayer].g_flBuryDuration = 0.0;
 					g_esPlayer[iPlayer].g_flBuryHeight = 0.0;
@@ -420,10 +425,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esPlayer[admin].g_iBuryAbility = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iBuryAbility, value, 0, 1);
 		g_esPlayer[admin].g_iBuryEffect = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iBuryEffect, value, 0, 7);
 		g_esPlayer[admin].g_iBuryMessage = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iBuryMessage, value, 0, 3);
+		g_esPlayer[admin].g_flBuryBuffer = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esPlayer[admin].g_flBuryBuffer, value, 0.0, float(MT_MAXHEALTH));
 		g_esPlayer[admin].g_flBuryChance = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esPlayer[admin].g_flBuryChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_flBuryDuration = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esPlayer[admin].g_flBuryDuration, value, 0.1, 999999.0);
 		g_esPlayer[admin].g_flBuryHeight = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esPlayer[admin].g_flBuryHeight, value, 0.1, 999999.0);
@@ -450,10 +456,11 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esAbility[type].g_iBuryAbility = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iBuryAbility, value, 0, 1);
 		g_esAbility[type].g_iBuryEffect = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iBuryEffect, value, 0, 7);
 		g_esAbility[type].g_iBuryMessage = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iBuryMessage, value, 0, 3);
+		g_esAbility[type].g_flBuryBuffer = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esAbility[type].g_flBuryBuffer, value, 0.0, float(MT_MAXHEALTH));
 		g_esAbility[type].g_flBuryChance = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esAbility[type].g_flBuryChance, value, 0.0, 100.0);
 		g_esAbility[type].g_flBuryDuration = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esAbility[type].g_flBuryDuration, value, 0.1, 999999.0);
 		g_esAbility[type].g_flBuryHeight = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esAbility[type].g_flBuryHeight, value, 0.1, 999999.0);
@@ -479,6 +486,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	g_esCache[tank].g_flBuryBuffer = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flBuryBuffer, g_esAbility[type].g_flBuryBuffer);
 	g_esCache[tank].g_flBuryChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flBuryChance, g_esAbility[type].g_flBuryChance);
 	g_esCache[tank].g_flBuryDuration = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flBuryDuration, g_esAbility[type].g_flBuryDuration);
 	g_esCache[tank].g_flBuryHeight = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flBuryHeight, g_esAbility[type].g_flBuryHeight);
@@ -536,7 +544,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
 	{
-		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (0 < iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -568,7 +576,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 static void vBuryAbility(int tank)
 {
-	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (0 < iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -616,7 +624,7 @@ static void vBuryAbility(int tank)
 
 static void vBuryHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
-	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[survivor].g_iImmunityFlags))
+	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (0 < iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -744,6 +752,12 @@ static void vStopBury(int survivor, int tank)
 
 	SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
 	L4D_ReviveSurvivor(survivor);
+
+	if (g_esCache[tank].g_flBuryBuffer > 0.0)
+	{
+		SetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime", GetGameTime());
+		SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", g_esCache[tank].g_flBuryBuffer);
+	}
 
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
