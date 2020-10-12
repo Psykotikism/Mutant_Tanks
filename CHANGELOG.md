@@ -12,6 +12,7 @@ Bug fixes:
 6. Fixed the `Drunk` ability requiring human survivors to be present by default.
 7. Fixed the `Drop Weapon Name` setting not reading non-melee weapon names properly.
 8. Fixed the `Requires Humans` setting not working in some formats.
+9. Fixed the `Requires Humans` setting not working when the core plugins is deciding which Mutant Tank type to spawn.
 
 Changes:
 
