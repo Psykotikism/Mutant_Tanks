@@ -91,7 +91,7 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0
-			"Idle Check"				"10.0"
+			"Idle Check"				"0.0"
 
 			// The type of idle mode to check for.
 			// Note: It is recommended to set this to "2" on non-finale maps and "0" on finale maps.
@@ -118,11 +118,14 @@
 			// 16: Custom messages
 			"Log Messages"				"0"
 
-			// The ability is only effective toward human survivors.
+			// All Mutant Tanks are only effective toward human survivors.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for all Mutant Tanks to be effective.
 			"Requires Humans"			"0"
 
 			// The range of types to check for.
@@ -519,7 +522,7 @@
 			// 1: ON
 			"Spawn Enabled"				"1"
 
-			// The Mutant Tank can be spawned through the "sm_tank" command.
+			// The Mutant Tank can be spawned through the "sm_tank"/"sm_mt_tank" command.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// 0: OFF
@@ -634,8 +637,11 @@
 			// The Mutant Tank is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this Mutant Tank to be effective.
 			"Requires Humans"			"0"
 		}
 		"Health"
@@ -1141,9 +1147,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -1278,8 +1287,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -1453,8 +1465,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -1595,9 +1610,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Ammo Hit" setting.
@@ -1738,8 +1756,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -1890,8 +1911,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -2043,8 +2067,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -2082,6 +2109,13 @@
 			// 1: Display message only when "Bury Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
+
+			// The amount of temporary health given to survivors recovering from the Mutant Tank's bury ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 65535.0
+			"Bury Buffer"				"100.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This setting can be overridden for specific players.
@@ -2187,9 +2221,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -2304,8 +2341,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -2454,8 +2494,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -2585,8 +2628,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -2649,8 +2695,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -2685,8 +2734,8 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0 OR 3: Pick randomly between left and right hands.
-			// 1: Guns only.
-			// 2: Melee weapons only.
+			// 1: Right hand.
+			// 2: Left hand.
 			"Drop Hand Position"			"0"
 
 			// The mode of the Mutant Tank's drop ability.
@@ -2772,8 +2821,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -2922,8 +2974,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -3078,8 +3133,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -3235,8 +3293,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -3388,8 +3449,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -3489,8 +3553,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -3644,8 +3711,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -3804,9 +3874,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -3985,8 +4058,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -4185,9 +4261,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -4287,8 +4366,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -4470,8 +4552,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -4525,7 +4610,7 @@
 			// --
 			// Minimum: 1.0
 			// Maximum: 65535.0
-			"Heal Buffer"				"25.0"
+			"Heal Buffer"				"100.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This setting can be overridden for specific players.
@@ -4638,8 +4723,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -4735,8 +4823,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -4892,8 +4983,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -5082,8 +5176,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -5225,8 +5322,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -5361,8 +5461,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -5483,9 +5586,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -5598,8 +5704,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -5768,8 +5877,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -5904,9 +6016,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Lag Hit" setting.
@@ -6047,8 +6162,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -6159,8 +6277,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -6312,8 +6433,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -6453,8 +6577,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -6559,8 +6686,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -6676,8 +6806,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -6767,9 +6900,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting does not affect the "Nullify Hit" setting.
@@ -6903,9 +7039,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -7010,8 +7149,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -7101,8 +7243,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -7261,8 +7406,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -7413,8 +7561,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -7530,8 +7681,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -7673,8 +7827,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -7817,8 +7974,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -7905,8 +8065,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -8007,8 +8170,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -8154,9 +8320,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -8265,8 +8434,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -8410,8 +8582,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -8591,9 +8766,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -8752,8 +8930,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -8924,8 +9105,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -9074,8 +9258,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -9210,8 +9397,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -9340,8 +9530,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -9448,8 +9641,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -9556,8 +9752,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -9659,8 +9858,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -9785,9 +9987,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -9878,8 +10083,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -9984,8 +10192,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -10053,8 +10264,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -10145,8 +10359,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -10314,8 +10531,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -10469,8 +10689,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -10627,9 +10850,12 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
-			"Requires Humans"			"0"
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -10710,8 +10936,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.
@@ -10812,8 +11041,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"1"
 
 			// Enable this ability.
@@ -10912,8 +11144,11 @@
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
 			// 0: OFF
-			// 1: ON 
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
 			"Requires Humans"			"0"
 
 			// Enable this ability.

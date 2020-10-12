@@ -1206,6 +1206,7 @@ Commands:
 ```
 // Requires "z" (Root) flag.
 sm_tank - Spawn a Mutant Tank.
+sm_mt_tank - Spawn a Mutant Tank.
 
 Valid inputs:
 
@@ -1231,6 +1232,7 @@ sm_mt_config - View a section of a config file.
 sm_mt_list - View a list of installed abilities.
 sm_mt_version - View a list of installed abilities.
 sm_tank2 - Spawn a Mutant Tank.
+sm_mt_tank2 - Spawn a Mutant Tank.
 
 // Accessible by all players.
 sm_mutanttank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)

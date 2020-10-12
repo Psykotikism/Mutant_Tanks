@@ -21,6 +21,10 @@ Changes:
 3. The `Finale Waves` and `Finale Types` settings now support up to `10` waves. (Thanks to 3aljiyavslgazana for testing and reporting!)
 4. Added a new option for the `Announce Death` setting.
 5. Enabled the `Requires Humans` setting for some of the default Mutant Tank types.
+6. Enabled the `Requires Humans` setting for some more abilities by default.
+7. Added command aliases for `sm_tank` and `sm_tank2`.
+8. Added the `Bury Buffer` setting for the `Bury` ability. (Requested by Mi.Cura.)
+9. Changed the default value of the `Heal` ability's `Heal Buffer` setting from `25.0` to `100.0`.
 
 Files:
 
