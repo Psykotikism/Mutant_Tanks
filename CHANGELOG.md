@@ -12,7 +12,8 @@ Bug fixes:
 6. Fixed the `Drunk` ability requiring human survivors to be present by default.
 7. Fixed the `Drop Weapon Name` setting not reading non-melee weapon names properly.
 8. Fixed the `Requires Humans` setting not working in some formats.
-9. Fixed the `Requires Humans` setting not working when the core plugins is deciding which Mutant Tank type to spawn.
+9. Fixed the `Requires Humans` setting not working when the core plugin is deciding which Mutant Tank type to spawn.
+10. Fixed some abilities calling `DispatchSpawn` on entities before teleporting them.
 
 Changes:
 
@@ -25,6 +26,7 @@ Changes:
 7. Added command aliases for `sm_tank` and `sm_tank2`.
 8. Added the `Bury Buffer` setting for the `Bury` ability. (Requested by Mi.Cura.)
 9. Changed the default value of the `Heal` ability's `Heal Buffer` setting from `25.0` to `100.0`.
+10. Some code optimization.
 
 Files:
 
