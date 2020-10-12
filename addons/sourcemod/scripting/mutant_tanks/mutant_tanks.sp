@@ -3087,7 +3087,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iPluginEnabled = 0;
 		g_esGeneral.g_iAnnounceArrival = 31;
 		g_esGeneral.g_iAnnounceDeath = 1;
-		g_esGeneral.g_iDeathRevert = 0;
+		g_esGeneral.g_iDeathRevert = 1;
 		g_esGeneral.g_iDetectPlugins = 1;
 		g_esGeneral.g_iFinalesOnly = 0;
 		g_esGeneral.g_flIdleCheck = 10.0;
@@ -3111,7 +3111,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iSpawnMode = 1;
 		g_esGeneral.g_iRegularAmount = 0;
 		g_esGeneral.g_flRegularInterval = 300.0;
-		g_esGeneral.g_iRegularLimit = 2;
+		g_esGeneral.g_iRegularLimit = 999999;
 		g_esGeneral.g_iRegularMinType = 0;
 		g_esGeneral.g_iRegularMaxType = 0;
 		g_esGeneral.g_iRegularMode = 0;
@@ -4054,10 +4054,14 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				vCacheSettings(iBot);
 			}
 		}
-		else if (StrEqual(name, "finale_escape_start") || StrEqual(name, "finale_vehicle_incoming") || StrEqual(name, "finale_vehicle_ready") || StrEqual(name, "finale_vehicle_leaving") || StrEqual(name, "finale_win"))
+		else if (StrEqual(name, "finale_escape_start") || StrEqual(name, "finale_vehicle_incoming") || StrEqual(name, "finale_vehicle_ready"))
 		{
 			g_esGeneral.g_iTankWave = 3;
 
+			vExecuteFinaleConfigs(name);
+		}
+		else if (StrEqual(name, "finale_vehicle_leaving") || StrEqual(name, "finale_win"))
+		{
 			vExecuteFinaleConfigs(name);
 		}
 		else if (StrEqual(name, "finale_start") || StrEqual(name, "gauntlet_finale_start"))
@@ -4169,7 +4173,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				vReset2(iTank, g_esCache[iTank].g_iDeathRevert);
 
 				CreateTimer(1.0, tTimerResetType, iTankId, TIMER_FLAG_NO_MAPCHANGE);
-				CreateTimer(3.0, tTimerTankWave, _, TIMER_FLAG_NO_MAPCHANGE);
+				CreateTimer(5.0, tTimerTankWave, _, TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
 		else if (StrEqual(name, "player_incapacitated"))
