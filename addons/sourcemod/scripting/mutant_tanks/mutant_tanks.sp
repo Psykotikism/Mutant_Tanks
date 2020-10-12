@@ -5675,7 +5675,7 @@ static bool bAreHumansRequired(int type, int tank = 0)
 {
 	static int iCount;
 	iCount = iGetHumanCount();
-	return (tank > 0 && (0 < iCount < g_esCache[tank].g_iRequiresHumans)) || (0 < iCount < g_esTank[type].g_iRequiresHumans) || (0 < iCount < g_esGeneral.g_iRequiresHumans);
+	return (tank > 0 && (g_esCache[tank].g_iRequiresHumans > 0 && iCount < g_esCache[tank].g_iRequiresHumans)) || (g_esTank[type].g_iRequiresHumans > 0 && iCount < g_esTank[type].g_iRequiresHumans) || (g_esGeneral.g_iRequiresHumans > 0 && iCount < g_esGeneral.g_iRequiresHumans);
 }
 
 static bool bCanTypeSpawn(int type = 0)
@@ -6443,7 +6443,8 @@ public Action tTimerIceEffect(Handle timer, int userid)
 
 public Action tTimerKillIdleTank(Handle timer, int userid)
 {
-	int iTank = GetClientOfUserId(userid);
+	static int iTank;
+	iTank = GetClientOfUserId(userid);
 	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsTankAllowed(iTank, MT_CHECK_ALIVE) || bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT))
 	{
 		return Plugin_Stop;
