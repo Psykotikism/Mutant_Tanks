@@ -91,7 +91,7 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0
-			"Idle Check"				"0.0"
+			"Idle Check"				"10.0"
 
 			// The type of idle mode to check for.
 			// Note: It is recommended to set this to "2" on non-finale maps and "0" on finale maps.
