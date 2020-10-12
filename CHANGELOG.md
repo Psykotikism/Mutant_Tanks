@@ -11,6 +11,7 @@ Bug fixes:
 5. Fixed the `Drug` ability not requiring human survivors to be present by default.
 6. Fixed the `Drunk` ability requiring human survivors to be present by default.
 7. Fixed the `Drop Weapon Name` setting not reading non-melee weapon names properly.
+8. Fixed the `Requires Humans` setting not working in some formats.
 
 Changes:
 
@@ -18,6 +19,7 @@ Changes:
 2. The `mt_clone` include file is now used by all plugins related to Mutant Tanks.
 3. The `Finale Waves` and `Finale Types` settings now support up to `10` waves. (Thanks to 3aljiyavslgazana for testing and reporting!)
 4. Added a new option for the `Announce Death` setting.
+5. Enabled the `Requires Humans` setting for some of the default Mutant Tank types.
 
 Files:
 
