@@ -55,7 +55,7 @@
 			// --
 			// 0: OFF
 			// 1: ON, announce deaths only.
-			// 2: ON, announce deaths and killers.
+			// 2: ON, announce deaths with killers.
 			"Announce Death"			"1"
 
 			// Mutant Tanks revert back to default Tanks upon death.
@@ -64,7 +64,7 @@
 			// --
 			// 0: OFF
 			// 1: ON
-			"Death Revert"				"0"
+			"Death Revert"				"1"
 
 			// The plugin will automatically disable any Mutant Tank whose abilities are not installed.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -287,12 +287,13 @@
 			"Regular Interval"			"300.0"
 
 			// How many waves of Tanks can spawn before the regular wave spawner stops.
+			// Note: All Tanks from a previous wave must die before more waves of Tanks can spawn.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This will not work unless "Regular Mode" is set to 1.
 			// --
 			// 0: OFF
 			// 1-999999: Only allow this number of waves.
-			"Regular Limit"				"2"
+			"Regular Limit"				"999999"
 
 			// The mode of the regular wave spawner.
 			// Note: Do not change this setting if you are unsure of how it works.

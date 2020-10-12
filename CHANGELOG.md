@@ -14,6 +14,7 @@ Bug fixes:
 8. Fixed the `Requires Humans` setting not working in some formats.
 9. Fixed the `Requires Humans` setting not working when the core plugin is deciding which Mutant Tank type to spawn.
 10. Fixed some abilities calling `DispatchSpawn` on entities before teleporting them.
+11. Fixed the core plugin skipping some waves. (Thanks to Tank Rush for testing and reporting!)
 
 Changes:
 
@@ -26,7 +27,8 @@ Changes:
 7. Added command aliases for `sm_tank` and `sm_tank2`.
 8. Added the `Bury Buffer` setting for the `Bury` ability. (Requested by Mi.Cura.)
 9. Changed the default value of the `Heal` ability's `Heal Buffer` setting from `25.0` to `100.0`.
-10. Some code optimization.
+10. Changed the default value of the `Regular Limit` setting from `2` to `999999`.
+11. Changed the default value of the `Death Revert` setting under `Plugin Settings/General` from `0` to `1`.
 
 Files:
 
