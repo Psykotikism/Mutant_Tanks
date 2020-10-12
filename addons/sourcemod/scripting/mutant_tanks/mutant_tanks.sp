@@ -5668,11 +5668,7 @@ static void vThrowInterval(int tank)
 
 static bool bAreHumansRequired(int type, int tank = 0)
 {
-	static int iCondition;
-	iCondition = (tank > 0) ? g_esCache[tank].g_iRequiresHumans : g_esTank[type].g_iRequiresHumans;
-	iCondition = (iCondition > 0) ? iCondition : g_esGeneral.g_iRequiresHumans;
-
-	return iCondition == 1 && iGetHumanCount() == 0;
+	return ((tank > 0 && g_esCache[tank].g_iRequiresHumans == 1) || g_esTank[type].g_iRequiresHumans == 1 || g_esGeneral.g_iRequiresHumans == 1) && iGetHumanCount() == 0;
 }
 
 static bool bCanTypeSpawn(int type = 0)
