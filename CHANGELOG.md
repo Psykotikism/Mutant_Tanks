@@ -15,6 +15,7 @@ Bug fixes:
 9. Fixed the `Requires Humans` setting not working when the core plugin is deciding which Mutant Tank type to spawn.
 10. Fixed some abilities calling `DispatchSpawn` on entities before teleporting them.
 11. Fixed the core plugin skipping some waves. (Thanks to Tank Rush for testing and reporting!)
+12. Fixed global chat messages not being translated. (Thanks to Mi.Cura for testing and reporting!)
 
 Changes:
 
@@ -29,6 +30,7 @@ Changes:
 9. Changed the default value of the `Heal` ability's `Heal Buffer` setting from `25.0` to `100.0`.
 10. Changed the default value of the `Regular Limit` setting from `2` to `999999`.
 11. Changed the default value of the `Death Revert` setting under `Plugin Settings/General` from `0` to `1`.
+12. Increased the delay between each Tank wave in finales from `3` to `5` seconds.
 
 Files:
 

@@ -545,15 +545,16 @@
 			// 4: Announce when a Mutant Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
 			// 8: Announce when a Mutant Tank transforms. (Only works when "Spawn Mode" is set to 3.)
 			// 16: Announce when a Mutant Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
-			"Announce Arrival"			"31"
+			"Announce Arrival"			"0"
 
 			// Announce the Mutant Tank's death.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
-			// 1: ON
-			"Announce Death"			"1"
+			// 1: ON, announce deaths only.
+			// 2: ON, announce deaths with killers.
+			"Announce Death"			"0"
 
 			// The Mutant Tank reverts back to default a Tank upon death.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -636,6 +637,7 @@
 			"Glow Type"				"0"
 
 			// The Mutant Tank is only effective toward human survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
@@ -666,7 +668,7 @@
 			// 9: ON, show health percentage and healthbar only.
 			// 10: ON, show name, health, and healthbar.
 			// 11: ON, show name, health percentage, and healthbar.
-			"Display Health"			"11"
+			"Display Health"			"0"
 
 			// Display type of the Mutant Tank's names and health.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -675,7 +677,7 @@
 			// 0: OFF
 			// 1: ON, show in hint text.
 			// 2: ON, show in center text.
-			"Display Health Type"			"1"
+			"Display Health Type"			"0"
 
 			// Extra health given to the Mutant Tank.
 			// Note: Tank's health limit on any difficulty is 65,535.
@@ -702,7 +704,7 @@
 			// --
 			// 1st character = Health indicator
 			// 2nd character = Damage indicator
-			"Health Characters"			"|,-"
+			"Health Characters"			""
 
 			// The number of human survivors required for "Multiply Health" to take effect.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -925,6 +927,7 @@
 			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3,33.3"
 
 			// These are the RGBA values of the Mutant Tank's light prop's color.
+			// Note: Seems to be broken after The Last Stand update came out.
 			// Note: Any value less than 0 will output a random color.
 			// Note: This setting can be overridden for specific players.
 			// --
