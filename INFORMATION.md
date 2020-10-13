@@ -540,11 +540,11 @@
 			// Maximum: 31
 			// --
 			// 0: OFF
-			// 1: Announce when a Mutant Tank spawns.
-			// 2: Announce when a Mutant Tank evolves. (Only works when "Spawn Mode" is set to 1.)
-			// 4: Announce when a Mutant Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
-			// 8: Announce when a Mutant Tank transforms. (Only works when "Spawn Mode" is set to 3.)
-			// 16: Announce when a Mutant Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
+			// 1: Announce when the Mutant Tank spawns.
+			// 2: Announce when the Mutant Tank evolves. (Only works when "Spawn Mode" is set to 1.)
+			// 4: Announce when the Mutant Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
+			// 8: Announce when the Mutant Tank transforms. (Only works when "Spawn Mode" is set to 3.)
+			// 16: Announce when the Mutant Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
 			"Announce Arrival"			"0"
 
 			// Announce the Mutant Tank's death.
@@ -3991,7 +3991,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank cloaks itself and nearby special infected, and disarms survivors.
-		// "Ability Enabled" - When a Mutant Tank spawns, it becomes invisible.
+		// "Ability Enabled" - When the Mutant Tank spawns, it becomes invisible.
 		// - "Ghost Fade Alpha"
 		// - "Ghost Fade Delay"
 		// - "Ghost Fade Limit"
