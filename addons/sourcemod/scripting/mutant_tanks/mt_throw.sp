@@ -605,6 +605,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						{
 							static char sTankName[33];
 							MT_GetTankName(iTank, sTankName);
+							MT_PrintToChatAll("%s %t", MT_TAG2, "Throw", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Throw", sTankName);
 						}
 					}
@@ -666,6 +667,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						{
 							static char sTankName[33];
 							MT_GetTankName(iTank, sTankName);
+							MT_PrintToChatAll("%s %t", MT_TAG2, "Throw2", sTankName);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Throw2", sTankName);
 						}
 					}
@@ -685,6 +687,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					{
 						static char sTankName[33];
 						MT_GetTankName(iTank, sTankName);
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Throw3", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Throw3", sTankName);
 					}
 				}
@@ -701,17 +704,17 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						NormalizeVector(flVelocity, flVelocity);
 						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
+						TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
 						DispatchSpawn(iWitch);
 						ActivateEntity(iWitch);
 						SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
-
-						TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
 					}
 
 					if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL2)
 					{
 						static char sTankName[33];
 						MT_GetTankName(iTank, sTankName);
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Throw4", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Throw4", sTankName);
 					}
 				}

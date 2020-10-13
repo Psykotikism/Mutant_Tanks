@@ -546,6 +546,7 @@ static void vReset2(int tank)
 	{
 		static char sTankName[33];
 		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Spam2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Spam2", sTankName);
 	}
 }
@@ -643,6 +644,7 @@ static void vSpamAbility(int tank)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Spam", sTankName);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Spam", sTankName);
 			}
 		}

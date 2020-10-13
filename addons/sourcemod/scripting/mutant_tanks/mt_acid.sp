@@ -669,6 +669,7 @@ public void MT_OnRockBreak(int tank, int rock)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Acid2", sTankName);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Acid2", sTankName);
 			}
 		}
@@ -776,6 +777,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 
 						if (g_esCache[tank].g_iAcidMessage & messages)
 						{
+							MT_PrintToChatAll("%s %t", MT_TAG2, "Acid", sTankName, survivor);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Acid", sTankName, survivor);
 						}
 					}
@@ -785,6 +787,7 @@ static void vAcidHit(int survivor, int tank, float chance, int enabled, int mess
 
 						if (g_esCache[tank].g_iAcidMessage & messages)
 						{
+							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
 							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Puke", sTankName, survivor);
 						}
 					}

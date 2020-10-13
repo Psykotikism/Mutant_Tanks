@@ -590,6 +590,7 @@ static void vWitchAbility(int tank)
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Witch", sTankName);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Witch", sTankName);
 				}
 			}

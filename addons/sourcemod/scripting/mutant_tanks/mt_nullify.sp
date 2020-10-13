@@ -637,6 +637,7 @@ static void vNullifyHit(int survivor, int tank, float chance, int enabled, int m
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Nullify", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Nullify", sTankName, survivor);
 				}
 			}
@@ -723,6 +724,7 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 	int iMessage = pack.ReadCell();
 	if (g_esCache[iTank].g_iNullifyMessage & iMessage)
 	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Nullify2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Nullify2", iSurvivor);
 	}
 

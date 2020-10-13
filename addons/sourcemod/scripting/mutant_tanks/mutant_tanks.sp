@@ -696,11 +696,9 @@ public any aNative_LogMessage(Handle plugin, int numParams)
 	{
 		char sBuffer[255];
 		int iSize = 0, iResult = FormatNativeString(0, 2, 3, sizeof(sBuffer), iSize, sBuffer);
-
-		switch (iResult)
+		if (iResult == SP_ERROR_NONE)
 		{
-			case SP_ERROR_NONE: vLogMessage(iType, sBuffer);
-			default: ThrowNativeError(iResult, "MT_LogMessage native failed with error code: %i", iResult);
+			vLogMessage(iType, sBuffer);
 		}
 	}
 }
@@ -4124,38 +4122,22 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					{
 						case 1:
 						{
-							switch (GetRandomInt(1, 10))
-							{
-								case 1: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death1", g_esCache[iTank].g_sTankName);
-								case 2: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death2", g_esCache[iTank].g_sTankName);
-								case 3: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death3", g_esCache[iTank].g_sTankName);
-								case 4: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death4", g_esCache[iTank].g_sTankName);
-								case 5: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death5", g_esCache[iTank].g_sTankName);
-								case 6: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death6", g_esCache[iTank].g_sTankName);
-								case 7: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death7", g_esCache[iTank].g_sTankName);
-								case 8: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death8", g_esCache[iTank].g_sTankName);
-								case 9: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death9", g_esCache[iTank].g_sTankName);
-								case 10: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Death10", g_esCache[iTank].g_sTankName);
-							}
+							char sPhrase[32];
+							int iOption = GetRandomInt(1, 10);
+							FormatEx(sPhrase, sizeof(sPhrase), "Death%i", iOption);
+							MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, g_esCache[iTank].g_sTankName);
+							vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, sPhrase, g_esCache[iTank].g_sTankName);
 						}
 						case 2:
 						{
 							int iSurvivor = GetClientOfUserId(event.GetInt("attacker"));
 							if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 							{
-								switch (GetRandomInt(1, 10))
-								{
-									case 1: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer1", iSurvivor, g_esCache[iTank].g_sTankName);
-									case 2: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer2", iSurvivor, g_esCache[iTank].g_sTankName);
-									case 3: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer3", iSurvivor, g_esCache[iTank].g_sTankName);
-									case 4: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer4", iSurvivor, g_esCache[iTank].g_sTankName);
-									case 5: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer5", iSurvivor, g_esCache[iTank].g_sTankName);
-									case 6: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer6", iSurvivor, g_esCache[iTank].g_sTankName);
-									case 7: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer7", iSurvivor, g_esCache[iTank].g_sTankName);
-									case 8: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer8", iSurvivor, g_esCache[iTank].g_sTankName);
-									case 9: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer9", iSurvivor, g_esCache[iTank].g_sTankName);
-									case 10: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Killer10", iSurvivor, g_esCache[iTank].g_sTankName);
-								}
+								char sPhrase[32];
+								int iOption = GetRandomInt(1, 10);
+								FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
+								MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, iSurvivor, g_esCache[iTank].g_sTankName);
+								vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, sPhrase, iSurvivor, g_esCache[iTank].g_sTankName);
 							}
 						}
 					}
@@ -4391,14 +4373,6 @@ static void vHookEventForward(bool mode)
 
 static void vLogMessage(int type, const char[] message, any ...)
 {
-	static char sBuffer[255];
-	VFormat(sBuffer, sizeof(sBuffer), message, 3);
-
-	if (!(type & MT_LOG_SERVER) && !(type & MT_LOG_CUSTOM))
-	{
-		MT_PrintToChatAll(sBuffer);
-	}
-
 	if (g_esGeneral.g_iLogMessages & type)
 	{
 		static Action aResult;
@@ -4414,6 +4388,9 @@ static void vLogMessage(int type, const char[] message, any ...)
 			case Plugin_Handled: return;
 			case Plugin_Continue:
 			{
+				static char sBuffer[255], sMessage[255], sTime[32];
+				VFormat(sBuffer, sizeof(sBuffer), message, 3);
+
 				ReplaceString(sBuffer, sizeof(sBuffer), "{default}", "");
 				ReplaceString(sBuffer, sizeof(sBuffer), "\x01", "");
 				ReplaceString(sBuffer, sizeof(sBuffer), "{mint}", "");
@@ -4423,7 +4400,6 @@ static void vLogMessage(int type, const char[] message, any ...)
 				ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
 				ReplaceString(sBuffer, sizeof(sBuffer), "\x05", "");
 
-				static char sMessage[255], sTime[32];
 				FormatTime(sTime, sizeof(sTime), "%Y-%m-%d - %H:%M:%S", GetTime());
 				FormatEx(sMessage, sizeof(sMessage), "[%s] %s", sTime, sBuffer);
 
@@ -4844,6 +4820,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			{
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_BOSS)
 				{
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Evolved", oldname, name, g_esPlayer[tank].g_iBossStageCount + 1);
 					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Evolved", oldname, name, g_esPlayer[tank].g_iBossStageCount + 1);
 				}
 			}
@@ -4851,6 +4828,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			{
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_RANDOM)
 				{
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Randomized", oldname, name);
 					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Randomized", oldname, name);
 				}
 			}
@@ -4858,6 +4836,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			{
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_TRANSFORM)
 				{
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Transformed", oldname, name);
 					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Transformed", oldname, name);
 				}
 			}
@@ -4865,6 +4844,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			{
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_REVERT)
 				{
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Untransformed", oldname, name);
 					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Untransformed", oldname, name);
 				}
 			}
@@ -4884,11 +4864,9 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 			FormatEx(sSteamIDFinal, sizeof(sSteamIDFinal), "%s", (TranslationPhraseExists(sSteamID32) ? sSteamID32 : sSteam3ID));
 			FormatEx(sTankNote, sizeof(sTankNote), "%s", ((bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iTankNote == 1) ? sSteamIDFinal : sPhrase));
 
-			switch (TranslationPhraseExists(sTankNote))
-			{
-				case true: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG3, sTankNote);
-				case false: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG3, "NoNote");
-			}
+			bool bExists = TranslationPhraseExists(sTankNote);
+			MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sTankNote : "NoNote"));
+			vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG3, (bExists ? sTankNote : "NoNote"));
 		}
 	}
 }
@@ -5251,19 +5229,11 @@ static void vAnnounceArrival(int tank, const char[] name)
 {
 	if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_SPAWN)
 	{
-		switch (GetRandomInt(1, 10))
-		{
-			case 1: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival1", name);
-			case 2: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival2", name);
-			case 3: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival3", name);
-			case 4: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival4", name);
-			case 5: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival5", name);
-			case 6: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival6", name);
-			case 7: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival7", name);
-			case 8: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival8", name);
-			case 9: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival9", name);
-			case 10: vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, "Arrival10", name);
-		}
+		char sPhrase[32];
+		int iOption = GetRandomInt(1, 10);
+		FormatEx(sPhrase, sizeof(sPhrase), "Arrival%i", iOption);
+		MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, name);
+		vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, sPhrase, name);
 	}
 }
 

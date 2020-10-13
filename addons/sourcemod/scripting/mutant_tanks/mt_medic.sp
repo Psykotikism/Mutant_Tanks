@@ -685,6 +685,7 @@ static void vMedicAbility(int tank, bool main)
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Medic", sTankName);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Medic", sTankName);
 				}
 			}
@@ -710,6 +711,7 @@ static void vMedicAbility(int tank, bool main)
 					{
 						static char sTankName[33];
 						MT_GetTankName(tank, sTankName);
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Medic2", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Medic2", sTankName);
 					}
 				}

@@ -312,6 +312,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					static char sTankName[33];
 					MT_GetTankName(victim, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Undead2", sTankName);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Undead2", sTankName);
 				}
 
@@ -552,6 +553,7 @@ static void vUndeadAbility(int tank)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Undead", sTankName);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Undead", sTankName);
 			}
 		}

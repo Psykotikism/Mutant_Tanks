@@ -652,6 +652,7 @@ static void vLagHit(int survivor, int tank, float chance, int enabled, int messa
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Lag", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Lag", sTankName, survivor);
 				}
 			}
@@ -708,6 +709,7 @@ static void vReset2(int survivor, int tank, int messages)
 
 	if (g_esCache[tank].g_iLagMessage & messages)
 	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Lag2", survivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Lag2", survivor);
 	}
 }

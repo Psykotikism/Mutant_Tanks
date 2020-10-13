@@ -381,6 +381,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		{
 			char sTankName[33];
 			MT_GetTankName(client, sTankName);
+			MT_PrintToChatAll("%s %t", MT_TAG2, "Ghost3", sTankName);
 			MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Ghost3", sTankName);
 		}
 
@@ -846,6 +847,7 @@ static void vGhostAbility(int tank, bool main)
 					{
 						static char sTankName[33];
 						MT_GetTankName(tank, sTankName);
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Ghost2", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Ghost2", sTankName);
 					}
 				}
@@ -906,6 +908,7 @@ static void vGhostHit(int survivor, int tank, float chance, int enabled, int mes
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Ghost", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Ghost", sTankName, survivor);
 				}
 			}

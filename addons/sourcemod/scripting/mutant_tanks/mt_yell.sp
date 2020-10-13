@@ -639,6 +639,7 @@ static void vReset2(int tank)
 	{
 		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Yell2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Yell2", sTankName);
 	}
 }
@@ -739,6 +740,7 @@ static void vYellAbility(int tank)
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Yell", sTankName);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Yell", sTankName);
 				}
 			}

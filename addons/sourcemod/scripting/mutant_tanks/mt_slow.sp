@@ -698,6 +698,7 @@ static void vSlowHit(int survivor, int tank, float chance, int enabled, int mess
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Slow", sTankName, survivor, g_esCache[tank].g_flSlowSpeed);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Slow", sTankName, survivor, g_esCache[tank].g_flSlowSpeed);
 				}
 			}
@@ -754,6 +755,7 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 	int iMessage = pack.ReadCell();
 	if (g_esCache[iTank].g_iSlowMessage & iMessage)
 	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Slow2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Slow2", iSurvivor);
 	}
 

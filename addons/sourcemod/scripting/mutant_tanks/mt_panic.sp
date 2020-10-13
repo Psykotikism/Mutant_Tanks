@@ -572,6 +572,7 @@ static void vPanicAbility(int tank)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Panic", sTankName);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Panic", sTankName);
 			}
 		}
@@ -659,6 +660,7 @@ public Action tTimerPanic(Handle timer, DataPack pack)
 	{
 		static char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Panic2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Panic2", sTankName);
 	}
 

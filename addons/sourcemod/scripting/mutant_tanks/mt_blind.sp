@@ -721,6 +721,7 @@ static void vBlindHit(int survivor, int tank, float chance, int enabled, int mes
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Blind", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Blind", sTankName, survivor);
 				}
 			}
@@ -844,6 +845,7 @@ public Action tTimerStopBlind(Handle timer, DataPack pack)
 	int iMessage = pack.ReadCell();
 	if (g_esCache[iTank].g_iBlindMessage & iMessage)
 	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Blind2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Blind2", iSurvivor);
 	}
 

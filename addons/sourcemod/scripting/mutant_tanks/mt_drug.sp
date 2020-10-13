@@ -722,6 +722,7 @@ static void vDrugHit(int survivor, int tank, float chance, int enabled, int mess
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Drug", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Drug", sTankName, survivor);
 				}
 			}
@@ -791,6 +792,7 @@ static void vReset2(int survivor, int tank, int messages)
 
 	if (g_esCache[tank].g_iDrugMessage & messages)
 	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Drug2", survivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Drug2", survivor);
 	}
 }

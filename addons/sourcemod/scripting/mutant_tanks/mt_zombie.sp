@@ -614,6 +614,7 @@ static void vZombieAbility(int tank)
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Zombie", sTankName);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Zombie", sTankName);
 			}
 		}
@@ -671,6 +672,7 @@ public Action tTimerZombie(Handle timer, DataPack pack)
 	{
 		static char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Zombie2", sTankName);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Zombie2", sTankName);
 	}
 

@@ -573,6 +573,7 @@ static void vKamikazeHit(int survivor, int tank, float chance, int enabled, int 
 			{
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Kamikaze", sTankName, survivor);
 				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Kamikaze", sTankName, survivor);
 			}
 		}

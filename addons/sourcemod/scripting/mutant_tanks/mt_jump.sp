@@ -800,6 +800,7 @@ static void vJumpAbility(int tank, bool main)
 					{
 						static char sTankName[33];
 						MT_GetTankName(tank, sTankName);
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Jump3", sTankName);
 						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Jump3", sTankName);
 					}
 				}
@@ -858,6 +859,7 @@ static void vJumpHit(int survivor, int tank, float chance, int enabled, int mess
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Jump", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Jump", sTankName, survivor);
 				}
 			}
@@ -912,6 +914,7 @@ static void vReset2(int survivor, int tank, int messages)
 
 	if (g_esCache[tank].g_iJumpMessage & messages)
 	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Jump2", survivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Jump2", survivor);
 	}
 }

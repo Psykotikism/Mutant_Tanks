@@ -673,6 +673,7 @@ static void vInvertHit(int survivor, int tank, float chance, int enabled, int me
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Invert", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Invert", sTankName, survivor);
 				}
 			}
@@ -759,6 +760,7 @@ public Action tTimerStopInvert(Handle timer, DataPack pack)
 	int iMessage = pack.ReadCell();
 	if (g_esCache[iTank].g_iInvertMessage & iMessage)
 	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Invert2", iSurvivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Invert2", iSurvivor);
 	}
 

@@ -653,6 +653,7 @@ static void vPimpHit(int survivor, int tank, float chance, int enabled, int mess
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Pimp", sTankName, survivor);
 					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Pimp", sTankName, survivor);
 				}
 			}
@@ -709,6 +710,7 @@ static void vReset2(int survivor, int tank, int messages)
 
 	if (g_esCache[tank].g_iPimpMessage & messages)
 	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Pimp2", survivor);
 		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Pimp2", survivor);
 	}
 }
