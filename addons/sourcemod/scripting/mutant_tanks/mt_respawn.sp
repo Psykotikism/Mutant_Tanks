@@ -377,13 +377,9 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			GetEntPropVector(iTank, Prop_Send, "m_vecOrigin", flPos);
 			GetEntPropVector(iTank, Prop_Send, "m_angRotation", flAngles);
 
-			int iFlags = GetEntProp(iTank, Prop_Send, "m_fFlags"), iSequence = GetEntProp(iTank, Prop_Data, "m_nSequence");
-
 			DataPack dpRespawn;
 			CreateDataTimer(0.4, tTimerRespawn, dpRespawn, TIMER_FLAG_NO_MAPCHANGE);
 			dpRespawn.WriteCell(GetClientUserId(iTank));
-			dpRespawn.WriteCell(iFlags);
-			dpRespawn.WriteCell(iSequence);
 			dpRespawn.WriteFloat(flPos[0]);
 			dpRespawn.WriteFloat(flPos[1]);
 			dpRespawn.WriteFloat(flPos[2]);
@@ -483,7 +479,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 
 	static int iTank;
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsPlayerIncapacitated(iTank) || !bIsCloneAllowed(iTank) || g_esCache[iTank].g_iRespawnAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank) || g_esCache[iTank].g_iRespawnAbility == 0)
 	{
 		g_esPlayer[iTank].g_iCount = 0;
 
@@ -497,10 +493,6 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 
 		return Plugin_Stop;
 	}
-
-	static int iFlags, iSequence;
-	iFlags = pack.ReadCell();
-	iSequence = pack.ReadCell();
 
 	static float flPos[3], flAngles[3];
 	flPos[0] = pack.ReadFloat();
@@ -563,8 +555,6 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 
 		if (bIsTank(iNewTank))
 		{
-			SetEntProp(iNewTank, Prop_Send, "m_fFlags", iFlags);
-			SetEntProp(iNewTank, Prop_Data, "m_nSequence", iSequence);
 			TeleportEntity(iNewTank, flPos, flAngles, NULL_VECTOR);
 
 			if (g_esCache[iTank].g_iRespawnMessage == 1)

@@ -177,6 +177,7 @@ enum struct esGeneral
 	ConVar g_cvMTPluginEnabled;
 
 	float g_flIdleCheck;
+	float g_flRegularDelay;
 	float g_flRegularInterval;
 
 	GlobalForward g_gfAbilityActivatedForward;
@@ -275,6 +276,8 @@ esAdmin g_esAdmin[MT_MAXTYPES + 1];
 enum struct esPlayer
 {
 	bool g_bAdminMenu;
+	bool g_bAttacked;
+	bool g_bAttackedAgain;
 	bool g_bBlood;
 	bool g_bBlur;
 	bool g_bBoss;
@@ -296,6 +299,8 @@ enum struct esPlayer
 	char g_sOriginalName[33];
 	char g_sTankName[33];
 
+	float g_flAttackDelay;
+	float g_flAttackInterval;
 	float g_flClawDamage;
 	float g_flPropsChance[7];
 	float g_flRandomInterval;
@@ -371,6 +376,7 @@ enum struct esTank
 	char g_sHealthCharacters[4];
 	char g_sTankName[33];
 
+	float g_flAttackInterval;
 	float g_flClawDamage;
 	float g_flPropsChance[7];
 	float g_flRandomInterval;
@@ -437,6 +443,7 @@ enum struct esCache
 	char g_sHealthCharacters[4];
 	char g_sTankName[33];
 
+	float g_flAttackInterval;
 	float g_flClawDamage;
 	float g_flPropsChance[7];
 	float g_flRandomInterval;
@@ -559,12 +566,12 @@ public any aNative_GetPropColors(Handle plugin, int numParams)
 		{
 			switch (iType)
 			{
-				case 1: iColor[iPos] = g_esCache[iTank].g_iSkinColor[iPos];
-				case 2: iColor[iPos] = g_esCache[iTank].g_iOzTankColor[iPos];
-				case 3: iColor[iPos] = g_esCache[iTank].g_iFlameColor[iPos];
-				case 4: iColor[iPos] = g_esCache[iTank].g_iRockColor[iPos];
-				case 5: iColor[iPos] = g_esCache[iTank].g_iTireColor[iPos];
-				case 6: iColor[iPos] = g_esCache[iTank].g_iPropTankColor[iPos];
+				case 1: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iSkinColor[iPos]);
+				case 2: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iOzTankColor[iPos]);
+				case 3: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iFlameColor[iPos]);
+				case 4: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iRockColor[iPos]);
+				case 5: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iTireColor[iPos]);
+				case 6: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iPropTankColor[iPos]);
 			}
 
 			SetNativeCellRef(iPos + 3, iColor[iPos]);
@@ -588,12 +595,12 @@ public any aNative_GetTankColors(Handle plugin, int numParams)
 		{
 			switch (iType)
 			{
-				case 1: iColor[iPos] = g_esCache[iTank].g_iSkinColor[iPos];
+				case 1: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iSkinColor[iPos]);
 				case 2:
 				{
 					if (iPos < sizeof(esCache::g_iGlowColor))
 					{
-						iColor[iPos] = g_esCache[iTank].g_iGlowColor[iPos];
+						iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iGlowColor[iPos]);
 					}
 				}
 			}
@@ -869,7 +876,6 @@ public void OnPluginStart()
 	g_esGeneral.g_alFilePaths = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 
 	char sDate[32];
-
 	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
 	BuildPath(Path_SM, g_esGeneral.g_sChatFile, sizeof(esGeneral::g_sChatFile), "logs/mutant_tanks_%s.log", sDate);
 
@@ -1516,7 +1522,6 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 
 public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
-	static char sKey[64], sValue[384];
 	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
 		if (g_esGeneral.g_iIgnoreLevel2)
@@ -1526,6 +1531,7 @@ public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] val
 
 		if (g_esGeneral.g_csState2 == ConfigState_Specific)
 		{
+			static char sKey[64], sValue[384];
 			FormatEx(sKey, sizeof(sKey), ((key_quotes) ? ("\"%s\"") : ("%s")), key);
 			FormatEx(sValue, sizeof(sValue), ((value_quotes) ? ("\"%s\"") : ("%s")), value);
 			MT_PrintToChat(g_esGeneral.g_iParserViewer, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
@@ -2750,6 +2756,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		return Plugin_Continue;
 	}
 
+	if ((buttons & IN_ATTACK) && !g_esPlayer[client].g_bAttackedAgain)
+	{
+		g_esPlayer[client].g_bAttackedAgain = true;
+	}
+
 	if (bIsTankAllowed(client, MT_CHECK_FAKECLIENT))
 	{
 		static int iButton;
@@ -2799,17 +2810,17 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 		if (bIsTankAllowed(attacker) && bHasCoreAdminAccess(attacker) && bIsSurvivor(victim) && !bIsCoreAdminImmune(victim, attacker))
 		{
-			if (StrEqual(sClassname, "weapon_tank_claw") && g_esCache[attacker].g_flClawDamage > 0.0)
+			if (StrEqual(sClassname, "weapon_tank_claw") && g_esCache[attacker].g_flClawDamage >= 0.0)
 			{
 				damage = g_esCache[attacker].g_flClawDamage;
 
-				return Plugin_Changed;
+				return g_esCache[attacker].g_flClawDamage > 0.0 ? Plugin_Changed : Plugin_Handled;
 			}
-			else if (StrEqual(sClassname, "tank_rock") && g_esCache[attacker].g_flRockDamage > 0.0)
+			else if (StrEqual(sClassname, "tank_rock") && g_esCache[attacker].g_flRockDamage >= 0.0)
 			{
 				damage = g_esCache[attacker].g_flRockDamage;
 
-				return Plugin_Changed;
+				return g_esCache[attacker].g_flRockDamage > 0.0 ? Plugin_Changed : Plugin_Handled;
 			}
 		}
 		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsCommonInfected(victim))
@@ -2855,6 +2866,7 @@ static void vCacheSettings(int tank)
 	vGetSettingValue(bAccess, true, g_esCache[tank].g_sHealthCharacters, sizeof(esCache::g_sHealthCharacters), g_esTank[iType].g_sHealthCharacters, g_esGeneral.g_sHealthCharacters);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sHealthCharacters, sizeof(esCache::g_sHealthCharacters), g_esPlayer[tank].g_sHealthCharacters, g_esCache[tank].g_sHealthCharacters);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sTankName, sizeof(esCache::g_sTankName), g_esPlayer[tank].g_sTankName, g_esTank[iType].g_sTankName);
+	g_esCache[tank].g_flAttackInterval = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flAttackInterval, g_esTank[iType].g_flAttackInterval, true);
 	g_esCache[tank].g_flClawDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flClawDamage, g_esTank[iType].g_flClawDamage, true);
 	g_esCache[tank].g_flRandomInterval = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRandomInterval, g_esTank[iType].g_flRandomInterval);
 	g_esCache[tank].g_flRockDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRockDamage, g_esTank[iType].g_flRockDamage, true);
@@ -3108,6 +3120,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iRenamePlayers = 0;
 		g_esGeneral.g_iSpawnMode = 1;
 		g_esGeneral.g_iRegularAmount = 0;
+		g_esGeneral.g_flRegularDelay = 10.0;
 		g_esGeneral.g_flRegularInterval = 300.0;
 		g_esGeneral.g_iRegularLimit = 999999;
 		g_esGeneral.g_iRegularMinType = 0;
@@ -3169,6 +3182,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iBodyEffects = 0;
 			g_esTank[iIndex].g_iRockEffects = 0;
 			g_esTank[iIndex].g_iRockModel = 2;
+			g_esTank[iIndex].g_flAttackInterval = -1.0;
 			g_esTank[iIndex].g_flClawDamage = -1.0;
 			g_esTank[iIndex].g_flRockDamage = -1.0;
 			g_esTank[iIndex].g_flRunSpeed = -1.0;
@@ -3245,6 +3259,7 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_iBodyEffects = 0;
 				g_esPlayer[iPlayer].g_iRockEffects = 0;
 				g_esPlayer[iPlayer].g_iRockModel = 0;
+				g_esPlayer[iPlayer].g_flAttackInterval = -1.0;
 				g_esPlayer[iPlayer].g_flClawDamage = -1.0;
 				g_esPlayer[iPlayer].g_flRockDamage = -1.0;
 				g_esPlayer[iPlayer].g_flRunSpeed = -1.0;
@@ -3389,7 +3404,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 	if (g_esGeneral.g_csState == ConfigState_Specific && value[0] != '\0')
 	{
-		static char sRange[10][10], sValue[50], sSet[10][6], sTankName[7][33];
 		if (g_esGeneral.g_iConfigMode < 3 && (StrEqual(g_esGeneral.g_sCurrentSection, "PluginSettings", false) || StrEqual(g_esGeneral.g_sCurrentSection, "Plugin Settings", false) || StrEqual(g_esGeneral.g_sCurrentSection, "Plugin_Settings", false) || StrEqual(g_esGeneral.g_sCurrentSection, "settings", false)))
 		{
 			g_esGeneral.g_iPluginEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "PluginEnabled", "Plugin Enabled", "Plugin_Enabled", "enabled", g_esGeneral.g_iPluginEnabled, value, 0, 1);
@@ -3412,6 +3426,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esGeneral.g_iRenamePlayers, value, 0, 1);
 			g_esGeneral.g_iSpawnMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "spawnmode", g_esGeneral.g_iSpawnMode, value, 0, 1);
 			g_esGeneral.g_iRegularAmount = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularAmount", "Regular Amount", "Regular_Amount", "regamount", g_esGeneral.g_iRegularAmount, value, 0, 32);
+			g_esGeneral.g_flRegularDelay = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularDelay", "Regular Delay", "Regular_Delay", "regdelay", g_esGeneral.g_flRegularDelay, value, 0.1, 999999.0);
 			g_esGeneral.g_flRegularInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularInterval", "Regular Interval", "Regular_Interval", "reginterval", g_esGeneral.g_flRegularInterval, value, 0.1, 999999.0);
 			g_esGeneral.g_iRegularLimit = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularLimit", "Regular Limit", "Regular_Limit", "reglimit", g_esGeneral.g_iRegularLimit, value, 0, 999999);
 			g_esGeneral.g_iRegularMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularMode", "Regular Mode", "Regular_Mode", "regmode", g_esGeneral.g_iRegularMode, value, 0, 1);
@@ -3422,8 +3437,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			{
 				if (StrEqual(key, "TypeRange", false) || StrEqual(key, "Type Range", false) || StrEqual(key, "Type_Range", false) || StrEqual(key, "types", false))
 				{
+					static char sValue[10];
 					strcopy(sValue, sizeof(sValue), value);
 					ReplaceString(sValue, sizeof(sValue), " ", "");
+
+					static char sRange[2][5];
 					ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
 					g_esGeneral.g_iMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 1, MT_MAXTYPES) : g_esGeneral.g_iMinType;
@@ -3454,8 +3472,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			{
 				if (StrEqual(key, "RegularType", false) || StrEqual(key, "Regular Type", false) || StrEqual(key, "Regular_Type", false) || StrEqual(key, "regtype", false))
 				{
+					static char sValue[10];
 					strcopy(sValue, sizeof(sValue), value);
 					ReplaceString(sValue, sizeof(sValue), " ", "");
+
+					static char sRange[2][5];
 					ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
 					g_esGeneral.g_iRegularMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, g_esGeneral.g_iMaxType) : g_esGeneral.g_iRegularMinType;
@@ -3463,8 +3484,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				}
 				else if (StrEqual(key, "FinaleTypes", false) || StrEqual(key, "Finale Types", false) || StrEqual(key, "Finale_Types", false) || StrEqual(key, "fintypes", false))
 				{
+					static char sValue[100];
 					strcopy(sValue, sizeof(sValue), value);
 					ReplaceString(sValue, sizeof(sValue), " ", "");
+
+					static char sRange[10][10];
 					ExplodeString(sValue, ",", sRange, sizeof(sRange), sizeof(sRange[]));
 
 					for (int iPos = 0; iPos < sizeof(sRange); iPos++)
@@ -3474,6 +3498,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							continue;
 						}
 
+						static char sSet[2][5];
 						ExplodeString(sRange[iPos], "-", sSet, sizeof(sSet), sizeof(sSet[]));
 
 						g_esGeneral.g_iFinaleMinTypes[iPos] = (sSet[0][0] != '\0') ? iClamp(StringToInt(sSet[0]), 0, g_esGeneral.g_iMaxType) : g_esGeneral.g_iFinaleMinTypes[iPos];
@@ -3482,8 +3507,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				}
 				else if (StrEqual(key, "FinaleWaves", false) || StrEqual(key, "Finale Waves", false) || StrEqual(key, "Finale_Waves", false) || StrEqual(key, "finwaves", false))
 				{
+					static char sValue[30];
 					strcopy(sValue, sizeof(sValue), value);
 					ReplaceString(sValue, sizeof(sValue), " ", "");
+
+					static char sSet[10][3];
 					ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 					for (int iPos = 0; iPos < sizeof(esGeneral::g_iFinaleWave); iPos++)
@@ -3524,6 +3552,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 		}
 		else if (g_esGeneral.g_iConfigMode < 3 && (StrContains(g_esGeneral.g_sCurrentSection, "Tank#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSection, "Tank #", false) == 0 || StrContains(g_esGeneral.g_sCurrentSection, "Tank_#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrEqual(g_esGeneral.g_sCurrentSection, "all", false) || StrContains(g_esGeneral.g_sCurrentSection, ",") != -1 || StrContains(g_esGeneral.g_sCurrentSection, "-") != -1))
 		{
+			static char sTankName[7][33];
 			for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 			{
 				FormatEx(sTankName[0], sizeof(sTankName[]), "Tank#%i", iIndex);
@@ -3577,14 +3606,15 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iPropsAttached = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esTank[iIndex].g_iPropsAttached, value, 0, 127);
 						g_esTank[iIndex].g_iBodyEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_esTank[iIndex].g_iBodyEffects, value, 0, 127);
 						g_esTank[iIndex].g_iRockEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esTank[iIndex].g_iRockEffects, value, 0, 15);
+						g_esTank[iIndex].g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esTank[iIndex].g_flAttackInterval, value, -1.0, 999999.0);
 						g_esTank[iIndex].g_flClawDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esTank[iIndex].g_flClawDamage, value, -1.0, 999999.0);
 						g_esTank[iIndex].g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esTank[iIndex].g_flRockDamage, value, -1.0, 999999.0);
 						g_esTank[iIndex].g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTank[iIndex].g_flRunSpeed, value, -1.0, 3.0);
 						g_esTank[iIndex].g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esTank[iIndex].g_flThrowInterval, value, -1.0, 999999.0);
-						g_esTank[iIndex].g_iBulletImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esTank[iIndex].g_iBulletImmunity, value, 0, 1);
-						g_esTank[iIndex].g_iExplosiveImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esTank[iIndex].g_iExplosiveImmunity, value, 0, 1);
-						g_esTank[iIndex].g_iFireImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_esTank[iIndex].g_iFireImmunity, value, 0, 1);
-						g_esTank[iIndex].g_iMeleeImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_esTank[iIndex].g_iMeleeImmunity, value, 0, 1);
+						g_esTank[iIndex].g_iBulletImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "immune", key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esTank[iIndex].g_iBulletImmunity, value, 0, 1);
+						g_esTank[iIndex].g_iExplosiveImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "immune", key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esTank[iIndex].g_iExplosiveImmunity, value, 0, 1);
+						g_esTank[iIndex].g_iFireImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "immune", key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_esTank[iIndex].g_iFireImmunity, value, 0, 1);
+						g_esTank[iIndex].g_iMeleeImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "immune", key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_esTank[iIndex].g_iMeleeImmunity, value, 0, 1);
 
 						if (StrEqual(g_esGeneral.g_sCurrentSubSection, "General", false))
 						{
@@ -3594,30 +3624,39 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							}
 							else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 							{
+								static char sValue[16];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
+
+								static char sSet[4][4];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 								for (int iPos = 0; iPos < sizeof(esTank::g_iSkinColor); iPos++)
 								{
-									g_esTank[iIndex].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+									g_esTank[iIndex].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 								}
 							}
 							else if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
 							{
+								static char sValue[12];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
+
+								static char sSet[3][4];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 								for (int iPos = 0; iPos < sizeof(esTank::g_iGlowColor); iPos++)
 								{
-									g_esTank[iIndex].g_iGlowColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+									g_esTank[iIndex].g_iGlowColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 								}
 							}
 							else if (StrEqual(key, "GlowRange", false) || StrEqual(key, "Glow Range", false) || StrEqual(key, "Glow_Range", false))
 							{
+								static char sValue[50];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
+
+								static char sRange[2][7];
 								ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
 								g_esTank[iIndex].g_iGlowMinRange = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, 999999) : g_esTank[iIndex].g_iGlowMinRange;
@@ -3646,8 +3685,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						{
 							if (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false))
 							{
+								static char sValue[50];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
+
+								static char sSet[10][5];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 								for (int iPos = 0; iPos < sizeof(esTank::g_iTransformType); iPos++)
@@ -3657,8 +3699,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							}
 							else
 							{
+								static char sValue[24];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
+
+								static char sSet[4][6];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 								for (int iPos = 0; iPos < sizeof(esTank::g_iBossHealth); iPos++)
@@ -3678,8 +3723,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						{
 							if (StrEqual(key, "PropsChance", false) || StrEqual(key, "Props Chance", false) || StrEqual(key, "Props_Chance", false) || StrEqual(key, "chance", false))
 							{
+								static char sValue[42];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
+
+								static char sSet[7][6];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 								for (int iPos = 0; iPos < sizeof(esTank::g_flPropsChance); iPos++)
@@ -3689,35 +3737,38 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							}
 							else
 							{
+								static char sValue[16];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
+
+								static char sSet[4][4];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 								for (int iPos = 0; iPos < sizeof(esTank::g_iLightColor); iPos++)
 								{
 									if (StrEqual(key, "LightColor", false) || StrEqual(key, "Light Color", false) || StrEqual(key, "Light_Color", false) || StrEqual(key, "light", false))
 									{
-										g_esTank[iIndex].g_iLightColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										g_esTank[iIndex].g_iLightColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 									}
 									else if (StrEqual(key, "OxygenTankColor", false) || StrEqual(key, "Oxygen Tank Color", false) || StrEqual(key, "Oxygen_Tank_Color", false) || StrEqual(key, "oxygen", false))
 									{
-										g_esTank[iIndex].g_iOzTankColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										g_esTank[iIndex].g_iOzTankColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 									}
 									else if (StrEqual(key, "FlameColor", false) || StrEqual(key, "Flame Color", false) || StrEqual(key, "Flame_Color", false) || StrEqual(key, "flame", false))
 									{
-										g_esTank[iIndex].g_iFlameColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										g_esTank[iIndex].g_iFlameColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 									}
 									else if (StrEqual(key, "RockColor", false) || StrEqual(key, "Rock Color", false) || StrEqual(key, "Rock_Color", false) || StrEqual(key, "rock", false))
 									{
-										g_esTank[iIndex].g_iRockColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										g_esTank[iIndex].g_iRockColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 									}
 									else if (StrEqual(key, "TireColor", false) || StrEqual(key, "Tire Color", false) || StrEqual(key, "Tire_Color", false) || StrEqual(key, "tire", false))
 									{
-										g_esTank[iIndex].g_iTireColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										g_esTank[iIndex].g_iTireColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 									}
 									else if (StrEqual(key, "PropaneTankColor", false) || StrEqual(key, "Propane Tank Color", false) || StrEqual(key, "Propane_Tank_Color", false) || StrEqual(key, "propane", false))
 									{
-										g_esTank[iIndex].g_iPropTankColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										g_esTank[iIndex].g_iPropTankColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 									}
 								}
 							}
@@ -3775,14 +3826,15 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_iPropsAttached = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esPlayer[iPlayer].g_iPropsAttached, value, 0, 127);
 							g_esPlayer[iPlayer].g_iBodyEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_esPlayer[iPlayer].g_iBodyEffects, value, 0, 127);
 							g_esPlayer[iPlayer].g_iRockEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esPlayer[iPlayer].g_iRockEffects, value, 0, 15);
+							g_esPlayer[iPlayer].g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esPlayer[iPlayer].g_flAttackInterval, value, -1.0, 999999.0);
 							g_esPlayer[iPlayer].g_flClawDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esPlayer[iPlayer].g_flClawDamage, value, -1.0, 999999.0);
 							g_esPlayer[iPlayer].g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esPlayer[iPlayer].g_flRockDamage, value, -1.0, 999999.0);
 							g_esPlayer[iPlayer].g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esPlayer[iPlayer].g_flRunSpeed, value, -1.0, 3.0);
 							g_esPlayer[iPlayer].g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esPlayer[iPlayer].g_flThrowInterval, value, -1.0, 999999.0);
-							g_esPlayer[iPlayer].g_iBulletImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esPlayer[iPlayer].g_iBulletImmunity, value, 0, 1);
-							g_esPlayer[iPlayer].g_iExplosiveImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esPlayer[iPlayer].g_iExplosiveImmunity, value, 0, 1);
-							g_esPlayer[iPlayer].g_iFireImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_esPlayer[iPlayer].g_iFireImmunity, value, 0, 1);
-							g_esPlayer[iPlayer].g_iMeleeImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "Immunities", key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_esPlayer[iPlayer].g_iMeleeImmunity, value, 0, 1);
+							g_esPlayer[iPlayer].g_iBulletImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "immune", key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esPlayer[iPlayer].g_iBulletImmunity, value, 0, 1);
+							g_esPlayer[iPlayer].g_iExplosiveImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "immune", key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esPlayer[iPlayer].g_iExplosiveImmunity, value, 0, 1);
+							g_esPlayer[iPlayer].g_iFireImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "immune", key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_esPlayer[iPlayer].g_iFireImmunity, value, 0, 1);
+							g_esPlayer[iPlayer].g_iMeleeImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Immunities", "Immunities", "Immunities", "immune", key, "MeleeImmunity", "Melee Immunity", "Melee_Immunity", "melee", g_esPlayer[iPlayer].g_iMeleeImmunity, value, 0, 1);
 							g_esPlayer[iPlayer].g_iFavoriteType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Administration", "Administration", "Administration", "admin", key, "FavoriteType", "Favorite Type", "Favorite_Type", "favorite", g_esPlayer[iPlayer].g_iFavoriteType, value, 0, g_esGeneral.g_iMaxType);
 
 							if (StrEqual(g_esGeneral.g_sCurrentSubSection, "General", false))
@@ -3793,30 +3845,39 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 								{
+									static char sValue[16];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
+
+									static char sSet[4][4];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_iSkinColor); iPos++)
 									{
-										g_esPlayer[iPlayer].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										g_esPlayer[iPlayer].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 									}
 								}
 								else if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
 								{
+									static char sValue[12];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
+
+									static char sSet[3][4];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_iGlowColor); iPos++)
 									{
-										g_esPlayer[iPlayer].g_iGlowColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+										g_esPlayer[iPlayer].g_iGlowColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 									}
 								}
 								else if (StrEqual(key, "GlowRange", false) || StrEqual(key, "Glow Range", false) || StrEqual(key, "Glow_Range", false))
 								{
+									static char sValue[14];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
+
+									static char sRange[2][7];
 									ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
 									g_esPlayer[iPlayer].g_iGlowMinRange = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, 999999) : g_esPlayer[iPlayer].g_iGlowMinRange;
@@ -3845,8 +3906,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false))
 								{
+									static char sValue[50];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
+
+									static char sSet[10][5];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_iTransformType); iPos++)
@@ -3856,8 +3920,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else
 								{
+									static char sValue[24];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
+
+									static char sSet[4][6];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_iBossHealth); iPos++)
@@ -3877,8 +3944,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "PropsChance", false) || StrEqual(key, "Props Chance", false) || StrEqual(key, "Props_Chance", false) || StrEqual(key, "chance", false))
 								{
+									static char sValue[42];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
+
+									static char sSet[7][6];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_flPropsChance); iPos++)
@@ -3888,41 +3958,45 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else
 								{
+									static char sValue[16];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
+
+									static char sSet[4][4];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_iLightColor); iPos++)
 									{
 										if (StrEqual(key, "LightColor", false) || StrEqual(key, "Light Color", false) || StrEqual(key, "Light_Color", false) || StrEqual(key, "light", false))
 										{
-											g_esPlayer[iPlayer].g_iLightColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+											g_esPlayer[iPlayer].g_iLightColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 										}
 										else if (StrEqual(key, "OxygenTankColor", false) || StrEqual(key, "Oxygen Tank Color", false) || StrEqual(key, "Oxygen_Tank_Color", false) || StrEqual(key, "oxygen", false))
 										{
-											g_esPlayer[iPlayer].g_iOzTankColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+											g_esPlayer[iPlayer].g_iOzTankColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 										}
 										else if (StrEqual(key, "FlameColor", false) || StrEqual(key, "Flame Color", false) || StrEqual(key, "Flame_Color", false) || StrEqual(key, "flame", false))
 										{
-											g_esPlayer[iPlayer].g_iFlameColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+											g_esPlayer[iPlayer].g_iFlameColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 										}
 										else if (StrEqual(key, "RockColor", false) || StrEqual(key, "Rock Color", false) || StrEqual(key, "Rock_Color", false) || StrEqual(key, "rock", false))
 										{
-											g_esPlayer[iPlayer].g_iRockColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+											g_esPlayer[iPlayer].g_iRockColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 										}
 										else if (StrEqual(key, "TireColor", false) || StrEqual(key, "Tire Color", false) || StrEqual(key, "Tire_Color", false) || StrEqual(key, "tire", false))
 										{
-											g_esPlayer[iPlayer].g_iTireColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+											g_esPlayer[iPlayer].g_iTireColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 										}
 										else if (StrEqual(key, "PropaneTankColor", false) || StrEqual(key, "Propane Tank Color", false) || StrEqual(key, "Propane_Tank_Color", false) || StrEqual(key, "propane", false))
 										{
-											g_esPlayer[iPlayer].g_iPropTankColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+											g_esPlayer[iPlayer].g_iPropTankColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 										}
 									}
 								}
 							}
 							else if (StrContains(g_esGeneral.g_sCurrentSubSection, "Tank#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank #", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank_#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSubSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) || StrEqual(g_esGeneral.g_sCurrentSubSection, "all", false) || StrContains(g_esGeneral.g_sCurrentSubSection, ",") != -1 || StrContains(g_esGeneral.g_sCurrentSubSection, "-") != -1)
 							{
+								static char sTankName[7][33];
 								for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 								{
 									FormatEx(sTankName[0], sizeof(sTankName[]), "Tank#%i", iIndex);
@@ -4185,7 +4259,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				if (bIsValidGame() && !bIsPlayerIncapacitated(iTank))
 				{
-					SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(g_esCache[iTank].g_iGlowColor[0], g_esCache[iTank].g_iGlowColor[1], g_esCache[iTank].g_iGlowColor[2]));
+					SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGetRandomColor(g_esCache[iTank].g_iGlowColor[0]), iGetRandomColor(g_esCache[iTank].g_iGlowColor[1]), iGetRandomColor(g_esCache[iTank].g_iGlowColor[2])));
 					SetEntProp(iTank, Prop_Send, "m_bFlashing", g_esCache[iTank].g_iGlowFlashing);
 					SetEntProp(iTank, Prop_Send, "m_nGlowRangeMin", g_esCache[iTank].g_iGlowMinRange);
 					SetEntProp(iTank, Prop_Send, "m_nGlowRange", g_esCache[iTank].g_iGlowMaxRange);
@@ -4234,6 +4308,36 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						}
 					}
 					default: vMutateTank(iTank);
+				}
+			}
+		}
+		else if (StrEqual(name, "weapon_fire"))
+		{
+			static int iTankId, iTank;
+			iTankId = event.GetInt("userid");
+			iTank = GetClientOfUserId(iTankId);
+			if (bIsTankAllowed(iTank) && g_esCache[iTank].g_flAttackInterval > 0.0)
+			{
+				static char sWeapon[32];
+				event.GetString("weapon", sWeapon, sizeof(sWeapon));
+				if (StrEqual(sWeapon, "tank_claw"))
+				{
+					if (!g_esPlayer[iTank].g_bAttacked)
+					{
+						g_esPlayer[iTank].g_bAttacked = true;
+
+						vAttackInterval(iTank);
+					}
+					else if (g_esPlayer[iTank].g_flAttackDelay == -1.0 && g_esPlayer[iTank].g_bAttackedAgain)
+					{
+						CreateTimer(g_esCache[iTank].g_flAttackInterval, tTimerResetDelay, iTankId, TIMER_FLAG_NO_MAPCHANGE);
+
+						vAttackInterval(iTank);
+					}
+					else if (g_esPlayer[iTank].g_flAttackDelay < GetGameTime())
+					{
+						g_esPlayer[iTank].g_flAttackDelay = -1.0;
+					}
 				}
 			}
 		}
@@ -4321,6 +4425,7 @@ static void vHookEvents(bool hook)
 		HookEvent("player_spawn", vEventHandler);
 		HookEvent("player_now_it", vEventHandler);
 		HookEvent("player_no_longer_it", vEventHandler);
+		HookEvent("weapon_fire", vEventHandler);
 
 		if (bIsValidGame())
 		{
@@ -4352,6 +4457,7 @@ static void vHookEvents(bool hook)
 		UnhookEvent("player_spawn", vEventHandler);
 		UnhookEvent("player_now_it", vEventHandler);
 		UnhookEvent("player_no_longer_it", vEventHandler);
+		UnhookEvent("weapon_fire", vEventHandler);
 
 		if (bIsValidGame())
 		{
@@ -4654,6 +4760,7 @@ static void vReset2(int tank, int mode = 1)
 
 static void vReset3(int tank)
 {
+	g_esPlayer[tank].g_bAttackedAgain = false;
 	g_esPlayer[tank].g_bBlood = false;
 	g_esPlayer[tank].g_bBlur = false;
 	g_esPlayer[tank].g_bElectric = false;
@@ -4664,6 +4771,7 @@ static void vReset3(int tank)
 	g_esPlayer[tank].g_bNeedHealth = false;
 	g_esPlayer[tank].g_bSmoke = false;
 	g_esPlayer[tank].g_bSpit = false;
+	g_esPlayer[tank].g_flAttackDelay = -1.0;
 	g_esPlayer[tank].g_iBossStageCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iTankType = 0;
@@ -4672,6 +4780,7 @@ static void vReset3(int tank)
 static void vResetCore(int client)
 {
 	g_esPlayer[client].g_bAdminMenu = false;
+	g_esPlayer[client].g_bAttacked = false;
 	g_esPlayer[client].g_bDied = false;
 	g_esPlayer[client].g_bDying = false;
 	g_esPlayer[client].g_bThirdPerson = false;
@@ -4723,10 +4832,20 @@ static void vKillRegularWavesTimer()
 	}
 }
 
-static void vResetTimers()
+static void vResetTimers(bool delay = false)
 {
-	vKillRegularWavesTimer();
-	g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, _, TIMER_REPEAT);
+	switch (delay)
+	{
+		case true: CreateTimer(g_esGeneral.g_flRegularDelay, tTimerDelayRegularWaves, _, TIMER_FLAG_NO_MAPCHANGE);
+		case false:
+		{
+			if (L4D_HasAnySurvivorLeftSafeArea())
+			{
+				vKillRegularWavesTimer();
+				g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, _, TIMER_REPEAT);
+			}
+		}
+	}
 
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
@@ -4790,11 +4909,11 @@ static void vSetColor(int tank, int type = 0)
 	vCacheSettings(tank);
 
 	SetEntityRenderMode(tank, RENDER_NORMAL);
-	SetEntityRenderColor(tank, g_esCache[tank].g_iSkinColor[0], g_esCache[tank].g_iSkinColor[1], g_esCache[tank].g_iSkinColor[2], g_esCache[tank].g_iSkinColor[3]);
+	SetEntityRenderColor(tank, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
 
 	if (bIsValidGame() && g_esCache[tank].g_iGlowEnabled == 1)
 	{
-		SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(g_esCache[tank].g_iGlowColor[0], g_esCache[tank].g_iGlowColor[1], g_esCache[tank].g_iGlowColor[2]));
+		SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGetRandomColor(g_esCache[tank].g_iGlowColor[0]), iGetRandomColor(g_esCache[tank].g_iGlowColor[1]), iGetRandomColor(g_esCache[tank].g_iGlowColor[2])));
 		SetEntProp(tank, Prop_Send, "m_bFlashing", g_esCache[tank].g_iGlowFlashing);
 		SetEntProp(tank, Prop_Send, "m_nGlowRangeMin", g_esCache[tank].g_iGlowMinRange);
 		SetEntProp(tank, Prop_Send, "m_nGlowRange", g_esCache[tank].g_iGlowMaxRange);
@@ -4920,7 +5039,7 @@ static void vSetProps(int tank)
 				if (bIsValidEntity(g_esPlayer[tank].g_iOzTank[iOzTank]))
 				{
 					SetEntityModel(g_esPlayer[tank].g_iOzTank[iOzTank], MODEL_JETPACK);
-					SetEntityRenderColor(g_esPlayer[tank].g_iOzTank[iOzTank], g_esCache[tank].g_iOzTankColor[0], g_esCache[tank].g_iOzTankColor[1], g_esCache[tank].g_iOzTankColor[2], g_esCache[tank].g_iOzTankColor[3]);
+					SetEntityRenderColor(g_esPlayer[tank].g_iOzTank[iOzTank], iGetRandomColor(g_esCache[tank].g_iOzTankColor[0]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[1]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[2]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[3]));
 
 					vSetEntityParent(g_esPlayer[tank].g_iOzTank[iOzTank], tank, true);
 
@@ -4962,7 +5081,7 @@ static void vSetProps(int tank)
 						g_esPlayer[tank].g_iFlame[iOzTank] = CreateEntityByName("env_steam");
 						if (bIsValidEntity(g_esPlayer[tank].g_iFlame[iOzTank]))
 						{
-							SetEntityRenderColor(g_esPlayer[tank].g_iFlame[iOzTank], g_esCache[tank].g_iFlameColor[0], g_esCache[tank].g_iFlameColor[1], g_esCache[tank].g_iFlameColor[2], g_esCache[tank].g_iFlameColor[3]);
+							SetEntityRenderColor(g_esPlayer[tank].g_iFlame[iOzTank], iGetRandomColor(g_esCache[tank].g_iFlameColor[0]), iGetRandomColor(g_esCache[tank].g_iFlameColor[1]), iGetRandomColor(g_esCache[tank].g_iFlameColor[2]), iGetRandomColor(g_esCache[tank].g_iFlameColor[3]));
 
 							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "spawnflags", "1");
 							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Type", "0");
@@ -4996,7 +5115,7 @@ static void vSetProps(int tank)
 				g_esPlayer[tank].g_iOzTank[iOzTank] = EntRefToEntIndex(g_esPlayer[tank].g_iOzTank[iOzTank]);
 				if (g_esCache[tank].g_iPropsAttached & MT_PROP_OXYGENTANK)
 				{
-					SetEntityRenderColor(g_esPlayer[tank].g_iOzTank[iOzTank], g_esCache[tank].g_iOzTankColor[0], g_esCache[tank].g_iOzTankColor[1], g_esCache[tank].g_iOzTankColor[2], g_esCache[tank].g_iOzTankColor[3]);
+					SetEntityRenderColor(g_esPlayer[tank].g_iOzTank[iOzTank], iGetRandomColor(g_esCache[tank].g_iOzTankColor[0]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[1]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[2]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[3]));
 				}
 				else
 				{
@@ -5014,7 +5133,7 @@ static void vSetProps(int tank)
 					g_esPlayer[tank].g_iFlame[iOzTank] = EntRefToEntIndex(g_esPlayer[tank].g_iFlame[iOzTank]);
 					if (g_esCache[tank].g_iPropsAttached & MT_PROP_FLAME)
 					{
-						SetEntityRenderColor(g_esPlayer[tank].g_iFlame[iOzTank], g_esCache[tank].g_iFlameColor[0], g_esCache[tank].g_iFlameColor[1], g_esCache[tank].g_iFlameColor[2], g_esCache[tank].g_iFlameColor[3]);
+						SetEntityRenderColor(g_esPlayer[tank].g_iFlame[iOzTank], iGetRandomColor(g_esCache[tank].g_iFlameColor[0]), iGetRandomColor(g_esCache[tank].g_iFlameColor[1]), iGetRandomColor(g_esCache[tank].g_iFlameColor[2]), iGetRandomColor(g_esCache[tank].g_iFlameColor[3]));
 					}
 					else
 					{
@@ -5040,7 +5159,7 @@ static void vSetProps(int tank)
 				g_esPlayer[tank].g_iRock[iRock] = CreateEntityByName("prop_dynamic_override");
 				if (bIsValidEntity(g_esPlayer[tank].g_iRock[iRock]))
 				{
-					SetEntityRenderColor(g_esPlayer[tank].g_iRock[iRock], g_esCache[tank].g_iRockColor[0], g_esCache[tank].g_iRockColor[1], g_esCache[tank].g_iRockColor[2], g_esCache[tank].g_iRockColor[3]);
+					SetEntityRenderColor(g_esPlayer[tank].g_iRock[iRock], iGetRandomColor(g_esCache[tank].g_iRockColor[0]), iGetRandomColor(g_esCache[tank].g_iRockColor[1]), iGetRandomColor(g_esCache[tank].g_iRockColor[2]), iGetRandomColor(g_esCache[tank].g_iRockColor[3]));
 					vSetRockModel(tank, g_esPlayer[tank].g_iRock[iRock]);
 
 					DispatchKeyValueVector(g_esPlayer[tank].g_iRock[iRock], "origin", flOrigin);
@@ -5084,7 +5203,7 @@ static void vSetProps(int tank)
 				g_esPlayer[tank].g_iRock[iRock] = EntRefToEntIndex(g_esPlayer[tank].g_iRock[iRock]);
 				if (g_esCache[tank].g_iPropsAttached & MT_PROP_ROCK)
 				{
-					SetEntityRenderColor(g_esPlayer[tank].g_iRock[iRock], g_esCache[tank].g_iRockColor[0], g_esCache[tank].g_iRockColor[1], g_esCache[tank].g_iRockColor[2], g_esCache[tank].g_iRockColor[3]);
+					SetEntityRenderColor(g_esPlayer[tank].g_iRock[iRock], iGetRandomColor(g_esCache[tank].g_iRockColor[0]), iGetRandomColor(g_esCache[tank].g_iRockColor[1]), iGetRandomColor(g_esCache[tank].g_iRockColor[2]), iGetRandomColor(g_esCache[tank].g_iRockColor[3]));
 					vSetRockModel(tank, g_esPlayer[tank].g_iRock[iRock]);
 				}
 				else
@@ -5112,7 +5231,7 @@ static void vSetProps(int tank)
 				if (bIsValidEntity(g_esPlayer[tank].g_iTire[iTire]))
 				{
 					SetEntityModel(g_esPlayer[tank].g_iTire[iTire], MODEL_TIRES);
-					SetEntityRenderColor(g_esPlayer[tank].g_iTire[iTire], g_esCache[tank].g_iTireColor[0], g_esCache[tank].g_iTireColor[1], g_esCache[tank].g_iTireColor[2], g_esCache[tank].g_iTireColor[3]);
+					SetEntityRenderColor(g_esPlayer[tank].g_iTire[iTire], iGetRandomColor(g_esCache[tank].g_iTireColor[0]), iGetRandomColor(g_esCache[tank].g_iTireColor[1]), iGetRandomColor(g_esCache[tank].g_iTireColor[2]), iGetRandomColor(g_esCache[tank].g_iTireColor[3]));
 
 					DispatchKeyValueVector(g_esPlayer[tank].g_iTire[iTire], "origin", flOrigin);
 					DispatchKeyValueVector(g_esPlayer[tank].g_iTire[iTire], "angles", flAngles);
@@ -5145,7 +5264,7 @@ static void vSetProps(int tank)
 				g_esPlayer[tank].g_iTire[iTire] = EntRefToEntIndex(g_esPlayer[tank].g_iTire[iTire]);
 				if (g_esCache[tank].g_iPropsAttached & MT_PROP_TIRE)
 				{
-					SetEntityRenderColor(g_esPlayer[tank].g_iTire[iTire], g_esCache[tank].g_iTireColor[0], g_esCache[tank].g_iTireColor[1], g_esCache[tank].g_iTireColor[2], g_esCache[tank].g_iTireColor[3]);
+					SetEntityRenderColor(g_esPlayer[tank].g_iTire[iTire], iGetRandomColor(g_esCache[tank].g_iTireColor[0]), iGetRandomColor(g_esCache[tank].g_iTireColor[1]), iGetRandomColor(g_esCache[tank].g_iTireColor[2]), iGetRandomColor(g_esCache[tank].g_iTireColor[3]));
 				}
 				else
 				{
@@ -5169,7 +5288,7 @@ static void vSetProps(int tank)
 			if (bIsValidEntity(g_esPlayer[tank].g_iPropaneTank))
 			{
 				SetEntityModel(g_esPlayer[tank].g_iPropaneTank, MODEL_PROPANETANK);
-				SetEntityRenderColor(g_esPlayer[tank].g_iPropaneTank, g_esCache[tank].g_iPropTankColor[0], g_esCache[tank].g_iPropTankColor[1], g_esCache[tank].g_iPropTankColor[2], g_esCache[tank].g_iPropTankColor[3]);
+				SetEntityRenderColor(g_esPlayer[tank].g_iPropaneTank, iGetRandomColor(g_esCache[tank].g_iPropTankColor[0]), iGetRandomColor(g_esCache[tank].g_iPropTankColor[1]), iGetRandomColor(g_esCache[tank].g_iPropTankColor[2]), iGetRandomColor(g_esCache[tank].g_iPropTankColor[3]));
 
 				DispatchKeyValueVector(g_esPlayer[tank].g_iPropaneTank, "origin", flOrigin);
 				DispatchKeyValueVector(g_esPlayer[tank].g_iPropaneTank, "angles", flAngles);
@@ -5199,7 +5318,7 @@ static void vSetProps(int tank)
 			g_esPlayer[tank].g_iPropaneTank = EntRefToEntIndex(g_esPlayer[tank].g_iPropaneTank);
 			if (g_esCache[tank].g_iPropsAttached & MT_PROP_PROPANETANK)
 			{
-				SetEntityRenderColor(g_esPlayer[tank].g_iPropaneTank, g_esCache[tank].g_iPropTankColor[0], g_esCache[tank].g_iPropTankColor[1], g_esCache[tank].g_iPropTankColor[2], g_esCache[tank].g_iPropTankColor[3]);
+				SetEntityRenderColor(g_esPlayer[tank].g_iPropaneTank, iGetRandomColor(g_esCache[tank].g_iPropTankColor[0]), iGetRandomColor(g_esCache[tank].g_iPropTankColor[1]), iGetRandomColor(g_esCache[tank].g_iPropTankColor[2]), iGetRandomColor(g_esCache[tank].g_iPropTankColor[3]));
 			}
 			else
 			{
@@ -5249,7 +5368,7 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spotlightlength", "60");
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spawnflags", "3");
 
-		SetEntityRenderColor(g_esPlayer[tank].g_iLight[light], g_esCache[tank].g_iLightColor[0], g_esCache[tank].g_iLightColor[1], g_esCache[tank].g_iLightColor[2], g_esCache[tank].g_iLightColor[3]);
+		SetEntityRenderColor(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iLightColor[0]), iGetRandomColor(g_esCache[tank].g_iLightColor[1]), iGetRandomColor(g_esCache[tank].g_iLightColor[2]), iGetRandomColor(g_esCache[tank].g_iLightColor[3]));
 
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "maxspeed", "100");
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "HDRColorScale", "0.7");
@@ -5629,6 +5748,21 @@ public void vTankSpawnFrame(DataPack pack)
 		Call_StartForward(g_esGeneral.g_gfPostTankSpawnForward);
 		Call_PushCell(iTank);
 		Call_Finish();
+	}
+}
+
+static void vAttackInterval(int tank)
+{
+	if (bIsTankAllowed(tank) && g_esCache[tank].g_flAttackInterval > 0.0)
+	{
+		static int iWeapon;
+		iWeapon = GetPlayerWeaponSlot(tank, 0);
+		if (iWeapon > 0)
+		{
+			g_esPlayer[tank].g_flAttackDelay = GetGameTime() + g_esCache[tank].g_flAttackInterval;
+			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", g_esCache[tank].g_flAttackInterval, 0);
+			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", g_esPlayer[tank].g_flAttackDelay, 1);
+		}
 	}
 }
 
@@ -6116,6 +6250,11 @@ static Address adGetFirstContainedResponder(Address address)
 	return view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, address));
 }
 
+public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
+{
+	vResetTimers(true);
+}
+
 public void L4D_OnEnterGhostState(int client)
 {
 	if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_iTankType > 0)
@@ -6161,7 +6300,7 @@ public MRESReturn mreTankRock(Handle hReturn)
 		if (bIsTank(iTank))
 		{
 			SetEntPropEnt(iRock, Prop_Data, "m_hThrower", iTank);
-			SetEntityRenderColor(iRock, g_esCache[iTank].g_iRockColor[0], g_esCache[iTank].g_iRockColor[1], g_esCache[iTank].g_iRockColor[2], g_esCache[iTank].g_iRockColor[3]);
+			SetEntityRenderColor(iRock, iGetRandomColor(g_esCache[iTank].g_iRockColor[0]), iGetRandomColor(g_esCache[iTank].g_iRockColor[1]), iGetRandomColor(g_esCache[iTank].g_iRockColor[2]), iGetRandomColor(g_esCache[iTank].g_iRockColor[3]));
 			vSetRockModel(iTank, iRock);
 		}
 	}
@@ -6318,7 +6457,7 @@ public Action tTimerBlurEffect(Handle timer, int userid)
 
 		AcceptEntityInput(g_esPlayer[iTank].g_iTankModel, "DisableCollision");
 
-		SetEntityRenderColor(g_esPlayer[iTank].g_iTankModel, g_esCache[iTank].g_iSkinColor[0], g_esCache[iTank].g_iSkinColor[1], g_esCache[iTank].g_iSkinColor[2], g_esCache[iTank].g_iSkinColor[3]);
+		SetEntityRenderColor(g_esPlayer[iTank].g_iTankModel, iGetRandomColor(g_esCache[iTank].g_iSkinColor[0]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[1]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[2]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[3]));
 
 		SetEntProp(g_esPlayer[iTank].g_iTankModel, Prop_Send, "m_nSequence", GetEntProp(iTank, Prop_Send, "m_nSequence"));
 		SetEntPropFloat(g_esPlayer[iTank].g_iTankModel, Prop_Send, "m_flPlaybackRate", 5.0);
@@ -6645,7 +6784,7 @@ public void vRockThrowFrame(int ref)
 		iThrower = GetEntPropEnt(iRock, Prop_Data, "m_hThrower");
 		if (bIsTankAllowed(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esTank[g_esPlayer[iThrower].g_iTankType].g_iTankEnabled == 1)
 		{
-			SetEntityRenderColor(iRock, g_esCache[iThrower].g_iRockColor[0], g_esCache[iThrower].g_iRockColor[1], g_esCache[iThrower].g_iRockColor[2], g_esCache[iThrower].g_iRockColor[3]);
+			SetEntityRenderColor(iRock, iGetRandomColor(g_esCache[iThrower].g_iRockColor[0]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[1]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[2]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[3]));
 			vSetRockModel(iThrower, iRock);
 
 			if (g_esCache[iThrower].g_iRockEffects > 0)
@@ -6662,6 +6801,12 @@ public void vRockThrowFrame(int ref)
 			Call_Finish();
 		}
 	}
+}
+
+public Action tTimerDelayRegularWaves(Handle timer)
+{
+	vKillRegularWavesTimer();
+	g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, _, TIMER_REPEAT);
 }
 
 public Action tTimerRegularWaves(Handle timer)
@@ -6709,7 +6854,7 @@ public Action tTimerSpawnTanks(Handle timer, int wave)
 
 public Action tTimerTankWave(Handle timer)
 {
-	if (iGetTankCount(true) > 0 || !(0 < g_esGeneral.g_iTankWave < 10))
+	if (!bIsFinaleMap() || iGetTankCount(true) > 0 || !(0 < g_esGeneral.g_iTankWave < 10))
 	{
 		return Plugin_Stop;
 	}
@@ -6859,6 +7004,19 @@ public Action tTimerRefreshConfigs(Handle timer)
 			}
 		}
 	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerResetDelay(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!bIsTankAllowed(iTank))
+	{
+		return Plugin_Stop;
+	}
+
+	g_esPlayer[iTank].g_bAttackedAgain = false;
 
 	return Plugin_Continue;
 }

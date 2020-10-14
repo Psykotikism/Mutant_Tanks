@@ -597,7 +597,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 						continue;
 					}
 
-					g_esPlayer[admin].g_iShieldColor[iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+					g_esPlayer[admin].g_iShieldColor[iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
 			}
 			else if (StrEqual(key, "ShieldHealthCharacters", false) || StrEqual(key, "Shield Health Characters", false) || StrEqual(key, "Shield_Characters", false) || StrEqual(key, "hpchars", false))
@@ -648,7 +648,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 						continue;
 					}
 
-					g_esAbility[type].g_iShieldColor[iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : GetRandomInt(0, 255);
+					g_esAbility[type].g_iShieldColor[iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
 			}
 			else if (StrEqual(key, "ShieldHealthCharacters", false) || StrEqual(key, "Shield Health Characters", false) || StrEqual(key, "Shield_Characters", false) || StrEqual(key, "hpchars", false))
@@ -927,7 +927,7 @@ static void vShield(int tank)
 	vSetEntityParent(g_esPlayer[tank].g_iShield, tank, true);
 
 	SetEntityRenderMode(g_esPlayer[tank].g_iShield, RENDER_TRANSTEXTURE);
-	SetEntityRenderColor(g_esPlayer[tank].g_iShield, g_esCache[tank].g_iShieldColor[0], g_esCache[tank].g_iShieldColor[1], g_esCache[tank].g_iShieldColor[2], g_esCache[tank].g_iShieldColor[3]);
+	SetEntityRenderColor(g_esPlayer[tank].g_iShield, iGetRandomColor(g_esCache[tank].g_iShieldColor[0]), iGetRandomColor(g_esCache[tank].g_iShieldColor[1]), iGetRandomColor(g_esCache[tank].g_iShieldColor[2]), iGetRandomColor(g_esCache[tank].g_iShieldColor[3]));
 
 	SetEntProp(g_esPlayer[tank].g_iShield, Prop_Send, "m_CollisionGroup", 1);
 

@@ -1850,6 +1850,11 @@ stock int iGetPlayerCount()
 	return iPlayerCount;
 }
 
+stock int iGetRandomColor(int color)
+{
+	return color == -1 ? GetRandomInt(0, 255) : color;
+}
+
 stock int iGetRandomSurvivor(int tank)
 {
 	static int iSurvivorCount, iSurvivors[MAXPLAYERS + 1];

@@ -7513,6 +7513,34 @@
 		"chi"			"{mint}这辆坦克像任何泥人一样令人讨厌."
 	}
 
+	"Tank #117"
+	{
+		"en"			"{mint}Goodbye everyone!"
+		"hu"			""
+		"chi"			"{mint}再见了，大家!"
+	}
+
+	"Tank #118"
+	{
+		"en"			"{mint}This Tank doesn't do any damage. It just wants to play!"
+		"hu"			""
+		"chi"			"{mint}该坦克不会造成任何伤害。 它只是想玩!"
+	}
+
+	"Tank #119"
+	{
+		"en"			"{mint}This Tank just won't go away..."
+		"hu"			""
+		"chi"			"{mint}这辆坦克不会消失..."
+	}
+
+	"Tank #120"
+	{
+		"en"			"{mint}This Tank is loyal to the survivors and loves to give hugs."
+		"hu"			""
+		"chi"			"{mint}这辆坦克忠于幸存者，喜欢拥抱."
+	}
+
 	// This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
 	// Ez egy valós Steam32ID. Ne töröld! Ez csak egy példa.
 	// 这实际上是一个有效的 Steam32ID ,所以请不要取消注释,这只是一个示例
