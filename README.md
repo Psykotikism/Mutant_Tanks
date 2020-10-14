@@ -36,9 +36,9 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 12. Administration system designed for access to and immunity from Mutant Tanks.
 
 ### Requirements
-1. You must have at least `SourceMod 1.11.0.6511` or higher.
-2. Required: [DHooks](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Required: [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
+1. `SourceMod 1.11.0.6511` or higher
+2. [DHooks](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
+3. [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
 
 ### Notes
 1. I do not provide support for listen servers but the plugin and its modules should still work properly on them.

@@ -16,6 +16,8 @@ Bug fixes:
 10. Fixed some abilities calling `DispatchSpawn` on entities before teleporting them.
 11. Fixed the core plugin skipping some waves. (Thanks to Tank Rush for testing and reporting!)
 12. Fixed global chat messages not being translated. (Thanks to Mi.Cura for testing and reporting!)
+13. Fixed settings not having their values stored properly.
+14. Fixed color-related settings from not picking random colors when set to `-1`.
 
 Changes:
 
@@ -31,6 +33,10 @@ Changes:
 10. Changed the default value of the `Regular Limit` setting from `2` to `999999`.
 11. Changed the default value of the `Death Revert` setting under `Plugin Settings/General` from `0` to `1`.
 12. Increased the delay between each Tank wave in finales from `3` to `5` seconds.
+13. Added the `Attack Interval` setting under `Tank #/Enhancements` section. (Thanks to epz for the code!)
+14. Added four new presets in the config files to showcase more features.
+15. The regular waves spawner now has a delay and starts after a survivor has left the saferoom.
+16. Added the `Regular Delay` setting under `Plugin Settings/Waves` section. (Requested by Tank Rush.)
 
 Files:
 

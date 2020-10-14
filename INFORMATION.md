@@ -279,6 +279,13 @@
 			// 1-32: ON, the number of Tanks that will spawn.
 			"Regular Amount"			"0"
 
+			// The delay before the regular wave spawner starts.
+			// Note: The delay starts after a survivor leaves the saferoom.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Regular Delay"				"10.0"
+
 			// Spawn Tanks on non-finale maps every time this many seconds passes.
 			// Note: This will not work unless "Regular Mode" is set to 1.
 			// --
@@ -322,6 +329,7 @@
 			"Regular Type"				"0-0"
 
 			// Spawn Tanks on non-finale maps periodically.
+			// Note: The timer starts after "Regular Delay" is up.
 			// Note: Leave this off if you want a generic spawn rate for Tanks or if you have a Multi-Tanks plugin installed.
 			// Note: This will not work unless "Regular Mode" is set to 1.
 			// --
@@ -647,87 +655,6 @@
 			// 1-32: ON, the number of human survivors required to be present for this Mutant Tank to be effective.
 			"Requires Humans"			"0"
 		}
-		"Health"
-		{
-			// Display the Mutant Tank's name and health.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 0
-			// Maximum: 11
-			// --
-			// 0: OFF
-			// 1: ON, show name only.
-			// 2: ON, show health only.
-			// 3: ON, show health percentage only.
-			// 4: ON, show healthbar only.
-			// 5: ON, show name and health only.
-			// 6: ON, show name and health percentage only.
-			// 7: ON, show name and healthbar only.
-			// 8: ON, show health and healthbar only.
-			// 9: ON, show health percentage and healthbar only.
-			// 10: ON, show name, health, and healthbar.
-			// 11: ON, show name, health percentage, and healthbar.
-			"Display Health"			"0"
-
-			// Display type of the Mutant Tank's names and health.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// 0: OFF
-			// 1: ON, show in hint text.
-			// 2: ON, show in center text.
-			"Display Health Type"			"0"
-
-			// Extra health given to the Mutant Tank.
-			// Note: Tank's health limit on any difficulty is 65,535.
-			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: -65535
-			// Maximum: 65535
-			// --
-			// Positive numbers: Current health + Extra health
-			// Negative numbers: Current health - Extra health
-			"Extra Health"				"0"
-
-			// The characters used to represent the health bar of the Mutant Tank.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting only takes effect when the "Display Health" setting is enabled.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Separate characters with commas (",").
-			// --
-			// Character limit: 2
-			// Character limit for each character: 1
-			// --
-			// 1st character = Health indicator
-			// 2nd character = Damage indicator
-			"Health Characters"			""
-
-			// The number of human survivors required for "Multiply Health" to take effect.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 1
-			// Maximum: 32
-			// --
-			// 1: OFF, no health multiplication. (Health * 1)
-			// 2-32: ON, the number of human survivors required to multiply Tank health. (Health * X)
-			"Minimum Humans"			"0"
-
-			// Multiply the Mutant Tank's health.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: Health multiplication only occurs when the requirement for "Minimum Humans" is met.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// 0: No changes to health.
-			// 1: Multiply original health only.
-			// 2: Multiply extra health only.
-			// 3: Multiply both.
-			"Multiply Health"			"0"
-		}
 		"Administration"
 		{
 			// Admins with one or more of these access flags has access to the Mutant Tank type.
@@ -1030,8 +957,98 @@
 			// 8: Acid Trail (Only available in Left 4 Dead 2.)
 			"Rock Effects"				"0"
 		}
+		"Health"
+		{
+			// Display the Mutant Tank's name and health.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 11
+			// --
+			// 0: OFF
+			// 1: ON, show name only.
+			// 2: ON, show health only.
+			// 3: ON, show health percentage only.
+			// 4: ON, show healthbar only.
+			// 5: ON, show name and health only.
+			// 6: ON, show name and health percentage only.
+			// 7: ON, show name and healthbar only.
+			// 8: ON, show health and healthbar only.
+			// 9: ON, show health percentage and healthbar only.
+			// 10: ON, show name, health, and healthbar.
+			// 11: ON, show name, health percentage, and healthbar.
+			"Display Health"			"0"
+
+			// Display type of the Mutant Tank's names and health.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON, show in hint text.
+			// 2: ON, show in center text.
+			"Display Health Type"			"0"
+
+			// Extra health given to the Mutant Tank.
+			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Disable this setting if it conflicts with other plugins.
+			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: -65535
+			// Maximum: 65535
+			// --
+			// Positive numbers: Current health + Extra health
+			// Negative numbers: Current health - Extra health
+			"Extra Health"				"0"
+
+			// The characters used to represent the health bar of the Mutant Tank.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting only takes effect when the "Display Health" setting is enabled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate characters with commas (",").
+			// --
+			// Character limit: 2
+			// Character limit for each character: 1
+			// --
+			// 1st character = Health indicator
+			// 2nd character = Damage indicator
+			"Health Characters"			""
+
+			// The number of human survivors required for "Multiply Health" to take effect.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 32
+			// --
+			// 1: OFF, no health multiplication. (Health * 1)
+			// 2-32: ON, the number of human survivors required to multiply Tank health. (Health * X)
+			"Minimum Humans"			"0"
+
+			// Multiply the Mutant Tank's health.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: Health multiplication only occurs when the requirement for "Minimum Humans" is met.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: No changes to health.
+			// 1: Multiply original health only.
+			// 2: Multiply extra health only.
+			// 3: Multiply both.
+			"Multiply Health"			"0"
+		}
 		"Enhancements"
 		{
+			// The Mutant Tank can only attack every time this many seconds passes.
+			// Note: Default attack interval is 2.0 seconds.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Attack Interval"			"-1.0"
+
 			// The Mutant Tank's claw attacks do this much damage.
 			// Note: This setting can be overridden for specific players.
 			// --
