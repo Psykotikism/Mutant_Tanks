@@ -2576,6 +2576,17 @@
 			// Note: Chosen types that also have the Clone ability will be replaced with the Mutant Tank's own type to prevent bugs.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Separate values with "-".
+			// --
+			// Value limit: 2
+			// Character limit for each value: 4
+			// --
+			// Minimum number for each value: 0 (OFF)
+			// Maximum number for each value: 1000
+			// --
+			// 1st number = Minimum value
+			// 2nd number = Maximum value
+			// --
 			// 0: OFF, use the randomization feature.
 			// 1-1000: ON, the type of the clone.
 			"Clone Type"				"0-0"
@@ -8124,6 +8135,17 @@
 			// The type that the Mutant Tank will respawn as.
 			// Note: Chosen types that also have the Respawn ability will be replaced with the Mutant Tank's own type to prevent bugs.
 			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with "-".
+			// --
+			// Value limit: 2
+			// Character limit for each value: 4
+			// --
+			// Minimum number for each value: 0 (OFF)
+			// Maximum number for each value: 1000
+			// --
+			// 1st number = Minimum value
+			// 2nd number = Maximum value
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-1000: ON, the type to respawn as.
