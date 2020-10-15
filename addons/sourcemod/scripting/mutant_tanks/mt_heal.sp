@@ -191,6 +191,17 @@ public void OnMapEnd()
 	vReset();
 }
 
+public void MT_OnPluginEnd()
+{
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
+		{
+			vResetGlow(iTank);
+		}
+	}
+}
+
 public Action cmdHealInfo(int client, int args)
 {
 	if (!MT_IsCorePluginEnabled())
@@ -580,7 +591,16 @@ public void MT_OnHookEvent(bool hooked)
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "heal_success"))
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vResetGlow(iBot);
+		}
+	}
+	else if (StrEqual(name, "heal_success"))
 	{
 		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
 		if (bIsSurvivor(iSurvivor))
@@ -598,7 +618,26 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vStopSound(iSurvivor, SOUND_HEARTBEAT);
 		}
 	}
-	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			{
+				vResetGlow(iPlayer);
+			}
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vResetGlow(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated") || StrEqual(name, "player_spawn"))
 	{
 		int iUserId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iUserId);
 		if (bIsSurvivor(iPlayer))
@@ -608,6 +647,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		else if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveHeal(iPlayer);
+			vResetGlow(iPlayer);
 		}
 	}
 }
@@ -916,6 +956,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveHeal(iPlayer);
+			vResetGlow(iPlayer);
 		}
 	}
 }
@@ -936,8 +977,6 @@ static void vReset2(int tank)
 static void vReset3(int tank)
 {
 	vResetGlow(tank);
-
-	SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
 
 	int iTime = GetTime();
 	g_esPlayer[tank].g_iCooldown = (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
@@ -962,15 +1001,15 @@ static void vResetGlow(int tank)
 			MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
 			SetEntProp(tank, Prop_Send, "m_iGlowType", 3);
 			SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
-			SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
 		}
 		case false:
 		{
 			SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
 			SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
-			SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
 		}
 	}
+
+	SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
 }
 
 public Action tTimerHeal(Handle timer, DataPack pack)
