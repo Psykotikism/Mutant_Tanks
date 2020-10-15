@@ -1339,9 +1339,6 @@ public Action cmdMTConfig(int client, int args)
 
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		static char sSteamID32[32], sSteam3ID[32];
-		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
-		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
 		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
 			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
@@ -2025,17 +2022,11 @@ public Action cmdMTList(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 	{
-		static char sSteamID32[32], sSteam3ID[32];
-		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
-		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
-		{
-			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
-			return Plugin_Handled;
-		}
+		return Plugin_Handled;
 	}
 
 	vListAbilities(client);
@@ -2046,7 +2037,7 @@ public Action cmdMTList(int client, int args)
 static void vListAbilities(int admin)
 {
 	static bool bHuman;
-	bHuman = bIsValidClient(admin, MT_CHECK_FAKECLIENT);
+	bHuman = bIsValidClient(admin, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
 	if (g_esGeneral.g_alPlugins != null)
 	{
 		static int iListSize;
@@ -2086,25 +2077,6 @@ static void vListAbilities(int admin)
 
 public Action cmdMTVersion(int client, int args)
 {
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
-	{
-		static char sSteamID32[32], sSteam3ID[32];
-		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
-		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
-		{
-			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
-
-			return Plugin_Handled;
-		}
-	}
-	else
-	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
-
-		return Plugin_Handled;
-	}
-
 	MT_ReplyToCommand(client, "%s Mutant Tanks{yellow} v%s{mint}, by{olive} Psyk0tik (Crasher_3637)", MT_TAG3, MT_VERSION);
 
 	return Plugin_Handled;
@@ -2180,9 +2152,6 @@ public Action cmdTank2(int client, int args)
 
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		static char sSteamID32[32], sSteam3ID[32];
-		GetClientAuthId(client, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
-		GetClientAuthId(client, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
 		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
 			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
@@ -2360,9 +2329,6 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 						case true: vSpawnTank(admin, g_esGeneral.g_iChosenType, amount, mode);
 						case false:
 						{
-							char sSteamID32[32], sSteam3ID[32];
-							GetClientAuthId(admin, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
-							GetClientAuthId(admin, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
 							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT) || bIsDeveloper(admin)))
 							{
 								vChangeTank(admin, amount, mode);
@@ -2414,9 +2380,6 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 		}
 		case false:
 		{
-			char sSteamID32[32], sSteam3ID[32];
-			GetClientAuthId(admin, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
-			GetClientAuthId(admin, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
 			if (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT) || bIsDeveloper(admin))
 			{
 				vChangeTank(admin, amount, mode);
@@ -4977,11 +4940,13 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		if (g_esCache[tank].g_iTankNote == 1 && bIsCloneAllowed(tank))
 		{
 			char sPhrase[32], sTankNote[32], sSteamID32[32], sSteam3ID[32], sSteamIDFinal[32];
+			if (GetClientAuthId(tank, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)) && GetClientAuthId(tank, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
+			{
+				FormatEx(sSteamIDFinal, sizeof(sSteamIDFinal), "%s", (TranslationPhraseExists(sSteamID32) ? sSteamID32 : sSteam3ID));
+			}
+
 			FormatEx(sPhrase, sizeof(sPhrase), "Tank #%i", g_esPlayer[tank].g_iTankType);
-			GetClientAuthId(tank, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
-			GetClientAuthId(tank, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-			FormatEx(sSteamIDFinal, sizeof(sSteamIDFinal), "%s", (TranslationPhraseExists(sSteamID32) ? sSteamID32 : sSteam3ID));
-			FormatEx(sTankNote, sizeof(sTankNote), "%s", ((bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iTankNote == 1) ? sSteamIDFinal : sPhrase));
+			FormatEx(sTankNote, sizeof(sTankNote), "%s", ((bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iTankNote == 1 && sSteamIDFinal[0] != '\0') ? sSteamIDFinal : sPhrase));
 
 			bool bExists = TranslationPhraseExists(sTankNote);
 			MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sTankNote : "NoNote"));
@@ -5882,11 +5847,12 @@ static bool bIsDeveloper(int developer)
 	if (g_esGeneral.g_iAllowDeveloper == 1)
 	{
 		static char sSteamID32[32], sSteam3ID[32];
-		GetClientAuthId(developer, AuthId_Steam2, sSteamID32, sizeof(sSteamID32));
-		GetClientAuthId(developer, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID));
-		if (StrEqual(sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(sSteam3ID, "[U:1:96399607]", false))
+		if (GetClientAuthId(developer, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)) && GetClientAuthId(developer, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
 		{
-			return true;
+			if (StrEqual(sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(sSteamID32, "STEAM_0:0:104982031", false) || StrEqual(sSteam3ID, "[U:1:96399607]", false) || StrEqual(sSteam3ID, "[U:1:209964062]", false))
+			{
+				return true;
+			}
 		}
 	}
 
