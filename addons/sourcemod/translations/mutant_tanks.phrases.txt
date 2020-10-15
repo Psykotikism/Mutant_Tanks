@@ -523,7 +523,7 @@
 	{
 		"#format"		"{1:N},{2:s}"
 		"en"			"{mint}{1}{default} finished off{olive} {2}{default}!"
-		"hu"			""
+		"hu"			"{mint}{1}{default} kivégezte{olive} {2}{default}!"
 		"chi"			"{mint}{1}{default} 完成了{olive} {2}{default}!"
 	}
 
@@ -531,7 +531,7 @@
 	{
 		"#format"		"{1:N},{2:s}"
 		"en"			"{mint}{1}{default} defeated{olive} {2}{default}!"
-		"hu"			""
+		"hu"			"{mint}{1}{default} legyőzte{olive} {2}{default}!"
 		"chi"			"{mint}{1}{default} 被击败了{olive} {2}{default}!"
 	}
 
@@ -539,7 +539,7 @@
 	{
 		"#format"		"{1:N},{2:s}"
 		"en"			"{mint}{1}{default} sent{olive} {2}{default} to hell!"
-		"hu"			""
+		"hu"			"{mint}{1}{default} elküldte{olive} {2}{default} a pokolba!"
 		"chi"			"{mint}{1}{default} 发送了{olive} {2}{default}到地狱!"
 	}
 
@@ -547,7 +547,7 @@
 	{
 		"#format"		"{1:N},{2:s}"
 		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?"
-		"hu"			""
+		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}?..."
 		"chi"			"{mint}{1}{default} 实际上杀死了{olive} {2}{default}...吗?"
 	}
 
@@ -555,7 +555,7 @@
 	{
 		"#format"		"{1:N},{2:s}"
 		"en"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!"
-		"hu"			""
+		"hu"			"{olive}{2}{default} elvesztette a kihívást{mint} {1}{default} ellen!"
 		"chi"			"{olive}{2}{default} 输掉了对{mint} {1}{default}的挑战!"
 	}
 
@@ -563,7 +563,7 @@
 	{
 		"#format"		"{1:N},{2:s}"
 		"en"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!"
-		"hu"			""
+		"hu"			"A(z){olive} {2}{default}-nak nem sikerült megölnie{mint} {1}{default}!"
 		"chi"			"{olive}{2}{default} 无法杀死{mint} {1}{default}!"
 	}
 
@@ -571,7 +571,7 @@
 	{
 		"#format"		"{1:N},{2:s}"
 		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!"
-		"hu"			""
+		"hu"			"{olive}{2}{default} elérte a pusztulás {mint} {1}{default} keze által!"
 		"chi"			"{olive}{2}{default} 已在{mint} {1}{default} 手中灭亡!"
 	}
 
@@ -579,7 +579,7 @@
 	{
 		"#format"		"{1:N},{2:s}"
 		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!"
-		"hu"			""
+		"hu"			"Éljen!{olive} {2}{default} halott, hála{mint} {1}{default}!"
 		"chi"			"哎呀!{olive} {2}{default} 死了，这要感谢{mint} {1}{default}!"
 	}
 
@@ -587,7 +587,7 @@
 	{
 		"#format"		"{1:N},{2:s}"
 		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit..."
-		"hu"			""
+		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen..."
 		"chi"			"{mint}{1}{default} 变成了{olive} {2}{default} 流行语..."
 	}
 
@@ -595,7 +595,7 @@
 	{
 		"#format"		"{1:N},{2:s}"
 		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all..."
-		"hu"			""
+		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is..."
 		"chi"			"看来{olive} {2}{default} 毕竟无法击败{mint} {1}{default}..."
 	}
 
@@ -7516,28 +7516,28 @@
 	"Tank #117"
 	{
 		"en"			"{mint}Goodbye everyone!"
-		"hu"			""
+		"hu"			"{mint}Viszlát mindenki!"
 		"chi"			"{mint}再见了，大家!"
 	}
 
 	"Tank #118"
 	{
 		"en"			"{mint}This Tank doesn't do any damage. It just wants to play!"
-		"hu"			""
+		"hu"			"{mint}Ez a Tank nem okoz sebzést. Csak játszani szeretne!"
 		"chi"			"{mint}该坦克不会造成任何伤害。 它只是想玩!"
 	}
 
 	"Tank #119"
 	{
 		"en"			"{mint}This Tank just won't go away..."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank egyszerűen csak nem megy el..."
 		"chi"			"{mint}这辆坦克不会消失..."
 	}
 
 	"Tank #120"
 	{
 		"en"			"{mint}This Tank is loyal to the survivors and loves to give hugs."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank lojális a túlélőkhöz és szeret öleléseket adni."
 		"chi"			"{mint}这辆坦克忠于幸存者，喜欢拥抱."
 	}
 
