@@ -1735,12 +1735,24 @@ stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace
 
 stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max)
 {
-	if ((StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false)) && (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	if (StrContains(subsection, ",") != -1)
 	{
-		if (value[0] != '\0')
+		static char sSet[16][16];
+		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 		{
-			return flClamp(StringToFloat(value), min, max);
+			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false) || StrEqual(sSet[iPos], sub4, false))
+				&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+			{
+				return flClamp(StringToFloat(value), min, max);
+			}
 		}
+	}
+	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
+		&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		return flClamp(StringToFloat(value), min, max);
 	}
 
 	return curVal;
@@ -1932,12 +1944,24 @@ stock int iGetRGBColor(int red, int green, int blue)
 
 stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
 {
-	if ((StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false)) && (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	if (StrContains(subsection, ",") != -1)
 	{
-		if (value[0] != '\0')
+		static char sSet[16][16];
+		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 		{
-			return iClamp(StringToInt(value), min, max);
+			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false) || StrEqual(sSet[iPos], sub4, false))
+				&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+			{
+				return iClamp(StringToInt(value), min, max);
+			}
 		}
+	}
+	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
+		&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		return iClamp(StringToInt(value), min, max);
 	}
 
 	return curVal;
