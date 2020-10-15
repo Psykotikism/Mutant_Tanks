@@ -55,10 +55,11 @@ enum struct esPlayer
 	int g_iCloneAbility;
 	int g_iCloneAmount;
 	int g_iCloneHealth;
+	int g_iCloneMaxType;
+	int g_iCloneMinType;
 	int g_iCloneMessage;
 	int g_iCloneMode;
 	int g_iCloneReplace;
-	int g_iCloneType;
 	int g_iCooldown;
 	int g_iCount;
 	int g_iCount2;
@@ -80,10 +81,11 @@ enum struct esAbility
 	int g_iCloneAbility;
 	int g_iCloneAmount;
 	int g_iCloneHealth;
+	int g_iCloneMaxType;
+	int g_iCloneMinType;
 	int g_iCloneMessage;
 	int g_iCloneMode;
 	int g_iCloneReplace;
-	int g_iCloneType;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -99,10 +101,11 @@ enum struct esCache
 	int g_iCloneAbility;
 	int g_iCloneAmount;
 	int g_iCloneHealth;
+	int g_iCloneMaxType;
+	int g_iCloneMinType;
 	int g_iCloneMessage;
 	int g_iCloneMode;
 	int g_iCloneReplace;
-	int g_iCloneType;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -330,9 +333,10 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iCloneAmount = 2;
 				g_esAbility[iIndex].g_flCloneChance = 33.3;
 				g_esAbility[iIndex].g_iCloneHealth = 1000;
+				g_esAbility[iIndex].g_iCloneMaxType = 0;
+				g_esAbility[iIndex].g_iCloneMinType = 0;
 				g_esAbility[iIndex].g_iCloneMode = 0;
 				g_esAbility[iIndex].g_iCloneReplace = 1;
-				g_esAbility[iIndex].g_iCloneType = -1;
 			}
 		}
 		case 3:
@@ -351,9 +355,10 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iCloneAmount = 0;
 					g_esPlayer[iPlayer].g_flCloneChance = 0.0;
 					g_esPlayer[iPlayer].g_iCloneHealth = 0;
+					g_esPlayer[iPlayer].g_iCloneMaxType = 0;
+					g_esPlayer[iPlayer].g_iCloneMinType = 0;
 					g_esPlayer[iPlayer].g_iCloneMode = 0;
 					g_esPlayer[iPlayer].g_iCloneReplace = 0;
-					g_esPlayer[iPlayer].g_iCloneType = -1;
 				}
 			}
 		}
@@ -375,13 +380,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iCloneHealth = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esPlayer[admin].g_iCloneHealth, value, 1, MT_MAXHEALTH);
 		g_esPlayer[admin].g_iCloneMode = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esPlayer[admin].g_iCloneMode, value, 0, 1);
 		g_esPlayer[admin].g_iCloneReplace = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esPlayer[admin].g_iCloneReplace, value, 0, 1);
-		g_esPlayer[admin].g_iCloneType = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneType", "Clone Type", "Clone_Type", "type", g_esPlayer[admin].g_iCloneType, value, -1, MT_MAXTYPES);
 
 		if (StrEqual(subsection, "cloneability", false) || StrEqual(subsection, "clone ability", false) || StrEqual(subsection, "clone_ability", false) || StrEqual(subsection, "clone", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
 				g_esPlayer[admin].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "CloneType", false) || StrEqual(key, "Clone Type", false) || StrEqual(key, "Clone_Type", false) || StrEqual(key, "type", false))
+			{
+				static char sValue[10];
+				strcopy(sValue, sizeof(sValue), value);
+				ReplaceString(sValue, sizeof(sValue), " ", "");
+
+				static char sRange[2][5];
+				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+
+				g_esPlayer[admin].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esPlayer[admin].g_iCloneMinType;
+				g_esPlayer[admin].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esPlayer[admin].g_iCloneMaxType;
 			}
 		}
 	}
@@ -399,13 +415,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iCloneHealth = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esAbility[type].g_iCloneHealth, value, 1, MT_MAXHEALTH);
 		g_esAbility[type].g_iCloneMode = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esAbility[type].g_iCloneMode, value, 0, 1);
 		g_esAbility[type].g_iCloneReplace = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esAbility[type].g_iCloneReplace, value, 0, 1);
-		g_esAbility[type].g_iCloneType = iGetKeyValue(subsection, "cloneability", "clone ability", "clone_ability", "clone", key, "CloneType", "Clone Type", "Clone_Type", "type", g_esAbility[type].g_iCloneType, value, -1, MT_MAXTYPES);
 
 		if (StrEqual(subsection, "cloneability", false) || StrEqual(subsection, "clone ability", false) || StrEqual(subsection, "clone_ability", false) || StrEqual(subsection, "clone", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
 				g_esAbility[type].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "CloneType", false) || StrEqual(key, "Clone Type", false) || StrEqual(key, "Clone_Type", false) || StrEqual(key, "type", false))
+			{
+				static char sValue[10];
+				strcopy(sValue, sizeof(sValue), value);
+				ReplaceString(sValue, sizeof(sValue), " ", "");
+
+				static char sRange[2][5];
+				ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
+
+				g_esAbility[type].g_iCloneMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, MT_MAXTYPES) : g_esAbility[type].g_iCloneMinType;
+				g_esAbility[type].g_iCloneMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 0, MT_MAXTYPES) : g_esAbility[type].g_iCloneMaxType;
 			}
 		}
 	}
@@ -418,10 +445,11 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iCloneAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneAbility, g_esAbility[type].g_iCloneAbility);
 	g_esCache[tank].g_iCloneAmount = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneAmount, g_esAbility[type].g_iCloneAmount);
 	g_esCache[tank].g_iCloneHealth = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneHealth, g_esAbility[type].g_iCloneHealth);
+	g_esCache[tank].g_iCloneMaxType = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneMaxType, g_esAbility[type].g_iCloneMaxType);
+	g_esCache[tank].g_iCloneMinType = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneMinType, g_esAbility[type].g_iCloneMinType);
 	g_esCache[tank].g_iCloneMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneMessage, g_esAbility[type].g_iCloneMessage);
 	g_esCache[tank].g_iCloneMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneMode, g_esAbility[type].g_iCloneMode);
 	g_esCache[tank].g_iCloneReplace = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneReplace, g_esAbility[type].g_iCloneReplace);
-	g_esCache[tank].g_iCloneType = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneType, g_esAbility[type].g_iCloneType);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
@@ -569,16 +597,18 @@ public void MT_OnChangeType(int tank, bool revert)
 	vRemoveClone(tank, revert);
 }
 
-static void vClone(int tank)
+static void vClone(int tank, int min = 0, int max = 0)
 {
 	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
-	static int iTypeCount, iTankTypes[MT_MAXTYPES + 1];
+	static int iMin, iMax, iTypeCount, iTankTypes[MT_MAXTYPES + 1];
+	iMin = (min > 0) ? min : MT_GetMinType();
+	iMax = (max > 0) ? max : MT_GetMaxType();
 	iTypeCount = 0;
-	for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+	for (int iIndex = iMin; iIndex <= iMax; iIndex++)
 	{
 		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex) || g_esAbility[iIndex].g_iCloneAbility == 1 || g_esPlayer[tank].g_iTankType == iIndex)
 		{
@@ -641,16 +671,13 @@ static void vCloneAbility(int tank)
 							}
 						}
 
-						switch (g_esCache[tank].g_iCloneType)
+						if (g_esCache[tank].g_iCloneMinType == 0 || g_esCache[tank].g_iCloneMaxType == 0)
 						{
-							case -1: MT_SpawnTank(tank, g_esPlayer[tank].g_iTankType);
-							case 0: vClone(tank);
-							default:
-							{
-								static int iType;
-								iType = (g_esAbility[g_esCache[tank].g_iCloneType].g_iCloneAbility == 1) ? g_esPlayer[tank].g_iTankType : g_esCache[tank].g_iCloneType;
-								MT_SpawnTank(tank, iType);
-							}
+							vClone(tank);
+						}
+						else
+						{
+							vClone(tank, g_esCache[tank].g_iCloneMinType, g_esCache[tank].g_iCloneMaxType);
 						}
 
 						static int iSelectedType;
