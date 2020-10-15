@@ -1401,6 +1401,32 @@ Example:
 }
 ```
 
+5. Is it possible to configure more than one ability in one section?
+
+Yes, you can either apply global settings for all abilities to use or specify certain abilities to use them.
+
+Example:
+
+```
+"Mutant Tanks"
+{
+	"Tank #1"
+	{
+		// Applies to every ability.
+		"All"
+		{
+			"Ability Enabled"			"1"
+		}
+
+		// Applies to Absorb and Acid abilities.
+		"Absorb,Acid"
+		{
+			"Ability Enabled"			"1"
+		}
+	}
+}
+```
+
 ### Administration System
 1. How does the system work?
 

@@ -39,6 +39,8 @@ Changes:
 14. Added four new presets in the config files to showcase more features.
 15. The regular waves spawner now has a delay and starts after a survivor has left the saferoom.
 16. Added the `Regular Delay` setting under `Plugin Settings/Waves` section. (Requested by Tank Rush.)
+17. Config files now support multiple abilities using comma separation.
+18. The `all` section can now be grouped with multiple types and abilities in config files.
 
 Files:
 
