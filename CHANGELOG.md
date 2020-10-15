@@ -18,6 +18,8 @@ Bug fixes:
 12. Fixed global chat messages not being translated. (Thanks to Mi.Cura for testing and reporting!)
 13. Fixed settings not having their values stored properly.
 14. Fixed color-related settings from not picking random colors when set to `-1`.
+15. Fixed the `Health` ability's glow outline not going away when Tanks die.
+16. Fixed the `Track` ability's glow outline not going away when rocks break.
 
 Changes:
 
