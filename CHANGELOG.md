@@ -41,6 +41,8 @@ Changes:
 16. Added the `Regular Delay` setting under `Plugin Settings/Waves` section. (Requested by Tank Rush.)
 17. Config files now support multiple abilities using comma separation.
 18. The `all` section can now be grouped with multiple types and abilities in config files.
+19. The `Clone` ability's `Clone Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
+20. The `Respawn` ability's `Respawn Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
 
 Files:
 

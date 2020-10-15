@@ -2576,10 +2576,9 @@
 			// Note: Chosen types that also have the Clone ability will be replaced with the Mutant Tank's own type to prevent bugs.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// -1: OFF, use current type.
 			// 0: OFF, use the randomization feature.
 			// 1-1000: ON, the type of the clone.
-			"Clone Type"				"-1"
+			"Clone Type"				"0-0"
 		}
 	}
 }
@@ -8126,10 +8125,9 @@
 			// Note: Chosen types that also have the Respawn ability will be replaced with the Mutant Tank's own type to prevent bugs.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// -1: OFF, use current type.
 			// 0: OFF, use the randomization feature.
 			// 1-1000: ON, the type to respawn as.
-			"Respawn Type"				"-1"
+			"Respawn Type"				"0-0"
 		}
 	}
 }
