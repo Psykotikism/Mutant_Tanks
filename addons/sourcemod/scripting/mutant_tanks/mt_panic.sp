@@ -573,7 +573,7 @@ static void vPanicAbility(int tank)
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Panic", sTankName);
-				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Panic", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Panic", LANG_SERVER, sTankName);
 			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -661,7 +661,7 @@ public Action tTimerPanic(Handle timer, DataPack pack)
 		static char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Panic2", sTankName);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Panic2", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Panic2", LANG_SERVER, sTankName);
 	}
 
 	return Plugin_Continue;

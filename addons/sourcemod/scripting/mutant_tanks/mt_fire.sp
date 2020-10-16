@@ -603,7 +603,7 @@ public void MT_OnRockBreak(int tank, int rock)
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Fire2", sTankName);
-				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Fire2", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fire2", LANG_SERVER, sTankName);
 			}
 		}
 	}
@@ -697,7 +697,7 @@ static void vFireHit(int survivor, int tank, float chance, int enabled, int mess
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Fire", sTankName, survivor);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Fire", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fire", LANG_SERVER, sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))

@@ -345,6 +345,7 @@ enum struct esPlayer
 	int g_iMeleeImmunity;
 	int g_iMinimumHumans;
 	int g_iMultiHealth;
+	int g_iOldTankType;
 	int g_iOzTank[2];
 	int g_iOzTankColor[4];
 	int g_iPropsAttached;
@@ -615,7 +616,9 @@ public any aNative_GetTankName(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1);
 	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 	{
-		SetNativeString(2, g_esCache[iTank].g_sTankName, sizeof(esCache::g_sTankName));
+		char sTankName[33];
+		vGetName(sTankName, sizeof(sTankName), iTank);
+		SetNativeString(2, sTankName, sizeof(sTankName));
 	}
 }
 
@@ -726,6 +729,7 @@ public any aNative_SetTankType(Handle plugin, int numParams)
 			}
 			case false:
 			{
+				g_esPlayer[iTank].g_iOldTankType = g_esPlayer[iTank].g_iTankType;
 				g_esPlayer[iTank].g_iTankType = iType;
 				vCacheSettings(iTank);
 			}
@@ -1396,14 +1400,14 @@ static void vParseConfig(int client)
 			char sSmcError[64];
 			smcParser.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
 
-			vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
+			vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
 		}
 
 		delete smcParser;
 	}
 	else
 	{
-		vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "FailedParsing", g_esGeneral.g_sChosenPath);
+		vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
 	}
 }
 
@@ -1723,7 +1727,7 @@ static void vConfigMenu(int admin, int item)
 				char sSmcError[64];
 				smcConfig.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
 
-				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ErrorParsing", g_esGeneral.g_sChosenPath, sSmcError);
+				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
 
 				delete smcConfig;
 				delete mConfigMenu;
@@ -1735,7 +1739,7 @@ static void vConfigMenu(int admin, int item)
 		}
 		else
 		{
-			vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "FailedParsing", g_esGeneral.g_sChosenPath);
+			vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
 
 			delete mConfigMenu;
 
@@ -2131,7 +2135,9 @@ public Action cmdTank(int client, int args)
 
 	if (IsCharNumeric(sType[0]) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", g_esTank[iType].g_sTankName, iType);
+		static char sTankName[33];
+		vGetName(sTankName, sizeof(sTankName), _, iType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
 
 		return Plugin_Handled;
 	}
@@ -2199,7 +2205,9 @@ public Action cmdTank2(int client, int args)
 
 	if (IsCharNumeric(sType[0]) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", g_esTank[iType].g_sTankName, iType);
+		static char sTankName[33];
+		vGetName(sTankName, sizeof(sTankName), _, iType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
 
 		return Plugin_Handled;
 	}
@@ -2265,7 +2273,9 @@ public Action cmdMutantTank(int client, int args)
 
 	if (IsCharNumeric(sType[0]) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", g_esTank[iType].g_sTankName, iType);
+		static char sTankName[33];
+		vGetName(sTankName, sizeof(sTankName), _, iType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
 
 		return Plugin_Handled;
 	}
@@ -2283,10 +2293,12 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 	{
 		case 0:
 		{
+			char sTankName[33];
 			int iTypeCount, iTankTypes[MT_MAXTYPES + 1];
 			for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 			{
-				if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex, admin) || !bCanTypeSpawn(iIndex) || StrContains(g_esTank[iIndex].g_sTankName, type) == -1)
+				vGetName(sTankName, sizeof(sTankName), _, iIndex);
+				if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex, admin) || !bCanTypeSpawn(iIndex) || StrContains(sTankName, type) == -1)
 				{
 					continue;
 				}
@@ -2479,7 +2491,7 @@ static void vTankMenu(int admin, int item)
 		iCount++;
 	}
 
-	static char sMenuItem[46];
+	static char sMenuItem[46], sTankName[33];
 	for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 	{
 		if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex))
@@ -2487,7 +2499,8 @@ static void vTankMenu(int admin, int item)
 			continue;
 		}
 
-		FormatEx(sMenuItem, sizeof(sMenuItem), "%t", "MTTankItem", g_esTank[iIndex].g_sTankName, iIndex);
+		vGetName(sTankName, sizeof(sTankName), _, iIndex);
+		FormatEx(sMenuItem, sizeof(sMenuItem), "%T", "MTTankItem", admin, sTankName, iIndex);
 		mTankMenu.AddItem(g_esTank[iIndex].g_sTankName, sMenuItem);
 		iCount++;
 	}
@@ -2641,11 +2654,6 @@ public void OnGameFrame()
 					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
 					if (StrEqual(sClassname, "player") && bIsTank(iTarget))
 					{
-						if (g_esCache[iTarget].g_sTankName[0] == '\0')
-						{
-							g_esCache[iTarget].g_sTankName = "Tank";
-						}
-
 						sHealthBar[0] = '\0';
 						iHealth = (g_esPlayer[iTarget].g_bDying) ? 0 : GetClientHealth(iTarget);
 						flPercentage = (float(iHealth) / float(g_esPlayer[iTarget].g_iTankHealth)) * 100;
@@ -2665,8 +2673,9 @@ public void OnGameFrame()
 
 						static bool bHuman;
 						bHuman = bIsValidClient(iTarget, MT_CHECK_FAKECLIENT);
-						static char sHumanTag[128];
+						static char sHumanTag[128], sTankName[33];
 						FormatEx(sHumanTag, sizeof(sHumanTag), "%T", "HumanTag", iPlayer);
+						vGetName(sTankName, sizeof(sTankName), iTarget);
 
 						switch (g_esCache[iTarget].g_iDisplayHealthType)
 						{
@@ -2674,34 +2683,34 @@ public void OnGameFrame()
 							{
 								switch (g_esCache[iTarget].g_iDisplayHealth)
 								{
-									case 1: PrintHintText(iPlayer, "%s %s", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""));
+									case 1: PrintHintText(iPlayer, "%s %s", sTankName, (bHuman ? sHumanTag : ""));
 									case 2: PrintHintText(iPlayer, "%i HP", iHealth);
 									case 3: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%");
 									case 4: PrintHintText(iPlayer, "HP: |-<%s>-|", sHealthBar);
-									case 5: PrintHintText(iPlayer, "%s %s (%i HP)", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""), iHealth);
-									case 6: PrintHintText(iPlayer, "%s %s [%i/%i HP (%.0f%s)]", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%");
-									case 7: PrintHintText(iPlayer, "%s %s\nHP: |-<%s>-|", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""), sHealthBar);
+									case 5: PrintHintText(iPlayer, "%s %s (%i HP)", sTankName, (bHuman ? sHumanTag : ""), iHealth);
+									case 6: PrintHintText(iPlayer, "%s %s [%i/%i HP (%.0f%s)]", sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%");
+									case 7: PrintHintText(iPlayer, "%s %s\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), sHealthBar);
 									case 8: PrintHintText(iPlayer, "%i HP\nHP: |-<%s>-|", iHealth, sHealthBar);
 									case 9: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%", sHealthBar);
-									case 10: PrintHintText(iPlayer, "%s %s (%i HP)\nHP: |-<%s>-|", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""), iHealth, sHealthBar);
-									case 11: PrintHintText(iPlayer, "%s %s [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%", sHealthBar);
+									case 10: PrintHintText(iPlayer, "%s %s (%i HP)\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), iHealth, sHealthBar);
+									case 11: PrintHintText(iPlayer, "%s %s [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%", sHealthBar);
 								}
 							}
 							case 2:
 							{
 								switch (g_esCache[iTarget].g_iDisplayHealth)
 								{
-									case 1: PrintCenterText(iPlayer, "%s %s", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""));
+									case 1: PrintCenterText(iPlayer, "%s %s", sTankName, (bHuman ? sHumanTag : ""));
 									case 2: PrintCenterText(iPlayer, "%i HP", iHealth);
 									case 3: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%");
 									case 4: PrintCenterText(iPlayer, "HP: |-<%s>-|", sHealthBar);
-									case 5: PrintCenterText(iPlayer, "%s %s (%i HP)", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""), iHealth);
-									case 6: PrintCenterText(iPlayer, "%s %s [%i/%i HP (%.0f%s)]", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%");
-									case 7: PrintCenterText(iPlayer, "%s %s\nHP: |-<%s>-|", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""), sHealthBar);
+									case 5: PrintCenterText(iPlayer, "%s %s (%i HP)", sTankName, (bHuman ? sHumanTag : ""), iHealth);
+									case 6: PrintCenterText(iPlayer, "%s %s [%i/%i HP (%.0f%s)]", sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%");
+									case 7: PrintCenterText(iPlayer, "%s %s\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), sHealthBar);
 									case 8: PrintCenterText(iPlayer, "%i HP\nHP: |-<%s>-|", iHealth, sHealthBar);
 									case 9: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%", sHealthBar);
-									case 10: PrintCenterText(iPlayer, "%s %s (%i HP)\nHP: |-<%s>-|", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""), iHealth, sHealthBar);
-									case 11: PrintCenterText(iPlayer, "%s %s [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", g_esCache[iTarget].g_sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%", sHealthBar);
+									case 10: PrintCenterText(iPlayer, "%s %s (%i HP)\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), iHealth, sHealthBar);
+									case 11: PrintCenterText(iPlayer, "%s %s [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%", sHealthBar);
 								}
 							}
 						}
@@ -3037,14 +3046,14 @@ static void vLoadConfigs(const char[] savepath, int mode)
 			char sSmcError[64];
 			smcLoader.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
 
-			vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ErrorParsing", savepath, sSmcError);
+			vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, savepath, sSmcError);
 		}
 
 		delete smcLoader;
 	}
 	else
 	{
-		vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "FailedParsing", savepath);
+		vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, savepath);
 	}
 }
 
@@ -3583,17 +3592,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						{
 							if (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false))
 							{
-								static char sName[33], sPhrase[32];
-								strcopy(sName, sizeof(sName), value);
-								FormatEx(sPhrase, sizeof(sPhrase), "Tank #%i Name", iIndex);
-								if (TranslationPhraseExists(sPhrase))
-								{
-									FormatEx(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), "%t", sPhrase, sName);
-								}
-								else
-								{
-									strcopy(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), value);
-								}
+								strcopy(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), value);
 							}
 							else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 							{
@@ -3814,19 +3813,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false))
 								{
-									static char sName[33], sPhrase[32], sPhrase2[32], sSteamIDFinal[32];
-									strcopy(sName, sizeof(sName), value);
-									FormatEx(sPhrase, sizeof(sPhrase), "%s Name", sSteamID32);
-									FormatEx(sPhrase2, sizeof(sPhrase2), "%s Name", sSteam3ID);
-									FormatEx(sSteamIDFinal, sizeof(sSteamIDFinal), "%s", (TranslationPhraseExists(sPhrase) ? sPhrase : sPhrase2));
-									if (sSteamIDFinal[0] != '\0' && TranslationPhraseExists(sSteamIDFinal))
-									{
-										FormatEx(g_esPlayer[iPlayer].g_sTankName, sizeof(esPlayer::g_sTankName), "%t", sSteamIDFinal, sName);
-									}
-									else
-									{
-										strcopy(g_esPlayer[iPlayer].g_sTankName, sizeof(esPlayer::g_sTankName), value);
-									}
+									strcopy(g_esPlayer[iPlayer].g_sTankName, sizeof(esPlayer::g_sTankName), value);
 								}
 								else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 								{
@@ -4157,6 +4144,20 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				vCacheSettings(iTank);
 			}
 		}
+		else if (StrEqual(name, "player_changename"))
+		{
+			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+			if (bIsValidClient(iTank))
+			{
+				char sOldName[33], sNewName[33];
+				event.GetString("oldname", sOldName, sizeof(sOldName));
+				event.GetString("newname", sNewName, sizeof(sNewName));
+				if ((StrEqual(sOldName, g_esPlayer[iTank].g_sOriginalName) || !StrEqual(sOldName, g_esPlayer[iTank].g_sOriginalName)) && !StrEqual(sNewName, g_esCache[iTank].g_sTankName))
+				{
+					GetClientName(iTank, g_esPlayer[iTank].g_sOriginalName, sizeof(esPlayer::g_sOriginalName));
+				}
+			}
+		}
 		else if (StrEqual(name, "player_death"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
@@ -4172,11 +4173,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 				if (bIsCloneAllowed(iTank))
 				{
-					if (g_esCache[iTank].g_sTankName[0] == '\0')
-					{
-						g_esCache[iTank].g_sTankName = "Tank";
-					}
-
 					switch (g_esCache[iTank].g_iAnnounceDeath)
 					{
 						case 1: vAnnounceDeath(iTank);
@@ -4185,11 +4181,12 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 							int iSurvivor = GetClientOfUserId(event.GetInt("attacker"));
 							if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 							{
-								char sPhrase[32];
+								char sPhrase[32], sTankName[33];
 								int iOption = GetRandomInt(1, 10);
 								FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
-								MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, iSurvivor, g_esCache[iTank].g_sTankName);
-								vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, sPhrase, iSurvivor, g_esCache[iTank].g_sTankName);
+								vGetName(sTankName, sizeof(sTankName), iTank);
+								MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, iSurvivor, sTankName);
+								vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, iSurvivor, sTankName);
 							}
 							else
 							{
@@ -4264,6 +4261,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				if (g_esPlayer[iTank].g_bDied)
 				{
 					g_esPlayer[iTank].g_bDied = false;
+					g_esPlayer[iTank].g_iOldTankType = 0;
 					g_esPlayer[iTank].g_iTankType = 0;
 				}
 
@@ -4402,6 +4400,7 @@ static void vHookEvents(bool hook)
 		HookEvent("finale_win", vEventHandler);
 		HookEvent("mission_lost", vEventHandler);
 		HookEvent("player_bot_replace", vEventHandler);
+		HookEvent("player_changename", vEventHandler);
 		HookEvent("player_death", vEventHandler, EventHookMode_Pre);
 		HookEvent("player_incapacitated", vEventHandler);
 		HookEvent("player_spawn", vEventHandler);
@@ -4434,6 +4433,7 @@ static void vHookEvents(bool hook)
 		UnhookEvent("finale_win", vEventHandler);
 		UnhookEvent("mission_lost", vEventHandler);
 		UnhookEvent("player_bot_replace", vEventHandler);
+		UnhookEvent("player_changename", vEventHandler);
 		UnhookEvent("player_death", vEventHandler, EventHookMode_Pre);
 		UnhookEvent("player_incapacitated", vEventHandler);
 		UnhookEvent("player_spawn", vEventHandler);
@@ -4756,6 +4756,7 @@ static void vReset3(int tank)
 	g_esPlayer[tank].g_flAttackDelay = -1.0;
 	g_esPlayer[tank].g_iBossStageCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
+	g_esPlayer[tank].g_iOldTankType = 0;
 	g_esPlayer[tank].g_iTankType = 0;
 }
 
@@ -4876,14 +4877,17 @@ static void vSetColor(int tank, int type = 0)
 
 		return;
 	}
-
-	if (g_esPlayer[tank].g_iTankType > 0 && g_esPlayer[tank].g_iTankType == type && !g_esPlayer[tank].g_bKeepCurrentType)
+	else if (g_esPlayer[tank].g_iTankType > 0 && g_esPlayer[tank].g_iTankType == type && !g_esPlayer[tank].g_bKeepCurrentType)
 	{
 		vRemoveProps(tank);
 
 		g_esPlayer[tank].g_iTankType = 0;
 
 		return;
+	}
+	else if (type > 0 && g_esPlayer[tank].g_iTankType > 0)
+	{
+		g_esPlayer[tank].g_iOldTankType = g_esPlayer[tank].g_iTankType;
 	}
 
 	g_esPlayer[tank].g_iTankType = type;
@@ -4903,6 +4907,48 @@ static void vSetColor(int tank, int type = 0)
 	}
 }
 
+static void vGetName(char[] buffer, int size, int tank = 0, int type = 0)
+{
+	static int iType;
+	iType = (type > 0) ? type : g_esPlayer[tank].g_iTankType;
+	if (tank > 0 && g_esPlayer[tank].g_sTankName[0] != '\0')
+	{
+		static char sSteamID32[32], sSteam3ID[32];
+		if (GetClientAuthId(tank, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)) && GetClientAuthId(tank, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
+		{
+			static char sPhrase[32], sPhrase2[32], sSteamIDFinal[32];
+			FormatEx(sPhrase, sizeof(sPhrase), "%s Name", sSteamID32);
+			FormatEx(sPhrase2, sizeof(sPhrase2), "%s Name", sSteam3ID);
+			FormatEx(sSteamIDFinal, sizeof(sSteamIDFinal), "%s", (TranslationPhraseExists(sPhrase) ? sPhrase : sPhrase2));
+			if (sSteamIDFinal[0] != '\0' && TranslationPhraseExists(sSteamIDFinal))
+			{
+				strcopy(buffer, size, sSteamIDFinal);
+			}
+			else
+			{
+				strcopy(buffer, size, "NoName");
+			}
+		}
+	}
+	else if (g_esTank[iType].g_sTankName[0] != '\0')
+	{
+		static char sTankName[32];
+		FormatEx(sTankName, sizeof(sTankName), "Tank #%i Name", iType);
+		if (sTankName[0] != '\0' && TranslationPhraseExists(sTankName))
+		{
+			strcopy(buffer, size, sTankName);
+		}
+		else
+		{
+			strcopy(buffer, size, "NoName");
+		}
+	}
+	else
+	{
+		strcopy(buffer, size, "NoName");
+	}
+}
+
 static void vSetName(int tank, const char[] oldname, const char[] name, int mode)
 {
 	if (bIsTank(tank))
@@ -4910,7 +4956,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iRenamePlayers == 1)
 		{
 			g_esGeneral.g_bHideNameChange = true;
-			SetClientName(tank, name);
+			SetClientName(tank, g_esCache[tank].g_sTankName);
 			g_esGeneral.g_bHideNameChange = false;
 		}
 
@@ -4922,7 +4968,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_BOSS)
 				{
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Evolved", oldname, name, g_esPlayer[tank].g_iBossStageCount + 1);
-					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Evolved", oldname, name, g_esPlayer[tank].g_iBossStageCount + 1);
+					vLogMessage(MT_LOG_CHANGE, "%s %T", MT_TAG, "Evolved", LANG_SERVER, oldname, name, g_esPlayer[tank].g_iBossStageCount + 1);
 				}
 			}
 			case 2:
@@ -4930,7 +4976,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_RANDOM)
 				{
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Randomized", oldname, name);
-					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Randomized", oldname, name);
+					vLogMessage(MT_LOG_CHANGE, "%s %T", MT_TAG, "Randomized", LANG_SERVER, oldname, name);
 				}
 			}
 			case 3:
@@ -4938,7 +4984,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_TRANSFORM)
 				{
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Transformed", oldname, name);
-					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Transformed", oldname, name);
+					vLogMessage(MT_LOG_CHANGE, "%s %T", MT_TAG, "Transformed", LANG_SERVER, oldname, name);
 				}
 			}
 			case 4:
@@ -4946,7 +4992,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 				if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_REVERT)
 				{
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Untransformed", oldname, name);
-					vLogMessage(MT_LOG_CHANGE, "%s %t", MT_TAG2, "Untransformed", oldname, name);
+					vLogMessage(MT_LOG_CHANGE, "%s %T", MT_TAG, "Untransformed", LANG_SERVER, oldname, name);
 				}
 			}
 			case 5:
@@ -4969,7 +5015,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 			bool bExists = TranslationPhraseExists(sTankNote);
 			MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sTankNote : "NoNote"));
-			vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG3, (bExists ? sTankNote : "NoNote"));
+			vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, (bExists ? sTankNote : "NoNote"), LANG_SERVER);
 		}
 	}
 }
@@ -5336,17 +5382,18 @@ static void vAnnounceArrival(int tank, const char[] name)
 		int iOption = GetRandomInt(1, 10);
 		FormatEx(sPhrase, sizeof(sPhrase), "Arrival%i", iOption);
 		MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, name);
-		vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, sPhrase, name);
+		vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, name);
 	}
 }
 
 static void vAnnounceDeath(int tank)
 {
-	char sPhrase[32];
+	char sPhrase[32], sTankName[33];
 	int iOption = GetRandomInt(1, 10);
 	FormatEx(sPhrase, sizeof(sPhrase), "Death%i", iOption);
-	MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, g_esCache[tank].g_sTankName);
-	vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, sPhrase, g_esCache[tank].g_sTankName);
+	vGetName(sTankName, sizeof(sTankName), tank);
+	MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName);
+	vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName);
 }
 
 static void vLightProp(int tank, int light, float origin[3], float angles[3])
@@ -5658,19 +5705,10 @@ public void vTankSpawnFrame(DataPack pack)
 		vParticleEffects(iTank);
 		vThrowInterval(iTank);
 
-		static char sCurrentName[33];
-		GetClientName(iTank, sCurrentName, sizeof(sCurrentName));
-		if (sCurrentName[0] == '\0')
-		{
-			sCurrentName = "Tank";
-		}
-
-		if (g_esCache[iTank].g_sTankName[0] == '\0')
-		{
-			g_esCache[iTank].g_sTankName = "Tank";
-		}
-
-		vSetName(iTank, sCurrentName, g_esCache[iTank].g_sTankName, iMode);
+		static char sOldName[33], sNewName[33];
+		vGetName(sOldName, sizeof(sOldName), _, g_esPlayer[iTank].g_iOldTankType);
+		vGetName(sNewName, sizeof(sNewName), _, g_esPlayer[iTank].g_iTankType);
+		vSetName(iTank, sOldName, sNewName, iMode);
 		vSetProps(iTank);
 
 		if (iMode == 0)
@@ -6882,7 +6920,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 		g_esGeneral.g_iFileTimeNew[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
 		if (g_esGeneral.g_iFileTimeOld[0] != g_esGeneral.g_iFileTimeNew[0])
 		{
-			vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", g_esGeneral.g_sSavePath);
+			vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, g_esGeneral.g_sSavePath);
 			vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 			vPluginStatus();
 			vResetTimers();
@@ -6901,7 +6939,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1])
 			{
-				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", sDifficultyConfig);
+				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDifficultyConfig);
 				vCustomConfig(sDifficultyConfig);
 				g_esGeneral.g_iFileTimeOld[1] = g_esGeneral.g_iFileTimeNew[1];
 			}
@@ -6918,7 +6956,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2])
 			{
-				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", sMapConfig);
+				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sMapConfig);
 				vCustomConfig(sMapConfig);
 				g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
 			}
@@ -6935,7 +6973,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3])
 			{
-				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", sModeConfig);
+				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sModeConfig);
 				vCustomConfig(sModeConfig);
 				g_esGeneral.g_iFileTimeOld[3] = g_esGeneral.g_iFileTimeNew[3];
 			}
@@ -6966,7 +7004,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4])
 			{
-				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", sDayConfig);
+				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDayConfig);
 				vCustomConfig(sDayConfig);
 				g_esGeneral.g_iFileTimeOld[4] = g_esGeneral.g_iFileTimeNew[4];
 			}
@@ -6984,7 +7022,7 @@ public Action tTimerRefreshConfigs(Handle timer)
 			g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
 			if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5])
 			{
-				vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG, "ReloadingConfig", sCountConfig);
+				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
 				vCustomConfig(sCountConfig);
 				g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
 				g_esGeneral.g_iPlayerCount[1] = iCount;

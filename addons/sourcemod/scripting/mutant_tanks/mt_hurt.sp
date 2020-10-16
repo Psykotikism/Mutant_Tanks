@@ -660,7 +660,7 @@ static void vHurtHit(int survivor, int tank, float chance, int enabled, int mess
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Hurt", sTankName, survivor);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Hurt", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hurt", LANG_SERVER, sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -717,7 +717,7 @@ static void vReset2(int survivor, int tank, int messages)
 	if (g_esCache[tank].g_iHurtMessage & messages)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Hurt2", survivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Hurt2", survivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hurt2", LANG_SERVER, survivor);
 	}
 }
 

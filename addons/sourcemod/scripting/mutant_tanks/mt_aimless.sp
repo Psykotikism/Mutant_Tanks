@@ -653,7 +653,7 @@ static void vAimlessHit(int survivor, int tank, float chance, int enabled, int m
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Aimless", sTankName, survivor);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Aimless", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Aimless", LANG_SERVER, sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -740,7 +740,7 @@ public Action tTimerStopAimless(Handle timer, DataPack pack)
 	if (g_esCache[iTank].g_iAimlessMessage & iMessage)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Aimless2", iSurvivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Aimless2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Aimless2", LANG_SERVER, iSurvivor);
 	}
 
 	return Plugin_Continue;

@@ -590,7 +590,7 @@ static void vLaser(int tank)
 			static char sTankName[33];
 			MT_GetTankName(tank, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Laser", sTankName, iSurvivor);
-			MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Laser", sTankName, iSurvivor);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Laser", LANG_SERVER, sTankName, iSurvivor);
 		}
 	}
 }
@@ -659,7 +659,7 @@ static void vReset2(int tank)
 		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Laser2", sTankName);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Laser2", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Laser2", LANG_SERVER, sTankName);
 	}
 }
 

@@ -663,7 +663,7 @@ static void vQuietHit(int survivor, int tank, float chance, int enabled, int mes
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Quiet", sTankName, survivor);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Quiet", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Quiet", LANG_SERVER, sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -752,7 +752,7 @@ public Action tTimerStopQuiet(Handle timer, DataPack pack)
 		char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Quiet2", sTankName, iSurvivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Quiet2", sTankName, iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Quiet2", LANG_SERVER, sTankName, iSurvivor);
 	}
 
 	return Plugin_Continue;

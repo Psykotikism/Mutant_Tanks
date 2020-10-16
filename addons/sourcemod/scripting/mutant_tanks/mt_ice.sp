@@ -661,7 +661,7 @@ static void vIceHit(int survivor, int tank, float chance, int enabled, int messa
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Ice", sTankName, survivor);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Ice", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ice", LANG_SERVER, sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -763,7 +763,7 @@ public Action tTimerStopIce(Handle timer, DataPack pack)
 	if (g_esCache[iTank].g_iIceMessage & iMessage)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Ice2", iSurvivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Ice2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ice2", LANG_SERVER, iSurvivor);
 	}
 
 	return Plugin_Continue;

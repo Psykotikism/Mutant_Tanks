@@ -705,7 +705,7 @@ static void vHypnoHit(int survivor, int tank, float chance, int enabled, int mes
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Hypno", sTankName, survivor);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Hypno", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hypno", LANG_SERVER, sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -793,7 +793,7 @@ public Action tTimerStopHypno(Handle timer, DataPack pack)
 	if (g_esCache[iTank].g_iHypnoMessage & iMessage)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Hypno2", iSurvivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Hypno2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hypno2", LANG_SERVER, iSurvivor);
 	}
 
 	return Plugin_Continue;

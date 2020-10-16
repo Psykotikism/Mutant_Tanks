@@ -658,7 +658,7 @@ static void vAbsorbAbility(int tank)
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Absorb", sTankName);
-				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Absorb", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Absorb", LANG_SERVER, sTankName);
 			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -701,7 +701,7 @@ static void vReset2(int tank)
 		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Absorb2", sTankName);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Absorb2", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Absorb2", LANG_SERVER, sTankName);
 	}
 }
 

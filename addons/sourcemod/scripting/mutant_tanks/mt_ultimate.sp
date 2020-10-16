@@ -360,7 +360,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			static char sTankName[33];
 			MT_GetTankName(client, sTankName);
 			MT_PrintToChatAll("%s %t", MT_TAG2, "Ultimate2", sTankName);
-			MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Ultimate2", sTankName);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ultimate2", LANG_SERVER, sTankName);
 		}
 	}
 
@@ -720,7 +720,7 @@ static void vUltimateAbility(int tank)
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Ultimate", sTankName);
-				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Ultimate", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Ultimate", LANG_SERVER, sTankName);
 			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)

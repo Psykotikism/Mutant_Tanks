@@ -977,7 +977,7 @@ static void vShieldAbility(int tank, bool shield)
 							static char sTankName[33];
 							MT_GetTankName(tank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Shield", sTankName);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Shield", sTankName);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shield", LANG_SERVER, sTankName);
 						}
 					}
 				}
@@ -1010,7 +1010,7 @@ static void vShieldAbility(int tank, bool shield)
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Shield2", sTankName);
-				MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Shield2", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shield2", LANG_SERVER, sTankName);
 			}
 		}
 	}

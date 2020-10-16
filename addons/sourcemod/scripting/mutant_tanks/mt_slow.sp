@@ -699,7 +699,7 @@ static void vSlowHit(int survivor, int tank, float chance, int enabled, int mess
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Slow", sTankName, survivor, g_esCache[tank].g_flSlowSpeed);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Slow", sTankName, survivor, g_esCache[tank].g_flSlowSpeed);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Slow", LANG_SERVER, sTankName, survivor, g_esCache[tank].g_flSlowSpeed);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -756,7 +756,7 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 	if (g_esCache[iTank].g_iSlowMessage & iMessage)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Slow2", iSurvivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Slow2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Slow2", LANG_SERVER, iSurvivor);
 	}
 
 	return Plugin_Continue;

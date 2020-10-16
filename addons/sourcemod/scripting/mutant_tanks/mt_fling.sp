@@ -736,7 +736,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 						if (g_esCache[tank].g_iFlingMessage & messages)
 						{
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Fling", sTankName, survivor);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Fling", sTankName, survivor);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fling", LANG_SERVER, sTankName, survivor);
 						}
 					}
 					case false:
@@ -746,7 +746,7 @@ static void vFlingHit(int survivor, int tank, float chance, int enabled, int mes
 						if (g_esCache[tank].g_iFlingMessage & messages)
 						{
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Puke", sTankName, survivor);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
 						}
 					}
 				}

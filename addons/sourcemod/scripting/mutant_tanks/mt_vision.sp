@@ -601,7 +601,7 @@ static void vReset2(int survivor, int tank, int messages)
 	if (g_esCache[tank].g_iVisionMessage & messages)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Vision2", survivor, 90);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Vision2", survivor, 90);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Vision2", LANG_SERVER, survivor, 90);
 	}
 }
 
@@ -709,7 +709,7 @@ static void vVisionHit(int survivor, int tank, float chance, int enabled, int me
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Vision", sTankName, survivor, g_esCache[tank].g_iVisionFOV);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Vision", sTankName, survivor, g_esCache[tank].g_iVisionFOV);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Vision", LANG_SERVER, sTankName, survivor, g_esCache[tank].g_iVisionFOV);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))

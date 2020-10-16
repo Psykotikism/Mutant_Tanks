@@ -557,12 +557,17 @@ public void MT_OnButtonPressed(int tank, int button)
 						{
 							if (!g_esPlayer[tank].g_bActivated && !bRecharging)
 							{
-								g_esPlayer[tank].g_bActivated = true;
-								g_esPlayer[tank].g_iCount++;
+								static int iSurvivorCount;
+								iSurvivorCount = iGetVictimCount(tank);
+								if (iSurvivorCount > 0)
+								{
+									g_esPlayer[tank].g_bActivated = true;
+									g_esPlayer[tank].g_iCount++;
 
-								vYell(tank);
+									vYell(tank);
 
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+									MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+								}
 							}
 							else if (g_esPlayer[tank].g_bActivated)
 							{
@@ -640,7 +645,7 @@ static void vReset2(int tank)
 		char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Yell2", sTankName);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Yell2", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Yell2", LANG_SERVER, sTankName);
 	}
 }
 
@@ -697,31 +702,8 @@ static void vYellAbility(int tank)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flYellChance)
 		{
-			static float flTankPos[3];
-			GetClientAbsOrigin(tank, flTankPos);
-
-			static float flSurvivorPos[3], flDistance;
 			static int iSurvivorCount;
-			iSurvivorCount = 0;
-			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-			{
-				if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) && !g_esPlayer[iSurvivor].g_bAffected)
-				{
-					GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-					flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-					if (flDistance <= g_esCache[tank].g_flYellRange)
-					{
-						g_esPlayer[iSurvivor].g_bAffected = true;
-						g_esPlayer[iSurvivor].g_iOwner = tank;
-
-						L4D_Deafen(iSurvivor);
-
-						iSurvivorCount++;
-					}
-				}
-			}
-
+			iSurvivorCount = iGetVictimCount(tank);
 			if (iSurvivorCount > 0 && !g_esPlayer[tank].g_bActivated)
 			{
 				g_esPlayer[tank].g_bActivated = true;
@@ -741,7 +723,7 @@ static void vYellAbility(int tank)
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Yell", sTankName);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Yell", sTankName);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Yell", LANG_SERVER, sTankName);
 				}
 			}
 		}
@@ -754,4 +736,34 @@ static void vYellAbility(int tank)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellAmmo");
 	}
+}
+
+static int iGetVictimCount(int tank)
+{
+	static float flTankPos[3];
+	GetClientAbsOrigin(tank, flTankPos);
+
+	static float flSurvivorPos[3], flDistance;
+	static int iSurvivorCount;
+	iSurvivorCount = 0;
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) && !g_esPlayer[iSurvivor].g_bAffected)
+		{
+			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+
+			flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
+			if (flDistance <= g_esCache[tank].g_flYellRange)
+			{
+				g_esPlayer[iSurvivor].g_bAffected = true;
+				g_esPlayer[iSurvivor].g_iOwner = tank;
+
+				L4D_Deafen(iSurvivor);
+
+				iSurvivorCount++;
+			}
+		}
+	}
+
+	return iSurvivorCount;
 }

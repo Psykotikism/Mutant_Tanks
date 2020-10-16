@@ -696,7 +696,7 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 						static char sTankName[33];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Idle", sTankName, survivor);
-						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Idle", sTankName, survivor);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Idle", LANG_SERVER, sTankName, survivor);
 					}
 				}
 			}

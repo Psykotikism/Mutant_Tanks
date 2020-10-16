@@ -746,7 +746,7 @@ static void vWarp2(int tank, int other)
 		static char sTankName[33];
 		MT_GetTankName(tank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Warp3", sTankName, other);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Warp3", sTankName, other);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp3", LANG_SERVER, sTankName, other);
 	}
 }
 
@@ -826,7 +826,7 @@ static void vWarpAbility(int tank, bool main)
 						static char sTankName[33];
 						MT_GetTankName(tank, sTankName);
 						MT_PrintToChatAll("%s %t", MT_TAG2, "Warp2", sTankName);
-						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Warp2", sTankName);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp2", LANG_SERVER, sTankName);
 					}
 				}
 				else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -879,7 +879,7 @@ static void vWarpHit(int survivor, int tank, float chance, int enabled, int mess
 						{
 							MT_GetTankName(tank, sTankName);
 							MT_PrintToChatAll("%s %t", MT_TAG2, "Warp", sTankName, survivor, iPlayer);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Warp", sTankName, survivor, iPlayer);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp", LANG_SERVER, sTankName, survivor, iPlayer);
 						}
 
 						break;

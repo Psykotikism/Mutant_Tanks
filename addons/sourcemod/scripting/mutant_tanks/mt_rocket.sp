@@ -835,7 +835,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		static char sTankName[33];
 		MT_GetTankName(iTank, sTankName);
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Rocket", sTankName, iSurvivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Rocket", sTankName, iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Rocket", LANG_SERVER, sTankName, iSurvivor);
 	}
 
 	return Plugin_Continue;

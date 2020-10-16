@@ -58,6 +58,7 @@ enum struct esPlayer
 	float g_flBuryHeight;
 	float g_flBuryRange;
 	float g_flBuryRangeChance;
+	float g_flLastPosition[3];
 
 	int g_iAccessFlags;
 	int g_iBuryAbility;
@@ -653,8 +654,9 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, int mess
 					}
 				}
 
-				static float flOrigin[3], flPos[3];
+				static float flOrigin[3];
 				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
+				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", g_esPlayer[survivor].g_flLastPosition);
 				flOrigin[2] -= g_esCache[tank].g_flBuryHeight;
 				SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 
@@ -663,8 +665,6 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, int mess
 					SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
 					SetEntProp(survivor, Prop_Data, "m_takedamage", 0, 1);
 				}
-
-				GetClientEyePosition(survivor, flPos);
 
 				if (GetEntityMoveType(survivor) != MOVETYPE_NONE)
 				{
@@ -684,7 +684,7 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, int mess
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
 					MT_PrintToChatAll("%s %t", MT_TAG2, "Bury", sTankName, survivor, flOrigin);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Bury", sTankName, survivor, flOrigin);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Bury", LANG_SERVER, sTankName, survivor, flOrigin);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -737,6 +737,9 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
+	g_esPlayer[tank].g_flLastPosition[0] = 0.0;
+	g_esPlayer[tank].g_flLastPosition[1] = 0.0;
+	g_esPlayer[tank].g_flLastPosition[2] = 0.0;
 	g_esPlayer[tank].g_iCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }
@@ -746,7 +749,7 @@ static void vStopBury(int survivor, int tank)
 	g_esPlayer[survivor].g_bAffected = false;
 	g_esPlayer[survivor].g_iOwner = 0;
 
-	float flOrigin[3], flCurrentOrigin[3];
+	float flOrigin[3];
 	GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 	flOrigin[2] += g_esCache[tank].g_flBuryHeight;
 	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
@@ -760,16 +763,11 @@ static void vStopBury(int survivor, int tank)
 		SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", g_esCache[tank].g_flBuryBuffer);
 	}
 
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !g_esPlayer[iPlayer].g_bAffected && iPlayer != survivor)
-		{
-			GetClientAbsOrigin(iPlayer, flCurrentOrigin);
-			TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
+	TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, NULL_VECTOR, NULL_VECTOR);
 
-			break;
-		}
-	}
+	g_esPlayer[survivor].g_flLastPosition[0] = 0.0;
+	g_esPlayer[survivor].g_flLastPosition[1] = 0.0;
+	g_esPlayer[survivor].g_flLastPosition[2] = 0.0;
 
 	if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
 	{
@@ -804,7 +802,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	if (g_esCache[iTank].g_iBuryMessage & iMessage)
 	{
 		MT_PrintToChatAll("%s %t", MT_TAG2, "Bury2", iSurvivor);
-		MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Bury2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Bury2", LANG_SERVER, iSurvivor);
 	}
 
 	return Plugin_Continue;
