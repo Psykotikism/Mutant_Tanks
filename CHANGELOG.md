@@ -18,10 +18,12 @@ Bug fixes:
 12. Fixed global chat messages not being translated. (Thanks to Mi.Cura for testing and reporting!)
 13. Fixed settings not having their values stored properly.
 14. Fixed color-related settings from not picking random colors when set to `-1`.
-15. Fixed the `Health` and `Track` abilities' glow outlines not going away when Tanks die and when rocks break respectively.
-16. Fixed the core plugin not tracking players' new names when storing their non-Mutant Tank names for the `Rename Players` setting.
-17. Fixed the `Burier` ability sometimes leaving players under the map.
-18. Fixed the `Yell` ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
+15. Fixed the `Health` ability's glow outline not going away when Tanks die.
+16. Fixed the `Track` ability's glow outline not going away when rocks break.
+17. Fixed the core plugin not tracking players' new names when storing their non-Mutant Tank names for the `Rename Players` setting.
+18. Fixed the `Burier` ability sometimes leaving players under the map.
+19. Fixed the `Yell` ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
+20. Fixed some phrases not being translated for other languages.
 
 Changes:
 
