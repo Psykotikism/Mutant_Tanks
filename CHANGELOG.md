@@ -20,10 +20,9 @@ Bug fixes:
 14. Fixed color-related settings from not picking random colors when set to `-1`.
 15. Fixed the `Health` ability's glow outline not going away when Tanks die.
 16. Fixed the `Track` ability's glow outline not going away when rocks break.
-17. Fixed the core plugin not tracking players' new names when storing their non-Mutant Tank names for the `Rename Players` setting.
-18. Fixed the `Burier` ability sometimes leaving players under the map.
-19. Fixed the `Yell` ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
-20. Fixed some phrases not being translated for other languages.
+17. Fixed the `Burier` ability sometimes leaving players under the map.
+18. Fixed the `Yell` ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
+19. Fixed some phrases not being translated for other languages.
 
 Changes:
 
@@ -47,6 +46,7 @@ Changes:
 18. The `all` section can now be grouped with multiple types and abilities in config files.
 19. The `Clone` ability's `Clone Type` setting and the `Respawn` ability's `Respawn Type` setting now both take in a type range. Example: `1-10` (Requested by Neptunia.)
 20. The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
+21. Removed the `Rename Players` setting. (Too many bugs with special characters in people's names.)
 
 Files:
 

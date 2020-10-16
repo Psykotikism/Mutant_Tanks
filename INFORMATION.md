@@ -251,14 +251,6 @@
 			// 1: ON
 			"Master Control"			"0"
 
-			// Human-controlled Mutant Tanks are renamed to their type's assigned name. If the player has a personalized Mutant Tank with a custom name, the player will use that name instead. Names are reverted back upon death, player disconnect, or end of map.
-			// Note: This setting can be overridden for each Mutant Tank under the "Human Support" section of their settings.
-			// Note: Do not change this setting if you are unsure of how it works.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Rename Players"			"0"
-
 			// The mode of how human-controlled Tanks spawn.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
@@ -683,14 +675,6 @@
 			// 1: ON, inform players about activating their abilities manually.
 			// 2: ON, do not inform players about activating their abilities manually.
 			"Human Support"				"0"
-
-			// Human-controlled Mutant Tanks are renamed to their type's assigned name. If the player has a personalized Mutant Tank with a custom name, the player will use that name instead. Names are reverted back upon death, player disconnect, or end of map.
-			// Note: This setting overrides the same setting under the "Plugin Settings/Human Support" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Rename Players"			"0"
 		}
 		"Spawn"
 		{
