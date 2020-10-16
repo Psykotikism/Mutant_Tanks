@@ -82,7 +82,7 @@
 
 	"MTTankItem"
 	{
-		"#format"		"{1:s},{2:i}"
+		"#format"		"{1:t},{2:i}"
 		"en"			"{1} (Tank #{2})"
 		"hu"			"{1} (Tank #{2})"
 		"chi"			"{1} (Tank #{2})"
@@ -279,7 +279,7 @@
 
 	"Arrival1"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} has appeared!"
 		"hu"			"{olive}{1}{default} megérkezett!"
 		"chi"			"{olive}{1}{default} 已经出现了!"
@@ -287,7 +287,7 @@
 
 	"Arrival2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"Here comes{olive} {1}{default}!"
 		"hu"			"Itt jön a(z){olive} {1}{default}!"
 		"chi"			"{olive}{1}{default} 来了!"
@@ -295,7 +295,7 @@
 
 	"Arrival3"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} is ready to kill!"
 		"hu"			"{olive}{1}{default} készen áll gyilkolni!"
 		"chi"			"{olive}{1}{default} 已准备好杀戮了!"
@@ -303,7 +303,7 @@
 
 	"Arrival4"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"Are you ready to face{olive} {1}{default}?"
 		"hu"			"Készen állsz szembenézni a(z){olive} {1}{default}-al?"
 		"chi"			"准备好面对 {olive}{1}{default} 了么?"
@@ -311,7 +311,7 @@
 
 	"Arrival5"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} came for a challenge!"
 		"hu"			"{olive}{1}{default} kihívásra érkezett!"
 		"chi"			"{olive}{1}{default} 来了,迎接挑战吧!"
@@ -319,7 +319,7 @@
 
 	"Arrival6"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"Get ready!{olive} {1}{default} is coming!"
 		"hu"			"Állj készen!{olive} {1}{default} érkezik!"
 		"chi"			"都给我准备好! {olive}{1}{default} 来了!"
@@ -327,7 +327,7 @@
 
 	"Arrival7"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} is here!"
 		"hu"			"{olive}{1}{default} itt van!"
 		"chi"			"{olive}{1}{default} 在这里!"
@@ -335,7 +335,7 @@
 
 	"Arrival8"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"Oh no!{olive} {1}{default} is nearing!"
 		"hu"			"Jaj ne!{olive} {1}{default} közeledik!"
 		"chi"			"糟糕! {olive}{1}{default} 正在靠近!"
@@ -343,7 +343,7 @@
 
 	"Arrival9"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} joined the game..."
 		"hu"			"{olive}{1}{default} csatlakozott a játékba..."
 		"chi"			"{olive}{1}{default} 加入游戏..."
@@ -351,7 +351,7 @@
 
 	"Arrival10"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"It seems{olive} {1}{default} is joining your company..."
 		"hu"			"Úgy látszik{olive} {1}{default} csatlakozik a társasághoz..."
 		"chi"			"看来 {olive}{1}{default} 正往你们那边去..."
@@ -388,7 +388,7 @@
 
 	"Death1"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} is defeated!"
 		"hu"			"{olive}{1}{default} legyőzve!"
 		"chi"			"{olive}{1}{default} 被击败了!"
@@ -396,7 +396,7 @@
 
 	"Death2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"The survivors defeated{olive} {1}{default}!"
 		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!"
 		"chi"			"幸存者消灭了 {olive}{1}{default}!"
@@ -404,7 +404,7 @@
 
 	"Death3"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} goes to hell!"
 		"hu"			"{olive}{1}{default} elindult a pokolba!"
 		"chi"			"{olive}{1}{default} 被打下了地狱!"
@@ -412,7 +412,7 @@
 
 	"Death4"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"Is{olive} {1}{default} really dead...?"
 		"hu"			"A(z){olive} {1}{default} tényleg halott...?"
 		"chi"			"{olive}{1}{default} 真的死了...?"
@@ -420,7 +420,7 @@
 
 	"Death5"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} lost the challenge against the survivors!"
 		"hu"			"{olive}{1}{default} elvesztette a kihívást a túlélőkkel szemben!"
 		"chi"			"{olive}{1}{default} 挑战幸存者失败!"
@@ -428,7 +428,7 @@
 
 	"Death6"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"The{olive} {1}{default} failed to kill the survivors!"
 		"hu"			"A(z){olive} {1}{default} elbukta a túlélők megölését!"
 		"chi"			"{olive}{1}{default} 未能团灭幸存者!"
@@ -436,7 +436,7 @@
 
 	"Death7"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} has met their demise!"
 		"hu"			"{olive}{1}{default} találkozott a halállal!"
 		"chi"			"{olive}{1}{default} 已经消逝了!"
@@ -444,7 +444,7 @@
 
 	"Death8"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"Yay!{olive} {1}{default} is dead!"
 		"hu"			"Éljen!{olive} {1}{default} halott!"
 		"chi"			"哎呀! {olive}{1}{default} 死了!"
@@ -452,7 +452,7 @@
 
 	"Death9"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} left the game..."
 		"hu"			"{olive}{1}{default} elhagyta a játékot..."
 		"chi"			"{olive}{1}{default} 被打出游戏..."
@@ -460,7 +460,7 @@
 
 	"Death10"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"It seems{olive} {1}{default} could not beat the survivors after all..."
 		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket..."
 		"chi"			"看来 {olive}{1}{default} 根本无法团灭幸存者嘛..."
@@ -476,7 +476,7 @@
 
 	"Evolved"
 	{
-		"#format"		"{1:s},{2:s},{3:i}"
+		"#format"		"{1:s},{2:t},{3:i}"
 		"en"			"{olive}{1}{mint} evolved into{olive} {2}{yellow} (Stage {3}){mint}!"
 		"hu"			"{olive}{1}{mint} tovább fejlődött{olive} {2}{yellow} (Stage {3}){mint}!"
 		"chi"			"{olive}{1}{mint} 演变为{olive} {2}{yellow} (阶段 {3}){mint}!"
@@ -521,7 +521,7 @@
 
 	"Killer1"
 	{
-		"#format"		"{1:N},{2:s}"
+		"#format"		"{1:N},{2:t}"
 		"en"			"{mint}{1}{default} finished off{olive} {2}{default}!"
 		"hu"			"{mint}{1}{default} kivégezte{olive} {2}{default}!"
 		"chi"			"{mint}{1}{default} 完成了{olive} {2}{default}!"
@@ -529,7 +529,7 @@
 
 	"Killer2"
 	{
-		"#format"		"{1:N},{2:s}"
+		"#format"		"{1:N},{2:t}"
 		"en"			"{mint}{1}{default} defeated{olive} {2}{default}!"
 		"hu"			"{mint}{1}{default} legyőzte{olive} {2}{default}!"
 		"chi"			"{mint}{1}{default} 被击败了{olive} {2}{default}!"
@@ -537,7 +537,7 @@
 
 	"Killer3"
 	{
-		"#format"		"{1:N},{2:s}"
+		"#format"		"{1:N},{2:t}"
 		"en"			"{mint}{1}{default} sent{olive} {2}{default} to hell!"
 		"hu"			"{mint}{1}{default} elküldte{olive} {2}{default} a pokolba!"
 		"chi"			"{mint}{1}{default} 发送了{olive} {2}{default}到地狱!"
@@ -545,7 +545,7 @@
 
 	"Killer4"
 	{
-		"#format"		"{1:N},{2:s}"
+		"#format"		"{1:N},{2:t}"
 		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?"
 		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}?..."
 		"chi"			"{mint}{1}{default} 实际上杀死了{olive} {2}{default}...吗?"
@@ -553,7 +553,7 @@
 
 	"Killer5"
 	{
-		"#format"		"{1:N},{2:s}"
+		"#format"		"{1:N},{2:t}"
 		"en"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!"
 		"hu"			"{olive}{2}{default} elvesztette a kihívást{mint} {1}{default} ellen!"
 		"chi"			"{olive}{2}{default} 输掉了对{mint} {1}{default}的挑战!"
@@ -561,7 +561,7 @@
 
 	"Killer6"
 	{
-		"#format"		"{1:N},{2:s}"
+		"#format"		"{1:N},{2:t}"
 		"en"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!"
 		"hu"			"A(z){olive} {2}{default}-nak nem sikerült megölnie{mint} {1}{default}!"
 		"chi"			"{olive}{2}{default} 无法杀死{mint} {1}{default}!"
@@ -569,7 +569,7 @@
 
 	"Killer7"
 	{
-		"#format"		"{1:N},{2:s}"
+		"#format"		"{1:N},{2:t}"
 		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!"
 		"hu"			"{olive}{2}{default} elérte a pusztulás {mint} {1}{default} keze által!"
 		"chi"			"{olive}{2}{default} 已在{mint} {1}{default} 手中灭亡!"
@@ -577,7 +577,7 @@
 
 	"Killer8"
 	{
-		"#format"		"{1:N},{2:s}"
+		"#format"		"{1:N},{2:t}"
 		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!"
 		"hu"			"Éljen!{olive} {2}{default} halott, hála{mint} {1}{default}!"
 		"chi"			"哎呀!{olive} {2}{default} 死了，这要感谢{mint} {1}{default}!"
@@ -585,7 +585,7 @@
 
 	"Killer9"
 	{
-		"#format"		"{1:N},{2:s}"
+		"#format"		"{1:N},{2:t}"
 		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit..."
 		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen..."
 		"chi"			"{mint}{1}{default} 变成了{olive} {2}{default} 流行语..."
@@ -593,7 +593,7 @@
 
 	"Killer10"
 	{
-		"#format"		"{1:N},{2:s}"
+		"#format"		"{1:N},{2:t}"
 		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all..."
 		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is..."
 		"chi"			"看来{olive} {2}{default} 毕竟无法击败{mint} {1}{default}..."
@@ -627,11 +627,11 @@
 		"chi"			"没有可用的物品."
 	}
 
-	"NoTypeAccess"
+	"NoName"
 	{
-		"en"			"You do not have access to this Mutant Tank type."
-		"hu"			"Nincs hozzáférésed ehhez a Mutáns Tank típushoz."
-		"chi"			"你无权使用此突变坦克类型."
+		"en"			"Tank"
+		"hu"			"Tank"
+		"chi"			"坦克"
 	}
 
 	"NoNote"
@@ -639,6 +639,13 @@
 		"en"			"No note found for this Mutant Tank."
 		"hu"			"Nincs jegyzet ehhez a Szuper Tankhoz."
 		"chi"			"找不到该突变坦克的注释文本."
+	}
+
+	"NoTypeAccess"
+	{
+		"en"			"You do not have access to this Mutant Tank type."
+		"hu"			"Nincs hozzáférésed ehhez a Mutáns Tank típushoz."
+		"chi"			"你无权使用此突变坦克类型."
 	}
 
 	"OptionNo"
@@ -671,7 +678,7 @@
 
 	"Randomized"
 	{
-		"#format"		"{1:s},{2:s}"
+		"#format"		"{1:s},{2:t}"
 		"en"			"{olive}{1}{mint} randomized into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} randomizálva{olive} {2}{mint}!"
 		"chi"			"{olive}{1}{mint} 随机为{olive} {2}{mint}!"
@@ -715,7 +722,7 @@
 
 	"Transformed"
 	{
-		"#format"		"{1:s},{2:s}"
+		"#format"		"{1:s},{2:t}"
 		"en"			"{olive}{1}{mint} transformed into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} átalakult{olive} {2}{mint}!"
 		"chi"			"{olive}{1}{mint} 变成了{olive} {2}{mint}!"
@@ -723,7 +730,7 @@
 
 	"Untransformed"
 	{
-		"#format"		"{1:s},{2:s}"
+		"#format"		"{1:s},{2:t}"
 		"en"			"{olive}{1}{mint} reverted back into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} visszaváltozott{olive} {2}{mint}!"
 		"chi"			"{olive}{1}{mint} 恢复为{olive} {2}{mint}!"
@@ -738,7 +745,7 @@
 
 	"TankDisabled"
 	{
-		"#format"		"{1:s},{2:i}"
+		"#format"		"{1:t},{2:i}"
 		"en"			"{1}{yellow} (Tank #{2}){default} is disabled."
 		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
 		"chi"			"{1}{yellow} (Tank #{2}){default} 已禁用."
@@ -746,7 +753,7 @@
 
 	"Absorb"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is temporarily absorbing most of your damage!"
 		"hu"			"{olive}{1}{mint} ideiglenesen elnyeli a sebzésed nagy részét!"
 		"chi"			"{olive}{1}{mint} 正在吸收你造成的大部分伤害!"
@@ -754,7 +761,7 @@
 
 	"Absorb2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is no longer absorbing most of your damage!"
 		"hu"			"{olive}{1}{mint} már nem nyeli el a sebzésed nagy részét!"
 		"chi"			"{olive}{1}{mint} 不再吸收你造成的大部分伤害!"
@@ -828,7 +835,7 @@
 
 	"Acid"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} just created an acid puddle underneath{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} létrehozott egy savas pocsolyát{olive} {2}{mint}alatt!"
 		"chi"			"{olive}{1}{mint} 刚刚在{olive} {2}{mint} 脚下生成一个酸液地带!"
@@ -836,7 +843,7 @@
 
 	"Acid2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} rock created an acid puddle."
 		"hu"			"{olive}{1}{mint} sziklája létrehozott egy savas pocsolyát."
 		"chi"			"{olive}{1}{mint} 的岩石创造了一个酸液地带."
@@ -910,7 +917,7 @@
 
 	"Aimless"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is preventing{olive} {2}{mint} from aiming!"
 		"hu"			"{olive}{1}{mint} akadályozza{olive} {2}{mint} a célzásban!"
 		"chi"			"{olive}{1}{mint} 正在阻止{olive} {2}{mint} 使用瞄准!"
@@ -992,7 +999,7 @@
 
 	"Ammo"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} took all of{olive} {2}'s{mint} ammunition!"
 		"hu"			"{olive}{1}{mint} elvette{olive} {2}{mint}-tól az összes lőszert!"
 		"chi"			"{olive}{1}{mint} 夺走了{olive} {2}{mint} 全部弹药!"
@@ -1066,7 +1073,7 @@
 
 	"Blind"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} blinded{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} megvakította{olive} {2}{mint}!"
 		"chi"			"{olive}{1}{mint} 致盲了{olive} {2}{mint}!"
@@ -1148,7 +1155,7 @@
 
 	"Bomb"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} just created an explosion at{olive} {2}'s{mint} location!"
 		"hu"			"{olive}{1}{mint} létrehozott egy robbanást{olive} {2}{mint} helyzeténél!"
 		"chi"			"{olive}{1}{mint} 刚刚在{olive} {2}{mint} 的位置爆炸了!"
@@ -1156,7 +1163,7 @@
 
 	"Bomb2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} rock created an explosion."
 		"hu"			"{olive}{1}{mint} sziklája robbanást okozott."
 		"chi"			"{olive}{1}{mint} 的岩石爆炸了.."
@@ -1230,7 +1237,7 @@
 
 	"Bury"
 	{
-		"#format"		"{1:s},{2:N},{3:.2f}"
+		"#format"		"{1:t},{2:N},{3:.2f}"
 		"en"			"{olive}{1}{mint} buried{olive} {2}{yellow} {3}{mint} feet into the ground!"
 		"hu"			"{olive}{1}{mint} eltemette{olive} {2}{yellow} {3}{mint} lábát a föld alá!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 埋入地下{yellow} {3} {mint}尺!"
@@ -1312,7 +1319,7 @@
 
 	"Car"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} started a{yellow} car shower{mint}!"
 		"hu"			"{olive}{1}{mint} autó záport{yellow} indított{mint}!"
 		"chi"			"{olive}{1}{mint} 开始召唤{yellow} 汽车雨 {mint}!"
@@ -1320,7 +1327,7 @@
 
 	"Car2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} car shower ended!"
 		"hu"			"{olive}{1}{mint} autó zápora véget ért!"
 		"chi"			"{olive}{1}{mint} 的 汽车雨 结束了!"
@@ -1394,7 +1401,7 @@
 
 	"Choke"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is choking{olive} {2}{mint} in the air!"
 		"hu"			"{olive}{1}{mint} fojtogatja{olive} {2}{mint} -t a levegőben!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 弄到窒息!"
@@ -1476,7 +1483,7 @@
 
 	"Clone"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} created a clone of itself!"
 		"hu"			"{olive}{1}{mint} klónozta magát!"
 		"chi"			"{olive}{1}{mint} 创造了自己的 克隆体!"
@@ -1557,7 +1564,7 @@
 
 	"Cloud"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is emitting clouds of smoke!"
 		"hu"			"{olive}{1}{mint} füstfelhőt bocsát ki!"
 		"chi"			"{olive}{1}{mint} 正在释放烟雾!"
@@ -1565,7 +1572,7 @@
 
 	"Cloud2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} stopped emitting clouds of smoke!"
 		"hu"			"{olive}{1}{mint} már nem bocsát ki füstfelhőt!"
 		"chi"			"{olive}{1}{mint} 停止了释放烟雾!"
@@ -1639,7 +1646,7 @@
 
 	"Drop"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} dropped a gun!"
 		"hu"			"{olive}{1}{mint} dobott egy fegyvert!"
 		"chi"			"{olive}{1}{mint} 掉落了枪械!"
@@ -1647,7 +1654,7 @@
 
 	"Drop2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} dropped a melee weapon!"
 		"hu"			"{olive}{1}{mint} dobott egy közelharci fegyvert!"
 		"chi"			"{olive}{1}{mint} 掉落了近战武器!"
@@ -1690,7 +1697,7 @@
 
 	"Drug"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} drugged{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} bedrogozta{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 对{olive} {2}{mint} 投毒了!"
@@ -1772,7 +1779,7 @@
 
 	"Drunk"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} made{olive} {2}{mint} drunk!"
 		"hu"			"{olive}{1}{mint} részeggé tette{olive} {2}{mint} -t!"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 喝醉了!"
@@ -1854,7 +1861,7 @@
 
 	"Electric"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is electrocuting{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} megrázta{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 正在电击{olive} {2}{mint}!"
@@ -1936,7 +1943,7 @@
 
 	"Enforce"
 	{
-		"#format"		"{1:s},{2:N},{3:i}"
+		"#format"		"{1:t},{2:N},{3:i}"
 		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to only use their weapon slot{yellow} #{3}{mint}!"
 		"hu"			"{olive}{1}{mint} kényszeríti{olive} {2}{mint} hogy csak a{yellow} #{3} slottot használja{mint}!"
 		"chi"			"{olive}{1}{mint} 强迫{olive} {2}{mint} 只能使用{yellow} #{3}{mint}号武器槽位!"
@@ -2018,7 +2025,7 @@
 
 	"Fast"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} special speed activated!"
 		"hu"			"{olive}{1}{mint} speciális sebessége aktiválva!"
 		"chi"			"{olive}{1}{mint} 的速度加成已激活!"
@@ -2026,7 +2033,7 @@
 
 	"Fast2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} special speed deactivated!"
 		"hu"			"{olive}{1}{mint} speciális sebessége deaktiválva!"
 		"chi"			"{olive}{1}{mint} 的速度加成已结束!"
@@ -2100,7 +2107,7 @@
 
 	"Fire"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} just created a fire underneath{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} tüzet okozott{olive} {2}{mint}alatt!"
 		"chi"			"{olive}{1}{mint} 刚在{olive} {2}{mint} 下方生成了火焰!"
@@ -2108,7 +2115,7 @@
 
 	"Fire2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} rock created a fire."
 		"hu"			"{olive}{1}{mint} sziklája tüzet okozott."
 		"chi"			"{olive}{1}{mint} 的岩石生成了火焰."
@@ -2182,7 +2189,7 @@
 
 	"Fling"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} flung{olive} {2}{mint} into the air!"
 		"hu"			"{olive}{1}{mint} feldobta{olive} {2}{mint} -t a levegőbe!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 抛向高空!"
@@ -2256,7 +2263,7 @@
 
 	"Fragile"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is temporarily fragile to damage but can deal more damage and run faster!"
 		"hu"			"{olive}{1}{mint} ideiglenesen érzékeny a sebzésre, de többet sebez és gyorsabban fut!"
 		"chi"			"{olive}{1}{mint} 的伤害抗性降低了,同时移动速度和对你的伤害更高了!"
@@ -2264,7 +2271,7 @@
 
 	"Fragile2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is no longer fragile to damage!"
 		"hu"			"{olive}{1}{mint} már nem érzékeny a sebzésre"
 		"chi"			"{olive}{1}{mint} 的伤害抗性恢复正常了!"
@@ -2338,7 +2345,7 @@
 
 	"Ghost"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} disarmed{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lefegyverezte{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 缴械了!"
@@ -2346,7 +2353,7 @@
 
 	"Ghost2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is cloaking itself!"
 		"hu"			"{olive}{1}{mint} álcázza magát!"
 		"chi"			"{olive}{1}{mint} 给自己伪装了!"
@@ -2354,7 +2361,7 @@
 
 	"Ghost3"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is visible again!"
 		"hu"			"{olive}{1}{mint} újra látható!"
 		"chi"			"{olive}{1}{mint} 的伪装结束了!"
@@ -2466,7 +2473,7 @@
 
 	"God"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is temporarily invincible!"
 		"hu"			"{olive}{1}{mint} ideiglenesen legyőzhetetlen!"
 		"chi"			"{olive}{1}{mint} 暂时无敌了!"
@@ -2474,7 +2481,7 @@
 
 	"God2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is no longer invincible!"
 		"hu"			"{olive}{1}{mint} többé már nem legyőzhetetlen!"
 		"chi"			"{olive}{1}{mint} 无敌结束了!"
@@ -2548,7 +2555,7 @@
 
 	"Gravity"
 	{
-		"#format"		"{1:s},{2:N},{3:.2f}"
+		"#format"		"{1:t},{2:N},{3:.2f}"
 		"en"			"{olive}{1}{mint} changed{olive} {2}'s{mint} gravity to{yellow} {3}{mint}!"
 		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} gravitációját{yellow} {3}{mint}!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的重力变成{yellow} {3}{mint}!"
@@ -2564,7 +2571,7 @@
 
 	"Gravity3"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} created a gravitational pull!"
 		"hu"			"{olive}{1}{mint} gravitációs vonzást hozott létre!"
 		"chi"			"{olive}{1}{mint} 生成了引力/推力!"
@@ -2572,7 +2579,7 @@
 
 	"Gravity4"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint}'s gravitational pull ended!"
 		"hu"			"{olive}{1}{mint}gravitációs vonzása véget ért!"
 		"chi"			"{olive}{1}{mint} 的引力/推力结束了!"
@@ -2684,7 +2691,7 @@
 
 	"Heal"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} set{olive} {2}{mint} to temporary health who will die when their HP reaches 0!"
 		"hu"			"{olive}{1}{mint} átállította{olive} {2}{mint} életerejét ideiglenesre, aki meghal amint eléri a 0-át!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的生命值改为临时生命值,同时生命值归0时将会死亡!"
@@ -2692,7 +2699,7 @@
 
 	"Heal2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is absorbing health from nearby infected!"
 		"hu"			"{olive}{1}{mint} épp elnyeli az életerőt a közelben lévő fertőzőtektől!"
 		"chi"			"{olive}{1}{mint} 正在吸收附近特殊感染者的生命值!"
@@ -2700,7 +2707,7 @@
 
 	"Heal3"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is no longer absorbing health from nearby infected!"
 		"hu"			"{olive}{1}{mint} már nem nyeli az életerőt a közelben lévő fertőzőtektől!"
 		"chi"			"{olive}{1}{mint} 停止了吸收附近特殊感染者的生命值!"
@@ -2833,7 +2840,7 @@
 
 	"Hurt"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is hurting{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} bántja{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 对 {olive} {2}{mint} 造成的伤口在不断流血!"
@@ -2915,7 +2922,7 @@
 
 	"Hypno"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} hypnotized{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} hipnotizálja{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 催眠了{olive} {2}{mint}!"
@@ -2997,7 +3004,7 @@
 
 	"Ice"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} froze{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lefagyasztotta{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 冻结了{olive} {2}{mint}!"
@@ -3079,7 +3086,7 @@
 
 	"Idle"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} made{olive} {2}{mint} go idle!"
 		"hu"			"{olive}{1}{mint} kényszerítette{olive} {2}{mint} hogy szünetet tartson!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 吓到闲置!"
@@ -3153,7 +3160,7 @@
 
 	"Invert"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} inverted{olive} {2}'s{mint} movement keys!"
 		"hu"			"{olive}{1}{mint} megfordította{olive} {2}{mint} gomb kiosztását!"
 		"chi"			"{olive}{1}{mint} 颠倒了{olive} {2}{mint} 的方向键!"
@@ -3235,7 +3242,7 @@
 
 	"Item"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} gave the survivors{yellow} items{mint}!"
 		"hu"			"{olive}{1}{mint} tételeket adott{yellow} a túlélőknek{mint}!"
 		"chi"			"{olive}{1}{mint} 给予了幸存者{yellow} 物品{mint}!"
@@ -3278,7 +3285,7 @@
 
 	"Jump"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to jump uncontrollably!"
 		"hu"			"{olive}{1}{mint} kényszeríti{olive} {2}{mint} -t hogy kontrollálhatatlanul ugráljon!"
 		"chi"			"{olive}{1}{mint} 迫使{olive} {2}{mint} 乱跳!"
@@ -3294,7 +3301,7 @@
 
 	"Jump3"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} will jump periodically!"
 		"hu"			"{olive}{1}{mint} időszakosan ugrálni fog!"
 		"chi"			"{olive}{1}{mint} 将进行周期性跳跃!"
@@ -3406,7 +3413,7 @@
 
 	"Kamikaze"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} just went kamikaze on{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} kamikazét adott {olive} {2}{mint}-nak!"
 		"chi"			"{olive}{1}{mint} 与{olive} {2}{mint} 同归于尽了!"
@@ -3456,7 +3463,7 @@
 
 	"Lag"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is making{olive} {2}{mint} lag!"
 		"hu"			"{olive}{1}{mint} késlelteti{olive} {2}{mint} -t!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 打出延迟!"
@@ -3538,7 +3545,7 @@
 
 	"Laser"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is shooting a laser at{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lézert lő{olive} {2}{mint}felé!"
 		"chi"			"{olive}{1}{mint} 正对{olive} {2}{mint} 发射激光!"
@@ -3546,7 +3553,7 @@
 
 	"Laser2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is no longer shooting a laser!"
 		"hu"			"{olive}{1}{mint} többé már nem lő lézert!"
 		"chi"			"{olive}{1}{mint} 停止了发射激光!"
@@ -3620,7 +3627,7 @@
 
 	"Leech"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is{yellow} leeching health{mint} off of{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} életet{yellow} szív{mint} el{olive} {2}{mint}-tól!"
 		"chi"			"{olive}{1}{mint} 正用{yellow} 水蛭{mint} 汲取{olive} {2}{mint} 的生命值!"
@@ -3628,7 +3635,7 @@
 
 	"Leech2"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is no longer{yellow} leeching health{mint} off of{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} már nem szív{yellow} életet{mint} el{olive} {2}{mint}-tól!"
 		"chi"			"{olive}{1}{mint} 的{yellow} 水蛭{mint} 不在汲取{olive} {2}{mint} 的生命值了!"
@@ -3702,7 +3709,7 @@
 
 	"Medic"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} just healed nearby special infected!"
 		"hu"			"{olive}{1}{mint} épp meggyógyította a közelben lévő speciális fertőzötteket!"
 		"chi"			"{olive}{1}{mint} 治愈了附近的特殊感染者!"
@@ -3710,7 +3717,7 @@
 
 	"Medic2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is healing nearby special infected!"
 		"hu"			"{olive}{1}{mint} gyógyítja a közelben lévő speciális fertőzötteket!"
 		"chi"			"{olive}{1}{mint} 正在治疗附近的特殊感染者!"
@@ -3791,7 +3798,7 @@
 
 	"Meteor"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} started a{yellow} meteor shower{mint}!"
 		"hu"			"{olive}{1}{mint} Meteor záport{yellow} indított{mint}!"
 		"chi"			"{olive}{1}{mint} 开始召唤{yellow} 流星雨{mint}!"
@@ -3799,7 +3806,7 @@
 
 	"Meteor2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} meteor shower ended!"
 		"hu"			"{olive}{1}{mint} meteor zápora véget ért!"
 		"chi"			"{olive}{1}{mint} 的 流星雨 结束了!"
@@ -3873,7 +3880,7 @@
 
 	"Minion"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} summoned a{yellow} minion{mint}!"
 		"hu"			"{olive}{1}{mint} megidézett egy{yellow} minyont{mint}!"
 		"chi"			"{olive}{1}{mint} 召唤了一个{yellow} 仆从{mint}!"
@@ -3947,7 +3954,7 @@
 
 	"Necro"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} resurrected nearby special infected!"
 		"hu"			"{olive}{1}{mint} visszahozta a közelben lévő speciális fertőzötteket!"
 		"chi"			"{olive}{1}{mint} 复活了附近的特殊感染者!"
@@ -4021,7 +4028,7 @@
 
 	"Nullify"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} temporarily nullified all of{olive} {2}'s{mint} damage!"
 		"hu"			"{olive}{1}{mint} hatástalanítja{olive} {2}{mint} összes sebzését!"
 		"chi"			"{olive}{1}{mint} 暂时免疫来自{olive} {2}{mint} 的伤害!"
@@ -4103,7 +4110,7 @@
 
 	"Omni"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} omni ability activated!"
 		"hu"			"{olive}{1}{mint} mindenség képessége aktiválva!"
 		"chi"			"{olive}{1}{mint} 的 全能 能力激活了!"
@@ -4111,7 +4118,7 @@
 
 	"Omni2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} omni ability deactivated!"
 		"hu"			"{olive}{1}{mint} mindenség képessége deaktiválva!"
 		"chi"			"{olive}{1}{mint} 的 全能 能力失效了!"
@@ -4185,7 +4192,7 @@
 
 	"Panic"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} will start panic events periodically!"
 		"hu"			"{olive}{1}{mint} időszakosan pánikot indít!"
 		"chi"			"{olive}{1}{mint} 将定期引发尸潮!"
@@ -4193,7 +4200,7 @@
 
 	"Panic2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} started a{yellow} panic event{mint}!"
 		"hu"			"{olive}{1}{mint} pánikot{yellow} indított{mint}!"
 		"chi"			"{olive}{1}{mint} 引发了一次{yellow} 尸潮{mint}!"
@@ -4267,7 +4274,7 @@
 
 	"Pimp"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is pimp slapping{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} csapdossa{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 鞭挞了{olive} {2}{mint} 好几次!"
@@ -4349,7 +4356,7 @@
 
 	"Puke"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} puked on{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lehányta{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 吐了{olive} {2}{mint} 一身!"
@@ -4423,7 +4430,7 @@
 
 	"Pyro"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} ignited itself!"
 		"hu"			"{olive}{1}{mint} meggyújtotta önmagát!"
 		"chi"			"{olive}{1}{mint} 自燃了!"
@@ -4431,7 +4438,7 @@
 
 	"Pyro2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is burning and running really fast!"
 		"hu"			"{olive}{1}{mint} ég és nagyon gyorsan fut!"
 		"chi"			"{olive}{1}{mint} 烧起来后跑得更快了!"
@@ -4439,7 +4446,7 @@
 
 	"Pyro3"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is no longer burning and is back to normal speed!"
 		"hu"			"{olive}{1}{mint} többé már nem ég és a sebessége is normális lett!"
 		"chi"			"{olive}{1}{mint} 灭火后恢复正常速度了!"
@@ -4513,7 +4520,7 @@
 
 	"Quiet"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} silenced itself around{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lenémította magát{olive} {2}{mint}körül!"
 		"chi"			"{olive}{1}{mint} 在{olive} {2}{mint} 周围沉默了!"
@@ -4521,7 +4528,7 @@
 
 	"Quiet2"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is no longer quiet around{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} többé már nem csendes{olive} {2}{mint}körül!"
 		"chi"			"{olive}{1}{mint} 不再在{olive} {2}{mint} 周围沉默了!"
@@ -4595,7 +4602,7 @@
 
 	"Recoil"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} gave{olive} {2}{mint} strong recoil!"
 		"hu"			"{olive}{1}{mint} erős visszarúgást adott{olive} {2}{mint} -nak!"
 		"chi"			"{olive}{1}{mint} 给予{olive} {2}{mint} 强大的后坐力!"
@@ -4677,7 +4684,7 @@
 
 	"Regen"
 	{
-		"#format"		"{1:s},{2:.2f}"
+		"#format"		"{1:t},{2:.2f}"
 		"en"			"{olive}{1}{mint} is regenerating health every{yellow} {2}{mint} second(s)!"
 		"hu"			"{olive}{1}{mint} regenerálja az életerejét minden{yellow} {2}{mint} másodpercben!"
 		"chi"			"{olive}{1}{mint} 每隔{yellow} {2}{mint} 秒会恢复一次生命值!"
@@ -4685,7 +4692,7 @@
 
 	"Regen2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} stopped regenerating health!"
 		"hu"			"{olive}{1}{mint} már nem regenerálja az életerejét!"
 		"chi"			"{olive}{1}{mint} 停止了恢复生命值!"
@@ -4759,7 +4766,7 @@
 
 	"Respawn"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} just respawned itself!"
 		"hu"			"{olive}{1}{mint} visszahozta önmagát!"
 		"chi"			"{olive}{1}{mint} 复活了!"
@@ -4817,7 +4824,7 @@
 
 	"Restart"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} caused{olive} {2}{mint} to restart with a different loadout!"
 		"hu"			"{olive}{1}{mint} rávette{olive} {2}{mint} -t hogy újrakezdje egy eltérő felszereléssel!"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 用不同的装备重新开始!"
@@ -4891,7 +4898,7 @@
 
 	"Rock"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} started a{yellow} rock shower{mint}!"
 		"hu"			"{olive}{1}{mint} szikla záport{yellow} indított{mint}!"
 		"chi"			"{olive}{1}{mint} 开始召唤{yellow} 岩石雨{mint}!"
@@ -4899,7 +4906,7 @@
 
 	"Rock2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} rock shower ended!"
 		"hu"			"{olive}{1}{mint} szikla zápora véget ért!"
 		"chi"			"{olive}{1}{mint} 的 岩石雨 结束了!"
@@ -4973,7 +4980,7 @@
 
 	"Rocket"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} sent{olive} {2}{mint} into space!"
 		"hu"			"{olive}{1}{mint} elküldte{olive} {2}{mint} -t az űrbe!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 送上了太空!"
@@ -5047,7 +5054,7 @@
 
 	"Shake"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is shaking{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} rázza{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 的屏幕疯狂抖动!"
@@ -5055,7 +5062,7 @@
 
 	"Shake2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is no longer shaking!"
 		"hu"			"{olive}{1}{mint} többé már nem rázkódik!"
 		"chi"			"{olive}{1}{mint} 的屏幕停止了抖动!"
@@ -5129,7 +5136,7 @@
 
 	"Shield"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} shield{yellow} activated{mint}!"
 		"hu"			"{olive}{1}{mint} pajzsa{yellow} aktiválva{mint}!"
 		"chi"			"{olive}{1}{mint} 的护盾{yellow} 已激活{mint}!"
@@ -5137,7 +5144,7 @@
 
 	"Shield2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} shield{yellow} deactivated{mint}!"
 		"hu"			"{olive}{1}{mint} pajzsa{yellow} deaktiválva{mint}!"
 		"chi"			"{olive}{1}{mint} 的护盾{yellow} 已失效{mint}!"
@@ -5211,7 +5218,7 @@
 
 	"ShieldOwner"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{1}'s Shield"
 		"hu"			"{1} Pajzsa"
 		"chi"			"{1} 的护盾"
@@ -5219,7 +5226,7 @@
 
 	"Shove"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is shoving{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lökdösi{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 正在推挤{olive} {2}{mint}!"
@@ -5301,7 +5308,7 @@
 
 	"Slow"
 	{
-		"#format"		"{1:s},{2:N},{3:.2f}"
+		"#format"		"{1:t},{2:N},{3:.2f}"
 		"en"			"{olive}{1}{mint} slowed{olive} {2}{mint} down to{yellow} {3}{mint}!"
 		"hu"			"{olive}{1}{mint} éppen{olive} {2}{mint} lelassította{yellow} {3}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的速度变成{yellow} {3}{mint}!"
@@ -5383,7 +5390,7 @@
 
 	"Smash"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} smashed{olive} {2}{mint} to death!"
 		"hu"			"{olive}{1}{mint} halálra zúzta{olive} {2}{mint} -t!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 砸死了!"
@@ -5457,7 +5464,7 @@
 
 	"Smite"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} smited{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lesújtott{olive} {2}{mint}-ra!"
 		"chi"			"{olive}{1}{mint} 重击了{olive} {2}{mint}!"
@@ -5531,7 +5538,7 @@
 
 	"Spam"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is spamming rocks!"
 		"hu"			"{olive}{1}{mint} folyamatosan sziklákat dobál!"
 		"chi"			"{olive}{1}{mint} 正在连投岩石!"
@@ -5539,7 +5546,7 @@
 
 	"Spam2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is no longer spamming rocks!"
 		"hu"			"{olive}{1}{mint} többé már nem dobál folyamatosan sziklákat!"
 		"chi"			"{olive}{1}{mint} 停止了连投岩石!"
@@ -5613,7 +5620,7 @@
 
 	"Splash"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is splashing damage at nearby survivors!"
 		"hu"			"{olive}{1}{mint} területi sebzést okoz a közelben lévő túlélőkre!"
 		"chi"			"{olive}{1}{mint} 正在对幸存者溅射伤害!"
@@ -5621,7 +5628,7 @@
 
 	"Splash2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is no longer splashing damage at nearby survivors!"
 		"hu"			"{olive}{1}{mint} többé már nem okoz területi sebzést a túlélőkre!"
 		"chi"			"{olive}{1}{mint} 停止了对幸存者溅射伤害!"
@@ -5695,7 +5702,7 @@
 
 	"Splatter"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} will cover everyone's screens with splatters periodically!"
 		"hu"			"{olive}{1}{mint} időszakosan mindenki képernyőjét befröcsköli!"
 		"chi"			"{olive}{1}{mint} 会定期用飞溅覆盖每个人的屏幕!"
@@ -5703,7 +5710,7 @@
 
 	"Splatter2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} covered everyone's screens with{yellow} splatters{mint}!"
 		"hu"			"{olive}{1}{mint} mindenki képernyőjét{yellow} befröcskölte{mint}!"
 		"chi"			"{olive}{1}{mint} 用{yellow} 飞溅{mint} 覆盖了每个人的屏幕!"
@@ -5777,7 +5784,7 @@
 
 	"Throw"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} threw a car!"
 		"hu"			"{olive}{1}{mint} dobott egy autót!"
 		"chi"			"{olive}{1}{mint} 扔出了 汽车!"
@@ -5785,7 +5792,7 @@
 
 	"Throw2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} threw a{yellow} special infected{mint}!"
 		"hu"			"{olive}{1}{mint} dobott egy{yellow} speciális fertőzöttet{mint}!"
 		"chi"			"{olive}{1}{mint} 扔出了{yellow} 特殊感染者{mint}!"
@@ -5793,7 +5800,7 @@
 
 	"Throw3"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} threw itself!"
 		"hu"			"{olive}{1}{mint} eldobta magát!"
 		"chi"			"{olive}{1}{mint} 扔出了 自己!"
@@ -5801,7 +5808,7 @@
 
 	"Throw4"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} threw a Witch!"
 		"hu"			"{olive}{1}{mint} dobott egy boszorkát!"
 		"chi"			"{olive}{1}{mint} 扔出了 女巫!"
@@ -5868,7 +5875,7 @@
 
 	"Track"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} rock is{yellow} tracking{mint} a survivor!"
 		"hu"			"{olive}{1}{mint} sziklája{yellow} követ{mint} egy túlélőt!"
 		"chi"			"{olive}{1}{mint} 的岩石{yellow} 正在追踪{mint} 幸存者!"
@@ -5935,7 +5942,7 @@
 
 	"Ultimate"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} activated ultimate mode!"
 		"hu"			"{olive}{1}{mint} aktiválta a végső módját!"
 		"chi"			"{olive}{1}{mint} 激活了 终极 模式!"
@@ -5943,7 +5950,7 @@
 
 	"Ultimate2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} deactivated ultimate mode!"
 		"hu"			"{olive}{1}{mint} deaktiválta a végső módját!"
 		"chi"			"{olive}{1}{mint} 的 终极 模式已结束!"
@@ -6032,7 +6039,7 @@
 
 	"Undead"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} increased its lifespan!"
 		"hu"			"{olive}{1}{mint} növelte az élettartamát!"
 		"chi"			"{olive}{1}{mint} 延长了自己的寿命!"
@@ -6040,7 +6047,7 @@
 
 	"Undead2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is back to full health!"
 		"hu"			"{olive}{1}{mint} újra teljes életerőn van!"
 		"chi"			"{olive}{1}{mint} 的生命值全满了!"
@@ -6114,7 +6121,7 @@
 
 	"Vampire"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} életerőt lopott{olive} {2}{mint}-tol!"
 		"chi"			"{olive}{1}{mint} 从{olive} {2}{mint} 偷走了一些生命值!"
@@ -6143,7 +6150,7 @@
 
 	"Vision"
 	{
-		"#format"		"{1:s},{2:N},{3:i}"
+		"#format"		"{1:t},{2:N},{3:i}"
 		"en"			"{olive}{1}{mint} changed{olive} {2}'s{mint} vision to{yellow} {3}{mint} FOV!"
 		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} látómezejét{yellow} {3}{mint} -ra!"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 的视觉系数变成了{yellow} {3}{mint}!"
@@ -6225,7 +6232,7 @@
 
 	"Warp"
 	{
-		"#format"		"{1:s},{2:N},{3:N}"
+		"#format"		"{1:t},{2:N},{3:N}"
 		"en"			"{olive}{1}{mint} warped{olive} {2}{mint} to{olive} {3}{mint}!"
 		"hu"			"{olive}{1}{mint} éppen{olive} {2}{mint} odateleportált{olive} {3}{mint}-hoz!"
 		"chi"			"{olive}{1}{mint} 传送{olive} {2}{mint} 到{olive} {3}{mint} 身边!"
@@ -6233,7 +6240,7 @@
 
 	"Warp2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} will warp to a survivor periodically!"
 		"hu"			"{olive}{1}{mint} időszakosan a túlélőkhöz teleportál!"
 		"chi"			"{olive}{1}{mint} 将周期性的传送到幸存者身边!"
@@ -6241,7 +6248,7 @@
 
 	"Warp3"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} warped to{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} odateleportált{olive} {2}{mint}-hoz!"
 		"chi"			"{olive}{1}{mint} 传送到{olive} {2}{mint} 身边!"
@@ -6353,7 +6360,7 @@
 
 	"Whirl"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} is making{olive} {2}{mint} whirl."
 		"hu"			"{olive}{1}{mint} éppen megpörgeti{olive} {2}{mint} -t."
 		"chi"			"{olive}{1}{mint} 翻转了{olive} {2}{mint}."
@@ -6435,7 +6442,7 @@
 
 	"Witch"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} converted some common infected into{olive} Witch minions{mint}!"
 		"hu"			"{olive}{1}{mint} átalakított pár közönséges fertőzöttet{olive} Boszorka minyonná{mint}!"
 		"chi"			"{olive}{1}{mint} 将一些普通感染者转化成{olive} 女巫仆从{mint}!"
@@ -6502,7 +6509,7 @@
 
 	"Xiphos"
 	{
-		"#format"		"{1:s},{2:N}"
+		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} ellopott egy kis életerőt{olive} {2}{mint}-tol!"
 		"chi"			"{olive}{1}{mint} 从{olive} {2}{mint} 身上偷取了一些生命值!"
@@ -6510,7 +6517,7 @@
 
 	"Xiphos2"
 	{
-		"#format"		"{1:N},{2:s}"
+		"#format"		"{1:N},{2:t}"
 		"en"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} ellopott egy kis életerőt{olive} {2}{mint}-tol!"
 		"chi"			"{olive}{1}{mint} 从{olive} {2}{mint} 身上偷取了一些生命值!"
@@ -6539,7 +6546,7 @@
 
 	"Yell"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} yelled at the survivors!"
 		"hu"			""
 		"chi"			"{olive}{1}{mint} 对幸存者大喊!"
@@ -6547,7 +6554,7 @@
 
 	"Yell2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} stopped yelling!"
 		"hu"			""
 		"chi"			"{olive}{1}{mint}不再大喊大叫!"
@@ -6621,7 +6628,7 @@
 
 	"Zombie"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} will spawn zombies periodically!"
 		"hu"			"{olive}{1}{mint} időszakosan zombikat hozz létre!"
 		"chi"			"{olive}{1}{mint} 将定期召唤僵尸!"
@@ -6629,7 +6636,7 @@
 
 	"Zombie2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} spawned {yellow} zombies{mint}!"
 		"hu"			"{olive}{1}{mint} zombikat {yellow} hozott létre{mint}!"
 		"chi"			"{olive}{1}{mint} 召唤了 {yellow} 僵尸{mint}!"
