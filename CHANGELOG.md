@@ -41,8 +41,8 @@ Changes:
 16. Added the `Regular Delay` setting under `Plugin Settings/Waves` section. (Requested by Tank Rush.)
 17. Config files now support multiple abilities using comma separation.
 18. The `all` section can now be grouped with multiple types and abilities in config files.
-19. The `Clone` ability's `Clone Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
-20. The `Respawn` ability's `Respawn Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
+19. The `Clone` ability's `Clone Type` setting and the `Respawn` ability's `Respawn Type` setting now both take in a type range. Example: `1-10` (Requested by Neptunia.)
+20. The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
 
 Files:
 
