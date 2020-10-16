@@ -7,7 +7,7 @@ Bug fixes:
 1. Fixed the core plugin creating log files even when `Log Messages` is disabled. (Thanks to KasperH/Ladis for reporting!)
 2. Fixed clones created by the `Clone` ability being detected by the `Finale Amount` and `Finale Waves` settings.
 3. Fixed some of the default Mutant Tanks that use the `Boss` and `Transformation` features turning into the wrong Mutant Tank types.
-4. Fixed the `Blind` ability being enabled by default. (Thanks to Mi.Cura for reporting!)
+4. Fixed the `Blind` ability being enabled by default. (Thanks to Mi.Cura and Tank Rush for reporting!)
 5. Fixed the `Drug` ability not requiring human survivors to be present by default.
 6. Fixed the `Drunk` ability requiring human survivors to be present by default.
 7. Fixed the `Drop Weapon Name` setting not reading non-melee weapon names properly.
@@ -18,8 +18,10 @@ Bug fixes:
 12. Fixed global chat messages not being translated. (Thanks to Mi.Cura for testing and reporting!)
 13. Fixed settings not having their values stored properly.
 14. Fixed color-related settings from not picking random colors when set to `-1`.
-15. Fixed the `Health` ability's glow outline not going away when Tanks die.
-16. Fixed the `Track` ability's glow outline not going away when rocks break.
+15. Fixed the `Health` and `Track` abilities' glow outlines not going away when Tanks die and when rocks break respectively.
+16. Fixed the core plugin not tracking players' new names when storing their non-Mutant Tank names for the `Rename Players` setting.
+17. Fixed the `Burier` ability sometimes leaving players under the map.
+18. Fixed the `Yell` ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
 
 Changes:
 

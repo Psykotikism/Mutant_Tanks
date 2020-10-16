@@ -490,8 +490,8 @@
 		"General"
 		{
 			// Name of the Mutant Tank.
-			// Note: This name can be overridden in the translation file.
-			// Note: If no override is found in the translation file, all players will see this name.
+			// Note: This name is only used for listing the Mutant Tank in menus, renaming the Mutant Tank in the server, and checking which translation phrase to use.
+			// Note: For displaying this name in chat messages and other forms of text, use the translation file.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Character limit: 32
