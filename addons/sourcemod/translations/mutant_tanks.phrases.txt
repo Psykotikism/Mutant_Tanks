@@ -6540,17 +6540,17 @@
 	"Yell"
 	{
 		"#format"		"{1:s}"
-		"en"			"{olive}{1}'s{mint} special speed activated!"
-		"hu"			"{olive}{1}{mint} speciális sebessége aktiválva!"
-		"chi"			"{olive}{1}{mint} 的速度加成已激活!"
+		"en"			"{olive}{1}{mint} yelled at the survivors!"
+		"hu"			""
+		"chi"			"{olive}{1}{mint} 对幸存者大喊!"
 	}
 
 	"Yell2"
 	{
 		"#format"		"{1:s}"
-		"en"			"{olive}{1}'s{mint} special speed deactivated!"
-		"hu"			"{olive}{1}{mint} speciális sebessége deaktiválva!"
-		"chi"			"{olive}{1}{mint} 的速度加成已结束!"
+		"en"			"{olive}{1}{mint} stopped yelling!"
+		"hu"			""
+		"chi"			"{olive}{1}{mint}不再大喊大叫!"
 	}
 
 	"YellAmmo"
