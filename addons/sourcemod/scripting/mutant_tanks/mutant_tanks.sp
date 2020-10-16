@@ -3583,7 +3583,17 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						{
 							if (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false))
 							{
-								strcopy(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), value);
+								static char sName[33], sPhrase[32];
+								strcopy(sName, sizeof(sName), value);
+								FormatEx(sPhrase, sizeof(sPhrase), "Tank #%i Name", iIndex);
+								if (TranslationPhraseExists(sPhrase))
+								{
+									FormatEx(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), "%t", sPhrase, sName);
+								}
+								else
+								{
+									strcopy(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), value);
+								}
 							}
 							else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 							{
@@ -3804,7 +3814,19 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false))
 								{
-									strcopy(g_esPlayer[iPlayer].g_sTankName, sizeof(esPlayer::g_sTankName), value);
+									static char sName[33], sPhrase[32], sPhrase2[32], sSteamIDFinal[32];
+									strcopy(sName, sizeof(sName), value);
+									FormatEx(sPhrase, sizeof(sPhrase), "%s Name", sSteamID32);
+									FormatEx(sPhrase2, sizeof(sPhrase2), "%s Name", sSteam3ID);
+									FormatEx(sSteamIDFinal, sizeof(sSteamIDFinal), "%s", (TranslationPhraseExists(sPhrase) ? sPhrase : sPhrase2));
+									if (sSteamIDFinal[0] != '\0' && TranslationPhraseExists(sSteamIDFinal))
+									{
+										FormatEx(g_esPlayer[iPlayer].g_sTankName, sizeof(esPlayer::g_sTankName), "%t", sSteamIDFinal, sName);
+									}
+									else
+									{
+										strcopy(g_esPlayer[iPlayer].g_sTankName, sizeof(esPlayer::g_sTankName), value);
+									}
 								}
 								else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 								{
@@ -4157,14 +4179,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 					switch (g_esCache[iTank].g_iAnnounceDeath)
 					{
-						case 1:
-						{
-							char sPhrase[32];
-							int iOption = GetRandomInt(1, 10);
-							FormatEx(sPhrase, sizeof(sPhrase), "Death%i", iOption);
-							MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, g_esCache[iTank].g_sTankName);
-							vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, sPhrase, g_esCache[iTank].g_sTankName);
-						}
+						case 1: vAnnounceDeath(iTank);
 						case 2:
 						{
 							int iSurvivor = GetClientOfUserId(event.GetInt("attacker"));
@@ -4175,6 +4190,10 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 								FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
 								MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, iSurvivor, g_esCache[iTank].g_sTankName);
 								vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, sPhrase, iSurvivor, g_esCache[iTank].g_sTankName);
+							}
+							else
+							{
+								vAnnounceDeath(iTank);
 							}
 						}
 					}
@@ -4939,7 +4958,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 		if (g_esCache[tank].g_iTankNote == 1 && bIsCloneAllowed(tank))
 		{
-			char sPhrase[32], sTankNote[32], sSteamID32[32], sSteam3ID[32], sSteamIDFinal[32];
+			char sPhrase[32], sSteamID32[32], sSteam3ID[32], sSteamIDFinal[32], sTankNote[32];
 			if (GetClientAuthId(tank, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)) && GetClientAuthId(tank, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
 			{
 				FormatEx(sSteamIDFinal, sizeof(sSteamIDFinal), "%s", (TranslationPhraseExists(sSteamID32) ? sSteamID32 : sSteam3ID));
@@ -5319,6 +5338,15 @@ static void vAnnounceArrival(int tank, const char[] name)
 		MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, name);
 		vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, sPhrase, name);
 	}
+}
+
+static void vAnnounceDeath(int tank)
+{
+	char sPhrase[32];
+	int iOption = GetRandomInt(1, 10);
+	FormatEx(sPhrase, sizeof(sPhrase), "Death%i", iOption);
+	MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, g_esCache[tank].g_sTankName);
+	vLogMessage(MT_LOG_LIFE, "%s %t", MT_TAG2, sPhrase, g_esCache[tank].g_sTankName);
 }
 
 static void vLightProp(int tank, int light, float origin[3], float angles[3])
