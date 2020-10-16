@@ -4152,7 +4152,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				char sOldName[33], sNewName[33];
 				event.GetString("oldname", sOldName, sizeof(sOldName));
 				event.GetString("newname", sNewName, sizeof(sNewName));
-				if ((StrEqual(sOldName, g_esPlayer[iTank].g_sOriginalName) || !StrEqual(sOldName, g_esPlayer[iTank].g_sOriginalName)) && !StrEqual(sNewName, g_esCache[iTank].g_sTankName))
+				if (!StrEqual(sOldName, g_esTank[g_esPlayer[iTank].g_iOldTankType].g_sTankName, false) && !StrEqual(sNewName, g_esCache[iTank].g_sTankName, false))
 				{
 					GetClientName(iTank, g_esPlayer[iTank].g_sOriginalName, sizeof(esPlayer::g_sOriginalName));
 				}
