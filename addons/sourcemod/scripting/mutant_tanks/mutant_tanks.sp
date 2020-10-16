@@ -254,7 +254,6 @@ enum struct esGeneral
 	int g_iRegularMinType;
 	int g_iRegularMode;
 	int g_iRegularWave;
-	int g_iRenamePlayers;
 	int g_iRequiresHumans;
 	int g_iSection;
 	int g_iSpawnMode;
@@ -296,7 +295,6 @@ enum struct esPlayer
 	bool g_bTransformed;
 
 	char g_sHealthCharacters[4];
-	char g_sOriginalName[33];
 	char g_sTankName[33];
 
 	float g_flAttackDelay;
@@ -352,7 +350,6 @@ enum struct esPlayer
 	int g_iPropaneTank;
 	int g_iPropTankColor[4];
 	int g_iRandomTank;
-	int g_iRenamePlayers;
 	int g_iRequiresHumans;
 	int g_iRock[20];
 	int g_iRockColor[4];
@@ -422,7 +419,6 @@ enum struct esTank
 	int g_iPropsAttached;
 	int g_iPropTankColor[4];
 	int g_iRandomTank;
-	int g_iRenamePlayers;
 	int g_iRequiresHumans;
 	int g_iRockColor[4];
 	int g_iRockEffects;
@@ -483,7 +479,6 @@ enum struct esCache
 	int g_iPropsAttached;
 	int g_iPropTankColor[4];
 	int g_iRandomTank;
-	int g_iRenamePlayers;
 	int g_iRequiresHumans;
 	int g_iRockColor[4];
 	int g_iRockEffects;
@@ -939,8 +934,6 @@ public void OnClientPostAdminCheck(int client)
 {
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 	{
-		GetClientName(client, g_esPlayer[client].g_sOriginalName, sizeof(esPlayer::g_sOriginalName));
-
 		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
 	}
 
@@ -2604,10 +2597,6 @@ public void OnEntityCreated(int entity, const char[] classname)
 		{
 			SDKHook(entity, SDKHook_OnTakeDamage, OnTakeDamage);
 		}
-		else if (StrEqual(classname, "trigger_finale", false) || StrEqual(classname, "finale_trigger", false))
-		{
-			HookEntityOutput(classname, "EscapeVehicleLeaving", vFinaleHook);
-		}
 	}
 }
 
@@ -2877,8 +2866,6 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iMultiHealth = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iMultiHealth, g_esCache[tank].g_iMultiHealth);
 	g_esCache[tank].g_iPropsAttached = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iPropsAttached, g_esTank[iType].g_iPropsAttached);
 	g_esCache[tank].g_iRandomTank = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRandomTank, g_esTank[iType].g_iRandomTank);
-	g_esCache[tank].g_iRenamePlayers = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRenamePlayers, g_esGeneral.g_iRenamePlayers);
-	g_esCache[tank].g_iRenamePlayers = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRenamePlayers, g_esCache[tank].g_iRenamePlayers);
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRequiresHumans, g_esGeneral.g_iRequiresHumans);
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esCache[tank].g_iRequiresHumans);
 	g_esCache[tank].g_iRockEffects = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRockEffects, g_esTank[iType].g_iRockEffects);
@@ -3090,7 +3077,6 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iImmunityFlags = 0;
 		g_esGeneral.g_iHumanCooldown = 600;
 		g_esGeneral.g_iMasterControl = 0;
-		g_esGeneral.g_iRenamePlayers = 0;
 		g_esGeneral.g_iSpawnMode = 1;
 		g_esGeneral.g_iRegularAmount = 0;
 		g_esGeneral.g_flRegularDelay = 10.0;
@@ -3134,7 +3120,6 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iMinimumHumans = 0;
 			g_esTank[iIndex].g_iMultiHealth = 0;
 			g_esTank[iIndex].g_iHumanSupport = 0;
-			g_esTank[iIndex].g_iRenamePlayers = 0;
 			g_esTank[iIndex].g_iGlowEnabled = 0;
 			g_esTank[iIndex].g_iGlowFlashing = 0;
 			g_esTank[iIndex].g_iGlowMinRange = 0;
@@ -3213,7 +3198,6 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_sHealthCharacters[0] = '\0';
 				g_esPlayer[iPlayer].g_iMinimumHumans = 0;
 				g_esPlayer[iPlayer].g_iMultiHealth = 0;
-				g_esPlayer[iPlayer].g_iRenamePlayers = 0;
 				g_esPlayer[iPlayer].g_iGlowEnabled = 0;
 				g_esPlayer[iPlayer].g_iGlowFlashing = 0;
 				g_esPlayer[iPlayer].g_iGlowMinRange = 0;
@@ -3396,7 +3380,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esGeneral.g_iMultiHealth, value, 0, 3);
 			g_esGeneral.g_iHumanCooldown = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "cooldown", g_esGeneral.g_iHumanCooldown, value, 0, 999999);
 			g_esGeneral.g_iMasterControl = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "MasterControl", "Master Control", "Master_Control", "master", g_esGeneral.g_iMasterControl, value, 0, 1);
-			g_esGeneral.g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esGeneral.g_iRenamePlayers, value, 0, 1);
 			g_esGeneral.g_iSpawnMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "spawnmode", g_esGeneral.g_iSpawnMode, value, 0, 1);
 			g_esGeneral.g_iRegularAmount = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularAmount", "Regular Amount", "Regular_Amount", "regamount", g_esGeneral.g_iRegularAmount, value, 0, 32);
 			g_esGeneral.g_flRegularDelay = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularDelay", "Regular Delay", "Regular_Delay", "regdelay", g_esGeneral.g_flRegularDelay, value, 0.1, 999999.0);
@@ -3566,7 +3549,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esTank[iIndex].g_iMinimumHumans, value, 1, 32);
 						g_esTank[iIndex].g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esTank[iIndex].g_iMultiHealth, value, 0, 3);
 						g_esTank[iIndex].g_iHumanSupport = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanSupport", "Human Support", "Human_Support", "human", g_esTank[iIndex].g_iHumanSupport, value, 0, 2);
-						g_esTank[iIndex].g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esTank[iIndex].g_iRenamePlayers, value, 0, 1);
 						g_esTank[iIndex].g_iChosenTypeLimit = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_esTank[iIndex].g_iChosenTypeLimit, value, 0, 32);
 						g_esTank[iIndex].g_iFinaleTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[iIndex].g_iFinaleTank, value, 0, 4);
 						g_esTank[iIndex].g_iBossStages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_esTank[iIndex].g_iBossStages, value, 1, 4);
@@ -3789,7 +3771,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_esPlayer[iPlayer].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 							g_esPlayer[iPlayer].g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esPlayer[iPlayer].g_iMinimumHumans, value, 1, 32);
 							g_esPlayer[iPlayer].g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esPlayer[iPlayer].g_iMultiHealth, value, 0, 3);
-							g_esPlayer[iPlayer].g_iRenamePlayers = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "RenamePlayers", "Rename Players", "Rename_Players", "rename", g_esPlayer[iPlayer].g_iRenamePlayers, value, 0, 1);
 							g_esPlayer[iPlayer].g_iBossStages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_esPlayer[iPlayer].g_iBossStages, value, 1, 4);
 							g_esPlayer[iPlayer].g_iRandomTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomTank", "Random Tank", "Random_Tank", "random", g_esPlayer[iPlayer].g_iRandomTank, value, 0, 1);
 							g_esPlayer[iPlayer].g_flRandomInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_esPlayer[iPlayer].g_flRandomInterval, value, 0.1, 999999.0);
@@ -4139,24 +4120,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 			if (bIsValidClient(iTank) && bIsTank(iBot))
 			{
-				vRevertName(iTank);
 				vReset2(iTank, 0);
 				vReset3(iTank);
 				vCacheSettings(iTank);
-			}
-		}
-		else if (StrEqual(name, "player_changename"))
-		{
-			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-			if (bIsValidClient(iTank))
-			{
-				char sOldName[33], sNewName[33];
-				event.GetString("oldname", sOldName, sizeof(sOldName));
-				event.GetString("newname", sNewName, sizeof(sNewName));
-				if (!StrEqual(sOldName, g_esTank[g_esPlayer[iTank].g_iOldTankType].g_sTankName, false) && !StrEqual(sNewName, g_esCache[iTank].g_sTankName, false))
-				{
-					GetClientName(iTank, g_esPlayer[iTank].g_sOriginalName, sizeof(esPlayer::g_sOriginalName));
-				}
 			}
 		}
 		else if (StrEqual(name, "player_death"))
@@ -4166,11 +4132,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				g_esPlayer[iTank].g_bDied = true;
 				g_esPlayer[iTank].g_bDying = false;
-
-				if (bIsValidClient(iTank, MT_CHECK_FAKECLIENT))
-				{
-					vRevertName(iTank);
-				}
 
 				if (bIsCloneAllowed(iTank))
 				{
@@ -4250,11 +4211,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_spawn"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-			if (bIsValidClient(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
-			{
-				vRevertName(iTank);
-			}
-
 			if (bIsTank(iTank))
 			{
 				g_esPlayer[iTank].g_bDying = false;
@@ -4401,7 +4357,6 @@ static void vHookEvents(bool hook)
 		HookEvent("finale_win", vEventHandler);
 		HookEvent("mission_lost", vEventHandler);
 		HookEvent("player_bot_replace", vEventHandler);
-		HookEvent("player_changename", vEventHandler);
 		HookEvent("player_death", vEventHandler, EventHookMode_Pre);
 		HookEvent("player_incapacitated", vEventHandler);
 		HookEvent("player_spawn", vEventHandler);
@@ -4434,7 +4389,6 @@ static void vHookEvents(bool hook)
 		UnhookEvent("finale_win", vEventHandler);
 		UnhookEvent("mission_lost", vEventHandler);
 		UnhookEvent("player_bot_replace", vEventHandler);
-		UnhookEvent("player_changename", vEventHandler);
 		UnhookEvent("player_death", vEventHandler, EventHookMode_Pre);
 		UnhookEvent("player_incapacitated", vEventHandler);
 		UnhookEvent("player_spawn", vEventHandler);
@@ -4770,7 +4724,6 @@ static void vResetCore(int client)
 	g_esPlayer[client].g_bDying = false;
 	g_esPlayer[client].g_bThirdPerson = false;
 	g_esPlayer[client].g_iLastButtons = 0;
-	g_esPlayer[client].g_sOriginalName[0] = '\0';
 }
 
 static void vResetSpeed(int tank, bool mode = false)
@@ -4850,18 +4803,6 @@ static void vResetTimersForward(int mode = 0, int tank = 0)
 	Call_PushCell(mode);
 	Call_PushCell(tank);
 	Call_Finish();
-}
-
-static void vRevertName(int tank)
-{
-	static char sCurrentName[33];
-	GetClientName(tank, sCurrentName, sizeof(sCurrentName));
-	if (!StrEqual(sCurrentName, g_esPlayer[tank].g_sOriginalName) && g_esPlayer[tank].g_sOriginalName[0] != '\0')
-	{
-		g_esGeneral.g_bHideNameChange = true;
-		SetClientName(tank, g_esPlayer[tank].g_sOriginalName);
-		g_esGeneral.g_bHideNameChange = false;
-	}
 }
 
 static void vSpawnModes(int tank, bool status)
@@ -4955,7 +4896,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 {
 	if (bIsTank(tank))
 	{
-		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iRenamePlayers == 1)
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT))
 		{
 			g_esGeneral.g_bHideNameChange = true;
 			SetClientName(tank, g_esCache[tank].g_sTankName);
@@ -6352,20 +6293,6 @@ public MRESReturn mreLaunchDirection(int pThis)
 	}
 
 	return MRES_Ignored;
-}
-
-public void vFinaleHook(const char[] output, int caller, int activator, float delay)
-{
-	if (caller > MaxClients && IsValidEntity(caller))
-	{
-		for (int iTank = 1; iTank <= MaxClients; iTank++)
-		{
-			if (bIsValidClient(iTank, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
-			{
-				vRevertName(iTank);
-			}
-		}
-	}
 }
 
 public void vGameMode(const char[] output, int caller, int activator, float delay)
