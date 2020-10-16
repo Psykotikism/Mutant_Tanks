@@ -85,7 +85,7 @@
 		"#format"		"{1:t},{2:i}"
 		"en"			"{1} (Tank #{2})"
 		"hu"			"{1} (Tank #{2})"
-		"chi"			"{1} (Tank #{2})"
+		"chi"			"{1} (坦克 #{2})"
 	}
 
 	"MTVersionMenu"
@@ -748,7 +748,7 @@
 		"#format"		"{1:t},{2:i}"
 		"en"			"{1}{yellow} (Tank #{2}){default} is disabled."
 		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
-		"chi"			"{1}{yellow} (Tank #{2}){default} 已禁用."
+		"chi"			"{1}{yellow} (坦克 #{2}){default} 已禁用."
 	}
 
 	"Absorb"
