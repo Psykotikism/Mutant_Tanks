@@ -15,7 +15,6 @@
 #define _mutanttanks_included
 
 #include <sdktools>
-#include <mt_clone>
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
@@ -1255,9 +1254,9 @@ stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT
 	return bIsInfected(charger, flags) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
 
-stock bool bIsCloneAllowed(int tank)
+stock bool bIsCloneAllowed(int tank, bool installed)
 {
-	if (LibraryExists("mt_clone") && !MT_IsCloneSupported(tank))
+	if (installed && !MT_IsCloneSupported(tank))
 	{
 		return false;
 	}

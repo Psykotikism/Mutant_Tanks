@@ -108,6 +108,29 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+bool g_bCloneInstalled;
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "mt_clone", false))
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "mt_clone", false))
+	{
+		g_bCloneInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("mt_clone");
+}
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -489,7 +512,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
-			if (bIsCloneAllowed(iTank) && GetRandomFloat(0.1, 100.0) <= g_esCache[iTank].g_flMedicChance && g_esPlayer[iTank].g_bActivated2)
+			if (bIsCloneAllowed(iTank, g_bCloneInstalled) && GetRandomFloat(0.1, 100.0) <= g_esCache[iTank].g_flMedicChance && g_esPlayer[iTank].g_bActivated2)
 			{
 				if (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags))
 				{
@@ -509,7 +532,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank) && g_esCache[tank].g_iMedicAbility > 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flMedicChance)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esCache[tank].g_iMedicAbility > 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flMedicChance)
 	{
 		g_esPlayer[tank].g_bActivated2 = true;
 
@@ -519,7 +542,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -618,7 +641,7 @@ public void MT_OnButtonReleased(int tank, int button)
 
 public void MT_OnChangeType(int tank, bool revert)
 {
-	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank) && g_esCache[tank].g_iMedicAbility > 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flMedicChance)
+	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esCache[tank].g_iMedicAbility > 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flMedicChance)
 	{
 		if (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags))
 		{
@@ -800,7 +823,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 	static int iTank, iType;
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank) || iType != g_esPlayer[iTank].g_iTankType || (g_esCache[iTank].g_iMedicAbility != 2 && g_esCache[iTank].g_iMedicAbility != 3) || !g_esPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || iType != g_esPlayer[iTank].g_iTankType || (g_esCache[iTank].g_iMedicAbility != 2 && g_esCache[iTank].g_iMedicAbility != 3) || !g_esPlayer[iTank].g_bActivated)
 	{
 		g_esPlayer[iTank].g_bActivated = false;
 

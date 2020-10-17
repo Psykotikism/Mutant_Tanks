@@ -117,6 +117,29 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+bool g_bCloneInstalled;
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "mt_clone", false))
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "mt_clone", false))
+	{
+		g_bCloneInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("mt_clone");
+}
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -311,7 +334,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker) && (g_esCache[attacker].g_iNullifyHitMode == 0 || g_esCache[attacker].g_iNullifyHitMode == 1) && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_bCloneInstalled) && (g_esCache[attacker].g_iNullifyHitMode == 0 || g_esCache[attacker].g_iNullifyHitMode == 1) && bIsSurvivor(victim))
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 			{
@@ -323,7 +346,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				vNullifyHit(victim, attacker, g_esCache[attacker].g_flNullifyChance, g_esCache[attacker].g_iNullifyHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim) && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && bIsSurvivor(attacker))
 		{
 			if ((g_esCache[victim].g_iNullifyHitMode == 0 || g_esCache[victim].g_iNullifyHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
 			{
@@ -509,7 +532,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank) && g_esCache[tank].g_iNullifyAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esCache[tank].g_iNullifyAbility == 1)
 	{
 		vNullifyAbility(tank);
 	}
@@ -517,7 +540,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -710,7 +733,7 @@ public Action tTimerStopNullify(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsTankSupported(iTank) || !bIsCloneAllowed(iTank))
+	if (!MT_IsTankSupported(iTank) || !bIsCloneAllowed(iTank, g_bCloneInstalled))
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;

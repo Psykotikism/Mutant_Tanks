@@ -86,6 +86,29 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+bool g_bCloneInstalled;
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "mt_clone", false))
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "mt_clone", false))
+	{
+		g_bCloneInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("mt_clone");
+}
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -229,7 +252,7 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
 	{
-		if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim) && g_esCache[victim].g_iHitAbility == 1 && bIsSurvivor(attacker))
+		if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_bCloneInstalled) && g_esCache[victim].g_iHitAbility == 1 && bIsSurvivor(attacker))
 		{
 			if (MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (g_esCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags) || g_esCache[victim].g_iHumanAbility == 0)
 			{
@@ -238,7 +261,11 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
 
 			damage *= g_esCache[victim].g_flHitDamageMultiplier;
 
-			return bCanHitGroup(victim, hitgroup) ? Plugin_Changed : Plugin_Handled;
+			static int iBit, iFlag;
+			iBit = hitgroup - 1;
+			iFlag = (1 << iBit);
+
+			return !!(g_esCache[victim].g_iHitGroup & iFlag) ? Plugin_Changed : Plugin_Handled;
 		}
 	}
 
@@ -350,13 +377,4 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
-}
-
-static bool bCanHitGroup(int tank, int hitgroup)
-{
-	static int iBit, iFlag;
-	iBit = hitgroup - 1;
-	iFlag = (1 << iBit);
-
-	return !!(g_esCache[tank].g_iHitGroup & iFlag);
 }

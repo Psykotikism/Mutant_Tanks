@@ -47,7 +47,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_HEAL "Heal Ability"
 
-ConVar g_cvMTMaxIncapCount;
+enum struct esGeneral
+{
+	bool g_bCloneInstalled;
+
+	ConVar g_cvMTMaxIncapCount;
+}
+
+esGeneral g_esGeneral;
 
 enum struct esPlayer
 {
@@ -144,6 +151,27 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "mt_clone", false))
+	{
+		g_esGeneral.g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "mt_clone", false))
+	{
+		g_esGeneral.g_bCloneInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
+}
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -151,7 +179,7 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_mt_heal", cmdHealInfo, "View information about the Heal ability.");
 
-	g_cvMTMaxIncapCount = FindConVar("survivor_max_incapacitated_count");
+	g_esGeneral.g_cvMTMaxIncapCount = FindConVar("survivor_max_incapacitated_count");
 
 	if (g_bLateLoad)
 	{
@@ -369,7 +397,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker) && (g_esCache[attacker].g_iHealHitMode == 0 || g_esCache[attacker].g_iHealHitMode == 1) && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker, g_esGeneral.g_bCloneInstalled) && (g_esCache[attacker].g_iHealHitMode == 0 || g_esCache[attacker].g_iHealHitMode == 1) && bIsSurvivor(victim))
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 			{
@@ -381,7 +409,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				vHealHit(victim, attacker, g_esCache[attacker].g_flHealChance, g_esCache[attacker].g_iHealHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim) && (g_esCache[victim].g_iHealHitMode == 0 || g_esCache[victim].g_iHealHitMode == 2) && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_esGeneral.g_bCloneInstalled) && (g_esCache[victim].g_iHealHitMode == 0 || g_esCache[victim].g_iHealHitMode == 2) && bIsSurvivor(attacker))
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
 			{
@@ -659,7 +687,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank) && g_esCache[tank].g_iHealAbility > 0)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esCache[tank].g_iHealAbility > 0)
 	{
 		vHealAbility(tank, true);
 		vHealAbility(tank, false);
@@ -668,7 +696,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled))
 	{
 		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -905,7 +933,7 @@ static void vHealHit(int survivor, int tank, float chance, int enabled, int mess
 					SetEntProp(survivor, Prop_Data, "m_iHealth", 1);
 					SetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime", GetGameTime());
 					SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", g_esCache[tank].g_flHealBuffer);
-					SetEntProp(survivor, Prop_Send, "m_currentReviveCount", g_cvMTMaxIncapCount.IntValue);
+					SetEntProp(survivor, Prop_Send, "m_currentReviveCount", g_esGeneral.g_cvMTMaxIncapCount.IntValue);
 
 					vEffect(survivor, tank, g_esCache[tank].g_iHealEffect, flags);
 
@@ -1019,7 +1047,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 	static int iTank, iType;
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank) || iType != g_esPlayer[iTank].g_iTankType || (g_esCache[iTank].g_iHealAbility != 2 && g_esCache[iTank].g_iHealAbility != 3) || !g_esPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || iType != g_esPlayer[iTank].g_iTankType || (g_esCache[iTank].g_iHealAbility != 2 && g_esCache[iTank].g_iHealAbility != 3) || !g_esPlayer[iTank].g_bActivated)
 	{
 		vReset2(iTank);
 

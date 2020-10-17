@@ -95,6 +95,29 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+bool g_bCloneInstalled;
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "mt_clone", false))
+	{
+		g_bCloneInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "mt_clone", false))
+	{
+		g_bCloneInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bCloneInstalled = LibraryExists("mt_clone");
+}
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -394,7 +417,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	if (StrEqual(name, "player_incapacitated"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(iTank) && g_esCache[iTank].g_iRespawnAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[iTank].g_flRespawnChance)
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(iTank, g_bCloneInstalled) && g_esCache[iTank].g_iRespawnAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[iTank].g_flRespawnChance)
 		{
 			if (MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)))
 			{
@@ -420,7 +443,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
 	{
 		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -509,7 +532,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 
 	static int iTank;
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank) || g_esCache[iTank].g_iRespawnAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank, g_bCloneInstalled) || g_esCache[iTank].g_iRespawnAbility == 0)
 	{
 		g_esPlayer[iTank].g_iCount = 0;
 
@@ -548,7 +571,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
 		{
 			bExists[iRespawn] = false;
-			if (MT_IsTankSupported(iRespawn, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(iRespawn))
+			if (MT_IsTankSupported(iRespawn, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(iRespawn, g_bCloneInstalled))
 			{
 				bExists[iRespawn] = true;
 			}
@@ -567,7 +590,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		iNewTank = 0;
 		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
 		{
-			if (MT_IsTankSupported(iRespawn, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(iRespawn) && !bExists[iRespawn])
+			if (MT_IsTankSupported(iRespawn, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(iRespawn, g_bCloneInstalled) && !bExists[iRespawn])
 			{
 				iNewTank = iRespawn;
 				g_esPlayer[iNewTank].g_bRespawn = false;

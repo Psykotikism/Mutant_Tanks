@@ -11,6 +11,7 @@
 
 #include <sourcemod>
 #include <mutant_tanks>
+#include <mt_clone>
 
 #pragma semicolon 1
 #pragma newdecls required
