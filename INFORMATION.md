@@ -260,6 +260,20 @@
 		}
 		"Waves"
 		{
+			// Wait this many seconds before spawning an extra Tank.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Extras Delay"				"3.0"
+
+			// Kick extra Tanks when the limits set by "Regular Amount", "Finale Amount", or "Finale Waves" are met.
+			// Note: If a human is controlling the extra Tank, it will be killed instead.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Remove Extras"				"0"
+
 			// Spawn this many Tanks on non-finale maps periodically.
 			// Note: Leave this off if you have a Multi-Tanks plugin installed that handles the limit.
 			// Note: This will not work unless "Regular Mode" is set to 1.
