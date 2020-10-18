@@ -6548,7 +6548,7 @@
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} yelled at the survivors!"
-		"hu"			""
+		"hu"			"{olive}{1}{mint} ráordított a túlélőkre"
 		"chi"			"{olive}{1}{mint} 对幸存者大喊!"
 	}
 
@@ -6556,7 +6556,7 @@
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} stopped yelling!"
-		"hu"			""
+		"hu"			"{olive}{1}{mint} abbahagyta az ordítást!"
 		"chi"			"{olive}{1}{mint}不再大喊大叫!"
 	}
 
