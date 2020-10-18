@@ -6711,7 +6711,7 @@
 	"Tank #1 Name"
 	{
 		"en"			"Absorber Tank"
-		"hu"			""
+		"hu"			"Elnyelő Tank"
 		"chi"			"吸收罐"
 	}
 
@@ -6725,7 +6725,7 @@
 	"Tank #2 Name"
 	{
 		"en"			"Acidic Tank"
-		"hu"			""
+		"hu"			"Savas Tank"
 		"chi"			"酸性罐"
 	}
 
@@ -6739,7 +6739,7 @@
 	"Tank #3 Name"
 	{
 		"en"			"Aimless Tank"
-		"hu"			""
+		"hu"			"Céltalan Tank"
 		"chi"			"无目标坦克"
 	}
 
@@ -6753,7 +6753,7 @@
 	"Tank #4 Name"
 	{
 		"en"			"Ammo Tank"
-		"hu"			""
+		"hu"			"Lőszer Tank"
 		"chi"			"弹药箱"
 	}
 
@@ -6767,7 +6767,7 @@
 	"Tank #5 Name"
 	{
 		"en"			"Blind Tank"
-		"hu"			""
+		"hu"			"Vak Tank"
 		"chi"			"盲坦克"
 	}
 
@@ -6781,7 +6781,7 @@
 	"Tank #6 Name"
 	{
 		"en"			"Bomber Tank"
-		"hu"			""
+		"hu"			"Bombázó Tank"
 		"chi"			"轰炸机坦克"
 	}
 
@@ -6795,7 +6795,7 @@
 	"Tank #7 Name"
 	{
 		"en"			"Boomer Tank"
-		"hu"			""
+		"hu"			"Pukkancs Tank"
 		"chi"			"回力坦克"
 	}
 
@@ -6809,7 +6809,7 @@
 	"Tank #8 Name"
 	{
 		"en"			"Bulletproof Tank"
-		"hu"			""
+		"hu"			"Golyóálló Tank"
 		"chi"			"防弹坦克"
 	}
 
@@ -6823,7 +6823,7 @@
 	"Tank #9 Name"
 	{
 		"en"			"Burier Tank"
-		"hu"			""
+		"hu"			"Eltemető Tank"
 		"chi"			"埋葬坦克"
 	}
 
@@ -6837,7 +6837,7 @@
 	"Tank #10 Name"
 	{
 		"en"			"Car Tank"
-		"hu"			""
+		"hu"			"Autó Tank"
 		"chi"			"车载油箱"
 	}
 
@@ -6851,7 +6851,7 @@
 	"Tank #11 Name"
 	{
 		"en"			"Charger Tank"
-		"hu"			""
+		"hu"			"Rohanó Tank"
 		"chi"			"充电箱"
 	}
 
@@ -6865,7 +6865,7 @@
 	"Tank #12 Name"
 	{
 		"en"			"Choker Tank"
-		"hu"			""
+		"hu"			"Elzáró Tank"
 		"chi"			"窒息坦克"
 	}
 
@@ -6879,7 +6879,7 @@
 	"Tank #13 Name"
 	{
 		"en"			"Clone Tank"
-		"hu"			""
+		"hu"			"Klón Tank"
 		"chi"			"克隆坦克"
 	}
 
@@ -6893,7 +6893,7 @@
 	"Tank #14 Name"
 	{
 		"en"			"Cloudy Tank"
-		"hu"			""
+		"hu"			"Felhős Tank"
 		"chi"			"阴天坦克"
 	}
 
@@ -6907,7 +6907,7 @@
 	"Tank #15 Name"
 	{
 		"en"			"Dropper Tank"
-		"hu"			""
+		"hu"			"Dobó Tank"
 		"chi"			"滴管罐"
 	}
 
@@ -6921,7 +6921,7 @@
 	"Tank #16 Name"
 	{
 		"en"			"Drugger Tank"
-		"hu"			""
+		"hu"			"Drogozó Tank"
 		"chi"			"药罐"
 	}
 
@@ -6935,7 +6935,7 @@
 	"Tank #17 Name"
 	{
 		"en"			"Drunk Tank"
-		"hu"			""
+		"hu"			"Részeg Tank"
 		"chi"			"醉酒坦克"
 	}
 
@@ -6949,7 +6949,7 @@
 	"Tank #18 Name"
 	{
 		"en"			"Electric Tank"
-		"hu"			""
+		"hu"			"Elektromos Tank"
 		"chi"			"电动坦克"
 	}
 
@@ -6963,7 +6963,7 @@
 	"Tank #19 Name"
 	{
 		"en"			"Enforcer Tank"
-		"hu"			""
+		"hu"			"Végrehajtó Tank"
 		"chi"			"强化坦克"
 	}
 
@@ -6977,7 +6977,7 @@
 	"Tank #20 Name"
 	{
 		"en"			"Fast Tank"
-		"hu"			""
+		"hu"			"Gyors Tank"
 		"chi"			"快速坦克"
 	}
 
@@ -6991,7 +6991,7 @@
 	"Tank #21 Name"
 	{
 		"en"			"Fireproof Tank"
-		"hu"			""
+		"hu"			"Tűzálló Tank"
 		"chi"			"防火坦克"
 	}
 
@@ -7005,7 +7005,7 @@
 	"Tank #22 Name"
 	{
 		"en"			"Flinger Tank"
-		"hu"			""
+		"hu"			"Hajító Tank"
 		"chi"			"弹匣"
 	}
 
@@ -7019,7 +7019,7 @@
 	"Tank #23 Name"
 	{
 		"en"			"Fragile Tank"
-		"hu"			""
+		"hu"			"Törékeny Tank"
 		"chi"			"易碎的坦克"
 	}
 
@@ -7033,7 +7033,7 @@
 	"Tank #24 Name"
 	{
 		"en"			"Ghost Tank"
-		"hu"			""
+		"hu"			"Szellem Tank"
 		"chi"			"幽灵坦克"
 	}
 
@@ -7047,7 +7047,7 @@
 	"Tank #25 Name"
 	{
 		"en"			"Godly Tank"
-		"hu"			""
+		"hu"			"Isteni Tank"
 		"chi"			"敬虔的坦克"
 	}
 
@@ -7061,7 +7061,7 @@
 	"Tank #26 Name"
 	{
 		"en"			"Gravity Tank"
-		"hu"			""
+		"hu"			"Gravitációs Tank"
 		"chi"			"重力坦克"
 	}
 
@@ -7075,7 +7075,7 @@
 	"Tank #27 Name"
 	{
 		"en"			"Healthy Tank"
-		"hu"			""
+		"hu"			"Egészséges Tank"
 		"chi"			"健康坦克"
 	}
 
@@ -7089,7 +7089,7 @@
 	"Tank #28 Name"
 	{
 		"en"			"Hitter Tank"
-		"hu"			""
+		"hu"			"Ütős Tank"
 		"chi"			"击打坦克"
 	}
 
@@ -7103,7 +7103,7 @@
 	"Tank #29 Name"
 	{
 		"en"			"Hunter Tank"
-		"hu"			""
+		"hu"			"Vadász Tank"
 		"chi"			"猎人坦克"
 	}
 
@@ -7117,7 +7117,7 @@
 	"Tank #30 Name"
 	{
 		"en"			"Hurtful Tank"
-		"hu"			""
+		"hu"			"Bántó Tank"
 		"chi"			"伤心的坦克"
 	}
 
@@ -7131,7 +7131,7 @@
 	"Tank #31 Name"
 	{
 		"en"			"Hypnotizer Tank"
-		"hu"			""
+		"hu"			"Hipnotizáló Tank"
 		"chi"			"催眠坦克"
 	}
 
@@ -7145,7 +7145,7 @@
 	"Tank #32 Name"
 	{
 		"en"			"Icy Tank"
-		"hu"			""
+		"hu"			"Fagyos Tank"
 		"chi"			"冰冷的坦克"
 	}
 
@@ -7159,7 +7159,7 @@
 	"Tank #33 Name"
 	{
 		"en"			"Idler Tank"
-		"hu"			""
+		"hu"			"Tétlen Tank"
 		"chi"			"惰轮坦克"
 	}
 
@@ -7173,7 +7173,7 @@
 	"Tank #34 Name"
 	{
 		"en"			"Inverter Tank"
-		"hu"			""
+		"hu"			"Felcserélő Tank"
 		"chi"			"变频水箱"
 	}
 
@@ -7187,7 +7187,7 @@
 	"Tank #35 Name"
 	{
 		"en"			"Item Tank"
-		"hu"			""
+		"hu"			"Áru Tank"
 		"chi"			"物品箱"
 	}
 
@@ -7201,7 +7201,7 @@
 	"Tank #36 Name"
 	{
 		"en"			"Jockey Tank"
-		"hu"			""
+		"hu"			"Zsoké Tank"
 		"chi"			"赛马坦克"
 	}
 
@@ -7215,7 +7215,7 @@
 	"Tank #37 Name"
 	{
 		"en"			"Jumper Tank"
-		"hu"			""
+		"hu"			"Ugró Tank"
 		"chi"			"跳线坦克"
 	}
 
@@ -7229,7 +7229,7 @@
 	"Tank #38 Name"
 	{
 		"en"			"Kamikaze Tank"
-		"hu"			""
+		"hu"			"Öngyilkos Tank"
 		"chi"			"神风坦克"
 	}
 
@@ -7243,7 +7243,7 @@
 	"Tank #39 Name"
 	{
 		"en"			"Lagger Tank"
-		"hu"			""
+		"hu"			"Késleltető Tank"
 		"chi"			"匕首坦克"
 	}
 
@@ -7257,7 +7257,7 @@
 	"Tank #40 Name"
 	{
 		"en"			"Laser Tank"
-		"hu"			""
+		"hu"			"Lézer Tank"
 		"chi"			"激光坦克"
 	}
 
@@ -7271,7 +7271,7 @@
 	"Tank #41 Name"
 	{
 		"en"			"Leecher Tank"
-		"hu"			""
+		"hu"			"Pióca Tank"
 		"chi"			"水坦克"
 	}
 
@@ -7285,7 +7285,7 @@
 	"Tank #42 Name"
 	{
 		"en"			"Medic Tank"
-		"hu"			""
+		"hu"			"Gyógyító Tank"
 		"chi"			"军用坦克"
 	}
 
@@ -7299,7 +7299,7 @@
 	"Tank #43 Name"
 	{
 		"en"			"Meteor Tank"
-		"hu"			""
+		"hu"			"Meteor Tank"
 		"chi"			"流星坦克"
 	}
 
@@ -7313,7 +7313,7 @@
 	"Tank #44 Name"
 	{
 		"en"			"Necromancer Tank"
-		"hu"			""
+		"hu"			"Nekromanta Tank"
 		"chi"			"死灵法师坦克"
 	}
 
@@ -7327,7 +7327,7 @@
 	"Tank #45 Name"
 	{
 		"en"			"Nullifier Tank"
-		"hu"			""
+		"hu"			"Hatástalanító Tank"
 		"chi"			"消音器坦克"
 	}
 
@@ -7341,7 +7341,7 @@
 	"Tank #46 Name"
 	{
 		"en"			"Omni Tank"
-		"hu"			""
+		"hu"			"Mindenható Tank"
 		"chi"			"全能坦克"
 	}
 
@@ -7355,7 +7355,7 @@
 	"Tank #47 Name"
 	{
 		"en"			"Panic Tank"
-		"hu"			""
+		"hu"			"Pánik Tank"
 		"chi"			"恐慌坦克"
 	}
 
@@ -7369,7 +7369,7 @@
 	"Tank #48 Name"
 	{
 		"en"			"Pimp Tank"
-		"hu"			""
+		"hu"			"Csapdosó Tank"
 		"chi"			"皮条客坦克"
 	}
 
@@ -7383,7 +7383,7 @@
 	"Tank #49 Name"
 	{
 		"en"			"Platinum Tank"
-		"hu"			""
+		"hu"			"Platina Tank"
 		"chi"			"白金坦克"
 	}
 
@@ -7397,7 +7397,7 @@
 	"Tank #50 Name"
 	{
 		"en"			"Puke Tank"
-		"hu"			""
+		"hu"			"Hányó Tank"
 		"chi"			"呕吐坦克"
 	}
 
@@ -7411,7 +7411,7 @@
 	"Tank #51 Name"
 	{
 		"en"			"Pyromaniac Tank"
-		"hu"			""
+		"hu"			"Piromániás Tank"
 		"chi"			"烈火坦克"
 	}
 
@@ -7425,7 +7425,7 @@
 	"Tank #52 Name"
 	{
 		"en"			"Quiet Tank"
-		"hu"			""
+		"hu"			"Csendes Tank"
 		"chi"			"安静的坦克"
 	}
 
@@ -7439,7 +7439,7 @@
 	"Tank #53 Name"
 	{
 		"en"			"Recoil Tank"
-		"hu"			""
+		"hu"			"Visszarúgó Tank"
 		"chi"			"反冲坦克"
 	}
 
@@ -7453,7 +7453,7 @@
 	"Tank #54 Name"
 	{
 		"en"			"Regenerative Tank"
-		"hu"			""
+		"hu"			"Regeneráló Tank"
 		"chi"			"蓄能坦克"
 	}
 
@@ -7467,7 +7467,7 @@
 	"Tank #55 Name"
 	{
 		"en"			"Respawner Tank"
-		"hu"			""
+		"hu"			"Újjászülető Tank"
 		"chi"			"重生坦克"
 	}
 
@@ -7481,7 +7481,7 @@
 	"Tank #56 Name"
 	{
 		"en"			"Restarter Tank"
-		"hu"			""
+		"hu"			"Újraindító Tank"
 		"chi"			"重启罐"
 	}
 
@@ -7495,7 +7495,7 @@
 	"Tank #57 Name"
 	{
 		"en"			"Rock Tank"
-		"hu"			""
+		"hu"			"Szikla Tank"
 		"chi"			"岩石坦克"
 	}
 
@@ -7509,7 +7509,7 @@
 	"Tank #58 Name"
 	{
 		"en"			"Rocketeer Tank"
-		"hu"			""
+		"hu"			"Rakétaszakértő Tank"
 		"chi"			"火箭坦克"
 	}
 
@@ -7523,7 +7523,7 @@
 	"Tank #59 Name"
 	{
 		"en"			"Self-throwing Tank"
-		"hu"			""
+		"hu"			"Öndobó Tank"
 		"chi"			"自投式坦克"
 	}
 
@@ -7537,7 +7537,7 @@
 	"Tank #60 Name"
 	{
 		"en"			"Shaker Tank"
-		"hu"			""
+		"hu"			"Rázó Tank"
 		"chi"			"振动罐"
 	}
 
@@ -7551,7 +7551,7 @@
 	"Tank #61 Name"
 	{
 		"en"			"Shield Tank"
-		"hu"			""
+		"hu"			"Pajzs Tank"
 		"chi"			"盾构坦克"
 	}
 
@@ -7565,7 +7565,7 @@
 	"Tank #62 Name"
 	{
 		"en"			"Shover Tank"
-		"hu"			""
+		"hu"			"Lökő Tank"
 		"chi"			"推坦克"
 	}
 
@@ -7579,7 +7579,7 @@
 	"Tank #63 Name"
 	{
 		"en"			"Slow Tank"
-		"hu"			""
+		"hu"			"Lassú Tank"
 		"chi"			"慢坦克"
 	}
 
@@ -7593,7 +7593,7 @@
 	"Tank #64 Name"
 	{
 		"en"			"Smasher Tank"
-		"hu"			""
+		"hu"			"Zúzó Tank"
 		"chi"			"粉碎机坦克"
 	}
 
@@ -7607,7 +7607,7 @@
 	"Tank #65 Name"
 	{
 		"en"			"Smiter Tank"
-		"hu"			""
+		"hu"			"Lecsapó Tank"
 		"chi"			"重击坦克"
 	}
 
@@ -7621,7 +7621,7 @@
 	"Tank #66 Name"
 	{
 		"en"			"Smoker Tank"
-		"hu"			""
+		"hu"			"Füstös Tank"
 		"chi"			"烟缸"
 	}
 
@@ -7635,7 +7635,7 @@
 	"Tank #67 Name"
 	{
 		"en"			"Spammer Tank"
-		"hu"			""
+		"hu"			"Kéretlen Tank"
 		"chi"			"垃圾邮件发送器"
 	}
 
@@ -7649,7 +7649,7 @@
 	"Tank #68 Name"
 	{
 		"en"			"Special Tank"
-		"hu"			""
+		"hu"			"Speciális Tank"
 		"chi"			"特种坦克"
 	}
 
@@ -7663,7 +7663,7 @@
 	"Tank #69 Name"
 	{
 		"en"			"Spitter Tank"
-		"hu"			""
+		"hu"			"köpködő Tank"
 		"chi"			"垃圾箱"
 	}
 
@@ -7677,7 +7677,7 @@
 	"Tank #70 Name"
 	{
 		"en"			"Splasher Tank"
-		"hu"			""
+		"hu"			"Területsebző Tank"
 		"chi"			"溅水箱"
 	}
 
@@ -7691,7 +7691,7 @@
 	"Tank #71 Name"
 	{
 		"en"			"Splatter Tank"
-		"hu"			""
+		"hu"			"Fröcskölő Tank"
 		"chi"			"飞溅坦克"
 	}
 
@@ -7705,7 +7705,7 @@
 	"Tank #72 Name"
 	{
 		"en"			"Thrower Tank"
-		"hu"			""
+		"hu"			"Eldobó Tank"
 		"chi"			"投掷坦克"
 	}
 
@@ -7719,7 +7719,7 @@
 	"Tank #73 Name"
 	{
 		"en"			"Tracker Tank"
-		"hu"			""
+		"hu"			"Követő Tank"
 		"chi"			"追踪坦克"
 	}
 
@@ -7733,7 +7733,7 @@
 	"Tank #74 Name"
 	{
 		"en"			"Ultimate Tank"
-		"hu"			""
+		"hu"			"Végső Tank"
 		"chi"			"终极坦克"
 	}
 
@@ -7747,7 +7747,7 @@
 	"Tank #75 Name"
 	{
 		"en"			"Undead Tank"
-		"hu"			""
+		"hu"			"Halhatatlan Tank"
 		"chi"			"亡灵坦克"
 	}
 
@@ -7761,7 +7761,7 @@
 	"Tank #76 Name"
 	{
 		"en"			"Vampire Tank"
-		"hu"			""
+		"hu"			"Vámpír Tank"
 		"chi"			"吸血鬼坦克"
 	}
 
@@ -7775,7 +7775,7 @@
 	"Tank #77 Name"
 	{
 		"en"			"Visual Tank"
-		"hu"			""
+		"hu"			"Vizuális Tank"
 		"chi"			"视觉坦克"
 	}
 
@@ -7789,7 +7789,7 @@
 	"Tank #78 Name"
 	{
 		"en"			"Warper Tank"
-		"hu"			""
+		"hu"			"Teleportáló Tank"
 		"chi"			"变形坦克"
 	}
 
@@ -7803,7 +7803,7 @@
 	"Tank #79 Name"
 	{
 		"en"			"Whirler Tank"
-		"hu"			""
+		"hu"			"Örvénylő Tank"
 		"chi"			"旋风坦克"
 	}
 
@@ -7817,7 +7817,7 @@
 	"Tank #80 Name"
 	{
 		"en"			"Witch Tank"
-		"hu"			""
+		"hu"			"Boszorka Tank"
 		"chi"			"女巫坦克"
 	}
 
@@ -7831,7 +7831,7 @@
 	"Tank #81 Name"
 	{
 		"en"			"Xiphos Tank"
-		"hu"			""
+		"hu"			"Xiphos Tank"
 		"chi"			"Xiphos坦克"
 	}
 
@@ -7845,7 +7845,7 @@
 	"Tank #82 Name"
 	{
 		"en"			"Yeller Tank"
-		"hu"			""
+		"hu"			"Üvöltő Tank"
 		"chi"			"耶勒坦克"
 	}
 
@@ -7859,7 +7859,7 @@
 	"Tank #83 Name"
 	{
 		"en"			"Zombie Tank"
-		"hu"			""
+		"hu"			"Zombi Tank"
 		"chi"			"僵尸坦克"
 	}
 
@@ -7873,7 +7873,7 @@
 	"Tank #84 Name"
 	{
 		"en"			"Armageddon Tank"
-		"hu"			""
+		"hu"			"Armageddon Tank"
 		"chi"			"大决战坦克"
 	}
 
@@ -7887,7 +7887,7 @@
 	"Tank #85 Name"
 	{
 		"en"			"Boss Tank"
-		"hu"			""
+		"hu"			"Főnök Tank"
 		"chi"			"老板坦克"
 	}
 
@@ -7901,7 +7901,7 @@
 	"Tank #86 Name"
 	{
 		"en"			"Cobalt Tank"
-		"hu"			""
+		"hu"			"Kobalt Tank"
 		"chi"			"钴罐"
 	}
 
@@ -7915,7 +7915,7 @@
 	"Tank #87 Name"
 	{
 		"en"			"Distraction Tank"
-		"hu"			""
+		"hu"			"Elterelő Tank"
 		"chi"			"牵引罐"
 	}
 
@@ -7929,7 +7929,7 @@
 	"Tank #88 Name"
 	{
 		"en"			"Feedback Tank"
-		"hu"			""
+		"hu"			"Visszaverő Tank"
 		"chi"			"反馈箱"
 	}
 
@@ -7943,7 +7943,7 @@
 	"Tank #89 Name"
 	{
 		"en"			"Flash Tank"
-		"hu"			""
+		"hu"			"Flash Tank"
 		"chi"			"闪蒸罐"
 	}
 
@@ -7957,7 +7957,7 @@
 	"Tank #90 Name"
 	{
 		"en"			"Goliath Tank"
-		"hu"			""
+		"hu"			"Góliát Tank"
 		"chi"			"巨人坦克"
 	}
 
@@ -7971,7 +7971,7 @@
 	"Tank #91 Name"
 	{
 		"en"			"Hallucination Tank"
-		"hu"			""
+		"hu"			"Hallucináció Tank"
 		"chi"			"幻觉坦克"
 	}
 
@@ -7985,7 +7985,7 @@
 	"Tank #92 Name"
 	{
 		"en"			"Meme Tank"
-		"hu"			""
+		"hu"			"Mém Tank"
 		"chi"			"米姆坦克"
 	}
 
@@ -7999,7 +7999,7 @@
 	"Tank #93 Name"
 	{
 		"en"			"Mirage Tank"
-		"hu"			""
+		"hu"			"Káprázat Tank"
 		"chi"			"幻影坦克"
 	}
 
@@ -8013,7 +8013,7 @@
 	"Tank #94 Name"
 	{
 		"en"			"Poltergeist Tank"
-		"hu"			""
+		"hu"			"Kísértet Tank"
 		"chi"			"Poltergeist坦克"
 	}
 
@@ -8027,7 +8027,7 @@
 	"Tank #95 Name"
 	{
 		"en"			"Psychotic Tank"
-		"hu"			""
+		"hu"			"Elmebeteg Tank"
 		"chi"			"精神病坦克"
 	}
 
@@ -8041,7 +8041,7 @@
 	"Tank #96 Name"
 	{
 		"en"			"Reverse-Flash Tank"
-		"hu"			""
+		"hu"			"Fordító Tank"
 		"chi"			"反闪坦克"
 	}
 
@@ -8055,7 +8055,7 @@
 	"Tank #97 Name"
 	{
 		"en"			"Spawner Tank"
-		"hu"			""
+		"hu"			"Létrehozó Tank"
 		"chi"			"扳手坦克"
 	}
 
@@ -8069,7 +8069,7 @@
 	"Tank #98 Name"
 	{
 		"en"			"Zoom Tank"
-		"hu"			""
+		"hu"			"Közelítő Tank"
 		"chi"			"变焦坦克"
 	}
 
@@ -8083,7 +8083,7 @@
 	"Tank #99 Name"
 	{
 		"en"			"Dread Tank"
-		"hu"			""
+		"hu"			"Félelemkeltő Tank"
 		"chi"			"恐惧坦克"
 	}
 
@@ -8097,7 +8097,7 @@
 	"Tank #100 Name"
 	{
 		"en"			"Rabid Tank"
-		"hu"			""
+		"hu"			"Fanatikus Tank"
 		"chi"			"狂暴坦克"
 	}
 
@@ -8111,7 +8111,7 @@
 	"Tank #101 Name"
 	{
 		"en"			"Tremor Tank"
-		"hu"			""
+		"hu"			"Remegő Tank"
 		"chi"			"震荡坦克"
 	}
 
@@ -8125,7 +8125,7 @@
 	"Tank #102 Name"
 	{
 		"en"			"Psyk0tik Tank"
-		"hu"			""
+		"hu"			"Elmeb3teg Tank"
 		"chi"			"Psyk0tik坦克"
 	}
 
@@ -8139,7 +8139,7 @@
 	"Tank #103 Name"
 	{
 		"en"			"Apocalyptic Tank"
-		"hu"			""
+		"hu"			"Apokalipszis Tank"
 		"chi"			"世界末日坦克"
 	}
 
@@ -8153,7 +8153,7 @@
 	"Tank #104 Name"
 	{
 		"en"			"Darth Vader Tank"
-		"hu"			""
+		"hu"			"Darth Vader Tank"
 		"chi"			"达斯·维达（Darth Vader）背心"
 	}
 
@@ -8167,7 +8167,7 @@
 	"Tank #105 Name"
 	{
 		"en"			"Grim Reaper Tank"
-		"hu"			""
+		"hu"			"Zord Kaszás Tank"
 		"chi"			"死神坦克"
 	}
 
@@ -8181,7 +8181,7 @@
 	"Tank #106 Name"
 	{
 		"en"			"Horde Tank"
-		"hu"			""
+		"hu"			"Horda Tank"
 		"chi"			"部落坦克"
 	}
 
@@ -8195,7 +8195,7 @@
 	"Tank #107 Name"
 	{
 		"en"			"Hulk Tank"
-		"hu"			""
+		"hu"			"Hulk Tank"
 		"chi"			"绿巨人坦克"
 	}
 
@@ -8209,7 +8209,7 @@
 	"Tank #108 Name"
 	{
 		"en"			"Ninja Tank"
-		"hu"			""
+		"hu"			"Nindzsa Tank"
 		"chi"			"忍者坦克"
 	}
 
@@ -8223,7 +8223,7 @@
 	"Tank #109 Name"
 	{
 		"en"			"Zen Tank"
-		"hu"			""
+		"hu"			"Zen Tank"
 		"chi"			"禅宗坦克"
 	}
 
@@ -8237,7 +8237,7 @@
 	"Tank #110 Name"
 	{
 		"en"			"The Boss (1st Form)"
-		"hu"			""
+		"hu"			"A Főnök (1. alak)"
 		"chi"			"老板（第一形式）"
 	}
 
@@ -8251,7 +8251,7 @@
 	"Tank #111 Name"
 	{
 		"en"			"Steel Overlord (2nd Form)"
-		"hu"			""
+		"hu"			"Acél Hűbérúr (2. Alak)"
 		"chi"			"钢铁霸主（第二种形式）"
 	}
 
@@ -8265,7 +8265,7 @@
 	"Tank #112 Name"
 	{
 		"en"			"Night Stalker (3rd Form)"
-		"hu"			""
+		"hu"			"Éjjeli Orvvadász (3. Alak)"
 		"chi"			"暗夜魔王（第三形式）"
 	}
 
@@ -8279,7 +8279,7 @@
 	"Tank #113 Name"
 	{
 		"en"			"Spirit of Fire (4th Form)"
-		"hu"			""
+		"hu"			"Tűz Szelleme (4. Alak)"
 		"chi"			"火灵（第四形式）"
 	}
 
@@ -8293,7 +8293,7 @@
 	"Tank #114 Name"
 	{
 		"en"			"Randomizer Tank"
-		"hu"			""
+		"hu"			"Randomizáló Tank"
 		"chi"			"随机坦克"
 	}
 
@@ -8307,7 +8307,7 @@
 	"Tank #115 Name"
 	{
 		"en"			"Shapeshifter Tank"
-		"hu"			""
+		"hu"			"Alakváltó Tank"
 		"chi"			"变形坦克"
 	}
 
@@ -8321,7 +8321,7 @@
 	"Tank #116 Name"
 	{
 		"en"			"Mudman Tank"
-		"hu"			""
+		"hu"			"Mocsárember Tank"
 		"chi"			"泥浆坦克"
 	}
 
@@ -8335,7 +8335,7 @@
 	"Tank #117 Name"
 	{
 		"en"			"Endgame Tank"
-		"hu"			""
+		"hu"			"Végjáték Tank"
 		"chi"			"残局坦克"
 	}
 
@@ -8349,7 +8349,7 @@
 	"Tank #118 Name"
 	{
 		"en"			"Playful Tank"
-		"hu"			""
+		"hu"			"Játékos Tank"
 		"chi"			"俏皮坦克"
 	}
 
@@ -8363,7 +8363,7 @@
 	"Tank #119 Name"
 	{
 		"en"			"Annoying Tank"
-		"hu"			""
+		"hu"			"Bosszantó Tank"
 		"chi"			"烦人的坦克"
 	}
 
@@ -8377,7 +8377,7 @@
 	"Tank #120 Name"
 	{
 		"en"			"Pet Tank"
-		"hu"			""
+		"hu"			"Háziállat Tank"
 		"chi"			"宠物罐"
 	}
 
