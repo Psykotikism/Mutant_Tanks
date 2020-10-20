@@ -6,7 +6,7 @@
 
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 33 and 34 and recompile at your own risk.)
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 32 and recompile at your own risk.)
-- Ability count: 74 (Suggest more if you want; limit is 100.)
+- Ability count: 75 (Suggest more if you want; limit is 100.)
 
 ## Sections
 - Plugin Settings
@@ -2764,6 +2764,11 @@
 			// The position of the Mutant Tank's weapon.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 3
+			// --
 			// 0 OR 3: Pick randomly between left and right hands.
 			// 1: Right hand.
 			// 2: Left hand.
@@ -3851,6 +3856,117 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Fling Range Chance"			"15.0"
+		}
+	}
+}
+```
+
+##### Fly Ability
+
+```
+"Mutant Tanks"
+{
+	"Tank #1"
+	{
+		// The Mutant Tank can fly.
+		// Requires "mt_fly.smx" to be installed.
+		"Fly Ability"
+		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
+
+			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
+			// 0: OFF
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"1"
+
+			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"			"0"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Fly Chance"				"33.3"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 999999
+			"Fly Duration"				"30"
+
+			// The Mutant Tank's flight ability is this fast.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Fly Speed"				"500.0"
+
+			// The type of event that triggers the Mutant Tank's flight ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 15
+			// --
+			// 0 OR 15: All types of events.
+			// 1: When the Mutant Tank hurts a survivor.
+			// 2: When a survivor hurts a Mutant Tank.
+			// 4: When the Mutant Tank throws a rock.
+			// 8: When the Mutant Tank jumps.
+			"Fly Type"				"0"
 		}
 	}
 }

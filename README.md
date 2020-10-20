@@ -59,8 +59,7 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
  - `addons/sourcemod/plugins` folder (`mutant_tanks.smx` and all of its modules)
  - `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
 2. Delete `mutant_tanks.txt` from `addons/sourcemod/gamedata` folder.
-3. Delete `mutant_tanks.inc` from `addons/sourcemod/scripting/include` folder.
-4. Delete `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
+3. Delete `mutant_tanks.inc` and `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
 5. Delete `mutant_tanks.phrases.txt` from `addons/sourcemod/translations` folder.
 6. Backup `mutant_tanks` folder in `addons/sourcemod/data` folder.
 6. Follow the Installation guide above. (Only for upgrading to newer versions.)
@@ -1021,6 +1020,15 @@ native bool MT_IsCloneSupported(int tank);
 native bool MT_IsCorePluginEnabled();
 
 /**
+ * Returns if a custom Tank is allowed to be a Mutant Tank.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the custom Tank is allowed to be a Mutant Tank, false otherwise.
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native bool MT_IsCustomTankSupported(int tank);
+
+/**
  * Returns if a certain Mutant Tank type is only available on finale maps.
  *
  * @param type			Mutant Tank type.
@@ -1256,6 +1264,7 @@ sm_mt_enforce - View information about the Enforce ability.
 sm_mt_fast - View information about the Fast ability.
 sm_mt_fire - View information about the Fire ability.
 sm_mt_fling - View information about the Fling ability.
+sm_mt_fly - View information about the Fly ability.
 sm_mt_fragile - View information about the Fragile ability.
 sm_mt_ghost - View information about the Ghost ability.
 sm_mt_god - View information about the God ability.
@@ -1760,7 +1769,7 @@ Examples:
 
 **nico-op** - For the [[L4D/L4D2] Infected Health Gauge (Tank & Witch & Special)](https://forums.alliedmods.net/showthread.php?t=125747) plugin.
 
-**Ernecio** - For the [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) plugin.
+**Ernecio** - For the [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) and [[L4D1 & L4D2] Improved Flying Tank](https://forums.alliedmods.net/showthread.php?t=325719) plugin.
 
 **Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
 
@@ -1858,7 +1867,6 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate (PayPal only)
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 - Donate to me at alfred_llagas3637@yahoo.com
-
 
 
 Thank you very much and have fun! :D

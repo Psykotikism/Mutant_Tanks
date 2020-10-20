@@ -11,7 +11,7 @@ Bug fixes:
 5. Fixed the `Drug` ability not requiring human survivors to be present by default.
 6. Fixed the `Drunk` ability requiring human survivors to be present by default.
 7. Fixed the `Drop Weapon Name` setting not reading non-melee weapon names properly.
-8. Fixed the `Requires Humans` setting not working in some formats.
+8. Fixed the `Requires Humans` setting not working in some config formats.
 9. Fixed the `Requires Humans` setting not working when the core plugin is deciding which Mutant Tank type to spawn.
 10. Fixed some abilities calling `DispatchSpawn` on entities before teleporting them.
 11. Fixed the core plugin skipping some waves. (Thanks to Tank Rush for testing and reporting!)
@@ -25,6 +25,8 @@ Bug fixes:
 19. Fixed the `Yell` ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
 20. Fixed the `Clone` ability not being optional.
 21. Fixed some phrases not being translated for other languages.
+22. Fixed some of the `Hit` ability's settings not working in some config formats.
+24. Fixed one of the `Shake` ability's messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
 
 Changes:
 
@@ -41,16 +43,18 @@ Changes:
 11. Changed the default value of the `Death Revert` setting under `Plugin Settings/General` from `0` to `1`.
 12. Increased the delay between each Tank wave in finales from `3` to `5` seconds.
 13. Added the `Attack Interval` setting under `Tank #/Enhancements` section. (Thanks to epz for the code!)
-14. Added four new presets in the config files to showcase more features.
-15. The regular waves spawner now has a delay and starts after a survivor has left the saferoom.
-16. Added the `Regular Delay` setting under `Plugin Settings/Waves` section. (Requested by Tank Rush.)
-17. Config files now support multiple abilities using comma separation.
-18. The `all` section can now be grouped with multiple types and abilities in config files.
-19. The `Clone` ability's `Clone Type` setting and the `Respawn` ability's `Respawn Type` setting now both take in a type range. Example: `1-10` (Requested by Neptunia.)
-20. The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
-21. Removed the `Rename Players` setting. (Too many bugs with special characters in people's names.)
-22. Added the `Remove Extras` and `Extras Delay` settings under `Plugin Settings/Waves` section.
-23. The arrival of Mutant Tanks is no longer announced when they are idle. Instead, the arrival is announced once the survivors trigger the Mutant Tank.
+14. The regular waves spawner now has a delay and starts after a survivor has left the saferoom.
+15. Added the `Regular Delay` setting under `Plugin Settings/Waves` section. (Requested by Tank Rush.)
+16. Config files now support multiple abilities using comma separation.
+17. The `all` section can now be grouped with multiple types and abilities in config files.
+18. The `Clone` ability's `Clone Type` setting and the `Respawn` ability's `Respawn Type` setting now both take in a type range. Example: `1-10` (Requested by Neptunia.)
+19. The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
+20. Removed the `Rename Players` setting. (Too many bugs with special characters in people's names.)
+21. Added the `Remove Extras` and `Extras Delay` settings under `Plugin Settings/Waves` section.
+22. The arrival of Mutant Tanks is no longer announced when they are idle. Instead, the arrival is announced once the survivors trigger the Mutant Tank.
+23. Added the `Fly` ability. (Thanks to Ernecio for the code!)
+24. None of the abilities' plugins need to check if the `Clone` ability is installed anymore.
+25. Added the `MT_IsCustomTankSupported` native to allow developers to check if a Tank clone is able to use abilities like real Mutant Tanks.
 
 Files:
 
