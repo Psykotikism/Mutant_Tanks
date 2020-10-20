@@ -26,7 +26,7 @@ Bug fixes:
 20. Fixed the `Clone` ability not being optional.
 21. Fixed some phrases not being translated for other languages.
 22. Fixed some of the `Hit` ability's settings not working in some config formats.
-24. Fixed one of the `Shake` ability's messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
+23. Fixed one of the `Shake` ability's messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
 
 Changes:
 

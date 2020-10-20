@@ -1380,7 +1380,6 @@ Example:
 			"Extra Health"				"1000"
 		}
 	}
-
 	// Applies to types 1 and 10.
 	"1,10"
 	{
@@ -1389,7 +1388,6 @@ Example:
 			"Extra Health"				"1000"
 		}
 	}
-
 	// Applies to types 11 through 20.
 	"11-20"
 	{
@@ -1398,7 +1396,6 @@ Example:
 			"Extra Health"				"1000"
 		}
 	}
-
 	// Applies to types 21 through 30 and types 31 through 40.
 	"21-30,31-40"
 	{
@@ -1426,7 +1423,6 @@ Example:
 		{
 			"Ability Enabled"			"1"
 		}
-
 		// Applies to Absorb and Acid abilities.
 		"Absorb,Acid"
 		{

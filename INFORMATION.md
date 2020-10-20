@@ -2,8 +2,9 @@
 > by Psyk0tik (Crasher_3637)
 
 ## Information
-> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
+> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
+- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 33 and 34 and recompile at your own risk.)
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 32 and recompile at your own risk.)
 - Ability count: 75 (Suggest more if you want; limit is 100.)
@@ -3954,6 +3955,7 @@
 			"Fly Speed"				"500.0"
 
 			// The type of event that triggers the Mutant Tank's flight ability.
+			// Note: This setting does not affect human-controlled Tanks.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
