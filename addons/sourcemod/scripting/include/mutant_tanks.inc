@@ -16,10 +16,6 @@
 
 #include <sdktools>
 
-#undef REQUIRE_PLUGIN
-#tryinclude <mt_clone>
-#define REQUIRE_PLUGIN
-
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
 #define MT_VERSION "8.80"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
@@ -418,6 +414,15 @@ native bool MT_IsAdminImmune(int survivor, int tank);
  * @return			True if core plugin is enabled, false otherwise.
  **/
 native bool MT_IsCorePluginEnabled();
+
+/**
+ * Returns if a custom Tank is allowed to be a Mutant Tank.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the custom Tank is allowed to be a Mutant Tank, false otherwise.
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native bool MT_IsCustomTankSupported(int tank);
 
 /**
  * Returns if a certain Mutant Tank type is only available on finale maps.
@@ -1254,23 +1259,12 @@ stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT
 	return bIsInfected(charger, flags) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
 
-stock bool bIsCloneAllowed(int tank, bool installed)
-{
-	if (installed && !MT_IsCloneSupported(tank))
-	{
-		return false;
-	}
-
-	return true;
-}
-
 stock bool bIsCommonInfected(int common)
 {
 	if (bIsValidEntity(common))
 	{
 		static char sClassname[32];
 		GetEntityClassname(common, sClassname, sizeof(sClassname));
-
 		return StrEqual(sClassname, "infected");
 	}
 
@@ -1400,6 +1394,26 @@ stock bool bIsSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|
 	return bIsValidClient(survivor, flags) && GetClientTeam(survivor) == 2;
 }
 
+stock bool bIsSurvivorCaught(int survivor)
+{
+	static int iSpecial;
+	iSpecial = GetEntPropEnt(survivor, Prop_Send, "m_pounceAttacker");
+	iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_tongueOwner") : iSpecial;
+	if (bIsValidGame())
+	{
+		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_pummelAttacker") : iSpecial;
+		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_carryAttacker") : iSpecial;
+		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_jockeyAttacker") : iSpecial;
+	}
+
+	if (iSpecial > 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
 {
 	return bIsInfected(tank, flags) && (bIsValidGame() ? GetEntProp(tank, Prop_Send, "m_zombieClass") == 8 : GetEntProp(tank, Prop_Send, "m_zombieClass") == 5);
@@ -1460,7 +1474,7 @@ stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME
 
 stock bool bIsValidEntity(int entity)
 {
-	return entity > 0 && IsValidEntity(entity);
+	return entity > MaxClients && IsValidEntity(entity);
 }
 
 stock bool bIsValidEntRef(int ref)
@@ -1471,7 +1485,6 @@ stock bool bIsValidEntRef(int ref)
 stock bool bIsValidGame(bool l4d2 = true)
 {
 	EngineVersion evEngine = GetEngineVersion();
-
 	return l4d2 ? evEngine == Engine_Left4Dead2 : evEngine == Engine_Left4Dead;
 }
 
@@ -1481,10 +1494,7 @@ stock bool bIsWitch(int witch)
 	{
 		static char sClassname[32];
 		GetEntityClassname(witch, sClassname, sizeof(sClassname));
-		if (StrEqual(sClassname, "witch"))
-		{
-			return true;
-		}
+		return StrEqual(sClassname, "witch");
 	}
 
 	return false;
@@ -1617,6 +1627,26 @@ public bool bTraceRayDontHitSelf(int entity, int mask, any data)
 	return true;
 }
 
+public bool bTraceRayDontHitSelfAndCommons(int entity, int mask, any data)
+{
+	if (entity == data || bIsCommonInfected(entity))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+public bool bTraceRayDontHitSelfAndInfected(int entity, int mask, any data)
+{
+	if (entity == data || bIsInfected(entity))
+	{
+		return false;
+	}
+
+	return true;
+}
+
 public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
 {
 	if (entity == data || bIsValidClient(entity, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -1637,10 +1667,10 @@ public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 	return true;
 }
 
-stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int flag)
+stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 {
 	static Handle hTrace;
-	switch (flag)
+	switch (type)
 	{
 		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
 		case 2: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndPlayer, entity);
@@ -1681,7 +1711,7 @@ stock float flGetAngle(float angle1[3], float angle2[3])
 	return ArcCosine(GetVectorDotProduct(angle1, angle2) / (GetVectorLength(angle1) * GetVectorLength(angle2)));
 }
 
-stock float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity, int trace)
+stock float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity, int type)
 {
 	static float flAngle[3];
 	vCopyVector(angle, flAngle);
@@ -1690,7 +1720,7 @@ stock float flGetDistance(float pos[3], float angle[3], float offset1, float off
 	GetAngleVectors(flAngle, force, NULL_VECTOR, NULL_VECTOR);
 
 	static float flDistance;
-	flDistance = flGetRayDistance(pos, flAngle, entity, trace);
+	flDistance = flGetRayDistance(pos, flAngle, entity, type);
 
 	return flDistance;
 }
@@ -1724,10 +1754,10 @@ stock float flGetGroundUnits(int entity)
 	return 0.0;
 }
 
-stock float flGetRayDistance(float pos[3], float angle[3], int entity, int trace)
+stock float flGetRayDistance(float pos[3], float angle[3], int entity, int type)
 {
 	static float flHitPos[3];
-	iGetRayHitPos(pos, angle, flHitPos, entity, false, trace);
+	iGetRayHitPos(pos, angle, flHitPos, entity, false, type);
 
 	return GetVectorDistance(pos, flHitPos);
 }
@@ -1901,14 +1931,16 @@ stock int iGetRandomTank(int tank)
 	return iTanks[GetRandomInt(0, iTankCount - 1)];
 }
 
-stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false, int trace)
+stock int iGetRayHitPos(float pos[3], float angle[3], float hitpos[3], int entity = 0, bool offset = false, int type)
 {
 	static Handle hTrace;
-	switch (trace)
+	switch (type)
 	{
 		case 1: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, entity);
 		case 2: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndPlayer, entity);
 		case 3: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndSurvivor, entity);
+		case 4: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndInfected, entity);
+		case 5: hTrace = TR_TraceRayFilterEx(pos, angle, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelfAndCommons, entity);
 	}
 
 	static int iHit;
@@ -2044,6 +2076,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_HideEntity");
 	MarkNativeAsOptional("MT_IsAdminImmune");
 	MarkNativeAsOptional("MT_IsCorePluginEnabled");
+	MarkNativeAsOptional("MT_IsCustomTankSupported");
 	MarkNativeAsOptional("MT_IsFinaleType");
 	MarkNativeAsOptional("MT_IsGlowEnabled");
 	MarkNativeAsOptional("MT_IsNonFinaleType");

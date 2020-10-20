@@ -44,15 +44,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_THROW "Throw Ability"
 
-enum struct esGeneral
-{
-	bool g_bCloneInstalled;
-
-	ConVar g_cvMTTankThrowForce;
-}
-
-esGeneral g_esGeneral;
-
 enum struct esPlayer
 {
 	bool g_bActivated;
@@ -108,26 +99,7 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_esGeneral.g_bCloneInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_esGeneral.g_bCloneInstalled = false;
-	}
-}
-
-public void OnAllPluginsLoaded()
-{
-	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
-}
+ConVar g_cvMTTankThrowForce;
 
 public void OnPluginStart()
 {
@@ -136,7 +108,7 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_mt_throw", cmdThrowInfo, "View information about the Throw ability.");
 
-	g_esGeneral.g_cvMTTankThrowForce = FindConVar("z_tank_throw_force");
+	g_cvMTTankThrowForce = FindConVar("z_tank_throw_force");
 }
 
 public void OnMapStart()
@@ -434,7 +406,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
 		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -483,7 +455,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnRockThrow(int tank, int rock)
 {
-	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esCache[tank].g_iThrowAbility > 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flThrowChance)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iThrowAbility > 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flThrowChance)
 	{
 		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -535,7 +507,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	static int iTank, iType;
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || iType != g_esPlayer[iTank].g_iTankType || (g_esCache[iTank].g_iThrowAbility == 0))
+	if (!MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || (g_esCache[iTank].g_iThrowAbility == 0))
 	{
 		return Plugin_Stop;
 	}
@@ -619,7 +591,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						RemoveEntity(iRock);
 
 						NormalizeVector(flVelocity, flVelocity);
-						ScaleVector(flVelocity, g_esGeneral.g_cvMTTankThrowForce.FloatValue * 1.4);
+						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
 						TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
 						DispatchSpawn(iCar);
@@ -687,7 +659,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						RemoveEntity(iRock);
 
 						NormalizeVector(flVelocity, flVelocity);
-						ScaleVector(flVelocity, g_esGeneral.g_cvMTTankThrowForce.FloatValue * 1.4);
+						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
 						TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
 
@@ -707,7 +679,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 					RemoveEntity(iRock);
 
 					NormalizeVector(flVelocity, flVelocity);
-					ScaleVector(flVelocity, g_esGeneral.g_cvMTTankThrowForce.FloatValue * 1.4);
+					ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
 					TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
 
@@ -730,7 +702,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						RemoveEntity(iRock);
 
 						NormalizeVector(flVelocity, flVelocity);
-						ScaleVector(flVelocity, g_esGeneral.g_cvMTTankThrowForce.FloatValue * 1.4);
+						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
 						TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
 						DispatchSpawn(iWitch);

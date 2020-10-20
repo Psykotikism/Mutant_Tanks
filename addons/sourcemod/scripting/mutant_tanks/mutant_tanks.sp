@@ -16,6 +16,11 @@
 #include <left4dhooks>
 #include <mutant_tanks>
 
+#undef REQUIRE_PLUGIN
+#tryinclude <mt_clone>
+//#tryinclude <mt_pet>
+#define REQUIRE_PLUGIN
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -58,6 +63,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MT_HideEntity", aNative_HideEntity);
 	CreateNative("MT_IsAdminImmune", aNative_IsAdminImmune);
 	CreateNative("MT_IsCorePluginEnabled", aNative_IsCorePluginEnabled);
+	CreateNative("MT_IsCustomTankSupported", aNative_IsCustomTankSupported);
 	CreateNative("MT_IsFinaleType", aNative_IsFinaleType);
 	CreateNative("MT_IsGlowEnabled", aNative_IsGlowEnabled);
 	CreateNative("MT_IsNonFinaleType", aNative_IsNonFinaleType);
@@ -153,6 +159,7 @@ enum struct esGeneral
 	bool g_bCloneInstalled;
 	bool g_bHideNameChange;
 	bool g_bMapStarted;
+	//bool g_bPetInstalled;
 	bool g_bPluginEnabled;
 	bool g_bUsedParser;
 
@@ -663,6 +670,11 @@ public any aNative_IsCorePluginEnabled(Handle plugin, int numParams)
 	return g_esGeneral.g_bPluginEnabled;
 }
 
+public any aNative_IsCustomTankSupported(Handle plugin, int numParams)
+{
+	return bIsCustomTankAllowed(GetNativeCell(1));//, GetNativeCell(2)
+}
+
 public any aNative_IsFinaleType(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
@@ -750,6 +762,10 @@ public void OnLibraryAdded(const char[] name)
 	{
 		g_esGeneral.g_bCloneInstalled = true;
 	}
+	/*else if (StrEqual(name, "mt_pet", false))
+	{
+		g_esGeneral.g_bPetInstalled = true;
+	}*/
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -758,11 +774,16 @@ public void OnLibraryRemoved(const char[] name)
 	{
 		g_esGeneral.g_bCloneInstalled = false;
 	}
+	/*else if (StrEqual(name, "mt_pet", false))
+	{
+		g_esGeneral.g_bPetInstalled = false;
+	}*/
 }
 
 public void OnAllPluginsLoaded()
 {
 	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
+	//g_esGeneral.g_bPetInstalled = LibraryExists("mt_pet");
 }
 
 public void OnPluginStart()
@@ -2423,15 +2444,15 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 
 static void vChangeTank(int admin, int amount, int mode)
 {
-	int iTarget = GetClientAimTarget(admin, false);
+	int iTarget = GetClientAimTarget(admin);
 
-	switch (bIsValidEntity(iTarget))
+	switch (bIsTank(iTarget))
 	{
 		case true:
 		{
 			char sClassname[32];
 			GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
-			if (bIsTank(iTarget) && StrEqual(sClassname, "player"))
+			if (StrEqual(sClassname, "player"))
 			{
 				vNewTankSettings(iTarget);
 				vSetColor(iTarget, g_esGeneral.g_iChosenType);
@@ -2662,11 +2683,11 @@ public void OnGameFrame()
 		{
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 			{
-				iTarget = GetClientAimTarget(iPlayer, false);
-				if (bIsValidEntity(iTarget))
+				iTarget = GetClientAimTarget(iPlayer);
+				if (bIsTank(iTarget))
 				{
 					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
-					if (StrEqual(sClassname, "player") && bIsTank(iTarget))
+					if (StrEqual(sClassname, "player"))
 					{
 						sHealthBar[0] = '\0';
 						iHealth = (g_esPlayer[iTarget].g_bDying) ? 0 : GetClientHealth(iTarget);
@@ -2811,19 +2832,21 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsCommonInfected(victim))
 		{
-			if (bIsTankAllowed(victim) && bHasCoreAdminAccess(victim))
+			if (bIsTankAllowed(attacker))// && (!g_esGeneral.g_bPetInstalled || (g_esGeneral.g_bPetInstalled && !MT_IsTankPet(attacker)))
 			{
-				if (((damagetype & DMG_BULLET) && g_esCache[victim].g_iBulletImmunity == 1) || (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iExplosiveImmunity == 1)
-					|| ((damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1) || (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1))
+				if (StrEqual(sClassname, "tank_rock") || ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA) || (damagetype & DMG_BURN)))
 				{
 					return Plugin_Handled;
 				}
 			}
 
-			if (attacker == victim || StrEqual(sClassname, "tank_rock") ||
-				(((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA) || (damagetype & DMG_BURN)) && bIsTank(attacker)))
+			if (bIsTankAllowed(victim) && bHasCoreAdminAccess(victim))
 			{
-				return Plugin_Handled;
+				if (attacker == victim || ((damagetype & DMG_BULLET) && g_esCache[victim].g_iBulletImmunity == 1) || (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iExplosiveImmunity == 1)
+					|| ((damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1) || (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1))
+				{
+					return Plugin_Handled;
+				}
 			}
 		}
 	}
@@ -4161,7 +4184,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				g_esPlayer[iTank].g_bDied = true;
 				g_esPlayer[iTank].g_bDying = false;
 
-				if (bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled))
+				if (bIsCustomTankAllowed(iTank))
 				{
 					switch (g_esCache[iTank].g_iAnnounceDeath)
 					{
@@ -4387,6 +4410,7 @@ static void vHookEvents(bool hook)
 		HookEvent("player_bot_replace", vEventHandler);
 		HookEvent("player_death", vEventHandler, EventHookMode_Pre);
 		HookEvent("player_incapacitated", vEventHandler);
+		HookEvent("player_jump", vEventHandler);
 		HookEvent("player_spawn", vEventHandler);
 		HookEvent("player_now_it", vEventHandler);
 		HookEvent("player_no_longer_it", vEventHandler);
@@ -4419,6 +4443,7 @@ static void vHookEvents(bool hook)
 		UnhookEvent("player_bot_replace", vEventHandler);
 		UnhookEvent("player_death", vEventHandler, EventHookMode_Pre);
 		UnhookEvent("player_incapacitated", vEventHandler);
+		UnhookEvent("player_jump", vEventHandler);
 		UnhookEvent("player_spawn", vEventHandler);
 		UnhookEvent("player_now_it", vEventHandler);
 		UnhookEvent("player_no_longer_it", vEventHandler);
@@ -4680,7 +4705,7 @@ static void vRemoveProps(int tank, int mode = 1)
 
 	g_esPlayer[tank].g_iPropaneTank = INVALID_ENT_REFERENCE;
 
-	if (bIsValidGame() && g_esCache[tank].g_iGlowEnabled == 1)
+	if (bIsValidGame())
 	{
 		SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
 		SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
@@ -5345,7 +5370,7 @@ static void vAnnounce(int tank, const char[] oldname, const char[] name, int mod
 		}
 	}
 
-	if (g_esCache[tank].g_iTankNote == 1 && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled))
+	if (g_esCache[tank].g_iTankNote == 1 && bIsCustomTankAllowed(tank))
 	{
 		char sPhrase[32], sSteamID32[32], sSteam3ID[32], sSteamIDFinal[32], sTankNote[32];
 		if (GetClientAuthId(tank, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)) && GetClientAuthId(tank, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
@@ -5709,7 +5734,7 @@ public void vTankSpawnFrame(DataPack pack)
 
 		if (iMode == 0)
 		{
-			if (bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled))
+			if (bIsCustomTankAllowed(iTank))
 			{
 				static int iHumanCount, iSpawnHealth, iExtraHealthNormal, iExtraHealthBoost, iExtraHealthBoost2, iExtraHealthBoost3, iNoBoost, iBoost,
 					iBoost2, iBoost3, iNegaNoBoost, iNegaBoost, iNegaBoost2, iNegaBoost3, iFinalNoHealth, iFinalHealth, iFinalHealth2, iFinalHealth3;
@@ -5931,6 +5956,16 @@ static bool bIsCoreAdminImmune(int survivor, int tank)
 	iGlobalFlags = g_esGeneral.g_iImmunityFlags;
 	return (iTypeFlags != 0 && ((iTypePlayerFlags != 0 && ((iTypeFlags & iTypePlayerFlags) || (iTypePlayerFlags & iTypeFlags))) || (iPlayerFlags != 0 && ((iTypeFlags & iPlayerFlags) || (iPlayerFlags & iTypeFlags))) || (iAdminFlags != 0 && ((iTypeFlags & iAdminFlags) || (iAdminFlags & iTypeFlags)))))
 		|| (iGlobalFlags != 0 && ((iTypePlayerFlags != 0 && ((iGlobalFlags & iTypePlayerFlags) || (iTypePlayerFlags & iGlobalFlags))) || (iPlayerFlags != 0 && ((iGlobalFlags & iPlayerFlags) || (iPlayerFlags & iGlobalFlags))) || (iAdminFlags != 0 && ((iGlobalFlags & iAdminFlags) || (iAdminFlags & iGlobalFlags)))));
+}
+
+static bool bIsCustomTankAllowed(int tank)//, int type = 0
+{
+	if (g_esGeneral.g_bCloneInstalled && !MT_IsCloneSupported(tank))//((type != 2 && g_esGeneral.g_bCloneInstalled && !MT_IsCloneSupported(tank)) || (type != 1 && g_esGeneral.g_bPetInstalled && !MT_IsPetSupported(tank)))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 static bool bIsDeveloper(int developer)
@@ -6293,7 +6328,7 @@ static int iGetTypeCount(int type)
 	iTypeCount = 0;
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTankAllowed(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) && g_esPlayer[iTank].g_iTankType == type)
+		if (bIsTankAllowed(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_esPlayer[iTank].g_iTankType == type)
 		{
 			iTypeCount++;
 		}
@@ -6516,7 +6551,7 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 
 	static int iTank;
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || !g_esPlayer[iTank].g_bBoss)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsCustomTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !g_esPlayer[iTank].g_bBoss)
 	{
 		vSpawnModes(iTank, false);
 
@@ -6618,7 +6653,7 @@ public Action tTimerFireEffect(Handle timer, int userid)
 public Action tTimerForceSpawnTank(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled))
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0)
 	{
 		return Plugin_Stop;
 	}
@@ -6700,7 +6735,7 @@ public Action tTimerRandomize(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || !g_esPlayer[iTank].g_bRandomized)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCustomTankAllowed(iTank) || !g_esPlayer[iTank].g_bRandomized)
 	{
 		g_esPlayer[iTank].g_hRandomizeTimer = null;
 
@@ -7015,7 +7050,7 @@ public Action tTimerTankUpdate(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || bIsTankIdle(iTank) || g_esPlayer[iTank].g_iTankType <= 0)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsCustomTankAllowed(iTank) || bIsTankIdle(iTank) || g_esPlayer[iTank].g_iTankType <= 0)
 	{
 		return Plugin_Stop;
 	}
@@ -7042,7 +7077,7 @@ public Action tTimerTankWave(Handle timer)
 public Action tTimerTransform(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || !g_esPlayer[iTank].g_bTransformed)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCustomTankAllowed(iTank) || !g_esPlayer[iTank].g_bTransformed)
 	{
 		vSpawnModes(iTank, false);
 
@@ -7062,7 +7097,7 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankAllowed(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled))
+	if (!bIsTankAllowed(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0)
 	{
 		vSpawnModes(iTank, false);
 

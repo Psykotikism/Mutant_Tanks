@@ -103,29 +103,6 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-bool g_bCloneInstalled;
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_bCloneInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_bCloneInstalled = false;
-	}
-}
-
-public void OnAllPluginsLoaded()
-{
-	g_bCloneInstalled = LibraryExists("mt_clone");
-}
-
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -318,7 +295,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				iOwner = GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity");
 			}
 
-			if (MT_IsTankSupported(iOwner) && bIsCloneAllowed(iOwner, g_bCloneInstalled))
+			if (MT_IsTankSupported(iOwner) && MT_IsCustomTankSupported(iOwner))
 			{
 				if (MT_DoesTypeRequireHumans(g_esPlayer[iOwner].g_iTankType) || (g_esCache[iOwner].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iOwner].g_iRequiresHumans) || (!MT_HasAdminAccess(iOwner) && !bHasAdminAccess(iOwner, g_esAbility[g_esPlayer[iOwner].g_iTankType].g_iAccessFlags, g_esPlayer[iOwner].g_iAccessFlags)) || MT_IsAdminImmune(victim, iOwner) || bIsAdminImmune(victim, g_esPlayer[iOwner].g_iTankType, g_esAbility[g_esPlayer[iOwner].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 				{
@@ -487,7 +464,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esCache[tank].g_iWitchAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iWitchAbility == 1)
 	{
 		vWitchAbility(tank);
 	}
@@ -495,7 +472,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
 		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -631,7 +608,7 @@ static void vWitchAbility(int tank)
 
 static void vWitchRange(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCloneAllowed(tank, g_bCloneInstalled) && g_esCache[tank].g_iWitchAbility == 1)
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iWitchAbility == 1)
 	{
 		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
 		{

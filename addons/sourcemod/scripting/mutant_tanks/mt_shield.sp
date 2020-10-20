@@ -49,15 +49,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_SHIELD "Shield Ability"
 
-enum struct esGeneral
-{
-	bool g_bCloneInstalled;
-
-	ConVar g_cvMTTankThrowForce;
-}
-
-esGeneral g_esGeneral;
-
 enum struct esPlayer
 {
 	bool g_bActivated;
@@ -143,26 +134,7 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-public void OnLibraryAdded(const char[] name)
-{
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_esGeneral.g_bCloneInstalled = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (StrEqual(name, "mt_clone", false))
-	{
-		g_esGeneral.g_bCloneInstalled = false;
-	}
-}
-
-public void OnAllPluginsLoaded()
-{
-	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
-}
+ConVar g_cvMTTankThrowForce;
 
 public void OnPluginStart()
 {
@@ -171,7 +143,7 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_mt_shield", cmdShieldInfo, "View information about the Shield ability.");
 
-	g_esGeneral.g_cvMTTankThrowForce = FindConVar("z_tank_throw_force");
+	g_cvMTTankThrowForce = FindConVar("z_tank_throw_force");
 
 	if (g_bLateLoad)
 	{
@@ -376,11 +348,11 @@ public void OnGameFrame()
 		{
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 			{
-				iTarget = GetClientAimTarget(iPlayer, false);
-				if (bIsValidEntity(iTarget))
+				iTarget = GetClientAimTarget(iPlayer);
+				if (bIsTank(iTarget))
 				{
 					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
-					if (StrEqual(sClassname, "player") && bIsTank(iTarget) && g_esPlayer[iTarget].g_bActivated && g_esPlayer[iTarget].g_flHealth > 0.0 && g_esCache[iTarget].g_flShieldHealth > 0.0)
+					if (StrEqual(sClassname, "player") && g_esPlayer[iTarget].g_bActivated && g_esPlayer[iTarget].g_flHealth > 0.0 && g_esCache[iTarget].g_flShieldHealth > 0.0)
 					{
 						MT_GetTankName(iTarget, sTankName);
 
@@ -474,7 +446,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
 	{
-		if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim, g_esGeneral.g_bCloneInstalled) && bIsSurvivor(attacker) && g_esPlayer[victim].g_bActivated)
+		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker) && g_esPlayer[victim].g_bActivated)
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
 			{
@@ -764,7 +736,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esCache[tank].g_iShieldAbility == 1 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShieldAbility == 1 && !g_esPlayer[tank].g_bActivated)
 	{
 		vShieldAbility(tank, true);
 	}
@@ -772,7 +744,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
 		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -871,7 +843,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnRockThrow(int tank, int rock)
 {
-	if (MT_IsTankSupported(tank) && bIsCloneAllowed(tank, g_esGeneral.g_bCloneInstalled) && g_esCache[tank].g_iShieldAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flShieldChance)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShieldAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flShieldChance)
 	{
 		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -1058,7 +1030,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	static int iTank, iType;
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !bIsCloneAllowed(iTank, g_esGeneral.g_bCloneInstalled) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iShieldAbility == 0 || !g_esPlayer[iTank].g_bActivated)
+	if (!MT_IsTankSupported(iTank) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iShieldAbility == 0 || !g_esPlayer[iTank].g_bActivated)
 	{
 		return Plugin_Stop;
 	}
@@ -1090,7 +1062,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 			RemoveEntity(iRock);
 
 			NormalizeVector(flVelocity, flVelocity);
-			ScaleVector(flVelocity, g_esGeneral.g_cvMTTankThrowForce.FloatValue * 1.4);
+			ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
 			TeleportEntity(iThrowable, flPos, NULL_VECTOR, flVelocity);
 			DispatchSpawn(iThrowable);
