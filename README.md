@@ -1610,7 +1610,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 36-39 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines 32-35 of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
@@ -1769,7 +1769,7 @@ Examples:
 
 **Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
 
-**epz** - For help with gamedata signatures, offsets, addresses, and invaluable input.
+**epz (epzminion)** - For help with gamedata signatures, offsets, addresses, and invaluable input.
 
 **Lux** - For helping to optimize/fix various parts of the code and code for detecting thirdperson view.
 
