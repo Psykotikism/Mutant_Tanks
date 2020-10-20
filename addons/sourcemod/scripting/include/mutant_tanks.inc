@@ -1229,6 +1229,7 @@ stock bool bIsAdminImmune(int admin, int type, int flags, int flags2)
 	iAdminFlags = GetUserFlagBits(admin);
 	iTypeFlags = MT_GetImmunityFlags(2, type);
 	iGlobalFlags = MT_GetImmunityFlags(1);
+
 	return (flags != 0 && ((flags2 != 0 && ((flags & flags2) || (flags2 & flags))) || (iTypePlayerFlags != 0 && ((flags & iTypePlayerFlags) || (iTypePlayerFlags & flags)))
 		|| (iPlayerFlags != 0 && ((flags & iPlayerFlags) || (iPlayerFlags & flags))) || (iAdminFlags != 0 && ((flags & iAdminFlags) || (iAdminFlags & flags)))))
 		|| (iTypeFlags != 0 && ((iTypeFlags & flags2) || (flags2 & iTypeFlags))) || (iGlobalFlags != 0 && ((iGlobalFlags & flags2) || (flags2 & iGlobalFlags)));
@@ -1406,12 +1407,7 @@ stock bool bIsSurvivorCaught(int survivor)
 		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_jockeyAttacker") : iSpecial;
 	}
 
-	if (iSpecial > 0)
-	{
-		return true;
-	}
-
-	return false;
+	return iSpecial > 0;
 }
 
 stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
@@ -1439,32 +1435,9 @@ stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGA
 
 stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
-	if ((flags & MT_CHECK_INDEX) && (player <= 0 || player > MaxClients))
-	{
-		return false;
-	}
-
-	if ((flags & MT_CHECK_CONNECTED) && !IsClientConnected(player))
-	{
-		return false;
-	}
-
-	if ((flags & MT_CHECK_INGAME) && !IsClientInGame(player))
-	{
-		return false;
-	}
-
-	if ((flags & MT_CHECK_ALIVE) && !IsPlayerAlive(player))
-	{
-		return false;
-	}
-
-	if ((flags & MT_CHECK_INKICKQUEUE) && IsClientInKickQueue(player))
-	{
-		return false;
-	}
-
-	if ((flags & MT_CHECK_FAKECLIENT) && IsFakeClient(player))
+	if (((flags & MT_CHECK_INDEX) && (player <= 0 || player > MaxClients)) || ((flags & MT_CHECK_CONNECTED) && !IsClientConnected(player))
+		|| ((flags & MT_CHECK_INGAME) && !IsClientInGame(player)) || ((flags & MT_CHECK_ALIVE) && !IsPlayerAlive(player))
+		|| ((flags & MT_CHECK_INKICKQUEUE) && IsClientInKickQueue(player)) || ((flags & MT_CHECK_FAKECLIENT) && IsFakeClient(player)))
 	{
 		return false;
 	}
@@ -1758,7 +1731,6 @@ stock float flGetRayDistance(float pos[3], float angle[3], int entity, int type)
 {
 	static float flHitPos[3];
 	iGetRayHitPos(pos, angle, flHitPos, entity, false, type);
-
 	return GetVectorDistance(pos, flHitPos);
 }
 

@@ -643,6 +643,34 @@ static void vMedic(int tank)
 	dpMedic.WriteCell(GetTime());
 }
 
+static void vMedic2(int tank)
+{
+	static float flTankPos[3];
+	GetClientAbsOrigin(tank, flTankPos);
+
+	static float flInfectedPos[3], flDistance;
+	static int iHealth, iNewHealth, iExtraHealth, iExtraHealth2, iRealHealth;
+	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
+	{
+		if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)) && tank != iInfected)
+		{
+			GetClientAbsOrigin(iInfected, flInfectedPos);
+
+			flDistance = GetVectorDistance(flTankPos, flInfectedPos);
+			if (flDistance <= g_esCache[tank].g_flMedicRange)
+			{
+				iHealth = GetClientHealth(iInfected);
+				iNewHealth = iHealth + iGetHealth(tank, iInfected);
+				iExtraHealth = (iNewHealth > iGetMaxHealth(tank, iInfected)) ? iGetMaxHealth(tank, iInfected) : iNewHealth;
+				iExtraHealth2 = (iNewHealth < iHealth) ? 1 : iNewHealth;
+				iRealHealth = (iNewHealth >= 0) ? iExtraHealth : iExtraHealth2;
+				//SetEntityHealth(iInfected, iRealHealth);
+				SetEntProp(iInfected, Prop_Data, "m_iHealth", iRealHealth);
+			}
+		}
+	}
+}
+
 static void vMedicAbility(int tank, bool main)
 {
 	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
@@ -656,30 +684,7 @@ static void vMedicAbility(int tank, bool main)
 		{
 			if (g_esCache[tank].g_iMedicAbility == 1 || g_esCache[tank].g_iMedicAbility == 3)
 			{
-				static float flTankPos[3];
-				GetClientAbsOrigin(tank, flTankPos);
-
-				static float flInfectedPos[3], flDistance;
-				static int iHealth, iNewHealth, iExtraHealth, iExtraHealth2, iRealHealth;
-				for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
-				{
-					if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)) && tank != iInfected)
-					{
-						GetClientAbsOrigin(iInfected, flInfectedPos);
-
-						flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-						if (flDistance <= g_esCache[tank].g_flMedicRange)
-						{
-							iHealth = GetClientHealth(iInfected);
-							iNewHealth = iHealth + iGetHealth(tank, iInfected);
-							iExtraHealth = (iNewHealth > iGetMaxHealth(tank, iInfected)) ? iGetMaxHealth(tank, iInfected) : iNewHealth;
-							iExtraHealth2 = (iNewHealth < iHealth) ? 1 : iNewHealth;
-							iRealHealth = (iNewHealth >= 0) ? iExtraHealth : iExtraHealth2;
-							//SetEntityHealth(iInfected, iRealHealth);
-							SetEntProp(iInfected, Prop_Data, "m_iHealth", iRealHealth);
-						}
-					}
-				}
+				vMedic2(tank);
 
 				if (g_esCache[tank].g_iMedicMessage & MT_MESSAGE_MELEE)
 				{
@@ -817,30 +822,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flTankPos[3];
-	GetClientAbsOrigin(iTank, flTankPos);
-
-	static float flInfectedPos[3], flDistance;
-	static int iHealth, iNewHealth, iExtraHealth, iExtraHealth2, iRealHealth;
-	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
-	{
-		if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)) && iTank != iInfected)
-		{
-			GetClientAbsOrigin(iInfected, flInfectedPos);
-
-			flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-			if (flDistance <= g_esCache[iTank].g_flMedicRange)
-			{
-				iHealth = GetClientHealth(iInfected);
-				iNewHealth = iHealth + iGetHealth(iTank, iInfected);
-				iExtraHealth = (iNewHealth > iGetMaxHealth(iTank, iInfected)) ? iGetMaxHealth(iTank, iInfected) : iNewHealth;
-				iExtraHealth2 = (iNewHealth < iHealth) ? 1 : iNewHealth;
-				iRealHealth = (iNewHealth >= 0) ? iExtraHealth : iExtraHealth2;
-				//SetEntityHealth(iInfected, iRealHealth);
-				SetEntProp(iInfected, Prop_Data, "m_iHealth", iRealHealth);
-			}
-		}
-	}
+	vMedic2(iTank);
 
 	return Plugin_Continue;
 }

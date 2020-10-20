@@ -7018,9 +7018,9 @@ public Action tTimerSmokeEffect(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerSpawnTanks(Handle timer, int wave)
+public Action tTimerSpawnTanks(Handle timer, int amount)
 {
-	if (iGetTankCount() >= wave)
+	if (iGetTankCount() >= amount)
 	{
 		return Plugin_Stop;
 	}
@@ -7050,9 +7050,14 @@ public Action tTimerTankUpdate(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsCustomTankAllowed(iTank) || bIsTankIdle(iTank) || g_esPlayer[iTank].g_iTankType <= 0)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsCustomTankAllowed(iTank) || g_esPlayer[iTank].g_iTankType <= 0)
 	{
 		return Plugin_Stop;
+	}
+
+	if (bIsTankIdle(iTank))
+	{
+		return Plugin_Continue;
 	}
 
 	Call_StartForward(g_esGeneral.g_gfAbilityActivatedForward);
