@@ -425,6 +425,7 @@ enum struct esTank
 	int g_iMenuEnabled;
 	int g_iMinimumHumans;
 	int g_iMultiHealth;
+	int g_iOpenAreasOnly;
 	int g_iOzTankColor[4];
 	int g_iPropsAttached;
 	int g_iPropTankColor[4];
@@ -888,7 +889,7 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKFirstContainedResponder = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKFirstContainedResponder == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Your \"FirstContainedResponder\" offset is outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, "%s Your \"FirstContainedResponder\" offsets are outdated.", MT_TAG);
 			}
 
 			iOffset = GameConfGetOffset(gdMutantTanks, "ActionGetName");
@@ -898,7 +899,7 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKActionGetName = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKActionGetName == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Your \"ActionGetName\" offset is outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, "%s Your \"ActionGetName\" offsets are outdated.", MT_TAG);
 			}
 
 			g_esGeneral.g_hLaunchDirectionDetour = DHookCreateFromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
@@ -2336,7 +2337,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 			for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 			{
 				vGetName(sTankName, sizeof(sTankName), _, iIndex);
-				if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex, admin) || !bCanTypeSpawn(iIndex) || StrContains(sTankName, type) == -1)
+				if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex, admin) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_iOpenAreasOnly) || StrContains(sTankName, type) == -1)
 				{
 					continue;
 				}
@@ -2532,7 +2533,7 @@ static void vTankMenu(int admin, int item)
 	static char sMenuItem[46], sTankName[33];
 	for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 	{
-		if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex))
+		if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_iOpenAreasOnly))
 		{
 			continue;
 		}
@@ -2587,7 +2588,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				{
 					for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 					{
-						if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(param1, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, param1) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex))
+						if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(param1, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, param1) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(param1, g_esTank[iIndex].g_iOpenAreasOnly))
 						{
 							continue;
 						}
@@ -3174,6 +3175,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iGlowMinRange = 0;
 			g_esTank[iIndex].g_iGlowMaxRange = 999999;
 			g_esTank[iIndex].g_iGlowType = 0;
+			g_esTank[iIndex].g_iOpenAreasOnly = 0;
 			g_esTank[iIndex].g_iRequiresHumans = 0;
 			g_esTank[iIndex].g_iAccessFlags = 0;
 			g_esTank[iIndex].g_iImmunityFlags = 0;
@@ -3602,6 +3604,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iHumanSupport = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "HumanSupport", "Human Support", "Human_Support", "human", g_esTank[iIndex].g_iHumanSupport, value, 0, 2);
 						g_esTank[iIndex].g_iChosenTypeLimit = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_esTank[iIndex].g_iChosenTypeLimit, value, 0, 32);
 						g_esTank[iIndex].g_iFinaleTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[iIndex].g_iFinaleTank, value, 0, 4);
+						g_esTank[iIndex].g_iOpenAreasOnly = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esTank[iIndex].g_iOpenAreasOnly, value, 0, 1);
 						g_esTank[iIndex].g_iBossStages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "BossStages", "Boss Stages", "Boss_Stages", "stages", g_esTank[iIndex].g_iBossStages, value, 1, 4);
 						g_esTank[iIndex].g_iRandomTank = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomTank", "Random Tank", "Random_Tank", "random", g_esTank[iIndex].g_iRandomTank, value, 0, 1);
 						g_esTank[iIndex].g_flRandomInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "RandomInterval", "Random Interval", "Random_Interval", "randinterval", g_esTank[iIndex].g_flRandomInterval, value, 0.1, 999999.0);
@@ -4361,12 +4364,12 @@ static void vPluginStatus()
 
 		vHookEvents(true);
 
-		if (!DHookEnableDetour(g_esGeneral.g_hLaunchDirectionDetour, false, mreLaunchDirection))
+		if (!DHookEnableDetour(g_esGeneral.g_hLaunchDirectionDetour, false, mreLaunchDirectionPre))
 		{
 			LogError("Failed to enable detour pre: CEnvRockLauncher::LaunchCurrentDir");
 		}
 
-		if (!DHookEnableDetour(g_esGeneral.g_hTankRockDetour, true, mreTankRock))
+		if (!DHookEnableDetour(g_esGeneral.g_hTankRockDetour, true, mreTankRockPost))
 		{
 			LogError("Failed to enable detour post: CTankRock::Create");
 		}
@@ -4377,12 +4380,12 @@ static void vPluginStatus()
 
 		vHookEvents(false);
 
-		if (!DHookDisableDetour(g_esGeneral.g_hLaunchDirectionDetour, false, mreLaunchDirection))
+		if (!DHookDisableDetour(g_esGeneral.g_hLaunchDirectionDetour, false, mreLaunchDirectionPre))
 		{
 			LogError("Failed to disable detour pre: CEnvRockLauncher::LaunchCurrentDir");
 		}
 
-		if (!DHookDisableDetour(g_esGeneral.g_hTankRockDetour, true, mreTankRock))
+		if (!DHookDisableDetour(g_esGeneral.g_hTankRockDetour, true, mreTankRockPost))
 		{
 			LogError("Failed to disable detour post: CTankRock::Create");
 		}
@@ -6200,8 +6203,8 @@ static int iChooseType(int exclude, int tank = 0, int min = 0, int max = 0)
 	{
 		switch (exclude)
 		{
-			case 1: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank, iIndex) || g_esTank[iIndex].g_iSpawnEnabled == 0 || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex, tank) || !bCanTypeSpawn(iIndex) || !bTankChance(iIndex) || (g_esTank[iIndex].g_iChosenTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iChosenTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
-			case 2: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex, tank) || !bCanTypeSpawn(iIndex);
+			case 1: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank, iIndex) || g_esTank[iIndex].g_iSpawnEnabled == 0 || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex, tank) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_iOpenAreasOnly) || !bTankChance(iIndex) || (g_esTank[iIndex].g_iChosenTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iChosenTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
+			case 2: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex, tank) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_iOpenAreasOnly);
 		}
 
 		if (bCondition)
@@ -6357,7 +6360,7 @@ public void L4D_OnEnterGhostState(int client)
 	}
 }
 
-public MRESReturn mreTankRock(Handle hReturn)
+public MRESReturn mreTankRockPost(Handle hReturn)
 {
 	static int iRock;
 	iRock = DHookGetReturn(hReturn);
@@ -6385,7 +6388,7 @@ public MRESReturn mreTankRock(Handle hReturn)
 	return MRES_Ignored;
 }
 
-public MRESReturn mreLaunchDirection(int pThis)
+public MRESReturn mreLaunchDirectionPre(int pThis)
 {
 	if (bIsValidEntity(pThis))
 	{

@@ -1235,6 +1235,37 @@ stock bool bIsAdminImmune(int admin, int type, int flags, int flags2)
 		|| (iTypeFlags != 0 && ((iTypeFlags & flags2) || (flags2 & iTypeFlags))) || (iGlobalFlags != 0 && ((iGlobalFlags & flags2) || (flags2 & iGlobalFlags)));
 }
 
+stock bool bIsAreaNarrow(int tank, int setting = -1)
+{
+	if (setting != 0)
+	{
+		static float flOrigin[3], flPos[3], flAngles[3];
+		flAngles[0] = -89.0;
+		GetClientEyePosition(tank, flOrigin);
+
+		static Handle hTrace;
+		hTrace = TR_TraceRayFilterEx(flOrigin, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
+		if (hTrace != null)
+		{
+			if (TR_DidHit(hTrace))
+			{
+				TR_GetEndPosition(flPos, hTrace); 
+
+				if (GetVectorDistance(flPos, flOrigin) <= 100.0)
+				{
+					delete hTrace;
+
+					return true;
+				}
+			}
+
+			delete hTrace;
+		}
+	}
+
+	return false;
+}
+
 stock bool bIsBoomer(int boomer, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
 	return bIsInfected(boomer, flags) && GetEntProp(boomer, Prop_Send, "m_zombieClass") == 2;
@@ -1417,11 +1448,6 @@ stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK
 
 stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT)
 {
-	if ((bIsValidGame() && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0)
-	{
-		return true;
-	}
-
 	if (bIsTank(tank, flags))
 	{
 		switch (GetEntProp(tank, Prop_Send, "m_nSequence"))
@@ -1430,7 +1456,7 @@ stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGA
 		}
 	}
 
-	return false;
+	return (bIsValidGame() && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0;
 }
 
 stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)

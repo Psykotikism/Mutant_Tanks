@@ -53,7 +53,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esPlayer
 {
 	bool g_bActivated;
-	bool g_bFailed;
 
 	float g_flCurrentVelocity[3];
 	float g_flFlyChance;
@@ -73,6 +72,7 @@ enum struct esPlayer
 	int g_iHumanCooldown;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
+	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -94,6 +94,7 @@ enum struct esAbility
 	int g_iHumanCooldown;
 	int g_iHumanMode;
 	int g_iImmunityFlags;
+	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 }
 
@@ -112,6 +113,7 @@ enum struct esCache
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanMode;
+	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 }
 
@@ -428,6 +430,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
 				g_esAbility[iIndex].g_iHumanMode = 1;
+				g_esAbility[iIndex].g_iOpenAreasOnly = 1;
 				g_esAbility[iIndex].g_iRequiresHumans = 1;
 				g_esAbility[iIndex].g_iFlyAbility = 0;
 				g_esAbility[iIndex].g_iFlyMessage = 0;
@@ -449,6 +452,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
 					g_esPlayer[iPlayer].g_iHumanMode = 0;
+					g_esPlayer[iPlayer].g_iOpenAreasOnly = 0;
 					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iFlyAbility = 0;
 					g_esPlayer[iPlayer].g_iFlyMessage = 0;
@@ -470,6 +474,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
 		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esPlayer[admin].g_iFlyAbility = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iFlyAbility, value, 0, 1);
 		g_esPlayer[admin].g_iFlyMessage = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iFlyMessage, value, 0, 1);
@@ -497,6 +502,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
 		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
 		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esAbility[type].g_iFlyAbility = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iFlyAbility, value, 0, 1);
 		g_esAbility[type].g_iFlyMessage = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iFlyMessage, value, 0, 1);
@@ -531,6 +537,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
 	g_esCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanMode, g_esAbility[type].g_iHumanMode);
+	g_esCache[tank].g_iOpenAreasOnly = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iOpenAreasOnly, g_esAbility[type].g_iOpenAreasOnly);
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
@@ -575,7 +582,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -612,12 +619,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						{
 							if (!g_esPlayer[tank].g_bActivated && !bRecharging)
 							{
-								g_esPlayer[tank].g_bActivated = true;
-								g_esPlayer[tank].g_iCount++;
-
-								vFly(tank);
-
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+								vFly(tank, false);
 							}
 							else if (g_esPlayer[tank].g_bActivated)
 							{
@@ -663,7 +665,7 @@ public void MT_OnRockThrow(int tank, int rock)
 {
 	if (MT_IsTankSupported(tank) && !MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlyAbility == 1 && (g_esCache[tank].g_iFlyType == 0 || (g_esCache[tank].g_iFlyType & MT_FLY_THROW)) && !g_esPlayer[tank].g_bActivated)
 	{
-		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -672,42 +674,24 @@ public void MT_OnRockThrow(int tank, int rock)
 	}
 }
 
-static void vFly(int tank)
+static void vFly(int tank, bool announce)
 {
-	static float flOrigin[3], flPos[3], flAngles[3], flEyeAngles[3];
-	flAngles[0] = -89.0;
-	GetClientEyePosition(tank, flOrigin);
-
-	static Handle hTrace;
-	hTrace = TR_TraceRayFilterEx(flOrigin, flAngles, MASK_SOLID, RayType_Infinite, bTraceRayDontHitSelf, tank);
-	if (hTrace != null)
+	if (bIsAreaNarrow(tank))
 	{
-		if (TR_DidHit(hTrace))
+		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
-			TR_GetEndPosition(flPos, hTrace); 
-
-			if (GetVectorDistance(flPos, flOrigin) <= 100.0)
-			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
-				{
-					g_esPlayer[tank].g_bFailed = true;
-
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman6");
-				}
-
-				delete hTrace;
-
-				return;
-			}
+			MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman6");
 		}
 
-		delete hTrace;
+		return;
 	}
 
 	g_esPlayer[tank].g_bActivated = true;
+	g_esPlayer[tank].g_iCount++;
 	g_esPlayer[tank].g_iDuration = GetTime() + g_esCache[tank].g_iFlyDuration;
 	g_esPlayer[tank].g_flLastTime = GetEngineTime() - 0.01;
 
+	static float flOrigin[3], flEyeAngles[3];
 	GetEntPropVector(tank, Prop_Data, "m_vecAbsOrigin", flOrigin);
 	GetClientEyeAngles(tank, flEyeAngles);
 	flOrigin[2] += 5.0;
@@ -723,37 +707,33 @@ static void vFly(int tank)
 	SDKHook(tank, SDKHook_PreThink, PreThink);
 	SDKUnhook(tank, SDKHook_StartTouch, StartTouch);
 	SDKHook(tank, SDKHook_StartTouch, StartTouch);
+
+	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+	}
+
+	if (announce && g_esCache[tank].g_iFlyMessage == 1)
+	{
+		static char sTankName[33];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Fly", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fly", LANG_SERVER, sTankName);
+	}
 }
 
 static void vFlyAbility(int tank)
 {
-	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
 	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
-		g_esPlayer[tank].g_bFailed = false;
-
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flFlyChance)
 		{
-			vFly(tank);
-
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
-			{
-				g_esPlayer[tank].g_iCount++;
-
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
-			}
-
-			if (g_esCache[tank].g_iFlyMessage == 1)
-			{
-				static char sTankName[33];
-				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Fly", sTankName);
-				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fly", LANG_SERVER, sTankName);
-			}
+			vFly(tank, true);
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
@@ -770,7 +750,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 {
 	if (bIsValidClient(tank))
 	{
-		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			vStopFly(tank);
 
@@ -1220,7 +1200,6 @@ static void vRemoveFly(int tank)
 	vStopFly(tank);
 	vReset4(tank);
 
-	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCount = 0;
 }

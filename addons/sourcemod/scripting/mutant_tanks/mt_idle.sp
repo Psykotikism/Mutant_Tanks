@@ -11,6 +11,7 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <dhooks>
 #include <mutant_tanks>
 
 #pragma semicolon 1
@@ -47,8 +48,16 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esGeneral
 {
+	bool g_bApplyFix;
+	bool g_bIgnoreSpec;
+
+	Handle g_hIdlePlayerDetour;
 	Handle g_hSDKIdlePlayer;
+	Handle g_hSDKObservePlayer;
 	Handle g_hSDKSpecPlayer;
+	Handle g_hSpecPlayerDetour;
+
+	int g_iSurvivorBot;
 }
 
 esGeneral g_esGeneral;
@@ -58,7 +67,6 @@ enum struct esPlayer
 	bool g_bAffected;
 	bool g_bFailed;
 	bool g_bNoAmmo;
-	bool g_bIdled;
 
 	float g_flIdleChance;
 	float g_flIdleRange;
@@ -76,6 +84,7 @@ enum struct esPlayer
 	int g_iIdleHitMode;
 	int g_iIdleMessage;
 	int g_iImmunityFlags;
+	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iTankType;
 }
@@ -98,6 +107,7 @@ enum struct esAbility
 	int g_iIdleHitMode;
 	int g_iIdleMessage;
 	int g_iImmunityFlags;
+	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 }
 
@@ -117,6 +127,7 @@ enum struct esCache
 	int g_iIdleHit;
 	int g_iIdleHitMode;
 	int g_iIdleMessage;
+	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 }
 
@@ -137,6 +148,18 @@ public void OnPluginStart()
 		return;
 	}
 
+	g_esGeneral.g_hIdlePlayerDetour = DHookCreateFromConf(gdMutantTanks, "CTerrorPlayer::GoAwayFromKeyboard");
+	if (g_esGeneral.g_hIdlePlayerDetour == null)
+	{
+		SetFailState("Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard");
+	}
+
+	g_esGeneral.g_hSpecPlayerDetour = DHookCreateFromConf(gdMutantTanks, "SurvivorBot::SetHumanSpectator");
+	if (g_esGeneral.g_hSpecPlayerDetour == null)
+	{
+		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
+	}
+
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::GoAwayFromKeyboard"))
 	{
@@ -146,13 +169,13 @@ public void OnPluginStart()
 	g_esGeneral.g_hSDKIdlePlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKIdlePlayer == null)
 	{
-		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", MT_TAG);
+		SetFailState("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", MT_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "SetHumanSpec"))
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "SurvivorBot::SetHumanSpectator"))
 	{
-		SetFailState("Failed to find signature: SetHumanSpec");
+		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
 	}
 
 	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
@@ -160,7 +183,20 @@ public void OnPluginStart()
 	g_esGeneral.g_hSDKSpecPlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKSpecPlayer == null)
 	{
-		MT_LogMessage(MT_LOG_SERVER, "%s Your \"SetHumanSpec\" signature is outdated.", MT_TAG);
+		SetFailState("%s Your \"SurvivorBot::SetHumanSpectator\" signature is outdated.", MT_TAG);
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::SetObserverTarget"))
+	{
+		SetFailState("Failed to load offset: CTerrorPlayer::SetObserverTarget");
+	}
+		
+	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+	g_esGeneral.g_hSDKObservePlayer = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKObservePlayer == null)
+	{
+		SetFailState("%s Your \"CTerrorPlayer::SetObserverTarget\" offsets are outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
@@ -338,6 +374,14 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
+public void OnEntityCreated(int entity, const char[] classname)
+{
+	if (g_esGeneral.g_bApplyFix && classname[0] == 's' && StrEqual(classname, "survivor_bot", false))
+	{
+		g_esGeneral.g_iSurvivorBot = entity;
+	}
+}
+
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
@@ -373,6 +417,47 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
+public MRESReturn mreIdlePlayerPre(int pThis, Handle hReturn)
+{
+	if (g_esGeneral.g_bApplyFix)
+	{
+		LogError("Something went wrong with \"CTerrorPlayer::GoAwayFromKeyboard\"");
+	}
+
+	g_esGeneral.g_bApplyFix = true;
+}
+
+public MRESReturn mreIdlePlayerPost(int pThis, Handle hReturn)
+{
+	if (g_esGeneral.g_bApplyFix && g_esGeneral.g_iSurvivorBot > 0 && !bIsValidClient(g_esGeneral.g_iSurvivorBot, MT_CHECK_FAKECLIENT))
+	{
+		g_esGeneral.g_bIgnoreSpec = true;
+
+		SDKCall(g_esGeneral.g_hSDKSpecPlayer, g_esGeneral.g_iSurvivorBot, pThis);
+		SDKCall(g_esGeneral.g_hSDKObservePlayer, pThis, g_esGeneral.g_iSurvivorBot);
+
+		vOfferTakeover(pThis, g_esGeneral.g_iSurvivorBot);
+
+		g_esPlayer[g_esGeneral.g_iSurvivorBot].g_bAffected = false;
+		g_esGeneral.g_bIgnoreSpec = false;
+	}
+
+	g_esGeneral.g_iSurvivorBot = 0;
+	g_esGeneral.g_bApplyFix = false;
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreSpecPlayerPre(int pThis, Handle hParams)
+{
+	if (!g_esGeneral.g_bApplyFix || g_esGeneral.g_bIgnoreSpec || g_esGeneral.g_iSurvivorBot <= 0)
+	{
+		return MRES_Ignored;
+	}
+
+	return MRES_Supercede;
+}
+
 public void MT_OnPluginCheck(ArrayList &list)
 {
 	char sName[32];
@@ -401,6 +486,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
+				g_esAbility[iIndex].g_iOpenAreasOnly = 0;
 				g_esAbility[iIndex].g_iRequiresHumans = 1;
 				g_esAbility[iIndex].g_iIdleAbility = 0;
 				g_esAbility[iIndex].g_iIdleEffect = 0;
@@ -423,6 +509,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esPlayer[iPlayer].g_iOpenAreasOnly = 0;
 					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iIdleAbility = 0;
 					g_esPlayer[iPlayer].g_iIdleEffect = 0;
@@ -445,6 +532,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
 		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esPlayer[admin].g_iIdleAbility = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iIdleAbility, value, 0, 1);
 		g_esPlayer[admin].g_iIdleEffect = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iIdleEffect, value, 0, 7);
@@ -473,6 +561,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
 		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esAbility[type].g_iIdleAbility = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iIdleAbility, value, 0, 1);
 		g_esAbility[type].g_iIdleEffect = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iIdleEffect, value, 0, 7);
@@ -511,6 +600,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iIdleHit = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iIdleHit, g_esAbility[type].g_iIdleHit);
 	g_esCache[tank].g_iIdleHitMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iIdleHitMode, g_esAbility[type].g_iIdleHitMode);
 	g_esCache[tank].g_iIdleMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iIdleMessage, g_esAbility[type].g_iIdleMessage);
+	g_esCache[tank].g_iOpenAreasOnly = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iOpenAreasOnly, g_esAbility[type].g_iOpenAreasOnly);
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
@@ -519,36 +609,46 @@ public void MT_OnHookEvent(bool hooked)
 {
 	switch (hooked)
 	{
-		case true: HookEvent("player_afk", MT_OnEventFired, EventHookMode_Pre);
-		case false: UnhookEvent("player_afk", MT_OnEventFired, EventHookMode_Pre);
+		case true:
+		{
+			if (!DHookEnableDetour(g_esGeneral.g_hIdlePlayerDetour, false, mreIdlePlayerPre))
+			{
+				SetFailState("Failed to enable detour pre: CTerrorPlayer::GoAwayFromKeyboard");
+			}
+
+			if (!DHookEnableDetour(g_esGeneral.g_hIdlePlayerDetour, true, mreIdlePlayerPost))
+			{
+				SetFailState("Failed to enable detour post: CTerrorPlayer::GoAwayFromKeyboard");
+			}
+
+			if (!DHookEnableDetour(g_esGeneral.g_hSpecPlayerDetour, false, mreSpecPlayerPre))
+			{
+				SetFailState("Failed to enable detour pre: SurvivorBot::SetHumanSpectator");
+			}
+		}
+		case false:
+		{
+			if (!DHookDisableDetour(g_esGeneral.g_hIdlePlayerDetour, false, mreIdlePlayerPre))
+			{
+				SetFailState("Failed to disable detour pre: CTerrorPlayer::GoAwayFromKeyboard");
+			}
+
+			if (!DHookDisableDetour(g_esGeneral.g_hIdlePlayerDetour, true, mreIdlePlayerPost))
+			{
+				SetFailState("Failed to disable detour post: CTerrorPlayer::GoAwayFromKeyboard");
+			}
+
+			if (!DHookDisableDetour(g_esGeneral.g_hSpecPlayerDetour, false, mreSpecPlayerPre))
+			{
+				SetFailState("Failed to disable detour pre: SurvivorBot::SetHumanSpectator");
+			}
+		}
 	}
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_afk"))
-	{
-		int iIdlerId = event.GetInt("player"), iIdler = GetClientOfUserId(iIdlerId);
-		g_esPlayer[iIdler].g_bIdled = true;
-	}
-	else if (StrEqual(name, "player_bot_replace"))
-	{
-		int iSurvivorId = event.GetInt("player"), iSurvivor = GetClientOfUserId(iSurvivorId),
-			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-		if (bIsIdlePlayer(iBot, iSurvivor)) 
-		{
-			DataPack dpIdleFix;
-			CreateDataTimer(0.2, tTimerIdleFix, dpIdleFix, TIMER_FLAG_NO_MAPCHANGE);
-			dpIdleFix.WriteCell(iSurvivorId);
-			dpIdleFix.WriteCell(iBotId);
-
-			if (g_esPlayer[iSurvivor].g_bAffected)
-			{
-				g_esPlayer[iSurvivor].g_bAffected = false;
-			}
-		}
-	}
-	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && MT_IsCustomTankSupported(iTank))
@@ -575,7 +675,7 @@ public void MT_OnButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -604,7 +704,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 static void vIdleAbility(int tank)
 {
-	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -652,7 +752,7 @@ static void vIdleAbility(int tank)
 
 static void vIdleHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
 {
-	if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[survivor].g_iImmunityFlags))
+	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -687,7 +787,6 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 				if (bIsBotIdle(survivor))
 				{
 					g_esPlayer[survivor].g_bAffected = true;
-					g_esPlayer[survivor].g_bIdled = true;
 
 					vEffect(survivor, tank, g_esCache[tank].g_iIdleEffect, flags);
 
@@ -719,12 +818,29 @@ static void vIdleHit(int survivor, int tank, float chance, int enabled, int mess
 	}
 }
 
+static void vOfferTakeover(int survivor, int bot)
+{
+	static char sValue[2];
+	static int iCharacter;
+	iCharacter = GetEntProp(bot, Prop_Send, "m_survivorCharacter", 1);
+	IntToString(iCharacter, sValue, sizeof(sValue));
+
+	static BfWrite bfWrite;
+	bfWrite = view_as<BfWrite>(StartMessageOne("VGUIMenu", survivor));
+	bfWrite.WriteString("takeover_survivor_bar");
+	bfWrite.WriteByte(true);
+	bfWrite.WriteByte(1);
+	bfWrite.WriteString("character");
+	bfWrite.WriteString(sValue);
+
+	EndMessage();
+}
+
 static void vRemoveIdle(int tank)
 {
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
-	g_esPlayer[tank].g_bIdled = false;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCount = 0;
 }
@@ -738,41 +854,4 @@ static void vReset()
 			vRemoveIdle(iPlayer);
 		}
 	}
-}
-
-public Action tTimerIdleFix(Handle timer, DataPack pack)
-{
-	pack.Reset();
-
-	int iSurvivor = GetClientOfUserId(pack.ReadCell()), iBot = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !bIsValidClient(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || !bIsValidClient(iBot, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || !g_esPlayer[iSurvivor].g_bIdled)
-	{
-		return Plugin_Stop;
-	}
-
-	if (!bIsValidClient(iSurvivor, MT_CHECK_FAKECLIENT) || GetClientTeam(iSurvivor) != 1 || iGetIdleBot(iSurvivor))
-	{
-		g_esPlayer[iSurvivor].g_bIdled = false;
-	}
-
-	if (!bIsBotIdleSurvivor(iBot) || GetClientTeam(iBot) != 2)
-	{
-		iBot = iGetBotSurvivor();
-	}
-
-	if (iBot < 1)
-	{
-		g_esPlayer[iSurvivor].g_bIdled = false;
-	}
-
-	if (g_esPlayer[iSurvivor].g_bIdled)
-	{
-		g_esPlayer[iSurvivor].g_bIdled = false;
-
-		SDKCall(g_esGeneral.g_hSDKSpecPlayer, iBot, iSurvivor);
-
-		SetEntProp(iSurvivor, Prop_Send, "m_iObserverMode", 5);
-	}
-
-	return Plugin_Continue;
 }

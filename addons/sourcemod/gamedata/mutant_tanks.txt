@@ -4,6 +4,27 @@
 	{
 		"Functions"
 		{
+			"CTerrorPlayer::GoAwayFromKeyboard"
+			{
+				"signature"	"CTerrorPlayer::GoAwayFromKeyboard"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+			"SurvivorBot::SetHumanSpectator"
+			{
+				"signature"	"SurvivorBot::SetHumanSpectator"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"player"
+					{
+						"type"    "cbaseentity"
+					}
+				}
+			}
 			"CEnvRockLauncher::LaunchCurrentDir"
 			{
 				"signature"	"CEnvRockLauncher::LaunchCurrentDir"
@@ -42,6 +63,11 @@
 	{
 		"Offsets"
 		{
+			"CTerrorPlayer::SetObserverTarget"
+			{
+				"windows"	"375"
+				"linux"		"376"
+			}
 			"GetIntentionInterfaceCommon"
 			{
 				"windows"	"3456"
@@ -69,13 +95,13 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer18GoAwayFromKeyboardEv"
-				"windows"	"\x83\xEC\x2A\x53\x56\x57\x8B\xF1\x8B\x06\x8B\x90\xB8\x2A\x2A\x2A\x8B\x9E\x34\x2A\x2A\x2A\x6A\x2A\x6A\x2A\x6A\x2A"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xF1\x8B\x06\x8B\x90\xB8\x07\x00\x00"
 			}
-			"SetHumanSpec"
+			"SurvivorBot::SetHumanSpectator"
 			{
 				"library"	"server"
 				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
-				"windows"	"\x53\x8B\xD9\x83\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8D\x2A\x2A\x2A\x2A\x2A\x7E\x07\x5E\x32\xC0\x5B\xC2\x04\x00"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2E\x00\x00\x00\x56\x8D\xB3\x80\x2E\x00\x00"
 			}
 			"CTerrorPlayer::OnVomitedUpon"
 			{
@@ -83,7 +109,7 @@
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_bb"
 				"windows"	"\x83\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84" 
 			}
-			"RoundRespawn"
+			"CTerrorPlayer::RoundRespawn"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
@@ -113,6 +139,11 @@
 	{
 		"Offsets"
 		{
+			"CTerrorPlayer::SetObserverTarget"
+			{
+				"windows"	"402"
+				"linux"		"403"
+			}
 			"GetIntentionInterfaceCommon"
 			{
 				"windows"	"7368"
@@ -152,13 +183,13 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer18GoAwayFromKeyboardEv"
-				"windows"	"\x55\x8b\xec\x83\xec*\x53\x56\x57\x8b\xf1\x8b\x06\x8b\x90***\x00\x8b\x9e***\x00\x6a\x00\x6a\x08\x6a\x01"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\xF1\x8B\x06\x8B\x90\xC8\x08\x00\x00"
 			}
-			"SetHumanSpec"
+			"SurvivorBot::SetHumanSpectator"
 			{
 				"library"	"server"
 				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
-				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x83\xBE\x2A\x2A\x2A\x2A\x00\x7E\x07\x32\xC0\x5E\x5D\xC2\x04\x00\x8B\x0D"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xBE\x44\x43\x00\x00\x00\x7E\x2A\x32\xC0\x5E\x5D\xC2\x04\x00"
 			}
 			"CTerrorPlayer::OnVomitedUpon"
 			{
@@ -166,7 +197,7 @@
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_b"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x53\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90"
 			}
-			"RoundRespawn"
+			"CTerrorPlayer::RoundRespawn"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
