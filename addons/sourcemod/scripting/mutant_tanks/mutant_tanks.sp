@@ -5417,6 +5417,16 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 	g_esPlayer[tank].g_iLight[light] = CreateEntityByName("beam_spotlight");
 	if (bIsValidEntity(g_esPlayer[tank].g_iLight[light]))
 	{
+		static char sParentName[64];
+		FormatEx(sParentName, sizeof(sParentName), "mutant_tank_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
+		DispatchKeyValue(tank, "targetname", sParentName);
+		GetEntPropString(tank, Prop_Data, "m_iName", sParentName, sizeof(sParentName));
+		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "parentname", sParentName);
+
+		static char sTargetName[64];
+		FormatEx(sTargetName, sizeof(sTargetName), "mutant_tank_light_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
+		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "targetname", sTargetName);
+
 		DispatchKeyValueVector(g_esPlayer[tank].g_iLight[light], "origin", origin);
 		DispatchKeyValueVector(g_esPlayer[tank].g_iLight[light], "angles", angles);
 
@@ -5431,7 +5441,9 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fadescale", "1");
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fademindist", "-1");
 
-		vSetEntityParent(g_esPlayer[tank].g_iLight[light], tank, true);
+		DispatchSpawn(g_esPlayer[tank].g_iLight[light]);
+		SetVariantString(sParentName);
+		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "SetParent", g_esPlayer[tank].g_iLight[light], g_esPlayer[tank].g_iLight[light]);
 
 		switch (light)
 		{
@@ -5455,9 +5467,9 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "SetParentAttachment");
 		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "Enable");
 		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "DisableCollision");
+		SetEntProp(g_esPlayer[tank].g_iLight[light], Prop_Send, "m_hOwnerEntity", tank);
 
 		TeleportEntity(g_esPlayer[tank].g_iLight[light], NULL_VECTOR, angles, NULL_VECTOR);
-		DispatchSpawn(g_esPlayer[tank].g_iLight[light]);
 
 		SDKHook(g_esPlayer[tank].g_iLight[light], SDKHook_SetTransmit, SetTransmit);
 		g_esPlayer[tank].g_iLight[light] = EntIndexToEntRef(g_esPlayer[tank].g_iLight[light]);
