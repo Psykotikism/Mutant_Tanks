@@ -29,6 +29,7 @@ Bug fixes:
 23. Fixed one of the `Shake` ability's messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
 24. Fixed Tanks not activating their passive abilities after exiting idle mode.
 25. Fixed the Tank wave spawner not counting alive Tanks properly.
+26. Fixed the `Vampire` ability not checking admin immunity properly.
 
 Changes:
 
@@ -57,12 +58,15 @@ Changes:
 23. Added the `Fly` ability. (Thanks to Ernecio for the code!)
 24. None of the abilities' plugins need to check if the `Clone` ability is installed anymore.
 25. Added the `MT_IsCustomTankSupported` native to allow developers to check if a Tank clone is able to use abilities like real Mutant Tanks.
+26. Applied a new idle fix method for the `Idle` ability. (Thanks to Lux for the code!)
+27. Added the `Open Areas Only` setting to determine which types or abilities are only for open areas.
 
 Files:
 
 1. Updated config files.
-2. Updated include files.
-3. Updated translation file.
+2. Updated gamedata file.
+3. Updated include files.
+4. Updated translation file.
 
 ## Version 8.79 (October 10, 2020)
 

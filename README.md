@@ -1771,7 +1771,7 @@ Examples:
 
 **epz (epzminion)** - For help with gamedata signatures, offsets, addresses, and invaluable input.
 
-**Lux** - For helping to optimize/fix various parts of the code and code for detecting thirdperson view.
+**Lux** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) plugins.
 
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 

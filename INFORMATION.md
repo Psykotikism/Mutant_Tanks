@@ -2,9 +2,8 @@
 > by Psyk0tik (Crasher_3637)
 
 ## Information
-> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
+> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 
-- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 29-30 and recompile at your own risk.)
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 28 and recompile at your own risk.)
 - Ability count: 75 (Suggest more if you want; limit is 100.)
@@ -712,6 +711,13 @@
 			// 4: ON, the Mutant Tank can only appear on finale maps after the rescue vehicle is called.
 			"Finale Tank"				"0"
 
+			// The Mutant Tank will only spawn in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: OFF, the Mutant Tank can appear anywhere.
+			// 1: ON, the Mutant Tank can only appear in open areas.
+			"Open Areas Only"			"0"
+
 			// The health of bosses needed for each stage.
 			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 1.
 			// Note: The values will be added to the boss's new health on every new stage.
@@ -1166,6 +1172,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -1305,6 +1319,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -1484,6 +1506,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -1628,6 +1658,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -1774,6 +1812,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -1929,6 +1975,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -2086,6 +2140,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2240,6 +2302,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"1"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2359,6 +2429,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -2513,6 +2591,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"1"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2657,6 +2743,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2723,6 +2817,14 @@
 			// 1: ON, players can use buttons to activate abilities.
 			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -2854,6 +2956,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -3007,6 +3117,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -3166,6 +3284,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -3327,6 +3453,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -3483,6 +3617,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -3586,6 +3728,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -3744,6 +3894,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -3908,6 +4066,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"1"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -4020,6 +4186,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -4028,7 +4202,7 @@
 			// --
 			// 0: OFF
 			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
-			"Requires Humans"			"1"
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -4203,6 +4377,14 @@
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -4407,6 +4589,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -4511,6 +4701,14 @@
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -4698,6 +4896,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -4869,6 +5075,14 @@
 			// 1: ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -4968,6 +5182,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -5128,6 +5350,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -5322,6 +5552,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -5431,6 +5669,7 @@
 		// - "Idle Chance"
 		// - "Idle Hit Mode"
 		// Requires "mt_idle.smx" to be installed.
+		// Requires DHooks to be installed.
 		"Idle Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5467,6 +5706,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -5607,6 +5854,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -5732,6 +5987,14 @@
 			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -5740,7 +6003,7 @@
 			// --
 			// 0: OFF
 			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
-			"Requires Humans"			"1"
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -5849,6 +6112,14 @@
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -6023,6 +6294,14 @@
 			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6161,6 +6440,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -6308,6 +6595,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6422,6 +6717,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -6579,6 +6882,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6723,6 +7034,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"1"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -6831,6 +7150,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"1"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -6952,6 +7279,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -7045,6 +7380,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -7185,6 +7528,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -7295,6 +7646,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -7388,6 +7747,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -7552,6 +7919,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -7707,6 +8082,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -7826,6 +8209,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -7972,6 +8363,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -8120,6 +8519,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -8210,6 +8617,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Ammo"				"5"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -8325,6 +8740,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -8476,6 +8899,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"1"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -8589,6 +9020,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -8737,6 +9176,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -8922,6 +9369,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9085,6 +9540,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -9261,6 +9724,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9414,6 +9885,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9553,6 +10032,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9686,6 +10173,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"1"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9796,6 +10291,14 @@
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability is activated.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -9908,6 +10411,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -10013,6 +10524,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"1"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -10143,6 +10662,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -10238,6 +10765,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -10348,6 +10883,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -10419,6 +10962,14 @@
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -10514,6 +11065,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -10687,6 +11246,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -10844,6 +11411,14 @@
 			// Minimum: 0
 			// Maximum: 999999
 			"Human Cooldown"			"30"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -11006,6 +11581,14 @@
 			// Maximum: 999999
 			"Human Cooldown"			"30"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -11091,6 +11674,14 @@
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -11197,6 +11788,14 @@
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
 
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -11299,6 +11898,14 @@
 			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
 			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
 			"Human Mode"				"1"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
