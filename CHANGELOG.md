@@ -28,7 +28,7 @@ Bug fixes:
 22. Fixed some of the `Hit` ability's settings not working in some config formats.
 23. Fixed one of the `Shake` ability's messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
 24. Fixed Tanks not activating their passive abilities after exiting idle mode.
-25. Fixed the Tank wave spawner not counting alive Tanks properly.
+25. Fixed the light props attached to Tanks using the Tank's skin color.
 26. Fixed the `Vampire` ability not checking admin immunity properly.
 
 Changes:

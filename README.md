@@ -1791,6 +1791,14 @@ Examples:
 
 **SilentBr** - For reporting issues and suggesting ideas.
 
+**Neptunia** - For reporting issues and suggesting ideas.
+
+**Zytheus** - For reporting issues and suggesting ideas.
+
+**huwong** - For reporting issues and suggesting ideas.
+
+**Tank Rush** - For reporting issues and suggesting ideas.
+
 **Princess LadyRain** - For reporting issues.
 
 **Nekrob** - For reporting issues.
@@ -1815,12 +1823,6 @@ Examples:
 
 **3aljiyavslgazana** - For reporting issues.
 
-**Zytheus** - For reporting issues and suggesting ideas.
-
-**huwong** - For reporting issues and suggesting ideas.
-
-**Tank Rush** - For reporting issues and suggesting ideas.
-
 **Electr000999** - For suggesting ideas.
 
 **foquaxticity** - For suggesting ideas.
@@ -1828,8 +1830,6 @@ Examples:
 **foxhound27** - For suggesting ideas.
 
 **sxslmk** - For suggesting ideas.
-
-**Neptunia** - For suggesting ideas.
 
 **yuzumi** - For suggesting ideas.
 
