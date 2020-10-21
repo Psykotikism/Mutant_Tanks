@@ -5441,7 +5441,6 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fadescale", "1");
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fademindist", "-1");
 
-		DispatchSpawn(g_esPlayer[tank].g_iLight[light]);
 		SetVariantString(sParentName);
 		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "SetParent", g_esPlayer[tank].g_iLight[light], g_esPlayer[tank].g_iLight[light]);
 
@@ -5470,6 +5469,7 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		SetEntProp(g_esPlayer[tank].g_iLight[light], Prop_Send, "m_hOwnerEntity", tank);
 
 		TeleportEntity(g_esPlayer[tank].g_iLight[light], NULL_VECTOR, angles, NULL_VECTOR);
+		DispatchSpawn(g_esPlayer[tank].g_iLight[light]);
 
 		SDKHook(g_esPlayer[tank].g_iLight[light], SDKHook_SetTransmit, SetTransmit);
 		g_esPlayer[tank].g_iLight[light] = EntIndexToEntRef(g_esPlayer[tank].g_iLight[light]);
