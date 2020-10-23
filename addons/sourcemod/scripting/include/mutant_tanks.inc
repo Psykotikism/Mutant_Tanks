@@ -324,7 +324,7 @@ native int MT_GetMinType();
  *
  * @param tank			Client index of the Tank.
  * @param type			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color, 4 = Rock color,
- *				5 = Tire color, 6 = Propane tank color
+ *				5 = Tire color, 6 = Propane tank color, 7 = Flashlight color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.

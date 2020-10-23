@@ -132,6 +132,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_PROP_ROCK (1 << 4) // rock prop
 #define MT_PROP_TIRE (1 << 5) // tire prop
 #define MT_PROP_PROPANETANK (1 << 6) // propane tank prop
+#define MT_PROP_FLASHLIGHT (1 << 7) // flashlight prop
 
 #define MT_ROCK_BLOOD (1 << 0) // blood particle
 #define MT_ROCK_ELECTRICITY (1 << 1) // electric particle
@@ -172,6 +173,7 @@ enum struct esGeneral
 	char g_sHealthCharacters[4];
 	char g_sSavePath[PLATFORM_MAX_PATH];
 	char g_sSection[PLATFORM_MAX_PATH];
+	char g_sSection2[PLATFORM_MAX_PATH];
 
 	ConfigState g_csState;
 	ConfigState g_csState2;
@@ -310,7 +312,7 @@ enum struct esPlayer
 	float g_flAttackDelay;
 	float g_flAttackInterval;
 	float g_flClawDamage;
-	float g_flPropsChance[7];
+	float g_flPropsChance[8];
 	float g_flRandomInterval;
 	float g_flRockDamage;
 	float g_flRunSpeed;
@@ -340,6 +342,8 @@ enum struct esPlayer
 	int g_iFireImmunity;
 	int g_iFlame[2];
 	int g_iFlameColor[4];
+	int g_iFlashlight;
+	int g_iFlashlightColor[4];
 	int g_iGlowColor[3];
 	int g_iGlowEnabled;
 	int g_iGlowFlashing;
@@ -348,7 +352,7 @@ enum struct esPlayer
 	int g_iGlowType;
 	int g_iImmunityFlags;
 	int g_iLastButtons;
-	int g_iLight[3];
+	int g_iLight[10];
 	int g_iLightColor[4];
 	int g_iMeleeImmunity;
 	int g_iMinimumHumans;
@@ -386,7 +390,7 @@ enum struct esTank
 
 	float g_flAttackInterval;
 	float g_flClawDamage;
-	float g_flPropsChance[7];
+	float g_flPropsChance[8];
 	float g_flRandomInterval;
 	float g_flRockDamage;
 	float g_flRunSpeed;
@@ -412,6 +416,7 @@ enum struct esTank
 	int g_iFinaleTank;
 	int g_iFireImmunity;
 	int g_iFlameColor[4];
+	int g_iFlashlightColor[4];
 	int g_iGlowColor[3];
 	int g_iGlowEnabled;
 	int g_iGlowFlashing;
@@ -453,7 +458,7 @@ enum struct esCache
 
 	float g_flAttackInterval;
 	float g_flClawDamage;
-	float g_flPropsChance[7];
+	float g_flPropsChance[8];
 	float g_flRandomInterval;
 	float g_flRockDamage;
 	float g_flRunSpeed;
@@ -476,6 +481,7 @@ enum struct esCache
 	int g_iExtraHealth;
 	int g_iFireImmunity;
 	int g_iFlameColor[4];
+	int g_iFlashlightColor[4];
 	int g_iGlowColor[3];
 	int g_iGlowEnabled;
 	int g_iGlowFlashing;
@@ -568,17 +574,18 @@ public any aNative_GetPropColors(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1);
 	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 	{
-		int iType = GetNativeCell(2), iColor[4];
+		int iType = iClamp(GetNativeCell(2), 1, 7), iColor[4];
 		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
 		{
 			switch (iType)
 			{
-				case 1: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iSkinColor[iPos]);
+				case 1: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iLightColor[iPos]);
 				case 2: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iOzTankColor[iPos]);
 				case 3: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iFlameColor[iPos]);
 				case 4: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iRockColor[iPos]);
 				case 5: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iTireColor[iPos]);
 				case 6: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iPropTankColor[iPos]);
+				case 7: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iFlashlightColor[iPos]);
 			}
 
 			SetNativeCellRef(iPos + 3, iColor[iPos]);
@@ -1897,17 +1904,19 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 public void SMCParseStart3(SMCParser smc)
 {
-	return;
+	g_esGeneral.g_sSection2[0] = '\0';
 }
 
 public SMCResult SMCNewSection3(SMCParser smc, const char[] name, bool opt_quotes)
 {
-	if (StrContains(name, "Mutant", false) == -1 && (StrEqual(name, "PluginSettings", false) || StrEqual(name, "Plugin Settings", false) || StrEqual(name, "Plugin_Settings", false) || StrEqual(name, "settings", false)
-		|| StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#'
-		|| IsCharNumeric(name[0]) || StrContains(name, "STEAM_", false) == 0 || strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']')
-		|| StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1))
+	if (StrContains(name, "Mutant", false) == -1 && (StrEqual(name, "PluginSettings", false) || StrEqual(name, "Plugin Settings", false) || StrEqual(name, "Plugin_Settings", false) || StrEqual(name, "settings", false) || StrContains(name, "STEAM_", false) == 0
+		|| strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']') || StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1))
 	{
 		g_esGeneral.g_alSections.PushString(name);
+	}
+	else if (StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#' || IsCharNumeric(name[0]))
+	{
+		strcopy(g_esGeneral.g_sSection2, sizeof(esGeneral::g_sSection2), name);
 	}
 
 	return SMCParse_Continue;
@@ -1915,17 +1924,34 @@ public SMCResult SMCNewSection3(SMCParser smc, const char[] name, bool opt_quote
 
 public SMCResult SMCKeyValues3(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
+	if (g_esGeneral.g_sSection2[0] != '\0' && (StrEqual(key, "TankName", false) || StrEqual(key, "Tank Name", false) || StrEqual(key, "Tank_Name", false) || StrEqual(key, "name", false)))
+	{
+		static bool bBracket, bParenthesis, bBrace;
+		static char sSection[46], sValue[33], sMark[2];
+		strcopy(sValue, sizeof(sValue), value);
+		bBracket = StrContains(sValue, "(") != -1 || StrContains(sValue, ")") != -1;
+		bParenthesis = StrContains(sValue, "[") != -1 || StrContains(sValue, "]") != -1;
+		bBrace = bBracket && bParenthesis;
+		sMark = (bBracket && !bParenthesis) ? "[]" : "()";
+		sMark = bBrace ? "{}" : sMark;
+		FormatEx(sSection, sizeof(sSection), "%s %c%s%c", sValue, sMark[0], g_esGeneral.g_sSection2, sMark[1]);
+		g_esGeneral.g_alSections.PushString(sSection);
+		g_esGeneral.g_sSection2[0] = '\0';
+	}
+
 	return SMCParse_Continue;
 }
 
 public SMCResult SMCEndSection3(SMCParser smc)
 {
+	g_esGeneral.g_sSection2[0] = '\0';
+
 	return SMCParse_Continue;
 }
 
 public void SMCParseEnd3(SMCParser smc, bool halted, bool failed)
 {
-	return;
+	g_esGeneral.g_sSection2[0] = '\0';
 }
 
 public Action cmdMTInfo(int client, int args)
@@ -2940,6 +2966,7 @@ static void vCacheSettings(int tank)
 			g_esCache[tank].g_iRockColor[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRockColor[iPos], g_esTank[iType].g_iRockColor[iPos], true);
 			g_esCache[tank].g_iTireColor[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iTireColor[iPos], g_esTank[iType].g_iTireColor[iPos], true);
 			g_esCache[tank].g_iPropTankColor[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iPropTankColor[iPos], g_esTank[iType].g_iPropTankColor[iPos], true);
+			g_esCache[tank].g_iFlashlightColor[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iFlashlightColor[iPos], g_esTank[iType].g_iFlashlightColor[iPos], true);
 		}
 
 		if (iPos < sizeof(esCache::g_iGlowColor))
@@ -3187,7 +3214,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_flTransformDelay = 10.0;
 			g_esTank[iIndex].g_flTransformDuration = 10.0;
 			g_esTank[iIndex].g_iSpawnMode = 0;
-			g_esTank[iIndex].g_iPropsAttached = bIsValidGame() ? 126 : 78;
+			g_esTank[iIndex].g_iPropsAttached = bIsValidGame() ? 254 : 206;
 			g_esTank[iIndex].g_iBodyEffects = 0;
 			g_esTank[iIndex].g_iRockEffects = 0;
 			g_esTank[iIndex].g_iRockModel = 2;
@@ -3221,6 +3248,7 @@ public void SMCParseStart(SMCParser smc)
 					g_esTank[iIndex].g_iRockColor[iPos] = -1;
 					g_esTank[iIndex].g_iTireColor[iPos] = -1;
 					g_esTank[iIndex].g_iPropTankColor[iPos] = -1;
+					g_esTank[iIndex].g_iFlashlightColor[iPos] = -1;
 				}
 
 				if (iPos < sizeof(esTank::g_iGlowColor))
@@ -3297,6 +3325,7 @@ public void SMCParseStart(SMCParser smc)
 						g_esPlayer[iPlayer].g_iRockColor[iPos] = -1;
 						g_esPlayer[iPlayer].g_iTireColor[iPos] = -1;
 						g_esPlayer[iPlayer].g_iPropTankColor[iPos] = -1;
+						g_esPlayer[iPlayer].g_iFlashlightColor[iPos] = -1;
 					}
 
 					if (iPos < sizeof(esPlayer::g_iGlowColor))
@@ -3612,7 +3641,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_flTransformDuration = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDuration", "Transform Duration", "Transform_Duration", "transduration", g_esTank[iIndex].g_flTransformDuration, value, 0.1, 999999.0);
 						g_esTank[iIndex].g_iSpawnMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "mode", g_esTank[iIndex].g_iSpawnMode, value, 0, 3);
 						g_esTank[iIndex].g_iRockModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "RockModel", "Rock Model", "Rock_Model", "rockmodel", g_esTank[iIndex].g_iRockModel, value, 0, 2);
-						g_esTank[iIndex].g_iPropsAttached = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esTank[iIndex].g_iPropsAttached, value, 0, 127);
+						g_esTank[iIndex].g_iPropsAttached = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esTank[iIndex].g_iPropsAttached, value, 0, 255);
 						g_esTank[iIndex].g_iBodyEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_esTank[iIndex].g_iBodyEffects, value, 0, 127);
 						g_esTank[iIndex].g_iRockEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esTank[iIndex].g_iRockEffects, value, 0, 15);
 						g_esTank[iIndex].g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esTank[iIndex].g_flAttackInterval, value, -1.0, 999999.0);
@@ -3736,7 +3765,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
 
-								static char sSet[7][6];
+								static char sSet[8][6];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 								for (int iPos = 0; iPos < sizeof(esTank::g_flPropsChance); iPos++)
@@ -3778,6 +3807,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									else if (StrEqual(key, "PropaneTankColor", false) || StrEqual(key, "Propane Tank Color", false) || StrEqual(key, "Propane_Tank_Color", false) || StrEqual(key, "propane", false))
 									{
 										g_esTank[iIndex].g_iPropTankColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
+									}
+									else if (StrEqual(key, "FlashlightColor", false) || StrEqual(key, "Flashlight Color", false) || StrEqual(key, "Flashlight_Color", false) || StrEqual(key, "flashlight", false))
+									{
+										g_esTank[iIndex].g_iFlashlightColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 									}
 								}
 							}
@@ -3831,7 +3864,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_flTransformDelay = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDelay", "Transform Delay", "Transform_Delay", "transdelay", g_esPlayer[iPlayer].g_flTransformDelay, value, 0.1, 999999.0);
 							g_esPlayer[iPlayer].g_flTransformDuration = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDuration", "Transform Duration", "Transform_Duration", "transduration", g_esPlayer[iPlayer].g_flTransformDuration, value, 0.1, 999999.0);
 							g_esPlayer[iPlayer].g_iRockModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "RockModel", "Rock Model", "Rock_Model", "rockmodel", g_esPlayer[iPlayer].g_iRockModel, value, 0, 2);
-							g_esPlayer[iPlayer].g_iPropsAttached = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esPlayer[iPlayer].g_iPropsAttached, value, 0, 127);
+							g_esPlayer[iPlayer].g_iPropsAttached = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esPlayer[iPlayer].g_iPropsAttached, value, 0, 255);
 							g_esPlayer[iPlayer].g_iBodyEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_esPlayer[iPlayer].g_iBodyEffects, value, 0, 127);
 							g_esPlayer[iPlayer].g_iRockEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esPlayer[iPlayer].g_iRockEffects, value, 0, 15);
 							g_esPlayer[iPlayer].g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esPlayer[iPlayer].g_flAttackInterval, value, -1.0, 999999.0);
@@ -3956,7 +3989,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
 
-									static char sSet[7][6];
+									static char sSet[8][6];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_flPropsChance); iPos++)
@@ -3998,6 +4031,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 										else if (StrEqual(key, "PropaneTankColor", false) || StrEqual(key, "Propane Tank Color", false) || StrEqual(key, "Propane_Tank_Color", false) || StrEqual(key, "propane", false))
 										{
 											g_esPlayer[iPlayer].g_iPropTankColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
+										}
+										else if (StrEqual(key, "FlashlightColor", false) || StrEqual(key, "Flashlight Color", false) || StrEqual(key, "Flashlight_Color", false) || StrEqual(key, "flashlight", false))
+										{
+											g_esPlayer[iPlayer].g_iFlashlightColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 										}
 									}
 								}
@@ -4708,6 +4745,18 @@ static void vRemoveProps(int tank, int mode = 1)
 
 	g_esPlayer[tank].g_iPropaneTank = INVALID_ENT_REFERENCE;
 
+	if (bIsValidEntRef(g_esPlayer[tank].g_iFlashlight))
+	{
+		g_esPlayer[tank].g_iFlashlight = EntRefToEntIndex(g_esPlayer[tank].g_iFlashlight);
+		if (bIsValidEntity(g_esPlayer[tank].g_iFlashlight))
+		{
+			SDKUnhook(g_esPlayer[tank].g_iFlashlight, SDKHook_SetTransmit, SetTransmit);
+			RemoveEntity(g_esPlayer[tank].g_iFlashlight);
+		}
+	}
+
+	g_esPlayer[tank].g_iFlashlight = INVALID_ENT_REFERENCE;
+
 	if (bIsValidGame())
 	{
 		SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
@@ -4986,13 +5035,15 @@ static void vSetProps(int tank)
 			CreateTimer(0.25, tTimerBlurEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		float flOrigin[3], flAngles[3];
+		float flOrigin[3], flAngles[3], flChance = GetRandomFloat(0.1, 100.0);
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
 		for (int iLight = 0; iLight < sizeof(esPlayer::g_iLight); iLight++)
 		{
-			if ((g_esPlayer[tank].g_iLight[iLight] == 0 || g_esPlayer[tank].g_iLight[iLight] == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[1] && (g_esCache[tank].g_iPropsAttached & MT_PROP_LIGHT))
+			static float flChance2;
+			flChance2 = (iLight < 3) ? GetRandomFloat(0.1, 100.0) : flChance;
+			if ((g_esPlayer[tank].g_iLight[iLight] == 0 || g_esPlayer[tank].g_iLight[iLight] == INVALID_ENT_REFERENCE) && flChance2 <= g_esCache[tank].g_flPropsChance[1] && (g_esCache[tank].g_iPropsAttached & MT_PROP_LIGHT))
 			{
 				vLightProp(tank, iLight, flOrigin, flAngles);
 			}
@@ -5044,7 +5095,7 @@ static void vSetProps(int tank)
 
 					AcceptEntityInput(g_esPlayer[tank].g_iOzTank[iOzTank], "SetParentAttachment");
 
-					float flAngles2[3];
+					static float flAngles2[3];
 					vSetVector(flAngles2, 0.0, 0.0, 1.0);
 					GetVectorAngles(flAngles2, flAngles2);
 					vCopyVector(flAngles, flAngles2);
@@ -5080,7 +5131,7 @@ static void vSetProps(int tank)
 
 							vSetEntityParent(g_esPlayer[tank].g_iFlame[iOzTank], g_esPlayer[tank].g_iOzTank[iOzTank], true);
 
-							float flOrigin2[3], flAngles3[3];
+							static float flOrigin2[3], flAngles3[3];
 							vSetVector(flOrigin2, -2.0, 0.0, 26.0);
 							vSetVector(flAngles3, 0.0, 0.0, 1.0);
 							GetVectorAngles(flAngles3, flAngles3);
@@ -5316,6 +5367,26 @@ static void vSetProps(int tank)
 				g_esPlayer[tank].g_iPropaneTank = INVALID_ENT_REFERENCE;
 			}
 		}
+	
+		if ((g_esPlayer[tank].g_iFlashlight == 0 || g_esPlayer[tank].g_iFlashlight == INVALID_ENT_REFERENCE) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[7] && (g_esCache[tank].g_iPropsAttached & MT_PROP_FLASHLIGHT))
+		{
+			vFlashlightProp(tank, flOrigin, flAngles);
+		}
+		else if (bIsValidEntRef(g_esPlayer[tank].g_iFlashlight))
+		{
+			g_esPlayer[tank].g_iFlashlight = EntRefToEntIndex(g_esPlayer[tank].g_iFlashlight);
+			if (bIsValidEntity(g_esPlayer[tank].g_iFlashlight))
+			{
+				SDKUnhook(g_esPlayer[tank].g_iFlashlight, SDKHook_SetTransmit, SetTransmit);
+				RemoveEntity(g_esPlayer[tank].g_iFlashlight);
+			}
+
+			g_esPlayer[tank].g_iFlashlight = INVALID_ENT_REFERENCE;
+			if (g_esCache[tank].g_iPropsAttached & MT_PROP_FLASHLIGHT)
+			{
+				vFlashlightProp(tank, flOrigin, flAngles);
+			}
+		}
 	}
 }
 
@@ -5412,63 +5483,143 @@ static void vAnnounceDeath(int tank)
 	vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName);
 }
 
+static void vFlashlightProp(int tank, float origin[3], float angles[3])
+{
+	g_esPlayer[tank].g_iFlashlight = CreateEntityByName("light_dynamic");
+	if (bIsValidEntity(g_esPlayer[tank].g_iFlashlight))
+	{
+		static char sColor[16];
+		FormatEx(sColor, sizeof(sColor), "%i %i %i %i", iGetRandomColor(g_esCache[tank].g_iFlashlightColor[0]), iGetRandomColor(g_esCache[tank].g_iFlashlightColor[1]), iGetRandomColor(g_esCache[tank].g_iFlashlightColor[2]), iGetRandomColor(g_esCache[tank].g_iFlashlightColor[3]));
+		DispatchKeyValue(g_esPlayer[tank].g_iFlashlight, "_light", sColor);
+
+		DispatchKeyValue(g_esPlayer[tank].g_iFlashlight, "inner_cone", "0");
+		DispatchKeyValue(g_esPlayer[tank].g_iFlashlight, "cone", "80");
+		DispatchKeyValue(g_esPlayer[tank].g_iFlashlight, "brightness", "1");
+		DispatchKeyValue(g_esPlayer[tank].g_iFlashlight, "spotlight_radius", "240.0");
+		DispatchKeyValue(g_esPlayer[tank].g_iFlashlight, "distance", "255.0");
+		DispatchKeyValue(g_esPlayer[tank].g_iFlashlight, "pitch", "-90");
+		DispatchKeyValue(g_esPlayer[tank].g_iFlashlight, "style", "5");
+
+		static float flOrigin2[3], flAngles2[3], flForward[3];
+		GetClientEyePosition(tank, origin);
+		GetClientEyeAngles(tank, angles);
+		GetClientEyeAngles(tank, flAngles2);
+
+		flAngles2[0] = 0.0;
+		flAngles2[2] = 0.0;
+		GetAngleVectors(flAngles2, flForward, NULL_VECTOR, NULL_VECTOR);
+		ScaleVector(flForward, -50.0);
+
+		flForward[2] = 0.0;
+		AddVectors(origin, flForward, flOrigin2);
+
+		angles[0] += 90.0;
+		flOrigin2[2] -= 120.0;
+		TeleportEntity(g_esPlayer[tank].g_iFlashlight, flOrigin2, angles, NULL_VECTOR);
+		DispatchSpawn(g_esPlayer[tank].g_iFlashlight);
+		vSetEntityParent(g_esPlayer[tank].g_iFlashlight, tank, true);
+		AcceptEntityInput(g_esPlayer[tank].g_iFlashlight, "TurnOn");
+
+		SDKHook(g_esPlayer[tank].g_iFlashlight, SDKHook_SetTransmit, SetTransmit);
+		g_esPlayer[tank].g_iFlashlight = EntIndexToEntRef(g_esPlayer[tank].g_iFlashlight);
+	}
+}
+
 static void vLightProp(int tank, int light, float origin[3], float angles[3])
 {
 	g_esPlayer[tank].g_iLight[light] = CreateEntityByName("beam_spotlight");
 	if (bIsValidEntity(g_esPlayer[tank].g_iLight[light]))
 	{
-		static char sParentName[64];
-		FormatEx(sParentName, sizeof(sParentName), "mutant_tank_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
-		DispatchKeyValue(tank, "targetname", sParentName);
-		GetEntPropString(tank, Prop_Data, "m_iName", sParentName, sizeof(sParentName));
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "parentname", sParentName);
+		if (light < 3)
+		{
+			static char sTargetName[64];
+			FormatEx(sTargetName, sizeof(sTargetName), "mutant_tank_light_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
+			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "targetname", sTargetName);
 
-		static char sTargetName[64];
-		FormatEx(sTargetName, sizeof(sTargetName), "mutant_tank_light_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "targetname", sTargetName);
+			DispatchKeyValueVector(g_esPlayer[tank].g_iLight[light], "origin", origin);
+			DispatchKeyValueVector(g_esPlayer[tank].g_iLight[light], "angles", angles);
 
-		DispatchKeyValueVector(g_esPlayer[tank].g_iLight[light], "origin", origin);
-		DispatchKeyValueVector(g_esPlayer[tank].g_iLight[light], "angles", angles);
+			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fadescale", "1");
+			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fademindist", "-1");
+		}
+		else
+		{
+			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "haloscale", "100");
+		}
 
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spotlightwidth", "10");
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spotlightlength", "60");
+		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spotlightlength", "50");
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spawnflags", "3");
 
 		SetEntityRenderColor(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iLightColor[0]), iGetRandomColor(g_esCache[tank].g_iLightColor[1]), iGetRandomColor(g_esCache[tank].g_iLightColor[2]), iGetRandomColor(g_esCache[tank].g_iLightColor[3]));
 
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "maxspeed", "100");
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "HDRColorScale", "0.7");
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fadescale", "1");
-		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fademindist", "-1");
 
-		SetVariantString(sParentName);
-		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "SetParent", g_esPlayer[tank].g_iLight[light], g_esPlayer[tank].g_iLight[light]);
+		static float flOrigin[3], flAngles[3];
+		if (light < 3)
+		{
+			static char sParentName[64];
+			FormatEx(sParentName, sizeof(sParentName), "mutant_tank_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
+			DispatchKeyValue(tank, "targetname", sParentName);
+			GetEntPropString(tank, Prop_Data, "m_iName", sParentName, sizeof(sParentName));
+			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "parentname", sParentName);
+
+			SetVariantString(sParentName);
+			AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "SetParent", g_esPlayer[tank].g_iLight[light], g_esPlayer[tank].g_iLight[light]);
+			SetEntProp(g_esPlayer[tank].g_iLight[light], Prop_Send, "m_hOwnerEntity", tank);
+
+			switch (light)
+			{
+				case 0:
+				{
+					SetVariantString("mouth");
+					vSetVector(angles, -90.0, 0.0, 0.0);
+				}
+				case 1:
+				{
+					SetVariantString("rhand");
+					vSetVector(angles, 90.0, 0.0, 0.0);
+				}
+				case 2:
+				{
+					SetVariantString("lhand");
+					vSetVector(angles, -90.0, 0.0, 0.0);
+				}
+			}
+
+			AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "SetParentAttachment");
+		}
+		else
+		{
+			vSetEntityParent(g_esPlayer[tank].g_iLight[light], tank, true);
+
+			flAngles[0] = -45.0;
+
+			switch (light)
+			{
+				case 1: flAngles[1] = 60.0;
+				case 2: flAngles[1] = 120.0;
+				case 3: flAngles[1] = 180.0;
+				case 4: flAngles[1] = 240.0;
+				case 5: flAngles[1] = 300.0;
+				case 6: flAngles[1] = 360.0;
+			}
+
+			flAngles[2] = 0.0;
+			flOrigin[2] = 95.0;
+		}
+
+		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "Enable");
+		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "DisableCollision");
+		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "TurnOn");
 
 		switch (light)
 		{
-			case 0:
-			{
-				SetVariantString("mouth");
-				vSetVector(angles, -90.0, 0.0, 0.0);
-			}
-			case 1:
-			{
-				SetVariantString("rhand");
-				vSetVector(angles, 90.0, 0.0, 0.0);
-			}
-			case 2:
-			{
-				SetVariantString("lhand");
-				vSetVector(angles, -90.0, 0.0, 0.0);
-			}
+			case 0, 1, 2: TeleportEntity(g_esPlayer[tank].g_iLight[light], NULL_VECTOR, angles, NULL_VECTOR);
+			case 3, 4, 5, 6, 7, 8, 9: TeleportEntity(g_esPlayer[tank].g_iLight[light], flOrigin, flAngles, NULL_VECTOR);
 		}
 
-		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "SetParentAttachment");
-		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "Enable");
-		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "DisableCollision");
-		SetEntProp(g_esPlayer[tank].g_iLight[light], Prop_Send, "m_hOwnerEntity", tank);
-
-		TeleportEntity(g_esPlayer[tank].g_iLight[light], NULL_VECTOR, angles, NULL_VECTOR);
 		DispatchSpawn(g_esPlayer[tank].g_iLight[light]);
 
 		SDKHook(g_esPlayer[tank].g_iLight[light], SDKHook_SetTransmit, SetTransmit);
@@ -5552,13 +5703,20 @@ static void vMutateTank(int tank)
 
 		g_esGeneral.g_iChosenType = 0;
 
+		DataPack dpCountCheck;
+		CreateDataTimer(g_esGeneral.g_flExtrasDelay, tTimerTankCountCheck, dpCountCheck, TIMER_FLAG_NO_MAPCHANGE);
+		dpCountCheck.WriteCell(GetClientUserId(tank));
+
 		switch (g_esGeneral.g_iTankWave)
 		{
-			case 0: vTankCountCheck(tank, g_esGeneral.g_iRegularAmount);
+			case 0: dpCountCheck.WriteCell(g_esGeneral.g_iRegularAmount);
 			default:
 			{
-				vTankCountCheck(tank, g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1]);
-				vTankCountCheck(tank, g_esGeneral.g_iFinaleAmount);
+				switch (g_esGeneral.g_iFinaleAmount)
+				{
+					case 0: dpCountCheck.WriteCell(g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1]);
+					default: dpCountCheck.WriteCell(g_esGeneral.g_iFinaleAmount);
+				}
 			}
 		}
 
@@ -5689,35 +5847,6 @@ public int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int pa
 	}
 
 	return 0;
-}
-
-static void vTankCountCheck(int tank, int amount)
-{
-	if (amount == 0 || iGetTankCount() == amount || (!bIsFinaleMap() && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
-	{
-		return;
-	}
-
-	if (iGetTankCount() < amount)
-	{
-		CreateTimer(g_esGeneral.g_flExtrasDelay, tTimerSpawnTanks, amount, TIMER_FLAG_NO_MAPCHANGE);
-	}
-	else if (iGetTankCount() > amount && g_esGeneral.g_iRemoveExtras == 1)
-	{
-		switch (bIsValidClient(tank, MT_CHECK_FAKECLIENT))
-		{
-			case true: ForcePlayerSuicide(tank);
-			case false:
-			{
-				vReset2(tank);
-				vReset3(tank);
-				vCacheSettings(tank);
-				vResetCore(tank);
-				vKillRandomizeTimer(tank);
-				KickClient(tank);
-			}
-		}
-	}
 }
 
 static void vTankSpawn(int tank, int mode = 0)
@@ -6917,7 +7046,9 @@ public Action tTimerRegularWaves(Handle timer)
 		return Plugin_Stop;
 	}
 
-	if (!g_esGeneral.g_bPluginEnabled || g_esGeneral.g_iRegularLimit == 0 || g_esGeneral.g_iRegularMode == 0 || g_esGeneral.g_iRegularWave == 0 || (g_esGeneral.g_iRegularAmount > 0 && iGetTankCount() >= g_esGeneral.g_iRegularAmount))
+	static int iCount;
+	iCount = iGetTankCount();
+	if (!g_esGeneral.g_bPluginEnabled || g_esGeneral.g_iRegularLimit == 0 || g_esGeneral.g_iRegularMode == 0 || g_esGeneral.g_iRegularWave == 0 || (g_esGeneral.g_iRegularAmount > 0 && iCount >= g_esGeneral.g_iRegularAmount))
 	{
 		return Plugin_Continue;
 	}
@@ -6927,7 +7058,7 @@ public Action tTimerRegularWaves(Handle timer)
 		case 0: vRegularSpawn();
 		default:
 		{
-			for (int iAmount = iGetTankCount(); iAmount < g_esGeneral.g_iRegularAmount; iAmount++)
+			for (int iAmount = iCount; iAmount < g_esGeneral.g_iRegularAmount; iAmount++)
 			{
 				vRegularSpawn();
 			}
@@ -7033,18 +7164,6 @@ public Action tTimerSmokeEffect(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerSpawnTanks(Handle timer, int amount)
-{
-	if (iGetTankCount() >= amount)
-	{
-		return Plugin_Stop;
-	}
-
-	vRegularSpawn();
-
-	return Plugin_Continue;
-}
-
 public Action tTimerSpitEffect(Handle timer, int userid)
 {
 	static int iTank;
@@ -7057,6 +7176,48 @@ public Action tTimerSpitEffect(Handle timer, int userid)
 	}
 
 	vAttachParticle(iTank, PARTICLE_SPIT, 2.0, 30.0);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerTankCountCheck(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	static int iTank;
+	iTank = GetClientOfUserId(pack.ReadCell());
+	if (!bIsTank(iTank))
+	{
+		return Plugin_Stop;
+	}
+
+	static int iAmount, iCount;
+	iAmount = pack.ReadCell(), iCount = iGetTankCount();
+	if (iAmount == 0 || iCount == iAmount || (!bIsFinaleMap() && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
+	{
+		return Plugin_Stop;
+	}
+
+	if (iCount < iAmount)
+	{
+		vRegularSpawn();
+	}
+	else if (iCount > iAmount && g_esGeneral.g_iRemoveExtras == 1)
+	{
+		switch (bIsValidClient(iTank, MT_CHECK_FAKECLIENT))
+		{
+			case true: ForcePlayerSuicide(iTank);
+			case false:
+			{
+				vReset2(iTank);
+				vReset3(iTank);
+				vCacheSettings(iTank);
+				vResetCore(iTank);
+				vKillRandomizeTimer(iTank);
+				KickClient(iTank);
+			}
+		}
+	}
 
 	return Plugin_Continue;
 }

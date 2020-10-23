@@ -700,7 +700,7 @@ static void vFly(int tank, bool announce)
 	GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 	NormalizeVector(flEyeAngles, flEyeAngles);
 	ScaleVector(flEyeAngles, 55.0);
-	TeleportEntity(tank, flOrigin, flEyeAngles, NULL_VECTOR);
+	TeleportEntity(tank, flOrigin, NULL_VECTOR, flEyeAngles);
 	vCopyVector(flEyeAngles, g_esPlayer[tank].g_flCurrentVelocity);
 
 	SDKUnhook(tank, SDKHook_PreThink, PreThink);
@@ -750,7 +750,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 {
 	if (bIsValidClient(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+		if (MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			vStopFly(tank);
 
@@ -802,7 +802,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
 				ScaleVector(flEyeAngles, g_esCache[tank].g_flFlySpeed);
-				TeleportEntity(tank, NULL_VECTOR, flEyeAngles, NULL_VECTOR);
+				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
 
 				return;
 			}
@@ -818,7 +818,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
 				ScaleVector(flEyeAngles, flSpeed2);
-				TeleportEntity(tank, NULL_VECTOR, flEyeAngles, NULL_VECTOR);
+				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
 
 				return;
 			}
@@ -833,7 +833,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
 				ScaleVector(flEyeAngles, flSpeed2);
-				TeleportEntity(tank, NULL_VECTOR, flEyeAngles, NULL_VECTOR);
+				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
 
 				return;
 			}
