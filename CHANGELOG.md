@@ -28,8 +28,10 @@ Bug fixes:
 22. Fixed some of the `Hit` ability's settings not working in some config formats.
 23. Fixed one of the `Shake` ability's messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
 24. Fixed Tanks not activating their passive abilities after exiting idle mode.
-25. Fixed the light props attached to Tanks using the Tank's skin color.
+25. Fixed the `Light Color` setting not working.
 26. Fixed the `Vampire` ability not checking admin immunity properly.
+27. Fixed the `MT_GetPropColors` native not returning the right color for the light prop.
+28. Fixed the Tank wave spawner not respecting the limits set by the `Regular Amount`, `Finale Amount`, and `Finale Waves` settings.
 
 Changes:
 
@@ -60,6 +62,10 @@ Changes:
 25. Added the `MT_IsCustomTankSupported` native to allow developers to check if a Tank clone is able to use abilities like real Mutant Tanks.
 26. Applied a new idle fix method for the `Idle` ability. (Thanks to Lux for the code!)
 27. Added the `Open Areas Only` setting to determine which types or abilities are only for open areas.
+28. Added the `Flashlight` option for the `Props Attached` setting.
+29. Added the `Flashlight Color` setting to determine the color of the Tank's dynamic flashlight prop.
+30. The `Props Chance` setting now accepts an extra value to support the `Flashlight` prop.
+31. The `Light` prop now comes with a crown. (Thanks to Ernecio for the code!)
 
 Files:
 

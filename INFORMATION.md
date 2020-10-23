@@ -45,10 +45,10 @@
 			// --
 			// 0: OFF
 			// 1: Announce when a Mutant Tank spawns.
-			// 2: Announce when a Mutant Tank evolves. (Only works when "Spawn Mode" is set to 1.)
-			// 4: Announce when a Mutant Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
-			// 8: Announce when a Mutant Tank transforms. (Only works when "Spawn Mode" is set to 3.)
-			// 16: Announce when a Mutant Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
+			// 2: Announce when a Mutant Tank evolves. (Only works when "Spawn Mode" is set to "1".)
+			// 4: Announce when a Mutant Tank randomizes. (Only works when "Spawn Mode" is set to "2".)
+			// 8: Announce when a Mutant Tank transforms. (Only works when "Spawn Mode" is set to "3".)
+			// 16: Announce when a Mutant Tank untransforms. (Only works when "Spawn Mode" is set to "3".)
 			"Announce Arrival"			"31"
 
 			// Announce each Mutant Tank's death.
@@ -277,7 +277,7 @@
 
 			// Spawn this many Tanks on non-finale maps periodically.
 			// Note: Leave this off if you have a Multi-Tanks plugin installed that handles the limit.
-			// Note: This will not work unless "Regular Mode" is set to 1.
+			// Note: This will not work unless "Regular Mode" is set to "1".
 			// --
 			// Minimum: 0
 			// Maximum: 32
@@ -294,7 +294,7 @@
 			"Regular Delay"				"10.0"
 
 			// Spawn Tanks on non-finale maps every time this many seconds passes.
-			// Note: This will not work unless "Regular Mode" is set to 1.
+			// Note: This will not work unless "Regular Mode" is set to "1".
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -303,7 +303,7 @@
 			// How many waves of Tanks can spawn before the regular wave spawner stops.
 			// Note: All Tanks from a previous wave must die before more waves of Tanks can spawn.
 			// Note: Do not change this setting if you are unsure of how it works.
-			// Note: This will not work unless "Regular Mode" is set to 1.
+			// Note: This will not work unless "Regular Mode" is set to "1".
 			// --
 			// 0: OFF
 			// 1-999999: Only allow this number of waves.
@@ -318,7 +318,7 @@
 			"Regular Mode"				"0"
 
 			// The type of Mutant Tank that will spawn.
-			// Note: This will not work unless "Regular Mode" is set to 1.
+			// Note: This will not work unless "Regular Mode" is set to "1".
 			// --
 			// Separate values with "-".
 			// --
@@ -338,14 +338,14 @@
 			// Spawn Tanks on non-finale maps periodically.
 			// Note: The timer starts after "Regular Delay" is up.
 			// Note: Leave this off if you want a generic spawn rate for Tanks or if you have a Multi-Tanks plugin installed.
-			// Note: This will not work unless "Regular Mode" is set to 1.
+			// Note: This will not work unless "Regular Mode" is set to "1".
 			// --
 			// 0: OFF
 			// 1: ON
 			"Regular Wave"				"0"
 
 			// Allow this many Tanks on finale maps to spawn regardless of the current wave.
-			// Note: This is checked after "Finale Waves" as the overall limit.
+			// Note: This is checked instead of "Finale Waves" if set to anything greater than 0.
 			// --
 			// Minimum: 0
 			// Maximum: 32
@@ -404,7 +404,7 @@
 		"Game Modes"
 		{
 			// Enable Mutant Tanks in these game mode types.
-			// Note: This setting has a convar equivalent (mt_gamemodetypes), which is only checked if this setting is set to 0.
+			// Note: This setting has a convar equivalent (mt_gamemodetypes), which is only checked if this setting is set to "0".
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -523,7 +523,7 @@
 			"Tank Chance"				"100.0"
 
 			// Display a note for the Mutant Tank when it spawns.
-			// Note: This note can also be displayed for clones if "Clone Mode" is set to 1, so the chat could be spammed if multiple clones spawn.
+			// Note: This note can also be displayed for clones if "Clone Mode" is set to "1", so the chat could be spammed if multiple clones spawn.
 			// Note: A note must be manually created in the translation file.
 			// Note: Tank notes support chat color tags in the translation file.
 			// Note: This setting can be overridden for specific players.
@@ -558,10 +558,10 @@
 			// --
 			// 0: OFF
 			// 1: Announce when the Mutant Tank spawns.
-			// 2: Announce when the Mutant Tank evolves. (Only works when "Spawn Mode" is set to 1.)
-			// 4: Announce when the Mutant Tank randomizes. (Only works when "Spawn Mode" is set to 2.)
-			// 8: Announce when the Mutant Tank transforms. (Only works when "Spawn Mode" is set to 3.)
-			// 16: Announce when the Mutant Tank untransforms. (Only works when "Spawn Mode" is set to 3.)
+			// 2: Announce when the Mutant Tank evolves. (Only works when "Spawn Mode" is set to "1".)
+			// 4: Announce when the Mutant Tank randomizes. (Only works when "Spawn Mode" is set to "2".)
+			// 8: Announce when the Mutant Tank transforms. (Only works when "Spawn Mode" is set to "3".)
+			// 16: Announce when the Mutant Tank untransforms. (Only works when "Spawn Mode" is set to "3".)
 			"Announce Arrival"			"0"
 
 			// Announce the Mutant Tank's death.
@@ -594,7 +594,7 @@
 			"Detect Plugins"			"0"
 
 			// These are the RGBA values of the Mutant Tank's skin color.
-			// Note: Any value less than 0 will output a random color.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
@@ -613,7 +613,7 @@
 
 			// These are the RGB values of the Mutant Tank's glow outline color.
 			// Note: Only available in Left 4 Dead 2.
-			// Note: Any value less than 0 will output a random color.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
@@ -720,7 +720,7 @@
 			"Open Areas Only"			"0"
 
 			// The health of bosses needed for each stage.
-			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 1.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to "1".
 			// Note: The values will be added to the boss's new health on every new stage.
 			// Note: The values will determine when the boss evolves to the next stage.
 			// Note: This setting can be overridden for specific players.
@@ -732,14 +732,14 @@
 			// Minimum value for each health stage: 1
 			// Maximum value for each health stage: 65535
 			// --
-			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to 1 or higher.)
-			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to 2 or higher.)
-			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to 3 or higher.)
-			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to 4 or higher.)
+			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "1" or higher.)
+			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "2" or higher.)
+			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "3" or higher.)
+			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "4" or higher.)
 			"Boss Health Stages"			"5000,2500,1666,1250"
 
 			// The number of stages for Mutant Tank bosses.
-			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 1.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -747,7 +747,7 @@
 			"Boss Stages"				"4"
 
 			// The Mutant Tank types that the boss will evolve into.
-			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 1.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to "1".
 			// Note: Make sure that the Mutant Tank types that the boss will evolve into are enabled.
 			// Note: This setting can be overridden for specific players.
 			// Example: When Stage 1 boss evolves into Stage 2, it will evolve into Tank #2.
@@ -773,7 +773,7 @@
 			"Random Tank"				"1"
 
 			// The Mutant Tank switches to a random type every time this many seconds passes.
-			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 2.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
@@ -781,7 +781,7 @@
 			"Random Interval"			"5.0"
 
 			// The Mutant Tank is able to transform again after this many seconds passes.
-			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 3.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to "3".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
@@ -789,7 +789,7 @@
 			"Transform Delay"			"10.0"
 
 			// The Mutant Tank's transformations last this long.
-			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 3.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to "3".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
@@ -797,7 +797,7 @@
 			"Transform Duration"			"10.0"
 
 			// The types that the Mutant Tank can transform into.
-			// Note: This setting only takes effect when the "Spawn Mode" setting is set to 3.
+			// Note: This setting only takes effect when the "Spawn Mode" setting is set to "3".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate game modes with commas (",").
@@ -829,7 +829,7 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
-			// Maximum: 127
+			// Maximum: 255
 			// --
 			// 0: OFF
 			// 1: Attach a blur effect only.
@@ -839,14 +839,15 @@
 			// 16: Attach rocks only.
 			// 32: Attach tires only.
 			// 64: Attach a propane tank only.
-			"Props Attached"			"126" // Default is "78" on Left 4 Dead 1.
+			// 128: Attach a flashlight only.
+			"Props Attached"			"254" // Default is "206" on Left 4 Dead 1.
 
 			// Each prop has this many chances out of 100.0% to appear when the Mutant Tank appears.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate chances with commas.
 			// --
-			// Chances limit: 7
+			// Chances limit: 8
 			// Character limit for each chance: 6
 			// --
 			// Minimum value for each chance: 0.0 (No chance)
@@ -859,11 +860,12 @@
 			// 5th number = Chance for rocks to appear.
 			// 6th number = Chance for tires to appear.
 			// 7th number = Chance for a propane tank to appear.
-			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3,33.3"
+			// 8th number = Chance for a flashlight to appear.
+			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3,33.3,33.3"
 
 			// These are the RGBA values of the Mutant Tank's light prop's color.
-			// Note: Seems to be broken after The Last Stand update came out.
-			// Note: Any value less than 0 will output a random color.
+			// Note: The lights will be found on the Tank's mouth, back of hands, and above the Tank forming a crown.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
@@ -873,7 +875,8 @@
 			"Light Color"				"-1,-1,-1,-1"
 
 			// These are the RGBA values of the Mutant Tank's oxygen tank prop's color.
-			// Note: Any value less than 0 will output a random color.
+			// Note: The oxygen tanks will be found on both outer sides of the Tank's legs.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
@@ -883,7 +886,8 @@
 			"Oxygen Tank Color"			"-1,-1,-1,-1"
 
 			// These are the RGBA values of the Mutant Tank's oxygen tank prop's flame's color.
-			// Note: Any value less than 0 will output a random color.
+			// Note: The flames will be found under the oxygen tanks.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
@@ -893,7 +897,8 @@
 			"Flame Color"				"-1,-1,-1,-1"
 
 			// These are the RGBA values of the Mutant Tank's rock prop's color.
-			// Note: Any value less than 0 will output a random color.
+			// Note: The rocks will be found all over both of the Tank's arms in random angles.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
@@ -911,7 +916,8 @@
 			"Rock Model"				"2"
 
 			// These are the RGBA values of the Mutant Tank's tire prop's color.
-			// Note: Any value less than 0 will output a random color.
+			// Note: The tires will be found on both outer sides of the Tank's legs.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
@@ -921,7 +927,8 @@
 			"Tire Color"				"-1,-1,-1,-1"
 
 			// These are the RGBA values of the Mutant Tank's propane tank prop's color.
-			// Note: Any value less than 0 will output a random color.
+			// Note: The propane tank will be found on the Tank's head acting like a helmet.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
@@ -929,6 +936,17 @@
 			// 3rd number = Blue
 			// 4th number = Alpha
 			"Propane Tank Color"			"-1,-1,-1,-1"
+
+			// These are the RGBA values of the Mutant Tank's flashlight's color.
+			// Note: The flashlight will be found above the Tank shining down wherever the Tank is standing.
+			// Note: Any value less than "0" will output a random color.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Flashlight Color"			"-1,-1,-1,-1"
 		}
 		"Particles"
 		{
@@ -1223,7 +1241,7 @@
 			"Absorb Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -1384,7 +1402,7 @@
 			"Acid Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -1406,7 +1424,7 @@
 			"Acid Death Range"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -1437,7 +1455,7 @@
 
 			// The Mutant Tank's rock creates an acid puddle when it breaks.
 			// Note: Only available in Left 4 Dead 2.
-			// Note: This does not need "Ability Enabled" or "Acid Hit" set to 1.
+			// Note: This does not need "Ability Enabled" or "Acid Hit" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -1729,7 +1747,7 @@
 			"Ammo Count"				"0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -1883,7 +1901,7 @@
 			"Blind Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -2040,7 +2058,7 @@
 			"Bomb Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -2070,7 +2088,7 @@
 			"Bomb Range Chance"			"15.0"
 
 			// The Mutant Tank's rock creates an explosion when it breaks.
-			// Note: This does not need "Ability Enabled" or "Bomb Hit" set to 1.
+			// Note: This does not need "Ability Enabled" or "Bomb Hit" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -2224,7 +2242,7 @@
 			"Bury Height"				"50.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -2730,7 +2748,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -3027,7 +3045,7 @@
 			"Drug Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -3362,7 +3380,7 @@
 			"Electric Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -3523,7 +3541,7 @@
 			"Enforce Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -3658,7 +3676,7 @@
 			"Fast Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -3793,7 +3811,7 @@
 			"Fire Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -3823,7 +3841,7 @@
 			"Fire Range Chance"			"15.0"
 
 			// The Mutant Tank's rock creates a fire when it breaks.
-			// Note: This does not need "Ability Enabled" or "Fire Hit" set to 1.
+			// Note: This does not need "Ability Enabled" or "Fire Hit" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -3958,7 +3976,7 @@
 			"Fling Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -3980,7 +3998,7 @@
 			"Fling Death Range"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -4107,7 +4125,7 @@
 			"Fly Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -4244,7 +4262,7 @@
 			"Fragile Damage Boost"			"5.0"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -4364,7 +4382,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -4432,8 +4450,8 @@
 			// --
 			// 0: OFF
 			// 1: Display message only when "Ghost Hit" is enabled.
-			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 4: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
+			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -4503,7 +4521,7 @@
 			"Ghost Range Chance"			"15.0"
 
 			// The Mutant Tank can cloak nearby special infected.
-			// Note: This setting needs "Ability Enabled" to be set to 2 or higher than 3.
+			// Note: This setting needs "Ability Enabled" to be set to "2" or higher than "3".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -4630,7 +4648,7 @@
 			"God Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -4756,8 +4774,8 @@
 			// --
 			// 0: OFF
 			// 1: Display message only when "Gravity Hit" is enabled.
-			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 4: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
+			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -4768,7 +4786,7 @@
 			"Gravity Chance"			"33.3"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -4882,7 +4900,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -4950,8 +4968,8 @@
 			// --
 			// 0: OFF
 			// 1: Display message only when "Heal Hit" is enabled.
-			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 4: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
+			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
 			"Ability Message"			"0"
 
 			// The distance between an infected and the Mutant Tank needed to trigger the ability.
@@ -5260,7 +5278,7 @@
 			"Hurt Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -5451,7 +5469,7 @@
 			"Hypno Fire Divisor"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -5622,7 +5640,7 @@
 			"Ice Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -5770,7 +5788,7 @@
 			"Idle Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -6167,8 +6185,8 @@
 			// --
 			// 0: OFF
 			// 1: Display message only when "Jump Hit" is enabled.
-			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 4: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
+			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -6179,7 +6197,7 @@
 			"Jump Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -6238,7 +6256,7 @@
 			"Jump Range Chance"			"15.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to jump sporadically.
-			// Note: This setting only applies if the "Jump Mode" setting is set to 1.
+			// Note: This setting only applies if the "Jump Mode" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (No chance)
@@ -6246,7 +6264,7 @@
 			"Jump Sporadic Chance"			"33.3"
 
 			// The Mutant Tank jumps this high up into the air.
-			// Note: This setting only applies if the "Jump Mode" setting is set to 1.
+			// Note: This setting only applies if the "Jump Mode" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
@@ -6357,7 +6375,7 @@
 			"Kamikaze Chance"			"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -6788,7 +6806,7 @@
 			"Leech Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -6868,7 +6886,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -6919,8 +6937,8 @@
 			// Maximum: 3
 			// --
 			// 0: OFF
-			// 1: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 2: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 1: Display message only when "Ability Enabled" is set to "1" or "3".
+			// 2: Display message only when "Ability Enabled" is set to "2" or "3".
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -7075,7 +7093,7 @@
 			"Meteor Chance"				"33.3"
 
 			// The Mutant Tank's meteorites do this much damage.
-			// Note: This setting only applies if the "Meteor Mode" setting is set to 1.
+			// Note: This setting only applies if the "Meteor Mode" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
@@ -7083,7 +7101,7 @@
 			"Meteor Damage"				"5.0"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -7266,7 +7284,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -7633,7 +7651,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -7825,7 +7843,7 @@
 			"Pimp Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -7982,7 +8000,7 @@
 			"Puke Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -8004,7 +8022,7 @@
 			"Puke Death Range"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -8130,7 +8148,7 @@
 			"Pyro Damage Boost"			"5.0"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -8280,7 +8298,7 @@
 			"Quiet Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -8506,7 +8524,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -8652,7 +8670,7 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank respawns up to this many times.
-			// Note: This setting only applies if the "Respawn Random" setting is set to 0.
+			// Note: This setting only applies if the "Respawn Random" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -8947,7 +8965,7 @@
 			"Rock Damage"				"5"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -9240,7 +9258,7 @@
 			"Shake Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -9269,7 +9287,7 @@
 			"Shake Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -9356,7 +9374,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -9410,7 +9428,7 @@
 			"Shield Chance"				"33.3"
 
 			// These are the RGBA values of the Mutant Tank's shield prop's color.
-			// Note: Any value less than 0 will output a random color.
+			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
@@ -9604,7 +9622,7 @@
 			"Shove Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -9633,7 +9651,7 @@
 			"Shove Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -9794,7 +9812,7 @@
 			"Slow Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -9948,7 +9966,7 @@
 			"Smash Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -10095,7 +10113,7 @@
 			"Smite Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -10221,7 +10239,7 @@
 			"Spam Damage"				"5"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -10279,7 +10297,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -10398,7 +10416,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -10568,10 +10586,10 @@
 			// Maximum: 15
 			// --
 			// 0: OFF
-			// 1: Display message only when "Ability Enabled" is set to 1.
-			// 2: Display message only when "Ability Enabled" is set to 2.
-			// 4: Display message only when "Ability Enabled" is set to 3.
-			// 8: Display message only when "Ability Enabled" is set to 4.
+			// 1: Display message only when "Ability Enabled" is set to "1".
+			// 2: Display message only when "Ability Enabled" is set to "2".
+			// 4: Display message only when "Ability Enabled" is set to "3".
+			// 8: Display message only when "Ability Enabled" is set to "4".
 			"Ability Message"			"0"
 
 			// The Mutant Tank throws these cars.
@@ -10710,7 +10728,7 @@
 			"Track Mode"				"1"
 
 			// The Mutant Tank's track ability is this fast.
-			// Note: This setting only applies if the "Track Mode" setting is set to 1.
+			// Note: This setting only applies if the "Track Mode" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
@@ -11143,7 +11161,7 @@
 			"Vision FOV"				"160"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -11232,7 +11250,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -11300,8 +11318,8 @@
 			// --
 			// 0: OFF
 			// 1: Display message only when "Warp Hit" is enabled.
-			// 2: Display message only when "Ability Enabled" is set to 1 or 3.
-			// 4: Display message only when "Ability Enabled" is set to 2 or 3.
+			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
+			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -11496,7 +11514,7 @@
 			"Whirl Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to 1.
+			// Note: This setting does not need "Ability Enabled" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -11886,7 +11904,7 @@
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
-			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to 0.
+			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Mode" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -11968,7 +11986,7 @@
 		"Administration"
 		{
 			// This is the Mutant Tank type that the admin will spawn with.
-			// Note: If the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 1, the admin will be prompted a menu asking if the admin wants to use this type.
+			// Note: If the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to "1", the admin will be prompted a menu asking if the admin wants to use this type.
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-1000: ON, the type that will be favorited.
