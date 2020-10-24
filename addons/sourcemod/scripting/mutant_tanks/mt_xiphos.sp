@@ -251,23 +251,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				if (!MT_IsTankSupported(attacker, MT_CHECK_FAKECLIENT) || g_esCache[attacker].g_iHumanAbility == 1)
 				{
-					static int iDamage, iHealth, iNewHealth, iFinalHealth;
-					iDamage = RoundToNearest(damage);
-					iHealth = GetClientHealth(attacker);
-					iNewHealth = iHealth + iDamage;
-					iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-					//SetEntityHealth(attacker, iFinalHealth);
-					SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
-
+					vXiphos(attacker, victim, damage, true);
 					vEffect(victim, attacker, g_esCache[attacker].g_iXiphosEffect, 1);
-
-					if (g_esCache[attacker].g_iXiphosMessage == 1)
-					{
-						static char sTankName[33];
-						MT_GetTankName(attacker, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Xiphos", sTankName, victim);
-						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Xiphos", LANG_SERVER, sTankName, victim);
-					}
 				}
 			}
 		}
@@ -280,21 +265,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (!MT_IsTankSupported(victim, MT_CHECK_FAKECLIENT) || g_esCache[victim].g_iHumanAbility == 1)
 			{
-				static int iDamage, iHealth, iNewHealth, iFinalHealth;
-				iDamage = RoundToNearest(damage);
-				iHealth = GetClientHealth(attacker);
-				iNewHealth = iHealth + iDamage;
-				iFinalHealth = (iNewHealth > g_esCache[victim].g_iXiphosMaxHealth) ? g_esCache[victim].g_iXiphosMaxHealth : iNewHealth;
-				//SetEntityHealth(attacker, iFinalHealth);
-				SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
-
-				if (g_esCache[victim].g_iXiphosMessage == 1)
-				{
-					static char sTankName[33];
-					MT_GetTankName(victim, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Xiphos2", attacker, sTankName);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Xiphos2", LANG_SERVER, attacker, sTankName);
-				}
+				vXiphos(attacker, victim, damage, false);
 			}
 		}
 	}
@@ -370,7 +341,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iXiphosEffect = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iXiphosEffect, value, 0, 1);
 		g_esPlayer[admin].g_iXiphosMessage = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iXiphosMessage, value, 0, 1);
 		g_esPlayer[admin].g_flXiphosChance = flGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esPlayer[admin].g_flXiphosChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iXiphosMaxHealth = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esPlayer[admin].g_iXiphosMaxHealth, value, 1, MT_MAXHEALTH);
+		g_esPlayer[admin].g_iXiphosMaxHealth = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esPlayer[admin].g_iXiphosMaxHealth, value, 0, MT_MAXHEALTH);
 
 		if (StrEqual(subsection, "xiphosability", false) || StrEqual(subsection, "xiphos ability", false) || StrEqual(subsection, "xiphos_ability", false) || StrEqual(subsection, "xiphos", false))
 		{
@@ -394,7 +365,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iXiphosEffect = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iXiphosEffect, value, 0, 1);
 		g_esAbility[type].g_iXiphosMessage = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iXiphosMessage, value, 0, 1);
 		g_esAbility[type].g_flXiphosChance = flGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esAbility[type].g_flXiphosChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iXiphosMaxHealth = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esAbility[type].g_iXiphosMaxHealth, value, 1, MT_MAXHEALTH);
+		g_esAbility[type].g_iXiphosMaxHealth = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esAbility[type].g_iXiphosMaxHealth, value, 0, MT_MAXHEALTH);
 
 		if (StrEqual(subsection, "xiphosability", false) || StrEqual(subsection, "xiphos ability", false) || StrEqual(subsection, "xiphos_ability", false) || StrEqual(subsection, "xiphos", false))
 		{
@@ -422,4 +393,40 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iXiphosMaxHealth = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iXiphosMaxHealth, g_esAbility[type].g_iXiphosMaxHealth);
 	g_esCache[tank].g_iXiphosMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iXiphosMessage, g_esAbility[type].g_iXiphosMessage);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
+}
+
+static void vXiphos(int attacker, int victim, float damage, bool tank)
+{
+	static int iTank;
+	iTank = tank ? attacker : victim;
+
+	static int iDamage, iHealth, iMaxHealth, iNewHealth, iFinalHealth;
+	iDamage = RoundToNearest(damage);
+	iHealth = GetClientHealth(attacker);
+	iMaxHealth = tank ? MT_MAXHEALTH : g_esCache[iTank].g_iXiphosMaxHealth;
+	iMaxHealth = (!tank && g_esCache[iTank].g_iXiphosMaxHealth == 0) ? GetEntProp(attacker, Prop_Data, "m_iMaxHealth") : iMaxHealth;
+	iNewHealth = iHealth + iDamage;
+	iFinalHealth = (iNewHealth > iMaxHealth) ? iMaxHealth : iNewHealth;
+	//SetEntityHealth(attacker, iFinalHealth);
+	SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
+
+	if (g_esCache[iTank].g_iXiphosMessage == 1)
+	{
+		static char sTankName[33];
+		MT_GetTankName(iTank, sTankName);
+
+		switch (tank)
+		{
+			case true:
+			{
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Xiphos", sTankName, victim);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Xiphos", LANG_SERVER, sTankName, victim);
+			}
+			case false:
+			{
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Xiphos2", attacker, sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Xiphos2", LANG_SERVER, attacker, sTankName);
+			}
+		}
+	}
 }

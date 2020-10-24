@@ -4361,27 +4361,6 @@
 		"chi"			"唤潮 能力"
 	}
 
-	//"PetDetails"
-	//{
-	//	"en"			"You help the survivors."
-	//	"hu"			""
-	//	"chi"			""
-	//}
-
-	//"PetMenu"
-	//{
-	//	"en"			"Pet Ability Information"
-	//	"hu"			""
-	//	"chi"			""
-	//}
-
-	//"PetMenu2"
-	//{
-	//	"en"			"Pet Ability"
-	//	"hu"			""
-	//	"chi"			""
-	//}
-
 	"Pimp"
 	{
 		"#format"		"{1:t},{2:N}"
@@ -8511,20 +8490,6 @@
 		"hu"			"{mint}Ez a Tank egyszerűen csak nem megy el..."
 		"chi"			"{mint}这辆坦克不会消失..."
 	}
-
-	//"Tank #122 Name"
-	//{
-	//	"en"			"Follower Tank"
-	//	"hu"			""
-	//	"chi"			""
-	//}
-
-	//"Tank #122"
-	//{
-	//	"en"			"{mint}This Tank likes to follow survivors around."
-	//	"hu"			""
-	//	"chi"			""
-	//}
 
 	// This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
 	// Ez egy valós Steam32ID. Ne töröld! Ez csak egy példa.

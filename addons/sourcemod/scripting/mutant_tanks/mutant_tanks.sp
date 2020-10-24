@@ -18,7 +18,6 @@
 
 #undef REQUIRE_PLUGIN
 #tryinclude <mt_clone>
-//#tryinclude <mt_pet>
 #define REQUIRE_PLUGIN
 
 #pragma semicolon 1
@@ -160,7 +159,6 @@ enum struct esGeneral
 	bool g_bCloneInstalled;
 	bool g_bHideNameChange;
 	bool g_bMapStarted;
-	//bool g_bPetInstalled;
 	bool g_bPluginEnabled;
 	bool g_bUsedParser;
 
@@ -680,7 +678,7 @@ public any aNative_IsCorePluginEnabled(Handle plugin, int numParams)
 
 public any aNative_IsCustomTankSupported(Handle plugin, int numParams)
 {
-	return bIsCustomTankAllowed(GetNativeCell(1));//, GetNativeCell(2)
+	return bIsCustomTankAllowed(GetNativeCell(1));
 }
 
 public any aNative_IsFinaleType(Handle plugin, int numParams)
@@ -770,10 +768,6 @@ public void OnLibraryAdded(const char[] name)
 	{
 		g_esGeneral.g_bCloneInstalled = true;
 	}
-	/*else if (StrEqual(name, "mt_pet", false))
-	{
-		g_esGeneral.g_bPetInstalled = true;
-	}*/
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -782,16 +776,11 @@ public void OnLibraryRemoved(const char[] name)
 	{
 		g_esGeneral.g_bCloneInstalled = false;
 	}
-	/*else if (StrEqual(name, "mt_pet", false))
-	{
-		g_esGeneral.g_bPetInstalled = false;
-	}*/
 }
 
 public void OnAllPluginsLoaded()
 {
 	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
-	//g_esGeneral.g_bPetInstalled = LibraryExists("mt_pet");
 }
 
 public void OnPluginStart()
@@ -2857,7 +2846,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsCommonInfected(victim))
 		{
-			if (bIsTankAllowed(attacker))// && (!g_esGeneral.g_bPetInstalled || (g_esGeneral.g_bPetInstalled && !MT_IsTankPet(attacker)))
+			if (bIsTankAllowed(attacker))
 			{
 				if (StrEqual(sClassname, "tank_rock") || ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA) || (damagetype & DMG_BURN)))
 				{
@@ -6103,9 +6092,9 @@ static bool bIsCoreAdminImmune(int survivor, int tank)
 		|| (iGlobalFlags != 0 && ((iTypePlayerFlags != 0 && ((iGlobalFlags & iTypePlayerFlags) || (iTypePlayerFlags & iGlobalFlags))) || (iPlayerFlags != 0 && ((iGlobalFlags & iPlayerFlags) || (iPlayerFlags & iGlobalFlags))) || (iAdminFlags != 0 && ((iGlobalFlags & iAdminFlags) || (iAdminFlags & iGlobalFlags)))));
 }
 
-static bool bIsCustomTankAllowed(int tank)//, int type = 0
+static bool bIsCustomTankAllowed(int tank)
 {
-	if (g_esGeneral.g_bCloneInstalled && !MT_IsCloneSupported(tank))//((type != 2 && g_esGeneral.g_bCloneInstalled && !MT_IsCloneSupported(tank)) || (type != 1 && g_esGeneral.g_bPetInstalled && !MT_IsPetSupported(tank)))
+	if (g_esGeneral.g_bCloneInstalled && !MT_IsCloneSupported(tank))
 	{
 		return false;
 	}
