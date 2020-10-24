@@ -4099,7 +4099,7 @@
 			// --
 			// 0: OFF
 			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
-			"Requires Humans"			"1"
+			"Requires Humans"			"0"
 
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
@@ -11743,7 +11743,7 @@
 			// Note: Survivors will not gain health if they already have this much health.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
+			// Minimum: 0 (OFF, use the max health value set by the game.)
 			// Maximum: 65535
 			"Xiphos Max Health"			"100"
 		}
