@@ -587,11 +587,6 @@ public void MT_OnButtonReleased(int tank, int button)
 	}
 }
 
-public void MT_OnChangeType(int tank, bool revert)
-{
-	vRemoveOmni(tank);
-}
-
 public void MT_OnPostTankSpawn(int tank)
 {
 	vCacheOriginalSettings(tank);
@@ -622,7 +617,7 @@ static void vOmni(int tank)
 			flDistance = GetVectorDistance(flTankPos, flTankPos2);
 			if (flDistance <= g_esOmni[tank].g_flOmniRange && g_esCache[iTank].g_iOmniAbility == 0)
 			{
-				iTypes[iTypeCount + 1] = g_esPlayer[iTank].g_iTankType;
+				iTypes[iTypeCount + 1] = MT_GetTankType(iTank);
 				iTypeCount++;
 			}
 		}
@@ -630,12 +625,11 @@ static void vOmni(int tank)
 
 	if (iTypeCount > 0)
 	{
-		MT_SetTankType(tank, iTypes[GetRandomInt(1, iTypeCount)], view_as<bool>(g_esOmni[tank].g_iOmniMode));
+		MT_SetTankType(tank, iTypes[GetRandomInt(1, iTypeCount)], !!g_esOmni[tank].g_iOmniMode);
 	}
 	else
 	{
-		static int iTypeCount2, iTypes2[MT_MAXTYPES + 1];
-		iTypeCount2 = 0;
+		iTypeCount = 0;
 		for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 		{
 			if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex) || g_esPlayer[tank].g_iOmniType == iIndex)
@@ -643,13 +637,13 @@ static void vOmni(int tank)
 				continue;
 			}
 
-			iTypes2[iTypeCount2 + 1] = iIndex;
-			iTypeCount2++;
+			iTypes[iTypeCount + 1] = iIndex;
+			iTypeCount++;
 		}
 
-		if (iTypeCount2 > 0)
+		if (iTypeCount > 0)
 		{
-			MT_SetTankType(tank, iTypes2[GetRandomInt(1, iTypeCount2)], view_as<bool>(g_esOmni[tank].g_iOmniMode));
+			MT_SetTankType(tank, iTypes[GetRandomInt(1, iTypeCount)], !!g_esOmni[tank].g_iOmniMode);
 		}
 	}
 }
@@ -721,7 +715,7 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_iDuration = -1;
 
-	MT_SetTankType(tank, g_esPlayer[tank].g_iOmniType, view_as<bool>(g_esOmni[tank].g_iOmniMode));
+	MT_SetTankType(tank, g_esPlayer[tank].g_iOmniType, !!g_esOmni[tank].g_iOmniMode);
 	g_esPlayer[tank].g_iOmniType = 0;
 
 	if (g_esOmni[tank].g_iOmniMessage == 1)

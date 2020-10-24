@@ -476,7 +476,7 @@
 
 	"Evolved"
 	{
-		"#format"		"{1:s},{2:t},{3:i}"
+		"#format"		"{1:t},{2:t},{3:i}"
 		"en"			"{olive}{1}{mint} evolved into{olive} {2}{yellow} (Stage {3}){mint}!"
 		"hu"			"{olive}{1}{mint} tovább fejlődött{olive} {2}{yellow} (Stage {3}){mint}!"
 		"chi"			"{olive}{1}{mint} 演变为{olive} {2}{yellow} (阶段 {3}){mint}!"
@@ -678,7 +678,7 @@
 
 	"Randomized"
 	{
-		"#format"		"{1:s},{2:t}"
+		"#format"		"{1:t},{2:t}"
 		"en"			"{olive}{1}{mint} randomized into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} randomizálva{olive} {2}{mint}!"
 		"chi"			"{olive}{1}{mint} 随机为{olive} {2}{mint}!"
@@ -722,7 +722,7 @@
 
 	"Transformed"
 	{
-		"#format"		"{1:s},{2:t}"
+		"#format"		"{1:t},{2:t}"
 		"en"			"{olive}{1}{mint} transformed into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} átalakult{olive} {2}{mint}!"
 		"chi"			"{olive}{1}{mint} 变成了{olive} {2}{mint}!"
@@ -730,7 +730,7 @@
 
 	"Untransformed"
 	{
-		"#format"		"{1:s},{2:t}"
+		"#format"		"{1:t},{2:t}"
 		"en"			"{olive}{1}{mint} reverted back into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} visszaváltozott{olive} {2}{mint}!"
 		"chi"			"{olive}{1}{mint} 恢复为{olive} {2}{mint}!"

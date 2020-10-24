@@ -757,7 +757,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 			return;
 		}
 
-		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT))
+		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT))
 		{
 			if (buttons & IN_USE)
 			{
@@ -899,7 +899,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 		}
 
 		static float flPos[3], flVelocity[3];
-		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flPos);
+		GetClientAbsOrigin(tank, flPos);
 		GetEntPropVector(tank, Prop_Data, "m_vecVelocity", flVelocity);
 		flPos[2] += 30.0;
 
@@ -926,10 +926,10 @@ static void vFlyThink(int tank, int buttons, float duration)
 			iTarget = iGetFlyTarget(flPos, flDirection, tank);
 		}
 
-		static float flVector[3], flVelocity2[3], flAngles[3], flDistance;
-		flDistance = 1000.0;
 		static bool bVisible;
 		bVisible = false;
+		static float flVector[3], flVelocity2[3], flAngles[3], flDistance;
+		flDistance = 1000.0;
 
 		if (bIsSurvivor(iTarget))
 		{
@@ -1190,7 +1190,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 
 		SetEntityMoveType(tank, MOVETYPE_FLY);
 		vCopyVector(flVelocity3, g_esPlayer[tank].g_flCurrentVelocity);
-		
+
 		TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 	}
 }

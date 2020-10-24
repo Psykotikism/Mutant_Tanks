@@ -741,12 +741,12 @@ public any aNative_SetTankType(Handle plugin, int numParams)
 		{
 			case true:
 			{
-				vResetTank(iTank);
 				vSetColor(iTank, iType);
 				vTankSpawn(iTank, 5);
 			}
 			case false:
 			{
+				vNewTankSettings(iTank);
 				g_esPlayer[iTank].g_iOldTankType = g_esPlayer[iTank].g_iTankType;
 				g_esPlayer[iTank].g_iTankType = iType;
 				vCacheSettings(iTank);
@@ -2421,7 +2421,6 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 									{
 										g_esPlayer[admin].g_iCooldown = -1;
 
-										vNewTankSettings(admin);
 										vSetColor(admin, g_esGeneral.g_iChosenType);
 
 										switch (g_esPlayer[admin].g_bNeedHealth)
@@ -2481,7 +2480,6 @@ static void vChangeTank(int admin, int amount, int mode)
 			GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
 			if (StrEqual(sClassname, "player"))
 			{
-				vNewTankSettings(iTarget);
 				vSetColor(iTarget, g_esGeneral.g_iChosenType);
 				vTankSpawn(iTarget, 5);
 
@@ -2550,9 +2548,9 @@ static void vTankMenu(int admin, int item)
 	static int iCount;
 	iCount = 0;
 
-	if (g_esPlayer[admin].g_iTankType > 0)
+	if (bIsTank(admin))
 	{
-		mTankMenu.AddItem("Default Tank", "Default Tank");
+		mTankMenu.AddItem("Default Tank", "Default Tank", ((g_esPlayer[admin].g_iTankType > 0) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED));
 		iCount++;
 	}
 
@@ -2567,7 +2565,7 @@ static void vTankMenu(int admin, int item)
 		vGetName(sTankName, sizeof(sTankName), _, iIndex);
 		SetGlobalTransTarget(admin);
 		FormatEx(sMenuItem, sizeof(sMenuItem), "%T", "MTTankItem", admin, sTankName, iIndex);
-		mTankMenu.AddItem(g_esTank[iIndex].g_sTankName, sMenuItem);
+		mTankMenu.AddItem(g_esTank[iIndex].g_sTankName, sMenuItem, ((g_esPlayer[admin].g_iTankType != iIndex) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED));
 		iCount++;
 	}
 
@@ -2708,7 +2706,7 @@ public void OnGameFrame()
 		static int iTarget, iHealth;
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
 			{
 				iTarget = GetClientAimTarget(iPlayer);
 				if (bIsTank(iTarget))
@@ -4252,8 +4250,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				if (g_esCache[iTank].g_iDeathRevert == 1)
 				{
 					int iType = g_esPlayer[iTank].g_iTankType;
-					vNewTankSettings(iTank, true);
-					vSetColor(iTank);
+					vSetColor(iTank, _, _, true);
 
 					g_esPlayer[iTank].g_iTankType = iType;
 				}
@@ -4611,7 +4608,6 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 		{
 			g_esPlayer[tank].g_iBossStageCount = stage;
 
-			vNewTankSettings(tank);
 			vSetColor(tank, type);
 			vTankSpawn(tank, 1);
 
@@ -4917,8 +4913,13 @@ static void vSpawnModes(int tank, bool status)
 	g_esPlayer[tank].g_bTransformed = status;
 }
 
-static void vSetColor(int tank, int type = 0)
+static void vSetColor(int tank, int type = 0, bool change = true, bool revert = false)
 {
+	if (change)
+	{
+		vNewTankSettings(tank, revert);
+	}
+
 	if (type == 0)
 	{
 		vRemoveProps(tank);
@@ -5698,7 +5699,7 @@ static void vMutateTank(int tank)
 		else
 		{
 			iType = (g_esGeneral.g_iChosenType > 0) ? g_esGeneral.g_iChosenType : g_esPlayer[tank].g_iTankType;
-			vSetColor(tank, iType);
+			vSetColor(tank, iType, false);
 		}
 
 		g_esGeneral.g_iChosenType = 0;
@@ -6320,7 +6321,7 @@ static int iChooseTank(int tank, int exclude, int min = 0, int max = 0, bool mut
 		{
 			if (mutate)
 			{
-				vSetColor(tank, iRealType);
+				vSetColor(tank, iRealType, false);
 			}
 
 			return iRealType;
@@ -6898,11 +6899,7 @@ public Action tTimerRandomize(Handle timer, int userid)
 
 			return Plugin_Stop;
 		}
-		default:
-		{
-			vNewTankSettings(iTank);
-			vSetColor(iTank, iType);
-		}
+		default: vSetColor(iTank, iType);
 	}
 
 	vTankSpawn(iTank, 2);
@@ -7266,7 +7263,6 @@ public Action tTimerTransform(Handle timer, int userid)
 	}
 
 	int iPos = GetRandomInt(0, 9);
-	vNewTankSettings(iTank);
 	vSetColor(iTank, g_esCache[iTank].g_iTransformType[iPos]);
 	vTankSpawn(iTank, 3);
 
@@ -7284,8 +7280,6 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 
 		return Plugin_Stop;
 	}
-
-	vNewTankSettings(iTank);
 
 	int iTankType = pack.ReadCell();
 	vSetColor(iTank, iTankType);
