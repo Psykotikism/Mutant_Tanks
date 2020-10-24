@@ -32,6 +32,8 @@ Bug fixes:
 26. Fixed the `Vampire` ability not checking admin immunity properly.
 27. Fixed the `MT_GetPropColors` native not returning the right color for the light prop.
 28. Fixed the Tank wave spawner not respecting the limits set by the `Regular Amount`, `Finale Amount`, and `Finale Waves` settings.
+29. Fixed the `Omni` ability not tracking type changes properly. (Thanks to Mi.Cura for reporting!)
+30. Fixed the `MT_SetTankType` native not reverting changes properly in some scenarios. (Thanks to Mi.Cura for reporting!)
 
 Changes:
 
