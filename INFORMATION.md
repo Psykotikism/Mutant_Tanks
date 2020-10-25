@@ -15,7 +15,6 @@
 - Administration System
 
 ### Plugin Settings
-
 ```
 "Mutant Tanks"
 {
@@ -487,7 +486,6 @@
 ### Tank Settings
 
 #### General, Administration, Human Support, Spawn, Props, Particles, Health, Enhancements, Immunities
-
 ```
 "Mutant Tanks"
 {
@@ -1158,7 +1156,6 @@
 #### Abilities
 
 ##### Absorb Ability
-
 ```
 "Mutant Tanks"
 {
@@ -1295,7 +1292,6 @@
 ```
 
 ##### Acid Ability
-
 ```
 "Mutant Tanks"
 {
@@ -1486,7 +1482,6 @@
 ```
 
 ##### Aimless Ability
-
 ```
 "Mutant Tanks"
 {
@@ -1639,7 +1634,6 @@
 ```
 
 ##### Ammo Ability
-
 ```
 "Mutant Tanks"
 {
@@ -1793,7 +1787,6 @@
 ```
 
 ##### Blind Ability
-
 ```
 "Mutant Tanks"
 {
@@ -1954,7 +1947,6 @@
 ```
 
 ##### Bomb Ability
-
 ```
 "Mutant Tanks"
 {
@@ -2119,7 +2111,6 @@
 ```
 
 ##### Bury Ability
-
 ```
 "Mutant Tanks"
 {
@@ -2288,7 +2279,6 @@
 ```
 
 ##### Car Ability
-
 ```
 "Mutant Tanks"
 {
@@ -2410,7 +2400,6 @@
 ```
 
 ##### Choke Ability
-
 ```
 "Mutant Tanks"
 {
@@ -2584,7 +2573,6 @@
 ```
 
 ##### Clone Ability
-
 ```
 "Mutant Tanks"
 {
@@ -2714,7 +2702,6 @@
 ```
 
 ##### Cloud Ability
-
 ```
 "Mutant Tanks"
 {
@@ -2825,7 +2812,6 @@
 ```
 
 ##### Drop Ability
-
 ```
 "Mutant Tanks"
 {
@@ -2937,7 +2923,6 @@
 ```
 
 ##### Drug Ability
-
 ```
 "Mutant Tanks"
 {
@@ -3098,7 +3083,6 @@
 ```
 
 ##### Drunk Ability
-
 ```
 "Mutant Tanks"
 {
@@ -3265,7 +3249,6 @@
 ```
 
 ##### Electric Ability
-
 ```
 "Mutant Tanks"
 {
@@ -3433,7 +3416,6 @@
 ```
 
 ##### Enforce Ability
-
 ```
 "Mutant Tanks"
 {
@@ -3603,7 +3585,6 @@
 ```
 
 ##### Fast Ability
-
 ```
 "Mutant Tanks"
 {
@@ -3707,7 +3688,6 @@
 ```
 
 ##### Fire Ability
-
 ```
 "Mutant Tanks"
 {
@@ -3872,7 +3852,6 @@
 ```
 
 ##### Fling Ability
-
 ```
 "Mutant Tanks"
 {
@@ -4052,7 +4031,6 @@
 ```
 
 ##### Fly Ability
-
 ```
 "Mutant Tanks"
 {
@@ -4172,7 +4150,6 @@
 ```
 
 ##### Fragile Ability
-
 ```
 "Mutant Tanks"
 {
@@ -4334,7 +4311,6 @@
 ```
 
 ##### Ghost Ability
-
 ```
 "Mutant Tanks"
 {
@@ -4575,7 +4551,6 @@
 ```
 
 ##### God Ability
-
 ```
 "Mutant Tanks"
 {
@@ -4672,7 +4647,6 @@
 ```
 
 ##### Gravity Ability
-
 ```
 "Mutant Tanks"
 {
@@ -4857,7 +4831,6 @@
 ```
 
 ##### Heal Ability
-
 ```
 "Mutant Tanks"
 {
@@ -5077,7 +5050,6 @@
 ```
 
 ##### Hit Ability
-
 ```
 "Mutant Tanks"
 {
@@ -5163,7 +5135,6 @@
 ```
 
 ##### Hurt Ability
-
 ```
 "Mutant Tanks"
 {
@@ -5331,7 +5302,6 @@
 ```
 
 ##### Hypno Ability
-
 ```
 "Mutant Tanks"
 {
@@ -5532,7 +5502,6 @@
 ```
 
 ##### Ice Ability
-
 ```
 "Mutant Tanks"
 {
@@ -5686,7 +5655,6 @@
 ```
 
 ##### Idle Ability
-
 ```
 "Mutant Tanks"
 {
@@ -5834,7 +5802,6 @@
 ```
 
 ##### Invert Ability
-
 ```
 "Mutant Tanks"
 {
@@ -5987,7 +5954,6 @@
 ```
 
 ##### Item Ability
-
 ```
 "Mutant Tanks"
 {
@@ -6080,7 +6046,6 @@
 ```
 
 ##### Jump Ability
-
 ```
 "Mutant Tanks"
 {
@@ -6288,7 +6253,6 @@
 ```
 
 ##### Kamikaze Ability
-
 ```
 "Mutant Tanks"
 {
@@ -6421,7 +6385,6 @@
 ```
 
 ##### Lag Ability
-
 ```
 "Mutant Tanks"
 {
@@ -6574,7 +6537,6 @@
 ```
 
 ##### Laser Ability
-
 ```
 "Mutant Tanks"
 {
@@ -6698,7 +6660,6 @@
 ```
 
 ##### Leech Ability
-
 ```
 "Mutant Tanks"
 {
@@ -6859,7 +6820,6 @@
 ```
 
 ##### Medic Ability
-
 ```
 "Mutant Tanks"
 {
@@ -7013,7 +6973,6 @@
 ```
 
 ##### Meteor Ability
-
 ```
 "Mutant Tanks"
 {
@@ -7144,7 +7103,6 @@
 ```
 
 ##### Minion Ability
-
 ```
 "Mutant Tanks"
 {
@@ -7257,7 +7215,6 @@
 ```
 
 ##### Necro Ability
-
 ```
 "Mutant Tanks"
 {
@@ -7361,7 +7318,6 @@
 ```
 
 ##### Nullify Ability
-
 ```
 "Mutant Tanks"
 {
@@ -7514,7 +7470,6 @@
 ```
 
 ##### Omni Ability
-
 ```
 "Mutant Tanks"
 {
@@ -7624,7 +7579,6 @@
 ```
 
 ##### Panic Ability
-
 ```
 "Mutant Tanks"
 {
@@ -7728,7 +7682,6 @@
 ```
 
 ##### Pimp Ability
-
 ```
 "Mutant Tanks"
 {
@@ -7896,7 +7849,6 @@
 ```
 
 ##### Puke Ability
-
 ```
 "Mutant Tanks"
 {
@@ -8068,7 +8020,6 @@
 ```
 
 ##### Pyro Ability
-
 ```
 "Mutant Tanks"
 {
@@ -8190,7 +8141,6 @@
 ```
 
 ##### Quiet Ability
-
 ```
 "Mutant Tanks"
 {
@@ -8344,7 +8294,6 @@
 ```
 
 ##### Recoil Ability
-
 ```
 "Mutant Tanks"
 {
@@ -8497,7 +8446,6 @@
 ```
 
 ##### Regen Ability
-
 ```
 "Mutant Tanks"
 {
@@ -8618,7 +8566,6 @@
 ```
 
 ##### Respawn Ability
-
 ```
 "Mutant Tanks"
 {
@@ -8720,7 +8667,6 @@
 ```
 
 ##### Restart Ability
-
 ```
 "Mutant Tanks"
 {
@@ -8885,7 +8831,6 @@
 ```
 
 ##### Rock Ability
-
 ```
 "Mutant Tanks"
 {
@@ -9001,7 +8946,6 @@
 ```
 
 ##### Rocket Ability
-
 ```
 "Mutant Tanks"
 {
@@ -9154,7 +9098,6 @@
 ```
 
 ##### Shake Ability
-
 ```
 "Mutant Tanks"
 {
@@ -9340,7 +9283,6 @@
 ```
 
 ##### Shield Ability
-
 ```
 "Mutant Tanks"
 {
@@ -9518,7 +9460,6 @@
 ```
 
 ##### Shove Ability
-
 ```
 "Mutant Tanks"
 {
@@ -9704,7 +9645,6 @@
 ```
 
 ##### Slow Ability
-
 ```
 "Mutant Tanks"
 {
@@ -9865,7 +9805,6 @@
 ```
 
 ##### Smash Ability
-
 ```
 "Mutant Tanks"
 {
@@ -10012,7 +9951,6 @@
 ```
 
 ##### Smite Ability
-
 ```
 "Mutant Tanks"
 {
@@ -10159,7 +10097,6 @@
 ```
 
 ##### Spam Ability
-
 ```
 "Mutant Tanks"
 {
@@ -10263,7 +10200,6 @@
 ```
 
 ##### Splash Ability
-
 ```
 "Mutant Tanks"
 {
@@ -10388,7 +10324,6 @@
 ```
 
 ##### Splatter Ability
-
 ```
 "Mutant Tanks"
 {
@@ -10518,7 +10453,6 @@
 ```
 
 ##### Throw Ability
-
 ```
 "Mutant Tanks"
 {
@@ -10648,7 +10582,6 @@
 ```
 
 ##### Track Ability
-
 ```
 "Mutant Tanks"
 {
@@ -10752,7 +10685,6 @@
 ```
 
 ##### Ultimate Ability
-
 ```
 "Mutant Tanks"
 {
@@ -10876,7 +10808,6 @@
 ```
 
 ##### Undead Ability
-
 ```
 "Mutant Tanks"
 {
@@ -10965,7 +10896,6 @@
 ```
 
 ##### Vampire Ability
-
 ```
 "Mutant Tanks"
 {
@@ -11046,7 +10976,6 @@
 ```
 
 ##### Vision Ability
-
 ```
 "Mutant Tanks"
 {
@@ -11207,7 +11136,6 @@
 ```
 
 ##### Warp Ability
-
 ```
 "Mutant Tanks"
 {
@@ -11392,7 +11320,6 @@
 ```
 
 ##### Whirl Ability
-
 ```
 "Mutant Tanks"
 {
@@ -11567,7 +11494,6 @@
 ```
 
 ##### Witch Ability
-
 ```
 "Mutant Tanks"
 {
@@ -11677,7 +11603,6 @@
 ```
 
 ##### Xiphos Ability
-
 ```
 "Mutant Tanks"
 {
@@ -11766,7 +11691,6 @@
 ```
 
 ##### Yell Ability
-
 ```
 "Mutant Tanks"
 {
@@ -11877,7 +11801,6 @@
 ```
 
 ##### Zombie Ability
-
 ```
 "Mutant Tanks"
 {
@@ -11988,7 +11911,6 @@
 ```
 
 ### Administration System
-
 ```
 "Mutant Tanks"
 {

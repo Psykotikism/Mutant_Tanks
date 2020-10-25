@@ -70,6 +70,8 @@ Changes:
 29. Added the `Flashlight Color` setting to determine the color of the Tank's dynamic flashlight prop. (Thanks to Ernecio for the code!)
 30. Added the `Crown Color` setting to determine the color of the Tank's crown prop. (Thanks to Ernecio for the code!)
 31. The `Props Chance` setting now accepts two extra values to support the `Flashlight` and `Crown` props.
+32. The core plugin and its modules now requires `DHooks 2.2.0-detours15` or higher.
+33. The `Rock` and `Spam` abilities spawn less rocks to reduce possible lag.
 
 Files:
 
@@ -1031,7 +1033,7 @@ Bug fixes:
 Changes:
 
 1. Renamed/removed some stocks.
-2. The plugin and its modules now requires `SM 1.10.0.6317` or higher.
+2. The core plugin and its modules now requires `SM 1.10.0.6317` or higher.
 3. The Tank Notes now display a different message when the phrase for a Super Tank is not found.
 4. Changed the directory of the configs from `cfg/sourcemod` to `addons/sourcemod/data`.
 5. Added a new native: `ST_TankColors` - Retrieves a Super Tank's colors.
@@ -1148,7 +1150,7 @@ Changes:
 1. Increased the maximum amount of possible Super Tank types from 2500 to 5000.
 2. Replaced the `Maximum Types` setting with the new `Type Range` setting. (Usage: `Type Range` `1-5000`)
 3. Changed the display info for each Super Tank type on the ST++ menu. (Before: `Tank's Name`, After: `Tank's Name (Tank #)`)
-4. The plugin no longer generates a config file nor a backup copy of it. (This feature was just wasting space and was overall unnecessary.)
+4. The core plugin no longer generates a config file nor a backup copy of it. (This feature was just wasting space and was overall unnecessary.)
 5. Removed the `Create Backup` setting.
 6. Removed support for human-controlled Tanks. (This feature was buggy and made the Infected team overpowered.)
 7. Removed the `Human Super Tanks` setting.
@@ -1200,8 +1202,8 @@ Changes:
 - `Fragile Fire Damage`
 - `Fragile Melee Damage`
 
-6. The plugin and all of its modules no longer work on locally-hosted/listen servers. (I'm tired of people reporting issues from their listen servers...)
-7. The plugin and all of its modules now require `SM 1.9.0.6225` or higher to work.
+6. The core plugin and all of its modules no longer work on locally-hosted/listen servers. (I'm tired of people reporting issues from their listen servers...)
+7. The core plugin and all of its modules now require `SM 1.9.0.6225` or higher to work.
 8. Removed unnecessary code.
 
 Files:
@@ -1447,7 +1449,7 @@ Changes:
 2. Added a ton of new KeyValues for many abilities.
 3. Added new abilities.
 4. Increased the maximum amount of possible Super Tank types from 1000 to 2500.
-5. The plugin now creates a folder inside `cfg/sourcemod/super_tanks++` called `backup_config` which contains a copy of the config file in case users need it.
+5. The core plugin now creates a folder inside `cfg/sourcemod/super_tanks++` called `backup_config` which contains a copy of the config file in case users need it.
 6. Added checks to trim all string-related settings to get rid of any white spaces.
 7. Raised the value limits of various settings.
 
