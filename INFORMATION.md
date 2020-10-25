@@ -1,8 +1,9 @@
 # Information
 
 ## Notes
-> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
+> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
+- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 29-30 and recompile at your own risk.)
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 28 and recompile at your own risk.)
 - Ability count: 75 (Suggest more if you want; limit is 100.)
@@ -827,7 +828,7 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
-			// Maximum: 255
+			// Maximum: 511
 			// --
 			// 0: OFF
 			// 1: Attach a blur effect only.
@@ -838,14 +839,15 @@
 			// 32: Attach tires only.
 			// 64: Attach a propane tank only.
 			// 128: Attach a flashlight only.
-			"Props Attached"			"254" // Default is "206" on Left 4 Dead 1.
+			// 256: Attach a crown only.
+			"Props Attached"			"510" // Default is "462" on Left 4 Dead 1.
 
 			// Each prop has this many chances out of 100.0% to appear when the Mutant Tank appears.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate chances with commas.
 			// --
-			// Chances limit: 8
+			// Chances limit: 9
 			// Character limit for each chance: 6
 			// --
 			// Minimum value for each chance: 0.0 (No chance)
@@ -859,10 +861,11 @@
 			// 6th number = Chance for tires to appear.
 			// 7th number = Chance for a propane tank to appear.
 			// 8th number = Chance for a flashlight to appear.
-			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3,33.3,33.3"
+			// 9th number = Chance for a crown to appear.
+			"Props Chance"				"33.3,33.3,33.3,33.3,33.3,33.3,33.3,33.3,33.3"
 
 			// These are the RGBA values of the Mutant Tank's light prop's color.
-			// Note: The lights will be found on the Tank's mouth, back of hands, and above the Tank forming a crown.
+			// Note: The lights will be found on the Tank's mouth and back of hands.
 			// Note: Any value less than "0" will output a random color.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -945,6 +948,17 @@
 			// 3rd number = Blue
 			// 4th number = Alpha
 			"Flashlight Color"			"-1,-1,-1,-1"
+
+			// These are the RGBA values of the Mutant Tank's crown prop's color.
+			// Note: The crown will be found above the Tank.
+			// Note: Any value less than "0" will output a random color.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			"Crown Color"				"-1,-1,-1,-1"
 		}
 		"Particles"
 		{
