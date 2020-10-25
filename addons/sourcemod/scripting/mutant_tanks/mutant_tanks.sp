@@ -25,9 +25,11 @@
 
 //#file "Mutant Tanks v8.80"
 
+#define MT_NAME "Mutant Tanks"
+
 public Plugin myinfo =
 {
-	name = "Mutant Tanks",
+	name = MT_NAME,
 	author = MT_AUTHOR,
 	description = "Mutant Tanks makes fighting Tanks great again!",
 	version = MT_VERSION,
@@ -40,7 +42,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
 	{
-		strcopy(error, err_max, "\"Mutant Tanks\" only supports Left 4 Dead 1 & 2.");
+		char sMessage[64];
+		FormatEx(sMessage, sizeof(sMessage), "\"%s\" only supports Left 4 Dead 1 & 2.", MT_NAME);
+		strcopy(error, err_max, sMessage);
 
 		return APLRes_SilentFailure;
 	}
@@ -1295,7 +1299,7 @@ public void OnAdminMenuReady(Handle topmenu)
 	if (tmoCommands != INVALID_TOPMENUOBJECT)
 	{
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_tank", vMutantTanksMenu, tmoCommands, "sm_mt_tank", ADMFLAG_ROOT);
-		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_config", vMTConfigMenu, tmoCommands, "sm_mt_config", ADMFLAG_GENERIC);
+		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_config", vMTConfigMenu, tmoCommands, "sm_mt_config", ADMFLAG_ROOT);
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_info", vMTInfoMenu, tmoCommands, "sm_mt_info", ADMFLAG_GENERIC);
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_list", vMTListMenu, tmoCommands, "sm_mt_list", ADMFLAG_ROOT);
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_version", vMTVersionMenu, tmoCommands, "sm_mt_version", ADMFLAG_ROOT);
@@ -1306,7 +1310,7 @@ public int iMTAdminMenuHandler(TopMenu topmenu, TopMenuAction action, TopMenuObj
 {
 	switch (action)
 	{
-		case TopMenuAction_DisplayTitle, TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "Mutant Tanks");
+		case TopMenuAction_DisplayTitle, TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%s", MT_NAME);
 	}
 
 	return 0;
@@ -1368,7 +1372,7 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 	switch (action)
 	{
 		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTVersionMenu", param);
-		case TopMenuAction_SelectOption: MT_PrintToChat(param, "%s Mutant Tanks{yellow} v%s{mint}, by{olive} Psyk0tik (Crasher_3637)", MT_TAG3, MT_VERSION);
+		case TopMenuAction_SelectOption: MT_PrintToChat(param, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
 	}
 }
 
@@ -1475,7 +1479,7 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 
 		if (g_esGeneral.g_csState2 == ConfigState_None)
 		{
-			if (StrEqual(name, "MutantTanks", false) || StrEqual(name, "Mutant Tanks", false) || StrEqual(name, "Mutant_Tanks", false) || StrEqual(name, "MT", false))
+			if (StrEqual(name, "MutantTanks", false) || StrEqual(name, MT_NAME, false) || StrEqual(name, "Mutant_Tanks", false) || StrEqual(name, "MT", false))
 			{
 				g_esGeneral.g_csState2 = ConfigState_Start;
 
@@ -1969,7 +1973,7 @@ public Action cmdMTInfo(int client, int args)
 static void vInfoMenu(int client, int item)
 {
 	Menu mInfoMenu = new Menu(iInfoMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
-	mInfoMenu.SetTitle("Mutant Tanks Information");
+	mInfoMenu.SetTitle("%s Information", MT_NAME);
 	mInfoMenu.AddItem("Status", "Status");
 	mInfoMenu.AddItem("Details", "Details");
 	mInfoMenu.AddItem("Human Support", "Human Support");
@@ -2140,7 +2144,7 @@ static void vListAbilities(int admin)
 
 public Action cmdMTVersion(int client, int args)
 {
-	MT_ReplyToCommand(client, "%s Mutant Tanks{yellow} v%s{mint}, by{olive} Psyk0tik (Crasher_3637)", MT_TAG3, MT_VERSION);
+	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
 
 	return Plugin_Handled;
 }
@@ -2537,7 +2541,7 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 static void vTankMenu(int admin, int item)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
-	mTankMenu.SetTitle("Mutant Tanks Menu");
+	mTankMenu.SetTitle("%s Menu", MT_NAME);
 
 	static int iCount;
 	iCount = 0;
@@ -3354,7 +3358,7 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 
 	if (g_esGeneral.g_csState == ConfigState_None)
 	{
-		if (StrEqual(name, "MutantTanks", false) || StrEqual(name, "Mutant Tanks", false) || StrEqual(name, "Mutant_Tanks", false) || StrEqual(name, "MT", false))
+		if (StrEqual(name, "MutantTanks", false) || StrEqual(name, MT_NAME, false) || StrEqual(name, "Mutant_Tanks", false) || StrEqual(name, "MT", false))
 		{
 			g_esGeneral.g_csState = ConfigState_Start;
 		}
