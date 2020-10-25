@@ -1238,12 +1238,12 @@ If you are a Tank:
 // Accessible by the developer and admins with "z" (Root) flag only.
 sm_mt_config - View a section of a config file.
 sm_mt_list - View a list of installed abilities.
-sm_mt_version - View a list of installed abilities.
 sm_tank2 - Spawn a Mutant Tank.
 sm_mt_tank2 - Spawn a Mutant Tank.
 
 // Accessible by all players.
 sm_mutanttank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mt_version - Find out the current version of Mutant Tanks.
 sm_mt_info - View information about Mutant Tanks.
 sm_mt_absorb - View information about the Absorb ability.
 sm_mt_acid - View information about the Acid ability.

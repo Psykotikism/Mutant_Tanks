@@ -11757,7 +11757,7 @@
 			// Note: Survivors will not gain health if they already have this much health.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0 (OFF, use the max health value set by the game.)
+			// Minimum: 0 (OFF, use the value set by the game.)
 			// Maximum: 65535
 			"Xiphos Max Health"			"100"
 		}
