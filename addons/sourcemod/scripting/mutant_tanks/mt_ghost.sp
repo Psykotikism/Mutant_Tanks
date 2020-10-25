@@ -1015,19 +1015,33 @@ static void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 		}
 	}
 
+	iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
 	{
 		static int iOwner;
 		iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
 		if (iOwner == tank)
 		{
-			static int iLightColor[4];
-			MT_GetPropColors(tank, 1, iLightColor[0], iLightColor[1], iLightColor[2], iLightColor[3]);
-			SetEntityRenderMode(iProp, mode);
-			SetEntityRenderColor(iProp, iLightColor[0], iLightColor[1], iLightColor[2], alpha);
+			static char sParentName[64], sTargetName[64];
+			GetEntPropString(iOwner, Prop_Data, "m_iName", sTargetName, sizeof(sTargetName));
+			FormatEx(sParentName, sizeof(sParentName), "mutant_tank_%i_%i_", iOwner, MT_GetTankType(iOwner));
+			static int iColor[4];
+			if (StrContains(sTargetName, sParentName, false) == 0)
+			{
+				MT_GetPropColors(tank, 1, iColor[0], iColor[1], iColor[2], iColor[3]);
+				SetEntityRenderMode(iProp, mode);
+				SetEntityRenderColor(iProp, iColor[0], iColor[1], iColor[2], alpha);
+			}
+			else
+			{
+				MT_GetPropColors(tank, 8, iColor[0], iColor[1], iColor[2], iColor[3]);
+				SetEntityRenderMode(iProp, mode);
+				SetEntityRenderColor(iProp, iColor[0], iColor[1], iColor[2], alpha);
+			}
 		}
 	}
 
+	iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
 	{
 		static int iOwner;
@@ -1038,6 +1052,20 @@ static void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 			MT_GetPropColors(tank, 3, iFlameColor[0], iFlameColor[1], iFlameColor[2], iFlameColor[3]);
 			SetEntityRenderMode(iProp, mode);
 			SetEntityRenderColor(iProp, iFlameColor[0], iFlameColor[1], iFlameColor[2], alpha);
+		}
+	}
+
+	iProp = -1;
+	while ((iProp = FindEntityByClassname(iProp, "light_dynamic")) != INVALID_ENT_REFERENCE)
+	{
+		static int iOwner;
+		iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+		if (iOwner == tank)
+		{
+			static int iFlashlightColor[4];
+			MT_GetPropColors(tank, 7, iFlashlightColor[0], iFlashlightColor[1], iFlashlightColor[2], iFlashlightColor[3]);
+			SetEntityRenderMode(iProp, mode);
+			SetEntityRenderColor(iProp, iFlashlightColor[0], iFlashlightColor[1], iFlashlightColor[2], alpha);
 		}
 	}
 }

@@ -132,6 +132,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_PROP_TIRE (1 << 5) // tire prop
 #define MT_PROP_PROPANETANK (1 << 6) // propane tank prop
 #define MT_PROP_FLASHLIGHT (1 << 7) // flashlight prop
+#define MT_PROP_CROWN (1 << 8) // crown prop
 
 #define MT_ROCK_BLOOD (1 << 0) // blood particle
 #define MT_ROCK_ELECTRICITY (1 << 1) // electric particle
@@ -310,7 +311,7 @@ enum struct esPlayer
 	float g_flAttackDelay;
 	float g_flAttackInterval;
 	float g_flClawDamage;
-	float g_flPropsChance[8];
+	float g_flPropsChance[9];
 	float g_flRandomInterval;
 	float g_flRockDamage;
 	float g_flRunSpeed;
@@ -330,6 +331,7 @@ enum struct esPlayer
 	int g_iBossType[4];
 	int g_iBulletImmunity;
 	int g_iCooldown;
+	int g_iCrownColor[4];
 	int g_iDeathRevert;
 	int g_iDetectPlugins;
 	int g_iDisplayHealth;
@@ -388,7 +390,7 @@ enum struct esTank
 
 	float g_flAttackInterval;
 	float g_flClawDamage;
-	float g_flPropsChance[8];
+	float g_flPropsChance[9];
 	float g_flRandomInterval;
 	float g_flRockDamage;
 	float g_flRunSpeed;
@@ -405,6 +407,7 @@ enum struct esTank
 	int g_iBossStages;
 	int g_iBossType[4];
 	int g_iBulletImmunity;
+	int g_iCrownColor[4];
 	int g_iDeathRevert;
 	int g_iDetectPlugins;
 	int g_iDisplayHealth;
@@ -456,7 +459,7 @@ enum struct esCache
 
 	float g_flAttackInterval;
 	float g_flClawDamage;
-	float g_flPropsChance[8];
+	float g_flPropsChance[9];
 	float g_flRandomInterval;
 	float g_flRockDamage;
 	float g_flRunSpeed;
@@ -471,6 +474,7 @@ enum struct esCache
 	int g_iBossStages;
 	int g_iBossType[4];
 	int g_iBulletImmunity;
+	int g_iCrownColor[4];
 	int g_iDeathRevert;
 	int g_iDetectPlugins;
 	int g_iDisplayHealth;
@@ -572,7 +576,7 @@ public any aNative_GetPropColors(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1);
 	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 	{
-		int iType = iClamp(GetNativeCell(2), 1, 7), iColor[4];
+		int iType = iClamp(GetNativeCell(2), 1, 8), iColor[4];
 		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
 		{
 			switch (iType)
@@ -584,6 +588,7 @@ public any aNative_GetPropColors(Handle plugin, int numParams)
 				case 5: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iTireColor[iPos]);
 				case 6: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iPropTankColor[iPos]);
 				case 7: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iFlashlightColor[iPos]);
+				case 8: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iCrownColor[iPos]);
 			}
 
 			SetNativeCellRef(iPos + 3, iColor[iPos]);
@@ -2954,6 +2959,7 @@ static void vCacheSettings(int tank)
 			g_esCache[tank].g_iTireColor[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iTireColor[iPos], g_esTank[iType].g_iTireColor[iPos], true);
 			g_esCache[tank].g_iPropTankColor[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iPropTankColor[iPos], g_esTank[iType].g_iPropTankColor[iPos], true);
 			g_esCache[tank].g_iFlashlightColor[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iFlashlightColor[iPos], g_esTank[iType].g_iFlashlightColor[iPos], true);
+			g_esCache[tank].g_iCrownColor[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iCrownColor[iPos], g_esTank[iType].g_iCrownColor[iPos], true);
 		}
 
 		if (iPos < sizeof(esCache::g_iGlowColor))
@@ -3201,7 +3207,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_flTransformDelay = 10.0;
 			g_esTank[iIndex].g_flTransformDuration = 10.0;
 			g_esTank[iIndex].g_iSpawnMode = 0;
-			g_esTank[iIndex].g_iPropsAttached = bIsValidGame() ? 254 : 206;
+			g_esTank[iIndex].g_iPropsAttached = bIsValidGame() ? 510 : 462;
 			g_esTank[iIndex].g_iBodyEffects = 0;
 			g_esTank[iIndex].g_iRockEffects = 0;
 			g_esTank[iIndex].g_iRockModel = 2;
@@ -3236,6 +3242,7 @@ public void SMCParseStart(SMCParser smc)
 					g_esTank[iIndex].g_iTireColor[iPos] = -1;
 					g_esTank[iIndex].g_iPropTankColor[iPos] = -1;
 					g_esTank[iIndex].g_iFlashlightColor[iPos] = -1;
+					g_esTank[iIndex].g_iCrownColor[iPos] = -1;
 				}
 
 				if (iPos < sizeof(esTank::g_iGlowColor))
@@ -3313,6 +3320,7 @@ public void SMCParseStart(SMCParser smc)
 						g_esPlayer[iPlayer].g_iTireColor[iPos] = -1;
 						g_esPlayer[iPlayer].g_iPropTankColor[iPos] = -1;
 						g_esPlayer[iPlayer].g_iFlashlightColor[iPos] = -1;
+						g_esPlayer[iPlayer].g_iCrownColor[iPos] = -1;
 					}
 
 					if (iPos < sizeof(esPlayer::g_iGlowColor))
@@ -3628,7 +3636,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_flTransformDuration = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDuration", "Transform Duration", "Transform_Duration", "transduration", g_esTank[iIndex].g_flTransformDuration, value, 0.1, 999999.0);
 						g_esTank[iIndex].g_iSpawnMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "mode", g_esTank[iIndex].g_iSpawnMode, value, 0, 3);
 						g_esTank[iIndex].g_iRockModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "RockModel", "Rock Model", "Rock_Model", "rockmodel", g_esTank[iIndex].g_iRockModel, value, 0, 2);
-						g_esTank[iIndex].g_iPropsAttached = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esTank[iIndex].g_iPropsAttached, value, 0, 255);
+						g_esTank[iIndex].g_iPropsAttached = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esTank[iIndex].g_iPropsAttached, value, 0, 511);
 						g_esTank[iIndex].g_iBodyEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_esTank[iIndex].g_iBodyEffects, value, 0, 127);
 						g_esTank[iIndex].g_iRockEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esTank[iIndex].g_iRockEffects, value, 0, 15);
 						g_esTank[iIndex].g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esTank[iIndex].g_flAttackInterval, value, -1.0, 999999.0);
@@ -3748,11 +3756,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						{
 							if (StrEqual(key, "PropsChance", false) || StrEqual(key, "Props Chance", false) || StrEqual(key, "Props_Chance", false) || StrEqual(key, "chance", false))
 							{
-								static char sValue[42];
+								static char sValue[54];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
 
-								static char sSet[8][6];
+								static char sSet[9][6];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 								for (int iPos = 0; iPos < sizeof(esTank::g_flPropsChance); iPos++)
@@ -3798,6 +3806,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									else if (StrEqual(key, "FlashlightColor", false) || StrEqual(key, "Flashlight Color", false) || StrEqual(key, "Flashlight_Color", false) || StrEqual(key, "flashlight", false))
 									{
 										g_esTank[iIndex].g_iFlashlightColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
+									}
+									else if (StrEqual(key, "CrownColor", false) || StrEqual(key, "Crown Color", false) || StrEqual(key, "Crown_Color", false) || StrEqual(key, "crown", false))
+									{
+										g_esTank[iIndex].g_iCrownColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 									}
 								}
 							}
@@ -3851,7 +3863,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_flTransformDelay = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDelay", "Transform Delay", "Transform_Delay", "transdelay", g_esPlayer[iPlayer].g_flTransformDelay, value, 0.1, 999999.0);
 							g_esPlayer[iPlayer].g_flTransformDuration = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Spawn", "Spawn", "Spawn", "Spawn", key, "TransformDuration", "Transform Duration", "Transform_Duration", "transduration", g_esPlayer[iPlayer].g_flTransformDuration, value, 0.1, 999999.0);
 							g_esPlayer[iPlayer].g_iRockModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "RockModel", "Rock Model", "Rock_Model", "rockmodel", g_esPlayer[iPlayer].g_iRockModel, value, 0, 2);
-							g_esPlayer[iPlayer].g_iPropsAttached = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esPlayer[iPlayer].g_iPropsAttached, value, 0, 255);
+							g_esPlayer[iPlayer].g_iPropsAttached = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Props", "Props", "Props", "Props", key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esPlayer[iPlayer].g_iPropsAttached, value, 0, 511);
 							g_esPlayer[iPlayer].g_iBodyEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_esPlayer[iPlayer].g_iBodyEffects, value, 0, 127);
 							g_esPlayer[iPlayer].g_iRockEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Particles", "Particles", "Particles", "Particles", key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esPlayer[iPlayer].g_iRockEffects, value, 0, 15);
 							g_esPlayer[iPlayer].g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Enhancements", "Enhancements", "Enhancements", "enhance", key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esPlayer[iPlayer].g_flAttackInterval, value, -1.0, 999999.0);
@@ -3972,11 +3984,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "PropsChance", false) || StrEqual(key, "Props Chance", false) || StrEqual(key, "Props_Chance", false) || StrEqual(key, "chance", false))
 								{
-									static char sValue[42];
+									static char sValue[54];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
 
-									static char sSet[8][6];
+									static char sSet[9][6];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_flPropsChance); iPos++)
@@ -4022,6 +4034,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 										else if (StrEqual(key, "FlashlightColor", false) || StrEqual(key, "Flashlight Color", false) || StrEqual(key, "Flashlight_Color", false) || StrEqual(key, "flashlight", false))
 										{
 											g_esPlayer[iPlayer].g_iFlashlightColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
+										}
+										else if (StrEqual(key, "CrownColor", false) || StrEqual(key, "Crown Color", false) || StrEqual(key, "Crown_Color", false) || StrEqual(key, "crown", false))
+										{
+											g_esPlayer[iPlayer].g_iCrownColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 										}
 									}
 								}
@@ -5025,15 +5041,19 @@ static void vSetProps(int tank)
 			CreateTimer(0.25, tTimerBlurEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		float flOrigin[3], flAngles[3], flChance = GetRandomFloat(0.1, 100.0);
+		float flOrigin[3], flAngles[3];
 		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
 		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
+		float flChance = GetRandomFloat(0.1, 100.0);
 		for (int iLight = 0; iLight < sizeof(esPlayer::g_iLight); iLight++)
 		{
-			static float flChance2;
-			flChance2 = (iLight < 3) ? GetRandomFloat(0.1, 100.0) : flChance;
-			if ((g_esPlayer[tank].g_iLight[iLight] == 0 || g_esPlayer[tank].g_iLight[iLight] == INVALID_ENT_REFERENCE) && flChance2 <= g_esCache[tank].g_flPropsChance[1] && (g_esCache[tank].g_iPropsAttached & MT_PROP_LIGHT))
+			static float flValue;
+			flValue = (iLight < 3) ? GetRandomFloat(0.1, 100.0) : flChance;
+			static int iFlag, iType;
+			iFlag = (iLight < 3) ? MT_PROP_LIGHT : MT_PROP_CROWN;
+			iType = (iLight < 3) ? 1 : 8;
+			if ((g_esPlayer[tank].g_iLight[iLight] == 0 || g_esPlayer[tank].g_iLight[iLight] == INVALID_ENT_REFERENCE) && flValue <= g_esCache[tank].g_flPropsChance[iType] && (g_esCache[tank].g_iPropsAttached & iFlag))
 			{
 				vLightProp(tank, iLight, flOrigin, flAngles);
 			}
@@ -5047,7 +5067,7 @@ static void vSetProps(int tank)
 				}
 
 				g_esPlayer[tank].g_iLight[iLight] = INVALID_ENT_REFERENCE;
-				if (g_esCache[tank].g_iPropsAttached & MT_PROP_LIGHT)
+				if (g_esCache[tank].g_iPropsAttached & iFlag)
 				{
 					vLightProp(tank, iLight, flOrigin, flAngles);
 				}
@@ -5531,27 +5551,28 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 
 			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fadescale", "1");
 			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "fademindist", "-1");
+
+			SetEntityRenderColor(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iLightColor[0]), iGetRandomColor(g_esCache[tank].g_iLightColor[1]), iGetRandomColor(g_esCache[tank].g_iLightColor[2]), iGetRandomColor(g_esCache[tank].g_iLightColor[3]));
 		}
 		else
 		{
 			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "haloscale", "100");
+
+			SetEntityRenderColor(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iCrownColor[0]), iGetRandomColor(g_esCache[tank].g_iCrownColor[1]), iGetRandomColor(g_esCache[tank].g_iCrownColor[2]), iGetRandomColor(g_esCache[tank].g_iCrownColor[3]));
 		}
 
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spotlightwidth", "10");
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spotlightlength", "50");
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "spawnflags", "3");
-
-		SetEntityRenderColor(g_esPlayer[tank].g_iLight[light], iGetRandomColor(g_esCache[tank].g_iLightColor[0]), iGetRandomColor(g_esCache[tank].g_iLightColor[1]), iGetRandomColor(g_esCache[tank].g_iLightColor[2]), iGetRandomColor(g_esCache[tank].g_iLightColor[3]));
-
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "maxspeed", "100");
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "HDRColorScale", "0.7");
 
 		static float flOrigin[3], flAngles[3];
 		if (light < 3)
 		{
-			static char sParentName[64];
-			FormatEx(sParentName, sizeof(sParentName), "mutant_tank_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
-			DispatchKeyValue(tank, "targetname", sParentName);
+			static char sParentName[64], sTargetName[64];
+			FormatEx(sTargetName, sizeof(sTargetName), "mutant_tank_%i_%i_%i", tank, g_esPlayer[tank].g_iTankType, light);
+			DispatchKeyValue(tank, "targetname", sTargetName);
 			GetEntPropString(tank, Prop_Data, "m_iName", sParentName, sizeof(sParentName));
 			DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "parentname", sParentName);
 
