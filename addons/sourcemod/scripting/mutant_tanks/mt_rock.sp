@@ -623,33 +623,9 @@ static void vRock(int tank)
 		iLauncher = EntIndexToEntRef(iLauncher);
 	}
 
-	static int iLauncher2;
-	iLauncher2 = CreateEntityByName("env_rock_launcher");
-	if (bIsValidEntity(iLauncher2))
-	{
-		SetEntPropEnt(iLauncher2, Prop_Send, "m_hOwnerEntity", tank);
-		TeleportEntity(iLauncher2, flPos, flAngles, NULL_VECTOR);
-		DispatchSpawn(iLauncher2);
-		DispatchKeyValue(iLauncher2, "rockdamageoverride", sDamage);
-		iLauncher2 = EntIndexToEntRef(iLauncher2);
-	}
-
-	static int iLauncher3;
-	iLauncher3 = CreateEntityByName("env_rock_launcher");
-	if (bIsValidEntity(iLauncher3))
-	{
-		SetEntPropEnt(iLauncher3, Prop_Send, "m_hOwnerEntity", tank);
-		TeleportEntity(iLauncher3, flPos, flAngles, NULL_VECTOR);
-		DispatchSpawn(iLauncher3);
-		DispatchKeyValue(iLauncher3, "rockdamageoverride", sDamage);
-		iLauncher3 = EntIndexToEntRef(iLauncher3);
-	}
-
 	DataPack dpRock;
 	CreateDataTimer(0.2, tTimerRock, dpRock, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpRock.WriteCell(iLauncher);
-	dpRock.WriteCell(iLauncher2);
-	dpRock.WriteCell(iLauncher3);
 	dpRock.WriteCell(GetClientUserId(tank));
 	dpRock.WriteCell(g_esPlayer[tank].g_iTankType);
 	dpRock.WriteCell(GetTime());
@@ -700,12 +676,10 @@ public Action tTimerRock(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iLauncher, iLauncher2, iLauncher3, iTank;
+	static int iLauncher, iTank;
 	iLauncher = EntRefToEntIndex(pack.ReadCell());
-	iLauncher2 = EntRefToEntIndex(pack.ReadCell());
-	iLauncher3 = EntRefToEntIndex(pack.ReadCell());
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if ((iLauncher == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher)) && (iLauncher2 == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher2)) && (iLauncher3 == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher3)))
+	if (iLauncher == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher))
 	{
 		g_esPlayer[iTank].g_bActivated = false;
 
@@ -773,28 +747,6 @@ public Action tTimerRock(Handle timer, DataPack pack)
 
 			TeleportEntity(iLauncher, flHitPos, flAngles2, NULL_VECTOR);
 			AcceptEntityInput(iLauncher, "LaunchRock");
-		}
-
-		if (bIsValidEntity(iLauncher2))
-		{
-			flAngles2[0] = GetRandomFloat(g_esCache[iTank].g_flRockRadius[0], g_esCache[iTank].g_flRockRadius[1]);
-			flAngles2[1] = GetRandomFloat(g_esCache[iTank].g_flRockRadius[0], g_esCache[iTank].g_flRockRadius[1]);
-			flAngles2[2] = -2.0;
-			GetVectorAngles(flAngles2, flAngles2);
-
-			TeleportEntity(iLauncher2, flHitPos, flAngles2, NULL_VECTOR);
-			AcceptEntityInput(iLauncher2, "LaunchRock");
-		}
-
-		if (bIsValidEntity(iLauncher3))
-		{
-			flAngles2[0] = GetRandomFloat(g_esCache[iTank].g_flRockRadius[0], g_esCache[iTank].g_flRockRadius[1]);
-			flAngles2[1] = GetRandomFloat(g_esCache[iTank].g_flRockRadius[0], g_esCache[iTank].g_flRockRadius[1]);
-			flAngles2[2] = -2.0;
-			GetVectorAngles(flAngles2, flAngles2);
-
-			TeleportEntity(iLauncher3, flHitPos, flAngles2, NULL_VECTOR);
-			AcceptEntityInput(iLauncher3, "LaunchRock");
 		}
 	}
 

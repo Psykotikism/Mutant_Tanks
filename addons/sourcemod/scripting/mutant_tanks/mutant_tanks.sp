@@ -189,6 +189,9 @@ enum struct esGeneral
 	ConVar g_cvMTGameTypes;
 	ConVar g_cvMTPluginEnabled;
 
+	DynamicDetour g_ddLauncherDirectionDetour;
+	DynamicDetour g_ddTankRockDetour;
+
 	float g_flExtrasDelay;
 	float g_flIdleCheck;
 	float g_flRegularDelay;
@@ -216,11 +219,9 @@ enum struct esGeneral
 	GlobalForward g_gfSettingsCachedForward;
 	GlobalForward g_gfTypeChosenForward;
 
-	Handle g_hLaunchDirectionDetour;
 	Handle g_hRegularWavesTimer;
 	Handle g_hSDKActionGetName;
 	Handle g_hSDKFirstContainedResponder;
-	Handle g_hTankRockDetour;
 
 	int g_iAccessFlags;
 	int g_iAllowDeveloper;
@@ -881,13 +882,13 @@ public void OnPluginStart()
 		case true: LogError("Unable to load the \"mutant_tanks\" gamedata file.");
 		case false:
 		{
-			g_esGeneral.g_iIntentionOffset = GameConfGetOffset(gdMutantTanks, "GetIntentionInterfaceSpecial");
+			g_esGeneral.g_iIntentionOffset = gdMutantTanks.GetOffset("GetIntentionInterfaceSpecial");
 			if (g_esGeneral.g_iIntentionOffset == -1)
 			{
 				vLogMessage(MT_LOG_SERVER, "Failed to load offset: GetIntentionInterfaceSpecial");
 			}
 
-			int iOffset = GameConfGetOffset(gdMutantTanks, "FirstContainedResponder");
+			int iOffset = gdMutantTanks.GetOffset("FirstContainedResponder");
 			StartPrepSDKCall(SDKCall_Raw);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
@@ -897,7 +898,7 @@ public void OnPluginStart()
 				vLogMessage(MT_LOG_SERVER, "%s Your \"FirstContainedResponder\" offsets are outdated.", MT_TAG);
 			}
 
-			iOffset = GameConfGetOffset(gdMutantTanks, "ActionGetName");
+			iOffset = gdMutantTanks.GetOffset("ActionGetName");
 			StartPrepSDKCall(SDKCall_Raw);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Plain);
@@ -907,14 +908,14 @@ public void OnPluginStart()
 				vLogMessage(MT_LOG_SERVER, "%s Your \"ActionGetName\" offsets are outdated.", MT_TAG);
 			}
 
-			g_esGeneral.g_hLaunchDirectionDetour = DHookCreateFromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
-			if (g_esGeneral.g_hLaunchDirectionDetour == null)
+			g_esGeneral.g_ddLauncherDirectionDetour = DynamicDetour.FromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
+			if (g_esGeneral.g_ddLauncherDirectionDetour == null)
 			{
 				vLogMessage(MT_LOG_SERVER, "Failed to find signature: CEnvRockLauncher::LaunchCurrentDir");
 			}
 
-			g_esGeneral.g_hTankRockDetour = DHookCreateFromConf(gdMutantTanks, "CTankRock::Create");
-			if (g_esGeneral.g_hTankRockDetour == null)
+			g_esGeneral.g_ddTankRockDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankRock::Create");
+			if (g_esGeneral.g_ddTankRockDetour == null)
 			{
 				vLogMessage(MT_LOG_SERVER, "Failed to find signature: CTankRock::Create");
 			}
@@ -4407,12 +4408,12 @@ static void vPluginStatus()
 
 		vHookEvents(true);
 
-		if (!DHookEnableDetour(g_esGeneral.g_hLaunchDirectionDetour, false, mreLaunchDirectionPre))
+		if (!g_esGeneral.g_ddLauncherDirectionDetour.Enable(Hook_Pre, mreLaunchDirectionPre))
 		{
 			LogError("Failed to enable detour pre: CEnvRockLauncher::LaunchCurrentDir");
 		}
 
-		if (!DHookEnableDetour(g_esGeneral.g_hTankRockDetour, true, mreTankRockPost))
+		if (!g_esGeneral.g_ddTankRockDetour.Enable(Hook_Post, mreTankRockPost))
 		{
 			LogError("Failed to enable detour post: CTankRock::Create");
 		}
@@ -4423,12 +4424,12 @@ static void vPluginStatus()
 
 		vHookEvents(false);
 
-		if (!DHookDisableDetour(g_esGeneral.g_hLaunchDirectionDetour, false, mreLaunchDirectionPre))
+		if (!g_esGeneral.g_ddLauncherDirectionDetour.Disable(Hook_Pre, mreLaunchDirectionPre))
 		{
 			LogError("Failed to disable detour pre: CEnvRockLauncher::LaunchCurrentDir");
 		}
 
-		if (!DHookDisableDetour(g_esGeneral.g_hTankRockDetour, true, mreTankRockPost))
+		if (!g_esGeneral.g_ddTankRockDetour.Disable(Hook_Post, mreTankRockPost))
 		{
 			LogError("Failed to disable detour post: CTankRock::Create");
 		}

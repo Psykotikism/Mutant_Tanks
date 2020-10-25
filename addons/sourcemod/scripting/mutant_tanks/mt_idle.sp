@@ -51,11 +51,12 @@ enum struct esGeneral
 	bool g_bApplyFix;
 	bool g_bIgnoreSpec;
 
-	Handle g_hIdlePlayerDetour;
+	DynamicDetour g_ddIdlePlayerDetour;
+	DynamicDetour g_ddSpecPlayerDetour;
+
 	Handle g_hSDKIdlePlayer;
 	Handle g_hSDKObservePlayer;
 	Handle g_hSDKSpecPlayer;
-	Handle g_hSpecPlayerDetour;
 
 	int g_iSurvivorBot;
 }
@@ -148,14 +149,14 @@ public void OnPluginStart()
 		return;
 	}
 
-	g_esGeneral.g_hIdlePlayerDetour = DHookCreateFromConf(gdMutantTanks, "CTerrorPlayer::GoAwayFromKeyboard");
-	if (g_esGeneral.g_hIdlePlayerDetour == null)
+	g_esGeneral.g_ddIdlePlayerDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::GoAwayFromKeyboard");
+	if (g_esGeneral.g_ddIdlePlayerDetour == null)
 	{
 		SetFailState("Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard");
 	}
 
-	g_esGeneral.g_hSpecPlayerDetour = DHookCreateFromConf(gdMutantTanks, "SurvivorBot::SetHumanSpectator");
-	if (g_esGeneral.g_hSpecPlayerDetour == null)
+	g_esGeneral.g_ddSpecPlayerDetour = DynamicDetour.FromConf(gdMutantTanks, "SurvivorBot::SetHumanSpectator");
+	if (g_esGeneral.g_ddSpecPlayerDetour == null)
 	{
 		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
 	}
@@ -611,34 +612,34 @@ public void MT_OnHookEvent(bool hooked)
 	{
 		case true:
 		{
-			if (!DHookEnableDetour(g_esGeneral.g_hIdlePlayerDetour, false, mreIdlePlayerPre))
+			if (!g_esGeneral.g_ddIdlePlayerDetour.Enable(Hook_Pre, mreIdlePlayerPre))
 			{
 				SetFailState("Failed to enable detour pre: CTerrorPlayer::GoAwayFromKeyboard");
 			}
 
-			if (!DHookEnableDetour(g_esGeneral.g_hIdlePlayerDetour, true, mreIdlePlayerPost))
+			if (!g_esGeneral.g_ddIdlePlayerDetour.Enable(Hook_Post, mreIdlePlayerPost))
 			{
 				SetFailState("Failed to enable detour post: CTerrorPlayer::GoAwayFromKeyboard");
 			}
 
-			if (!DHookEnableDetour(g_esGeneral.g_hSpecPlayerDetour, false, mreSpecPlayerPre))
+			if (!g_esGeneral.g_ddSpecPlayerDetour.Enable(Hook_Pre, mreSpecPlayerPre))
 			{
 				SetFailState("Failed to enable detour pre: SurvivorBot::SetHumanSpectator");
 			}
 		}
 		case false:
 		{
-			if (!DHookDisableDetour(g_esGeneral.g_hIdlePlayerDetour, false, mreIdlePlayerPre))
+			if (!g_esGeneral.g_ddIdlePlayerDetour.Disable(Hook_Pre, mreIdlePlayerPre))
 			{
 				SetFailState("Failed to disable detour pre: CTerrorPlayer::GoAwayFromKeyboard");
 			}
 
-			if (!DHookDisableDetour(g_esGeneral.g_hIdlePlayerDetour, true, mreIdlePlayerPost))
+			if (!g_esGeneral.g_ddIdlePlayerDetour.Disable(Hook_Post, mreIdlePlayerPost))
 			{
 				SetFailState("Failed to disable detour post: CTerrorPlayer::GoAwayFromKeyboard");
 			}
 
-			if (!DHookDisableDetour(g_esGeneral.g_hSpecPlayerDetour, false, mreSpecPlayerPre))
+			if (!g_esGeneral.g_ddSpecPlayerDetour.Disable(Hook_Pre, mreSpecPlayerPre))
 			{
 				SetFailState("Failed to disable detour pre: SurvivorBot::SetHumanSpectator");
 			}

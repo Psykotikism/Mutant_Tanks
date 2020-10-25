@@ -594,33 +594,9 @@ static void vSpam(int tank)
 		iLauncher = EntIndexToEntRef(iLauncher);
 	}
 
-	static int iLauncher2;
-	iLauncher2 = CreateEntityByName("env_rock_launcher");
-	if (bIsValidEntity(iLauncher2))
-	{
-		SetEntPropEnt(iLauncher2, Prop_Send, "m_hOwnerEntity", tank);
-		TeleportEntity(iLauncher2, flPos, flAngles, NULL_VECTOR);
-		DispatchSpawn(iLauncher2);
-		DispatchKeyValue(iLauncher2, "rockdamageoverride", sDamage);
-		iLauncher2 = EntIndexToEntRef(iLauncher2);
-	}
-
-	static int iLauncher3;
-	iLauncher3 = CreateEntityByName("env_rock_launcher");
-	if (bIsValidEntity(iLauncher3))
-	{
-		SetEntPropEnt(iLauncher3, Prop_Send, "m_hOwnerEntity", tank);
-		TeleportEntity(iLauncher3, flPos, flAngles, NULL_VECTOR);
-		DispatchSpawn(iLauncher3);
-		DispatchKeyValue(iLauncher3, "rockdamageoverride", sDamage);
-		iLauncher3 = EntIndexToEntRef(iLauncher3);
-	}
-
 	DataPack dpSpam;
 	CreateDataTimer(0.5, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpSpam.WriteCell(iLauncher);
-	dpSpam.WriteCell(iLauncher2);
-	dpSpam.WriteCell(iLauncher3);
 	dpSpam.WriteCell(GetClientUserId(tank));
 	dpSpam.WriteCell(g_esPlayer[tank].g_iTankType);
 	dpSpam.WriteCell(GetTime());
@@ -671,12 +647,10 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iLauncher, iLauncher2, iLauncher3, iTank;
+	static int iLauncher, iTank;
 	iLauncher = EntRefToEntIndex(pack.ReadCell());
-	iLauncher2 = EntRefToEntIndex(pack.ReadCell());
-	iLauncher3 = EntRefToEntIndex(pack.ReadCell());
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if ((iLauncher == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher)) && (iLauncher2 == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher2)) && (iLauncher3 == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher3)))
+	if (iLauncher == INVALID_ENT_REFERENCE || !bIsValidEntity(iLauncher))
 	{
 		g_esPlayer[iTank].g_bActivated = false;
 
@@ -716,24 +690,6 @@ public Action tTimerSpam(Handle timer, DataPack pack)
 	{
 		TeleportEntity(iLauncher, flPos, flAngles, NULL_VECTOR);
 		AcceptEntityInput(iLauncher, "LaunchRock");
-	}
-
-	flPos[1] += 50.0;
-	flAngles[1] += 45.0;
-
-	if (bIsValidEntity(iLauncher2))
-	{
-		TeleportEntity(iLauncher2, flPos, flAngles, NULL_VECTOR);
-		AcceptEntityInput(iLauncher2, "LaunchRock");
-	}
-
-	flPos[1] -= 100.0;
-	flAngles[1] -= 90.0;
-
-	if (bIsValidEntity(iLauncher3))
-	{
-		TeleportEntity(iLauncher3, flPos, flAngles, NULL_VECTOR);
-		AcceptEntityInput(iLauncher3, "LaunchRock");
 	}
 
 	return Plugin_Continue;
