@@ -486,7 +486,7 @@
 
 ### Tank Settings
 
-#### General, Administration, Spawn, Props, Particles, Enhancements, Immunities
+#### General, Administration, Human Support, Spawn, Props, Particles, Health, Enhancements, Immunities
 
 ```
 "Mutant Tanks"

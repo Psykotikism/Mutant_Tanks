@@ -34,6 +34,8 @@ Bug fixes:
 28. Fixed the Tank wave spawner not respecting the limits set by the `Regular Amount`, `Finale Amount`, and `Finale Waves` settings.
 29. Fixed the `Omni` ability not tracking type changes properly. (Thanks to Mi.Cura for testing and reporting!)
 30. Fixed the `MT_SetTankType` native not reverting changes properly in some scenarios. (Thanks to Mi.Cura for testing and reporting!)
+31. Fixed some admin commands using the wrong access flags.
+32. Fixed the `Rock` and `Spam` abilities' rocks colliding with each other.
 
 Changes:
 
