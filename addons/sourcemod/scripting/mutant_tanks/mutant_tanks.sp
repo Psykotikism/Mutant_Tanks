@@ -6473,7 +6473,7 @@ static int iGetTankCount(bool include = false)
 	iTankCount = 0;
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && (include || !MT_IsTankClone(iTank)))
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && (include || (g_esGeneral.g_bCloneInstalled && !MT_IsTankClone(iTank))))
 		{
 			iTankCount++;
 		}
