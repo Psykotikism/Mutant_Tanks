@@ -27,13 +27,15 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 3. Fully customize all Mutant Tanks.
 4. Store up to 1,000 Mutant Tank types.
 5. Four different formats for the config file.
-6. Auto-reload the config file when you change settings mid-game.
+6. Auto-reload the config file when changes are made mid-game.
 7. Choose which abilities to install.
-8. Add your own abilities and features through the use of forwards and natives.
+8. Add custom abilities and features through the use of forwards and natives.
 9. Custom target filters for targeting survivors and special infected.
 10. Supports multiple languages.
 11. Chat color tags for translation files.
 12. Administration system designed for access to and immunity from Mutant Tanks.
+13. Detects idle or bugged (no behavior) Tanks.
+14. Controllable Tank spawns.
 
 ### Requirements
 1. `SourceMod 1.11.0.6511` or higher

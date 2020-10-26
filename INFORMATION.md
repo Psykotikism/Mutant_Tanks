@@ -1,9 +1,8 @@
 # Information
 
 ## Notes
-> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
+> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 
-- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 29-30 and recompile at your own risk.)
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 28 and recompile at your own risk.)
 - Ability count: 75 (Suggest more if you want; limit is 100.)
@@ -265,13 +264,6 @@
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Extras Delay"				"3.0"
-
-			// Kick extra Tanks when the limits set by "Regular Amount", "Finale Amount", or "Finale Waves" are met.
-			// Note: If a human is controlling the extra Tank, it will be killed instead.
-			// --
-			// 0: OFF
-			// 1: ON
-			"Remove Extras"				"0"
 
 			// Spawn this many Tanks on non-finale maps periodically.
 			// Note: Leave this off if you have a Multi-Tanks plugin installed that handles the limit.

@@ -59,7 +59,7 @@ Changes:
 18. The `Clone` ability's `Clone Type` setting and the `Respawn` ability's `Respawn Type` setting now both take in a type range. Example: `1-10` (Requested by Neptunia.)
 19. The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
 20. Removed the `Rename Players` setting. (Too many bugs with special characters in people's names.)
-21. Added the `Remove Extras` and `Extras Delay` settings under `Plugin Settings/Waves` section.
+21. Added the `Extras Delay` settings under `Plugin Settings/Waves` section.
 22. The arrival of Mutant Tanks is no longer announced when they are idle. Instead, the arrival is announced once the survivors trigger the Mutant Tank.
 23. Added the `Fly` ability. (Thanks to Ernecio for the code!)
 24. None of the abilities' plugins need to check if the `Clone` ability is installed anymore.
