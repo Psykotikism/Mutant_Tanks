@@ -128,8 +128,8 @@ public void OnMapStart()
 {
 	switch (bIsValidGame())
 	{
-		case true: g_iLaserSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
-		case false: g_iLaserSprite = PrecacheModel("materials/sprites/laser.vmt");
+		case true: g_iLaserSprite = PrecacheModel("materials/sprites/laserbeam.vmt", true);
+		case false: g_iLaserSprite = PrecacheModel("materials/sprites/laser.vmt", true);
 	}
 
 	PrecacheSound(SOUND_ELECTRICITY, true);

@@ -43,8 +43,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-#define SPRITE_FIRE "sprites/sprite_fire01.vmt"
-
 #define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
 #define SOUND_FIRE "weapons/molotov/fire_ignite_1.wav"
 #define SOUND_LAUNCH "player/boomer/explode/explo_medium_14.wav"
@@ -151,7 +149,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	g_iRocketSprite = PrecacheModel(SPRITE_FIRE, true);
+	g_iRocketSprite = PrecacheModel("sprites/sprite_fire01.vmt", true);
 
 	PrecacheSound(SOUND_EXPLOSION, true);
 	PrecacheSound(SOUND_FIRE, true);

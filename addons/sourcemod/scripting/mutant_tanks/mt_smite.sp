@@ -43,8 +43,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-#define SPRITE_GLOW "sprites/glow.vmt"
-
 #define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
 
 #define MT_MENU_SMITE "Smite Ability"
@@ -144,7 +142,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	g_iSmiteSprite = PrecacheModel(SPRITE_GLOW, true);
+	g_iSmiteSprite = PrecacheModel("sprites/glow.vmt", true);
 
 	PrecacheSound(SOUND_EXPLOSION, true);
 
