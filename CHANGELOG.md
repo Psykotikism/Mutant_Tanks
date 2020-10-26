@@ -35,7 +35,7 @@ Bug fixes:
 29. Fixed the `Omni` ability not tracking type changes properly. (Thanks to Mi.Cura for testing and reporting!)
 30. Fixed the `MT_SetTankType` native not reverting changes properly in some scenarios. (Thanks to Mi.Cura for testing and reporting!)
 31. Fixed some admin commands using the wrong access flags.
-32. Fixed the `Rock` and `Spam` abilities' rocks colliding with each other.
+32. Fixed the `Rock` and `Spam` abilities' rocks colliding with each other and producing lag.
 
 Changes:
 
@@ -71,7 +71,7 @@ Changes:
 30. Added the `Crown Color` setting to determine the color of the Tank's crown prop. (Thanks to Ernecio for the code!)
 31. The `Props Chance` setting now accepts two extra values to support the `Flashlight` and `Crown` props.
 32. The core plugin and its modules now requires `DHooks 2.2.0-detours15` or higher.
-33. The `Rock` and `Spam` abilities spawn less rocks to reduce possible lag.
+33. Added the `Medic Field` and `Medic Field Color` settings for the `Medic` ability. (Thanks to Marttt and Silvers for the code!)
 
 Files:
 

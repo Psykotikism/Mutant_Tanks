@@ -713,7 +713,7 @@
 			// Note: The values will be added to the boss's new health on every new stage.
 			// Note: The values will determine when the boss evolves to the next stage.
 			// Note: This setting can be overridden for specific players.
-			// Example: When Stage 2 boss with 8000 base HP has 2500 HP or less, he will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
+			// Example: When Stage 2 boss with 8000 base HP has 2500 HP or less, it will evolve into Stage 3 boss with 10500 HP (8000 + 2500 HP).
 			// --
 			// Character limit: 25
 			// Character limit for each health stage: 5
@@ -721,10 +721,10 @@
 			// Minimum value for each health stage: 1
 			// Maximum value for each health stage: 65535
 			// --
-			// 1st number = Amount of health of the boss to make him evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "1" or higher.)
-			// 2nd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "2" or higher.)
-			// 3rd number = Amount of health of the boss to make him evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "3" or higher.)
-			// 4th number = Amount of health of the boss to make him evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "4" or higher.)
+			// 1st number = Amount of health of the boss to make it evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "1" or higher.)
+			// 2nd number = Amount of health of the boss to make it evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "2" or higher.)
+			// 3rd number = Amount of health of the boss to make it evolve/Amount of health given to Stage 4 boss. (The "Boss Stages" setting must be set to "3" or higher.)
+			// 4th number = Amount of health of the boss to make it evolve/Amount of health given to Stage 5 boss. (The "Boss Stages" setting must be set to "4" or higher.)
 			"Boss Health Stages"			"5000,2500,1666,1250"
 
 			// The number of stages for Mutant Tank bosses.
@@ -898,7 +898,7 @@
 			// 4th number = Alpha
 			"Rock Color"				"-1,-1,-1,-1"
 
-			// This is the model of the Mutant Tank's rocks, which includes the rocks attached to him and the ones that he throws/spawns.
+			// This is the model of the Mutant Tank's rocks, which includes the rocks attached to it and the ones that it throws/spawns.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF, use default model.
@@ -6911,6 +6911,22 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Medic Chance"				"33.3"
+
+			// The Mutant Tank creates a healing field visual effect around it when healing fellow special infected.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Medic Field"				"1"
+
+			// These are the RGB values of the Mutant Tank's healing field's color.
+			// Note: Any value less than "0" will output a random color.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			"Medic Field Color"			"0,255,0"
 
 			// The Mutant Tank gives special infected this much health each time.
 			// Note: This setting can be overridden for specific players.
