@@ -162,6 +162,7 @@ enum struct esGeneral
 
 	bool g_bAbilityPlugin[MT_MAX_ABILITIES + 1];
 	bool g_bCloneInstalled;
+	bool g_bForceSpawned;
 	bool g_bHideNameChange;
 	bool g_bMapStarted;
 	bool g_bPluginEnabled;
@@ -269,7 +270,6 @@ enum struct esGeneral
 	int g_iRegularMinType;
 	int g_iRegularMode;
 	int g_iRegularWave;
-	int g_iRemoveExtras;
 	int g_iRequiresHumans;
 	int g_iSection;
 	int g_iSpawnMode;
@@ -2455,13 +2455,10 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 		}
 		case false:
 		{
-			if (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT) || bIsDeveloper(admin))
+			switch (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT) || bIsDeveloper(admin))
 			{
-				vChangeTank(admin, amount, mode);
-			}
-			else
-			{
-				MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoCommandAccess");
+				case true: vChangeTank(admin, amount, mode);
+				case false: MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoCommandAccess");
 			}
 		}
 	}
@@ -2507,6 +2504,8 @@ static void vQueueTank(int admin, int type, bool mode = true)
 
 static void vSpawnTank(int admin, int type, int amount, int mode)
 {
+	g_esGeneral.g_bForceSpawned = true;
+
 	char sParameter[32];
 
 	switch (mode)
@@ -3152,7 +3151,6 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iMasterControl = 0;
 		g_esGeneral.g_iSpawnMode = 1;
 		g_esGeneral.g_flExtrasDelay = 3.0;
-		g_esGeneral.g_iRemoveExtras = 1;
 		g_esGeneral.g_iRegularAmount = 0;
 		g_esGeneral.g_flRegularDelay = 10.0;
 		g_esGeneral.g_flRegularInterval = 300.0;
@@ -3462,7 +3460,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iMasterControl = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "MasterControl", "Master Control", "Master_Control", "master", g_esGeneral.g_iMasterControl, value, 0, 1);
 			g_esGeneral.g_iSpawnMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "HumanSupport", "Human Support", "Human_Support", "human", key, "SpawnMode", "Spawn Mode", "Spawn_Mode", "spawnmode", g_esGeneral.g_iSpawnMode, value, 0, 1);
 			g_esGeneral.g_flExtrasDelay = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "ExtrasDelay", "Extras Delay", "Extras_Delay", "exdelay", g_esGeneral.g_flExtrasDelay, value, 0.1, 999999.0);
-			g_esGeneral.g_iRemoveExtras = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RemoveExtras", "Remove Extras", "Remove_Extras", "remex", g_esGeneral.g_iRemoveExtras, value, 0, 1);
 			g_esGeneral.g_iRegularAmount = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularAmount", "Regular Amount", "Regular_Amount", "regamount", g_esGeneral.g_iRegularAmount, value, 0, 32);
 			g_esGeneral.g_flRegularDelay = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularDelay", "Regular Delay", "Regular_Delay", "regdelay", g_esGeneral.g_flRegularDelay, value, 0.1, 999999.0);
 			g_esGeneral.g_flRegularInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Waves", "Waves", "Waves", "Waves", key, "RegularInterval", "Regular Interval", "Regular_Interval", "reginterval", g_esGeneral.g_flRegularInterval, value, 0.1, 999999.0);
@@ -4778,6 +4775,7 @@ static void vRemoveProps(int tank, int mode = 1)
 
 static void vReset()
 {
+	g_esGeneral.g_bForceSpawned = false;
 	g_esGeneral.g_bUsedParser = false;
 	g_esGeneral.g_iChosenType = 0;
 	g_esGeneral.g_iParserViewer = 0;
@@ -6473,8 +6471,13 @@ static int iGetTankCount(bool include = false)
 	iTankCount = 0;
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && (include || (g_esGeneral.g_bCloneInstalled && !MT_IsTankClone(iTank))))
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
+			if (!include && g_esGeneral.g_bCloneInstalled && MT_IsTankClone(iTank))
+			{
+				continue;
+			}
+
 			iTankCount++;
 		}
 	}
@@ -6502,11 +6505,6 @@ static Address adGetFirstContainedResponder(Address address)
 	return view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, address));
 }
 
-public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
-{
-	vResetTimers(true);
-}
-
 public void L4D_OnEnterGhostState(int client)
 {
 	if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_iTankType > 0)
@@ -6515,6 +6513,39 @@ public void L4D_OnEnterGhostState(int client)
 
 		CreateTimer(1.0, tTimerForceSpawnTank, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
+}
+
+public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
+{
+	vResetTimers(true);
+}
+
+public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
+{
+	if (g_esGeneral.g_bForceSpawned)
+	{
+		g_esGeneral.g_bForceSpawned = false;
+
+		return Plugin_Continue;
+	}
+
+	bool bBlock = false;
+	int iCount = iGetTankCount();
+
+	switch (g_esGeneral.g_iTankWave)
+	{
+		case 0: bBlock = 0 < g_esGeneral.g_iRegularAmount <= iCount;
+		default:
+		{
+			switch (g_esGeneral.g_iFinaleAmount)
+			{
+				case 0: bBlock = 0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount;
+				default: bBlock = 0 < g_esGeneral.g_iFinaleAmount <= iCount;
+			}
+		}
+	}
+
+	return bBlock ? Plugin_Handled : Plugin_Continue;
 }
 
 public MRESReturn mreTankRockPost(Handle hReturn)
@@ -7196,39 +7227,15 @@ public Action tTimerTankCountCheck(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iTank;
-	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTank(iTank))
+	static int iTank, iAmount, iCount;
+	iTank = GetClientOfUserId(pack.ReadCell()), iAmount = pack.ReadCell(), iCount = iGetTankCount();
+	if (!bIsTank(iTank) || iAmount == 0 || iCount >= iAmount || (!bIsFinaleMap() && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
 	{
 		return Plugin_Stop;
 	}
-
-	static int iAmount, iCount;
-	iAmount = pack.ReadCell(), iCount = iGetTankCount();
-	if (iAmount == 0 || iCount == iAmount || (!bIsFinaleMap() && g_esGeneral.g_iTankWave == 0 && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1))
-	{
-		return Plugin_Stop;
-	}
-
-	if (iCount < iAmount)
+	else if (iCount < iAmount)
 	{
 		vRegularSpawn();
-	}
-	else if (iCount > iAmount && g_esGeneral.g_iRemoveExtras == 1)
-	{
-		switch (bIsValidClient(iTank, MT_CHECK_FAKECLIENT))
-		{
-			case true: ForcePlayerSuicide(iTank);
-			case false:
-			{
-				vReset2(iTank);
-				vReset3(iTank);
-				vCacheSettings(iTank);
-				vResetCore(iTank);
-				vKillRandomizeTimer(iTank);
-				KickClient(iTank);
-			}
-		}
 	}
 
 	return Plugin_Continue;
