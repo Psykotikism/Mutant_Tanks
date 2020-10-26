@@ -5798,6 +5798,8 @@ static void vMutateTank(int tank)
 			g_esPlayer[tank].g_bKeepCurrentType = false;
 		}
 	}
+
+	g_esGeneral.g_bForceSpawned = false;
 }
 
 static void vRandomize(int tank)
