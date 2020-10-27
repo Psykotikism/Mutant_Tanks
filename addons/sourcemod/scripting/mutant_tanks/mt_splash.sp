@@ -695,7 +695,7 @@ public Action tTimerSplash(Handle timer, DataPack pack)
 			flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 			if (flDistance <= g_esCache[iTank].g_flSplashRange)
 			{
-				vDamageEntity(iSurvivor, iTank, g_esCache[iTank].g_flSplashDamage, "65536");
+				vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(g_esCache[iTank].g_flSplashDamage), "65536");
 			}
 		}
 	}

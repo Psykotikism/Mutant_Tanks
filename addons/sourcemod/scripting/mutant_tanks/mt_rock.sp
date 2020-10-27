@@ -606,7 +606,7 @@ static void vRock(int tank)
 	}
 
 	static char sDamage[11];
-	IntToString(g_esCache[tank].g_iRockDamage, sDamage, sizeof(sDamage));
+	IntToString(RoundToNearest(MT_GetScaledDamage(float(g_esCache[tank].g_iRockDamage))), sDamage, sizeof(sDamage));
 
 	static float flPos[3], flAngles[3];
 	GetClientEyePosition(tank, flPos);

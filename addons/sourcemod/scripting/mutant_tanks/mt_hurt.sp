@@ -773,7 +773,7 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	vDamageEntity(iSurvivor, iTank, g_esCache[iTank].g_flHurtDamage);
+	vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(g_esCache[iTank].g_flHurtDamage));
 	EmitSoundToAll(SOUND_ATTACK, iSurvivor);
 
 	return Plugin_Continue;

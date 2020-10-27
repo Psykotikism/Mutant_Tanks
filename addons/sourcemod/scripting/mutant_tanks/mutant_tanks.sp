@@ -58,6 +58,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MT_GetMinType", aNative_GetMinType);
 	CreateNative("MT_GetPropColors", aNative_GetPropColors);
 	CreateNative("MT_GetRunSpeed", aNative_GetRunSpeed);
+	CreateNative("MT_GetScaledDamage", aNative_GetScaledDamage);
 	CreateNative("MT_GetTankColors", aNative_GetTankColors);
 	CreateNative("MT_GetTankName", aNative_GetTankName);
 	CreateNative("MT_GetTankType", aNative_GetTankType);
@@ -193,6 +194,7 @@ enum struct esGeneral
 	DynamicDetour g_ddLauncherDirectionDetour;
 	DynamicDetour g_ddTankRockDetour;
 
+	float g_flDifficultyDamage[4];
 	float g_flExtrasDelay;
 	float g_flIdleCheck;
 	float g_flRegularDelay;
@@ -271,6 +273,7 @@ enum struct esGeneral
 	int g_iRegularMode;
 	int g_iRegularWave;
 	int g_iRequiresHumans;
+	int g_iScaleDamage;
 	int g_iSection;
 	int g_iSpawnMode;
 	int g_iTankWave;
@@ -518,13 +521,27 @@ esCache g_esCache[MAXPLAYERS + 1];
 public any aNative_CanTypeSpawn(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
-	return iType > 0 && g_esTank[iType].g_iSpawnEnabled == 1 && bCanTypeSpawn(iType);
+	if (iType <= 0)
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+
+		return false;
+	}
+
+	return g_esTank[iType].g_iSpawnEnabled == 1 && bCanTypeSpawn(iType);
 }
 
 public any aNative_DoesTypeRequireHumans(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
-	return iType > 0 && bAreHumansRequired(iType);
+	if (iType <= 0)
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+
+		return false;
+	}
+
+	return bAreHumansRequired(iType);
 }
 
 public any aNative_GetAccessFlags(Handle plugin, int numParams)
@@ -532,12 +549,33 @@ public any aNative_GetAccessFlags(Handle plugin, int numParams)
 	int iMode = GetNativeCell(1), iType = GetNativeCell(2), iAdmin = GetNativeCell(3);
 	if (iMode > 0)
 	{
+		if ((iMode == 2 || iMode == 4) && iType <= 0)
+		{
+			return ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+		}
+
+		if ((iMode == 3 || iMode == 4))
+		{
+			if (!bIsValidClient(iAdmin, MT_CHECK_INDEX))
+			{
+				return ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iAdmin);
+			}
+			else if (!bIsValidClient(iAdmin, MT_CHECK_INGAME))
+			{
+				return ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iAdmin);
+			}
+			else if (!bIsValidClient(iAdmin, MT_CHECK_FAKECLIENT))
+			{
+				return ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is a fake client", iAdmin);
+			}
+		}
+
 		switch (iMode)
 		{
 			case 1: return g_esGeneral.g_iAccessFlags;
-			case 2: return (iType > 0) ? g_esTank[iType].g_iAccessFlags : 0;
-			case 3: return bIsValidClient(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) ? g_esPlayer[iAdmin].g_iAccessFlags : 0;
-			case 4: return (bIsValidClient(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && iType > 0) ? g_esAdmin[iType].g_iAccessFlags[iAdmin] : 0;
+			case 2: return g_esTank[iType].g_iAccessFlags;
+			case 3: return g_esPlayer[iAdmin].g_iAccessFlags;
+			case 4: return g_esAdmin[iType].g_iAccessFlags[iAdmin];
 		}
 	}
 
@@ -554,12 +592,33 @@ public any aNative_GetImmunityFlags(Handle plugin, int numParams)
 	int iMode = GetNativeCell(1), iType = GetNativeCell(2), iAdmin = GetNativeCell(3);
 	if (iMode > 0)
 	{
+		if ((iMode == 2 || iMode == 4) && iType <= 0)
+		{
+			return ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+		}
+
+		if ((iMode == 3 || iMode == 4))
+		{
+			if (!bIsValidClient(iAdmin, MT_CHECK_INDEX))
+			{
+				return ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iAdmin);
+			}
+			else if (!bIsValidClient(iAdmin, MT_CHECK_INGAME))
+			{
+				return ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iAdmin);
+			}
+			else if (!bIsValidClient(iAdmin, MT_CHECK_FAKECLIENT))
+			{
+				return ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is a fake client", iAdmin);
+			}
+		}
+
 		switch (iMode)
 		{
 			case 1: return g_esGeneral.g_iImmunityFlags;
-			case 2: return (iType > 0) ? g_esTank[iType].g_iImmunityFlags : 0;
-			case 3: return bIsValidClient(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) ? g_esPlayer[iAdmin].g_iImmunityFlags : 0;
-			case 4: return (bIsValidClient(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && iType > 0) ? g_esAdmin[iType].g_iImmunityFlags[iAdmin] : 0;
+			case 2: return g_esTank[iType].g_iImmunityFlags;
+			case 3: return g_esPlayer[iAdmin].g_iImmunityFlags;
+			case 4: return g_esAdmin[iType].g_iImmunityFlags[iAdmin];
 		}
 	}
 
@@ -579,106 +638,255 @@ public any aNative_GetMinType(Handle plugin, int numParams)
 public any aNative_GetPropColors(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		int iType = iClamp(GetNativeCell(2), 1, 8), iColor[4];
-		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
 		{
-			switch (iType)
-			{
-				case 1: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iLightColor[iPos]);
-				case 2: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iOzTankColor[iPos]);
-				case 3: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iFlameColor[iPos]);
-				case 4: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iRockColor[iPos]);
-				case 5: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iTireColor[iPos]);
-				case 6: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iPropTankColor[iPos]);
-				case 7: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iFlashlightColor[iPos]);
-				case 8: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iCrownColor[iPos]);
-			}
-
-			SetNativeCellRef(iPos + 3, iColor[iPos]);
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
 		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+
+		return;
+	}
+
+	int iType = GetNativeCell(2);
+	if (iType < 1 || iType > 8)
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+
+		return;
+	}
+
+	int iColor[4];
+	for (int iPos = 0; iPos < sizeof(iColor); iPos++)
+	{
+		switch (iType)
+		{
+			case 1: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iLightColor[iPos]);
+			case 2: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iOzTankColor[iPos]);
+			case 3: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iFlameColor[iPos]);
+			case 4: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iRockColor[iPos]);
+			case 5: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iTireColor[iPos]);
+			case 6: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iPropTankColor[iPos]);
+			case 7: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iFlashlightColor[iPos]);
+			case 8: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iCrownColor[iPos]);
+		}
+
+		SetNativeCellRef(iPos + 3, iColor[iPos]);
 	}
 }
 
 public any aNative_GetRunSpeed(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	return (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esCache[iTank].g_flRunSpeed > 0.0) ? g_esCache[iTank].g_flRunSpeed : 1.0;
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+
+		return 0.0;
+	}
+
+	return (g_esCache[iTank].g_flRunSpeed > 0.0) ? g_esCache[iTank].g_flRunSpeed : 1.0;
+}
+
+public any aNative_GetScaledDamage(Handle plugin, int numParams)
+{
+	return flGetScaledDamage(GetNativeCell(1));
 }
 
 public any aNative_GetTankColors(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		int iType = GetNativeCell(2), iColor[4];
-		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
 		{
-			switch (iType)
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+
+		return;
+	}
+
+	int iType = GetNativeCell(2);
+	if (iType < 1 || iType > 2)
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+
+		return;
+	}
+
+	int iColor[4];
+	for (int iPos = 0; iPos < sizeof(iColor); iPos++)
+	{
+		switch (iType)
+		{
+			case 1: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iSkinColor[iPos]);
+			case 2:
 			{
-				case 1: iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iSkinColor[iPos]);
-				case 2:
+				if (iPos < sizeof(esCache::g_iGlowColor))
 				{
-					if (iPos < sizeof(esCache::g_iGlowColor))
-					{
-						iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iGlowColor[iPos]);
-					}
+					iColor[iPos] = iGetRandomColor(g_esCache[iTank].g_iGlowColor[iPos]);
 				}
 			}
-
-			SetNativeCellRef(iPos + 3, iColor[iPos]);
 		}
+
+		SetNativeCellRef(iPos + 3, iColor[iPos]);
 	}
 }
 
 public any aNative_GetTankName(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		char sTankName[33];
-		vGetName(sTankName, sizeof(sTankName), iTank);
-		SetNativeString(2, sTankName, sizeof(sTankName));
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+
+		return;
 	}
+
+	char sTankName[33];
+	vGetName(sTankName, sizeof(sTankName), iTank);
+	SetNativeString(2, sTankName, sizeof(sTankName));
 }
 
 public any aNative_GetTankType(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	return bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) ? g_esPlayer[iTank].g_iTankType : 0;
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
+		{
+			return ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			return ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+	}
+
+	return g_esPlayer[iTank].g_iTankType;
 }
 
 public any aNative_HasAdminAccess(Handle plugin, int numParams)
 {
 	int iAdmin = GetNativeCell(1);
-	return bIsTank(iAdmin) && bHasCoreAdminAccess(iAdmin);
+	if (!bIsTank(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		if (!bIsTank(iAdmin, MT_CHECK_INDEX))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iAdmin);
+		}
+		else if (!bIsTank(iAdmin, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iAdmin);
+		}
+		else if (!bIsTank(iAdmin, MT_CHECK_FAKECLIENT))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is a fake client", iAdmin);
+		}
+
+		return false;
+	}
+
+	return bHasCoreAdminAccess(iAdmin);
 }
 
 public any aNative_HasChanceToSpawn(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
-	return iType > 0 && bTankChance(iType);
+	if (iType <= 0)
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+
+		return false;
+	}
+
+	return bTankChance(iType);
 }
 
 public any aNative_HideEntity(Handle plugin, int numParams)
 {
 	int iEntity = GetNativeCell(1);
 	bool bMode = GetNativeCell(2);
-	if (bIsValidEntity(iEntity))
+	if (!bIsValidEntity(iEntity))
 	{
-		switch (bMode)
-		{
-			case true: SDKHook(iEntity, SDKHook_SetTransmit, SetTransmit);
-			case false: SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
-		}
+		ThrowNativeError(SP_ERROR_NATIVE, "Entity index %i is invalid", iEntity);
+
+		return;
+	}
+
+	switch (bMode)
+	{
+		case true: SDKHook(iEntity, SDKHook_SetTransmit, SetTransmit);
+		case false: SDKUnhook(iEntity, SDKHook_SetTransmit, SetTransmit);
 	}
 }
 
 public any aNative_IsAdminImmune(Handle plugin, int numParams)
 {
 	int iSurvivor = GetNativeCell(1), iTank = GetNativeCell(2);
-	return bIsHumanSurvivor(iSurvivor) && bIsTank(iTank) && bIsCoreAdminImmune(iSurvivor, iTank);
+	if (!bIsHumanSurvivor(iSurvivor))
+	{
+		if (!bIsHumanSurvivor(iSurvivor, MT_CHECK_INDEX))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iSurvivor);
+		}
+		else if (!bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iSurvivor);
+		}
+		else if (!bIsHumanSurvivor(iSurvivor, MT_CHECK_ALIVE))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is dead", iSurvivor);
+		}
+		else if (!bIsHumanSurvivor(iSurvivor, MT_CHECK_FAKECLIENT))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is a fake client", iSurvivor);
+		}
+		else if (bHasIdlePlayer(iSurvivor) || bIsPlayerIdle(iSurvivor))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is idle", iSurvivor);
+		}
+
+		return false;
+	}
+
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+
+		return false;
+	}
+
+	return bIsCoreAdminImmune(iSurvivor, iTank);
 }
 
 public any aNative_IsCorePluginEnabled(Handle plugin, int numParams)
@@ -688,41 +896,140 @@ public any aNative_IsCorePluginEnabled(Handle plugin, int numParams)
 
 public any aNative_IsCustomTankSupported(Handle plugin, int numParams)
 {
-	return bIsCustomTankAllowed(GetNativeCell(1));
+	int iTank = GetNativeCell(1);
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+	{
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_ALIVE))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is dead", iTank);
+		}
+
+		return false;
+	}
+
+	return bIsCustomTankAllowed(iTank);
 }
 
 public any aNative_IsFinaleType(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
-	return iType > 0 && g_esTank[iType].g_iFinaleTank == 1;
+	if (iType <= 0)
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+
+		return false;
+	}
+
+	return g_esTank[iType].g_iFinaleTank == 1;
 }
 
 public any aNative_IsGlowEnabled(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	return bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esCache[iTank].g_iGlowEnabled == 1;
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+
+		return false;
+	}
+
+	return g_esCache[iTank].g_iGlowEnabled == 1;
 }
 
 public any aNative_IsNonFinaleType(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
-	return iType > 0 && g_esTank[iType].g_iFinaleTank == 2;
+	if (iType <= 0)
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+
+		return false;
+	}
+
+	return g_esTank[iType].g_iFinaleTank == 2;
 }
 
 public any aNative_IsTankIdle(Handle plugin, int numParams)
 {
-	return bIsTankIdle(GetNativeCell(1), GetNativeCell(2));
+	int iTank = GetNativeCell(1), iType = GetNativeCell(2);
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+	{
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_ALIVE))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is dead", iTank);
+		}
+
+		return false;
+	}
+
+	if (iType < 0 || iType > 2)
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+
+		return false;
+	}
+
+	return bIsTankIdle(iTank, iType);
 }
 
 public any aNative_IsTankSupported(Handle plugin, int numParams)
 {
-	return bIsTankAllowed(GetNativeCell(1), GetNativeCell(2));
+	int iTank = GetNativeCell(1);
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+	{
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_ALIVE))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is dead", iTank);
+		}
+
+		return false;
+	}
+
+	return bIsTankAllowed(iTank, GetNativeCell(2));
 }
 
 public any aNative_IsTypeEnabled(Handle plugin, int numParams)
 {
 	int iType = GetNativeCell(1);
-	return iType > 0 && g_esTank[iType].g_iTankEnabled == 1 && bIsTypeAvailable(iType);
+	if (iType <= 0)
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+
+		return false;
+	}
+
+	return g_esTank[iType].g_iTankEnabled == 1 && bIsTypeAvailable(iType);
 }
 
 public any aNative_LogMessage(Handle plugin, int numParams)
@@ -743,22 +1050,44 @@ public any aNative_SetTankType(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1), iType = GetNativeCell(2);
 	bool bMode = GetNativeCell(3);
-	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
 	{
-		switch (bMode)
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
 		{
-			case true:
-			{
-				vSetColor(iTank, iType);
-				vTankSpawn(iTank, 5);
-			}
-			case false:
-			{
-				vNewTankSettings(iTank);
-				g_esPlayer[iTank].g_iOldTankType = g_esPlayer[iTank].g_iTankType;
-				g_esPlayer[iTank].g_iTankType = iType;
-				vCacheSettings(iTank);
-			}
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_ALIVE))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is dead", iTank);
+		}
+
+		return;
+	}
+
+	if (iType <= 0)
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+
+		return;
+	}
+
+	switch (bMode)
+	{
+		case true:
+		{
+			vSetColor(iTank, iType);
+			vTankSpawn(iTank, 5);
+		}
+		case false:
+		{
+			vNewTankSettings(iTank);
+			g_esPlayer[iTank].g_iOldTankType = g_esPlayer[iTank].g_iTankType;
+			g_esPlayer[iTank].g_iTankType = iType;
+			vCacheSettings(iTank);
 		}
 	}
 }
@@ -766,10 +1095,28 @@ public any aNative_SetTankType(Handle plugin, int numParams)
 public any aNative_SpawnTank(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1), iType = GetNativeCell(2);
-	if (bIsValidClient(iTank))
+	if (!bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		vQueueTank(iTank, iType);
+		if (!bIsTank(iTank, MT_CHECK_INDEX))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is invalid", iTank);
+		}
+		else if (!bIsTank(iTank, MT_CHECK_INGAME))
+		{
+			ThrowNativeError(SP_ERROR_NATIVE, "Client index %i is not in-game", iTank);
+		}
+
+		return;
 	}
+
+	if (iType <= 0)
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid type (%i)", iType);
+
+		return;
+	}
+
+	vQueueTank(iTank, iType);
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -1023,7 +1370,7 @@ public void OnConfigsExecuted()
 		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/difficulty_configs/");
 		CreateDirectory(sSMPath, 511);
 
-		char sDifficulty[32];
+		char sDifficulty[11];
 		for (int iDifficulty = 0; iDifficulty <= 3; iDifficulty++)
 		{
 			switch (iDifficulty)
@@ -2842,15 +3189,15 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			if (StrEqual(sClassname, "weapon_tank_claw") && g_esCache[attacker].g_flClawDamage >= 0.0)
 			{
-				damage = g_esCache[attacker].g_flClawDamage;
+				damage = flGetScaledDamage(g_esCache[attacker].g_flClawDamage);
 
-				return g_esCache[attacker].g_flClawDamage > 0.0 ? Plugin_Changed : Plugin_Handled;
+				return (g_esCache[attacker].g_flClawDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 			}
 			else if (StrEqual(sClassname, "tank_rock") && g_esCache[attacker].g_flRockDamage >= 0.0)
 			{
-				damage = g_esCache[attacker].g_flRockDamage;
+				damage = flGetScaledDamage(g_esCache[attacker].g_flRockDamage);
 
-				return g_esCache[attacker].g_flRockDamage > 0.0 ? Plugin_Changed : Plugin_Handled;
+				return (g_esCache[attacker].g_flRockDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 			}
 		}
 		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsCommonInfected(victim))
@@ -3138,6 +3485,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iMinType = 1;
 		g_esGeneral.g_iMaxType = MT_MAXTYPES;
 		g_esGeneral.g_iRequiresHumans = 0;
+		g_esGeneral.g_iScaleDamage = 0;
 		g_esGeneral.g_iBaseHealth = 0;
 		g_esGeneral.g_iDisplayHealth = 11;
 		g_esGeneral.g_iDisplayHealthType = 1;
@@ -3172,6 +3520,11 @@ public void SMCParseStart(SMCParser smc)
 			g_esGeneral.g_iFinaleMaxTypes[iPos] = 0;
 			g_esGeneral.g_iFinaleMinTypes[iPos] = 0;
 			g_esGeneral.g_iFinaleWave[iPos] = 0;
+
+			if (iPos < sizeof(esGeneral::g_flDifficultyDamage))
+			{
+				g_esGeneral.g_flDifficultyDamage[iPos] = 0.0;
+			}
 		}
 
 		for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
@@ -3451,6 +3804,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iIdleCheckMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "IdleCheckMode", "Idle Check Mode", "Idle_Check_Mode", "idlemode", g_esGeneral.g_iIdleCheckMode, value, 0, 2);
 			g_esGeneral.g_iLogMessages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "LogMessages", "Log Messages", "Log_Messages", "log", g_esGeneral.g_iLogMessages, value, 0, 31);
 			g_esGeneral.g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGeneral.g_iRequiresHumans, value, 0, 32);
+			g_esGeneral.g_iScaleDamage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Difficulty", "Difficulty", "Difficulty", "Difficulty", key, "ScaleDamage", "Scale Damage", "Scale_Damage", "scaledmg", g_esGeneral.g_iScaleDamage, value, 0, 1);
 			g_esGeneral.g_iBaseHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "BaseHealth", "Base Health", "Base_Health", "health", g_esGeneral.g_iBaseHealth, value, 0, MT_MAXHEALTH);
 			g_esGeneral.g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esGeneral.g_iDisplayHealth, value, 0, 11);
 			g_esGeneral.g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esGeneral.g_iDisplayHealthType, value, 0, 2);
@@ -3483,7 +3837,24 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					g_esGeneral.g_iMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 1, MT_MAXTYPES) : g_esGeneral.g_iMaxType;
 				}
 			}
-			if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Health", false))
+			else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Difficulty", false))
+			{
+				if (StrEqual(key, "DifficultyDamage", false) || StrEqual(key, "Difficulty Damage", false) || StrEqual(key, "Difficulty_Damage", false) || StrEqual(key, "diffdmg", false))
+				{
+					static char sValue[36];
+					strcopy(sValue, sizeof(sValue), value);
+					ReplaceString(sValue, sizeof(sValue), " ", "");
+
+					static char sSet[4][9];
+					ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+					for (int iPos = 0; iPos < sizeof(esGeneral::g_flDifficultyDamage); iPos++)
+					{
+						g_esGeneral.g_flDifficultyDamage[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 999999.0) : g_esGeneral.g_flDifficultyDamage[iPos];
+					}
+				}
+			}
+			else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Health", false))
 			{
 				if (StrEqual(key, "HealthCharacters", false) || StrEqual(key, "Health Characters", false) || StrEqual(key, "Health_Characters", false) || StrEqual(key, "hpchars", false))
 				{
@@ -6324,6 +6695,25 @@ static bool bIsTypeAvailable(int type, int tank = 0)
 static bool bTankChance(int type)
 {
 	return GetRandomFloat(0.1, 100.0) <= g_esTank[type].g_flTankChance;
+}
+
+static float flGetScaledDamage(float damage)
+{
+	if (g_esGeneral.g_iScaleDamage == 1)
+	{
+		static char sDifficulty[11];
+		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
+
+		switch (sDifficulty[0])
+		{
+			case 'e': return (g_esGeneral.g_flDifficultyDamage[0] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[0]) : damage;
+			case 'n': return (g_esGeneral.g_flDifficultyDamage[1] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[1]) : damage;
+			case 'h': return (g_esGeneral.g_flDifficultyDamage[2] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[2]) : damage;
+			case 'i': return (g_esGeneral.g_flDifficultyDamage[3] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[3]) : damage;
+		}
+	}
+
+	return damage;
 }
 
 static int iChooseTank(int tank, int exclude, int min = 0, int max = 0, bool mutate = true)

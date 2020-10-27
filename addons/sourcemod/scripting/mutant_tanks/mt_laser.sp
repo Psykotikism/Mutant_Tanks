@@ -591,7 +591,7 @@ static void vLaser(int tank)
 		TE_SetupBeamPoints(flTankPos, flSurvivorPos, g_iLaserSprite, 0, 0, 0, 0.5, 5.0, 5.0, 1, 0.0, iColor, 0);
 		TE_SendToAll();
 
-		vDamageEntity(iSurvivor, tank, g_esCache[tank].g_flLaserDamage, "1024");
+		vDamageEntity(iSurvivor, tank, MT_GetScaledDamage(g_esCache[tank].g_flLaserDamage), "1024");
 
 		if (g_esCache[tank].g_iLaserMessage == 1)
 		{

@@ -318,6 +318,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					return Plugin_Handled;
 				}
+
+				damage = MT_GetScaledDamage(damage);
+
+				return Plugin_Changed;
 			}
 		}
 	}

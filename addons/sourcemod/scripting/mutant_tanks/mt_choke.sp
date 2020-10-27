@@ -843,7 +843,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
 	SetEntityGravity(iSurvivor, 1.0);
 
-	vDamageEntity(iSurvivor, iTank, g_esCache[iTank].g_flChokeDamage, "16384");
+	vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(g_esCache[iTank].g_flChokeDamage), "16384");
 
 	return Plugin_Continue;
 }

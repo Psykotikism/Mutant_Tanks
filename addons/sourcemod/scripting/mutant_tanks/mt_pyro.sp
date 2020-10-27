@@ -393,8 +393,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					{
 						switch (g_esCache[attacker].g_iPyroMode)
 						{
-							case 0: damage += g_esCache[attacker].g_flPyroDamageBoost;
-							case 1: damage = g_esCache[attacker].g_flPyroDamageBoost;
+							case 0:
+							{
+								damage += g_esCache[attacker].g_flPyroDamageBoost;
+								damage = MT_GetScaledDamage(damage);
+							}
+							case 1: damage = MT_GetScaledDamage(g_esCache[attacker].g_flPyroDamageBoost);
 						}
 
 						return Plugin_Changed;

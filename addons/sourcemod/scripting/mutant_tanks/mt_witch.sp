@@ -301,7 +301,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					return Plugin_Handled;
 				}
 
-				damage = g_esCache[iOwner].g_flWitchDamage;
+				damage = MT_GetScaledDamage(g_esCache[iOwner].g_flWitchDamage);
 
 				return Plugin_Changed;
 			}

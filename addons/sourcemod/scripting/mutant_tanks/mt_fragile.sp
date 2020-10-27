@@ -389,8 +389,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				switch (g_esCache[attacker].g_iFragileMode)
 				{
-					case 0: damage += g_esCache[attacker].g_flFragileDamageBoost;
-					case 1: damage = g_esCache[attacker].g_flFragileDamageBoost;
+					case 0:
+					{
+						damage += g_esCache[attacker].g_flFragileDamageBoost;
+						damage = MT_GetScaledDamage(damage);
+					}
+					case 1: damage = MT_GetScaledDamage(g_esCache[attacker].g_flFragileDamageBoost);
 				}
 
 				return Plugin_Changed;

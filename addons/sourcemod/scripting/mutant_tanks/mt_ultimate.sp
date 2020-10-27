@@ -406,6 +406,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				if (g_esPlayer[attacker].g_bActivated && (g_esPlayer[attacker].g_iCooldown == -1 || g_esPlayer[attacker].g_iCooldown < GetTime()))
 				{
 					damage *= g_esCache[attacker].g_flUltimateDamageBoost;
+					damage = MT_GetScaledDamage(damage);
 
 					return Plugin_Changed;
 				}

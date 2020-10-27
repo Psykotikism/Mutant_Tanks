@@ -621,7 +621,7 @@ static void vMeteor(int tank, int rock)
 					flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 					if (flDistance < 200.0)
 					{
-						vDamageEntity(iSurvivor, tank, g_esCache[tank].g_flMeteorDamage, "16");
+						vDamageEntity(iSurvivor, tank, MT_GetScaledDamage(g_esCache[tank].g_flMeteorDamage), "16");
 					}
 				}
 			}

@@ -263,7 +263,7 @@ forward Action MT_OnTypeChosen(int &type, int tank);
  *
  * @param type			Mutant Tank type.
  * @return			True if the type can spawn, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_CanTypeSpawn(int type);
 
@@ -272,7 +272,7 @@ native bool MT_CanTypeSpawn(int type);
  *
  * @param type			Mutant Tank type.
  * @return			True if the type requires human-controlled survivors to be present, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_DoesTypeRequireHumans(int type);
 
@@ -283,7 +283,7 @@ native bool MT_DoesTypeRequireHumans(int type);
  * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
  * @return			The current access flags.
- * @error			Invalid client index or type is 0.
+ * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
 native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
 
@@ -301,7 +301,7 @@ native int MT_GetCurrentFinaleWave();
  * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
  * @return			The current immunity flags.
- * @error			Invalid client index or type is 0.
+ * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
 native int MT_GetImmunityFlags(int mode, int type = 0, int admin = -1);
 
@@ -324,12 +324,12 @@ native int MT_GetMinType();
  *
  * @param tank			Client index of the Tank.
  * @param type			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color, 4 = Rock color,
- *				5 = Tire color, 6 = Propane tank color, 7 = Flashlight color, 8 = Crown color
+ *					5 = Tire color, 6 = Propane tank color, 7 = Flashlight color, 8 = Crown color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
- * @error			Invalid client index.
+ * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 8.
  **/
 native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
@@ -338,9 +338,17 @@ native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue
  *
  * @param tank			Client index of the Tank.
  * @return			The run speed of the Tank.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native float MT_GetRunSpeed(int tank);
+
+/**
+ * Returns the scaled damage based on difficulty.
+ *
+ * @param damage		Base damage to scale.
+ * @return			The scaled damage based on difficulty.
+ **/
+native float MT_GetScaledDamage(float damage);
 
 /**
  * Returns the RGB colors given to a Mutant Tank.
@@ -351,7 +359,7 @@ native float MT_GetRunSpeed(int tank);
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
- * @error			Invalid client index.
+ * @error			Invalid client index, client is not in-game or type is less than 1 or greater than 2.
  **/
 native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
@@ -360,7 +368,7 @@ native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue
  *
  * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom name in.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native void MT_GetTankName(int tank, char[] buffer);
 
@@ -369,7 +377,7 @@ native void MT_GetTankName(int tank, char[] buffer);
  *
  * @param tank			Client index of the Tank.
  * @return			The Tank's Mutant Tank type.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native int MT_GetTankType(int tank);
 
@@ -378,6 +386,7 @@ native int MT_GetTankType(int tank);
  *
  * @param admin			Client index of the admin.
  * @return			True if the human player has access, false otherwise.
+ * @error			Invalid client index, client is not in-game, or client is a bot.
  **/
 native bool MT_HasAdminAccess(int admin);
 
@@ -386,7 +395,7 @@ native bool MT_HasAdminAccess(int admin);
  *
  * @param type			Mutant Tank type.
  * @return			True if the type has a chance of spawning, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_HasChanceToSpawn(int type);
 
@@ -405,6 +414,8 @@ native void MT_HideEntity(int entity, bool mode);
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
  * @return			True if the human survivor is immune, false otherwise.
+ * @error			Invalid survivor index, survivor is not in-game, survivor is dead, survivor is a bot, survivor is idle,
+ *					invalid Tank index, or Tank is not in-game.
  **/
 native bool MT_IsAdminImmune(int survivor, int tank);
 
@@ -429,7 +440,7 @@ native bool MT_IsCustomTankSupported(int tank);
  *
  * @param type			Mutant Tank type.
  * @return			True if the type is available, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_IsFinaleType(int type);
 
@@ -438,7 +449,7 @@ native bool MT_IsFinaleType(int type);
  *
  * @param tank			Client index of the Tank.
  * @return			True if the Tank has a glow outline, false otherwise.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native bool MT_IsGlowEnabled(int tank);
 
@@ -447,7 +458,7 @@ native bool MT_IsGlowEnabled(int tank);
  *
  * @param type			Mutant Tank type.
  * @return			True if the type is available, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_IsNonFinaleType(int type);
 
@@ -457,7 +468,7 @@ native bool MT_IsNonFinaleType(int type);
  * @param tank			Client index of the Tank.
  * @param type			Idle mode of the Tank. 0 = Both, 1 = Idle (waiting for survivors), 2 = Bugged (no behavior)
  * @return			True if the Tank is idle, false otherwise.
- * @error			Invalid client index.
+ * @error			Invalid client index, client is not in-game, client is dead, or type is less than 0 or greater than 2.
  **/
 native bool MT_IsTankIdle(int tank, int type = 0);
 
@@ -468,9 +479,9 @@ native bool MT_IsTankIdle(int tank, int type = 0);
  * @param flags			Checks to run.
  *					MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
  *					MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
- *				Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE
+ *					Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE
  * @return			True if the Tank is allowed to be a Mutant Tank, false otherwise.
- * @error			Invalid client index.
+ * @error			Invalid client index, client is not in-game, or client is dead.
  **/
 native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE);
 
@@ -479,7 +490,7 @@ native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_ING
  *
  * @param type			Mutant Tank type.
  * @return			True if the type is enabled, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_IsTypeEnabled(int type);
 
@@ -499,6 +510,7 @@ native void MT_LogMessage(int type = MT_LOG_CUSTOM, char[] message, any ...);
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
  * @param mode			True if the Tank should transform physically into the new Mutant Tank type, false otherwise.
+ * @error			Invalid client index, client is not in-game, client is dead, or type is 0 or less.
  **/
 native void MT_SetTankType(int tank, int type, bool mode);
 
@@ -507,7 +519,7 @@ native void MT_SetTankType(int tank, int type, bool mode);
  *
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
- * @error			Invalid client index or type is 0.
+ * @error			Invalid client index, client is not in-game, or type is 0 or less.
  **/
 native void MT_SpawnTank(int tank, int type);
 
@@ -731,7 +743,7 @@ stock bool ST_PluginEnabled()
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color,
- *				4 = Rock color, 5 = Tire color
+ *					4 = Rock color, 5 = Tire color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.
@@ -1027,6 +1039,7 @@ stock void vMultiTargetFilters(int toggle)
 			RemoveMultiTargetFilter("@tanks", bTankFilter);
 			RemoveMultiTargetFilter("@special", bSpecialFilter);
 			RemoveMultiTargetFilter("@infected", bInfectedFilter);
+			RemoveMultiTargetFilter("@mutants", bMutantFilter);
 		}
 		case 1:
 		{
@@ -1039,6 +1052,7 @@ stock void vMultiTargetFilters(int toggle)
 			AddMultiTargetFilter("@tanks", bTankFilter, "all Tanks", false);
 			AddMultiTargetFilter("@special", bSpecialFilter, "all Special Infected", false);
 			AddMultiTargetFilter("@infected", bInfectedFilter, "all Infected", false);
+			AddMultiTargetFilter("@mutants", bMutantFilter, "all Mutant Tanks", false);
 		}
 	}
 }
@@ -1206,10 +1220,7 @@ stock bool bHasIdlePlayer(int survivor)
 		{
 			static int iIdler;
 			iIdler = GetClientOfUserId(iSpectatorUserId);
-			if (iIdler > 0 && bIsValidClient(iIdler, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && GetClientTeam(iIdler) != 2)
-			{
-				return true;
-			}
+			return iIdler > 0 && bIsValidClient(iIdler, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && GetClientTeam(iIdler) != 2;
 		}
 	}
 
@@ -1305,12 +1316,7 @@ stock bool bIsCommonInfected(int common)
 
 stock bool bIsEntityGrounded(int entity)
 {
-	if ((HasEntProp(entity, Prop_Send, "m_fFlags") && (GetEntProp(entity, Prop_Send, "m_fFlags") & FL_ONGROUND)) || (HasEntProp(entity, Prop_Send, "m_hGroundEntity") && GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity") == 0))
-	{
-		return true;
-	}
-
-	return false;
+	return (HasEntProp(entity, Prop_Send, "m_fFlags") && (GetEntProp(entity, Prop_Send, "m_fFlags") & FL_ONGROUND)) || (HasEntProp(entity, Prop_Send, "m_hGroundEntity") && GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity") == 0);
 }
 
 stock bool bIsFinaleMap()
@@ -1322,12 +1328,7 @@ stock bool bIsGunWeapon(int survivor)
 {
 	static char sWeapon[32];
 	GetClientWeapon(survivor, sWeapon, sizeof(sWeapon));
-	if (GetPlayerWeaponSlot(survivor, 0) > 0 || (GetPlayerWeaponSlot(survivor, 1) > 0 && StrContains(sWeapon, "pistol", false) != -1))
-	{
-		return true;
-	}
-
-	return false;
+	return GetPlayerWeaponSlot(survivor, 0) > 0 || (GetPlayerWeaponSlot(survivor, 1) > 0 && StrContains(sWeapon, "pistol", false) != -1);
 }
 
 stock bool bIsHumanSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
@@ -1358,12 +1359,7 @@ stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_C
 
 stock bool bIsPlayerBurning(int player)
 {
-	if (GetEntPropFloat(player, Prop_Send, "m_burnPercent") > 0.0 || GetEntProp(player, Prop_Data, "m_fFlags") & FL_ONFIRE)
-	{
-		return true;
-	}
-
-	return false;
+	return GetEntPropFloat(player, Prop_Send, "m_burnPercent") > 0.0 || GetEntProp(player, Prop_Data, "m_fFlags") & FL_ONFIRE;
 }
 
 stock bool bIsPlayerIdle(int survivor)
@@ -1385,10 +1381,7 @@ stock bool bIsPlayerIdle(int survivor)
 			{
 				static int iIdler;
 				iIdler = GetClientOfUserId(iSpectatorUserId);
-				if (iIdler == survivor)
-				{
-					return true;
-				}
+				return iIdler == survivor;
 			}
 		}
 	}
@@ -1398,12 +1391,7 @@ stock bool bIsPlayerIdle(int survivor)
 
 stock bool bIsPlayerIncapacitated(int survivor)
 {
-	if (GetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1))
-	{
-		return true;
-	}
-
-	return false;
+	return GetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1) == 1;
 }
 
 stock bool bIsSmoker(int smoker, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
@@ -1564,6 +1552,19 @@ public bool bJockeyFilter(const char[] pattern, Handle clients)
 	return true;
 }
 
+public bool bMutantFilter(const char[] pattern, Handle clients)
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && MT_GetTankType(iPlayer) > 0)
+		{
+			PushArrayCell(clients, iPlayer);
+		}
+	}
+
+	return true;
+}
+
 public bool bSmokerFilter(const char[] pattern, Handle clients)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -1618,52 +1619,27 @@ public bool bTankFilter(const char[] pattern, Handle clients)
 
 public bool bTraceRayDontHitSelf(int entity, int mask, any data)
 {
-	if (entity == data)
-	{
-		return false;
-	}
-
-	return true;
+	return entity != data;
 }
 
 public bool bTraceRayDontHitSelfAndCommons(int entity, int mask, any data)
 {
-	if (entity == data || bIsCommonInfected(entity))
-	{
-		return false;
-	}
-
-	return true;
+	return entity != data && !bIsCommonInfected(entity);
 }
 
 public bool bTraceRayDontHitSelfAndInfected(int entity, int mask, any data)
 {
-	if (entity == data || bIsInfected(entity))
-	{
-		return false;
-	}
-
-	return true;
+	return entity != data && !bIsInfected(entity);
 }
 
 public bool bTraceRayDontHitSelfAndPlayer(int entity, int mask, any data)
 {
-	if (entity == data || bIsValidClient(entity, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
-	{
-		return false;
-	}
-
-	return true;
+	return entity != data && !bIsValidClient(entity, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE);
 }
 
 public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 {
-	if (entity == data || bIsSurvivor(entity))
-	{
-		return false;
-	}
-
-	return true;
+	return entity != data && !bIsSurvivor(entity);
 }
 
 stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
@@ -1720,14 +1696,13 @@ stock float flGetDistance(float pos[3], float angle[3], float offset1, float off
 
 	static float flDistance;
 	flDistance = flGetRayDistance(pos, flAngle, entity, type);
-
 	return flDistance;
 }
 
 stock float flGetGroundUnits(int entity)
 {
 	if (!(GetEntityFlags(entity) & FL_ONGROUND))
-	{ 
+	{
 		static float flOrigin[3], flPosition[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flOrigin);
 
@@ -2066,6 +2041,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_GetMinType");
 	MarkNativeAsOptional("MT_GetPropColors");
 	MarkNativeAsOptional("MT_GetRunSpeed");
+	MarkNativeAsOptional("MT_GetScaledDamage");
 	MarkNativeAsOptional("MT_GetTankColors");
 	MarkNativeAsOptional("MT_GetTankName");
 	MarkNativeAsOptional("MT_GetTankType");

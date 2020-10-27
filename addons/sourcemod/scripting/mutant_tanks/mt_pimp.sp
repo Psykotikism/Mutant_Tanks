@@ -767,7 +767,7 @@ public Action tTimerPimp(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	SlapPlayer(iSurvivor, g_esCache[iTank].g_iPimpDamage, true);
+	SlapPlayer(iSurvivor, RoundToNearest(MT_GetScaledDamage(float(g_esCache[iTank].g_iPimpDamage))), true);
 
 	return Plugin_Continue;
 }

@@ -674,7 +674,7 @@ public Action tTimerCloud(Handle timer, DataPack pack)
 			flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 			if (flDistance <= 200.0)
 			{
-				vDamageEntity(iSurvivor, iTank, g_esCache[iTank].g_flCloudDamage, "65536");
+				vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(g_esCache[iTank].g_flCloudDamage), "65536");
 			}
 		}
 	}
