@@ -3796,6 +3796,88 @@
 		"chi"			"水蛭 能力"
 	}
 
+	"Lightning"
+	{
+		"#format"		"{1:t}"
+		"en"			"{olive}{1}{mint} started a{yellow} lightning storm{mint}!"
+		"hu"			""
+		"chi"			"{olive}{1}{mint} 开始了{yellow} 雷电风暴{mint}!"
+	}
+
+	"Lightning2"
+	{
+		"#format"		"{1:t}"
+		"en"			"{olive}{1}'s{mint} lightning storm ended!"
+		"hu"			""
+		"chi"			"{olive}{1}{mint} 雷雨结束了!"
+	}
+
+	"LightningAmmo"
+	{
+		"en"			"You've used up all your lightning storms."
+		"hu"			""
+		"chi"			"您已经用尽了所有的雷电风暴."
+	}
+
+	"LightningDetails"
+	{
+		"en"			"You create lightning storms."
+		"hu"			""
+		"chi"			"您会产生闪电风暴."
+	}
+
+	"LightningHuman"
+	{
+		"#format"		"{1:i},{2:i}"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lightning storms!"
+		"hu"			""
+		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 的闪电风暴!"
+	}
+
+	"LightningHuman2"
+	{
+		"en"			"Your lightning storm failed to activate. Try again."
+		"hu"			""
+		"chi"			"您的闪电风暴未能激活. 再试一次."
+	}
+
+	"LightningHuman3"
+	{
+		"en"			"You already activated your lightning storm."
+		"hu"			""
+		"chi"			"您已经激活了闪电风暴."
+	}
+
+	"LightningHuman4"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your lightning storm still needs another{yellow} {1} second(s){mint} to recharge."
+		"hu"			""
+		"chi"			"您的雷雨仍然需要另外{yellow} {1} 秒{mint} 进行充能."
+	}
+
+	"LightningHuman5"
+	{
+		"#format"		"{1:i}"
+		"en"			"Your lightning storm ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"hu"			""
+		"chi"			"您的闪电风暴结束了，需要{yellow} {1} 秒{mint} 进行充能."
+	}
+
+	"LightningMenu"
+	{
+		"en"			"Lightning Ability Information"
+		"hu"			""
+		"chi"			"闪电能力信息"
+	}
+
+	"LightningMenu2"
+	{
+		"en"			"Lightning Ability"
+		"hu"			""
+		"chi"			"闪电能力"
+	}
+
 	"Medic"
 	{
 		"#format"		"{1:t}"
@@ -7387,1104 +7469,1118 @@
 
 	"Tank #43 Name"
 	{
+		"en"			"Lightning Tank"
+		"hu"			""
+		"chi"			"闪电坦克"
+	}
+
+	"Tank #43"
+	{
+		"en"			"{mint}This Tank creates lightning storms..."
+		"hu"			""
+		"chi"			"{mint}这辆战车制造了闪电风暴..."
+	}
+
+	"Tank #44 Name"
+	{
 		"en"			"Medic Tank"
 		"hu"			"Gyógyító Tank"
 		"chi"			"军用坦克"
 	}
 
-	"Tank #43"
+	"Tank #44"
 	{
 		"en"			"{mint}This Tank can heal nearby special infected upon death."
 		"hu"			"{mint}Ez a Tank gyógyítja a közeli speciális fertőzötteket a halála pillanatában."
 		"chi"			"{mint}这个坦克死亡后会治愈附近的特殊感染者."
 	}
 
-	"Tank #44 Name"
+	"Tank #45 Name"
 	{
 		"en"			"Meteor Tank"
 		"hu"			"Meteor Tank"
 		"chi"			"流星坦克"
 	}
 
-	"Tank #44"
+	"Tank #45"
 	{
 		"en"			"{mint}This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
 		"hu"			"{mint}Ez a Tank meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
 		"chi"			"{mint}这个坦克可以召唤带火焰和爆炸效果的流星雨,会持续好几秒."
 	}
 
-	"Tank #45 Name"
+	"Tank #46 Name"
 	{
 		"en"			"Necromancer Tank"
 		"hu"			"Nekromanta Tank"
 		"chi"			"死灵法师坦克"
 	}
 
-	"Tank #45"
+	"Tank #46"
 	{
 		"en"			"{mint}This Tank can resurrect dead special infected."
 		"hu"			"{mint}Ez a Tank visszahozhatja a halott speciális fertőzötteket."
 		"chi"			"{mint}这个坦克可以复活死亡的的特殊感染者."
 	}
 
-	"Tank #46 Name"
+	"Tank #47 Name"
 	{
 		"en"			"Nullifier Tank"
 		"hu"			"Hatástalanító Tank"
 		"chi"			"消音器坦克"
 	}
 
-	"Tank #46"
+	"Tank #47"
 	{
 		"en"			"{mint}This Tank can nullify survivors' damage to protect itself from damage."
 		"hu"			"{mint}Ez a Tank hatástalanítja a túlélők sebzését, ezáltal védve önmagát."
 		"chi"			"{mint}这个坦克可以抵消幸存者造成的伤害."
 	}
 
-	"Tank #47 Name"
+	"Tank #48 Name"
 	{
 		"en"			"Omni Tank"
 		"hu"			"Mindenható Tank"
 		"chi"			"全能坦克"
 	}
 
-	"Tank #47"
+	"Tank #48"
 	{
 		"en"			"{mint}This Tank can access other nearby Mutant Tanks' abilities."
 		"hu"			"{mint}Ez a Tank hozzáfér a többi közel lévő Mutáns Tank képességeihez."
 		"chi"			"{mint}这个坦克可以使用附近突变坦克的能力."
 	}
 
-	"Tank #48 Name"
+	"Tank #49 Name"
 	{
 		"en"			"Panic Tank"
 		"hu"			"Pánik Tank"
 		"chi"			"恐慌坦克"
 	}
 
-	"Tank #48"
+	"Tank #49"
 	{
 		"en"			"{mint}This Tank can start panic events with hordes of zombies."
 		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, sok hordányi zombival."
 		"chi"			"{mint}这个坦克可以召唤尸潮."
 	}
 
-	"Tank #49 Name"
+	"Tank #50 Name"
 	{
 		"en"			"Pet Tank"
 		"hu"			"Háziállat Tank"
 		"chi"			"宠物罐"
 	}
 
-	"Tank #49"
+	"Tank #50"
 	{
 		"en"			"{mint}This Tank is loyal to the survivors and loves to give hugs."
 		"hu"			"{mint}Ez a Tank lojális a túlélőkhöz és szeret öleléseket adni."
 		"chi"			"{mint}这辆坦克忠于幸存者，喜欢拥抱."
 	}
 
-	"Tank #50 Name"
+	"Tank #51 Name"
 	{
 		"en"			"Pimp Tank"
 		"hu"			"Csapdosó Tank"
 		"chi"			"皮条客坦克"
 	}
 
-	"Tank #50"
+	"Tank #51"
 	{
 		"en"			"{mint}This Tank can pimp slap survivors repeatedly to show them who's boss."
 		"hu"			"{mint}Ez a Tank folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
 		"chi"			"{mint}这个坦克可以鞭挞幸存者,让幸存者知道谁才是老大."
 	}
 
-	"Tank #51 Name"
+	"Tank #52 Name"
 	{
 		"en"			"Platinum Tank"
 		"hu"			"Platina Tank"
 		"chi"			"白金坦克"
 	}
 
-	"Tank #51"
+	"Tank #52"
 	{
 		"en"			"{mint}This Tank is immune to melee damage."
 		"hu"			"{mint}Ez a Tank immunis a közelharci sebzésre."
 		"chi"			"{mint}这个坦克免疫近战伤害."
 	}
 
-	"Tank #52 Name"
+	"Tank #53 Name"
 	{
 		"en"			"Puke Tank"
 		"hu"			"Hányó Tank"
 		"chi"			"呕吐坦克"
 	}
 
-	"Tank #52"
+	"Tank #53"
 	{
 		"en"			"{mint}This Tank can puke on survivors."
 		"hu"			"{mint}Ez a Tank lehányhatja a túlélőket."
 		"chi"			"{mint}这个坦克会对幸存者呕吐."
 	}
 
-	"Tank #53 Name"
+	"Tank #54 Name"
 	{
 		"en"			"Pyromaniac Tank"
 		"hu"			"Piromániás Tank"
 		"chi"			"烈火坦克"
 	}
 
-	"Tank #53"
+	"Tank #54"
 	{
 		"en"			"{mint}This Tank gains a speed boost when set on fire."
 		"hu"			"{mint}Ez Tank gyorsabb lesz ha felgyújtják."
 		"chi"			"{mint}这个坦克被点燃时会提高移动速度."
 	}
 
-	"Tank #54 Name"
+	"Tank #55 Name"
 	{
 		"en"			"Quiet Tank"
 		"hu"			"Csendes Tank"
 		"chi"			"安静的坦克"
 	}
 
-	"Tank #54"
+	"Tank #55"
 	{
 		"en"			"{mint}This Tank can silence itself from survivors."
 		"hu"			"{mint}Ez a Tank lenémíthatja magát a túlélők elől."
 		"chi"			"{mint}这个坦克可以在幸存者附近消无声息."
 	}
 
-	"Tank #55 Name"
+	"Tank #56 Name"
 	{
 		"en"			"Recoil Tank"
 		"hu"			"Visszarúgó Tank"
 		"chi"			"反冲坦克"
 	}
 
-	"Tank #55"
+	"Tank #56"
 	{
 		"en"			"{mint}This Tank can give survivors high gun recoil."
 		"hu"			"{mint}Ez a Tank erős visszarúgást adhat a túlélőknek."
 		"chi"			"{mint}这个坦克会给予幸存者巨大的后坐力."
 	}
 
-	"Tank #56 Name"
+	"Tank #57 Name"
 	{
 		"en"			"Regenerative Tank"
 		"hu"			"Regeneráló Tank"
 		"chi"			"蓄能坦克"
 	}
 
-	"Tank #56"
+	"Tank #57"
 	{
 		"en"			"{mint}This Tank regenerates health every second."
 		"hu"			"{mint}Ez a Tank életerőt regenerál minden másodpercben."
 		"chi"			"{mint}这个坦克会每秒持续恢复生命值."
 	}
 
-	"Tank #57 Name"
+	"Tank #58 Name"
 	{
 		"en"			"Respawner Tank"
 		"hu"			"Újjászülető Tank"
 		"chi"			"重生坦克"
 	}
 
-	"Tank #57"
+	"Tank #58"
 	{
 		"en"			"{mint}This Tank can respawn upon death."
 		"hu"			"{mint}Ez a Tank újjászülethet a halála pillanatában."
 		"chi"			"{mint}这个坦克死亡后会复活."
 	}
 
-	"Tank #58 Name"
+	"Tank #59 Name"
 	{
 		"en"			"Restarter Tank"
 		"hu"			"Újraindító Tank"
 		"chi"			"重启罐"
 	}
 
-	"Tank #58"
+	"Tank #59"
 	{
 		"en"			"{mint}This Tank can force survivors to restart with a new loadout."
 		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra, hogy új felszereléssel kezdjenek előröl."
 		"chi"			"{mint}这个坦克能让幸存者用新的装备套件重新开始."
 	}
 
-	"Tank #59 Name"
+	"Tank #60 Name"
 	{
 		"en"			"Rock Tank"
 		"hu"			"Szikla Tank"
 		"chi"			"岩石坦克"
 	}
 
-	"Tank #59"
+	"Tank #60"
 	{
 		"en"			"{mint}This Tank can start rock showers."
 		"hu"			"{mint}Ez a Tank szikla záporokat indít."
 		"chi"			"{mint}这个坦克可以召唤岩石雨."
 	}
 
-	"Tank #60 Name"
+	"Tank #61 Name"
 	{
 		"en"			"Rocketeer Tank"
 		"hu"			"Rakétaszakértő Tank"
 		"chi"			"火箭坦克"
 	}
 
-	"Tank #60"
+	"Tank #61"
 	{
 		"en"			"{mint}This Tank can send survivors into space."
 		"hu"			"{mint}Ez a Tank az űrbe küldheti a túlélőket."
 		"chi"			"{mint}这个坦克可以把幸存者送上太空."
 	}
 
-	"Tank #61 Name"
+	"Tank #62 Name"
 	{
 		"en"			"Self-throwing Tank"
 		"hu"			"Öndobó Tank"
 		"chi"			"自投式坦克"
 	}
 
-	"Tank #61"
+	"Tank #62"
 	{
 		"en"			"{mint}This Tank can throw itself towards survivors."
 		"hu"			"{mint}Ez a Tank eldobhatja magát a túlélők felé."
 		"chi"			"{mint}这个坦克会对幸存者投掷随机的物品."
 	}
 
-	"Tank #62 Name"
+	"Tank #63 Name"
 	{
 		"en"			"Shaker Tank"
 		"hu"			"Rázó Tank"
 		"chi"			"振动罐"
 	}
 
-	"Tank #62"
+	"Tank #63"
 	{
 		"en"			"{mint}This Tank can shake survivors' screens."
 		"hu"			"{mint}Ez a Tank megrázza a túlélők képernyőjét."
 		"chi"			"{mint}这个坦克可以震动幸存者的屏幕."
 	}
 
-	"Tank #63 Name"
+	"Tank #64 Name"
 	{
 		"en"			"Shield Tank"
 		"hu"			"Pajzs Tank"
 		"chi"			"盾构坦克"
 	}
 
-	"Tank #63"
+	"Tank #64"
 	{
 		"en"			"{mint}This Tank spawns with a shield and throws propane tanks or gas cans which survivors can use to break the shield."
 		"hu"			"{mint}Ez a Tank egy pajzzsal születik, propán tartályokat vagy benzines kannákat dobál. Ezek segítségével a túlélők áttörhetnek a pajzson."
 		"chi"			"{mint}这个坦克出生时会被护盾保护,投掷的石头会变成煤气瓶或汽油桶,幸存者可以用他们打破盾牌."
 	}
 
-	"Tank #64 Name"
+	"Tank #65 Name"
 	{
 		"en"			"Shover Tank"
 		"hu"			"Lökő Tank"
 		"chi"			"推坦克"
 	}
 
-	"Tank #64"
+	"Tank #65"
 	{
 		"en"			"{mint}This Tank can shove survivors around."
 		"hu"			"{mint}Ez a Tank mindenhova lökdösi a túlélőket."
 		"chi"			"{mint}这个坦克可以把幸存者推到附近."
 	}
 
-	"Tank #65 Name"
+	"Tank #66 Name"
 	{
 		"en"			"Slow Tank"
 		"hu"			"Lassú Tank"
 		"chi"			"慢坦克"
 	}
 
-	"Tank #65"
+	"Tank #66"
 	{
 		"en"			"{mint}This Tank can slow survivors down."
 		"hu"			"{mint}Ez a Tank letudja lassítani a túlélőket."
 		"chi"			"{mint}这个坦克可以减慢幸存者的速度."
 	}
 
-	"Tank #66 Name"
+	"Tank #67 Name"
 	{
 		"en"			"Smasher Tank"
 		"hu"			"Zúzó Tank"
 		"chi"			"粉碎机坦克"
 	}
 
-	"Tank #66"
+	"Tank #67"
 	{
 		"en"			"{mint}This Tank can smash survivors to death."
 		"hu"			"{mint}Ez a Tank a halálba tudja zúzni a túlélőket."
 		"chi"			"{mint}这个坦克可以砸死幸存者."
 	}
 
-	"Tank #67 Name"
+	"Tank #68 Name"
 	{
 		"en"			"Smiter Tank"
 		"hu"			"Lecsapó Tank"
 		"chi"			"重击坦克"
 	}
 
-	"Tank #67"
+	"Tank #68"
 	{
 		"en"			"{mint}This Tank can smite survivors for an instant kill."
 		"hu"			"{mint}Ez a Tank letudja csapni a túlélőket, ezzel azonnali halált okozva."
 		"chi"			"{mint}这个坦克击倒幸存者会直接杀死."
 	}
 
-	"Tank #68 Name"
+	"Tank #69 Name"
 	{
 		"en"			"Smoker Tank"
 		"hu"			"Füstös Tank"
 		"chi"			"烟缸"
 	}
 
-	"Tank #68"
+	"Tank #69"
 	{
 		"en"			"{mint}This Tank can spawn Smokers behind it and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank tud Füstösöket létrehozni, és dobni is egy párat a túlélők felé."
 		"chi"			"{mint}这个坦克可以生成Smoker和向幸存者投掷Smoker."
 	}
 
-	"Tank #69 Name"
+	"Tank #70 Name"
 	{
 		"en"			"Spammer Tank"
 		"hu"			"Kéretlen Tank"
 		"chi"			"垃圾邮件发送器"
 	}
 
-	"Tank #69"
+	"Tank #70"
 	{
 		"en"			"{mint}This Tank can spam rocks at survivors."
 		"hu"			"{mint}Ez a Tank folyamatosan sziklákat dobál a túlélők felé."
 		"chi"			"{mint}这个坦克可以对幸存者投掷一堆岩石."
 	}
 
-	"Tank #70 Name"
+	"Tank #71 Name"
 	{
 		"en"			"Special Tank"
 		"hu"			"Speciális Tank"
 		"chi"			"特种坦克"
 	}
 
-	"Tank #70"
+	"Tank #71"
 	{
 		"en"			"{mint}This Tank can spawn random special infected behind it and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank tud létrehozni véletlenszerű speciális fertőzötteket, és dobni is egy párat a túlélők felé."
 		"chi"			"{mint}这个坦克可以生成特殊感染者和向幸存者投掷特殊感染者."
 	}
 
-	"Tank #71 Name"
+	"Tank #72 Name"
 	{
 		"en"			"Spitter Tank"
 		"hu"			"köpködő Tank"
 		"chi"			"垃圾箱"
 	}
 
-	"Tank #71"
+	"Tank #72"
 	{
 		"en"			"{mint}This Tank can spawn Spitters behind it and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank tud Köpködőket létrehozni, és dobni is egy párat a túlélők felé."
 		"chi"			"{mint}这个坦克可以生成Spitter和向幸存者投掷Spitter"
 	}
 
-	"Tank #72 Name"
+	"Tank #73 Name"
 	{
 		"en"			"Splasher Tank"
 		"hu"			"Területsebző Tank"
 		"chi"			"溅水箱"
 	}
 
-	"Tank #72"
+	"Tank #73"
 	{
 		"en"			"{mint}This Tank can release a splash of damage within a certain radius."
 		"hu"			"{mint}Ez a Tank területi sebzést okoz egy bizonyos távolságon belül."
 		"chi"			"{mint}这个坦克可以让一定范围内的幸存者受到伤害."
 	}
 
-	"Tank #73 Name"
+	"Tank #74 Name"
 	{
 		"en"			"Splatter Tank"
 		"hu"			"Fröcskölő Tank"
 		"chi"			"飞溅坦克"
 	}
 
-	"Tank #73"
+	"Tank #74"
 	{
 		"en"			"{mint}This Tank can cover everyone's screens with splatters."
 		"hu"			"{mint}Ez a Tank mindenki képernyőjét befröcsköli."
 		"chi"			"{mint}该坦克可以用飞溅覆盖每个人的屏幕."
 	}
 
-	"Tank #74 Name"
+	"Tank #75 Name"
 	{
 		"en"			"Thrower Tank"
 		"hu"			"Eldobó Tank"
 		"chi"			"投掷坦克"
 	}
 
-	"Tank #74"
+	"Tank #75"
 	{
 		"en"			"{mint}This Tank can throw cars, special infected, Tanks, Witches, and itself!"
 		"hu"			"{mint}Ez a Tank tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
 		"chi"			"{mint}这个坦克可以投掷汽车/特殊感染者/坦克/女巫,甚至它自己!"
 	}
 
-	"Tank #75 Name"
+	"Tank #76 Name"
 	{
 		"en"			"Tracker Tank"
 		"hu"			"Követő Tank"
 		"chi"			"追踪坦克"
 	}
 
-	"Tank #75"
+	"Tank #76"
 	{
 		"en"			"{mint}This Tank throws rocks which can track nearby survivors."
 		"hu"			"{mint}Ez a Tank olyan sziklákat dob, ami követi a közelben lévő túlélőket."
 		"chi"			"{mint}这个坦克投掷的岩石会追踪附近的幸存者."
 	}
 
-	"Tank #76 Name"
+	"Tank #77 Name"
 	{
 		"en"			"Ultimate Tank"
 		"hu"			"Végső Tank"
 		"chi"			"终极坦克"
 	}
 
-	"Tank #76"
+	"Tank #77"
 	{
 		"en"			"{mint}This Tank gains temporary godmode and damage boost when low on health."
 		"hu"			"{mint}Ez a Tank ideiglenes halhatatlanságot és sebzést növelést kap, amikor már kevés az életereje."
 		"chi"			"{mint}这个坦克在生命值过低时会获得暂时性的无敌和伤害提升."
 	}
 
-	"Tank #77 Name"
+	"Tank #78 Name"
 	{
 		"en"			"Undead Tank"
 		"hu"			"Halhatatlan Tank"
 		"chi"			"亡灵坦克"
 	}
 
-	"Tank #77"
+	"Tank #78"
 	{
 		"en"			"{mint}This Tank regains full HP when close to dying."
 		"hu"			"{mint}Ez a Tank visszanyeri a teljes életerejét, amikor már közel jár a halálhoz."
 		"chi"			"{mint}这个坦克在濒临死亡时会回满生命值."
 	}
 
-	"Tank #78 Name"
+	"Tank #79 Name"
 	{
 		"en"			"Vampire Tank"
 		"hu"			"Vámpír Tank"
 		"chi"			"吸血鬼坦克"
 	}
 
-	"Tank #78"
+	"Tank #79"
 	{
 		"en"			"{mint}This Tank can steal health from survivors."
 		"hu"			"{mint}Ez a Tank életerőt lophat a túlélőktől."
 		"chi"			"{mint}这个坦克可以窃取幸存者生命值."
 	}
 
-	"Tank #79 Name"
+	"Tank #80 Name"
 	{
 		"en"			"Visual Tank"
 		"hu"			"Vizuális Tank"
 		"chi"			"视觉坦克"
 	}
 
-	"Tank #79"
+	"Tank #80"
 	{
 		"en"			"{mint}This Tank can change the FOV of survivors."
 		"hu"			"{mint}Ez a Tank megváltoztatja a túlélők látómezejét."
 		"chi"			"{mint}这个坦克可以改变幸存者的视野."
 	}
 
-	"Tank #80 Name"
+	"Tank #81 Name"
 	{
 		"en"			"Warper Tank"
 		"hu"			"Teleportáló Tank"
 		"chi"			"变形坦克"
 	}
 
-	"Tank #80"
+	"Tank #81"
 	{
 		"en"			"{mint}This Tank can warp to a random survivor."
 		"hu"			"{mint}Ez a Tank véletlenszerűen egy túlélőhöz teleportál."
 		"chi"			"{mint}这个坦克会传送到随机一名幸存者身上."
 	}
 
-	"Tank #81 Name"
+	"Tank #82 Name"
 	{
 		"en"			"Whirler Tank"
 		"hu"			"Örvénylő Tank"
 		"chi"			"旋风坦克"
 	}
 
-	"Tank #81"
+	"Tank #82"
 	{
 		"en"			"{mint}This Tank can make survivors whirl."
 		"hu"			"{mint}Ez a Tank megpörgeti a túlélőket."
 		"chi"			"{mint}这个坦克可以把幸存者翻转."
 	}
 
-	"Tank #82 Name"
+	"Tank #83 Name"
 	{
 		"en"			"Witch Tank"
 		"hu"			"Boszorka Tank"
 		"chi"			"女巫坦克"
 	}
 
-	"Tank #82"
+	"Tank #83"
 	{
 		"en"			"{mint}This Tank can convert nearby common infected into Witches and throw some at survivors too."
 		"hu"			"{mint}Ez a Tank Boszorkává alakítja a közeli fertőzötteket, és dob is párat a túlélők felé."
 		"chi"			"{mint}这个坦克可以把附近的普通感染者转化成女巫并向幸存者投掷女巫."
 	}
 
-	"Tank #83 Name"
+	"Tank #84 Name"
 	{
 		"en"			"Xiphos Tank"
 		"hu"			"Xiphos Tank"
 		"chi"			"Xiphos坦克"
 	}
 
-	"Tank #83"
+	"Tank #84"
 	{
 		"en"			"{mint}This Tank can steal health from survivors and vice-versa."
 		"hu"			"{mint}Ez a Tank tud életerőt lopni a túlélőktől és fordítva."
 		"chi"			"{mint}这个坦克可以窃取幸存者生命值,反之亦然."
 	}
 
-	"Tank #84 Name"
+	"Tank #85 Name"
 	{
 		"en"			"Yeller Tank"
 		"hu"			"Üvöltő Tank"
 		"chi"			"耶勒坦克"
 	}
 
-	"Tank #84"
+	"Tank #85"
 	{
 		"en"			"{mint}This Tank can yell to defean survivors."
 		"hu"			"{mint}Ez a Tank tud üvölteni, így megsüketítve a túlélőket."
 		"chi"			"{mint}这个坦克可以大吼来震慑幸存者."
 	}
 
-	"Tank #85 Name"
+	"Tank #86 Name"
 	{
 		"en"			"Zombie Tank"
 		"hu"			"Zombi Tank"
 		"chi"			"僵尸坦克"
 	}
 
-	"Tank #85"
+	"Tank #86"
 	{
 		"en"			"{mint}This Tank can create a mob of zombies within the area."
 		"hu"			"{mint}Ez a Tank hordákat hoz létre."
 		"chi"			"{mint}这个坦克可以在某个区域内召唤僵尸."
 	}
 
-	"Tank #86 Name"
+	"Tank #87 Name"
 	{
 		"en"			"Armageddon Tank"
 		"hu"			"Armageddon Tank"
 		"chi"			"大决战坦克"
 	}
 
-	"Tank #86"
+	"Tank #87"
 	{
 		"en"			"{mint}This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
 		"hu"			"{mint}Ez a Tank immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
 		"chi"			"{mint}这个坦克免疫爆炸伤害,可以把幸存者和特殊感染者拉向它身边.并且可以召唤流星雨."
 	}
 
-	"Tank #87 Name"
+	"Tank #88 Name"
 	{
 		"en"			"Boss Tank"
 		"hu"			"Főnök Tank"
 		"chi"			"老板坦克"
 	}
 
-	"Tank #87"
+	"Tank #88"
 	{
 		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
 		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
 		"chi"			"{mint}对火免疫,跑得快,伪装自己,让幸存者缴械,把幸存者拉向它身边同时改变他们的重力,周期性跳跃和召唤流星雨,出生自带护盾,会重击幸存者,会传送到幸存者身边并生成女巫/僵尸."
 	}
 
-	"Tank #88 Name"
+	"Tank #89 Name"
 	{
 		"en"			"Cobalt Tank"
 		"hu"			"Kobalt Tank"
 		"chi"			"钴罐"
 	}
 
-	"Tank #88"
+	"Tank #89"
 	{
 		"en"			"{mint}This Tank is immune to fire damage and can run really fast."
 		"hu"			"{mint}Ez a Tank immunis a tűzre és nagyon gyorsan fut."
 		"chi"			"{mint}这个坦克免疫火焰伤害同时跑得很快."
 	}
 
-	"Tank #89 Name"
+	"Tank #90 Name"
 	{
 		"en"			"Distraction Tank"
 		"hu"			"Elterelő Tank"
 		"chi"			"牵引罐"
 	}
 
-	"Tank #89"
+	"Tank #90"
 	{
 		"en"			"{mint}This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
 		"hu"			"{mint}Ez a Tank időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
 		"chi"			"{mint}这个坦克会周期性的跳跃,让幸存者不受控制的跳跃并且会传送到幸存者身边."
 	}
 
-	"Tank #90 Name"
+	"Tank #91 Name"
 	{
 		"en"			"Feedback Tank"
 		"hu"			"Visszaverő Tank"
 		"chi"			"反馈箱"
 	}
 
-	"Tank #90"
+	"Tank #91"
 	{
 		"en"			"{mint}This Tank pushes survivors away."
 		"hu"			"{mint}Ez a Tank ellöki magától a túlélőket."
 		"chi"			"{mint}这个坦克会一直推开幸存者."
 	}
 
-	"Tank #91 Name"
+	"Tank #92 Name"
 	{
 		"en"			"Flash Tank"
 		"hu"			"Flash Tank"
 		"chi"			"闪蒸罐"
 	}
 
-	"Tank #91"
+	"Tank #92"
 	{
 		"en"			"{mint}This Tank can run really fast like the Flash and create speed mirages (clones) of itself."
 		"hu"			"{mint}Ez a Tank olyan gyorsan fut mint Flash és gyors délibábokat (klónokat) készít önmagáról."
 		"chi"			"{mint}这个坦克可以跑的跟闪电一样快,并且可以召唤出自己的速度幻影(克隆体)."
 	}
 
-	"Tank #92 Name"
+	"Tank #93 Name"
 	{
 		"en"			"Goliath Tank"
 		"hu"			"Góliát Tank"
 		"chi"			"巨人坦克"
 	}
 
-	"Tank #92"
+	"Tank #93"
 	{
 		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
 		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
 		"chi"			"{mint}免疫火焰伤害,移动速度慢,会给予幸存者临时生命值,吸收附近特殊感染者的生命值,出生自带护盾和重击幸存者."
 	}
 
-	"Tank #93 Name"
+	"Tank #94 Name"
 	{
 		"en"			"Hallucination Tank"
 		"hu"			"Hallucináció Tank"
 		"chi"			"幻觉坦克"
 	}
 
-	"Tank #93"
+	"Tank #94"
 	{
 		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
 		"chi"			"{mint}免疫火焰伤害,伪装自己且会传送到幸存者身边."
 	}
 
-	"Tank #94 Name"
+	"Tank #95 Name"
 	{
 		"en"			"Meme Tank"
 		"hu"			"Mém Tank"
 		"chi"			"米姆坦克"
 	}
 
-	"Tank #94"
+	"Tank #95"
 	{
 		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
 		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
 		"chi"			"{mint}免疫火焰伤害,吸收伤害,跑得快,伪装自己,将幸存者拉向自己并改变他们重力值,跳得高,召唤流星雨,重击幸存者,投掷一堆岩石,会传送到幸存者身边和召唤女巫/僵尸."
 	}
 
-	"Tank #95 Name"
+	"Tank #96 Name"
 	{
 		"en"			"Mirage Tank"
 		"hu"			"Káprázat Tank"
 		"chi"			"幻影坦克"
 	}
 
-	"Tank #95"
+	"Tank #96"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
 		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快并可以传送到幸存者身边."
 	}
 
-	"Tank #96 Name"
+	"Tank #97 Name"
 	{
 		"en"			"Poltergeist Tank"
 		"hu"			"Kísértet Tank"
 		"chi"			"Poltergeist坦克"
 	}
 
-	"Tank #96"
+	"Tank #97"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
 		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,伪装自己并可以传送到幸存者身边"
 	}
 
-	"Tank #97 Name"
+	"Tank #98 Name"
 	{
 		"en"			"Psychotic Tank"
 		"hu"			"Elmebeteg Tank"
 		"chi"			"精神病坦克"
 	}
 
-	"Tank #97"
+	"Tank #98"
 	{
 		"en"			"{mint}This Tank can give survivors temporary health, absorb health from nearby infected, jump really high, start meteor showers, spawn with a shield, and warp to survivors."
 		"hu"			"{mint}Ez a Tank ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, nagyon magasra ugrik, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
 		"chi"			"{mint}这个坦克会给予幸存者临时生命值,吸收附近特殊感染者的生命值,跳得高,召唤流星雨,出生自带护盾,并会传送到幸存者身边"
 	}
 
-	"Tank #98 Name"
+	"Tank #99 Name"
 	{
 		"en"			"Reverse-Flash Tank"
 		"hu"			"Fordító Tank"
 		"chi"			"反闪坦克"
 	}
 
-	"Tank #98"
+	"Tank #99"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
 		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,并且可以传送到幸存者身边."
 	}
 
-	"Tank #99 Name"
+	"Tank #100 Name"
 	{
 		"en"			"Spawner Tank"
 		"hu"			"Létrehozó Tank"
 		"chi"			"扳手坦克"
 	}
 
-	"Tank #99"
+	"Tank #100"
 	{
 		"en"			"{mint}This Tank spawns zombies behind clouds of smoke within the area."
 		"hu"			"{mint}Ez a Tank zombikat hoz létre egy füstfelhő mögött."
 		"chi"			"{mint}这个坦克会在烟雾内生成僵尸."
 	}
 
-	"Tank #100 Name"
+	"Tank #101 Name"
 	{
 		"en"			"Zoom Tank"
 		"hu"			"Közelítő Tank"
 		"chi"			"变焦坦克"
 	}
 
-	"Tank #100"
+	"Tank #101"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
 		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,并且会传送到幸存者身边."
 	}
 
-	"Tank #101 Name"
+	"Tank #102 Name"
 	{
 		"en"			"Dread Tank"
 		"hu"			"Félelemkeltő Tank"
 		"chi"			"恐惧坦克"
 	}
 
-	"Tank #101"
+	"Tank #102"
 	{
 		"en"			"{mint}This Tank can partially blind and drug survivors."
 		"hu"			"{mint}Ez a Tank részben megvakítja és bedrogozza a túlélőket."
 		"chi"			"{mint}这个坦克可以让幸存者失明和中毒."
 	}
 
-	"Tank #102 Name"
+	"Tank #103 Name"
 	{
 		"en"			"Rabid Tank"
 		"hu"			"Fanatikus Tank"
 		"chi"			"狂暴坦克"
 	}
 
-	"Tank #102"
+	"Tank #103"
 	{
 		"en"			"{mint}This Tank can partially drug and hurt survivors."
 		"hu"			"{mint}Ez a Tank részben bedrogozza és bántja a túlélőket."
 		"chi"			"{mint}这个坦克可以让幸存者中毒和受到持续伤害."
 	}
 
-	"Tank #103 Name"
+	"Tank #104 Name"
 	{
 		"en"			"Tremor Tank"
 		"hu"			"Remegő Tank"
 		"chi"			"震荡坦克"
 	}
 
-	"Tank #103"
+	"Tank #104"
 	{
 		"en"			"{mint}This Tank can start rock showers and spam rocks at survivors."
 		"hu"			"{mint}Ez a Tank szikla záporokat hoz létre, és folyamatosan sziklákat dobál a túlélőkre."
 		"chi"			"{mint}这个坦克会召唤岩石雨和向幸存者投掷一堆岩石."
 	}
 
-	"Tank #104 Name"
+	"Tank #105 Name"
 	{
 		"en"			"Psyk0tik Tank"
 		"hu"			"Elmeb3teg Tank"
 		"chi"			"Psyk0tik坦克"
 	}
 
-	"Tank #104"
+	"Tank #105"
 	{
 		"en"			"{mint}This Tank does extra damage, runs really fast, clones itself, creates acid puddles, explosions, and fires, cloaks itself, starts rock showers, spams rocks at survivors, and throws rocks that track nearby survivors."
 		"hu"			"{mint}Ez a Tank többet sebez, nagyon gyorsan fut, klónozza magát, savas pocsolyákat, robbanásokat, és tüzet hoz létre, álcázza magát, szikla záport indít, folyamatosan sziklákat dobál a túlélőkre, sziklákat dob amik követik a közeli túlélőket."
 		"chi"			"{mint}这个坦克能对幸存者造成更多伤害,跑得快,还会自我复制,制造酸液地带/爆炸和火焰,会伪装自己,召唤岩石雨和向幸存者投掷岩石或一堆岩石."
 	}
 
-	"Tank #105 Name"
+	"Tank #106 Name"
 	{
 		"en"			"Apocalyptic Tank"
 		"hu"			"Apokalipszis Tank"
 		"chi"			"世界末日坦克"
 	}
 
-	"Tank #105"
+	"Tank #106"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
 		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,会召唤流星雨/尸潮和岩石雨"
 	}
 
-	"Tank #106 Name"
+	"Tank #107 Name"
 	{
 		"en"			"Darth Vader Tank"
 		"hu"			"Darth Vader Tank"
 		"chi"			"达斯·维达（Darth Vader）背心"
 	}
 
-	"Tank #106"
+	"Tank #107"
 	{
 		"en"			"{mint}It's Darth Vader... And he is... A Mutant Tank with the Force!"
 		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Tank az erővel!"
 		"chi"			"{mint}是..是达斯·维达..它..它是帝国的突变坦克!"
 	}
 
-	"Tank #107 Name"
+	"Tank #108 Name"
 	{
 		"en"			"Grim Reaper Tank"
 		"hu"			"Zord Kaszás Tank"
 		"chi"			"死神坦克"
 	}
 
-	"Tank #107"
+	"Tank #108"
 	{
 		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
 		"chi"			"{mint}这个坦克跑的比一般的快,会伪装自己,可以埋葬幸存者和传送到幸存者身边."
 	}
 
-	"Tank #108 Name"
+	"Tank #109 Name"
 	{
 		"en"			"Horde Tank"
 		"hu"			"Horda Tank"
 		"chi"			"部落坦克"
 	}
 
-	"Tank #108"
+	"Tank #109"
 	{
 		"en"			"{mint}This Tank can start panic events and spawn Boomers to help prolong them."
 		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, és segítségül Pukkancsokat hozhat létre."
 		"chi"			"{mint}这个坦克可以召唤尸潮,并生成Boomer来帮助自己延长尸潮持续时间."
 	}
 
-	"Tank #109 Name"
+	"Tank #110 Name"
 	{
 		"en"			"Hulk Tank"
 		"hu"			"Hulk Tank"
 		"chi"			"绿巨人坦克"
 	}
 
-	"Tank #109"
+	"Tank #110"
 	{
 		"en"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
 		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Tanknak nagyrészt olyan képességei vannak mint Hulk-nak!"
 		"chi"			"{mint}遇到难以置信的绿巨人!这个坦克拥有绿巨人的大部分能力!"
 	}
 
-	"Tank #110 Name"
+	"Tank #111 Name"
 	{
 		"en"			"Ninja Tank"
 		"hu"			"Nindzsa Tank"
 		"chi"			"忍者坦克"
 	}
 
-	"Tank #110"
+	"Tank #111"
 	{
 		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
 		"hu"			"{mint}Ez a Tank tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
 		"chi"			"{mint}这个坦克可以瞬移,消无声息的移动和伪装自己.需要特别小心!"
 	}
 
-	"Tank #111 Name"
+	"Tank #112 Name"
 	{
 		"en"			"Zen Tank"
 		"hu"			"Zen Tank"
 		"chi"			"禅宗坦克"
 	}
 
-	"Tank #111"
+	"Tank #112"
 	{
 		"en"			"{mint}This Tank is too busy meditating to care about you."
 		"hu"			"{mint}Ez a Tank éppen meditál, túl elfoglalt hogy foglalkozzon veled."
 		"chi"			"{mint}这个坦克沉迷冥思,根本对你毫无兴趣."
 	}
 
-	"Tank #112 Name"
+	"Tank #113 Name"
 	{
 		"en"			"The Boss (1st Form)"
 		"hu"			"A Főnök (1. alak)"
 		"chi"			"老板（第一形式）"
 	}
 
-	"Tank #112"
+	"Tank #113"
 	{
 		"en"			"{mint}This Tank throws explosive rocks and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank robbanó sziklákat dob és időszakosan teleportál egy túlélőkhöz."
 		"chi"			"{mint}这个坦克会对幸存者投掷会爆炸的岩石并会定期进行传送."
 	}
 
-	"Tank #113 Name"
+	"Tank #114 Name"
 	{
 		"en"			"Steel Overlord (2nd Form)"
 		"hu"			"Acél Hűbérúr (2. Alak)"
 		"chi"			"钢铁霸主（第二种形式）"
 	}
 
-	"Tank #113"
+	"Tank #114"
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, robbanó sziklákat dob, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
 		"chi"			"{mint}这个坦克跑得比一般的快,免疫近战伤害,比一般的坦克强一点,会投掷爆炸的岩石,可以改变幸存者的重力值和传送到幸存者身边."
 	}
 
-	"Tank #114 Name"
+	"Tank #115 Name"
 	{
 		"en"			"Night Stalker (3rd Form)"
 		"hu"			"Éjjeli Orvvadász (3. Alak)"
 		"chi"			"暗夜魔王（第三形式）"
 	}
 
-	"Tank #114"
+	"Tank #115"
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, robbanó sziklákat dob, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
 		"chi"			"{mint}这个坦克跑得比一般的快,免疫火焰伤害,比一般的坦克弱一点,会投掷爆炸的岩石,可以让幸存者失明和伪装自己,并会定期传送到幸存者身边."
 	}
 
-	"Tank #115 Name"
+	"Tank #116 Name"
 	{
 		"en"			"Spirit of Fire (4th Form)"
 		"hu"			"Tűz Szelleme (4. Alak)"
 		"chi"			"火灵（第四形式）"
 	}
 
-	"Tank #115"
+	"Tank #116"
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, robbanó sziklákat dob, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
 		"chi"			"{mint}这个坦克跑的比一般的快,免疫火焰伤害,比一般的坦克强一点,会投掷爆炸的岩石和引发火灾,给予幸存者临时生命值,会定期进行跳跃和传送到幸存者身边."
 	}
 
-	"Tank #116 Name"
+	"Tank #117 Name"
 	{
 		"en"			"Randomizer Tank"
 		"hu"			"Randomizáló Tank"
 		"chi"			"随机坦克"
 	}
 
-	"Tank #116"
+	"Tank #117"
 	{
 		"en"			"{mint}This Tank randomly switches into different Mutant Tank types and deals increased damage. Be careful..."
 		"hu"			"{mint}Ez a tank véletlenszerűen átalakul egy másik típusú Mutáns Tankká, a sebzése megnő. Légy óvatos..."
 		"chi"			"{mint}这个坦克会随机转化成其他突变坦克类型,会造成巨大威胁.请小心..."
 	}
 
-	"Tank #117 Name"
+	"Tank #118 Name"
 	{
 		"en"			"Shapeshifter Tank"
 		"hu"			"Alakváltó Tank"
 		"chi"			"变形坦克"
 	}
 
-	"Tank #117"
+	"Tank #118"
 	{
 		"en"			"{mint}This Tank can shapeshift into different Mutant Tank types. Don't underestimate it..."
 		"hu"			"{mint}Ez a tank át tud alakulni egy másik típusú Mutáns Tankká. Ne becsüld le..."
 		"chi"			"{mint}这个坦克可以变成其他突变坦克类型,要特别小心..."
 	}
 
-	"Tank #118 Name"
+	"Tank #119 Name"
 	{
 		"en"			"Mudman Tank"
 		"hu"			"Mocsárember Tank"
 		"chi"			"泥浆坦克"
 	}
 
-	"Tank #118"
+	"Tank #119"
 	{
 		"en"			"{mint}This Tank is as annoying as any mudman."
 		"hu"			"{mint}Ez a Tank ugyanolyan bosszantó mint bármelyik sárember."
 		"chi"			"{mint}这辆坦克像任何泥人一样令人讨厌."
 	}
 
-	"Tank #119 Name"
+	"Tank #120 Name"
 	{
 		"en"			"Endgame Tank"
 		"hu"			"Végjáték Tank"
 		"chi"			"残局坦克"
 	}
 
-	"Tank #119"
+	"Tank #120"
 	{
 		"en"			"{mint}Goodbye everyone!"
 		"hu"			"{mint}Viszlát mindenki!"
 		"chi"			"{mint}再见了，大家!"
 	}
 
-	"Tank #120 Name"
+	"Tank #121 Name"
 	{
 		"en"			"Playful Tank"
 		"hu"			"Játékos Tank"
 		"chi"			"俏皮坦克"
 	}
 
-	"Tank #120"
+	"Tank #121"
 	{
 		"en"			"{mint}This Tank doesn't do any damage. It just wants to play!"
 		"hu"			"{mint}Ez a Tank nem okoz sebzést. Csak játszani szeretne!"
 		"chi"			"{mint}该坦克不会造成任何伤害. 它只是想玩!"
 	}
 
-	"Tank #121 Name"
+	"Tank #122 Name"
 	{
 		"en"			"Annoying Tank"
 		"hu"			"Bosszantó Tank"
 		"chi"			"烦人的坦克"
 	}
 
-	"Tank #121"
+	"Tank #122"
 	{
 		"en"			"{mint}This Tank just won't go away..."
 		"hu"			"{mint}Ez a Tank egyszerűen csak nem megy el..."
