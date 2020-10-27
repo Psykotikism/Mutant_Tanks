@@ -2384,7 +2384,14 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
-			"Car Duration"			"5"
+			"Car Duration"				"5"
+
+			// The Mutant Tank's car shower drops a car every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Car Interval"				"0.6"
 
 			// The Mutant Tank create car showers with these cars.
 			// Note: This setting can be overridden for specific players.
@@ -7229,6 +7236,13 @@
 			// Maximum: 999999
 			"Meteor Duration"			"5"
 
+			// The Mutant Tank's meteor shower drops a meteorite every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Meteor Interval"			"0.6"
+
 			// The mode of the Mutant Tank's meteor shower ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -8996,6 +9010,13 @@
 			// Not empty: These access flags are immune.
 			"Access Flags"				""
 
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9078,6 +9099,13 @@
 			// Minimum: 1
 			// Maximum: 999999
 			"Rock Duration"				"5"
+
+			// The Mutant Tank's rock shower drops a rock every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Rock Interval"				"0.2"
 
 			// The radius of the Mutant Tank's rock shower.
 			// Note: This setting can be overridden for specific players.
@@ -10262,6 +10290,13 @@
 			// Not empty: These access flags are immune.
 			"Access Flags"				""
 
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -10344,6 +10379,13 @@
 			// Minimum: 1
 			// Maximum: 999999
 			"Spam Duration"				"5"
+
+			// The Mutant Tank's rock spammer throws a rock every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Spam Interval"				"0.5"
 		}
 	}
 }

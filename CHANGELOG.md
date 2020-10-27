@@ -37,6 +37,8 @@ Bug fixes:
 31. Fixed some admin commands using the wrong access flags.
 32. Fixed the `Rock` and `Spam` abilities' rocks colliding with each other and producing lag.
 33. Fixed the `Splatter` ability's `Splatter Type` setting using the wrong value limit. (Thanks to 3aljiyavslgazana for testing and reporting!)
+34. Fixed parenting problems with some entities.
+35. Fixed some abilities' damage settings not working properly.
 
 Changes:
 
@@ -78,6 +80,8 @@ Changes:
 36. Added the `MT_GetScaledDamage` native to allow developers to get the proper scaled damage of Mutant Tanks.
 37. Updated all natives to have self-contained validity checks.
 38. Added the `@mutants` target filter to let admins target Mutant Tanks.
+39. Added the `Immunity Flags` setting for the `Rock` and `Spam` abilities.
+40. Added the `* Interval` setting for the `Car`, `Meteor`, `Rock`, and `Spam` abilities.
 
 Files:
 
