@@ -392,7 +392,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iSplatterMessage = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSplatterMessage, value, 0, 1);
 		g_esPlayer[admin].g_flSplatterChance = flGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esPlayer[admin].g_flSplatterChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_flSplatterInterval = flGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esPlayer[admin].g_flSplatterInterval, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iSplatterType = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esPlayer[admin].g_iSplatterType, value, 0, sizeof(g_sParticles) - 1);
+		g_esPlayer[admin].g_iSplatterType = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esPlayer[admin].g_iSplatterType, value, 0, sizeof(g_sParticles));
 
 		if (StrEqual(subsection, "splatterability", false) || StrEqual(subsection, "splatter ability", false) || StrEqual(subsection, "splatter_ability", false) || StrEqual(subsection, "splatter", false))
 		{
@@ -416,7 +416,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iSplatterMessage = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSplatterMessage, value, 0, 1);
 		g_esAbility[type].g_flSplatterChance = flGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esAbility[type].g_flSplatterChance, value, 0.0, 100.0);
 		g_esAbility[type].g_flSplatterInterval = flGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esAbility[type].g_flSplatterInterval, value, 0.1, 999999.0);
-		g_esAbility[type].g_iSplatterType = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esAbility[type].g_iSplatterType, value, 0, sizeof(g_sParticles) - 1);
+		g_esAbility[type].g_iSplatterType = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esAbility[type].g_iSplatterType, value, 0, sizeof(g_sParticles));
 
 		if (StrEqual(subsection, "splatterability", false) || StrEqual(subsection, "splatter ability", false) || StrEqual(subsection, "splatter_ability", false) || StrEqual(subsection, "splatter", false))
 		{

@@ -2105,7 +2105,7 @@ public Action cmdMTList(int client, int args)
 static void vListAbilities(int admin)
 {
 	static bool bHuman;
-	bHuman = bIsValidClient(admin, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
+	bHuman = bIsValidClient(admin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT);
 	if (g_esGeneral.g_alPlugins != null)
 	{
 		static int iListSize;
@@ -2120,7 +2120,7 @@ static void vListAbilities(int admin)
 				switch (bHuman)
 				{
 					case true: MT_PrintToChat(admin, "%s %t", MT_TAG3, "AbilityInstalled", sFilename);
-					case false: MT_ReplyToCommand(admin, "%s %t", MT_TAG, "AbilityInstalled2", sFilename);
+					case false: PrintToServer("%s %t", MT_TAG, "AbilityInstalled2", sFilename);
 				}
 			}
 		}
@@ -2129,7 +2129,7 @@ static void vListAbilities(int admin)
 			switch (bHuman)
 			{
 				case true: MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoAbilities");
-				case false: MT_ReplyToCommand(admin, "%s %t", MT_TAG, "NoAbilities");
+				case false: PrintToServer("%s %t", MT_TAG, "NoAbilities");
 			}
 		}
 	}
@@ -2138,7 +2138,7 @@ static void vListAbilities(int admin)
 		switch (bHuman)
 		{
 			case true: MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoAbilities");
-			case false: MT_ReplyToCommand(admin, "%s %t", MT_TAG, "NoAbilities");
+			case false: PrintToServer("%s %t", MT_TAG, "NoAbilities");
 		}
 	}
 }
@@ -5581,7 +5581,7 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 
 			SetVariantString(sParentName);
 			AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "SetParent", g_esPlayer[tank].g_iLight[light], g_esPlayer[tank].g_iLight[light]);
-			SetEntProp(g_esPlayer[tank].g_iLight[light], Prop_Send, "m_hOwnerEntity", tank);
+			SetEntPropEnt(g_esPlayer[tank].g_iLight[light], Prop_Send, "m_hOwnerEntity", tank);
 
 			switch (light)
 			{

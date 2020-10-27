@@ -715,7 +715,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
 						DispatchSpawn(iWitch);
 						ActivateEntity(iWitch);
-						SetEntProp(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
+						SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
 					}
 
 					if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL2)

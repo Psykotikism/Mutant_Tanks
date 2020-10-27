@@ -292,15 +292,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (bIsWitch(attacker) && bIsSurvivor(victim))
 		{
-			int iOwner;
-			if (HasEntProp(attacker, Prop_Send, "m_hOwnerEntity"))
-			{
-				iOwner = GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity");
-			}
-
+			static int iOwner;
+			iOwner = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;
 			if (MT_IsTankSupported(iOwner) && MT_IsCustomTankSupported(iOwner))
 			{
-				if (bIsAreaNarrow(iOwner, g_esCache[iOwner].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iOwner].g_iTankType) || (g_esCache[iOwner].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iOwner].g_iRequiresHumans) || (!MT_HasAdminAccess(iOwner) && !bHasAdminAccess(iOwner, g_esAbility[g_esPlayer[iOwner].g_iTankType].g_iAccessFlags, g_esPlayer[iOwner].g_iAccessFlags)) || MT_IsAdminImmune(victim, iOwner) || bIsAdminImmune(victim, g_esPlayer[iOwner].g_iTankType, g_esAbility[g_esPlayer[iOwner].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
+				if ((!MT_HasAdminAccess(iOwner) && !bHasAdminAccess(iOwner, g_esAbility[g_esPlayer[iOwner].g_iTankType].g_iAccessFlags, g_esPlayer[iOwner].g_iAccessFlags)) || MT_IsAdminImmune(victim, iOwner) || bIsAdminImmune(victim, g_esPlayer[iOwner].g_iTankType, g_esAbility[g_esPlayer[iOwner].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 				{
 					return Plugin_Handled;
 				}
