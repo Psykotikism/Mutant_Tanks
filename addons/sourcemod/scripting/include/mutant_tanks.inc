@@ -158,8 +158,8 @@ forward void MT_OnHookEvent(bool hooked);
  * Called when a message is about to be logged.
  * Use this forward to intercept a message.
  *
- * @param message		Buffer containing the message.
  * @param type			Type of message being logged.
+ * @param message		Buffer containing the message.
  *
  * @return			Plugin_Handled to prevent the message from being logged, Plugin_Continue to allow.
  **/
@@ -498,11 +498,10 @@ native bool MT_IsTypeEnabled(int type);
  * Logs a message.
  *
  * @param type			Type of message to be logged.
- * @param message		Buffer to store the message.
- * @param size			Size of the buffer.
+ * @param message		Buffer containing the message.
  * @param ...			Variable number of format parameters.
  **/
-native void MT_LogMessage(int type = MT_LOG_CUSTOM, char[] message, any ...);
+native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ...);
 
 /**
  * Sets a Tank's Mutant Tank type.
@@ -1317,11 +1316,6 @@ stock bool bIsCommonInfected(int common)
 stock bool bIsEntityGrounded(int entity)
 {
 	return (HasEntProp(entity, Prop_Send, "m_fFlags") && (GetEntProp(entity, Prop_Send, "m_fFlags") & FL_ONGROUND)) || (HasEntProp(entity, Prop_Send, "m_hGroundEntity") && GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity") == 0);
-}
-
-stock bool bIsFinaleMap()
-{
-	return (FindEntityByClassname(-1, "info_changelevel") == -1 && FindEntityByClassname(-1, "trigger_changelevel") == -1) || FindEntityByClassname(-1, "trigger_finale") != -1 || FindEntityByClassname(-1, "finale_trigger") != -1;
 }
 
 stock bool bIsGunWeapon(int survivor)
