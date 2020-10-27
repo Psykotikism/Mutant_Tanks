@@ -754,8 +754,8 @@ forward void MT_OnHookEvent(bool hooked);
  * Called when a message is about to be logged.
  * Use this forward to intercept a message.
  *
- * @param message		Buffer containing the message.
  * @param type			Type of message being logged.
+ * @param message		Buffer containing the message.
  *
  * @return			Plugin_Handled to prevent the message from being logged, Plugin_Continue to allow.
  **/
@@ -1097,11 +1097,10 @@ native bool MT_IsTypeEnabled(int type);
  * Logs a message.
  *
  * @param type			Type of message to be logged.
- * @param message		Buffer to store the message.
- * @param size			Size of the buffer.
+ * @param message		Buffer containing the message.
  * @param ...			Variable number of format parameters.
  **/
-native void MT_LogMessage(int type = MT_LOG_CUSTOM, char[] message, any ...);
+native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ...);
 
 /**
  * Sets a Tank's Mutant Tank type.
@@ -1882,6 +1881,7 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate (PayPal only)
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 - Donate to me at alfred_llagas3637@yahoo.com
+
 
 
 
