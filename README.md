@@ -855,13 +855,14 @@ forward Action MT_OnTypeChosen(int &type, int tank);
 ```
 
 Natives:
+- Core plugin:
 ```
 /**
  * Returns if a certain Mutant Tank type can spawn.
  *
  * @param type			Mutant Tank type.
  * @return			True if the type can spawn, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_CanTypeSpawn(int type);
 
@@ -870,7 +871,7 @@ native bool MT_CanTypeSpawn(int type);
  *
  * @param type			Mutant Tank type.
  * @return			True if the type requires human-controlled survivors to be present, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_DoesTypeRequireHumans(int type);
 
@@ -881,7 +882,7 @@ native bool MT_DoesTypeRequireHumans(int type);
  * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
  * @return			The current access flags.
- * @error			Invalid client index or type is 0.
+ * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
 native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
 
@@ -899,7 +900,7 @@ native int MT_GetCurrentFinaleWave();
  * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
  * @return			The current immunity flags.
- * @error			Invalid client index or type is 0.
+ * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
 native int MT_GetImmunityFlags(int mode, int type = 0, int admin = -1);
 
@@ -922,12 +923,12 @@ native int MT_GetMinType();
  *
  * @param tank			Client index of the Tank.
  * @param type			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color, 4 = Rock color,
- *				5 = Tire color, 6 = Propane tank color, 7 = Flashlight color, 8 = Crown color
+ *					5 = Tire color, 6 = Propane tank color, 7 = Flashlight color, 8 = Crown color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
- * @error			Invalid client index.
+ * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 8.
  **/
 native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
@@ -936,9 +937,17 @@ native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue
  *
  * @param tank			Client index of the Tank.
  * @return			The run speed of the Tank.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native float MT_GetRunSpeed(int tank);
+
+/**
+ * Returns the scaled damage based on difficulty.
+ *
+ * @param damage		Base damage to scale.
+ * @return			The scaled damage based on difficulty.
+ **/
+native float MT_GetScaledDamage(float damage);
 
 /**
  * Returns the RGB colors given to a Mutant Tank.
@@ -949,7 +958,7 @@ native float MT_GetRunSpeed(int tank);
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
- * @error			Invalid client index.
+ * @error			Invalid client index, client is not in-game or type is less than 1 or greater than 2.
  **/
 native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
@@ -958,7 +967,7 @@ native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue
  *
  * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom name in.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native void MT_GetTankName(int tank, char[] buffer);
 
@@ -967,7 +976,7 @@ native void MT_GetTankName(int tank, char[] buffer);
  *
  * @param tank			Client index of the Tank.
  * @return			The Tank's Mutant Tank type.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native int MT_GetTankType(int tank);
 
@@ -976,6 +985,7 @@ native int MT_GetTankType(int tank);
  *
  * @param admin			Client index of the admin.
  * @return			True if the human player has access, false otherwise.
+ * @error			Invalid client index, client is not in-game, or client is a bot.
  **/
 native bool MT_HasAdminAccess(int admin);
 
@@ -984,7 +994,7 @@ native bool MT_HasAdminAccess(int admin);
  *
  * @param type			Mutant Tank type.
  * @return			True if the type has a chance of spawning, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_HasChanceToSpawn(int type);
 
@@ -1003,16 +1013,10 @@ native void MT_HideEntity(int entity, bool mode);
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
  * @return			True if the human survivor is immune, false otherwise.
+ * @error			Invalid survivor index, survivor is not in-game, survivor is dead, survivor is a bot, survivor is idle,
+ *					invalid Tank index, or Tank is not in-game.
  **/
 native bool MT_IsAdminImmune(int survivor, int tank);
-
-/**
- * Returns if the clone can use abilities.
- *
- * @param tank			Client index of the Tank.
- * @return			True if clone can use abilities, false otherwise.
- **/
-native bool MT_IsCloneSupported(int tank);
 
 /**
  * Returns if the core plugin is enabled.
@@ -1035,7 +1039,7 @@ native bool MT_IsCustomTankSupported(int tank);
  *
  * @param type			Mutant Tank type.
  * @return			True if the type is available, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_IsFinaleType(int type);
 
@@ -1044,7 +1048,7 @@ native bool MT_IsFinaleType(int type);
  *
  * @param tank			Client index of the Tank.
  * @return			True if the Tank has a glow outline, false otherwise.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native bool MT_IsGlowEnabled(int tank);
 
@@ -1053,18 +1057,9 @@ native bool MT_IsGlowEnabled(int tank);
  *
  * @param type			Mutant Tank type.
  * @return			True if the type is available, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_IsNonFinaleType(int type);
-
-/**
- * Returns if a Tank is a clone.
- *
- * @param tank			Client index of the Tank.
- * @return			True if the Tank is a clone, false otherwise.
- * @error			Invalid client index.
- **/
-native bool MT_IsTankClone(int tank);
 
 /**
  * Returns if a Tank is idle.
@@ -1072,7 +1067,7 @@ native bool MT_IsTankClone(int tank);
  * @param tank			Client index of the Tank.
  * @param type			Idle mode of the Tank. 0 = Both, 1 = Idle (waiting for survivors), 2 = Bugged (no behavior)
  * @return			True if the Tank is idle, false otherwise.
- * @error			Invalid client index.
+ * @error			Invalid client index, client is not in-game, client is dead, or type is less than 0 or greater than 2.
  **/
 native bool MT_IsTankIdle(int tank, int type = 0);
 
@@ -1083,9 +1078,9 @@ native bool MT_IsTankIdle(int tank, int type = 0);
  * @param flags			Checks to run.
  *					MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
  *					MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
- *				Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE
+ *					Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE
  * @return			True if the Tank is allowed to be a Mutant Tank, false otherwise.
- * @error			Invalid client index.
+ * @error			Invalid client index, client is not in-game, or client is dead.
  **/
 native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE);
 
@@ -1094,7 +1089,7 @@ native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_ING
  *
  * @param type			Mutant Tank type.
  * @return			True if the type is enabled, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_IsTypeEnabled(int type);
 
@@ -1114,6 +1109,7 @@ native void MT_LogMessage(int type = MT_LOG_CUSTOM, char[] message, any ...);
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
  * @param mode			True if the Tank should transform physically into the new Mutant Tank type, false otherwise.
+ * @error			Invalid client index, client is not in-game, client is dead, or type is 0 or less.
  **/
 native void MT_SetTankType(int tank, int type, bool mode);
 
@@ -1122,9 +1118,28 @@ native void MT_SetTankType(int tank, int type, bool mode);
  *
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
- * @error			Invalid client index or type is 0.
+ * @error			Invalid client index, client is not in-game, or type is 0 or less.
  **/
 native void MT_SpawnTank(int tank, int type);
+```
+- Clone ability:
+```
+/**
+ * Returns if the clone can use abilities.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if clone can use abilities, false otherwise.
+ **/
+native bool MT_IsCloneSupported(int tank);
+
+/**
+ * Returns if a Tank is a clone.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the Tank is a clone, false otherwise.
+ * @error			Invalid client index.
+ **/
+native bool MT_IsTankClone(int tank);
 ```
 
 Stocks:
@@ -1209,6 +1224,7 @@ Target filters:
 @tanks
 @special
 @infected
+@mutants
 ```
 
 Commands:

@@ -141,6 +141,30 @@
 			// 2nd number = Maximum value
 			"Type Range"				"1-1000"
 		}
+		"Difficulty"
+		{
+			// The damage scales to use for multiplying damage caused by Mutant Tanks.
+			// --
+			// Separate chances with commas.
+			// --
+			// Scale limit: 4
+			// Character limit for each damage scale: 9
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0
+			// --
+			// 1st number = Damage scale for Easy difficulty.
+			// 2nd number = Damage scale for Normal difficulty.
+			// 3rd number = Damage scale for Advanced difficulty.
+			// 4th number = Damage scale for Expert difficulty.
+			"Difficulty Damage"			"0.0,0.0,0.0,0.0"
+
+			// Scale all custom damage caused by Mutant Tanks based on the current difficulty.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Scale Damage"				"0"
+		}
 		"Health"
 		{
 			// Base health given to all Mutant Tanks.

@@ -74,6 +74,10 @@ Changes:
 32. The `Props Chance` setting now accepts two extra values to support the `Flashlight` and `Crown` props.
 33. The core plugin and its modules now requires `DHooks 2.2.0-detours15` or higher.
 34. Added the `Medic Field` and `Medic Field Color` settings for the `Medic` ability. (Thanks to Marttt and Silvers for the code!)
+35. Added the `Scale Damage` and `Difficulty Damage` settings under the `General/Difficulty` section.
+36. Added the `MT_GetScaledDamage` native to allow developers to get the proper scaled damage of Mutant Tanks.
+37. All the natives now throw errors when given invalid parameters.
+38. Added the `@mutants` target filter to let admins target Mutant Tanks.
 
 Files:
 
