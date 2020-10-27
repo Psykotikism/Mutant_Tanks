@@ -1284,6 +1284,7 @@ sm_mt_kamikaze - View information about the Kamikaze ability.
 sm_mt_lag - View information about the Lag ability.
 sm_mt_laser - View information about the Laser ability.
 sm_mt_leech - View information about the Leech ability.
+sm_mt_lightning - View information about the Lightning ability.
 sm_mt_medic - View information about the Medic ability.
 sm_mt_meteor - View information about the Meteor ability.
 sm_mt_minion - View information about the Minion ability.
@@ -1865,7 +1866,6 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate (PayPal only)
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 - Donate to me at alfred_llagas3637@yahoo.com
-
 
 
 

@@ -36,6 +36,7 @@ Bug fixes:
 30. Fixed the `MT_SetTankType` native not reverting changes properly in some scenarios. (Thanks to Mi.Cura for testing and reporting!)
 31. Fixed some admin commands using the wrong access flags.
 32. Fixed the `Rock` and `Spam` abilities' rocks colliding with each other and producing lag.
+33. Fixed the `Splatter` ability's `Splatter Type` setting using the wrong value limit. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 Changes:
 
@@ -62,16 +63,17 @@ Changes:
 21. Added the `Extras Delay` settings under `Plugin Settings/Waves` section.
 22. The arrival of Mutant Tanks is no longer announced when they are idle. Instead, the arrival is announced once the survivors trigger the Mutant Tank.
 23. Added the `Fly` ability. (Thanks to Ernecio for the code!)
-24. None of the abilities' plugins need to check if the `Clone` ability is installed anymore.
-25. Added the `MT_IsCustomTankSupported` native to allow developers to check if a Tank clone is able to use abilities like real Mutant Tanks.
-26. Applied a new idle fix method for the `Idle` ability. (Thanks to Lux for the code!)
-27. Added the `Open Areas Only` setting to determine which types or abilities are only for open areas.
-28. Added the `Flashlight` and `Crown` options for the `Props Attached` setting.
-29. Added the `Flashlight Color` setting to determine the color of the Tank's dynamic flashlight prop. (Thanks to Ernecio for the code!)
-30. Added the `Crown Color` setting to determine the color of the Tank's crown prop. (Thanks to Ernecio for the code!)
-31. The `Props Chance` setting now accepts two extra values to support the `Flashlight` and `Crown` props.
-32. The core plugin and its modules now requires `DHooks 2.2.0-detours15` or higher.
-33. Added the `Medic Field` and `Medic Field Color` settings for the `Medic` ability. (Thanks to Marttt and Silvers for the code!)
+24. Added the `Lightning` ability which is exclusive to Left 4 Dead 2.
+25. None of the abilities' plugins need to check if the `Clone` ability is installed anymore.
+26. Added the `MT_IsCustomTankSupported` native to allow developers to check if a Tank clone is able to use abilities like real Mutant Tanks.
+27. Applied a new idle fix method for the `Idle` ability. (Thanks to Lux for the code!)
+28. Added the `Open Areas Only` setting to determine which types or abilities are only for open areas.
+29. Added the `Flashlight` and `Crown` options for the `Props Attached` setting.
+30. Added the `Flashlight Color` setting to determine the color of the Tank's dynamic flashlight prop. (Thanks to Ernecio for the code!)
+31. Added the `Crown Color` setting to determine the color of the Tank's crown prop. (Thanks to Ernecio for the code!)
+32. The `Props Chance` setting now accepts two extra values to support the `Flashlight` and `Crown` props.
+33. The core plugin and its modules now requires `DHooks 2.2.0-detours15` or higher.
+34. Added the `Medic Field` and `Medic Field Color` settings for the `Medic` ability. (Thanks to Marttt and Silvers for the code!)
 
 Files:
 

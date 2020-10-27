@@ -1,11 +1,12 @@
 # Information
 
 ## Notes
-> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
+> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
+- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 29-30 and recompile at your own risk.)
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 28 and recompile at your own risk.)
-- Ability count: 75 (Suggest more if you want; limit is 100.)
+- Ability count: 76 (Suggest more if you want; limit is 100.)
 
 ## Sections
 - Plugin Settings
@@ -6806,6 +6807,123 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Leech Range Chance"			"15.0"
+		}
+	}
+}
+```
+
+##### Lightning Ability
+```
+"Mutant Tanks"
+{
+	"Tank #1"
+	{
+		// The Mutant Tank creates lightning storms.
+		// Requires "mt_lightning.smx" to be installed.
+		// Note: Only available in Left 4 Dead 2.
+		"Lightning Ability"
+		{
+			// Admins with one or more of these access flags have access to this ability.
+			// --
+			// Empty: No access flags are immune.
+			// Not empty: These access flags are immune.
+			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
+			// Allow human-controlled Mutant Tanks to use this ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON, players can use buttons to activate abilities.
+			// 2: ON, abilities will activate automatically.
+			"Human Ability"				"0"
+
+			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Ammo"				"5"
+
+			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 999999
+			"Human Cooldown"			"30"
+
+			// The mode of how human-controlled Mutant Tanks activate their abilities.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Press buttons to activate corresponding abilities. Cooldown starts after ability's duration ends.
+			// 1: Hold down buttons to keep corresponding abilities activated. Cooldown starts after the player lets go of the buttons.
+			"Human Mode"				"1"
+
+			// The ability can only activate in open areas.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Open Areas Only"			"0"
+
+			// The ability is only effective toward human survivors.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
+			// 0: OFF
+			// 1-32: ON, the number of human survivors required to be present for this ability to be effective.
+			"Requires Humans"			"0"
+
+			// Enable this ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Enabled"			"0"
+
+			// Display a message whenever the ability activates/deactivates.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Ability Message"			"0"
+
+			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (No chance)
+			// Maximum: 100.0 (Highest chance)
+			"Lightning Chance"			"33.3"
+
+			// The Mutant Tank's lightning storm strikes cause this much damage per hit.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 999999
+			"Lightning Damage"			"5"
+
+			// The Mutant Tank's ability effects last this long.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 999999
+			"Lightning Duration"			"5"
+
+			// The Mutant Tank's lightning storm strikes every time this many seconds passes.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Lightning Interval"			"1.0"
 		}
 	}
 }
