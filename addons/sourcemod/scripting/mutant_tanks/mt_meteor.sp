@@ -53,6 +53,7 @@ enum struct esPlayer
 
 	float g_flMeteorChance;
 	float g_flMeteorDamage;
+	float g_flMeteorInterval;
 	float g_flMeteorRadius[2];
 
 	int g_iAccessFlags;
@@ -78,6 +79,7 @@ enum struct esAbility
 {
 	float g_flMeteorChance;
 	float g_flMeteorDamage;
+	float g_flMeteorInterval;
 	float g_flMeteorRadius[2];
 
 	int g_iAccessFlags;
@@ -100,6 +102,7 @@ enum struct esCache
 {
 	float g_flMeteorChance;
 	float g_flMeteorDamage;
+	float g_flMeteorInterval;
 	float g_flMeteorRadius[2];
 
 	int g_iHumanAbility;
@@ -337,6 +340,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_flMeteorChance = 33.3;
 				g_esAbility[iIndex].g_flMeteorDamage = 5.0;
 				g_esAbility[iIndex].g_iMeteorDuration = 5;
+				g_esAbility[iIndex].g_flMeteorInterval = 0.6;
 				g_esAbility[iIndex].g_iMeteorMode = 0;
 				g_esAbility[iIndex].g_flMeteorRadius[0] = -180.0;
 				g_esAbility[iIndex].g_flMeteorRadius[1] = 180.0;
@@ -361,6 +365,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_flMeteorChance = 0.0;
 					g_esPlayer[iPlayer].g_flMeteorDamage = 0.0;
 					g_esPlayer[iPlayer].g_iMeteorDuration = 0;
+					g_esPlayer[iPlayer].g_flMeteorInterval = 0.0;
 					g_esPlayer[iPlayer].g_iMeteorMode = 0;
 					g_esPlayer[iPlayer].g_flMeteorRadius[0] = 0.0;
 					g_esPlayer[iPlayer].g_flMeteorRadius[1] = 0.0;
@@ -385,6 +390,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_flMeteorChance = flGetKeyValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esPlayer[admin].g_flMeteorChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_flMeteorDamage = flGetKeyValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esPlayer[admin].g_flMeteorDamage, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_iMeteorDuration = iGetKeyValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esPlayer[admin].g_iMeteorDuration, value, 1, 999999);
+		g_esPlayer[admin].g_flMeteorInterval = flGetKeyValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esPlayer[admin].g_flMeteorInterval, value, 0.1, 999999.0);
 		g_esPlayer[admin].g_iMeteorMode = iGetKeyValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esPlayer[admin].g_iMeteorMode, value, 0, 1);
 
 		if (StrEqual(subsection, "meteorability", false) || StrEqual(subsection, "meteor ability", false) || StrEqual(subsection, "meteor_ability", false) || StrEqual(subsection, "meteor", false))
@@ -423,6 +429,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_flMeteorChance = flGetKeyValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esAbility[type].g_flMeteorChance, value, 0.0, 100.0);
 		g_esAbility[type].g_flMeteorDamage = flGetKeyValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esAbility[type].g_flMeteorDamage, value, 1.0, 999999.0);
 		g_esAbility[type].g_iMeteorDuration = iGetKeyValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esAbility[type].g_iMeteorDuration, value, 1, 999999);
+		g_esAbility[type].g_flMeteorInterval = flGetKeyValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esAbility[type].g_flMeteorInterval, value, 0.1, 999999.0);
 		g_esAbility[type].g_iMeteorMode = iGetKeyValue(subsection, "meteorability", "meteor ability", "meteor_ability", "meteor", key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esAbility[type].g_iMeteorMode, value, 0, 1);
 
 		if (StrEqual(subsection, "meteorability", false) || StrEqual(subsection, "meteor ability", false) || StrEqual(subsection, "meteor_ability", false) || StrEqual(subsection, "meteor", false))
@@ -454,6 +461,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flMeteorChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorChance, g_esAbility[type].g_flMeteorChance);
 	g_esCache[tank].g_flMeteorDamage = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorDamage, g_esAbility[type].g_flMeteorDamage);
+	g_esCache[tank].g_flMeteorInterval = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorInterval, g_esAbility[type].g_flMeteorInterval);
 	g_esCache[tank].g_flMeteorRadius[0] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorRadius[0], g_esAbility[type].g_flMeteorRadius[0]);
 	g_esCache[tank].g_flMeteorRadius[1] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorRadius[1], g_esAbility[type].g_flMeteorRadius[1]);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
@@ -654,7 +662,7 @@ static void vMeteor2(int tank)
 	}
 
 	DataPack dpMeteor;
-	CreateDataTimer(0.6, tTimerMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateDataTimer(g_esCache[tank].g_flMeteorInterval, tTimerMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpMeteor.WriteCell(GetClientUserId(tank));
 	dpMeteor.WriteCell(g_esPlayer[tank].g_iTankType);
 	dpMeteor.WriteCell(GetTime());
@@ -833,11 +841,11 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 	iMeteor = -1;
 	while ((iMeteor = FindEntityByClassname(iMeteor, "tank_rock")) != INVALID_ENT_REFERENCE)
 	{
-		static int iOwner;
-		iOwner = GetEntPropEnt(iMeteor, Prop_Data, "m_hThrower");
-		if (iTank == iOwner && flGetGroundUnits(iMeteor) < 200.0)
+		static int iTank2;
+		iTank2 = GetEntPropEnt(iMeteor, Prop_Data, "m_hThrower");
+		if (iTank == iTank2 && flGetGroundUnits(iMeteor) < 200.0)
 		{
-			vMeteor(iOwner, iMeteor);
+			vMeteor(iTank2, iMeteor);
 		}
 	}
 

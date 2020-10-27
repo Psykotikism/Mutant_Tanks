@@ -6636,6 +6636,7 @@ public MRESReturn mreTankRockPost(Handle hReturn)
 		if (bIsTank(iTank))
 		{
 			SetEntPropEnt(iRock, Prop_Data, "m_hThrower", iTank);
+			SetEntPropEnt(iRock, Prop_Send, "m_hOwnerEntity", g_esGeneral.g_iLauncher);
 			SetEntityRenderColor(iRock, iGetRandomColor(g_esCache[iTank].g_iRockColor[0]), iGetRandomColor(g_esCache[iTank].g_iRockColor[1]), iGetRandomColor(g_esCache[iTank].g_iRockColor[2]), iGetRandomColor(g_esCache[iTank].g_iRockColor[3]));
 			vSetRockModel(iTank, iRock);
 		}

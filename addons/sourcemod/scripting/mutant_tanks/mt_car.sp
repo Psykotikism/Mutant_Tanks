@@ -49,6 +49,7 @@ enum struct esPlayer
 	bool g_bActivated;
 
 	float g_flCarChance;
+	float g_flCarInterval;
 	float g_flCarRadius[2];
 
 	int g_iAccessFlags;
@@ -72,6 +73,7 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 enum struct esAbility
 {
 	float g_flCarChance;
+	float g_flCarInterval;
 	float g_flCarRadius[2];
 
 	int g_iAccessFlags;
@@ -92,6 +94,7 @@ esAbility g_esAbility[MT_MAXTYPES + 1];
 enum struct esCache
 {
 	float g_flCarChance;
+	float g_flCarInterval;
 	float g_flCarRadius[2];
 
 	int g_iCarAbility;
@@ -328,6 +331,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_flCarChance = 33.3;
 				g_esAbility[iIndex].g_iCarDuration = 5;
 				g_esAbility[iIndex].g_iCarOptions = 0;
+				g_esAbility[iIndex].g_flCarInterval = 0.6;
 				g_esAbility[iIndex].g_flCarRadius[0] = -180.0;
 				g_esAbility[iIndex].g_flCarRadius[1] = 180.0;
 			}
@@ -349,6 +353,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_flCarChance = 0.0;
 					g_esPlayer[iPlayer].g_iCarDuration = 0;
 					g_esPlayer[iPlayer].g_iCarOptions = 0;
+					g_esPlayer[iPlayer].g_flCarInterval = 0.0;
 					g_esPlayer[iPlayer].g_flCarRadius[0] = 0.0;
 					g_esPlayer[iPlayer].g_flCarRadius[1] = 0.0;
 				}
@@ -371,6 +376,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iCarMessage = iGetKeyValue(subsection, "carability", "car ability", "car_ability", "car", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iCarMessage, value, 0, 1);
 		g_esPlayer[admin].g_flCarChance = flGetKeyValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esPlayer[admin].g_flCarChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iCarDuration = iGetKeyValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esPlayer[admin].g_iCarDuration, value, 1, 999999);
+		g_esPlayer[admin].g_flCarInterval = flGetKeyValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esPlayer[admin].g_flCarInterval, value, 0.1, 999999.0);
 		g_esPlayer[admin].g_iCarOptions = iGetKeyValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarOptions", "Car Options", "Car_Options", "options", g_esPlayer[admin].g_iCarOptions, value, 0, 7);
 
 		if (StrEqual(subsection, "carability", false) || StrEqual(subsection, "car ability", false) || StrEqual(subsection, "car_ability", false) || StrEqual(subsection, "car", false))
@@ -404,6 +410,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iCarMessage = iGetKeyValue(subsection, "carability", "car ability", "car_ability", "car", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iCarMessage, value, 0, 1);
 		g_esAbility[type].g_flCarChance = flGetKeyValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esAbility[type].g_flCarChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iCarDuration = iGetKeyValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esAbility[type].g_iCarDuration, value, 1, 999999);
+		g_esAbility[type].g_flCarInterval = flGetKeyValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esAbility[type].g_flCarInterval, value, 0.1, 999999.0);
 		g_esAbility[type].g_iCarOptions = iGetKeyValue(subsection, "carability", "car ability", "car_ability", "car", key, "CarOptions", "Car Options", "Car_Options", "options", g_esAbility[type].g_iCarOptions, value, 0, 7);
 
 		if (StrEqual(subsection, "carability", false) || StrEqual(subsection, "car ability", false) || StrEqual(subsection, "car_ability", false) || StrEqual(subsection, "car", false))
@@ -430,6 +437,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flCarChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCarChance, g_esAbility[type].g_flCarChance);
+	g_esCache[tank].g_flCarInterval = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCarInterval, g_esAbility[type].g_flCarInterval);
 	g_esCache[tank].g_flCarRadius[0] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCarRadius[0], g_esAbility[type].g_flCarRadius[0]);
 	g_esCache[tank].g_flCarRadius[1] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCarRadius[1], g_esAbility[type].g_flCarRadius[1]);
 	g_esCache[tank].g_iCarAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCarAbility, g_esAbility[type].g_iCarAbility);
@@ -566,7 +574,7 @@ static void vCar(int tank)
 	}
 
 	DataPack dpCar;
-	CreateDataTimer(0.6, tTimerCar, dpCar, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateDataTimer(g_esCache[tank].g_flCarInterval, tTimerCar, dpCar, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpCar.WriteCell(GetClientUserId(tank));
 	dpCar.WriteCell(g_esPlayer[tank].g_iTankType);
 	dpCar.WriteCell(GetTime());

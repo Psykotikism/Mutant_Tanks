@@ -10,6 +10,7 @@
  **/
 
 #include <sourcemod>
+#include <sdkhooks>
 #include <mutant_tanks>
 
 #pragma semicolon 1
@@ -47,6 +48,7 @@ enum struct esPlayer
 	bool g_bActivated;
 
 	float g_flSpamChance;
+	float g_flSpamInterval;
 
 	int g_iAccessFlags;
 	int g_iCooldown;
@@ -55,6 +57,8 @@ enum struct esPlayer
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanMode;
+	int g_iImmunityFlags;
+	int g_iLauncher;
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iSpamAbility;
@@ -69,12 +73,14 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 enum struct esAbility
 {
 	float g_flSpamChance;
+	float g_flSpamInterval;
 
 	int g_iAccessFlags;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanMode;
+	int g_iImmunityFlags;
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iSpamAbility;
@@ -88,6 +94,7 @@ esAbility g_esAbility[MT_MAXTYPES + 1];
 enum struct esCache
 {
 	float g_flSpamChance;
+	float g_flSpamInterval;
 
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
@@ -120,6 +127,8 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+
 	vRemoveSpam(client);
 }
 
@@ -286,6 +295,38 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsValidEntity(inflictor) && damage >= 0.5)
+	{
+		static char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		if (StrEqual(sClassname, "tank_rock"))
+		{
+			static int iLauncher;
+			iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0;
+			if (bIsValidEntity(iLauncher))
+			{
+				static int iTank;
+				iTank = HasEntProp(iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
+				if (g_esPlayer[iTank].g_iLauncher != INVALID_ENT_REFERENCE && iLauncher == EntRefToEntIndex(g_esPlayer[iTank].g_iLauncher) && MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)))
+				{
+					if (bIsInfected(victim) || (bIsSurvivor(victim) && (MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))))
+					{
+						return Plugin_Handled;
+					}
+
+					damage = MT_GetScaledDamage(float(g_esCache[iTank].g_iSpamDamage));
+
+					return Plugin_Changed;
+				}
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
 public void MT_OnPluginCheck(ArrayList &list)
 {
 	char sName[32];
@@ -310,6 +351,7 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
+				g_esAbility[iIndex].g_iImmunityFlags = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -321,6 +363,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_flSpamChance = 33.3;
 				g_esAbility[iIndex].g_iSpamDamage = 5;
 				g_esAbility[iIndex].g_iSpamDuration = 5;
+				g_esAbility[iIndex].g_flSpamInterval = 0.5;
 			}
 		}
 		case 3:
@@ -330,6 +373,7 @@ public void MT_OnConfigsLoad(int mode)
 				if (bIsValidClient(iPlayer))
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
@@ -341,6 +385,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_flSpamChance = 0.0;
 					g_esPlayer[iPlayer].g_iSpamDamage = 0;
 					g_esPlayer[iPlayer].g_iSpamDuration = 0;
+					g_esPlayer[iPlayer].g_flSpamInterval = 0.0;
 				}
 			}
 		}
@@ -362,12 +407,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_flSpamChance = flGetKeyValue(subsection, "spamability", "spam ability", "spam_ability", "spam", key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esPlayer[admin].g_flSpamChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iSpamDamage = iGetKeyValue(subsection, "spamability", "spam ability", "spam_ability", "spam", key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esPlayer[admin].g_iSpamDamage, value, 1, 999999);
 		g_esPlayer[admin].g_iSpamDuration = iGetKeyValue(subsection, "spamability", "spam ability", "spam_ability", "spam", key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esPlayer[admin].g_iSpamDuration, value, 1, 999999);
+		g_esPlayer[admin].g_flSpamInterval = flGetKeyValue(subsection, "spamability", "spam ability", "spam_ability", "spam", key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esPlayer[admin].g_flSpamInterval, value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "spamability", false) || StrEqual(subsection, "spam ability", false) || StrEqual(subsection, "spam_ability", false) || StrEqual(subsection, "spam", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
 				g_esPlayer[admin].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_esPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
 			}
 		}
 	}
@@ -385,12 +435,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_flSpamChance = flGetKeyValue(subsection, "spamability", "spam ability", "spam_ability", "spam", key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esAbility[type].g_flSpamChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iSpamDamage = iGetKeyValue(subsection, "spamability", "spam ability", "spam_ability", "spam", key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esAbility[type].g_iSpamDamage, value, 1, 999999);
 		g_esAbility[type].g_iSpamDuration = iGetKeyValue(subsection, "spamability", "spam ability", "spam_ability", "spam", key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esAbility[type].g_iSpamDuration, value, 1, 999999);
+		g_esAbility[type].g_flSpamInterval = flGetKeyValue(subsection, "spamability", "spam ability", "spam_ability", "spam", key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esAbility[type].g_flSpamInterval, value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "spamability", false) || StrEqual(subsection, "spam ability", false) || StrEqual(subsection, "spam_ability", false) || StrEqual(subsection, "spam", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
 				g_esAbility[type].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_esAbility[type].g_iImmunityFlags = ReadFlagString(value);
 			}
 		}
 	}
@@ -400,6 +455,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flSpamChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flSpamChance, g_esAbility[type].g_flSpamChance);
+	g_esCache[tank].g_flSpamInterval = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flSpamInterval, g_esAbility[type].g_flSpamInterval);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
@@ -526,8 +582,24 @@ public void MT_OnChangeType(int tank, bool revert)
 	vRemoveSpam(tank);
 }
 
+static void vRemoveLauncher(int tank)
+{
+	if (bIsValidEntRef(g_esPlayer[tank].g_iLauncher))
+	{
+		g_esPlayer[tank].g_iLauncher = EntRefToEntIndex(g_esPlayer[tank].g_iLauncher);
+		if (bIsValidEntity(g_esPlayer[tank].g_iLauncher))
+		{
+			RemoveEntity(g_esPlayer[tank].g_iLauncher);
+		}
+	}
+
+	g_esPlayer[tank].g_iLauncher = INVALID_ENT_REFERENCE;
+}
+
 static void vRemoveSpam(int tank)
 {
+	vRemoveLauncher(tank);
+
 	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCount = 0;
@@ -546,6 +618,8 @@ static void vReset()
 
 static void vReset2(int tank)
 {
+	vRemoveLauncher(tank);
+
 	g_esPlayer[tank].g_bActivated = false;
 
 	CreateTimer(3.0, tTimerStopRockSound, _, TIMER_FLAG_NO_MAPCHANGE);
@@ -592,10 +666,11 @@ static void vSpam(int tank)
 		DispatchSpawn(iLauncher);
 		DispatchKeyValue(iLauncher, "rockdamageoverride", sDamage);
 		iLauncher = EntIndexToEntRef(iLauncher);
+		g_esPlayer[tank].g_iLauncher = iLauncher;
 	}
 
 	DataPack dpSpam;
-	CreateDataTimer(0.5, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateDataTimer(g_esCache[tank].g_flSpamInterval, tTimerSpam, dpSpam, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpSpam.WriteCell(iLauncher);
 	dpSpam.WriteCell(GetClientUserId(tank));
 	dpSpam.WriteCell(g_esPlayer[tank].g_iTankType);

@@ -968,9 +968,9 @@ static void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 		GetEntPropString(iProp, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 		if (StrEqual(sModel, MODEL_JETPACK, false) || StrEqual(sModel, MODEL_CONCRETE_CHUNK, false) || StrEqual(sModel, MODEL_TREE_TRUNK, false) || StrEqual(sModel, MODEL_TIRES, false) || StrEqual(sModel, MODEL_PROPANETANK, false) || StrEqual(sModel, MODEL_TANK, false))
 		{
-			static int iOwner;
-			iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-			if (iOwner == tank)
+			static int iTank;
+			iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+			if (iTank == tank)
 			{
 				if (StrEqual(sModel, MODEL_JETPACK, false))
 				{
@@ -1018,13 +1018,13 @@ static void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 	iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "beam_spotlight")) != INVALID_ENT_REFERENCE)
 	{
-		static int iOwner;
-		iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-		if (iOwner == tank)
+		static int iTank;
+		iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+		if (iTank == tank)
 		{
 			static char sParentName[64], sTargetName[64];
-			GetEntPropString(iOwner, Prop_Data, "m_iName", sTargetName, sizeof(sTargetName));
-			FormatEx(sParentName, sizeof(sParentName), "mutant_tank_%i_%i_", iOwner, MT_GetTankType(iOwner));
+			GetEntPropString(iTank, Prop_Data, "m_iName", sTargetName, sizeof(sTargetName));
+			FormatEx(sParentName, sizeof(sParentName), "mutant_tank_%i_%i_", iTank, MT_GetTankType(iTank));
 			static int iColor[4];
 			if (StrContains(sTargetName, sParentName, false) == 0)
 			{
@@ -1044,9 +1044,9 @@ static void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 	iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "env_steam")) != INVALID_ENT_REFERENCE)
 	{
-		static int iOwner;
-		iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-		if (iOwner == tank)
+		static int iTank;
+		iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+		if (iTank == tank)
 		{
 			static int iFlameColor[4];
 			MT_GetPropColors(tank, 3, iFlameColor[0], iFlameColor[1], iFlameColor[2], iFlameColor[3]);
@@ -1058,9 +1058,9 @@ static void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 	iProp = -1;
 	while ((iProp = FindEntityByClassname(iProp, "light_dynamic")) != INVALID_ENT_REFERENCE)
 	{
-		static int iOwner;
-		iOwner = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
-		if (iOwner == tank)
+		static int iTank;
+		iTank = GetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity");
+		if (iTank == tank)
 		{
 			static int iFlashlightColor[4];
 			MT_GetPropColors(tank, 7, iFlashlightColor[0], iFlashlightColor[1], iFlashlightColor[2], iFlashlightColor[3]);

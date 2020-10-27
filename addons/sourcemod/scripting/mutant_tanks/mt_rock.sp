@@ -10,6 +10,7 @@
  **/
 
 #include <sourcemod>
+#include <sdkhooks>
 #include <mutant_tanks>
 
 #pragma semicolon 1
@@ -47,6 +48,7 @@ enum struct esPlayer
 	bool g_bActivated;
 
 	float g_flRockChance;
+	float g_flRockInterval;
 	float g_flRockRadius[2];
 
 	int g_iAccessFlags;
@@ -56,6 +58,8 @@ enum struct esPlayer
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanMode;
+	int g_iImmunityFlags;
+	int g_iLauncher;
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iRockAbility;
@@ -70,6 +74,7 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 enum struct esAbility
 {
 	float g_flRockChance;
+	float g_flRockInterval;
 	float g_flRockRadius[2];
 
 	int g_iAccessFlags;
@@ -77,6 +82,7 @@ enum struct esAbility
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
 	int g_iHumanMode;
+	int g_iImmunityFlags;
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iRockAbility;
@@ -90,6 +96,7 @@ esAbility g_esAbility[MT_MAXTYPES + 1];
 enum struct esCache
 {
 	float g_flRockChance;
+	float g_flRockInterval;
 	float g_flRockRadius[2];
 
 	int g_iHumanAbility;
@@ -123,6 +130,8 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+
 	vRemoveRock(client);
 }
 
@@ -289,6 +298,38 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsValidEntity(inflictor) && damage >= 0.5)
+	{
+		static char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		if (StrEqual(sClassname, "tank_rock"))
+		{
+			static int iLauncher;
+			iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0;
+			if (bIsValidEntity(iLauncher))
+			{
+				static int iTank;
+				iTank = HasEntProp(iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
+				if (g_esPlayer[iTank].g_iLauncher != INVALID_ENT_REFERENCE && iLauncher == EntRefToEntIndex(g_esPlayer[iTank].g_iLauncher) && MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)))
+				{
+					if (bIsInfected(victim) || (bIsSurvivor(victim) && (MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))))
+					{
+						return Plugin_Handled;
+					}
+
+					damage = MT_GetScaledDamage(float(g_esCache[iTank].g_iRockDamage));
+
+					return Plugin_Changed;
+				}
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
 public void MT_OnPluginCheck(ArrayList &list)
 {
 	char sName[32];
@@ -313,6 +354,7 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
+				g_esAbility[iIndex].g_iImmunityFlags = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -324,6 +366,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_flRockChance = 33.3;
 				g_esAbility[iIndex].g_iRockDamage = 5;
 				g_esAbility[iIndex].g_iRockDuration = 5;
+				g_esAbility[iIndex].g_flRockInterval = 0.2;
 				g_esAbility[iIndex].g_flRockRadius[0] = -1.25;
 				g_esAbility[iIndex].g_flRockRadius[1] = 1.25;
 			}
@@ -335,6 +378,7 @@ public void MT_OnConfigsLoad(int mode)
 				if (bIsValidClient(iPlayer))
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
@@ -346,6 +390,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_flRockChance = 0.0;
 					g_esPlayer[iPlayer].g_iRockDamage = 0;
 					g_esPlayer[iPlayer].g_iRockDuration = 0;
+					g_esPlayer[iPlayer].g_flRockInterval = 0.0;
 					g_esPlayer[iPlayer].g_flRockRadius[0] = 0.0;
 					g_esPlayer[iPlayer].g_flRockRadius[1] = 0.0;
 				}
@@ -369,12 +414,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_flRockChance = flGetKeyValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockChance", "Rock Chance", "Rock_Chance", "chance", g_esPlayer[admin].g_flRockChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iRockDamage = iGetKeyValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", g_esPlayer[admin].g_iRockDamage, value, 1, 999999);
 		g_esPlayer[admin].g_iRockDuration = iGetKeyValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", g_esPlayer[admin].g_iRockDuration, value, 1, 999999);
+		g_esPlayer[admin].g_flRockInterval = flGetKeyValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esPlayer[admin].g_flRockInterval, value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "rockability", false) || StrEqual(subsection, "rock ability", false) || StrEqual(subsection, "rock_ability", false) || StrEqual(subsection, "rock", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
 				g_esPlayer[admin].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_esPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
 			}
 			else if (StrEqual(key, "RockRadius", false) || StrEqual(key, "Rock Radius", false) || StrEqual(key, "Rock_Radius", false) || StrEqual(key, "radius", false))
 			{
@@ -402,12 +452,17 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_flRockChance = flGetKeyValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockChance", "Rock Chance", "Rock_Chance", "chance", g_esAbility[type].g_flRockChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iRockDamage = iGetKeyValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", g_esAbility[type].g_iRockDamage, value, 1, 999999);
 		g_esAbility[type].g_iRockDuration = iGetKeyValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", g_esAbility[type].g_iRockDuration, value, 1, 999999);
+		g_esAbility[type].g_flRockInterval = flGetKeyValue(subsection, "rockability", "rock ability", "rock_ability", "rock", key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esAbility[type].g_flRockInterval, value, 0.1, 999999.0);
 
 		if (StrEqual(subsection, "rockability", false) || StrEqual(subsection, "rock ability", false) || StrEqual(subsection, "rock_ability", false) || StrEqual(subsection, "rock", false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
 				g_esAbility[type].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_esAbility[type].g_iImmunityFlags = ReadFlagString(value);
 			}
 			else if (StrEqual(key, "RockRadius", false) || StrEqual(key, "Rock Radius", false) || StrEqual(key, "Rock_Radius", false) || StrEqual(key, "radius", false))
 			{
@@ -427,6 +482,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flRockChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flRockChance, g_esAbility[type].g_flRockChance);
+	g_esCache[tank].g_flRockInterval = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flRockInterval, g_esAbility[type].g_flRockInterval);
 	g_esCache[tank].g_flRockRadius[0] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flRockRadius[0], g_esAbility[type].g_flRockRadius[0]);
 	g_esCache[tank].g_flRockRadius[1] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flRockRadius[1], g_esAbility[type].g_flRockRadius[1]);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
@@ -555,8 +611,24 @@ public void MT_OnChangeType(int tank, bool revert)
 	vRemoveRock(tank);
 }
 
+static void vRemoveLauncher(int tank)
+{
+	if (bIsValidEntRef(g_esPlayer[tank].g_iLauncher))
+	{
+		g_esPlayer[tank].g_iLauncher = EntRefToEntIndex(g_esPlayer[tank].g_iLauncher);
+		if (bIsValidEntity(g_esPlayer[tank].g_iLauncher))
+		{
+			RemoveEntity(g_esPlayer[tank].g_iLauncher);
+		}
+	}
+
+	g_esPlayer[tank].g_iLauncher = INVALID_ENT_REFERENCE;
+}
+
 static void vRemoveRock(int tank)
 {
+	vRemoveLauncher(tank);
+
 	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCount = 0;
@@ -575,6 +647,8 @@ static void vReset()
 
 static void vReset2(int tank)
 {
+	vRemoveLauncher(tank);
+
 	g_esPlayer[tank].g_bActivated = false;
 
 	CreateTimer(3.0, tTimerStopRockSound, _, TIMER_FLAG_NO_MAPCHANGE);
@@ -621,10 +695,11 @@ static void vRock(int tank)
 		DispatchSpawn(iLauncher);
 		DispatchKeyValue(iLauncher, "rockdamageoverride", sDamage);
 		iLauncher = EntIndexToEntRef(iLauncher);
+		g_esPlayer[tank].g_iLauncher = iLauncher;
 	}
 
 	DataPack dpRock;
-	CreateDataTimer(0.2, tTimerRock, dpRock, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateDataTimer(g_esCache[tank].g_flRockInterval, tTimerRock, dpRock, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpRock.WriteCell(iLauncher);
 	dpRock.WriteCell(GetClientUserId(tank));
 	dpRock.WriteCell(g_esPlayer[tank].g_iTankType);
