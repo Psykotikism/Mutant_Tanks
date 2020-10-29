@@ -479,6 +479,13 @@ static void vCacheOriginalSettings(int tank)
 	g_esOmni[tank].g_iRequiresHumans = iGetSettingValue(true, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[iType].g_iRequiresHumans);
 }
 
+public void MT_OnCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+}
+
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
@@ -574,7 +581,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnButtonReleased(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		if (button & MT_MAIN_KEY)
 		{

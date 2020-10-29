@@ -48,7 +48,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esPlayer
 {
 	bool g_bAffected;
-	bool g_bHypno3;
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
@@ -565,6 +564,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+public void MT_OnCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+}
+
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
@@ -765,7 +771,6 @@ static void vReset()
 static void vReset2(int tank)
 {
 	g_esPlayer[tank].g_bAffected = false;
-	g_esPlayer[tank].g_bHypno3 = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
 	g_esPlayer[tank].g_iCooldown = -1;

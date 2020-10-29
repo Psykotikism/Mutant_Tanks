@@ -499,6 +499,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+public void MT_OnCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+}
+
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
@@ -566,7 +573,7 @@ public void MT_OnButtonPressed(int tank, int button)
 							if (!g_esPlayer[tank].g_bActivated && !bRecharging)
 							{
 								static int iSurvivorCount;
-								iSurvivorCount = iGetVictimCount(tank);
+								iSurvivorCount = iGetVictimCount(tank, true);
 								if (iSurvivorCount > 0)
 								{
 									g_esPlayer[tank].g_bActivated = true;
@@ -599,7 +606,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnButtonReleased(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		if (button & MT_MAIN_KEY)
 		{
@@ -711,7 +718,7 @@ static void vYellAbility(int tank)
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flYellChance)
 		{
 			static int iSurvivorCount;
-			iSurvivorCount = iGetVictimCount(tank);
+			iSurvivorCount = iGetVictimCount(tank, false);
 			if (iSurvivorCount > 0 && !g_esPlayer[tank].g_bActivated)
 			{
 				g_esPlayer[tank].g_bActivated = true;
@@ -746,7 +753,7 @@ static void vYellAbility(int tank)
 	}
 }
 
-static int iGetVictimCount(int tank)
+static int iGetVictimCount(int tank, bool repeat)
 {
 	static float flTankPos[3];
 	GetClientAbsOrigin(tank, flTankPos);
@@ -768,10 +775,61 @@ static int iGetVictimCount(int tank)
 
 				L4D_Deafen(iSurvivor);
 
+				if (repeat)
+				{
+					DataPack dpYell;
+					CreateDataTimer(5.0, tTimerYell, dpYell, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+					dpYell.WriteCell(GetClientUserId(iSurvivor));
+					dpYell.WriteCell(GetClientUserId(tank));
+					dpYell.WriteCell(g_esPlayer[tank].g_iTankType);
+				}
+
 				iSurvivorCount++;
 			}
 		}
 	}
 
 	return iSurvivorCount;
+}
+
+public Action tTimerYell(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	static int iSurvivor;
+	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
+	{
+		g_esPlayer[iSurvivor].g_bAffected = false;
+		g_esPlayer[iSurvivor].g_iOwner = 0;
+
+		return Plugin_Stop;
+	}
+
+	static int iTank, iType;
+	iTank = GetClientOfUserId(pack.ReadCell());
+	iType = pack.ReadCell();
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags) || !MT_IsTypeEnabled(iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) || !g_esPlayer[iSurvivor].g_bAffected || !g_esPlayer[iSurvivor].g_bActivated || g_esCache[iTank].g_iYellAbility == 0)
+	{
+		g_esPlayer[iSurvivor].g_bActivated = false;
+		g_esPlayer[iSurvivor].g_bAffected = false;
+		g_esPlayer[iSurvivor].g_iOwner = 0;
+
+		return Plugin_Stop;
+	}
+
+	L4D_Deafen(iSurvivor);
+	EmitSoundToClient(iSurvivor, SOUND_YELL);
+	EmitSoundToClient(iSurvivor, SOUND_YELL2);
+	EmitSoundToClient(iSurvivor, SOUND_YELL3);
+	EmitSoundToClient(iSurvivor, SOUND_YELL4);
+	EmitSoundToClient(iSurvivor, SOUND_YELL5);
+	EmitSoundToClient(iSurvivor, SOUND_YELL6);
+	EmitSoundToClient(iSurvivor, SOUND_YELL7);
+	EmitSoundToClient(iSurvivor, SOUND_YELL8);
+	EmitSoundToClient(iSurvivor, SOUND_YELL9);
+	EmitSoundToClient(iSurvivor, SOUND_YELL10);
+	EmitSoundToClient(iSurvivor, SOUND_YELL11);
+
+	return Plugin_Continue;
 }

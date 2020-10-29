@@ -25,8 +25,6 @@
 
 //#file "Mutant Tanks v8.80"
 
-#define MT_NAME "Mutant Tanks"
-
 public Plugin myinfo =
 {
 	name = MT_NAME,
@@ -86,6 +84,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 
 #define MODEL_CONCRETE_CHUNK "models/props_debris/concrete_chunk01a.mdl"
+#define MODEL_FIREWORKCRATE "models/props_junk/explosive_box001.mdl"
+#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 #define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #define MODEL_TANK "models/infected/hulk.mdl"
@@ -191,7 +191,9 @@ enum struct esGeneral
 	ConVar g_cvMTGameTypes;
 	ConVar g_cvMTPluginEnabled;
 
+	DynamicDetour g_ddEnterStasis;
 	DynamicDetour g_ddLauncherDirectionDetour;
+	DynamicDetour g_ddLeaveStasis;
 	DynamicDetour g_ddTankRockDetour;
 
 	float g_flDifficultyDamage[4];
@@ -207,6 +209,7 @@ enum struct esGeneral
 	GlobalForward g_gfChangeTypeForward;
 	GlobalForward g_gfConfigsLoadForward;
 	GlobalForward g_gfConfigsLoadedForward;
+	GlobalForward g_gfCopyStatsForward;
 	GlobalForward g_gfDisplayMenuForward;
 	GlobalForward g_gfEventFiredForward;
 	GlobalForward g_gfHookEventForward;
@@ -223,10 +226,13 @@ enum struct esGeneral
 	GlobalForward g_gfTypeChosenForward;
 
 	Handle g_hRegularWavesTimer;
-	Handle g_hSDKActionGetName;
 	Handle g_hSDKFirstContainedResponder;
+	Handle g_hSDKGetName;
+	Handle g_hSDKIsInStasis;
+	Handle g_hSDKLeaveStasis;
 
 	int g_iAccessFlags;
+	int g_iAggressiveTanks;
 	int g_iAllowDeveloper;
 	int g_iAnnounceArrival;
 	int g_iAnnounceDeath;
@@ -276,7 +282,9 @@ enum struct esGeneral
 	int g_iScaleDamage;
 	int g_iSection;
 	int g_iSpawnMode;
+	int g_iStasisMode;
 	int g_iTankWave;
+	int g_iTeamID[2048];
 
 	TopMenu g_tmMTMenu;
 }
@@ -303,6 +311,7 @@ enum struct esPlayer
 	bool g_bDying;
 	bool g_bElectric;
 	bool g_bFire;
+	bool g_bFirstSpawn;
 	bool g_bIce;
 	bool g_bKeepCurrentType;
 	bool g_bMeteor;
@@ -310,8 +319,11 @@ enum struct esPlayer
 	bool g_bRandomized;
 	bool g_bSmoke;
 	bool g_bSpit;
+	bool g_bStasis;
 	bool g_bThirdPerson;
+	bool g_bThirdPerson2;
 	bool g_bTransformed;
+	bool g_bTriggered;
 
 	char g_sHealthCharacters[4];
 	char g_sTankName[33];
@@ -385,6 +397,7 @@ enum struct esPlayer
 	int g_iTire[2];
 	int g_iTireColor[4];
 	int g_iTransformType[10];
+	int g_iUserID;
 }
 
 esPlayer g_esPlayer[MAXPLAYERS + 1];
@@ -665,7 +678,7 @@ public any aNative_GetTankType(Handle plugin, int numParams)
 public any aNative_HasAdminAccess(Handle plugin, int numParams)
 {
 	int iAdmin = GetNativeCell(1);
-	return bIsTank(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && bHasCoreAdminAccess(iAdmin);
+	return bIsTank(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME) && bHasCoreAdminAccess(iAdmin);
 }
 
 public any aNative_HasChanceToSpawn(Handle plugin, int numParams)
@@ -818,6 +831,7 @@ public void OnPluginStart()
 	g_esGeneral.g_gfChangeTypeForward = new GlobalForward("MT_OnChangeType", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfConfigsLoadForward = new GlobalForward("MT_OnConfigsLoad", ET_Ignore, Param_Cell);
 	g_esGeneral.g_gfConfigsLoadedForward = new GlobalForward("MT_OnConfigsLoaded", ET_Ignore, Param_String, Param_String, Param_String, Param_Cell, Param_Cell, Param_Cell);
+	g_esGeneral.g_gfCopyStatsForward = new GlobalForward("MT_OnCopyStats", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfDisplayMenuForward = new GlobalForward("MT_OnDisplayMenu", ET_Ignore, Param_Cell);
 	g_esGeneral.g_gfEventFiredForward = new GlobalForward("MT_OnEventFired", ET_Ignore, Param_Cell, Param_String, Param_Cell);
 	g_esGeneral.g_gfHookEventForward = new GlobalForward("MT_OnHookEvent", ET_Ignore, Param_Cell);
@@ -896,6 +910,10 @@ public void OnPluginStart()
 
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
+	char sDate[32];
+	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
+	BuildPath(Path_SM, g_esGeneral.g_sChatFile, sizeof(esGeneral::g_sChatFile), "logs/mutant_tanks_%s.log", sDate);
+
 	GameData gdMutantTanks = new GameData("mutant_tanks");
 
 	switch (gdMutantTanks == null)
@@ -903,42 +921,83 @@ public void OnPluginStart()
 		case true: LogError("Unable to load the \"mutant_tanks\" gamedata file.");
 		case false:
 		{
-			g_esGeneral.g_iIntentionOffset = gdMutantTanks.GetOffset("GetIntentionInterfaceSpecial");
-			if (g_esGeneral.g_iIntentionOffset == -1)
+			if (bIsValidGame())
 			{
-				vLogMessage(MT_LOG_SERVER, "Failed to load offset: GetIntentionInterfaceSpecial");
+				StartPrepSDKCall(SDKCall_Player);
+				if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseEntity::IsInStasis"))
+				{
+					vLogMessage(MT_LOG_SERVER, "%s Failed to load offset: CBaseEntity::IsInStasis", MT_TAG);
+				}
+
+				PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+				g_esGeneral.g_hSDKIsInStasis = EndPrepSDKCall();
+				if (g_esGeneral.g_hSDKIsInStasis == null)
+				{
+					vLogMessage(MT_LOG_SERVER, "%s Your \"CBaseEntity::IsInStasis\" offsets are outdated.", MT_TAG);
+				}
 			}
 
-			int iOffset = gdMutantTanks.GetOffset("FirstContainedResponder");
+			StartPrepSDKCall(SDKCall_Player);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "Tank::LeaveStasis"))
+			{
+				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
+			}
+
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_esGeneral.g_hSDKLeaveStasis = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKLeaveStasis == null)
+			{
+				vLogMessage(MT_LOG_SERVER, "%s Your \"Tank::LeaveStasis\" signature is outdated..", MT_TAG);
+			}
+
+			g_esGeneral.g_iIntentionOffset = gdMutantTanks.GetOffset("Tank::GetIntentionInterface");
+			if (g_esGeneral.g_iIntentionOffset == -1)
+			{
+				vLogMessage(MT_LOG_SERVER, "%s Failed to load offset: Tank::GetIntentionInterface", MT_TAG);
+			}
+
+			int iOffset = gdMutantTanks.GetOffset("TankIntention::FirstContainedResponder");
 			StartPrepSDKCall(SDKCall_Raw);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_esGeneral.g_hSDKFirstContainedResponder = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKFirstContainedResponder == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Your \"FirstContainedResponder\" offsets are outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, "%s Your \"TankIntention::FirstContainedResponder\" offsets are outdated.", MT_TAG);
 			}
 
-			iOffset = gdMutantTanks.GetOffset("ActionGetName");
+			iOffset = gdMutantTanks.GetOffset("TankIdle::GetName");
 			StartPrepSDKCall(SDKCall_Raw);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Plain);
-			g_esGeneral.g_hSDKActionGetName = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKActionGetName == null)
+			g_esGeneral.g_hSDKGetName = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKGetName == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Your \"ActionGetName\" offsets are outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, "%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
 			}
 
 			g_esGeneral.g_ddLauncherDirectionDetour = DynamicDetour.FromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
 			if (g_esGeneral.g_ddLauncherDirectionDetour == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "Failed to find signature: CEnvRockLauncher::LaunchCurrentDir");
+				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
 			}
 
 			g_esGeneral.g_ddTankRockDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankRock::Create");
 			if (g_esGeneral.g_ddTankRockDetour == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "Failed to find signature: CTankRock::Create");
+				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: CTankRock::Create", MT_TAG);
+			}
+
+			g_esGeneral.g_ddEnterStasis = DynamicDetour.FromConf(gdMutantTanks, "Tank::EnterStasis");
+			if (g_esGeneral.g_ddEnterStasis == null)
+			{
+				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: Tank::EnterStasis", MT_TAG);
+			}
+
+			g_esGeneral.g_ddLeaveStasis = DynamicDetour.FromConf(gdMutantTanks, "Tank::LeaveStasis");
+			if (g_esGeneral.g_ddLeaveStasis == null)
+			{
+				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
 			}
 
 			delete gdMutantTanks;
@@ -946,10 +1005,6 @@ public void OnPluginStart()
 	}
 
 	g_esGeneral.g_alFilePaths = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
-
-	char sDate[32];
-	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
-	BuildPath(Path_SM, g_esGeneral.g_sChatFile, sizeof(esGeneral::g_sChatFile), "logs/mutant_tanks_%s.log", sDate);
 
 	if (g_bLateLoad)
 	{
@@ -971,6 +1026,8 @@ public void OnMapStart()
 	g_esGeneral.g_bMapStarted = true;
 
 	PrecacheModel(MODEL_CONCRETE_CHUNK, true);
+	PrecacheModel(MODEL_FIREWORKCRATE, true);
+	PrecacheModel(MODEL_GASCAN, true);
 	PrecacheModel(MODEL_JETPACK, true);
 	PrecacheModel(MODEL_PROPANETANK, true);
 	PrecacheModel(MODEL_TIRES, true);
@@ -996,6 +1053,8 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
+	g_esPlayer[client].g_iUserID = GetClientUserId(client);
+
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 
 	vReset3(client);
@@ -2378,11 +2437,13 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 	{
 		case 0:
 		{
-			char sTankName[33];
+			char sPhrase[32], sTankName[33];
 			int iTypeCount, iTankTypes[MT_MAXTYPES + 1];
 			for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 			{
-				vGetTranslatedName(sTankName, sizeof(sTankName), _, iIndex);
+				vGetTranslatedName(sPhrase, sizeof(sPhrase), _, iIndex);
+				SetGlobalTransTarget(admin);
+				FormatEx(sTankName, sizeof(sTankName), "%T", sPhrase, admin);
 				if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex, admin) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_iOpenAreasOnly) || StrContains(sTankName, type) == -1)
 				{
 					continue;
@@ -2410,7 +2471,10 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 				}
 			}
 		}
-		default: g_esGeneral.g_iChosenType = iClamp(iType, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
+		default:
+		{
+			g_esGeneral.g_iChosenType = iClamp(iType, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
+		}
 	}
 
 	switch (bIsTank(admin))
@@ -2465,9 +2529,9 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 										}
 									}
 								}
-							}
 
-							g_esGeneral.g_iChosenType = 0;
+								g_esGeneral.g_iChosenType = 0;
+							}
 						}
 					}
 				}
@@ -2678,13 +2742,28 @@ public void OnEntityCreated(int entity, const char[] classname)
 {
 	if (g_esGeneral.g_bPluginEnabled && bIsValidEntity(entity))
 	{
+		g_esGeneral.g_iTeamID[entity] = 0;
+
 		if (StrEqual(classname, "tank_rock"))
 		{
 			RequestFrame(vRockThrowFrame, EntIndexToEntRef(entity));
 		}
-		else if (StrEqual(classname, "infected"))
+		else if (StrEqual(classname, "infected") || StrEqual(classname, "witch"))
 		{
 			SDKHook(entity, SDKHook_OnTakeDamage, OnTakeDamage);
+			SDKHook(entity, SDKHook_OnTakeDamage, OnTakePropDamage);
+		}
+		else if (StrEqual(classname, "inferno") || StrEqual(classname, "pipe_bomb_projectile") || (bIsValidGame() && (StrEqual(classname, "fire_cracker_blast") || StrEqual(classname, "grenade_launcher_projectile"))))
+		{
+			SDKHook(entity, SDKHook_SpawnPost, OnSpawnPost);
+		}
+		else if (StrEqual(classname, "physics_prop") || StrEqual(classname, "prop_physics"))
+		{
+			SDKHook(entity, SDKHook_SpawnPost, OnPropSpawnPost);
+		}
+		else if (StrEqual(classname, "prop_fuel_barrel"))
+		{
+			SDKHook(entity, SDKHook_OnTakeDamage, OnTakePropDamage);
 		}
 	}
 }
@@ -2709,7 +2788,7 @@ public void OnEntityDestroyed(int entity)
 
 			StopSound(entity, SNDCHAN_BODY, SOUND_MISSILE);
 		}
-		else if (StrEqual(sClassname, "infected"))
+		else if (StrEqual(sClassname, "infected") || StrEqual(sClassname, "witch"))
 		{
 			SDKUnhook(entity, SDKHook_OnTakeDamage, OnTakeDamage);
 		}
@@ -2849,13 +2928,59 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
+public void OnSpawnPost(int entity)
+{
+	int iAttacker = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+	if (bIsTank(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_esGeneral.g_iTeamID[entity] = GetClientTeam(iAttacker);
+	}
+}
+
+public void OnPropSpawnPost(int entity)
+{
+	static char sModel[64];
+	GetEntPropString(entity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+	if (StrEqual(sModel, MODEL_JETPACK) || StrEqual(sModel, MODEL_PROPANETANK) || StrEqual(sModel, MODEL_GASCAN) || (bIsValidGame() && StrEqual(sModel, MODEL_FIREWORKCRATE)))
+	{
+		SDKHook(entity, SDKHook_OnTakeDamage, OnTakePropDamage);
+	}
+}
+
+public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (g_esGeneral.g_bPluginEnabled && (bIsInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim)) && damage >= 0.5)
+	{
+		if (bIsValidEntity(inflictor) && attacker == inflictor && g_esGeneral.g_iTeamID[inflictor] == 3)
+		{
+			attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
+			if (attacker == -1 || (0 < attacker <= MaxClients && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID)))
+			{
+				return Plugin_Handled;
+			}
+		}
+		else if (0 < attacker <= MaxClients)
+		{
+			if (g_esGeneral.g_iTeamID[inflictor] == 3 && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID || GetClientTeam(attacker) != 3))
+			{
+				return Plugin_Handled;
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (g_esGeneral.g_bPluginEnabled && damage >= 0.5)
 	{
 		static char sClassname[32];
+		static int iTank, iTank2;
 		if (bIsValidEntity(inflictor))
 		{
+			iTank = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0;
+			iTank2 = HasEntProp(inflictor, Prop_Data, "m_hThrower") ? GetEntPropEnt(inflictor, Prop_Data, "m_hThrower") : 0;
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		}
 
@@ -2874,9 +2999,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return (g_esCache[attacker].g_flRockDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 			}
 		}
-		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsCommonInfected(victim))
+		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsCommonInfected(victim) || bIsWitch(victim))
 		{
-			if (bIsTankAllowed(attacker))
+			if (StrEqual(sClassname, "weapon_tank_claw"))
+			{
+				return Plugin_Continue;
+			}
+
+			if (bIsTankAllowed(attacker) || bIsTankAllowed(iTank) || bIsTankAllowed(iTank2))
 			{
 				if (StrEqual(sClassname, "tank_rock") || ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA) || (damagetype & DMG_BURN)))
 				{
@@ -2901,7 +3031,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 public Action SetTransmit(int entity, int client)
 {
 	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (g_esGeneral.g_bPluginEnabled && bIsValidClient(iOwner) && bIsValidClient(client) && iOwner == client && !bIsTankThirdPerson(client) && !g_esPlayer[client].g_bThirdPerson)
+	if (g_esGeneral.g_bPluginEnabled && bIsValidClient(iOwner) && bIsValidClient(client) && iOwner == client && !bIsTankInThirdPerson(client))
 	{
 		return Plugin_Handled;
 	}
@@ -3031,6 +3161,35 @@ static void vClearSectionList()
 
 		delete g_esGeneral.g_alSections;
 	}
+}
+
+static void vCopyStats(int tank, int newtank)
+{
+	g_esPlayer[newtank].g_bBlood = g_esPlayer[tank].g_bBlood;
+	g_esPlayer[newtank].g_bBlur = g_esPlayer[tank].g_bBlur;
+	g_esPlayer[newtank].g_bBoss = g_esPlayer[tank].g_bBoss;
+	g_esPlayer[newtank].g_bElectric = g_esPlayer[tank].g_bElectric;
+	g_esPlayer[newtank].g_bFire = g_esPlayer[tank].g_bFire;
+	g_esPlayer[newtank].g_bFirstSpawn = g_esPlayer[tank].g_bFirstSpawn;
+	g_esPlayer[newtank].g_bIce = g_esPlayer[tank].g_bIce;
+	g_esPlayer[newtank].g_bKeepCurrentType = g_esPlayer[tank].g_bKeepCurrentType;
+	g_esPlayer[newtank].g_bMeteor = g_esPlayer[tank].g_bMeteor;
+	g_esPlayer[newtank].g_bNeedHealth = g_esPlayer[tank].g_bNeedHealth;
+	g_esPlayer[newtank].g_bRandomized = g_esPlayer[tank].g_bRandomized;
+	g_esPlayer[newtank].g_bSmoke = g_esPlayer[tank].g_bSmoke;
+	g_esPlayer[newtank].g_bSpit = g_esPlayer[tank].g_bSpit;
+	g_esPlayer[newtank].g_bTransformed = g_esPlayer[tank].g_bTransformed;
+	g_esPlayer[newtank].g_bTriggered = g_esPlayer[tank].g_bTriggered;
+	g_esPlayer[newtank].g_iBossStageCount = g_esPlayer[tank].g_iBossStageCount;
+	g_esPlayer[newtank].g_iCooldown = g_esPlayer[tank].g_iCooldown;
+	g_esPlayer[newtank].g_iOldTankType = g_esPlayer[tank].g_iOldTankType;
+	g_esPlayer[newtank].g_iTankHealth = g_esPlayer[tank].g_iTankHealth;
+	g_esPlayer[newtank].g_iTankType = g_esPlayer[tank].g_iTankType;
+
+	Call_StartForward(g_esGeneral.g_gfCopyStatsForward);
+	Call_PushCell(tank);
+	Call_PushCell(newtank);
+	Call_Finish();
 }
 
 static void vCustomConfig(const char[] savepath)
@@ -3182,6 +3341,8 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iRegularMode = 0;
 		g_esGeneral.g_iRegularWave = 0;
 		g_esGeneral.g_iFinaleAmount = 0;
+		g_esGeneral.g_iAggressiveTanks = 0;
+		g_esGeneral.g_iStasisMode = 0;
 		g_esGeneral.g_iGameModeTypes = 0;
 		g_esGeneral.g_sEnabledGameModes[0] = '\0';
 		g_esGeneral.g_sDisabledGameModes[0] = '\0';
@@ -3478,7 +3639,9 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iIdleCheckMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "IdleCheckMode", "Idle Check Mode", "Idle_Check_Mode", "idlemode", g_esGeneral.g_iIdleCheckMode, value, 0, 2);
 			g_esGeneral.g_iLogMessages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "LogMessages", "Log Messages", "Log_Messages", "log", g_esGeneral.g_iLogMessages, value, 0, 31);
 			g_esGeneral.g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGeneral.g_iRequiresHumans, value, 0, 32);
-			g_esGeneral.g_iScaleDamage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Difficulty", "Difficulty", "Difficulty", "Difficulty", key, "ScaleDamage", "Scale Damage", "Scale_Damage", "scaledmg", g_esGeneral.g_iScaleDamage, value, 0, 1);
+			g_esGeneral.g_iAggressiveTanks = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Competitive", "Competitive", "Competitive", "comp", key, "AggressiveTanks", "Aggressive Tanks", "Aggressive_Tanks", "aggressive", g_esGeneral.g_iAggressiveTanks, value, 0, 1);
+			g_esGeneral.g_iStasisMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Competitive", "Competitive", "Competitive", "comp", key, "StasisMode", "Stasis Mode", "Stasis_Mode", "stasis", g_esGeneral.g_iStasisMode, value, 0, 1);
+			g_esGeneral.g_iScaleDamage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Difficulty", "Difficulty", "Difficulty", "diff", key, "ScaleDamage", "Scale Damage", "Scale_Damage", "scaledmg", g_esGeneral.g_iScaleDamage, value, 0, 1);
 			g_esGeneral.g_iBaseHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "BaseHealth", "Base Health", "Base_Health", "health", g_esGeneral.g_iBaseHealth, value, 0, MT_MAXHEALTH);
 			g_esGeneral.g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esGeneral.g_iDisplayHealth, value, 0, 11);
 			g_esGeneral.g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esGeneral.g_iDisplayHealthType, value, 0, 2);
@@ -3511,7 +3674,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					g_esGeneral.g_iMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 1, MT_MAXTYPES) : g_esGeneral.g_iMaxType;
 				}
 			}
-			else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Difficulty", false))
+			else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Difficulty", false) || StrEqual(g_esGeneral.g_sCurrentSubSection, "diff", false))
 			{
 				if (StrEqual(key, "DifficultyDamage", false) || StrEqual(key, "Difficulty Damage", false) || StrEqual(key, "Difficulty_Damage", false) || StrEqual(key, "diffdmg", false))
 				{
@@ -4216,6 +4379,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
 			if (bIsValidClient(iBot) && bIsTank(iTank))
 			{
+				vSetColor(iTank, g_esPlayer[iBot].g_iTankType);
+				vCopyStats(iBot, iTank);
+				vTankSpawn(iTank, -1);
 				vReset2(iBot, 0);
 				vReset3(iBot);
 				vCacheSettings(iBot);
@@ -4261,6 +4427,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 			if (bIsValidClient(iTank) && bIsTank(iBot))
 			{
+				vSetColor(iBot, g_esPlayer[iTank].g_iTankType);
+				vCopyStats(iTank, iBot);
+				vTankSpawn(iBot, -1);
 				vReset2(iTank, 0);
 				vReset3(iTank);
 				vCacheSettings(iTank);
@@ -4273,6 +4442,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				g_esPlayer[iTank].g_bDied = true;
 				g_esPlayer[iTank].g_bDying = false;
+				g_esPlayer[iTank].g_bTriggered = false;
 
 				if (bIsCustomTankAllowed(iTank))
 				{
@@ -4353,39 +4523,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 			if (bIsTank(iTank))
 			{
-				g_esPlayer[iTank].g_bDying = false;
-
-				if (g_esPlayer[iTank].g_bDied)
-				{
-					g_esPlayer[iTank].g_bDied = false;
-					g_esPlayer[iTank].g_iOldTankType = 0;
-					g_esPlayer[iTank].g_iTankType = 0;
-				}
-
-				switch (g_esGeneral.g_iChosenType)
-				{
-					case 0:
-					{
-						switch (bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT))
-						{
-							case true:
-							{
-								switch (g_esGeneral.g_iSpawnMode)
-								{
-									case 0:
-									{
-										g_esPlayer[iTank].g_bNeedHealth = true;
-
-										vTankMenu(iTank, 0);
-									}
-									case 1: vMutateTank(iTank);
-								}
-							}
-							case false: vMutateTank(iTank);
-						}
-					}
-					default: vMutateTank(iTank);
-				}
+				RequestFrame(vPlayerSpawnFrame, iTankId);
 			}
 		}
 		else if (StrEqual(name, "weapon_fire"))
@@ -4459,6 +4597,16 @@ static void vPluginStatus()
 		{
 			LogError("Failed to enable detour post: CTankRock::Create");
 		}
+
+		if (!g_esGeneral.g_ddEnterStasis.Enable(Hook_Post, mreEnterStasisPost))
+		{
+			LogError("Failed to enable detour post: Tank::EnterStasis");
+		}
+
+		if (!g_esGeneral.g_ddLeaveStasis.Enable(Hook_Post, mreLeaveStasisPost))
+		{
+			LogError("Failed to enable detour post: Tank::LeaveStasis");
+		}
 	}
 	else if (g_esGeneral.g_bPluginEnabled && (!bPluginAllowed || !bPluginEnabled))
 	{
@@ -4474,6 +4622,16 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddTankRockDetour.Disable(Hook_Post, mreTankRockPost))
 		{
 			LogError("Failed to disable detour post: CTankRock::Create");
+		}
+
+		if (!g_esGeneral.g_ddEnterStasis.Disable(Hook_Post, mreEnterStasisPost))
+		{
+			LogError("Failed to disable detour post: Tank::EnterStasis");
+		}
+
+		if (!g_esGeneral.g_ddLeaveStasis.Disable(Hook_Post, mreLeaveStasisPost))
+		{
+			LogError("Failed to disable detour post: Tank::LeaveStasis");
 		}
 	}
 }
@@ -4857,12 +5015,14 @@ static void vReset3(int tank)
 	g_esPlayer[tank].g_bBlur = false;
 	g_esPlayer[tank].g_bElectric = false;
 	g_esPlayer[tank].g_bFire = false;
+	g_esPlayer[tank].g_bFirstSpawn = false;
 	g_esPlayer[tank].g_bIce = false;
 	g_esPlayer[tank].g_bKeepCurrentType = false;
 	g_esPlayer[tank].g_bMeteor = false;
 	g_esPlayer[tank].g_bNeedHealth = false;
 	g_esPlayer[tank].g_bSmoke = false;
 	g_esPlayer[tank].g_bSpit = false;
+	g_esPlayer[tank].g_bTriggered = false;
 	g_esPlayer[tank].g_flAttackDelay = -1.0;
 	g_esPlayer[tank].g_iBossStageCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
@@ -4876,8 +5036,10 @@ static void vResetCore(int client)
 	g_esPlayer[client].g_bAttacked = false;
 	g_esPlayer[client].g_bDied = false;
 	g_esPlayer[client].g_bDying = false;
-	g_esPlayer[client].g_bThirdPerson = false;
 	g_esPlayer[client].g_iLastButtons = 0;
+	g_esPlayer[client].g_bStasis = false;
+	g_esPlayer[client].g_bThirdPerson = false;
+	g_esPlayer[client].g_bThirdPerson2 = false;
 }
 
 static void vResetSpeed(int tank, bool mode = false)
@@ -5051,6 +5213,11 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT))
 		{
+			if (g_esCache[tank].g_sTankName[0] == '\0')
+			{
+				g_esCache[tank].g_sTankName = "Tank";
+			}
+
 			g_esGeneral.g_bHideNameChange = true;
 			SetClientName(tank, g_esCache[tank].g_sTankName);
 			g_esGeneral.g_bHideNameChange = false;
@@ -5496,7 +5663,7 @@ static void vAnnounce(int tank, const char[] oldname, const char[] name, int mod
 		}
 	}
 
-	if (g_esCache[tank].g_iTankNote == 1 && bIsCustomTankAllowed(tank))
+	if (mode >= 0 && g_esCache[tank].g_iTankNote == 1 && bIsCustomTankAllowed(tank))
 	{
 		char sPhrase[32], sSteamID32[32], sSteam3ID[32], sSteamIDFinal[32], sTankNote[32];
 		if (GetClientAuthId(tank, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)) && GetClientAuthId(tank, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
@@ -5760,14 +5927,14 @@ static void vMutateTank(int tank)
 		CreateDataTimer(g_esGeneral.g_flExtrasDelay, tTimerTankCountCheck, dpCountCheck, TIMER_FLAG_NO_MAPCHANGE);
 		dpCountCheck.WriteCell(GetClientUserId(tank));
 
-		switch (g_esGeneral.g_iTankWave)
+		switch (g_esGeneral.g_iTankWave == 0 && bIsNonFinaleMap())
 		{
-			case 0: dpCountCheck.WriteCell(g_esGeneral.g_iRegularAmount);
-			default:
+			case true: dpCountCheck.WriteCell(g_esGeneral.g_iRegularAmount);
+			case false:
 			{
 				switch (g_esGeneral.g_iFinaleAmount)
 				{
-					case 0: dpCountCheck.WriteCell(g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1]);
+					case 0: dpCountCheck.WriteCell(((g_esGeneral.g_iTankWave > 0) ? g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] : 0));
 					default: dpCountCheck.WriteCell(g_esGeneral.g_iFinaleAmount);
 				}
 			}
@@ -5830,11 +5997,6 @@ static void vMutateTank(int tank)
 		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iFavoriteType > 0 && iType != g_esPlayer[tank].g_iFavoriteType)
 		{
 			vFavoriteMenu(tank);
-		}
-
-		if (GetEntProp(tank, Prop_Send, "m_isGhost") == 0)
-		{
-			g_esPlayer[tank].g_bKeepCurrentType = false;
 		}
 	}
 
@@ -5912,6 +6074,92 @@ static void vTankSpawn(int tank, int mode = 0)
 	dpTankSpawn.WriteCell(mode);
 }
 
+public void vPlayerSpawnFrame(int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (bIsTank(iTank) && !g_esPlayer[iTank].g_bFirstSpawn)
+	{
+		if (bIsTankInStasis(iTank) && g_esGeneral.g_iStasisMode == 1)
+		{
+			SDKCall(g_esGeneral.g_hSDKLeaveStasis, iTank);
+		}
+
+		g_esPlayer[iTank].g_bDying = false;
+		g_esPlayer[iTank].g_bFirstSpawn = true;
+
+		if (g_esPlayer[iTank].g_bDied)
+		{
+			g_esPlayer[iTank].g_bDied = false;
+			g_esPlayer[iTank].g_iOldTankType = 0;
+			g_esPlayer[iTank].g_iTankType = 0;
+		}
+
+		switch (g_esGeneral.g_iChosenType)
+		{
+			case 0:
+			{
+				switch (bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT))
+				{
+					case true:
+					{
+						switch (g_esGeneral.g_iSpawnMode)
+						{
+							case 0:
+							{
+								g_esPlayer[iTank].g_bNeedHealth = true;
+
+								vTankMenu(iTank, 0);
+							}
+							case 1: vMutateTank(iTank);
+						}
+					}
+					case false: vMutateTank(iTank);
+				}
+			}
+			default: vMutateTank(iTank);
+		}
+	}
+}
+
+public void vRockThrowFrame(int ref)
+{
+	static int iRock;
+	iRock = EntRefToEntIndex(ref);
+	if (g_esGeneral.g_bPluginEnabled && bIsValidEntity(iRock))
+	{
+		static int iThrower;
+		iThrower = GetEntPropEnt(iRock, Prop_Data, "m_hThrower");
+		if (bIsTankAllowed(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esTank[g_esPlayer[iThrower].g_iTankType].g_iTankEnabled == 1)
+		{
+			SetEntityRenderColor(iRock, iGetRandomColor(g_esCache[iThrower].g_iRockColor[0]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[1]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[2]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[3]));
+			vSetRockModel(iThrower, iRock);
+
+			if (g_esCache[iThrower].g_iRockEffects > 0)
+			{
+				DataPack dpRockEffects;
+				CreateDataTimer(0.75, tTimerRockEffects, dpRockEffects, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpRockEffects.WriteCell(ref);
+				dpRockEffects.WriteCell(GetClientUserId(iThrower));
+			}
+
+			Call_StartForward(g_esGeneral.g_gfRockThrowForward);
+			Call_PushCell(iThrower);
+			Call_PushCell(iRock);
+			Call_Finish();
+		}
+	}
+}
+
+static bool bIsTankInStasis(int tank)
+{
+	return g_esPlayer[tank].g_bStasis || (bIsValidGame() && (SDKCall(g_esGeneral.g_hSDKIsInStasis, tank) || bIsTankStasis(tank)));
+}
+
+static bool bIsTankInThirdPerson(int tank)
+{
+	return g_esPlayer[tank].g_bThirdPerson || g_esPlayer[tank].g_bThirdPerson2 || bIsTankThirdPerson(tank);
+}
+
 public void vTankSpawnFrame(DataPack pack)
 {
 	pack.Reset();
@@ -5922,14 +6170,21 @@ public void vTankSpawnFrame(DataPack pack)
 	if (bIsTankAllowed(iTank) && bHasCoreAdminAccess(iTank))
 	{
 		vCacheSettings(iTank);
-		vParticleEffects(iTank);
-		vThrowInterval(iTank);
 
 		static char sOldName[33], sNewName[33];
 		vGetTranslatedName(sOldName, sizeof(sOldName), _, g_esPlayer[iTank].g_iOldTankType);
 		vGetTranslatedName(sNewName, sizeof(sNewName), _, g_esPlayer[iTank].g_iTankType);
 		vSetName(iTank, sOldName, sNewName, iMode);
-		vSetProps(iTank);
+
+		if (!bIsInfectedGhost(iTank) && !bIsTankInStasis(iTank))
+		{
+			g_esPlayer[iTank].g_bKeepCurrentType = false;
+
+			vParticleEffects(iTank);
+			vResetSpeed(iTank);
+			vSetProps(iTank);
+			vThrowInterval(iTank);
+		}
 
 		if (iMode == 0)
 		{
@@ -5994,40 +6249,9 @@ public void vTankSpawnFrame(DataPack pack)
 			g_esPlayer[iTank].g_iTankHealth = GetClientHealth(iTank);
 		}
 
-		vResetSpeed(iTank);
-
 		Call_StartForward(g_esGeneral.g_gfPostTankSpawnForward);
 		Call_PushCell(iTank);
 		Call_Finish();
-	}
-}
-
-public void vRockThrowFrame(int ref)
-{
-	static int iRock;
-	iRock = EntRefToEntIndex(ref);
-	if (g_esGeneral.g_bPluginEnabled && bIsValidEntity(iRock))
-	{
-		static int iThrower;
-		iThrower = GetEntPropEnt(iRock, Prop_Data, "m_hThrower");
-		if (bIsTankAllowed(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esTank[g_esPlayer[iThrower].g_iTankType].g_iTankEnabled == 1)
-		{
-			SetEntityRenderColor(iRock, iGetRandomColor(g_esCache[iThrower].g_iRockColor[0]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[1]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[2]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[3]));
-			vSetRockModel(iThrower, iRock);
-
-			if (g_esCache[iThrower].g_iRockEffects > 0)
-			{
-				DataPack dpRockEffects;
-				CreateDataTimer(0.75, tTimerRockEffects, dpRockEffects, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-				dpRockEffects.WriteCell(ref);
-				dpRockEffects.WriteCell(GetClientUserId(iThrower));
-			}
-
-			Call_StartForward(g_esGeneral.g_gfRockThrowForward);
-			Call_PushCell(iThrower);
-			Call_PushCell(iRock);
-			Call_Finish();
-		}
 	}
 }
 
@@ -6318,13 +6542,8 @@ static bool bIsTankIdle(int tank, int type = 0)
 	}
 
 	char sAction[64];
-	SDKCall(g_esGeneral.g_hSDKActionGetName, adAction, sAction, sizeof(sAction));
-	if ((type != 2 && StrEqual(sAction, "TankIdle")) || (type != 1 && (StrEqual(sAction, "TankBehavior") || adAction == adBehavior)))
-	{
-		return true;
-	}
-
-	return false;
+	SDKCall(g_esGeneral.g_hSDKGetName, adAction, sAction, sizeof(sAction));
+	return (type != 2 && StrEqual(sAction, "TankIdle")) || (type != 1 && (StrEqual(sAction, "TankBehavior") || adAction == adBehavior));
 }
 
 static bool bIsTypeAvailable(int type, int tank = 0)
@@ -6590,6 +6809,16 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 	vResetTimers(true);
 }
 
+public void L4D_OnReplaceTank(int tank, int newtank)
+{
+	vSetColor(newtank, g_esPlayer[tank].g_iTankType);
+	vCopyStats(tank, newtank);
+	vTankSpawn(newtank, -1);
+	vReset2(tank, 0);
+	vReset3(tank);
+	vCacheSettings(tank);
+}
+
 public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 {
 	if (g_esGeneral.g_bForceSpawned)
@@ -6602,20 +6831,50 @@ public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 	bool bBlock = false;
 	int iCount = iGetTankCount();
 
-	switch (g_esGeneral.g_iTankWave)
+	switch (g_esGeneral.g_iTankWave == 0 && bIsNonFinaleMap())
 	{
-		case 0: bBlock = 0 < g_esGeneral.g_iRegularAmount <= iCount;
-		default:
+		case true: bBlock = 0 < g_esGeneral.g_iRegularAmount <= iCount;
+		case false:
 		{
 			switch (g_esGeneral.g_iFinaleAmount)
 			{
-				case 0: bBlock = 0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount;
+				case 0: bBlock = 0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount && g_esGeneral.g_iTankWave > 0;
 				default: bBlock = 0 < g_esGeneral.g_iFinaleAmount <= iCount;
 			}
 		}
 	}
 
 	return bBlock ? Plugin_Handled : Plugin_Continue;
+}
+
+public MRESReturn mreEnterStasisPost(int pThis)
+{
+	if (bIsTank(pThis))
+	{
+		g_esPlayer[pThis].g_bStasis = true;
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreLaunchDirectionPre(int pThis)
+{
+	if (bIsValidEntity(pThis))
+	{
+		g_esGeneral.g_iLauncher = pThis;
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreLeaveStasisPost(int pThis)
+{
+	if (bIsTank(pThis))
+	{
+		g_esPlayer[pThis].g_bStasis = false;
+	}
+
+	return MRES_Ignored;
 }
 
 public MRESReturn mreTankRockPost(Handle hReturn)
@@ -6643,16 +6902,6 @@ public MRESReturn mreTankRockPost(Handle hReturn)
 	}
 
 	g_esGeneral.g_iLauncher = 0;
-
-	return MRES_Ignored;
-}
-
-public MRESReturn mreLaunchDirectionPre(int pThis)
-{
-	if (bIsValidEntity(pThis))
-	{
-		g_esGeneral.g_iLauncher = pThis;
-	}
 
 	return MRES_Ignored;
 }
@@ -6717,8 +6966,8 @@ public void vViewQuery2(QueryCookie cookie, int client, ConVarQueryResult result
 	{
 		switch (result)
 		{
-			case ConVarQuery_Okay: g_esPlayer[client].g_bThirdPerson = (StrEqual(cvarName, "c_thirdpersonshoulder") && (StringToInt(cvarValue) == 1 || StrEqual(cvarValue, "1", false))) ? true : false;
-			default: g_esPlayer[client].g_bThirdPerson = false;
+			case ConVarQuery_Okay: g_esPlayer[client].g_bThirdPerson2 = (StrEqual(cvarName, "c_thirdpersonshoulder") && (StringToInt(cvarValue) == 1 || StrEqual(cvarValue, "1", false))) ? true : false;
+			default: g_esPlayer[client].g_bThirdPerson2 = false;
 		}
 	}
 }
@@ -6746,6 +6995,14 @@ public Action tTimerAnnounce(Handle timer, DataPack pack)
 		vAnnounce(iTank, sOldName, sNewName, iMode);
 
 		return Plugin_Stop;
+	}
+	else if (bIsTankIdle(iTank, 1) && g_esGeneral.g_iAggressiveTanks == 1 && !g_esPlayer[iTank].g_bTriggered)
+	{
+		g_esPlayer[iTank].g_bTriggered = true;
+
+		int iHealth = GetClientHealth(iTank);
+		vDamageEntity(iTank, iGetRandomSurvivor(iTank), 1.0, "0");
+		SetEntProp(iTank, Prop_Data, "m_iHealth", iHealth);
 	}
 
 	return Plugin_Continue;

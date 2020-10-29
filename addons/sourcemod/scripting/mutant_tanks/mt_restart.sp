@@ -531,6 +531,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+public void MT_OnCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+}
+
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
@@ -725,7 +732,22 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, int m
 
 				if (g_esPlayer[survivor].g_bRecorded && g_esCache[tank].g_iRestartMode == 0)
 				{
-					TeleportEntity(survivor, g_esPlayer[survivor].g_flPosition, NULL_VECTOR, NULL_VECTOR);
+					static bool bTeleport;
+					bTeleport = true;
+					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+					{
+						if (bIsSurvivor(iSurvivor) && g_esPlayer[iSurvivor].g_bRecorded)
+						{
+							bTeleport = false;
+
+							TeleportEntity(survivor, g_esPlayer[iSurvivor].g_flPosition, NULL_VECTOR, NULL_VECTOR);
+						}
+					}
+
+					if (bTeleport)
+					{
+						TeleportEntity(survivor, g_esPlayer[survivor].g_flPosition, NULL_VECTOR, NULL_VECTOR);
+					}
 				}
 				else
 				{

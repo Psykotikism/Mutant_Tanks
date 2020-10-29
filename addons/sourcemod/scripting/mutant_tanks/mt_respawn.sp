@@ -42,7 +42,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esPlayer
 {
-	bool g_bRespawn;
+	bool g_bActivated;
 
 	float g_flRespawnChance;
 
@@ -397,6 +397,14 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+public void MT_OnCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_bActivated = g_esPlayer[oldTank].g_bActivated;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
+	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+}
+
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_incapacitated"))
@@ -439,7 +447,7 @@ public void MT_OnButtonPressed(int tank, int button)
 		{
 			if (g_esCache[tank].g_iRespawnAbility == 1 && g_esCache[tank].g_iHumanAbility == 1)
 			{
-				switch (g_esPlayer[tank].g_bRespawn)
+				switch (g_esPlayer[tank].g_bActivated)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RespawnHuman2");
 					case false:
@@ -448,7 +456,7 @@ public void MT_OnButtonPressed(int tank, int button)
 						{
 							case true:
 							{
-								g_esPlayer[tank].g_bRespawn = true;
+								g_esPlayer[tank].g_bActivated = true;
 
 								MT_PrintToChat(tank, "%s %t", MT_TAG3, "RespawnHuman");
 							}
@@ -468,7 +476,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 static void vRemoveRespawn(int tank)
 {
-	g_esPlayer[tank].g_bRespawn = false;
+	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_iCount = 0;
 	g_esPlayer[tank].g_iCount2 = 0;
 }
@@ -524,9 +532,9 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && !g_esPlayer[iTank].g_bRespawn)
+	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && !g_esPlayer[iTank].g_bActivated)
 	{
-		g_esPlayer[iTank].g_bRespawn = false;
+		g_esPlayer[iTank].g_bActivated = false;
 		g_esPlayer[iTank].g_iCount = 0;
 
 		return Plugin_Stop;
@@ -542,7 +550,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 
 	if (g_esPlayer[iTank].g_iCount < g_esCache[iTank].g_iRespawnAmount && (!MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) || (g_esPlayer[iTank].g_iCount2 < g_esCache[iTank].g_iHumanAmmo && g_esCache[iTank].g_iHumanAmmo > 0)))
 	{
-		g_esPlayer[iTank].g_bRespawn = false;
+		g_esPlayer[iTank].g_bActivated = false;
 		g_esPlayer[iTank].g_iCount++;
 
 		if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1)
@@ -575,7 +583,7 @@ public Action tTimerRespawn(Handle timer, DataPack pack)
 			if (MT_IsTankSupported(iRespawn, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && MT_IsCustomTankSupported(iRespawn) && !bExists[iRespawn])
 			{
 				iNewTank = iRespawn;
-				g_esPlayer[iNewTank].g_bRespawn = false;
+				g_esPlayer[iNewTank].g_bActivated = false;
 				g_esPlayer[iNewTank].g_iCount = g_esPlayer[iTank].g_iCount;
 				g_esPlayer[iNewTank].g_iCount2 = g_esPlayer[iTank].g_iCount2;
 

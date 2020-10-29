@@ -564,6 +564,19 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+public void MT_OnCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_bActivated = g_esPlayer[oldTank].g_bActivated;
+	g_esPlayer[newTank].g_bQualified = g_esPlayer[oldTank].g_bQualified;
+	g_esPlayer[newTank].g_flDamage = g_esPlayer[oldTank].g_flDamage;
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
+	g_esPlayer[newTank].g_iDuration = g_esPlayer[oldTank].g_iDuration;
+	g_esPlayer[newTank].g_iHealth = g_esPlayer[oldTank].g_iHealth;
+	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+}
+
 public void MT_OnPluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)

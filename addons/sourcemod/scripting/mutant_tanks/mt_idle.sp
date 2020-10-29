@@ -170,7 +170,7 @@ public void OnPluginStart()
 	g_esGeneral.g_hSDKIdlePlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKIdlePlayer == null)
 	{
-		SetFailState("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", MT_TAG);
+		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", MT_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -184,7 +184,7 @@ public void OnPluginStart()
 	g_esGeneral.g_hSDKSpecPlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKSpecPlayer == null)
 	{
-		SetFailState("%s Your \"SurvivorBot::SetHumanSpectator\" signature is outdated.", MT_TAG);
+		MT_LogMessage(MT_LOG_SERVER, "%s Your \"SurvivorBot::SetHumanSpectator\" signature is outdated.", MT_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -197,7 +197,7 @@ public void OnPluginStart()
 	g_esGeneral.g_hSDKObservePlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKObservePlayer == null)
 	{
-		SetFailState("%s Your \"CTerrorPlayer::SetObserverTarget\" offsets are outdated.", MT_TAG);
+		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::SetObserverTarget\" offsets are outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
@@ -604,6 +604,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iOpenAreasOnly = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iOpenAreasOnly, g_esAbility[type].g_iOpenAreasOnly);
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
+}
+
+public void MT_OnCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
 }
 
 public void MT_OnHookEvent(bool hooked)

@@ -16,6 +16,7 @@
 
 #include <sdktools>
 
+#define MT_NAME "Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
 #define MT_VERSION "8.80"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
@@ -127,6 +128,15 @@ forward void MT_OnConfigsLoad(int mode);
  * @param mode			1 = Load general settings, 2 = 1 + load type settings, 3 = Load admin settings
  **/
 forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode);
+
+/**
+ * Called when the Tank is passed on to another player or bot.
+ * Use this forward to copy over any stats for the Tank's new owner.
+ *
+ * @param oldTank		Client index of the previous owner.
+ * @param newTank		Client index of the new owner.
+ **/
+forward void MT_OnCopyStats(int oldTank, int newTank);
 
 /**
  * Called when a player uses the "sm_st_info" command.
@@ -1346,6 +1356,11 @@ stock bool bIsInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|
 	return bIsValidClient(infected, flags) && GetClientTeam(infected) == 3;
 }
 
+stock bool bIsInfectedGhost(int infected)
+{
+	return GetEntProp(infected, Prop_Send, "m_isGhost") == 1;
+}
+
 stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
 {
 	return bIsInfected(jockey, flags) && bIsValidGame() && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
@@ -1426,6 +1441,11 @@ stock bool bIsSurvivorCaught(int survivor)
 stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
 {
 	return bIsInfected(tank, flags) && (bIsValidGame() ? GetEntProp(tank, Prop_Send, "m_zombieClass") == 8 : GetEntProp(tank, Prop_Send, "m_zombieClass") == 5);
+}
+
+stock bool bIsTankStasis(int tank)
+{
+	return GetEntProp(tank, Prop_Data, "m_bIsInStasis") == 1;
 }
 
 stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT)

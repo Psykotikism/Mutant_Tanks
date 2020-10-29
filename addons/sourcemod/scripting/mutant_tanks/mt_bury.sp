@@ -513,6 +513,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+public void MT_OnCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+}
+
 public void MT_OnPluginEnd()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
@@ -771,7 +778,24 @@ static void vStopBury(int survivor, int tank)
 		SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", g_esCache[tank].g_flBuryBuffer);
 	}
 
-	TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, NULL_VECTOR, NULL_VECTOR);
+	bool bTeleport = true;
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerIncapacitated(iPlayer) && !g_esPlayer[iPlayer].g_bAffected && iPlayer != survivor)
+		{
+			bTeleport = false;
+
+			GetClientAbsOrigin(iPlayer, flOrigin);
+			TeleportEntity(survivor, flOrigin, NULL_VECTOR, NULL_VECTOR);
+
+			break;
+		}
+	}
+
+	if (bTeleport)
+	{
+		TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, NULL_VECTOR, NULL_VECTOR);
+	}
 
 	g_esPlayer[survivor].g_flLastPosition[0] = 0.0;
 	g_esPlayer[survivor].g_flLastPosition[1] = 0.0;

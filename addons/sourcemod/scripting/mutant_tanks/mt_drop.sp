@@ -493,6 +493,14 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+public void MT_OnCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_bActivated = g_esPlayer[oldTank].g_bActivated;
+	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+	g_esPlayer[newTank].g_iWeapon = g_esPlayer[oldTank].g_iWeapon;
+	g_esPlayer[newTank].g_iWeaponIndex = g_esPlayer[oldTank].g_iWeaponIndex;
+}
+
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "bot_player_replace"))
