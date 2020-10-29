@@ -102,7 +102,7 @@ Files:
 2. Updated gamedata file.
 3. Updated include files.
 4. Updated translation file.
-5. Updated all plugins' source code files.
+5. Updated every plugin's source code files.
 
 ## Version 8.79 (October 10, 2020)
 

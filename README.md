@@ -64,8 +64,8 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
  - `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
 2. Delete `mutant_tanks.txt` from `addons/sourcemod/gamedata` folder.
 3. Delete `mutant_tanks.inc` and `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
-5. Delete `mutant_tanks.phrases.txt` from `addons/sourcemod/translations` folder.
-6. Backup `mutant_tanks` folder in `addons/sourcemod/data` folder.
+4. Delete `mutant_tanks.phrases.txt` from `addons/sourcemod/translations` folder.
+5. Backup `mutant_tanks` folder in `addons/sourcemod/data` folder.
 6. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
 ### Disabling

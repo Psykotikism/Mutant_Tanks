@@ -160,7 +160,7 @@
 		{
 			// The damage scales to use for multiplying damage caused by Mutant Tanks.
 			// --
-			// Separate chances with commas.
+			// Separate scales with commas.
 			// --
 			// Scale limit: 4
 			// Character limit for each damage scale: 9
