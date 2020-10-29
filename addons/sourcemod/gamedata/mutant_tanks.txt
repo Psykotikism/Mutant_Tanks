@@ -57,6 +57,20 @@
 					}
 				}
 			}
+			"Tank::EnterStasis"
+			{
+				"signature"	"Tank::EnterStasis"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+			"Tank::LeaveStasis"
+			{
+				"signature"	"Tank::LeaveStasis"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
 		}
 	}
 	"left4dead"
@@ -68,22 +82,22 @@
 				"windows"	"375"
 				"linux"		"376"
 			}
-			"GetIntentionInterfaceCommon"
+			"Infected::GetIntentionInterface"
 			{
 				"windows"	"3456"
 				"linux"		"3476"
 			}
-			"GetIntentionInterfaceSpecial"
+			"Tank::GetIntentionInterface"
 			{
 				"windows"	"11924"
 				"linux"		"11940"
 			}
-			"FirstContainedResponder"
+			"TankIntention::FirstContainedResponder"
 			{
 				"windows"	"1"
 				"linux"		"2"
 			}
-			"ActionGetName"
+			"TankIdle::GetName"
 			{
 				"windows"	"35"
 				"linux"		"36"
@@ -133,33 +147,50 @@
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter.constprop.123"
 				"windows"	"\x8B\x44\x24\x08\x53\x8B\x5C\x24\x08"
 			}
+			"Tank::EnterStasis"
+			{
+				"library"	"server"
+				"linux"		"@_ZN4Tank11EnterStasisEv"
+				"windows"	"\x56\x8B\xF1\x80\xBE\x2A\x2A\x2A\x2A\x00\x0F\x85\x2A\x2A\x2A\x2A\x83\x7E"
+			}
+			"Tank::LeaveStasis"
+			{
+				"library"	"server"
+				"linux"		"@_ZN4Tank11LeaveStasisEv"
+				"windows"	"\x56\x8B\xF1\x80\xBE\x2A\x2A\x2A\x2A\x00\x0F\x84\x2A\x2A\x2A\x2A\x83\x7E"
+			}
 		}
 	}
 	"left4dead2"
 	{
 		"Offsets"
 		{
+			"CBaseEntity::IsInStasis"
+			{
+				"windows"	"39"
+				"linux"		"40"
+			}
 			"CTerrorPlayer::SetObserverTarget"
 			{
 				"windows"	"402"
 				"linux"		"403"
 			}
-			"GetIntentionInterfaceCommon"
+			"Infected::GetIntentionInterface"
 			{
 				"windows"	"7368"
 				"linux"		"7364"
 			}
-			"GetIntentionInterfaceSpecial"
+			"Tank::GetIntentionInterface"
 			{
 				"windows"	"17236"
 				"linux"		"17208"
 			}
-			"FirstContainedResponder"
+			"TankIntention::FirstContainedResponder"
 			{
 				"windows"	"1"
 				"linux"		"2"
 			}
-			"ActionGetName"
+			"TankIdle::GetName"
 			{
 				"windows"	"40"
 				"linux"		"41"
@@ -220,6 +251,18 @@
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\xEC\x8B\x45\x0C\x8B\x4D\x08\x53"
+			}
+			"Tank::EnterStasis"
+			{
+				"library"	"server"
+				"linux"		"@_ZN4Tank11EnterStasisEv"
+				"windows"	"\x56\x57\x8B\xF9\x80\xBF\x2A\x2A\x2A\x2A\x00\x8D\xB7\x2A\x2A\x2A\x2A\x74\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x56\xFF\xD2\xC6\x06\x00\x8B"
+			}
+			"Tank::LeaveStasis"
+			{
+				"library"	"server"
+				"linux"		"@_ZN4Tank11LeaveStasisEv"
+				"windows"	"\x56\x57\x8B\xF9\x80\xBF\xF1\x00\x00\x00\x02\x8D\xB7\xF1\x00\x00\x00"
 			}
 		}
 	}
