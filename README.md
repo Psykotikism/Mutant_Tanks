@@ -70,7 +70,7 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 
 ### Disabling
 1. Move `mutant_tanks` folder (`mutant_tanks.smx` and all of its modules) to `plugins/disabled` folder.
-2. Unload Mutant Tanks by restarting the server.
+2. Unload Mutant Tanks by restarting the server. (Using `sm plugins unload` will take too long.)
 
 ## ConVar Settings
 ```
