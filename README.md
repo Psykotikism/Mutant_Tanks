@@ -1815,9 +1815,9 @@ Examples:
 
 **hmmmmm** - For showing me how to pick a random character out of a dynamic string.
 
-**Mi.Cura** - For reporting issues, suggesting ideas, and overall support.
-
 **KasperH** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
+
+**Mi.Cura** - For reporting issues, suggesting ideas, and overall support.
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
@@ -1856,6 +1856,8 @@ Examples:
 **ur5efj** - For reporting issues.
 
 **3aljiyavslgazana** - For reporting issues.
+
+**What** - For reporting issues.
 
 **Electr000999** - For suggesting ideas.
 

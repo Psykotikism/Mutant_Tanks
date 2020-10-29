@@ -45,6 +45,7 @@ Bug fixes:
 39. Fixed the Tank's primary attack being blocked by the friendly-fire check.
 40. Fixed the thirdperson check not working properly.
 41. Fixed the `Eletric` ability not working sometimes. (Thanks to Tank Rush for testing and reporting!)
+42. Fixed some messages for all abilities appearing when their `Human Mode` settings are set to `1`.
 
 Changes:
 
@@ -92,7 +93,7 @@ Changes:
 42. Human-controlled Tanks now keep the same Mutant Tank type between passes.
 43. Mutant Tank stats are now properly copied when passing Tanks between players.
 44. Added the `MT_OnCopyStats` native to allow developers to properly copy over active Tank stats when Tanks are passed around in competitive game modes.
-45. The `Yell` ability now runs repeatedly while a Tank player holds down the ability button when `Human Mode` is set to `1`.
+45. The `Yell` ability now runs repeatedly while activated when `Human Mode` is set to `1`.
 46. Added the `Aggressive Tanks` and `Stasis Mode` settings under the `Plugin Settings/Competitive` section.
 
 Files:
@@ -101,6 +102,7 @@ Files:
 2. Updated gamedata file.
 3. Updated include files.
 4. Updated translation file.
+5. Updated all plugins' source code files.
 
 ## Version 8.79 (October 10, 2020)
 
