@@ -21,7 +21,7 @@ Bug fixes:
 15. Fixed the core plugin's glow outline not going away when Tanks are kicked.
 16. Fixed the `Health` ability's glow outline not going away when Tanks die.
 17. Fixed the `Track` ability's glow outline not going away when rocks break.
-18. Fixed the `Burier` ability sometimes leaving players under the map.
+18. Fixed the `Bury` ability sometimes leaving players under the map. (Thanks to Mi.Cura for testing and reporting!)
 19. Fixed the `Yell` ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
 20. Fixed the `Clone` ability not being optional.
 21. Fixed some phrases not being translated for other languages.
@@ -39,6 +39,12 @@ Bug fixes:
 33. Fixed the `Splatter` ability's `Splatter Type` setting using the wrong value limit. (Thanks to 3aljiyavslgazana for testing and reporting!)
 34. Fixed parenting problems with some entities.
 35. Fixed some abilities' damage settings not working properly.
+36. Fixed the `Regular Amount` setting being used on finale maps when the finale has not started.
+37. Fixed Tanks in ghost or stasis mode having props.
+38. Fixed the log messages causing errors for some server messages.
+39. Fixed the Tank's primary attack being blocked by the friendly-fire check.
+40. Fixed the thirdperson check not working properly.
+41. Fixed the `Eletric` ability not working sometimes. (Thanks to Tank Rush for testing and reporting!)
 
 Changes:
 
@@ -76,12 +82,18 @@ Changes:
 32. The `Props Chance` setting now accepts two extra values to support the `Flashlight` and `Crown` props.
 33. The core plugin and its modules now requires `DHooks 2.2.0-detours15` or higher.
 34. Added the `Medic Field` and `Medic Field Color` settings for the `Medic` ability. (Thanks to Marttt and Silvers for the code!)
-35. Added the `Scale Damage` and `Difficulty Damage` settings under the `General/Difficulty` section.
+35. Added the `Scale Damage` and `Difficulty Damage` settings under the `Plugin Settings/Difficulty` section.
 36. Added the `MT_GetScaledDamage` native to allow developers to get the proper scaled damage of Mutant Tanks.
 37. Updated all natives to have self-contained validity checks.
 38. Added the `@mutants` target filter to let admins target Mutant Tanks.
 39. Added the `Immunity Flags` setting for the `Rock` and `Spam` abilities.
 40. Added the `* Interval` setting for the `Car`, `Meteor`, `Rock`, and `Spam` abilities.
+41. Added better friendly-fire check for all abilities. (Thanks to Silvers for the code!)
+42. Human-controlled Tanks now keep the same Mutant Tank type between passes.
+43. Mutant Tank stats are now properly copied when passing Tanks between players.
+44. Added the `MT_OnCopyStats` native to allow developers to properly copy over active Tank stats when Tanks are passed around in competitive game modes.
+45. The `Yell` ability now runs repeatedly while a Tank player holds down the ability button when `Human Mode` is set to `1`.
+46. Added the `Aggressive Tanks` and `Stasis Mode` settings under the `Plugin Settings/Competitive` section.
 
 Files:
 
@@ -613,7 +625,7 @@ Bug fixes:
 
 Changes:
 
-1. The administration system now detects SM's admin flags if the plugin's config file doesn't define specific flags for a user.
+1. The administration system now detects SM's admin flags if the plugin's config file does not define specific flags for a user.
 2. The `MT_IsTypeEnabled()` native now checks if abilities for Mutant Tanks are available.
 3. Added the `Regular Mode` setting under the `Plugin Settings/Waves` section.
 4. The core plugin now detects custom sourcemod directories when checking for the `plugins` folder.
@@ -1643,7 +1655,7 @@ Files:
 Bug fixes:
 
 1. Fixed the shield color being overridden when the Super Tank has the Ghost Ability enabled.
-2. Fixed custom configs not respecting the settings from the main config when KeyValues aren't found inside the custom configs.
+2. Fixed custom configs not respecting the settings from the main config when KeyValues are not found inside the custom configs.
 3. Fixed the `player_death` event callback returning the victim's user ID for the attacker.
 
 Changes:
@@ -1655,7 +1667,7 @@ Changes:
 5. Added the `Vampire Claw-Rock` KeyValue which lets the Super Tank steal health from survivors. Format: `Vampire Claw-Rock` `1`
 6. Added the `Vampire Health` KeyValue to determine how much health the Super Tank receives from hitting survivors. Format: `Vampire Health` `100`
 7. Added the `Vampire Chance` KeyValue to determine the chances of the Super Tank stealing health from survivors. Format: `Bomb Rock Break` `4`
-8. The config file is now automatically created if it doesn't exist already.
+8. The config file is now automatically created if it does not exist already.
 9. Optimized code even more.
 
 Files:

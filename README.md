@@ -36,6 +36,8 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 12. Administration system designed for access to and immunity from Mutant Tanks.
 13. Detects idle or bugged (no behavior) Tanks.
 14. Controllable Tank spawns.
+15. Fully compatible with all game modes.
+16. Toggle damage scaling based on difficulty.
 
 ### Requirements
 1. `SourceMod 1.11.0.6511` or higher
@@ -419,6 +421,11 @@ It may be due to one or more of the following:
 - You are missing curly braces.
 - You have more than 1,000 Mutant Tanks in your config file.
 - You didn't format your config file properly.
+- The Mutant Tanks requires X human-controlled survivors around and there are none.
+- The Mutant Tank needs to be in an open area to spawn and it's currently in a narrow place.
+- The number of Mutant Tanks currently alive with the same type has reached or exceeded the limit set by the `Type Limit`.
+- The Mutant Tank can only spawn on regular maps.
+- The Mutant Tank can only spawn on finale maps.
 
 5. How do I kill the Tanks depending on what abilities they have?
 
@@ -723,6 +730,15 @@ forward void MT_OnConfigsLoad(int mode);
  * @param mode			1 = Load general settings, 2 = 1 + load type settings, 3 = Load admin settings
  **/
 forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode);
+
+/**
+ * Called when the Tank is passed on to another player or bot.
+ * Use this forward to copy over any stats for the Tank's new owner.
+ *
+ * @param oldTank		Client index of the previous owner.
+ * @param newTank		Client index of the new owner.
+ **/
+forward void MT_OnCopyStats(int oldTank, int newTank);
 
 /**
  * Called when a player uses the "sm_st_info" command.
@@ -1628,7 +1644,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 32-35 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines 33-36 of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 

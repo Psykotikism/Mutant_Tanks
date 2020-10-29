@@ -4,8 +4,8 @@
 > Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
-- Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 29-30 and recompile at your own risk.)
-- Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 28 and recompile at your own risk.)
+- Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 30-31 and recompile at your own risk.)
+- Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 29 and recompile at your own risk.)
 - Ability count: 76 (Suggest more if you want; limit is 100.)
 
 ## Sections
@@ -140,6 +140,22 @@
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			"Type Range"				"1-1000"
+		}
+		"Competitive"
+		{
+			// (Co-Op modes only) Mutant Tanks should attack immediately after spawning.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: OFF, let the game determine Mutant Tanks' initial behavior.
+			// 1: ON, force Mutant Tanks to attack immediately.
+			"Aggressive Tanks"			"0"
+
+			// (Versus modes only) The stasis mode of Mutant Tanks in competitive game modes.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: OFF, let the game determine Mutant Tanks' stasis mode.
+			// 1: ON, skip stasis mode and spawn Mutant Tanks right away.
+			"Stasis Mode"				"0"
 		}
 		"Difficulty"
 		{
@@ -420,6 +436,7 @@
 		{
 			// Enable Mutant Tanks in these game mode types.
 			// Note: This setting has a convar equivalent (mt_gamemodetypes), which is only checked if this setting is set to "0".
+			// Note: This setting cannot be changed in custom config files.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -435,6 +452,7 @@
 
 			// Enable Mutant Tanks in these game modes.
 			// Note: This setting has a convar equivalent (mt_enabledgamemodes), which is only checked if this setting is left empty.
+			// Note: This setting cannot be changed in custom config files.
 			// --
 			// Separate game modes with commas (",").
 			// --
@@ -446,6 +464,7 @@
 
 			// Disable Mutant Tanks in these game modes.
 			// Note: This setting has a convar equivalent (mt_disabledgamemodes), which is only checked if this setting is left empty.
+			// Note: This setting cannot be changed in custom config files.
 			// --
 			// Separate game modes with commas (",").
 			// --
@@ -458,12 +477,14 @@
 		"Custom"
 		{
 			// Enable Mutant Tanks custom configuration.
+			// Note: This setting cannot be changed in custom config files.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Enable Custom Configs"			"0"
 
 			// The type of custom config that Mutant Tanks creates.
+			// Note: This setting cannot be changed in custom config files.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -481,6 +502,7 @@
 
 			// The type of custom config that Mutant Tanks executes.
 			// Note: Custom config files that do not exist will not be executed.
+			// Note: This setting cannot be changed in custom config files.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -4061,6 +4083,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank can fly.
+		// "Fly Type" - AI (bot) Tanks - When an AI (bot) Tank throws a rock, attacks, gets hurt, or jumps, it has a chance to fly.
 		// Requires "mt_fly.smx" to be installed.
 		"Fly Ability"
 		{
@@ -4075,7 +4098,6 @@
 			// --
 			// 0: OFF
 			// 1: ON, players can use buttons to activate abilities.
-			// 2: ON, abilities will activate automatically.
 			"Human Ability"				"0"
 
 			// Determines how many times human-controlled Mutant Tanks can use their abilities in one life.
