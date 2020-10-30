@@ -692,9 +692,10 @@ static void vBuryHit(int survivor, int tank, float chance, int enabled, int mess
 					}
 				}
 
+				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", g_esPlayer[survivor].g_flLastPosition);
+
 				static float flOrigin[3];
 				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
-				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", g_esPlayer[survivor].g_flLastPosition);
 				flOrigin[2] -= g_esCache[tank].g_flBuryHeight;
 				SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 

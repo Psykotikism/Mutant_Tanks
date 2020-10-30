@@ -870,15 +870,16 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, int m
 
 static bool bIsSurvivorInCheckpoint(int survivor, bool start)
 {
+	bool bReturn = false;
 	if (g_esPlayer[survivor].g_bCheckpoint)
 	{
 		int iArea = SDKCall(g_esGeneral.g_hSDKGetLastKnownArea, survivor);
 		if (iArea)
 		{
 			float flFlow = view_as<float>(LoadFromAddress(view_as<Address>(iArea + g_esGeneral.g_iFlowOffset), NumberType_Int32));
-			return start ? (flFlow < 3000.0) : (flFlow > 3000.0);
+			bReturn = start ? (flFlow < 3000.0) : (flFlow > 3000.0);
 		}
 	}
 
-	return start ? GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea") == 1 : false;
+	return bReturn || (start ? GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea") == 1 : false);
 }
