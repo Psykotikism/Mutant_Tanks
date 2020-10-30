@@ -11,7 +11,6 @@
 
 #include <sourcemod>
 #include <sdkhooks>
-#include <left4dhooks>
 #include <mutant_tanks>
 
 #pragma semicolon 1
@@ -128,12 +127,36 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+Handle g_hSDKRevivePlayer;
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_bury", cmdBuryInfo, "View information about the Bury ability.");
+
+	GameData gdMutantTanks = new GameData("mutant_tanks");
+	if (gdMutantTanks == null)
+	{
+		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+
+		return;
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnRevived"))
+	{
+		SetFailState("Failed to find signature: CTerrorPlayer::OnRevived");
+	}
+
+	g_hSDKRevivePlayer = EndPrepSDKCall();
+	if (g_hSDKRevivePlayer == null)
+	{
+		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::OnRevived\" signature is outdated.", MT_TAG);
+	}
+
+	delete gdMutantTanks;
 
 	if (g_bLateLoad)
 	{
@@ -770,7 +793,7 @@ static void vStopBury(int survivor, int tank)
 	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 
 	SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
-	L4D_ReviveSurvivor(survivor);
+	SDKCall(g_hSDKRevivePlayer, survivor);
 
 	if (g_esCache[tank].g_flBuryBuffer > 0.0)
 	{

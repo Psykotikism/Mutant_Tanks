@@ -11,7 +11,6 @@
 
 #include <sourcemod>
 #include <sdkhooks>
-#include <left4dhooks>
 #include <mutant_tanks>
 
 #pragma semicolon 1
@@ -48,8 +47,19 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_RESTART "Restart Ability"
 
+enum struct esGeneral
+{
+	Handle g_hSDKGetLastKnownArea;
+	Handle g_hSDKRespawnPlayer;
+
+	int g_iFlowOffset;
+}
+
+esGeneral g_esGeneral;
+
 enum struct esPlayer
 {
+	bool g_bCheckpoint;
 	bool g_bFailed;
 	bool g_bNoAmmo;
 	bool g_bRecorded;
@@ -129,8 +139,6 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKRespawnPlayer;
-
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -146,14 +154,33 @@ public void OnPluginStart()
 		return;
 	}
 
+	g_esGeneral.g_iFlowOffset = gdMutantTanks.GetOffset("m_flow");
+	if (g_esGeneral.g_iFlowOffset == -1)
+	{
+		MT_LogMessage(MT_LOG_SERVER, "%s Failed to load offset: m_flow", MT_TAG);
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::GetLastKnownArea"))
+	{
+		SetFailState("Failed to find signature: CTerrorPlayer::GetLastKnownArea");
+	}
+
+	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+	g_esGeneral.g_hSDKGetLastKnownArea = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKGetLastKnownArea == null)
+	{
+		SetFailState("Failed to create SDKCall: CTerrorPlayer::GetLastKnownArea");
+	}
+
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::RoundRespawn"))
 	{
 		SetFailState("Failed to find signature: CTerrorPlayer::RoundRespawn");
 	}
 
-	g_hSDKRespawnPlayer = EndPrepSDKCall();
-	if (g_hSDKRespawnPlayer == null)
+	g_esGeneral.g_hSDKRespawnPlayer = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKRespawnPlayer == null)
 	{
 		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
 	}
@@ -538,6 +565,33 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
 }
 
+public void MT_OnHookEvent(bool hooked)
+{
+	switch (hooked)
+	{
+		case true:
+		{
+			HookEvent("player_entered_checkpoint", MT_OnEventFired);
+			HookEvent("player_left_checkpoint", MT_OnEventFired);
+
+			if (!bIsValidGame())
+			{
+				HookEvent("player_entered_start_area", MT_OnEventFired);
+			}
+		}
+		case false:
+		{
+			UnhookEvent("player_entered_checkpoint", MT_OnEventFired);
+			UnhookEvent("player_left_checkpoint", MT_OnEventFired);
+
+			if (!bIsValidGame())
+			{
+				UnhookEvent("player_entered_start_area", MT_OnEventFired);
+			}
+		}
+	}
+}
+
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
@@ -548,11 +602,30 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveRestart(iTank);
 		}
 	}
+	else if (StrEqual(name, "player_left_checkpoint"))
+	{
+		g_esPlayer[GetClientOfUserId(event.GetInt("userid"))].g_bCheckpoint = false;
+	}
+	else if (StrEqual(name, "player_entered_checkpoint") || StrEqual(name, "player_entered_start_area"))
+	{
+		g_esPlayer[GetClientOfUserId(event.GetInt("userid"))].g_bCheckpoint = true;
+	}
+	else if (StrEqual(name, "round_start"))
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++ )
+		{
+			switch (bIsSurvivor(iPlayer, MT_CHECK_INGAME))
+			{
+				case true: g_esPlayer[iPlayer].g_bCheckpoint = true;
+				case false: g_esPlayer[iPlayer].g_bCheckpoint = false;
+			}
+		}
+	}
 
 	if (StrEqual(name, "player_spawn"))
 	{
 		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor) && !g_esPlayer[iSurvivor].g_bRecorded && L4D_IsInFirstCheckpoint(iSurvivor))
+		if (bIsSurvivor(iSurvivor) && !g_esPlayer[iSurvivor].g_bRecorded && bIsSurvivorInCheckpoint(iSurvivor, true))
 		{
 			g_esPlayer[iSurvivor].g_bRecorded = true;
 
@@ -711,7 +784,7 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, int m
 					}
 				}
 
-				SDKCall(g_hSDKRespawnPlayer, survivor);
+				SDKCall(g_esGeneral.g_hSDKRespawnPlayer, survivor);
 
 				static char sItems[5][64];
 				ReplaceString(g_esCache[tank].g_sRestartLoadout, sizeof(esAbility::g_sRestartLoadout), " ", "");
@@ -793,4 +866,19 @@ static void vRestartHit(int survivor, int tank, float chance, int enabled, int m
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RestartAmmo");
 		}
 	}
+}
+
+static bool bIsSurvivorInCheckpoint(int survivor, bool start)
+{
+	if (g_esPlayer[survivor].g_bCheckpoint)
+	{
+		int iArea = SDKCall(g_esGeneral.g_hSDKGetLastKnownArea, survivor);
+		if (iArea)
+		{
+			float flFlow = view_as<float>(LoadFromAddress(view_as<Address>(iArea + g_esGeneral.g_iFlowOffset), NumberType_Int32));
+			return start ? (flFlow < 3000.0) : (flFlow > 3000.0);
+		}
+	}
+
+	return start ? GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea") == 1 : false;
 }

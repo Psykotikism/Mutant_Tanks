@@ -194,6 +194,7 @@ public void OnPluginStart()
 	}
 		
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+
 	g_esGeneral.g_hSDKObservePlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKObservePlayer == null)
 	{

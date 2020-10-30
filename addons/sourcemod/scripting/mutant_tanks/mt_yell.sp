@@ -10,7 +10,6 @@
  **/
 
 #include <sourcemod>
-#include <left4dhooks>
 #include <mutant_tanks>
 
 #pragma semicolon 1
@@ -119,12 +118,40 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+Handle g_hSDKDeafenPlayer;
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_yell", cmdYellInfo, "View information about the Yell ability.");
+
+	GameData gdMutantTanks = new GameData("mutant_tanks");
+	if (gdMutantTanks == null)
+	{
+		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+
+		return;
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::Deafen"))
+	{
+		SetFailState("Failed to find signature: CTerrorPlayer::Deafen");
+	}
+
+	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+
+	g_hSDKDeafenPlayer = EndPrepSDKCall();
+	if (g_hSDKDeafenPlayer == null)
+	{
+		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::Deafen\" signature is outdated.", MT_TAG);
+	}
+
+	delete gdMutantTanks;
 }
 
 public void OnMapStart()
@@ -773,7 +800,7 @@ static int iGetVictimCount(int tank, bool repeat)
 				g_esPlayer[iSurvivor].g_bAffected = true;
 				g_esPlayer[iSurvivor].g_iOwner = tank;
 
-				L4D_Deafen(iSurvivor);
+				SDKCall(g_hSDKDeafenPlayer, iSurvivor, 1.0, 0.0, 0.01);
 
 				if (repeat)
 				{
@@ -818,7 +845,7 @@ public Action tTimerYell(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	L4D_Deafen(iSurvivor);
+	SDKCall(g_hSDKDeafenPlayer, iSurvivor, 1.0, 0.0, 0.01);
 	EmitSoundToClient(iSurvivor, SOUND_YELL);
 	EmitSoundToClient(iSurvivor, SOUND_YELL2);
 	EmitSoundToClient(iSurvivor, SOUND_YELL3);

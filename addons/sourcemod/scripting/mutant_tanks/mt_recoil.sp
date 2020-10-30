@@ -502,15 +502,6 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
 }
 
-public void MT_OnHookEvent(bool hooked)
-{
-	switch (hooked)
-	{
-		case true: HookEvent("weapon_fire", MT_OnEventFired);
-		case false: UnhookEvent("weapon_fire", MT_OnEventFired);
-	}
-}
-
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
