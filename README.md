@@ -38,6 +38,7 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 14. Controllable Tank spawns.
 15. Fully compatible with all game modes.
 16. Toggle damage scaling based on difficulty.
+17. Over 70 unique abilities to choose from.
 
 ### Requirements
 1. `SourceMod 1.11.0.6511` or higher
@@ -1899,7 +1900,6 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate (PayPal only)
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 - Donate to me at alfred_llagas3637@yahoo.com
-
 
 
 

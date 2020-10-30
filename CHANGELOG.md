@@ -95,6 +95,7 @@ Changes:
 44. Added the `MT_OnCopyStats` native to allow developers to properly copy over active Tank stats when Tanks are passed around in competitive game modes.
 45. The `Yell` ability now runs repeatedly while activated when `Human Mode` is set to `1`.
 46. Added the `Aggressive Tanks` and `Stasis Mode` settings under the `Plugin Settings/Competitive` section.
+47. The `Bury`, `Restart`, and `Yell` abilities no longer require Left 4 DHooks.
 
 Files:
 
@@ -102,7 +103,6 @@ Files:
 2. Updated gamedata file.
 3. Updated include files.
 4. Updated translation file.
-5. Updated source code files.
 
 ## Version 8.79 (October 10, 2020)
 
