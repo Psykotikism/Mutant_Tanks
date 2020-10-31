@@ -4,8 +4,8 @@
 > Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
-- Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 30-31 and recompile at your own risk.)
-- Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 29 and recompile at your own risk.)
+- Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 31-32 and recompile at your own risk.)
+- Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 30 and recompile at your own risk.)
 - Ability count: 76 (Suggest more if you want; limit is 100.)
 
 ## Sections
@@ -317,7 +317,7 @@
 			// 1-32: ON, the number of Tanks that will spawn.
 			"Regular Amount"			"0"
 
-			// The delay before the regular wave spawner starts.
+			// The delay in seconds before the regular wave spawner starts.
 			// Note: The delay starts after a survivor leaves the saferoom.
 			// --
 			// Minimum: 0.1
@@ -639,6 +639,19 @@
 			// 4th number = Alpha
 			"Skin Color"				"-1,-1,-1,-1"
 
+			// The Mutant Tank is only effective toward human survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0
+			// Maximum: 32
+			// --
+			// 0: OFF
+			// 1-32: ON, the number of human survivors required to be present for this Mutant Tank to be effective.
+			"Requires Humans"			"0"
+		}
+		"Glow"
+		{
 			// The Mutant Tank will have a glow outline.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting can be overridden for specific players.
@@ -688,17 +701,6 @@
 			// 0: Glow outline visible only on sight.
 			// 1: Glow outline visible through the walls.
 			"Glow Type"				"0"
-
-			// The Mutant Tank is only effective toward human survivors.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 0
-			// Maximum: 32
-			// --
-			// 0: OFF
-			// 1-32: ON, the number of human survivors required to be present for this Mutant Tank to be effective.
-			"Requires Humans"			"0"
 		}
 		"Administration"
 		{
@@ -9625,6 +9627,13 @@
 			// 2: ON, show in center text.
 			"Shield Display Health Type"		"2"
 
+			// The Mutant Tank's shield has a glow outline when activated.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Shield Glow"				"1"
+
 			// The Mutant Tank's shield starts out with this much health.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -9648,11 +9657,17 @@
 			// The type of the Mutant Tank's shield.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: Bullet-based (Requires bullets to break shield.)
-			// 1: Blast-based (Requires explosives to break shield.)
-			// 2: Fire-based (Requires fires to break shield.)
-			// 3: Melee-based (Requires melee weapons to break shield.)
-			"Shield Type"				"1"
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 15
+			// --
+			// 0: OFF
+			// 1: Bullet-based (Requires bullets to break shield.)
+			// 2: Blast-based (Requires explosives to break shield.)
+			// 4: Fire-based (Requires fires to break shield.)
+			// 8: Melee-based (Requires melee weapons to break shield.)
+			"Shield Type"				"2"
 		}
 	}
 }
@@ -10878,6 +10893,13 @@
 			// Maximum: 100.0 (Highest chance)
 			"Track Chance"				"33.3"
 
+			// The Mutant Tank's heat-seeking rocks have glow outlines when activated.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Track Glow"				"1"
+
 			// The mode of the Mutant Tank's track ability.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -11883,7 +11905,9 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
-			// 1: ON
+			// 1: Display message only when Tank hurts a survivor.
+			// 2: Display message only when a survivor hurts Tank.
+			// 3: Both
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.

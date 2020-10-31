@@ -35,10 +35,9 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 11. Chat color tags for translation files.
 12. Administration system designed for access to and immunity from Mutant Tanks.
 13. Detects idle or bugged (no behavior) Tanks.
-14. Controllable Tank spawns.
-15. Fully compatible with all game modes.
-16. Toggle damage scaling based on difficulty.
-17. Over 70 unique abilities to choose from.
+14. Fully compatible with all game modes.
+15. Toggle damage scaling based on difficulty.
+16. Over 70 unique abilities to choose from.
 
 ### Requirements
 1. `SourceMod 1.11.0.6511` or higher
@@ -911,6 +910,25 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
 native int MT_GetCurrentFinaleWave();
 
 /**
+ * Returns a Mutant Tank's glow outline range.
+ *
+ * @param tank			Client index of the Tank.
+ * @param mode			True if looking for max range, false otherwise.
+ * @return			The glow outline range of the Tank.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native int MT_GetGlowRange(int tank, bool mode);
+
+/**
+ * Returns a Mutant Tank's glow outline type.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			The glow outline type of the Tank.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native int MT_GetGlowType(int tank);
+
+/**
  * Returns the current immunity flags set by the core plugin.
  *
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
@@ -1068,6 +1086,15 @@ native bool MT_IsFinaleType(int type);
  * @error			Invalid client index or client is not in-game.
  **/
 native bool MT_IsGlowEnabled(int tank);
+
+/**
+ * Returns if a Mutant Tank type's glow outline is flashing.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the Tank's glow outline is flashing, false otherwise.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native bool MT_IsGlowFlashing(int tank);
 
 /**
  * Returns if a certain Mutant Tank type is only available on non-finale maps.
@@ -1645,7 +1672,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 33-36 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines 34-37 of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
@@ -1860,6 +1887,8 @@ Examples:
 
 **What** - For reporting issues.
 
+**moekai** - For reporting issues.
+
 **Electr000999** - For suggesting ideas.
 
 **foquaxticity** - For suggesting ideas.
@@ -1882,6 +1911,8 @@ Examples:
 
 **Dragokas** - For reporting issues, suggesting ideas, and providing fixes.
 
+**login101** - For providing some source code.
+
 **Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (v8.66), helping to set up the wiki pages, and overall support.
 
 **Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
@@ -1900,6 +1931,7 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate (PayPal only)
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 - Donate to me at alfred_llagas3637@yahoo.com
+
 
 
 

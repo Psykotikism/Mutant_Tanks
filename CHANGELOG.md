@@ -10,7 +10,7 @@ Bug fixes:
 4. Fixed the `Blind` ability being enabled by default. (Thanks to Mi.Cura and Tank Rush for reporting!)
 5. Fixed the `Drug` ability not requiring human survivors to be present by default.
 6. Fixed the `Drunk` ability requiring human survivors to be present by default.
-7. Fixed the `Drop Weapon Name` setting not reading non-melee weapon names properly.
+7. Fixed the `Drop Weapon Name` setting not reading weapon names properly. (Thanks to Tank Rush and moekai for testing and reporting!)
 8. Fixed the `Requires Humans` setting not working in some config formats.
 9. Fixed the `Requires Humans` setting not working when the core plugin is deciding which Mutant Tank type to spawn.
 10. Fixed some abilities calling `DispatchSpawn` on entities before teleporting them.
@@ -46,6 +46,8 @@ Bug fixes:
 40. Fixed the thirdperson check not working properly.
 41. Fixed the `Eletric` ability not working sometimes. (Thanks to Tank Rush for testing and reporting!)
 42. Fixed some messages for all abilities appearing when their `Human Mode` settings are set to `1`.
+43. Fixed all abilities not resetting when the Tank is passed between two players.
+44. Fixed the `Heal` and `Track` abilities not applying/resetting glow outlines properly.
 
 Changes:
 
@@ -85,7 +87,7 @@ Changes:
 34. Added the `Medic Field` and `Medic Field Color` settings for the `Medic` ability. (Thanks to Marttt and Silvers for the code!)
 35. Added the `Scale Damage` and `Difficulty Damage` settings under the `Plugin Settings/Difficulty` section.
 36. Added the `MT_GetScaledDamage` native to allow developers to get the proper scaled damage of Mutant Tanks.
-37. Updated all natives to have self-contained validity checks.
+37. Added the `MT_GetGlowRange`, `MT_GetGlowType`, and `MT_IsGlowFlashing` natives to allow developers to retrieve the glow outline settings for Mutant Tanks.
 38. Added the `@mutants` target filter to let admins target Mutant Tanks.
 39. Added the `Immunity Flags` setting for the `Rock` and `Spam` abilities.
 40. Added the `* Interval` setting for the `Car`, `Meteor`, `Rock`, and `Spam` abilities.
@@ -96,6 +98,16 @@ Changes:
 45. The `Yell` ability now runs repeatedly while activated when `Human Mode` is set to `1`.
 46. Added the `Aggressive Tanks` and `Stasis Mode` settings under the `Plugin Settings/Competitive` section.
 47. The `Bury`, `Restart`, and `Yell` abilities no longer require Left 4 DHooks.
+48. The `Shield` ability's `Shield Type` setting now allows combinations of options.
+49. Moved the following settings to the `Tank #/Glow` and `STEAM_ID/Glow` sections:
+- `Glow Enabled`
+- `Glow Color`
+- `Glow Flashing`
+- `Glow Range`
+- `Glow Type`
+50. Added the `Shield Glow` setting for the `Shield` ability.
+51. Added the `Track Glow` setting for the `Track` ability.
+52. Updated all natives to have self-contained validity checks.
 
 Files:
 
