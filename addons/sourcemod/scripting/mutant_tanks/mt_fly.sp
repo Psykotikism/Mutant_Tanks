@@ -539,14 +539,37 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
-	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+	vCopyStats(oldTank, newTank);
+
+	if (oldTank != newTank)
+	{
+		vRemoveFly(oldTank);
+	}
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_jump"))
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vCopyStats(iBot, iTank);
+			vRemoveFly(iBot);
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vCopyStats(iTank, iBot);
+			vRemoveFly(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_jump"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT))
@@ -564,6 +587,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveFly(iTank);
 		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	{
+		vReset();
 	}
 }
 
@@ -673,6 +700,12 @@ public void MT_OnRockThrow(int tank, int rock)
 
 		vFlyAbility(tank);
 	}
+}
+
+static void vCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
 static void vFly(int tank, bool announce)
@@ -1263,7 +1296,7 @@ static void vStopFly(int tank)
 	SDKUnhook(tank, SDKHook_PreThink, PreThink);
 	SDKUnhook(tank, SDKHook_StartTouch, StartTouch);
 
-	if (MT_IsTankSupported(tank))
+	if (bIsValidClient(tank))
 	{
 		SetEntityMoveType(tank, MOVETYPE_WALK);
 		SetEntityGravity(tank, 1.0);

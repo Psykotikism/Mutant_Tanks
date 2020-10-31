@@ -513,9 +513,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
-	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+	vCopyStats(oldTank, newTank);
+
+	if (oldTank != newTank)
+	{
+		vRemoveBlind(oldTank);
+	}
 }
 
 public void MT_OnPluginEnd()
@@ -531,13 +534,37 @@ public void MT_OnPluginEnd()
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vCopyStats(iBot, iTank);
+			vRemoveBlind(iBot);
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vCopyStats(iTank, iBot);
+			vRemoveBlind(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveBlind(iTank);
 		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	{
+		vReset();
 	}
 
 	if (StrEqual(name, "player_spawn"))
@@ -757,6 +784,12 @@ static void vBlindHit(int survivor, int tank, float chance, int enabled, int mes
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "BlindAmmo");
 		}
 	}
+}
+
+static void vCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
 static void vRemoveBlind(int tank)

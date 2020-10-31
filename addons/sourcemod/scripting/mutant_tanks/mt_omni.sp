@@ -479,22 +479,68 @@ static void vCacheOriginalSettings(int tank)
 	g_esOmni[tank].g_iRequiresHumans = iGetSettingValue(true, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[iType].g_iRequiresHumans);
 }
 
-public void MT_OnCopyStats(int oldTank, int newTank)
+static void vCopyStats(int oldTank, int newTank)
 {
 	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+	g_esPlayer[newTank].g_iOmniType = g_esPlayer[oldTank].g_iOmniType;
+	g_esOmni[newTank].g_flOmniChance = g_esOmni[oldTank].g_flOmniChance;
+	g_esOmni[newTank].g_flOmniRange = g_esOmni[oldTank].g_flOmniRange;
+	g_esOmni[newTank].g_iAccessFlags = g_esOmni[oldTank].g_iAccessFlags;
+	g_esOmni[newTank].g_iHumanAbility = g_esOmni[oldTank].g_iHumanAbility;
+	g_esOmni[newTank].g_iHumanAmmo = g_esOmni[oldTank].g_iHumanAmmo;
+	g_esOmni[newTank].g_iHumanCooldown = g_esOmni[oldTank].g_iHumanCooldown;
+	g_esOmni[newTank].g_iHumanMode = g_esOmni[oldTank].g_iHumanMode;
+	g_esOmni[newTank].g_iOmniAbility = g_esOmni[oldTank].g_iOmniAbility;
+	g_esOmni[newTank].g_iOmniDuration = g_esOmni[oldTank].g_iOmniDuration;
+	g_esOmni[newTank].g_iOmniMessage = g_esOmni[oldTank].g_iOmniMessage;
+	g_esOmni[newTank].g_iOmniMode = g_esOmni[oldTank].g_iOmniMode;
+	g_esOmni[newTank].g_iRequiresHumans = g_esOmni[oldTank].g_iRequiresHumans;
+}
+
+public void MT_OnCopyStats(int oldTank, int newTank)
+{
+	vCopyStats(oldTank, newTank);
+
+	if (oldTank != newTank)
+	{
+		vRemoveOmni(oldTank);
+	}
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vCopyStats(iBot, iTank);
+			vRemoveOmni(iBot);
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vCopyStats(iTank, iBot);
+			vRemoveOmni(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveOmni(iTank);
 		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	{
+		vReset();
 	}
 }
 
@@ -598,6 +644,8 @@ public void MT_OnPostTankSpawn(int tank)
 {
 	vCacheOriginalSettings(tank);
 }
+
+//
 
 static void vOmni(int tank)
 {

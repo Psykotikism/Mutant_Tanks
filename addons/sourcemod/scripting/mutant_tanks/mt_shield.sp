@@ -47,6 +47,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
 
+#define MT_SHIELD_BULLET (1 << 0) // requires bullet damage
+#define MT_SHIELD_EXPLOSIVE (1 << 1) // requires explosive damage
+#define MT_SHIELD_FIRE (1 << 2) // requires fire damage
+#define MT_SHIELD_MELEE (1 << 3) // requires melee damage
+
 #define MT_MENU_SHIELD "Shield Ability"
 
 enum struct esPlayer
@@ -78,6 +83,7 @@ enum struct esPlayer
 	int g_iShieldDelay;
 	int g_iShieldDisplayHP;
 	int g_iShieldDisplayHPType;
+	int g_iShieldGlow;
 	int g_iShieldMessage;
 	int g_iShieldType;
 	int g_iTankType;
@@ -106,6 +112,7 @@ enum struct esAbility
 	int g_iShieldDelay;
 	int g_iShieldDisplayHP;
 	int g_iShieldDisplayHPType;
+	int g_iShieldGlow;
 	int g_iShieldMessage;
 	int g_iShieldType;
 }
@@ -131,6 +138,7 @@ enum struct esCache
 	int g_iShieldDelay;
 	int g_iShieldDisplayHP;
 	int g_iShieldDisplayHPType;
+	int g_iShieldGlow;
 	int g_iShieldMessage;
 	int g_iShieldType;
 }
@@ -458,9 +466,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Continue;
 			}
 
-			if (((damagetype & DMG_BULLET) && g_esCache[victim].g_iShieldType == 0) || (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT)
-				|| (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iShieldType == 1) || ((damagetype & DMG_BURN) && g_esCache[victim].g_iShieldType == 2) || (((damagetype & DMG_SLASH)
-				|| (damagetype & DMG_CLUB)) && g_esCache[victim].g_iShieldType == 3))
+			if (((damagetype & DMG_BULLET) && g_esCache[victim].g_iShieldType & MT_SHIELD_BULLET) || (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT)
+				|| (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE) || ((damagetype & DMG_BURN) && g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE)
+				|| (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE))
 			{
 				g_esPlayer[victim].g_flHealth -= damage;
 				if (g_esCache[victim].g_flShieldHealth == 0.0 || g_esPlayer[victim].g_flHealth < 1.0)
@@ -514,9 +522,10 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iShieldDelay = 5;
 				g_esAbility[iIndex].g_iShieldDisplayHP = 11;
 				g_esAbility[iIndex].g_iShieldDisplayHPType = 2;
+				g_esAbility[iIndex].g_iShieldGlow = 1;
 				g_esAbility[iIndex].g_flShieldHealth = 0.0;
 				g_esAbility[iIndex].g_sShieldHealthChars = "],=";
-				g_esAbility[iIndex].g_iShieldType = 1;
+				g_esAbility[iIndex].g_iShieldType = 2;
 
 				for (int iPos = 0; iPos < sizeof(esAbility::g_iShieldColor); iPos++)
 				{
@@ -545,6 +554,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iShieldDelay = 0;
 					g_esPlayer[iPlayer].g_iShieldDisplayHP = 0;
 					g_esPlayer[iPlayer].g_iShieldDisplayHPType = 0;
+					g_esPlayer[iPlayer].g_iShieldGlow = 0;
 					g_esPlayer[iPlayer].g_flShieldHealth = 0.0;
 					g_esPlayer[iPlayer].g_sShieldHealthChars[0] = '\0';
 					g_esPlayer[iPlayer].g_iShieldType = 0;
@@ -576,8 +586,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iShieldDelay = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDelay", "Shield Delay", "Shield_Delay", "delay", g_esPlayer[admin].g_iShieldDelay, value, 1, 999999);
 		g_esPlayer[admin].g_iShieldDisplayHP = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDisplayHealth", "Shield Display Health", "Shield_Display_Health", "displayhp", g_esPlayer[admin].g_iShieldDisplayHP, value, 0, 11);
 		g_esPlayer[admin].g_iShieldDisplayHPType = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDisplayHealthType", "Shield Display Health Type", "Shield_Display_Health_Type", "displaytype", g_esPlayer[admin].g_iShieldDisplayHPType, value, 0, 2);
+		g_esPlayer[admin].g_iShieldGlow = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldGlow", "Shield Glow", "Shield_Glow", "glow", g_esPlayer[admin].g_iShieldGlow, value, 0, 1);
 		g_esPlayer[admin].g_flShieldHealth = flGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldHealth", "Shield Health", "Shield_Health", "health", g_esPlayer[admin].g_flShieldHealth, value, 0.0, 999999.0);
-		g_esPlayer[admin].g_iShieldType = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldType", "Shield Type", "Shield_Type", "type", g_esPlayer[admin].g_iShieldType, value, 0, 3);
+		g_esPlayer[admin].g_iShieldType = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldType", "Shield Type", "Shield_Type", "type", g_esPlayer[admin].g_iShieldType, value, 0, 15);
 
 		if (StrEqual(subsection, "shieldability", false) || StrEqual(subsection, "shield ability", false) || StrEqual(subsection, "shield_ability", false) || StrEqual(subsection, "shield", false))
 		{
@@ -628,8 +639,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iShieldDelay = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDelay", "Shield Delay", "Shield_Delay", "delay", g_esAbility[type].g_iShieldDelay, value, 1, 999999);
 		g_esAbility[type].g_iShieldDisplayHP = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDisplayHealth", "Shield Display Health", "Shield_Display_Health", "displayhp", g_esAbility[type].g_iShieldDisplayHP, value, 0, 11);
 		g_esAbility[type].g_iShieldDisplayHPType = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldDisplayHealthType", "Shield Display Health Type", "Shield_Display_Health_Type", "displaytype", g_esAbility[type].g_iShieldDisplayHPType, value, 0, 2);
+		g_esAbility[type].g_iShieldGlow = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldGlow", "Shield Glow", "Shield_Glow", "glow", g_esAbility[type].g_iShieldGlow, value, 0, 1);
 		g_esAbility[type].g_flShieldHealth = flGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldHealth", "Shield Health", "Shield_Health", "health", g_esAbility[type].g_flShieldHealth, value, 0.0, 999999.0);
-		g_esAbility[type].g_iShieldType = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldType", "Shield Type", "Shield_Type", "type", g_esAbility[type].g_iShieldType, value, 0, 3);
+		g_esAbility[type].g_iShieldType = iGetKeyValue(subsection, "shieldability", "shield ability", "shield_ability", "shield", key, "ShieldType", "Shield Type", "Shield_Type", "type", g_esAbility[type].g_iShieldType, value, 0, 15);
 
 		if (StrEqual(subsection, "shieldability", false) || StrEqual(subsection, "shield ability", false) || StrEqual(subsection, "shield_ability", false) || StrEqual(subsection, "shield", false))
 		{
@@ -682,6 +694,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iShieldDelay = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldDelay, g_esAbility[type].g_iShieldDelay);
 	g_esCache[tank].g_iShieldDisplayHP = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldDisplayHP, g_esAbility[type].g_iShieldDisplayHP);
 	g_esCache[tank].g_iShieldDisplayHPType = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldDisplayHPType, g_esAbility[type].g_iShieldDisplayHPType);
+	g_esCache[tank].g_iShieldGlow = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldGlow, g_esAbility[type].g_iShieldGlow);
 	g_esCache[tank].g_flShieldHealth = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flShieldHealth, g_esAbility[type].g_flShieldHealth);
 	g_esCache[tank].g_iShieldMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldMessage, g_esAbility[type].g_iShieldMessage);
 	g_esCache[tank].g_iShieldType = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldType, g_esAbility[type].g_iShieldType);
@@ -695,9 +708,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
-	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+	vCopyStats(oldTank, newTank);
+
+	if (oldTank != newTank)
+	{
+		vRemoveShield(oldTank);
+	}
 }
 
 public void MT_OnPluginEnd()
@@ -719,8 +735,8 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
+			vCopyStats(iBot, iTank);
 			vRemoveShield(iBot);
-			vReset2(iBot);
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -729,8 +745,8 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
+			vCopyStats(iTank, iBot);
 			vRemoveShield(iTank);
-			vReset2(iTank);
 		}
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated") || StrEqual(name, "player_spawn"))
@@ -741,6 +757,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveShield(iTank);
 			vReset2(iTank);
 		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	{
+		vReset();
 	}
 }
 
@@ -858,7 +878,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnRockThrow(int tank, int rock)
 {
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShieldAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flShieldChance)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShieldAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flShieldChance && ((g_esCache[tank].g_iShieldType & MT_SHIELD_EXPLOSIVE) || (g_esCache[tank].g_iShieldType & MT_SHIELD_FIRE)))
 	{
 		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -873,6 +893,12 @@ public void MT_OnRockThrow(int tank, int rock)
 	}
 }
 
+static void vCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+}
+
 static void vRemoveShield(int tank)
 {
 	if (bIsValidEntRef(g_esPlayer[tank].g_iShield))
@@ -880,6 +906,15 @@ static void vRemoveShield(int tank)
 		g_esPlayer[tank].g_iShield = EntRefToEntIndex(g_esPlayer[tank].g_iShield);
 		if (bIsValidEntity(g_esPlayer[tank].g_iShield))
 		{
+			vSetGlow(g_esPlayer[tank].g_iShield, 0, 0, 0, 0, 0);
+
+			if (bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && MT_IsGlowEnabled(tank))
+			{
+				int iGlowColor[4];
+				MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
+				vSetGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(tank) ? 1 : 0), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), (MT_GetGlowType(tank) == 1 ? 3 : 2));
+			}
+
 			MT_HideEntity(g_esPlayer[tank].g_iShield, false);
 			RemoveEntity(g_esPlayer[tank].g_iShield);
 		}
@@ -895,6 +930,7 @@ static void vReset()
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vReset2(iPlayer);
+			vShieldAbility(iPlayer, false);
 		}
 	}
 }
@@ -924,6 +960,20 @@ static void vReset3(int tank)
 	}
 }
 
+static void vSetGlow(int tank, int color, int flashing, int min, int max, int type)
+{
+	if (!bIsValidGame())
+	{
+		return;
+	}
+
+	SetEntProp(tank, Prop_Send, "m_glowColorOverride", color);
+	SetEntProp(tank, Prop_Send, "m_bFlashing", flashing);
+	SetEntProp(tank, Prop_Send, "m_nGlowRangeMin", min);
+	SetEntProp(tank, Prop_Send, "m_nGlowRange", max);
+	SetEntProp(tank, Prop_Send, "m_iGlowType", type);
+}
+
 static void vShield(int tank)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
@@ -943,6 +993,14 @@ static void vShield(int tank)
 
 	SetEntityRenderMode(g_esPlayer[tank].g_iShield, RENDER_TRANSTEXTURE);
 	SetEntityRenderColor(g_esPlayer[tank].g_iShield, iGetRandomColor(g_esCache[tank].g_iShieldColor[0]), iGetRandomColor(g_esCache[tank].g_iShieldColor[1]), iGetRandomColor(g_esCache[tank].g_iShieldColor[2]), iGetRandomColor(g_esCache[tank].g_iShieldColor[3]));
+
+	if (g_esCache[tank].g_iShieldGlow == 1)
+	{
+		vSetGlow(tank, 0, 0, 0, 0, 0);
+		int iGlowColor[4];
+		MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
+		vSetGlow(g_esPlayer[tank].g_iShield, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(tank) ? 1 : 0), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), (MT_GetGlowType(tank) == 1 ? 3 : 2));
+	}
 
 	SetEntProp(g_esPlayer[tank].g_iShield, Prop_Send, "m_CollisionGroup", 1);
 
@@ -1050,7 +1108,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (g_esCache[iTank].g_iShieldType != 1 && g_esCache[iTank].g_iShieldType != 2)
+	if (!(g_esCache[iTank].g_iShieldType & MT_SHIELD_EXPLOSIVE) && !(g_esCache[iTank].g_iShieldType & MT_SHIELD_FIRE))
 	{
 		return Plugin_Stop;
 	}
@@ -1066,10 +1124,32 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 		iThrowable = CreateEntityByName("prop_physics");
 		if (bIsValidEntity(iThrowable))
 		{
-			switch (g_esCache[iTank].g_iShieldType)
+			static int iTypeCount, iTypes[3], iFlag;
+			iTypeCount = 0;
+			for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
 			{
-				case 1: SetEntityModel(iThrowable, MODEL_PROPANETANK);
-				case 2: SetEntityModel(iThrowable, MODEL_GASCAN);
+				iFlag = (1 << iBit);
+				if (!(g_esCache[iTank].g_iShieldType & iFlag))
+				{
+					continue;
+				}
+
+				iTypes[iTypeCount] = iFlag;
+				iTypeCount++;
+			}
+
+			switch (iTypes[GetRandomInt(0, iTypeCount - 1)])
+			{
+				case 2: SetEntityModel(iThrowable, MODEL_PROPANETANK);
+				case 4: SetEntityModel(iThrowable, MODEL_GASCAN);
+				default:
+				{
+					switch (GetRandomInt(1, 2))
+					{
+						case 1: SetEntityModel(iThrowable, MODEL_PROPANETANK);
+						case 2: SetEntityModel(iThrowable, MODEL_GASCAN);
+					}
+				}
 			}
 
 			static float flPos[3];

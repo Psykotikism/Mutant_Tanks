@@ -590,11 +590,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
-	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
-	g_esPlayer[newTank].g_iCooldown2 = g_esPlayer[oldTank].g_iCooldown2;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
-	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+	vCopyStats(oldTank, newTank);
+
+	if (oldTank != newTank)
+	{
+		vRemoveHeal(oldTank);
+	}
 }
 
 public void MT_OnHookEvent(bool hooked)
@@ -614,7 +615,8 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
-			vResetGlow(iBot);
+			vCopyStats(iBot, iTank);
+			vRemoveHeal(iBot);
 		}
 	}
 	else if (StrEqual(name, "heal_success"))
@@ -637,13 +639,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
 	{
-		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-		{
-			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
-			{
-				vResetGlow(iPlayer);
-			}
-		}
+		vReset();
 	}
 	else if (StrEqual(name, "player_bot_replace"))
 	{
@@ -651,7 +647,8 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
-			vResetGlow(iTank);
+			vCopyStats(iTank, iBot);
+			vRemoveHeal(iTank);
 		}
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated") || StrEqual(name, "player_spawn"))
@@ -664,7 +661,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		else if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveHeal(iPlayer);
-			vResetGlow(iPlayer);
 		}
 	}
 }
@@ -781,6 +777,14 @@ public void MT_OnButtonReleased(int tank, int button)
 public void MT_OnChangeType(int tank, bool revert)
 {
 	vRemoveHeal(tank);
+}
+
+static void vCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCooldown2 = g_esPlayer[oldTank].g_iCooldown2;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
 }
 
 static void vHeal(int tank)
@@ -956,6 +960,8 @@ static void vHealHit(int survivor, int tank, float chance, int enabled, int mess
 
 static void vRemoveHeal(int tank)
 {
+	vResetGlow(tank);
+
 	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
@@ -973,7 +979,6 @@ static void vReset()
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveHeal(iPlayer);
-			vResetGlow(iPlayer);
 		}
 	}
 }
@@ -1005,28 +1010,35 @@ static void vReset3(int tank)
 
 static void vResetGlow(int tank)
 {
-	if (!bIsValidGame())
+	if (!bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 	{
 		return;
 	}
 
-	switch (bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && MT_IsGlowEnabled(tank))
+	switch (MT_IsGlowEnabled(tank))
 	{
 		case true:
 		{
 			int iGlowColor[4];
 			MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
-			SetEntProp(tank, Prop_Send, "m_iGlowType", 3);
-			SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
+			vSetGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(tank) ? 1 : 0), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), (MT_GetGlowType(tank) == 1 ? 3 : 2));
 		}
-		case false:
-		{
-			SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
-			SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
-		}
+		case false: vSetGlow(tank, 0, 0, 0, 0, 0);
+	}
+}
+
+static void vSetGlow(int tank, int color, int flashing, int min, int max, int type)
+{
+	if (!bIsValidGame())
+	{
+		return;
 	}
 
-	SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
+	SetEntProp(tank, Prop_Send, "m_glowColorOverride", color);
+	SetEntProp(tank, Prop_Send, "m_bFlashing", flashing);
+	SetEntProp(tank, Prop_Send, "m_nGlowRangeMin", min);
+	SetEntProp(tank, Prop_Send, "m_nGlowRange", max);
+	SetEntProp(tank, Prop_Send, "m_iGlowType", type);
 }
 
 public Action tTimerHeal(Handle timer, DataPack pack)
@@ -1054,9 +1066,10 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iHealType, iCommon, iHealth, iCommonHealth, iSpecialHealth, iTankHealth, iExtraHealth, iExtraHealth2, iRealHealth;
-	iCommon = -1;
 	static float flTankPos[3], flInfectedPos[3], flDistance;
+	static int iCommon, iCommonHealth, iExtraHealth, iExtraHealth2, iHealth, iHealType, iRealHealth, iSpecialHealth, iTankHealth;
+	iCommon = -1;
+	iHealType = 0;
 
 	while ((iCommon = FindEntityByClassname(iCommon, "infected")) != INVALID_ENT_REFERENCE)
 	{
@@ -1078,9 +1091,11 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 
 				if (bIsValidGame())
 				{
-					SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 					SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 185, 0));
 					SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
+					SetEntProp(iTank, Prop_Send, "m_nGlowRangeMin", MT_GetGlowRange(iTank, false));
+					SetEntProp(iTank, Prop_Send, "m_nGlowRange", MT_GetGlowRange(iTank, true));
+					SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 				}
 
 				iHealType = 1;
@@ -1112,9 +1127,11 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 					{
 						if (bIsValidGame())
 						{
-							SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 							SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 220, 0));
 							SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
+							SetEntProp(iTank, Prop_Send, "m_nGlowRangeMin", MT_GetGlowRange(iTank, false));
+							SetEntProp(iTank, Prop_Send, "m_nGlowRange", MT_GetGlowRange(iTank, true));
+							SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 						}
 
 						iHealType = 1;
@@ -1142,9 +1159,11 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 
 					if (bIsValidGame())
 					{
-						SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 						SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 255, 0));
 						SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
+						SetEntProp(iTank, Prop_Send, "m_nGlowRangeMin", MT_GetGlowRange(iTank, false));
+						SetEntProp(iTank, Prop_Send, "m_nGlowRange", MT_GetGlowRange(iTank, true));
+						SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
 					}
 
 					iHealType = 2;

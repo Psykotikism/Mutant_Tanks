@@ -29,7 +29,7 @@ public Plugin myinfo =
 {
 	name = MT_NAME,
 	author = MT_AUTHOR,
-	description = "Mutant Tanks makes fighting Tanks great again!",
+	description = MT_DESCRIPTION,
 	version = MT_VERSION,
 	url = MT_URL
 };
@@ -51,6 +51,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MT_DoesTypeRequireHumans", aNative_DoesTypeRequireHumans);
 	CreateNative("MT_GetAccessFlags", aNative_GetAccessFlags);
 	CreateNative("MT_GetCurrentFinaleWave", aNative_GetCurrentFinaleWave);
+	CreateNative("MT_GetGlowRange", aNative_GetGlowRange);
+	CreateNative("MT_GetGlowType", aNative_GetGlowType);
 	CreateNative("MT_GetImmunityFlags", aNative_GetImmunityFlags);
 	CreateNative("MT_GetMaxType", aNative_GetMaxType);
 	CreateNative("MT_GetMinType", aNative_GetMinType);
@@ -68,6 +70,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MT_IsCustomTankSupported", aNative_IsCustomTankSupported);
 	CreateNative("MT_IsFinaleType", aNative_IsFinaleType);
 	CreateNative("MT_IsGlowEnabled", aNative_IsGlowEnabled);
+	CreateNative("MT_IsGlowFlashing", aNative_IsGlowFlashing);
 	CreateNative("MT_IsNonFinaleType", aNative_IsNonFinaleType);
 	CreateNative("MT_IsTankIdle", aNative_IsTankIdle);
 	CreateNative("MT_IsTankSupported", aNative_IsTankSupported);
@@ -317,6 +320,7 @@ enum struct esPlayer
 	bool g_bMeteor;
 	bool g_bNeedHealth;
 	bool g_bRandomized;
+	bool g_bReplaceSelf;
 	bool g_bSmoke;
 	bool g_bSpit;
 	bool g_bStasis;
@@ -565,6 +569,28 @@ public any aNative_GetCurrentFinaleWave(Handle plugin, int numParams)
 	return g_esGeneral.g_iTankWave;
 }
 
+public any aNative_GetGlowRange(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	bool bMode = GetNativeCell(2);
+	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		switch (bMode)
+		{
+			case true: return g_esCache[iTank].g_iGlowMaxRange;
+			case false: return g_esCache[iTank].g_iGlowMinRange;
+		}
+	}
+
+	return 0;
+}
+
+public any aNative_GetGlowType(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	return bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) ? g_esCache[iTank].g_iGlowType : 0;
+}
+
 public any aNative_GetImmunityFlags(Handle plugin, int numParams)
 {
 	int iMode = GetNativeCell(1), iType = GetNativeCell(2), iAdmin = GetNativeCell(3);
@@ -728,6 +754,12 @@ public any aNative_IsGlowEnabled(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	return bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iTank].g_iGlowEnabled == 1;
+}
+
+public any aNative_IsGlowFlashing(Handle plugin, int numParams)
+{
+	int iTank = GetNativeCell(1);
+	return bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iTank].g_iGlowFlashing == 1;
 }
 
 public any aNative_IsNonFinaleType(Handle plugin, int numParams)
@@ -2809,6 +2841,11 @@ public void OnGameFrame()
 				iTarget = GetClientAimTarget(iPlayer);
 				if (bIsTank(iTarget))
 				{
+					if (bIsTankIdle(iTarget, 1) && bIsSurvivor(iPlayer))
+					{
+						continue;
+					}
+
 					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
 					if (StrEqual(sClassname, "player"))
 					{
@@ -3826,10 +3863,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esTank[iIndex].g_iAnnounceDeath, value, 0, 2);
 						g_esTank[iIndex].g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esTank[iIndex].g_iDeathRevert, value, 0, 1);
 						g_esTank[iIndex].g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esTank[iIndex].g_iDetectPlugins, value, 0, 1);
-						g_esTank[iIndex].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_esTank[iIndex].g_iGlowEnabled, value, 0, 1);
-						g_esTank[iIndex].g_iGlowFlashing = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "glowflashing", g_esTank[iIndex].g_iGlowFlashing, value, 0, 1);
-						g_esTank[iIndex].g_iGlowType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowType", "Glow Type", "Glow_Type", "glowtype", g_esTank[iIndex].g_iGlowType, value, 0, 1);
 						g_esTank[iIndex].g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esTank[iIndex].g_iRequiresHumans, value, 0, 32);
+						g_esTank[iIndex].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Glow", "Glow", "Glow", "Glow", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "enabled", g_esTank[iIndex].g_iGlowEnabled, value, 0, 1);
+						g_esTank[iIndex].g_iGlowFlashing = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Glow", "Glow", "Glow", "Glow", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "flashing", g_esTank[iIndex].g_iGlowFlashing, value, 0, 1);
+						g_esTank[iIndex].g_iGlowType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Glow", "Glow", "Glow", "Glow", key, "GlowType", "Glow Type", "Glow_Type", "type", g_esTank[iIndex].g_iGlowType, value, 0, 1);
 						g_esTank[iIndex].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esTank[iIndex].g_iDisplayHealth, value, 0, 11);
 						g_esTank[iIndex].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esTank[iIndex].g_iDisplayHealthType, value, 0, 2);
 						g_esTank[iIndex].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_esTank[iIndex].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
@@ -3879,7 +3916,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									g_esTank[iIndex].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 								}
 							}
-							else if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
+						}
+						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Glow", false))
+						{
+							if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
 							{
 								static char sValue[12];
 								strcopy(sValue, sizeof(sValue), value);
@@ -4058,10 +4098,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esPlayer[iPlayer].g_iAnnounceDeath, value, 0, 2);
 							g_esPlayer[iPlayer].g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esPlayer[iPlayer].g_iDeathRevert, value, 0, 1);
 							g_esPlayer[iPlayer].g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esPlayer[iPlayer].g_iDetectPlugins, value, 0, 1);
-							g_esPlayer[iPlayer].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "glow", g_esPlayer[iPlayer].g_iGlowEnabled, value, 0, 1);
-							g_esPlayer[iPlayer].g_iGlowFlashing = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "glowflashing", g_esPlayer[iPlayer].g_iGlowFlashing, value, 0, 1);
-							g_esPlayer[iPlayer].g_iGlowType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "GlowType", "Glow Type", "Glow_Type", "glowtype", g_esPlayer[iPlayer].g_iGlowType, value, 0, 1);
 							g_esPlayer[iPlayer].g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "General", "General", "General", "General", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[iPlayer].g_iRequiresHumans, value, 0, 32);
+							g_esPlayer[iPlayer].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Glow", "Glow", "Glow", "Glow", key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "enabled", g_esPlayer[iPlayer].g_iGlowEnabled, value, 0, 1);
+							g_esPlayer[iPlayer].g_iGlowFlashing = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Glow", "Glow", "Glow", "Glow", key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "flashing", g_esPlayer[iPlayer].g_iGlowFlashing, value, 0, 1);
+							g_esPlayer[iPlayer].g_iGlowType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Glow", "Glow", "Glow", "Glow", key, "GlowType", "Glow Type", "Glow_Type", "type", g_esPlayer[iPlayer].g_iGlowType, value, 0, 1);
 							g_esPlayer[iPlayer].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esPlayer[iPlayer].g_iDisplayHealth, value, 0, 11);
 							g_esPlayer[iPlayer].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esPlayer[iPlayer].g_iDisplayHealthType, value, 0, 2);
 							g_esPlayer[iPlayer].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, "Health", "Health", "Health", "Health", key, "ExtraHealth", "Extra Health", "Extra_Health", "health", g_esPlayer[iPlayer].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
@@ -4107,7 +4147,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 										g_esPlayer[iPlayer].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 									}
 								}
-								else if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
+							}
+							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, "Glow", false))
+							{
+								if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
 								{
 									static char sValue[12];
 									strcopy(sValue, sizeof(sValue), value);
@@ -4499,23 +4542,15 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
  			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsValidGame())
 			{
-				SetEntProp(iTank, Prop_Send, "m_iGlowType", 0);
-				SetEntProp(iTank, Prop_Send, "m_glowColorOverride", 0);
+				vRemoveGlow(iTank);
 			}
 		}
 		else if (StrEqual(name, "player_no_longer_it"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
- 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_esCache[iTank].g_iGlowEnabled == 1)
+ 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsValidGame() && !bIsPlayerIncapacitated(iTank) && g_esCache[iTank].g_iGlowEnabled == 1)
 			{
-				if (bIsValidGame() && !bIsPlayerIncapacitated(iTank))
-				{
-					SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGetRandomColor(g_esCache[iTank].g_iGlowColor[0]), iGetRandomColor(g_esCache[iTank].g_iGlowColor[1]), iGetRandomColor(g_esCache[iTank].g_iGlowColor[2])));
-					SetEntProp(iTank, Prop_Send, "m_bFlashing", g_esCache[iTank].g_iGlowFlashing);
-					SetEntProp(iTank, Prop_Send, "m_nGlowRangeMin", g_esCache[iTank].g_iGlowMinRange);
-					SetEntProp(iTank, Prop_Send, "m_nGlowRange", g_esCache[iTank].g_iGlowMaxRange);
-					SetEntProp(iTank, Prop_Send, "m_iGlowType", (g_esCache[iTank].g_iGlowType == 1 ? 3 : 2));
-				}
+				vSetGlow(iTank);
 			}
 		}
 		else if (StrEqual(name, "player_spawn"))
@@ -4853,6 +4888,13 @@ static void vRegularSpawn()
 	}
 }
 
+static void vRemoveGlow(int tank)
+{
+	SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
+	SetEntProp(tank, Prop_Send, "m_bFlashing", 0);
+	SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
+}
+
 static void vRemoveProps(int tank, int mode = 1)
 {
 	if (bIsValidEntRef(g_esPlayer[tank].g_iTankModel))
@@ -4965,8 +5007,7 @@ static void vRemoveProps(int tank, int mode = 1)
 
 	if (bIsValidGame())
 	{
-		SetEntProp(tank, Prop_Send, "m_iGlowType", 0);
-		SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
+		vRemoveGlow(tank);
 	}
 
 	if (mode == 1)
@@ -5020,6 +5061,7 @@ static void vReset3(int tank)
 	g_esPlayer[tank].g_bKeepCurrentType = false;
 	g_esPlayer[tank].g_bMeteor = false;
 	g_esPlayer[tank].g_bNeedHealth = false;
+	g_esPlayer[tank].g_bReplaceSelf = false;
 	g_esPlayer[tank].g_bSmoke = false;
 	g_esPlayer[tank].g_bSpit = false;
 	g_esPlayer[tank].g_bTriggered = false;
@@ -5141,7 +5183,7 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 
 		return;
 	}
-	else if (g_esPlayer[tank].g_iTankType > 0 && g_esPlayer[tank].g_iTankType == type && !g_esPlayer[tank].g_bKeepCurrentType)
+	else if (g_esPlayer[tank].g_iTankType > 0 && g_esPlayer[tank].g_iTankType == type && !g_esPlayer[tank].g_bReplaceSelf && !g_esPlayer[tank].g_bKeepCurrentType)
 	{
 		vRemoveProps(tank);
 
@@ -5155,6 +5197,7 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 	}
 
 	g_esPlayer[tank].g_iTankType = type;
+	g_esPlayer[tank].g_bReplaceSelf = false;
 
 	vCacheSettings(tank);
 
@@ -5163,11 +5206,7 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 
 	if (bIsValidGame() && g_esCache[tank].g_iGlowEnabled == 1)
 	{
-		SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGetRandomColor(g_esCache[tank].g_iGlowColor[0]), iGetRandomColor(g_esCache[tank].g_iGlowColor[1]), iGetRandomColor(g_esCache[tank].g_iGlowColor[2])));
-		SetEntProp(tank, Prop_Send, "m_bFlashing", g_esCache[tank].g_iGlowFlashing);
-		SetEntProp(tank, Prop_Send, "m_nGlowRangeMin", g_esCache[tank].g_iGlowMinRange);
-		SetEntProp(tank, Prop_Send, "m_nGlowRange", g_esCache[tank].g_iGlowMaxRange);
-		SetEntProp(tank, Prop_Send, "m_iGlowType", (g_esCache[tank].g_iGlowType == 1 ? 3 : 2));
+		vSetGlow(tank);
 	}
 }
 
@@ -5205,6 +5244,15 @@ static void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type =
 	{
 		strcopy(buffer, size, "NoName");
 	}
+}
+
+static void vSetGlow(int tank)
+{
+	SetEntProp(tank, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGetRandomColor(g_esCache[tank].g_iGlowColor[0]), iGetRandomColor(g_esCache[tank].g_iGlowColor[1]), iGetRandomColor(g_esCache[tank].g_iGlowColor[2])));
+	SetEntProp(tank, Prop_Send, "m_bFlashing", g_esCache[tank].g_iGlowFlashing);
+	SetEntProp(tank, Prop_Send, "m_nGlowRangeMin", g_esCache[tank].g_iGlowMinRange);
+	SetEntProp(tank, Prop_Send, "m_nGlowRange", g_esCache[tank].g_iGlowMaxRange);
+	SetEntProp(tank, Prop_Send, "m_iGlowType", (g_esCache[tank].g_iGlowType == 1 ? 3 : 2));
 }
 
 static void vSetName(int tank, const char[] oldname, const char[] name, int mode)
@@ -5914,6 +5962,30 @@ static void vMutateTank(int tank)
 				case true: iType = iChooseTank(tank, 1, g_esGeneral.g_iFinaleMinTypes[g_esGeneral.g_iTankWave - 1], g_esGeneral.g_iFinaleMaxTypes[g_esGeneral.g_iTankWave - 1]);
 				case false: iType = (bIsNonFinaleMap() && g_esGeneral.g_iRegularMode == 1 && g_esGeneral.g_iRegularWave == 1) ? iChooseTank(tank, 1, g_esGeneral.g_iRegularMinType, g_esGeneral.g_iRegularMaxType) : iChooseTank(tank, 1);
 			}
+
+			DataPack dpCountCheck;
+			CreateDataTimer(g_esGeneral.g_flExtrasDelay, tTimerTankCountCheck, dpCountCheck, TIMER_FLAG_NO_MAPCHANGE);
+			dpCountCheck.WriteCell(GetClientUserId(tank));
+
+			switch (bIsFinaleMap())
+			{
+				case true:
+				{
+					switch (g_esGeneral.g_iTankWave)
+					{
+						case 0: dpCountCheck.WriteCell(0);
+						default:
+						{
+							switch (g_esGeneral.g_iFinaleAmount)
+							{
+								case 0: dpCountCheck.WriteCell(g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1]);
+								default: dpCountCheck.WriteCell(g_esGeneral.g_iFinaleAmount);
+							}
+						}
+					}
+				}
+				case false: dpCountCheck.WriteCell(g_esGeneral.g_iRegularAmount);
+			}
 		}
 		else
 		{
@@ -5922,23 +5994,6 @@ static void vMutateTank(int tank)
 		}
 
 		g_esGeneral.g_iChosenType = 0;
-
-		DataPack dpCountCheck;
-		CreateDataTimer(g_esGeneral.g_flExtrasDelay, tTimerTankCountCheck, dpCountCheck, TIMER_FLAG_NO_MAPCHANGE);
-		dpCountCheck.WriteCell(GetClientUserId(tank));
-
-		switch (g_esGeneral.g_iTankWave == 0 && bIsNonFinaleMap())
-		{
-			case true: dpCountCheck.WriteCell(g_esGeneral.g_iRegularAmount);
-			case false:
-			{
-				switch (g_esGeneral.g_iFinaleAmount)
-				{
-					case 0: dpCountCheck.WriteCell(((g_esGeneral.g_iTankWave > 0) ? g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] : 0));
-					default: dpCountCheck.WriteCell(g_esGeneral.g_iFinaleAmount);
-				}
-			}
-		}
 
 		vTankSpawn(tank);
 
@@ -6148,16 +6203,6 @@ public void vRockThrowFrame(int ref)
 			Call_Finish();
 		}
 	}
-}
-
-static bool bIsTankInStasis(int tank)
-{
-	return g_esPlayer[tank].g_bStasis || (bIsValidGame() && (SDKCall(g_esGeneral.g_hSDKIsInStasis, tank) || bIsTankStasis(tank)));
-}
-
-static bool bIsTankInThirdPerson(int tank)
-{
-	return g_esPlayer[tank].g_bThirdPerson || g_esPlayer[tank].g_bThirdPerson2 || bIsTankThirdPerson(tank);
 }
 
 public void vTankSpawnFrame(DataPack pack)
@@ -6448,7 +6493,11 @@ static bool bIsPluginEnabled()
 
 			ActivateEntity(iGameMode);
 			AcceptEntityInput(iGameMode, "PostSpawnActivate");
-			RemoveEntity(iGameMode);
+
+			if (bIsValidEntity(iGameMode))
+			{
+				RemoveEdict(iGameMode);
+			}
 		}
 
 		if (g_esGeneral.g_iCurrentMode == 0 || !(iMode & g_esGeneral.g_iCurrentMode))
@@ -6546,6 +6595,16 @@ static bool bIsTankIdle(int tank, int type = 0)
 	return (type != 2 && StrEqual(sAction, "TankIdle")) || (type != 1 && (StrEqual(sAction, "TankBehavior") || adAction == adBehavior));
 }
 
+static bool bIsTankInStasis(int tank)
+{
+	return g_esPlayer[tank].g_bStasis || (bIsValidGame() && (SDKCall(g_esGeneral.g_hSDKIsInStasis, tank) || bIsTankStasis(tank)));
+}
+
+static bool bIsTankInThirdPerson(int tank)
+{
+	return g_esPlayer[tank].g_bThirdPerson || g_esPlayer[tank].g_bThirdPerson2 || bIsTankThirdPerson(tank);
+}
+
 static bool bIsTypeAvailable(int type, int tank = 0)
 {
 	if ((tank > 0 && g_esCache[tank].g_iDetectPlugins == 0) || (g_esGeneral.g_iDetectPlugins == 0 && g_esTank[type].g_iDetectPlugins == 0))
@@ -6596,7 +6655,7 @@ static bool bTankChance(int type)
 
 static float flGetScaledDamage(float damage)
 {
-	if (g_esGeneral.g_iScaleDamage == 1)
+	if (g_esGeneral.g_iCurrentMode == 1 && g_esGeneral.g_iScaleDamage == 1)
 	{
 		static char sDifficulty[11];
 		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
@@ -6811,6 +6870,8 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 
 public void L4D_OnReplaceTank(int tank, int newtank)
 {
+	g_esPlayer[newtank].g_bReplaceSelf = true;
+
 	vSetColor(newtank, g_esPlayer[tank].g_iTankType);
 	vCopyStats(tank, newtank);
 	vTankSpawn(newtank, -1);
@@ -6831,17 +6892,24 @@ public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 	bool bBlock = false;
 	int iCount = iGetTankCount();
 
-	switch (g_esGeneral.g_iTankWave == 0 && bIsNonFinaleMap())
+	switch (bIsFinaleMap())
 	{
-		case true: bBlock = 0 < g_esGeneral.g_iRegularAmount <= iCount;
-		case false:
+		case true:
 		{
-			switch (g_esGeneral.g_iFinaleAmount)
+			switch (g_esGeneral.g_iTankWave)
 			{
-				case 0: bBlock = 0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount && g_esGeneral.g_iTankWave > 0;
-				default: bBlock = 0 < g_esGeneral.g_iFinaleAmount <= iCount;
+				case 0: bBlock = false;
+				default:
+				{
+					switch (g_esGeneral.g_iFinaleAmount)
+					{
+						case 0: bBlock = g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount;
+						default: bBlock = g_esGeneral.g_iFinaleAmount <= iCount;
+					}
+				}
 			}
 		}
+		case false: bBlock = 0 < g_esGeneral.g_iRegularAmount <= iCount;
 	}
 
 	return bBlock ? Plugin_Handled : Plugin_Continue;
@@ -6996,7 +7064,7 @@ public Action tTimerAnnounce(Handle timer, DataPack pack)
 
 		return Plugin_Stop;
 	}
-	else if (bIsTankIdle(iTank, 1) && g_esGeneral.g_iAggressiveTanks == 1 && !g_esPlayer[iTank].g_bTriggered)
+	else if (bIsTankIdle(iTank, 1) && g_esGeneral.g_iCurrentMode == 1 && g_esGeneral.g_iAggressiveTanks == 1 && !g_esPlayer[iTank].g_bTriggered)
 	{
 		g_esPlayer[iTank].g_bTriggered = true;
 

@@ -18,6 +18,7 @@
 
 #define MT_NAME "Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
+#define MT_DESCRIPTION "Mutant Tanks makes fighting Tanks great again!"
 #define MT_VERSION "8.80"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
@@ -305,6 +306,25 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
 native int MT_GetCurrentFinaleWave();
 
 /**
+ * Returns a Mutant Tank's glow outline range.
+ *
+ * @param tank			Client index of the Tank.
+ * @param mode			True if looking for max range, false otherwise.
+ * @return			The glow outline range of the Tank.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native int MT_GetGlowRange(int tank, bool mode);
+
+/**
+ * Returns a Mutant Tank's glow outline type.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			The glow outline type of the Tank.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native int MT_GetGlowType(int tank);
+
+/**
  * Returns the current immunity flags set by the core plugin.
  *
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
@@ -462,6 +482,15 @@ native bool MT_IsFinaleType(int type);
  * @error			Invalid client index or client is not in-game.
  **/
 native bool MT_IsGlowEnabled(int tank);
+
+/**
+ * Returns if a Mutant Tank type's glow outline is flashing.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the Tank's glow outline is flashing, false otherwise.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native bool MT_IsGlowFlashing(int tank);
 
 /**
  * Returns if a certain Mutant Tank type is only available on non-finale maps.
@@ -1458,7 +1487,7 @@ stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGA
 		}
 	}
 
-	return (bIsValidGame() && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0;
+	return bIsPlayerIncapacitated(tank) || (bIsValidGame() && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0;
 }
 
 stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)
@@ -2050,6 +2079,8 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_DoesTypeRequireHumans")
 	MarkNativeAsOptional("MT_GetAccessFlags");
 	MarkNativeAsOptional("MT_GetCurrentFinaleWave");
+	MarkNativeAsOptional("MT_GetGlowRange");
+	MarkNativeAsOptional("MT_GetGlowType");
 	MarkNativeAsOptional("MT_GetImmunityFlags");
 	MarkNativeAsOptional("MT_GetMaxType");
 	MarkNativeAsOptional("MT_GetMinType");
@@ -2067,6 +2098,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_IsCustomTankSupported");
 	MarkNativeAsOptional("MT_IsFinaleType");
 	MarkNativeAsOptional("MT_IsGlowEnabled");
+	MarkNativeAsOptional("MT_IsGlowFlashing");
 	MarkNativeAsOptional("MT_IsNonFinaleType");
 	MarkNativeAsOptional("MT_IsTankIdle");
 	MarkNativeAsOptional("MT_IsTankSupported");

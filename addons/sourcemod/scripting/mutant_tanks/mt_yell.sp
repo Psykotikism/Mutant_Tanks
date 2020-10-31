@@ -528,20 +528,47 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
-	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+	vCopyStats(oldTank, newTank);
+
+	if (oldTank != newTank)
+	{
+		vRemoveYell(oldTank);
+	}
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vCopyStats(iBot, iTank);
+			vRemoveYell(iBot);
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vCopyStats(iTank, iBot);
+			vRemoveYell(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveYell(iTank);
 		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	{
+		vReset();
 	}
 }
 
@@ -599,17 +626,12 @@ public void MT_OnButtonPressed(int tank, int button)
 						{
 							if (!g_esPlayer[tank].g_bActivated && !bRecharging)
 							{
-								static int iSurvivorCount;
-								iSurvivorCount = iGetVictimCount(tank, true);
-								if (iSurvivorCount > 0)
-								{
-									g_esPlayer[tank].g_bActivated = true;
-									g_esPlayer[tank].g_iCount++;
+								g_esPlayer[tank].g_bActivated = true;
+								g_esPlayer[tank].g_iCount++;
 
-									vYell(tank);
+								vYell(tank, true);
 
-									MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
-								}
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
 							}
 							else if (g_esPlayer[tank].g_bActivated)
 							{
@@ -649,6 +671,12 @@ public void MT_OnButtonReleased(int tank, int button)
 public void MT_OnChangeType(int tank, bool revert)
 {
 	vRemoveYell(tank);
+}
+
+static void vCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
 static void vRemoveYell(int tank)
@@ -713,81 +741,12 @@ static void vReset4(int tank)
 	}
 }
 
-static void vYell(int tank)
-{
-	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
-	{
-		return;
-	}
-
-	EmitSoundToAll(SOUND_YELL, tank);
-	EmitSoundToAll(SOUND_YELL2, tank);
-	EmitSoundToAll(SOUND_YELL3, tank);
-	EmitSoundToAll(SOUND_YELL4, tank);
-	EmitSoundToAll(SOUND_YELL5, tank);
-	EmitSoundToAll(SOUND_YELL6, tank);
-	EmitSoundToAll(SOUND_YELL7, tank);
-	EmitSoundToAll(SOUND_YELL8, tank);
-	EmitSoundToAll(SOUND_YELL9, tank);
-	EmitSoundToAll(SOUND_YELL10, tank);
-	EmitSoundToAll(SOUND_YELL11, tank);
-}
-
-static void vYellAbility(int tank)
-{
-	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
-	{
-		return;
-	}
-
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
-	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flYellChance)
-		{
-			static int iSurvivorCount;
-			iSurvivorCount = iGetVictimCount(tank, false);
-			if (iSurvivorCount > 0 && !g_esPlayer[tank].g_bActivated)
-			{
-				g_esPlayer[tank].g_bActivated = true;
-				g_esPlayer[tank].g_iDuration = GetTime() + g_esCache[tank].g_iYellDuration;
-
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
-				{
-					g_esPlayer[tank].g_iCount++;
-
-					MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
-				}
-
-				vYell(tank);
-
-				if (g_esCache[tank].g_iYellMessage == 1)
-				{
-					static char sTankName[33];
-					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Yell", sTankName);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Yell", LANG_SERVER, sTankName);
-				}
-			}
-		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
-		{
-			MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman2");
-		}
-	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
-	{
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellAmmo");
-	}
-}
-
-static int iGetVictimCount(int tank, bool repeat)
+static void vYell(int tank, bool repeat)
 {
 	static float flTankPos[3];
 	GetClientAbsOrigin(tank, flTankPos);
 
 	static float flSurvivorPos[3], flDistance;
-	static int iSurvivorCount;
-	iSurvivorCount = 0;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) && !g_esPlayer[iSurvivor].g_bAffected)
@@ -810,13 +769,51 @@ static int iGetVictimCount(int tank, bool repeat)
 					dpYell.WriteCell(GetClientUserId(tank));
 					dpYell.WriteCell(g_esPlayer[tank].g_iTankType);
 				}
-
-				iSurvivorCount++;
 			}
 		}
 	}
+}
 
-	return iSurvivorCount;
+static void vYellAbility(int tank)
+{
+	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+	{
+		return;
+	}
+
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	{
+		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flYellChance)
+		{
+			g_esPlayer[tank].g_bActivated = true;
+			g_esPlayer[tank].g_iDuration = GetTime() + g_esCache[tank].g_iYellDuration;
+
+			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+			{
+				g_esPlayer[tank].g_iCount++;
+
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+			}
+
+			vYell(tank, false);
+
+			if (g_esCache[tank].g_iYellMessage == 1)
+			{
+				static char sTankName[33];
+				MT_GetTankName(tank, sTankName);
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Yell", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Yell", LANG_SERVER, sTankName);
+			}
+		}
+		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		{
+			MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellHuman2");
+		}
+	}
+	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "YellAmmo");
+	}
 }
 
 public Action tTimerYell(Handle timer, DataPack pack)

@@ -339,7 +339,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esPlayer[admin].g_iXiphosAbility = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iXiphosAbility, value, 0, 1);
 		g_esPlayer[admin].g_iXiphosEffect = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iXiphosEffect, value, 0, 1);
-		g_esPlayer[admin].g_iXiphosMessage = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iXiphosMessage, value, 0, 1);
+		g_esPlayer[admin].g_iXiphosMessage = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iXiphosMessage, value, 0, 3);
 		g_esPlayer[admin].g_flXiphosChance = flGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esPlayer[admin].g_flXiphosChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iXiphosMaxHealth = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esPlayer[admin].g_iXiphosMaxHealth, value, 0, MT_MAXHEALTH);
 
@@ -363,7 +363,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esAbility[type].g_iXiphosAbility = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iXiphosAbility, value, 0, 1);
 		g_esAbility[type].g_iXiphosEffect = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iXiphosEffect, value, 0, 1);
-		g_esAbility[type].g_iXiphosMessage = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iXiphosMessage, value, 0, 1);
+		g_esAbility[type].g_iXiphosMessage = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iXiphosMessage, value, 0, 3);
 		g_esAbility[type].g_flXiphosChance = flGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosChance", "Xiphos Chance", "Xiphos_Chance", "chance", g_esAbility[type].g_flXiphosChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iXiphosMaxHealth = iGetKeyValue(subsection, "xiphosability", "xiphos ability", "xiphos_ability", "xiphos", key, "XiphosMaxHealth", "Xiphos Max Health", "Xiphos_Max_Health", "maxhealth", g_esAbility[type].g_iXiphosMaxHealth, value, 0, MT_MAXHEALTH);
 
@@ -395,11 +395,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
-public void MT_OnCopyStats(int oldTank, int newTank)
-{
-	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
-}
-
 static void vXiphos(int attacker, int victim, float damage, bool tank)
 {
 	static int iTank;
@@ -415,7 +410,9 @@ static void vXiphos(int attacker, int victim, float damage, bool tank)
 	//SetEntityHealth(attacker, iFinalHealth);
 	SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
 
-	if (g_esCache[iTank].g_iXiphosMessage == 1)
+	static int iType;
+	iType = tank ? 1 : 2;
+	if (g_esCache[iTank].g_iXiphosMessage & iType)
 	{
 		static char sTankName[33];
 		MT_GetTankName(iTank, sTankName);

@@ -568,18 +568,11 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
-	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
-	g_esPlayer[newTank].g_iCooldown2 = g_esPlayer[oldTank].g_iCooldown2;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
-	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+	vCopyStats(oldTank, newTank);
 
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	if (oldTank != newTank)
 	{
-		if (g_esPlayer[iSurvivor].g_iOwner == oldTank)
-		{
-			g_esPlayer[iSurvivor].g_iOwner = newTank;
-		}
+		vRemoveGravity(oldTank);
 	}
 }
 
@@ -602,8 +595,8 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
+			vCopyStats(iBot, iTank);
 			vRemoveGravity(iBot);
-			vReset2(iBot);
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -612,8 +605,8 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
+			vCopyStats(iTank, iBot);
 			vRemoveGravity(iTank);
-			vReset2(iTank);
 		}
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
@@ -624,6 +617,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveGravity(iTank);
 			vReset2(iTank);
 		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	{
+		vReset();
 	}
 }
 
@@ -748,6 +745,14 @@ public void MT_OnChangeType(int tank, bool revert)
 	}
 
 	vReset2(tank, revert);
+}
+
+static void vCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCooldown2 = g_esPlayer[oldTank].g_iCooldown2;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
 }
 
 static void vGravity(int tank)
@@ -970,6 +975,7 @@ static void vReset()
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
+			vRemoveGravity(iPlayer);
 			vReset2(iPlayer);
 
 			g_esPlayer[iPlayer].g_iOwner = 0;

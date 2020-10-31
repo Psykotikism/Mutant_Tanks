@@ -59,6 +59,7 @@ enum struct esPlayer
 	int g_iRequiresHumans;
 	int g_iTankType;
 	int g_iTrackAbility;
+	int g_iTrackGlow;
 	int g_iTrackMessage;
 	int g_iTrackMode;
 }
@@ -78,6 +79,7 @@ enum struct esAbility
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iTrackAbility;
+	int g_iTrackGlow;
 	int g_iTrackMessage;
 	int g_iTrackMode;
 }
@@ -95,6 +97,7 @@ enum struct esCache
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iTrackAbility;
+	int g_iTrackGlow;
 	int g_iTrackMessage;
 	int g_iTrackMode;
 }
@@ -308,6 +311,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iTrackAbility = 0;
 				g_esAbility[iIndex].g_iTrackMessage = 0;
 				g_esAbility[iIndex].g_flTrackChance = 33.3;
+				g_esAbility[iIndex].g_iTrackGlow = 1;
 				g_esAbility[iIndex].g_iTrackMode = 1;
 				g_esAbility[iIndex].g_flTrackSpeed = 500.0;
 			}
@@ -328,6 +332,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iTrackAbility = 0;
 					g_esPlayer[iPlayer].g_iTrackMessage = 0;
 					g_esPlayer[iPlayer].g_flTrackChance = 0.0;
+					g_esPlayer[iPlayer].g_iTrackGlow = 0;
 					g_esPlayer[iPlayer].g_iTrackMode = 0;
 					g_esPlayer[iPlayer].g_flTrackSpeed = 0.0;
 				}
@@ -348,6 +353,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iTrackAbility = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iTrackAbility, value, 0, 1);
 		g_esPlayer[admin].g_iTrackMessage = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iTrackMessage, value, 0, 1);
 		g_esPlayer[admin].g_flTrackChance = flGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackChance", "Track Chance", "Track_Chance", "chance", g_esPlayer[admin].g_flTrackChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iTrackGlow = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackGlow", "Track Glow", "Track_Glow", "glow", g_esPlayer[admin].g_iTrackGlow, value, 0, 1);
 		g_esPlayer[admin].g_iTrackMode = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackMode", "Track Mode", "Track_Mode", "mode", g_esPlayer[admin].g_iTrackMode, value, 0, 1);
 		g_esPlayer[admin].g_flTrackSpeed = flGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackSpeed", "Track Speed", "Track_Speed", "speed", g_esPlayer[admin].g_flTrackSpeed, value, 0.1, 999999.0);
 
@@ -374,6 +380,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iTrackAbility = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iTrackAbility, value, 0, 1);
 		g_esAbility[type].g_iTrackMessage = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iTrackMessage, value, 0, 1);
 		g_esAbility[type].g_flTrackChance = flGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackChance", "Track Chance", "Track_Chance", "chance", g_esAbility[type].g_flTrackChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iTrackGlow = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackGlow", "Track Glow", "Track_Glow", "glow", g_esAbility[type].g_iTrackGlow, value, 0, 1);
 		g_esAbility[type].g_iTrackMode = iGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackMode", "Track Mode", "Track_Mode", "mode", g_esAbility[type].g_iTrackMode, value, 0, 1);
 		g_esAbility[type].g_flTrackSpeed = flGetKeyValue(subsection, "trackability", "track ability", "track_ability", "track", key, "TrackSpeed", "Track Speed", "Track_Speed", "speed", g_esAbility[type].g_flTrackSpeed, value, 0.1, 999999.0);
 
@@ -402,6 +409,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iOpenAreasOnly = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iOpenAreasOnly, g_esAbility[type].g_iOpenAreasOnly);
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esCache[tank].g_iTrackAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iTrackAbility, g_esAbility[type].g_iTrackAbility);
+	g_esCache[tank].g_iTrackGlow = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iTrackGlow, g_esAbility[type].g_iTrackGlow);
 	g_esCache[tank].g_iTrackMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iTrackMessage, g_esAbility[type].g_iTrackMessage);
 	g_esCache[tank].g_iTrackMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iTrackMode, g_esAbility[type].g_iTrackMode);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
@@ -409,20 +417,47 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
-	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+	vCopyStats(oldTank, newTank);
+
+	if (oldTank != newTank)
+	{
+		vRemoveTrack(oldTank);
+	}
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vCopyStats(iBot, iTank);
+			vRemoveTrack(iBot);
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vCopyStats(iTank, iBot);
+			vRemoveTrack(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
 			vRemoveTrack(iTank);
 		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	{
+		vReset();
 	}
 }
 
@@ -482,10 +517,9 @@ public void MT_OnRockBreak(int tank, int rock)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && bIsValidGame())
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank))
 	{
-		SetEntProp(rock, Prop_Send, "m_iGlowType", 3);
-		SetEntProp(rock, Prop_Send, "m_glowColorOverride", 0);
+		vSetGlow(rock, 0, 0, 0, 0, 0);
 	}
 }
 
@@ -519,6 +553,12 @@ public void MT_OnRockThrow(int tank, int rock)
 	}
 }
 
+static void vCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+}
+
 static void vRemoveTrack(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
@@ -535,6 +575,20 @@ static void vReset()
 			vRemoveTrack(iPlayer);
 		}
 	}
+}
+
+static void vSetGlow(int rock, int color, int flashing, int min, int max, int type)
+{
+	if (!bIsValidGame())
+	{
+		return;
+	}
+
+	SetEntProp(rock, Prop_Send, "m_glowColorOverride", color);
+	SetEntProp(rock, Prop_Send, "m_bFlashing", flashing);
+	SetEntProp(rock, Prop_Send, "m_nGlowRangeMin", min);
+	SetEntProp(rock, Prop_Send, "m_nGlowRange", max);
+	SetEntProp(rock, Prop_Send, "m_iGlowType", type);
 }
 
 static void vTrackThink(int rock)
@@ -813,13 +867,11 @@ static void vTrackThink(int rock)
 				SetEntityGravity(rock, 0.01);
 				TeleportEntity(rock, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 
-				if (MT_IsGlowEnabled(iTank) && bIsValidGame())
+				if (g_esCache[iTank].g_iTrackGlow == 1)
 				{
 					static int iGlowColor[4];
 					MT_GetTankColors(iTank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
-					SetEntProp(rock, Prop_Send, "m_iGlowType", 3);
-					SetEntProp(rock, Prop_Send, "m_nGlowRange", 0);
-					SetEntProp(rock, Prop_Send, "m_glowColorOverride", iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]));
+					vSetGlow(rock, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(iTank) ? 1 : 0), MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), (MT_GetGlowType(iTank) == 1 ? 3 : 2));
 				}
 			}
 		}

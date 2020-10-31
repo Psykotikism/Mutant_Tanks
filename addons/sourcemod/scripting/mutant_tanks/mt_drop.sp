@@ -495,10 +495,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
-	g_esPlayer[newTank].g_bActivated = g_esPlayer[oldTank].g_bActivated;
-	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
-	g_esPlayer[newTank].g_iWeapon = g_esPlayer[oldTank].g_iWeapon;
-	g_esPlayer[newTank].g_iWeaponIndex = g_esPlayer[oldTank].g_iWeaponIndex;
+	vCopyStats(oldTank, newTank);
+
+	if (oldTank != newTank)
+	{
+		vRemoveDrop(oldTank);
+	}
 }
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
@@ -509,8 +511,8 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
+			vCopyStats(iBot, iTank);
 			vRemoveDrop(iBot);
-			vReset2(iBot);
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -519,8 +521,8 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
+			vCopyStats(iTank, iBot);
 			vRemoveDrop(iTank);
-			vReset2(iTank);
 		}
 	}
 	else if (StrEqual(name, "player_death"))
@@ -535,6 +537,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 			vReset2(iTank);
 		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	{
+		vReset();
 	}
 }
 
@@ -587,6 +593,13 @@ public void MT_OnChangeType(int tank, bool revert)
 	{
 		g_esPlayer[tank].g_bActivated = false;
 	}
+}
+
+static void vCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_bActivated = g_esPlayer[oldTank].g_bActivated;
+	g_esPlayer[newTank].g_iWeapon = g_esPlayer[oldTank].g_iWeapon;
+	g_esPlayer[newTank].g_iWeaponIndex = g_esPlayer[oldTank].g_iWeaponIndex;
 }
 
 static void vDropWeapon(int tank)
@@ -721,6 +734,7 @@ static void vReset()
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
+			vRemoveDrop(iPlayer);
 			vReset2(iPlayer);
 		}
 	}

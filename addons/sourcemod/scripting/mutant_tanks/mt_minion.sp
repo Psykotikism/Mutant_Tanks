@@ -397,10 +397,12 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
-	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
-	g_esPlayer[newTank].g_iTankType = g_esPlayer[oldTank].g_iTankType;
+	vCopyStats(oldTank, newTank);
+
+	if (oldTank != newTank)
+	{
+		vRemoveMinion(oldTank);
+	}
 }
 
 public void MT_OnPluginEnd()
@@ -420,7 +422,27 @@ public void MT_OnPluginEnd()
 
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
-	if (StrEqual(name, "player_death"))
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vCopyStats(iBot, iTank);
+			vRemoveMinion(iBot);
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vCopyStats(iTank, iBot);
+			vRemoveMinion(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_death"))
 	{
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
 		if (MT_IsTankSupported(iInfected, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
@@ -458,6 +480,10 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 				}
 			}
 		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	{
+		vReset();
 	}
 }
 
@@ -503,6 +529,13 @@ public void MT_OnButtonPressed(int tank, int button)
 public void MT_OnChangeType(int tank, bool revert)
 {
 	vRemoveMinion(tank, revert);
+}
+
+static void vCopyStats(int oldTank, int newTank)
+{
+	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
+	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
 }
 
 static void vMinionAbility(int tank)
