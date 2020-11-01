@@ -384,7 +384,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
 		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esPlayer[admin].g_iLaserAbility = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iLaserAbility, value, 0, 1);
-		g_esPlayer[admin].g_iLaserMessage = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iLaserMessage, value, 0, 3);
+		g_esPlayer[admin].g_iLaserMessage = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iLaserMessage, value, 0, 1);
 		g_esPlayer[admin].g_flLaserChance = flGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "LaserChance", "Laser Chance", "Laser_Chance", "chance", g_esPlayer[admin].g_flLaserChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_flLaserDamage = flGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "LaserDamage", "Laser Damage", "Laser_Damage", "damage", g_esPlayer[admin].g_flLaserDamage, value, 0.1, 999999.0);
 		g_esPlayer[admin].g_iLaserDuration = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "LaserDuration", "Laser Duration", "Laser_Duration", "duration", g_esPlayer[admin].g_iLaserDuration, value, 1, 999999);
@@ -413,7 +413,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
 		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esAbility[type].g_iLaserAbility = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iLaserAbility, value, 0, 1);
-		g_esAbility[type].g_iLaserMessage = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iLaserMessage, value, 0, 3);
+		g_esAbility[type].g_iLaserMessage = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iLaserMessage, value, 0, 1);
 		g_esAbility[type].g_flLaserChance = flGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "LaserChance", "Laser Chance", "Laser_Chance", "chance", g_esAbility[type].g_flLaserChance, value, 0.0, 100.0);
 		g_esAbility[type].g_flLaserDamage = flGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "LaserDamage", "Laser Damage", "Laser_Damage", "damage", g_esAbility[type].g_flLaserDamage, value, 0.1, 999999.0);
 		g_esAbility[type].g_iLaserDuration = iGetKeyValue(subsection, "laserability", "laser ability", "laser_ability", "laser", key, "LaserDuration", "Laser Duration", "Laser_Duration", "duration", g_esAbility[type].g_iLaserDuration, value, 1, 999999);
@@ -726,7 +726,7 @@ static int iGetNearestSurvivor(int tank, float pos[3])
 	static float flSurvivorPos[3], flDistance;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 		{
 			GetClientEyePosition(iSurvivor, flSurvivorPos);
 
