@@ -1179,6 +1179,7 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 	ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
 	ReplaceString(sMessage, sizeof(sMessage), "{yellow}", "\x04");
 	ReplaceString(sMessage, sizeof(sMessage), "{olive}", "\x05");
+	ReplaceString(sMessage, sizeof(sMessage), "{percent}", "%%");
 
 	PrintToChat(client, sMessage);
 }
@@ -1210,6 +1211,7 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 		ReplaceString(sBuffer, sizeof(sBuffer), "{mint}", "");
 		ReplaceString(sBuffer, sizeof(sBuffer), "{yellow}", "");
 		ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
+		ReplaceString(sBuffer, sizeof(sBuffer), "{percent}", "%%");
 
 		switch (client == 0)
 		{

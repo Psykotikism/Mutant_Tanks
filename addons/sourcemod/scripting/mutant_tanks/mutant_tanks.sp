@@ -394,6 +394,7 @@ enum struct esPlayer
 	int g_iRockEffects;
 	int g_iRockModel;
 	int g_iSkinColor[4];
+	int g_iTankDamage[MAXPLAYERS + 1];
 	int g_iTankHealth;
 	int g_iTankModel;
 	int g_iTankNote;
@@ -3200,6 +3201,14 @@ static void vClearSectionList()
 	}
 }
 
+static void vCopyDamage(int oldSurvivor, int newSurvivor)
+{
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		g_esPlayer[newSurvivor].g_iTankDamage[iTank] = g_esPlayer[oldSurvivor].g_iTankDamage[iTank];
+	}
+}
+
 static void vCopyStats(int tank, int newtank)
 {
 	g_esPlayer[newtank].g_bBlood = g_esPlayer[tank].g_bBlood;
@@ -3222,6 +3231,11 @@ static void vCopyStats(int tank, int newtank)
 	g_esPlayer[newtank].g_iOldTankType = g_esPlayer[tank].g_iOldTankType;
 	g_esPlayer[newtank].g_iTankHealth = g_esPlayer[tank].g_iTankHealth;
 	g_esPlayer[newtank].g_iTankType = g_esPlayer[tank].g_iTankType;
+
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		g_esPlayer[iSurvivor].g_iTankDamage[newtank] = g_esPlayer[iSurvivor].g_iTankDamage[tank];
+	}
 
 	Call_StartForward(g_esGeneral.g_gfCopyStatsForward);
 	Call_PushCell(tank);
@@ -4419,15 +4433,22 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "bot_player_replace"))
 		{
 			int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
-				iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
-			if (bIsValidClient(iBot) && bIsTank(iTank))
+				iPlayerId = event.GetInt("player"), iPlayer = GetClientOfUserId(iPlayerId);
+			if (bIsValidClient(iBot, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
-				vSetColor(iTank, g_esPlayer[iBot].g_iTankType);
-				vCopyStats(iBot, iTank);
-				vTankSpawn(iTank, -1);
-				vReset2(iBot, 0);
-				vReset3(iBot);
-				vCacheSettings(iBot);
+				if (bIsTank(iPlayer))
+				{
+					vSetColor(iPlayer, g_esPlayer[iBot].g_iTankType);
+					vCopyStats(iBot, iPlayer);
+					vTankSpawn(iPlayer, -1);
+					vReset2(iBot, 0);
+					vReset3(iBot);
+					vCacheSettings(iBot);
+				}
+				else if (bIsSurvivor(iPlayer))
+				{
+					vCopyDamage(iBot, iPlayer);
+				}
 			}
 		}
 		else if (StrEqual(name, "finale_escape_start") || StrEqual(name, "finale_vehicle_incoming") || StrEqual(name, "finale_vehicle_ready"))
@@ -4466,16 +4487,23 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (StrEqual(name, "player_bot_replace"))
 		{
-			int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			int iPlayerId = event.GetInt("player"), iPlayer = GetClientOfUserId(iPlayerId),
 				iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
-			if (bIsValidClient(iTank) && bIsTank(iBot))
+			if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
-				vSetColor(iBot, g_esPlayer[iTank].g_iTankType);
-				vCopyStats(iTank, iBot);
-				vTankSpawn(iBot, -1);
-				vReset2(iTank, 0);
-				vReset3(iTank);
-				vCacheSettings(iTank);
+				if (bIsTank(iBot))
+				{
+					vSetColor(iBot, g_esPlayer[iPlayer].g_iTankType);
+					vCopyStats(iPlayer, iBot);
+					vTankSpawn(iBot, -1);
+					vReset2(iPlayer, 0);
+					vReset3(iPlayer);
+					vCacheSettings(iPlayer);
+				}
+				else if (bIsSurvivor(iBot))
+				{
+					vCopyDamage(iPlayer, iBot);
+				}
 			}
 		}
 		else if (StrEqual(name, "player_death"))
@@ -4497,12 +4525,24 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 							int iSurvivor = GetClientOfUserId(event.GetInt("attacker"));
 							if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 							{
+								int iAssistant = iSurvivor;
+								for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+								{
+									if (bIsValidClient(iPlayer, MT_CHECK_INGAME) && g_esPlayer[iPlayer].g_iTankDamage[iTank] > g_esPlayer[iAssistant].g_iTankDamage[iTank])
+									{
+										iAssistant = iPlayer;
+									}
+								}
+
 								char sPhrase[32], sTankName[33];
+								float flPercentage = (float(g_esPlayer[iAssistant].g_iTankDamage[iTank]) / float(g_esPlayer[iTank].g_iTankHealth)) * 100;
 								int iOption = GetRandomInt(1, 10);
 								FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
 								vGetTranslatedName(sTankName, sizeof(sTankName), iTank);
-								MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, iSurvivor, sTankName);
-								vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, iSurvivor, sTankName);
+								MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, iSurvivor, sTankName, iAssistant, flPercentage);
+								vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, iSurvivor, sTankName, iAssistant, flPercentage);
+
+								vResetDamage(iTank);
 							}
 							else
 							{
@@ -4524,6 +4564,15 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 				CreateTimer(1.0, tTimerResetType, iTankId, TIMER_FLAG_NO_MAPCHANGE);
 				CreateTimer(5.0, tTimerTankWave, _, TIMER_FLAG_NO_MAPCHANGE);
+			}
+		}
+		else if (StrEqual(name, "player_hurt"))
+		{
+			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+				iSurvivorId = event.GetInt("attacker"), iSurvivor = GetClientOfUserId(iSurvivorId);
+			if (bIsTank(iTank) && !bIsPlayerIncapacitated(iTank) && bIsSurvivor(iSurvivor))
+			{
+				g_esPlayer[iSurvivor].g_iTankDamage[iTank] += event.GetInt("dmg_health");
 			}
 		}
 		else if (StrEqual(name, "player_incapacitated"))
@@ -4691,6 +4740,7 @@ static void vHookEvents(bool hook)
 		HookEvent("mission_lost", vEventHandler);
 		HookEvent("player_bot_replace", vEventHandler);
 		HookEvent("player_death", vEventHandler, EventHookMode_Pre);
+		HookEvent("player_hurt", vEventHandler);
 		HookEvent("player_incapacitated", vEventHandler);
 		HookEvent("player_jump", vEventHandler);
 		HookEvent("player_spawn", vEventHandler);
@@ -4724,6 +4774,7 @@ static void vHookEvents(bool hook)
 		UnhookEvent("mission_lost", vEventHandler);
 		UnhookEvent("player_bot_replace", vEventHandler);
 		UnhookEvent("player_death", vEventHandler, EventHookMode_Pre);
+		UnhookEvent("player_hurt", vEventHandler);
 		UnhookEvent("player_incapacitated", vEventHandler);
 		UnhookEvent("player_jump", vEventHandler);
 		UnhookEvent("player_spawn", vEventHandler);
@@ -4778,6 +4829,7 @@ static void vLogMessage(int type, const char[] message, any ...)
 				ReplaceString(sBuffer, sizeof(sBuffer), "\x04", "");
 				ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
 				ReplaceString(sBuffer, sizeof(sBuffer), "\x05", "");
+				ReplaceString(sBuffer, sizeof(sBuffer), "{percent}", "%%");
 
 				FormatTime(sTime, sizeof(sTime), "%Y-%m-%d - %H:%M:%S", GetTime());
 				FormatEx(sMessage, sizeof(sMessage), "[%s] %s", sTime, sBuffer);
@@ -5031,8 +5083,8 @@ static void vReset()
 		{
 			vReset2(iPlayer);
 			vReset3(iPlayer);
-			vCacheSettings(iPlayer);
 			vResetCore(iPlayer);
+			vCacheSettings(iPlayer);
 			vKillRandomizeTimer(iPlayer);
 		}
 	}
@@ -5082,6 +5134,16 @@ static void vResetCore(int client)
 	g_esPlayer[client].g_bStasis = false;
 	g_esPlayer[client].g_bThirdPerson = false;
 	g_esPlayer[client].g_bThirdPerson2 = false;
+
+	vResetDamage(client);
+}
+
+static void vResetDamage(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		g_esPlayer[iSurvivor].g_iTankDamage[tank] = 0;
+	}
 }
 
 static void vResetSpeed(int tank, bool mode = false)
