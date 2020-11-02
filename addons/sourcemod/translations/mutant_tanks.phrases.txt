@@ -521,82 +521,82 @@
 
 	"Killer1"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{mint}{1}{default} finished off{olive} {2}{default}!"
-		"hu"			"{mint}{1}{default} kivégezte{olive} {2}{default}!"
-		"chi"			"{mint}{1}{default} 完成了{olive} {2}{default}!"
+		"#format"		"{1:N},{2:t},{3:N},{4:s}"
+		"en"			"{mint}{1}{default} finished off{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"hu"			"{mint}{1}{default} kivégezte{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"chi"			"{mint}{1}{default} 完成了{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
 	}
 
 	"Killer2"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{mint}{1}{default} defeated{olive} {2}{default}!"
-		"hu"			"{mint}{1}{default} legyőzte{olive} {2}{default}!"
-		"chi"			"{mint}{1}{default} 被击败了{olive} {2}{default}!"
+		"#format"		"{1:N},{2:t},{3:N},{4:s}"
+		"en"			"{mint}{1}{default} defeated{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"hu"			"{mint}{1}{default} legyőzte{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"chi"			"{mint}{1}{default} 被击败了{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
 	}
 
 	"Killer3"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{mint}{1}{default} sent{olive} {2}{default} to hell!"
-		"hu"			"{mint}{1}{default} elküldte{olive} {2}{default} a pokolba!"
-		"chi"			"{mint}{1}{default} 发送了{olive} {2}{default}到地狱!"
+		"#format"		"{1:N},{2:t},{3:N},{4:s}"
+		"en"			"{mint}{1}{default} sent{olive} {2}{default} to hell!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"hu"			"{mint}{1}{default} elküldte{olive} {2}{default} a pokolba!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"chi"			"{mint}{1}{default} 发送了{olive} {2}{default}到地狱!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
 	}
 
 	"Killer4"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?"
-		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}?..."
-		"chi"			"{mint}{1}{default} 实际上杀死了{olive} {2}{default}...吗?"
+		"#format"		"{1:N},{2:t},{3:N},{4:s}"
+		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"chi"			"{mint}{1}{default} 实际上杀死了{olive} {2}{default}...吗?{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
 	}
 
 	"Killer5"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!"
-		"hu"			"{olive}{2}{default} elvesztette a kihívást{mint} {1}{default} ellen!"
-		"chi"			"{olive}{2}{default} 输掉了对{mint} {1}{default}的挑战!"
+		"#format"		"{1:N},{2:t},{3:N},{4:s}"
+		"en"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"hu"			"{olive}{2}{default} elvesztette a kihívást{mint} {1}{default} ellen!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"chi"			"{olive}{2}{default} 输掉了对{mint} {1}{default}的挑战!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
 	}
 
 	"Killer6"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!"
-		"hu"			"A(z){olive} {2}{default}-nak nem sikerült megölnie{mint} {1}{default}!"
-		"chi"			"{olive}{2}{default} 无法杀死{mint} {1}{default}!"
+		"#format"		"{1:N},{2:t},{3:N},{4:s}"
+		"en"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"hu"			"A(z){olive} {2}{default}-nak nem sikerült megölnie{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"chi"			"{olive}{2}{default} 无法杀死{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
 	}
 
 	"Killer7"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!"
-		"hu"			"{olive}{2}{default} elérte a pusztulás {mint} {1}{default} keze által!"
-		"chi"			"{olive}{2}{default} 已在{mint} {1}{default} 手中灭亡!"
+		"#format"		"{1:N},{2:t},{3:N},{4:s}"
+		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"hu"			"{olive}{2}{default} elérte a pusztulás {mint} {1}{default} keze által!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"chi"			"{olive}{2}{default} 已在{mint} {1}{default} 手中灭亡!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
 	}
 
 	"Killer8"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!"
-		"hu"			"Éljen!{olive} {2}{default} halott, hála{mint} {1}{default}!"
-		"chi"			"哎呀!{olive} {2}{default} 死了，这要感谢{mint} {1}{default}!"
+		"#format"		"{1:N},{2:t},{3:N},{4:s}"
+		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"hu"			"Éljen!{olive} {2}{default} halott, hála{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"chi"			"哎呀!{olive} {2}{default} 死了，这要感谢{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
 	}
 
 	"Killer9"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit..."
-		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen..."
-		"chi"			"{mint}{1}{default} 变成了{olive} {2}{default} 流行语..."
+		"#format"		"{1:N},{2:t},{3:N},{4:s}"
+		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit...{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen...{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"chi"			"{mint}{1}{default} 变成了{olive} {2}{default} 流行语...{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
 	}
 
 	"Killer10"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all..."
-		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is..."
-		"chi"			"看来{olive} {2}{default} 毕竟无法击败{mint} {1}{default}..."
+		"#format"		"{1:N},{2:t},{3:N},{4:s}"
+		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all...{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is...{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
+		"chi"			"看来{olive} {2}{default} 毕竟无法击败{mint} {1}{default}...{yellow} MVP:{mint} {3}{default} ({olive}{4}{default})"
 	}
 
 	"MultipleMatches"
