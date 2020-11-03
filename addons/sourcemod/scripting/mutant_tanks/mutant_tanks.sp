@@ -6683,7 +6683,7 @@ static bool bIsTypeAvailable(int type, int tank = 0)
 		iPluginCount++;
 	}
 
-	return g_esTank[type].g_bHasAbility && iPluginCount > 0;
+	return !g_esTank[type].g_bHasAbility || (g_esTank[type].g_bHasAbility && iPluginCount > 0);
 }
 
 static bool bTankChance(int type)
