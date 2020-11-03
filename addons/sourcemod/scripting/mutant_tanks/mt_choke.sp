@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "chokeability"
+#define MT_CONFIG_SECTION2 "choke ability"
+#define MT_CONFIG_SECTION3 "choke_ability"
+#define MT_CONFIG_SECTION4 "choke"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_CHOKE "Choke Ability"
 
 enum struct esPlayer
@@ -359,14 +365,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("chokeability");
-	list2.PushString("choke ability");
-	list3.PushString("choke_ability");
-	list4.PushString("choke");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -431,25 +429,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iChokeAbility = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iChokeAbility, value, 0, 1);
-		g_esPlayer[admin].g_iChokeEffect = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iChokeEffect, value, 0, 7);
-		g_esPlayer[admin].g_iChokeMessage = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iChokeMessage, value, 0, 3);
-		g_esPlayer[admin].g_flChokeChance = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeChance", "Choke Chance", "Choke_Chance", "chance", g_esPlayer[admin].g_flChokeChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flChokeDamage = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esPlayer[admin].g_flChokeDamage, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flChokeDelay = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDelay", "Choke Delay", "Choke_Delay", "delay", g_esPlayer[admin].g_flChokeDelay, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iChokeDuration = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDuration", "Choke Duration", "Choke_Duration", "duration", g_esPlayer[admin].g_iChokeDuration, value, 1, 999999);
-		g_esPlayer[admin].g_flChokeHeight = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeHeight", "Choke Height", "Choke_Height", "height", g_esPlayer[admin].g_flChokeHeight, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iChokeHit = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeHit", "Choke Hit", "Choke_Hit", "hit", g_esPlayer[admin].g_iChokeHit, value, 0, 1);
-		g_esPlayer[admin].g_iChokeHitMode = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeHitMode", "Choke Hit Mode", "Choke_Hit_Mode", "hitmode", g_esPlayer[admin].g_iChokeHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flChokeRange = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esPlayer[admin].g_flChokeRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flChokeRangeChance = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeRangeChance", "Choke Range Chance", "Choke_Range_Chance", "rangechance", g_esPlayer[admin].g_flChokeRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iChokeAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iChokeAbility, value, 0, 1);
+		g_esPlayer[admin].g_iChokeEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iChokeEffect, value, 0, 7);
+		g_esPlayer[admin].g_iChokeMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iChokeMessage, value, 0, 3);
+		g_esPlayer[admin].g_flChokeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeChance", "Choke Chance", "Choke_Chance", "chance", g_esPlayer[admin].g_flChokeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flChokeDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esPlayer[admin].g_flChokeDamage, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flChokeDelay = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDelay", "Choke Delay", "Choke_Delay", "delay", g_esPlayer[admin].g_flChokeDelay, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iChokeDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDuration", "Choke Duration", "Choke_Duration", "duration", g_esPlayer[admin].g_iChokeDuration, value, 1, 999999);
+		g_esPlayer[admin].g_flChokeHeight = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHeight", "Choke Height", "Choke_Height", "height", g_esPlayer[admin].g_flChokeHeight, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iChokeHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHit", "Choke Hit", "Choke_Hit", "hit", g_esPlayer[admin].g_iChokeHit, value, 0, 1);
+		g_esPlayer[admin].g_iChokeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHitMode", "Choke Hit Mode", "Choke_Hit_Mode", "hitmode", g_esPlayer[admin].g_iChokeHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flChokeRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esPlayer[admin].g_flChokeRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flChokeRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeRangeChance", "Choke Range Chance", "Choke_Range_Chance", "rangechance", g_esPlayer[admin].g_flChokeRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "chokeability", false) || StrEqual(subsection, "choke ability", false) || StrEqual(subsection, "choke_ability", false) || StrEqual(subsection, "choke", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -464,25 +462,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iChokeAbility = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iChokeAbility, value, 0, 1);
-		g_esAbility[type].g_iChokeEffect = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iChokeEffect, value, 0, 7);
-		g_esAbility[type].g_iChokeMessage = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iChokeMessage, value, 0, 3);
-		g_esAbility[type].g_flChokeChance = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeChance", "Choke Chance", "Choke_Chance", "chance", g_esAbility[type].g_flChokeChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flChokeDamage = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esAbility[type].g_flChokeDamage, value, 1.0, 999999.0);
-		g_esAbility[type].g_flChokeDelay = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDelay", "Choke Delay", "Choke_Delay", "delay", g_esAbility[type].g_flChokeDelay, value, 0.1, 999999.0);
-		g_esAbility[type].g_iChokeDuration = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeDuration", "Choke Duration", "Choke_Duration", "duration", g_esAbility[type].g_iChokeDuration, value, 1, 999999);
-		g_esAbility[type].g_flChokeHeight = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeHeight", "Choke Height", "Choke_Height", "height", g_esAbility[type].g_flChokeHeight, value, 0.1, 999999.0);
-		g_esAbility[type].g_iChokeHit = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeHit", "Choke Hit", "Choke_Hit", "hit", g_esAbility[type].g_iChokeHit, value, 0, 1);
-		g_esAbility[type].g_iChokeHitMode = iGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeHitMode", "Choke Hit Mode", "Choke_Hit_Mode", "hitmode", g_esAbility[type].g_iChokeHitMode, value, 0, 2);
-		g_esAbility[type].g_flChokeRange = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esAbility[type].g_flChokeRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flChokeRangeChance = flGetKeyValue(subsection, "chokeability", "choke ability", "choke_ability", "choke", key, "ChokeRangeChance", "Choke Range Chance", "Choke_Range_Chance", "rangechance", g_esAbility[type].g_flChokeRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iChokeAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iChokeAbility, value, 0, 1);
+		g_esAbility[type].g_iChokeEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iChokeEffect, value, 0, 7);
+		g_esAbility[type].g_iChokeMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iChokeMessage, value, 0, 3);
+		g_esAbility[type].g_flChokeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeChance", "Choke Chance", "Choke_Chance", "chance", g_esAbility[type].g_flChokeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flChokeDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esAbility[type].g_flChokeDamage, value, 1.0, 999999.0);
+		g_esAbility[type].g_flChokeDelay = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDelay", "Choke Delay", "Choke_Delay", "delay", g_esAbility[type].g_flChokeDelay, value, 0.1, 999999.0);
+		g_esAbility[type].g_iChokeDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDuration", "Choke Duration", "Choke_Duration", "duration", g_esAbility[type].g_iChokeDuration, value, 1, 999999);
+		g_esAbility[type].g_flChokeHeight = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHeight", "Choke Height", "Choke_Height", "height", g_esAbility[type].g_flChokeHeight, value, 0.1, 999999.0);
+		g_esAbility[type].g_iChokeHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHit", "Choke Hit", "Choke_Hit", "hit", g_esAbility[type].g_iChokeHit, value, 0, 1);
+		g_esAbility[type].g_iChokeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHitMode", "Choke Hit Mode", "Choke_Hit_Mode", "hitmode", g_esAbility[type].g_iChokeHitMode, value, 0, 2);
+		g_esAbility[type].g_flChokeRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esAbility[type].g_flChokeRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flChokeRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeRangeChance", "Choke Range Chance", "Choke_Range_Chance", "rangechance", g_esAbility[type].g_flChokeRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "chokeability", false) || StrEqual(subsection, "choke ability", false) || StrEqual(subsection, "choke_ability", false) || StrEqual(subsection, "choke", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

@@ -45,6 +45,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define PARTICLE_BLOOD "boomer_explode_D"
 
+#define MT_CONFIG_SECTION "pukeability"
+#define MT_CONFIG_SECTION2 "puke ability"
+#define MT_CONFIG_SECTION3 "puke_ability"
+#define MT_CONFIG_SECTION4 "puke"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_PUKE "Puke Ability"
 
 enum struct esPlayer
@@ -377,14 +383,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("pukeability");
-	list2.PushString("puke ability");
-	list3.PushString("puke_ability");
-	list4.PushString("puke");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -447,24 +445,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iPukeAbility = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iPukeAbility, value, 0, 1);
-		g_esPlayer[admin].g_iPukeEffect = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iPukeEffect, value, 0, 7);
-		g_esPlayer[admin].g_iPukeMessage = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iPukeMessage, value, 0, 3);
-		g_esPlayer[admin].g_flPukeChance = flGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeChance", "Puke Chance", "Puke_Chance", "chance", g_esPlayer[admin].g_flPukeChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iPukeDeath = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeDeath", "Puke Death", "Puke_Death", "death", g_esPlayer[admin].g_iPukeDeath, value, 0, 1);
-		g_esPlayer[admin].g_flPukeDeathChance = flGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeDeathChance", "Puke Death Chance", "Puke_Death_Chance", "deathchance", g_esPlayer[admin].g_flPukeDeathChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flPukeDeathRange = flGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeDeathRange", "Puke Death Range", "Puke_Death_Range", "deathrange", g_esPlayer[admin].g_flPukeDeathRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_iPukeHit = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHit", "Puke Hit", "Puke_Hit", "hit", g_esPlayer[admin].g_iPukeHit, value, 0, 1);
-		g_esPlayer[admin].g_iPukeHitMode = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHitMode", "Puke Hit Mode", "Puke_Hit_Mode", "hitmode", g_esPlayer[admin].g_iPukeHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flPukeRange = flGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeRange", "Puke Range", "Puke_Range", "range", g_esPlayer[admin].g_flPukeRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flPukeRangeChance = flGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeRangeChance", "Puke Range Chance", "Puke_Range_Chance", "rangechance", g_esPlayer[admin].g_flPukeRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iPukeAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iPukeAbility, value, 0, 1);
+		g_esPlayer[admin].g_iPukeEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iPukeEffect, value, 0, 7);
+		g_esPlayer[admin].g_iPukeMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iPukeMessage, value, 0, 3);
+		g_esPlayer[admin].g_flPukeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeChance", "Puke Chance", "Puke_Chance", "chance", g_esPlayer[admin].g_flPukeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iPukeDeath = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeDeath", "Puke Death", "Puke_Death", "death", g_esPlayer[admin].g_iPukeDeath, value, 0, 1);
+		g_esPlayer[admin].g_flPukeDeathChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeDeathChance", "Puke Death Chance", "Puke_Death_Chance", "deathchance", g_esPlayer[admin].g_flPukeDeathChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flPukeDeathRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeDeathRange", "Puke Death Range", "Puke_Death_Range", "deathrange", g_esPlayer[admin].g_flPukeDeathRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iPukeHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeHit", "Puke Hit", "Puke_Hit", "hit", g_esPlayer[admin].g_iPukeHit, value, 0, 1);
+		g_esPlayer[admin].g_iPukeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeHitMode", "Puke Hit Mode", "Puke_Hit_Mode", "hitmode", g_esPlayer[admin].g_iPukeHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flPukeRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeRange", "Puke Range", "Puke_Range", "range", g_esPlayer[admin].g_flPukeRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flPukeRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeRangeChance", "Puke Range Chance", "Puke_Range_Chance", "rangechance", g_esPlayer[admin].g_flPukeRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "pukeability", false) || StrEqual(subsection, "puke ability", false) || StrEqual(subsection, "puke_ability", false) || StrEqual(subsection, "puke", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -479,24 +477,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iPukeAbility = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iPukeAbility, value, 0, 1);
-		g_esAbility[type].g_iPukeEffect = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iPukeEffect, value, 0, 7);
-		g_esAbility[type].g_iPukeMessage = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iPukeMessage, value, 0, 3);
-		g_esAbility[type].g_flPukeChance = flGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeChance", "Puke Chance", "Puke_Chance", "chance", g_esAbility[type].g_flPukeChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iPukeDeath = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeDeath", "Puke Death", "Puke_Death", "death", g_esAbility[type].g_iPukeDeath, value, 0, 1);
-		g_esAbility[type].g_flPukeDeathChance = flGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeDeathChance", "Puke Death Chance", "Puke_Death_Chance", "deathchance", g_esAbility[type].g_flPukeDeathChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flPukeDeathRange = flGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeDeathRange", "Puke Death Range", "Puke_Death_Range", "deathrange", g_esAbility[type].g_flPukeDeathRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_iPukeHit = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHit", "Puke Hit", "Puke_Hit", "hit", g_esAbility[type].g_iPukeHit, value, 0, 1);
-		g_esAbility[type].g_iPukeHitMode = iGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeHitMode", "Puke Hit Mode", "Puke_Hit_Mode", "hitmode", g_esAbility[type].g_iPukeHitMode, value, 0, 2);
-		g_esAbility[type].g_flPukeRange = flGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeRange", "Puke Range", "Puke_Range", "range", g_esAbility[type].g_flPukeRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flPukeRangeChance = flGetKeyValue(subsection, "pukeability", "puke ability", "puke_ability", "puke", key, "PukeRangeChance", "Puke Range Chance", "Puke_Range_Chance", "rangechance", g_esAbility[type].g_flPukeRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iPukeAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iPukeAbility, value, 0, 1);
+		g_esAbility[type].g_iPukeEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iPukeEffect, value, 0, 7);
+		g_esAbility[type].g_iPukeMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iPukeMessage, value, 0, 3);
+		g_esAbility[type].g_flPukeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeChance", "Puke Chance", "Puke_Chance", "chance", g_esAbility[type].g_flPukeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iPukeDeath = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeDeath", "Puke Death", "Puke_Death", "death", g_esAbility[type].g_iPukeDeath, value, 0, 1);
+		g_esAbility[type].g_flPukeDeathChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeDeathChance", "Puke Death Chance", "Puke_Death_Chance", "deathchance", g_esAbility[type].g_flPukeDeathChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flPukeDeathRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeDeathRange", "Puke Death Range", "Puke_Death_Range", "deathrange", g_esAbility[type].g_flPukeDeathRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_iPukeHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeHit", "Puke Hit", "Puke_Hit", "hit", g_esAbility[type].g_iPukeHit, value, 0, 1);
+		g_esAbility[type].g_iPukeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeHitMode", "Puke Hit Mode", "Puke_Hit_Mode", "hitmode", g_esAbility[type].g_iPukeHitMode, value, 0, 2);
+		g_esAbility[type].g_flPukeRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeRange", "Puke Range", "Puke_Range", "range", g_esAbility[type].g_flPukeRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flPukeRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "PukeRangeChance", "Puke Range Chance", "Puke_Range_Chance", "rangechance", g_esAbility[type].g_flPukeRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "pukeability", false) || StrEqual(subsection, "puke ability", false) || StrEqual(subsection, "puke_ability", false) || StrEqual(subsection, "puke", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

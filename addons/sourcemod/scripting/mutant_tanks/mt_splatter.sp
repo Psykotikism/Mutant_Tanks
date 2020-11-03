@@ -39,6 +39,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "splatterability"
+#define MT_CONFIG_SECTION2 "splatter ability"
+#define MT_CONFIG_SECTION3 "splatter_ability"
+#define MT_CONFIG_SECTION4 "splatter"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_SPLATTER "Splatter Ability"
 
 char g_sParticles[][] =
@@ -321,14 +327,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("splatterability");
-	list2.PushString("splatter ability");
-	list3.PushString("splatter_ability");
-	list4.PushString("splatter");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -381,20 +379,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPlayer[admin].g_iHumanDuration, value, 1, 999999);
-		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iSplatterAbility = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iSplatterAbility, value, 0, 3);
-		g_esPlayer[admin].g_iSplatterMessage = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSplatterMessage, value, 0, 1);
-		g_esPlayer[admin].g_flSplatterChance = flGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esPlayer[admin].g_flSplatterChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flSplatterInterval = flGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esPlayer[admin].g_flSplatterInterval, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iSplatterType = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esPlayer[admin].g_iSplatterType, value, 0, sizeof(g_sParticles));
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPlayer[admin].g_iHumanDuration, value, 1, 999999);
+		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iSplatterAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iSplatterAbility, value, 0, 3);
+		g_esPlayer[admin].g_iSplatterMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSplatterMessage, value, 0, 1);
+		g_esPlayer[admin].g_flSplatterChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esPlayer[admin].g_flSplatterChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flSplatterInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esPlayer[admin].g_flSplatterInterval, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iSplatterType = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esPlayer[admin].g_iSplatterType, value, 0, sizeof(g_sParticles));
 
-		if (StrEqual(subsection, "splatterability", false) || StrEqual(subsection, "splatter ability", false) || StrEqual(subsection, "splatter_ability", false) || StrEqual(subsection, "splatter", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -405,20 +403,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iHumanDuration = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_iHumanDuration, value, 1, 999999);
-		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iSplatterAbility = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iSplatterAbility, value, 0, 3);
-		g_esAbility[type].g_iSplatterMessage = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSplatterMessage, value, 0, 1);
-		g_esAbility[type].g_flSplatterChance = flGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esAbility[type].g_flSplatterChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flSplatterInterval = flGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esAbility[type].g_flSplatterInterval, value, 0.1, 999999.0);
-		g_esAbility[type].g_iSplatterType = iGetKeyValue(subsection, "splatterability", "splatter ability", "splatter_ability", "splatter", key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esAbility[type].g_iSplatterType, value, 0, sizeof(g_sParticles));
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_iHumanDuration, value, 1, 999999);
+		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iSplatterAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iSplatterAbility, value, 0, 3);
+		g_esAbility[type].g_iSplatterMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSplatterMessage, value, 0, 1);
+		g_esAbility[type].g_flSplatterChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplatterChance", "Splatter Chance", "Splatter_Chance", "chance", g_esAbility[type].g_flSplatterChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flSplatterInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplatterInterval", "Splatter Interval", "Splatter_Interval", "interval", g_esAbility[type].g_flSplatterInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_iSplatterType = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplatterType", "Splatter Type", "Splatter_Type", "type", g_esAbility[type].g_iSplatterType, value, 0, sizeof(g_sParticles));
 
-		if (StrEqual(subsection, "splatterability", false) || StrEqual(subsection, "splatter ability", false) || StrEqual(subsection, "splatter_ability", false) || StrEqual(subsection, "splatter", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

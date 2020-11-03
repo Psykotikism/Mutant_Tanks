@@ -47,6 +47,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define SOUND_EXPLODE "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_1.wav"
 
+#define MT_CONFIG_SECTION "fireability"
+#define MT_CONFIG_SECTION2 "fire ability"
+#define MT_CONFIG_SECTION3 "fire_ability"
+#define MT_CONFIG_SECTION4 "fire"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_FIRE "Fire Ability"
 
 enum struct esPlayer
@@ -357,14 +363,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("fireability");
-	list2.PushString("fire ability");
-	list3.PushString("fire_ability");
-	list4.PushString("fire");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -429,25 +427,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iFireAbility = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iFireAbility, value, 0, 1);
-		g_esPlayer[admin].g_iFireEffect = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iFireEffect, value, 0, 7);
-		g_esPlayer[admin].g_iFireMessage = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iFireMessage, value, 0, 7);
-		g_esPlayer[admin].g_flFireChance = flGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireChance", "Fire Chance", "Fire_Chance", "chance", g_esPlayer[admin].g_flFireChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iFireDeath = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireDeath", "Fire Death", "Fire_Death", "death", g_esPlayer[admin].g_iFireDeath, value, 0, 1);
-		g_esPlayer[admin].g_flFireDeathChance = flGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireDeathChance", "Fire Death Chance", "Fire_Death_Chance", "deathchance", g_esPlayer[admin].g_flFireDeathChance, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_iFireHit = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireHit", "Fire Hit", "Fire_Hit", "hit", g_esPlayer[admin].g_iFireHit, value, 0, 1);
-		g_esPlayer[admin].g_iFireHitMode = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireHitMode", "Fire Hit Mode", "Fire_Hit_Mode", "hitmode", g_esPlayer[admin].g_iFireHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flFireRange = flGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRange", "Fire Range", "Fire_Range", "range", g_esPlayer[admin].g_flFireRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flFireRangeChance = flGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRangeChance", "Fire Range Chance", "Fire_Range_Chance", "rangechance", g_esPlayer[admin].g_flFireRangeChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iFireRockBreak = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRockBreak", "Fire Rock Break", "Fire_Rock_Break", "rock", g_esPlayer[admin].g_iFireRockBreak, value, 0, 1);
-		g_esPlayer[admin].g_flFireRockChance = flGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRockChance", "Fire Rock Chance", "Fire_Rock_Chance", "rockchance", g_esPlayer[admin].g_flFireRockChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iFireAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iFireAbility, value, 0, 1);
+		g_esPlayer[admin].g_iFireEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iFireEffect, value, 0, 7);
+		g_esPlayer[admin].g_iFireMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iFireMessage, value, 0, 7);
+		g_esPlayer[admin].g_flFireChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireChance", "Fire Chance", "Fire_Chance", "chance", g_esPlayer[admin].g_flFireChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iFireDeath = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireDeath", "Fire Death", "Fire_Death", "death", g_esPlayer[admin].g_iFireDeath, value, 0, 1);
+		g_esPlayer[admin].g_flFireDeathChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireDeathChance", "Fire Death Chance", "Fire_Death_Chance", "deathchance", g_esPlayer[admin].g_flFireDeathChance, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iFireHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireHit", "Fire Hit", "Fire_Hit", "hit", g_esPlayer[admin].g_iFireHit, value, 0, 1);
+		g_esPlayer[admin].g_iFireHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireHitMode", "Fire Hit Mode", "Fire_Hit_Mode", "hitmode", g_esPlayer[admin].g_iFireHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flFireRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireRange", "Fire Range", "Fire_Range", "range", g_esPlayer[admin].g_flFireRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flFireRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireRangeChance", "Fire Range Chance", "Fire_Range_Chance", "rangechance", g_esPlayer[admin].g_flFireRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iFireRockBreak = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireRockBreak", "Fire Rock Break", "Fire_Rock_Break", "rock", g_esPlayer[admin].g_iFireRockBreak, value, 0, 1);
+		g_esPlayer[admin].g_flFireRockChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireRockChance", "Fire Rock Chance", "Fire_Rock_Chance", "rockchance", g_esPlayer[admin].g_flFireRockChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "fireability", false) || StrEqual(subsection, "fire ability", false) || StrEqual(subsection, "fire_ability", false) || StrEqual(subsection, "fire", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -462,25 +460,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iFireAbility = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iFireAbility, value, 0, 1);
-		g_esAbility[type].g_iFireEffect = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iFireEffect, value, 0, 7);
-		g_esAbility[type].g_iFireMessage = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iFireMessage, value, 0, 7);
-		g_esAbility[type].g_flFireChance = flGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireChance", "Fire Chance", "Fire_Chance", "chance", g_esAbility[type].g_flFireChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iFireDeath = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireDeath", "Fire Death", "Fire_Death", "death", g_esAbility[type].g_iFireDeath, value, 0, 1);
-		g_esAbility[type].g_flFireDeathChance = flGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireDeathChance", "Fire Death Chance", "Fire_Death_Chance", "deathchance", g_esAbility[type].g_flFireDeathChance, value, 1.0, 999999.0);
-		g_esAbility[type].g_iFireHit = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireHit", "Fire Hit", "Fire_Hit", "hit", g_esAbility[type].g_iFireHit, value, 0, 1);
-		g_esAbility[type].g_iFireHitMode = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireHitMode", "Fire Hit Mode", "Fire_Hit_Mode", "hitmode", g_esAbility[type].g_iFireHitMode, value, 0, 2);
-		g_esAbility[type].g_flFireRange = flGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRange", "Fire Range", "Fire_Range", "range", g_esAbility[type].g_flFireRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flFireRangeChance = flGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRangeChance", "Fire Range Chance", "Fire_Range_Chance", "rangechance", g_esAbility[type].g_flFireRangeChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iFireRockBreak = iGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRockBreak", "Fire Rock Break", "Fire_Rock_Break", "rock", g_esAbility[type].g_iFireRockBreak, value, 0, 1);
-		g_esAbility[type].g_flFireRockChance = flGetKeyValue(subsection, "fireability", "fire ability", "fire_ability", "fire", key, "FireRockChance", "Fire Rock Chance", "Fire_Rock_Chance", "rockchance", g_esAbility[type].g_flFireRockChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iFireAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iFireAbility, value, 0, 1);
+		g_esAbility[type].g_iFireEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iFireEffect, value, 0, 7);
+		g_esAbility[type].g_iFireMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iFireMessage, value, 0, 7);
+		g_esAbility[type].g_flFireChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireChance", "Fire Chance", "Fire_Chance", "chance", g_esAbility[type].g_flFireChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iFireDeath = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireDeath", "Fire Death", "Fire_Death", "death", g_esAbility[type].g_iFireDeath, value, 0, 1);
+		g_esAbility[type].g_flFireDeathChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireDeathChance", "Fire Death Chance", "Fire_Death_Chance", "deathchance", g_esAbility[type].g_flFireDeathChance, value, 1.0, 999999.0);
+		g_esAbility[type].g_iFireHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireHit", "Fire Hit", "Fire_Hit", "hit", g_esAbility[type].g_iFireHit, value, 0, 1);
+		g_esAbility[type].g_iFireHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireHitMode", "Fire Hit Mode", "Fire_Hit_Mode", "hitmode", g_esAbility[type].g_iFireHitMode, value, 0, 2);
+		g_esAbility[type].g_flFireRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireRange", "Fire Range", "Fire_Range", "range", g_esAbility[type].g_flFireRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flFireRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireRangeChance", "Fire Range Chance", "Fire_Range_Chance", "rangechance", g_esAbility[type].g_flFireRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iFireRockBreak = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireRockBreak", "Fire Rock Break", "Fire_Rock_Break", "rock", g_esAbility[type].g_iFireRockBreak, value, 0, 1);
+		g_esAbility[type].g_flFireRockChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FireRockChance", "Fire Rock Chance", "Fire_Rock_Chance", "rockchance", g_esAbility[type].g_flFireRockChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "fireability", false) || StrEqual(subsection, "fire ability", false) || StrEqual(subsection, "fire_ability", false) || StrEqual(subsection, "fire", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

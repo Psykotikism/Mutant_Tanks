@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "ammoability"
+#define MT_CONFIG_SECTION2 "ammo ability"
+#define MT_CONFIG_SECTION3 "ammo_ability"
+#define MT_CONFIG_SECTION4 "ammo"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_AMMO "Ammo Ability"
 
 enum struct esPlayer
@@ -340,14 +346,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("ammoability");
-	list2.PushString("ammo ability");
-	list3.PushString("ammo_ability");
-	list4.PushString("ammo");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -406,22 +404,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iAmmoAbility = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iAmmoAbility, value, 0, 1);
-		g_esPlayer[admin].g_iAmmoEffect = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iAmmoEffect, value, 0, 7);
-		g_esPlayer[admin].g_iAmmoMessage = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iAmmoMessage, value, 0, 3);
-		g_esPlayer[admin].g_flAmmoChance = flGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esPlayer[admin].g_flAmmoChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iAmmoAmount = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esPlayer[admin].g_iAmmoAmount, value, 0, 25);
-		g_esPlayer[admin].g_iAmmoHit = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esPlayer[admin].g_iAmmoHit, value, 0, 1);
-		g_esPlayer[admin].g_iAmmoHitMode = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esPlayer[admin].g_iAmmoHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flAmmoRange = flGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esPlayer[admin].g_flAmmoRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flAmmoRangeChance = flGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esPlayer[admin].g_flAmmoRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iAmmoAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iAmmoAbility, value, 0, 1);
+		g_esPlayer[admin].g_iAmmoEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iAmmoEffect, value, 0, 7);
+		g_esPlayer[admin].g_iAmmoMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iAmmoMessage, value, 0, 3);
+		g_esPlayer[admin].g_flAmmoChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esPlayer[admin].g_flAmmoChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iAmmoAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esPlayer[admin].g_iAmmoAmount, value, 0, 25);
+		g_esPlayer[admin].g_iAmmoHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esPlayer[admin].g_iAmmoHit, value, 0, 1);
+		g_esPlayer[admin].g_iAmmoHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esPlayer[admin].g_iAmmoHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flAmmoRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esPlayer[admin].g_flAmmoRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flAmmoRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esPlayer[admin].g_flAmmoRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "ammoability", false) || StrEqual(subsection, "ammo ability", false) || StrEqual(subsection, "ammo_ability", false) || StrEqual(subsection, "ammo", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -436,22 +434,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iAmmoAbility = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iAmmoAbility, value, 0, 1);
-		g_esAbility[type].g_iAmmoEffect = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iAmmoEffect, value, 0, 7);
-		g_esAbility[type].g_iAmmoMessage = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iAmmoMessage, value, 0, 3);
-		g_esAbility[type].g_flAmmoChance = flGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAbility[type].g_flAmmoChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iAmmoAmount = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAbility[type].g_iAmmoAmount, value, 0, 25);
-		g_esAbility[type].g_iAmmoHit = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esAbility[type].g_iAmmoHit, value, 0, 1);
-		g_esAbility[type].g_iAmmoHitMode = iGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esAbility[type].g_iAmmoHitMode, value, 0, 2);
-		g_esAbility[type].g_flAmmoRange = flGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esAbility[type].g_flAmmoRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flAmmoRangeChance = flGetKeyValue(subsection, "ammoability", "ammo ability", "ammo_ability", "ammo", key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esAbility[type].g_flAmmoRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iAmmoAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iAmmoAbility, value, 0, 1);
+		g_esAbility[type].g_iAmmoEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iAmmoEffect, value, 0, 7);
+		g_esAbility[type].g_iAmmoMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iAmmoMessage, value, 0, 3);
+		g_esAbility[type].g_flAmmoChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoChance", "Ammo Chance", "Ammo_Chance", "chance", g_esAbility[type].g_flAmmoChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iAmmoAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoCount", "Ammo Count", "Ammo_Count", "count", g_esAbility[type].g_iAmmoAmount, value, 0, 25);
+		g_esAbility[type].g_iAmmoHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoHit", "Ammo Hit", "Ammo_Hit", "hit", g_esAbility[type].g_iAmmoHit, value, 0, 1);
+		g_esAbility[type].g_iAmmoHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoHitMode", "Ammo Hit Mode", "Ammo_Hit_Mode", "hitmode", g_esAbility[type].g_iAmmoHitMode, value, 0, 2);
+		g_esAbility[type].g_flAmmoRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoRange", "Ammo Range", "Ammo_Range", "range", g_esAbility[type].g_flAmmoRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flAmmoRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AmmoRangeChance", "Ammo Range Chance", "Ammo_Range_Chance", "rangechance", g_esAbility[type].g_flAmmoRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "ammoability", false) || StrEqual(subsection, "ammo ability", false) || StrEqual(subsection, "ammo_ability", false) || StrEqual(subsection, "ammo", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

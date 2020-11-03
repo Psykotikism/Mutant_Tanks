@@ -51,6 +51,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define PARTICLE_ELECTRICITY6 "impact_ricochet_sparks"
 #define PARTICLE_ELECTRICITY7 "railroad_wheel_sparks"
 
+#define MT_CONFIG_SECTION "electricability"
+#define MT_CONFIG_SECTION2 "electric ability"
+#define MT_CONFIG_SECTION3 "electric_ability"
+#define MT_CONFIG_SECTION4 "electric"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_ELECTRIC "Electric Ability"
 
 char g_sZapSounds[8][26] = {"ambient/energy/zap1.wav", "ambient/energy/zap2.wav", "ambient/energy/zap3.wav", "ambient/energy/zap5.wav", "ambient/energy/zap6.wav", "ambient/energy/zap7.wav", "ambient/energy/zap8.wav", "ambient/energy/zap9.wav"};
@@ -388,14 +394,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("electricability");
-	list2.PushString("electric ability");
-	list3.PushString("electric_ability");
-	list4.PushString("electric");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -458,24 +456,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iElectricAbility = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iElectricAbility, value, 0, 1);
-		g_esPlayer[admin].g_iElectricEffect = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iElectricEffect, value, 0, 7);
-		g_esPlayer[admin].g_iElectricMessage = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iElectricMessage, value, 0, 3);
-		g_esPlayer[admin].g_flElectricChance = flGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esPlayer[admin].g_flElectricChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flElectricDamage = flGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esPlayer[admin].g_flElectricDamage, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_iElectricDuration = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricDuration", "Electric Duration", "Electric_Duration", "duration", g_esPlayer[admin].g_iElectricDuration, value, 1, 999999);
-		g_esPlayer[admin].g_iElectricHit = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricHit", "Electric Hit", "Electric_Hit", "hit", g_esPlayer[admin].g_iElectricHit, value, 0, 1);
-		g_esPlayer[admin].g_iElectricHitMode = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricHitMode", "Electric Hit Mode", "Electric_Hit_Mode", "hitmode", g_esPlayer[admin].g_iElectricHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flElectricInterval = flGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricInterval", "Electric Interval", "Electric_Interval", "interval", g_esPlayer[admin].g_flElectricInterval, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flElectricRange = flGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esPlayer[admin].g_flElectricRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flElectricRangeChance = flGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esPlayer[admin].g_flElectricRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iElectricAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iElectricAbility, value, 0, 1);
+		g_esPlayer[admin].g_iElectricEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iElectricEffect, value, 0, 7);
+		g_esPlayer[admin].g_iElectricMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iElectricMessage, value, 0, 3);
+		g_esPlayer[admin].g_flElectricChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esPlayer[admin].g_flElectricChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flElectricDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esPlayer[admin].g_flElectricDamage, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iElectricDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricDuration", "Electric Duration", "Electric_Duration", "duration", g_esPlayer[admin].g_iElectricDuration, value, 1, 999999);
+		g_esPlayer[admin].g_iElectricHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricHit", "Electric Hit", "Electric_Hit", "hit", g_esPlayer[admin].g_iElectricHit, value, 0, 1);
+		g_esPlayer[admin].g_iElectricHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricHitMode", "Electric Hit Mode", "Electric_Hit_Mode", "hitmode", g_esPlayer[admin].g_iElectricHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flElectricInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricInterval", "Electric Interval", "Electric_Interval", "interval", g_esPlayer[admin].g_flElectricInterval, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flElectricRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esPlayer[admin].g_flElectricRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flElectricRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esPlayer[admin].g_flElectricRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "electricability", false) || StrEqual(subsection, "electric ability", false) || StrEqual(subsection, "electric_ability", false) || StrEqual(subsection, "electric", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -490,24 +488,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iElectricAbility = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iElectricAbility, value, 0, 1);
-		g_esAbility[type].g_iElectricEffect = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iElectricEffect, value, 0, 7);
-		g_esAbility[type].g_iElectricMessage = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iElectricMessage, value, 0, 3);
-		g_esAbility[type].g_flElectricChance = flGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esAbility[type].g_flElectricChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flElectricDamage = flGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esAbility[type].g_flElectricDamage, value, 1.0, 999999.0);
-		g_esAbility[type].g_iElectricDuration = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricDuration", "Electric Duration", "Electric_Duration", "duration", g_esAbility[type].g_iElectricDuration, value, 1, 999999);
-		g_esAbility[type].g_iElectricHit = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricHit", "Electric Hit", "Electric_Hit", "hit", g_esAbility[type].g_iElectricHit, value, 0, 1);
-		g_esAbility[type].g_iElectricHitMode = iGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricHitMode", "Electric Hit Mode", "Electric_Hit_Mode", "hitmode", g_esAbility[type].g_iElectricHitMode, value, 0, 2);
-		g_esAbility[type].g_flElectricInterval = flGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricInterval", "Electric Interval", "Electric_Interval", "interval", g_esAbility[type].g_flElectricInterval, value, 0.1, 999999.0);
-		g_esAbility[type].g_flElectricRange = flGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esAbility[type].g_flElectricRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flElectricRangeChance = flGetKeyValue(subsection, "electricability", "electric ability", "electric_ability", "electric", key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esAbility[type].g_flElectricRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iElectricAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iElectricAbility, value, 0, 1);
+		g_esAbility[type].g_iElectricEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iElectricEffect, value, 0, 7);
+		g_esAbility[type].g_iElectricMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iElectricMessage, value, 0, 3);
+		g_esAbility[type].g_flElectricChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricChance", "Electric Chance", "Electric_Chance", "chance", g_esAbility[type].g_flElectricChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flElectricDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricDamage", "Electric Damage", "Electric_Damage", "damage", g_esAbility[type].g_flElectricDamage, value, 1.0, 999999.0);
+		g_esAbility[type].g_iElectricDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricDuration", "Electric Duration", "Electric_Duration", "duration", g_esAbility[type].g_iElectricDuration, value, 1, 999999);
+		g_esAbility[type].g_iElectricHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricHit", "Electric Hit", "Electric_Hit", "hit", g_esAbility[type].g_iElectricHit, value, 0, 1);
+		g_esAbility[type].g_iElectricHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricHitMode", "Electric Hit Mode", "Electric_Hit_Mode", "hitmode", g_esAbility[type].g_iElectricHitMode, value, 0, 2);
+		g_esAbility[type].g_flElectricInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricInterval", "Electric Interval", "Electric_Interval", "interval", g_esAbility[type].g_flElectricInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_flElectricRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esAbility[type].g_flElectricRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flElectricRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esAbility[type].g_flElectricRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "electricability", false) || StrEqual(subsection, "electric ability", false) || StrEqual(subsection, "electric_ability", false) || StrEqual(subsection, "electric", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

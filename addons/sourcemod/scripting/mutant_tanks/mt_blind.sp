@@ -45,6 +45,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define SOUND_GROAN "ambient/random_amb_sounds/randbridgegroan_03.wav"
 
+#define MT_CONFIG_SECTION "blindability"
+#define MT_CONFIG_SECTION2 "blind ability"
+#define MT_CONFIG_SECTION3 "blind_ability"
+#define MT_CONFIG_SECTION4 "blind"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_BLIND "Blind Ability"
 
 enum struct esPlayer
@@ -361,14 +367,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("blindability");
-	list2.PushString("blind ability");
-	list3.PushString("blind_ability");
-	list4.PushString("blind");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -429,23 +427,23 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iBlindAbility = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iBlindAbility, value, 0, 1);
-		g_esPlayer[admin].g_iBlindEffect = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iBlindEffect, value, 0, 7);
-		g_esPlayer[admin].g_iBlindMessage = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iBlindMessage, value, 0, 3);
-		g_esPlayer[admin].g_flBlindChance = flGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esPlayer[admin].g_flBlindChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flBlindDuration = flGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esPlayer[admin].g_flBlindDuration, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iBlindHit = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindHit", "Blind Hit", "Blind_Hit", "hit", g_esPlayer[admin].g_iBlindHit, value, 0, 1);
-		g_esPlayer[admin].g_iBlindHitMode = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindHitMode", "Blind Hit Mode", "Blind_Hit_Mode", "hitmode", g_esPlayer[admin].g_iBlindHitMode, value, 0, 2);
-		g_esPlayer[admin].g_iBlindIntensity = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindIntensity", "Blind Intensity", "Blind_Intensity", "intensity", g_esPlayer[admin].g_iBlindIntensity, value, 0, 255);
-		g_esPlayer[admin].g_flBlindRange = flGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindRange", "Blind Range", "Blind_Range", "range", g_esPlayer[admin].g_flBlindRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flBlindRangeChance = flGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindRangeChance", "Blind Range Chance", "Blind_Range_Chance", "rangechance", g_esPlayer[admin].g_flBlindRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iBlindAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iBlindAbility, value, 0, 1);
+		g_esPlayer[admin].g_iBlindEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iBlindEffect, value, 0, 7);
+		g_esPlayer[admin].g_iBlindMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iBlindMessage, value, 0, 3);
+		g_esPlayer[admin].g_flBlindChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esPlayer[admin].g_flBlindChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flBlindDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esPlayer[admin].g_flBlindDuration, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iBlindHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindHit", "Blind Hit", "Blind_Hit", "hit", g_esPlayer[admin].g_iBlindHit, value, 0, 1);
+		g_esPlayer[admin].g_iBlindHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindHitMode", "Blind Hit Mode", "Blind_Hit_Mode", "hitmode", g_esPlayer[admin].g_iBlindHitMode, value, 0, 2);
+		g_esPlayer[admin].g_iBlindIntensity = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindIntensity", "Blind Intensity", "Blind_Intensity", "intensity", g_esPlayer[admin].g_iBlindIntensity, value, 0, 255);
+		g_esPlayer[admin].g_flBlindRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindRange", "Blind Range", "Blind_Range", "range", g_esPlayer[admin].g_flBlindRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flBlindRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindRangeChance", "Blind Range Chance", "Blind_Range_Chance", "rangechance", g_esPlayer[admin].g_flBlindRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "blindability", false) || StrEqual(subsection, "blind ability", false) || StrEqual(subsection, "blind_ability", false) || StrEqual(subsection, "blind", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -460,23 +458,23 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iBlindAbility = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iBlindAbility, value, 0, 1);
-		g_esAbility[type].g_iBlindEffect = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iBlindEffect, value, 0, 7);
-		g_esAbility[type].g_iBlindMessage = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iBlindMessage, value, 0, 3);
-		g_esAbility[type].g_flBlindChance = flGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esAbility[type].g_flBlindChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flBlindDuration = flGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esAbility[type].g_flBlindDuration, value, 0.1, 999999.0);
-		g_esAbility[type].g_iBlindHit = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindHit", "Blind Hit", "Blind_Hit", "hit", g_esAbility[type].g_iBlindHit, value, 0, 1);
-		g_esAbility[type].g_iBlindHitMode = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindHitMode", "Blind Hit Mode", "Blind_Hit_Mode", "hitmode", g_esAbility[type].g_iBlindHitMode, value, 0, 2);
-		g_esAbility[type].g_iBlindIntensity = iGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindIntensity", "Blind Intensity", "Blind_Intensity", "intensity", g_esAbility[type].g_iBlindIntensity, value, 0, 255);
-		g_esAbility[type].g_flBlindRange = flGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindRange", "Blind Range", "Blind_Range", "range", g_esAbility[type].g_flBlindRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flBlindRangeChance = flGetKeyValue(subsection, "blindability", "blind ability", "blind_ability", "blind", key, "BlindRangeChance", "Blind Range Chance", "Blind_Range_Chance", "rangechance", g_esAbility[type].g_flBlindRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iBlindAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iBlindAbility, value, 0, 1);
+		g_esAbility[type].g_iBlindEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iBlindEffect, value, 0, 7);
+		g_esAbility[type].g_iBlindMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iBlindMessage, value, 0, 3);
+		g_esAbility[type].g_flBlindChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindChance", "Blind Chance", "Blind_Chance", "chance", g_esAbility[type].g_flBlindChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flBlindDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindDuration", "Blind Duration", "Blind_Duration", "duration", g_esAbility[type].g_flBlindDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iBlindHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindHit", "Blind Hit", "Blind_Hit", "hit", g_esAbility[type].g_iBlindHit, value, 0, 1);
+		g_esAbility[type].g_iBlindHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindHitMode", "Blind Hit Mode", "Blind_Hit_Mode", "hitmode", g_esAbility[type].g_iBlindHitMode, value, 0, 2);
+		g_esAbility[type].g_iBlindIntensity = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindIntensity", "Blind Intensity", "Blind_Intensity", "intensity", g_esAbility[type].g_iBlindIntensity, value, 0, 255);
+		g_esAbility[type].g_flBlindRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindRange", "Blind Range", "Blind_Range", "range", g_esAbility[type].g_flBlindRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flBlindRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BlindRangeChance", "Blind Range Chance", "Blind_Range_Chance", "rangechance", g_esAbility[type].g_flBlindRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "blindability", false) || StrEqual(subsection, "blind ability", false) || StrEqual(subsection, "blind_ability", false) || StrEqual(subsection, "blind", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "buryability"
+#define MT_CONFIG_SECTION2 "bury ability"
+#define MT_CONFIG_SECTION3 "bury_ability"
+#define MT_CONFIG_SECTION4 "bury"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_BURY "Bury Ability"
 
 enum struct esPlayer
@@ -381,14 +387,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("buryability");
-	list2.PushString("bury ability");
-	list3.PushString("bury_ability");
-	list4.PushString("bury");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -451,24 +449,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iBuryAbility = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iBuryAbility, value, 0, 1);
-		g_esPlayer[admin].g_iBuryEffect = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iBuryEffect, value, 0, 7);
-		g_esPlayer[admin].g_iBuryMessage = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iBuryMessage, value, 0, 3);
-		g_esPlayer[admin].g_flBuryBuffer = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esPlayer[admin].g_flBuryBuffer, value, 0.0, float(MT_MAXHEALTH));
-		g_esPlayer[admin].g_flBuryChance = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esPlayer[admin].g_flBuryChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flBuryDuration = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esPlayer[admin].g_flBuryDuration, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flBuryHeight = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esPlayer[admin].g_flBuryHeight, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iBuryHit = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esPlayer[admin].g_iBuryHit, value, 0, 1);
-		g_esPlayer[admin].g_iBuryHitMode = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esPlayer[admin].g_iBuryHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flBuryRange = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esPlayer[admin].g_flBuryRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flBuryRangeChance = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esPlayer[admin].g_flBuryRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iBuryAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iBuryAbility, value, 0, 1);
+		g_esPlayer[admin].g_iBuryEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iBuryEffect, value, 0, 7);
+		g_esPlayer[admin].g_iBuryMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iBuryMessage, value, 0, 3);
+		g_esPlayer[admin].g_flBuryBuffer = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esPlayer[admin].g_flBuryBuffer, value, 0.0, float(MT_MAXHEALTH));
+		g_esPlayer[admin].g_flBuryChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esPlayer[admin].g_flBuryChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flBuryDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esPlayer[admin].g_flBuryDuration, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flBuryHeight = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esPlayer[admin].g_flBuryHeight, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iBuryHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esPlayer[admin].g_iBuryHit, value, 0, 1);
+		g_esPlayer[admin].g_iBuryHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esPlayer[admin].g_iBuryHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flBuryRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esPlayer[admin].g_flBuryRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flBuryRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esPlayer[admin].g_flBuryRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "buryability", false) || StrEqual(subsection, "bury ability", false) || StrEqual(subsection, "bury_ability", false) || StrEqual(subsection, "bury", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -483,24 +481,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iBuryAbility = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iBuryAbility, value, 0, 1);
-		g_esAbility[type].g_iBuryEffect = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iBuryEffect, value, 0, 7);
-		g_esAbility[type].g_iBuryMessage = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iBuryMessage, value, 0, 3);
-		g_esAbility[type].g_flBuryBuffer = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esAbility[type].g_flBuryBuffer, value, 0.0, float(MT_MAXHEALTH));
-		g_esAbility[type].g_flBuryChance = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esAbility[type].g_flBuryChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flBuryDuration = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esAbility[type].g_flBuryDuration, value, 0.1, 999999.0);
-		g_esAbility[type].g_flBuryHeight = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esAbility[type].g_flBuryHeight, value, 0.1, 999999.0);
-		g_esAbility[type].g_iBuryHit = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esAbility[type].g_iBuryHit, value, 0, 1);
-		g_esAbility[type].g_iBuryHitMode = iGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esAbility[type].g_iBuryHitMode, value, 0, 2);
-		g_esAbility[type].g_flBuryRange = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esAbility[type].g_flBuryRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flBuryRangeChance = flGetKeyValue(subsection, "buryability", "bury ability", "bury_ability", "bury", key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esAbility[type].g_flBuryRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iBuryAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iBuryAbility, value, 0, 1);
+		g_esAbility[type].g_iBuryEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iBuryEffect, value, 0, 7);
+		g_esAbility[type].g_iBuryMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iBuryMessage, value, 0, 3);
+		g_esAbility[type].g_flBuryBuffer = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryBuffer", "Bury Buffer", "Bury_Buffer", "buffer", g_esAbility[type].g_flBuryBuffer, value, 0.0, float(MT_MAXHEALTH));
+		g_esAbility[type].g_flBuryChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryChance", "Bury Chance", "Bury_Chance", "chance", g_esAbility[type].g_flBuryChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flBuryDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryDuration", "Bury Duration", "Bury_Duration", "duration", g_esAbility[type].g_flBuryDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_flBuryHeight = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryHeight", "Bury Height", "Bury_Height", "height", g_esAbility[type].g_flBuryHeight, value, 0.1, 999999.0);
+		g_esAbility[type].g_iBuryHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryHit", "Bury Hit", "Bury_Hit", "hit", g_esAbility[type].g_iBuryHit, value, 0, 1);
+		g_esAbility[type].g_iBuryHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryHitMode", "Bury Hit Mode", "Bury_Hit_Mode", "hitmode", g_esAbility[type].g_iBuryHitMode, value, 0, 2);
+		g_esAbility[type].g_flBuryRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryRange", "Bury Range", "Bury_Range", "range", g_esAbility[type].g_flBuryRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flBuryRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BuryRangeChance", "Bury Range Chance", "Bury_Range_Chance", "rangechance", g_esAbility[type].g_flBuryRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "buryability", false) || StrEqual(subsection, "bury ability", false) || StrEqual(subsection, "bury_ability", false) || StrEqual(subsection, "bury", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

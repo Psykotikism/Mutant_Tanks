@@ -45,6 +45,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
 
+#define MT_CONFIG_SECTION "smiteability"
+#define MT_CONFIG_SECTION2 "smite ability"
+#define MT_CONFIG_SECTION3 "smite_ability"
+#define MT_CONFIG_SECTION4 "smite"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_SMITE "Smite Ability"
 
 enum struct esPlayer
@@ -345,14 +351,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("smiteability");
-	list2.PushString("smite ability");
-	list3.PushString("smite_ability");
-	list4.PushString("smite");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -409,21 +407,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iSmiteAbility = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iSmiteAbility, value, 0, 1);
-		g_esPlayer[admin].g_iSmiteEffect = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iSmiteEffect, value, 0, 7);
-		g_esPlayer[admin].g_iSmiteMessage = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSmiteMessage, value, 0, 3);
-		g_esPlayer[admin].g_flSmiteChance = flGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esPlayer[admin].g_flSmiteChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iSmiteHit = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteHit", "Smite Hit", "Smite_Hit", "hit", g_esPlayer[admin].g_iSmiteHit, value, 0, 1);
-		g_esPlayer[admin].g_iSmiteHitMode = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteHitMode", "Smite Hit Mode", "Smite_Hit_Mode", "hitmode", g_esPlayer[admin].g_iSmiteHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flSmiteRange = flGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteRange", "Smite Range", "Smite_Range", "range", g_esPlayer[admin].g_flSmiteRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flSmiteRangeChance = flGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteRangeChance", "Smite Range Chance", "Smite_Range_Chance", "rangechance", g_esPlayer[admin].g_flSmiteRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iSmiteAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iSmiteAbility, value, 0, 1);
+		g_esPlayer[admin].g_iSmiteEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iSmiteEffect, value, 0, 7);
+		g_esPlayer[admin].g_iSmiteMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSmiteMessage, value, 0, 3);
+		g_esPlayer[admin].g_flSmiteChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esPlayer[admin].g_flSmiteChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iSmiteHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteHit", "Smite Hit", "Smite_Hit", "hit", g_esPlayer[admin].g_iSmiteHit, value, 0, 1);
+		g_esPlayer[admin].g_iSmiteHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteHitMode", "Smite Hit Mode", "Smite_Hit_Mode", "hitmode", g_esPlayer[admin].g_iSmiteHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flSmiteRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteRange", "Smite Range", "Smite_Range", "range", g_esPlayer[admin].g_flSmiteRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flSmiteRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteRangeChance", "Smite Range Chance", "Smite_Range_Chance", "rangechance", g_esPlayer[admin].g_flSmiteRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "smiteability", false) || StrEqual(subsection, "smite ability", false) || StrEqual(subsection, "smite_ability", false) || StrEqual(subsection, "smite", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -438,21 +436,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iSmiteAbility = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iSmiteAbility, value, 0, 1);
-		g_esAbility[type].g_iSmiteEffect = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iSmiteEffect, value, 0, 7);
-		g_esAbility[type].g_iSmiteMessage = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSmiteMessage, value, 0, 3);
-		g_esAbility[type].g_flSmiteChance = flGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esAbility[type].g_flSmiteChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iSmiteHit = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteHit", "Smite Hit", "Smite_Hit", "hit", g_esAbility[type].g_iSmiteHit, value, 0, 1);
-		g_esAbility[type].g_iSmiteHitMode = iGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteHitMode", "Smite Hit Mode", "Smite_Hit_Mode", "hitmode", g_esAbility[type].g_iSmiteHitMode, value, 0, 2);
-		g_esAbility[type].g_flSmiteRange = flGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteRange", "Smite Range", "Smite_Range", "range", g_esAbility[type].g_flSmiteRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flSmiteRangeChance = flGetKeyValue(subsection, "smiteability", "smite ability", "smite_ability", "smite", key, "SmiteRangeChance", "Smite Range Chance", "Smite_Range_Chance", "rangechance", g_esAbility[type].g_flSmiteRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iSmiteAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iSmiteAbility, value, 0, 1);
+		g_esAbility[type].g_iSmiteEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iSmiteEffect, value, 0, 7);
+		g_esAbility[type].g_iSmiteMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSmiteMessage, value, 0, 3);
+		g_esAbility[type].g_flSmiteChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esAbility[type].g_flSmiteChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iSmiteHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteHit", "Smite Hit", "Smite_Hit", "hit", g_esAbility[type].g_iSmiteHit, value, 0, 1);
+		g_esAbility[type].g_iSmiteHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteHitMode", "Smite Hit Mode", "Smite_Hit_Mode", "hitmode", g_esAbility[type].g_iSmiteHitMode, value, 0, 2);
+		g_esAbility[type].g_flSmiteRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteRange", "Smite Range", "Smite_Range", "range", g_esAbility[type].g_flSmiteRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flSmiteRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteRangeChance", "Smite Range Chance", "Smite_Range_Chance", "rangechance", g_esAbility[type].g_flSmiteRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "smiteability", false) || StrEqual(subsection, "smite ability", false) || StrEqual(subsection, "smite_ability", false) || StrEqual(subsection, "smite", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "quietability"
+#define MT_CONFIG_SECTION2 "quiet ability"
+#define MT_CONFIG_SECTION3 "quiet_ability"
+#define MT_CONFIG_SECTION4 "quiet"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_QUIET "Quiet Ability"
 
 enum struct esPlayer
@@ -378,14 +384,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("quietability");
-	list2.PushString("quiet ability");
-	list3.PushString("quiet_ability");
-	list4.PushString("quiet");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -444,22 +442,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iQuietAbility = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iQuietAbility, value, 0, 1);
-		g_esPlayer[admin].g_iQuietEffect = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iQuietEffect, value, 0, 7);
-		g_esPlayer[admin].g_iQuietMessage = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iQuietMessage, value, 0, 3);
-		g_esPlayer[admin].g_flQuietChance = flGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esPlayer[admin].g_flQuietChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flQuietDuration = flGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esPlayer[admin].g_flQuietDuration, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iQuietHit = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietHit", "Quiet Hit", "Quiet_Hit", "hit", g_esPlayer[admin].g_iQuietHit, value, 0, 1);
-		g_esPlayer[admin].g_iQuietHitMode = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietHitMode", "Quiet Hit Mode", "Quiet_Hit_Mode", "hitmode", g_esPlayer[admin].g_iQuietHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flQuietRange = flGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esPlayer[admin].g_flQuietRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flQuietRangeChance = flGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esPlayer[admin].g_flQuietRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iQuietAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iQuietAbility, value, 0, 1);
+		g_esPlayer[admin].g_iQuietEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iQuietEffect, value, 0, 7);
+		g_esPlayer[admin].g_iQuietMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iQuietMessage, value, 0, 3);
+		g_esPlayer[admin].g_flQuietChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esPlayer[admin].g_flQuietChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flQuietDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esPlayer[admin].g_flQuietDuration, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iQuietHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietHit", "Quiet Hit", "Quiet_Hit", "hit", g_esPlayer[admin].g_iQuietHit, value, 0, 1);
+		g_esPlayer[admin].g_iQuietHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietHitMode", "Quiet Hit Mode", "Quiet_Hit_Mode", "hitmode", g_esPlayer[admin].g_iQuietHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flQuietRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esPlayer[admin].g_flQuietRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flQuietRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esPlayer[admin].g_flQuietRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "quietability", false) || StrEqual(subsection, "quiet ability", false) || StrEqual(subsection, "quiet_ability", false) || StrEqual(subsection, "quiet", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -474,22 +472,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iQuietAbility = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iQuietAbility, value, 0, 1);
-		g_esAbility[type].g_iQuietEffect = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iQuietEffect, value, 0, 7);
-		g_esAbility[type].g_iQuietMessage = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iQuietMessage, value, 0, 3);
-		g_esAbility[type].g_flQuietChance = flGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esAbility[type].g_flQuietChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flQuietDuration = flGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esAbility[type].g_flQuietDuration, value, 0.1, 999999.0);
-		g_esAbility[type].g_iQuietHit = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietHit", "Quiet Hit", "Quiet_Hit", "hit", g_esAbility[type].g_iQuietHit, value, 0, 1);
-		g_esAbility[type].g_iQuietHitMode = iGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietHitMode", "Quiet Hit Mode", "Quiet_Hit_Mode", "hitmode", g_esAbility[type].g_iQuietHitMode, value, 0, 2);
-		g_esAbility[type].g_flQuietRange = flGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esAbility[type].g_flQuietRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flQuietRangeChance = flGetKeyValue(subsection, "quietability", "quiet ability", "quiet_ability", "quiet", key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esAbility[type].g_flQuietRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iQuietAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iQuietAbility, value, 0, 1);
+		g_esAbility[type].g_iQuietEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iQuietEffect, value, 0, 7);
+		g_esAbility[type].g_iQuietMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iQuietMessage, value, 0, 3);
+		g_esAbility[type].g_flQuietChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietChance", "Quiet Chance", "Quiet_Chance", "chance", g_esAbility[type].g_flQuietChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flQuietDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietDuration", "Quiet Duration", "Quiet_Duration", "duration", g_esAbility[type].g_flQuietDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iQuietHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietHit", "Quiet Hit", "Quiet_Hit", "hit", g_esAbility[type].g_iQuietHit, value, 0, 1);
+		g_esAbility[type].g_iQuietHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietHitMode", "Quiet Hit Mode", "Quiet_Hit_Mode", "hitmode", g_esAbility[type].g_iQuietHitMode, value, 0, 2);
+		g_esAbility[type].g_flQuietRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietRange", "Quiet Range", "Quiet_Range", "range", g_esAbility[type].g_flQuietRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flQuietRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "QuietRangeChance", "Quiet Range Chance", "Quiet_Range_Chance", "rangechance", g_esAbility[type].g_flQuietRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "quietability", false) || StrEqual(subsection, "quiet ability", false) || StrEqual(subsection, "quiet_ability", false) || StrEqual(subsection, "quiet", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

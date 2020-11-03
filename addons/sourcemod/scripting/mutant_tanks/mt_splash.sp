@@ -38,6 +38,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "splashability"
+#define MT_CONFIG_SECTION2 "splash ability"
+#define MT_CONFIG_SECTION3 "splash_ability"
+#define MT_CONFIG_SECTION4 "splash"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_SPLASH "Splash Ability"
 
 enum struct esPlayer
@@ -297,14 +303,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("splashability");
-	list2.PushString("splash ability");
-	list3.PushString("splash_ability");
-	list4.PushString("splash");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -361,21 +359,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPlayer[admin].g_iHumanDuration, value, 1, 999999);
-		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iSplashAbility = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iSplashAbility, value, 0, 1);
-		g_esPlayer[admin].g_iSplashMessage = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSplashMessage, value, 0, 1);
-		g_esPlayer[admin].g_flSplashChance = flGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esPlayer[admin].g_flSplashChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flSplashDamage = flGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esPlayer[admin].g_flSplashDamage, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flSplashInterval = flGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esPlayer[admin].g_flSplashInterval, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flSplashRange = flGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esPlayer[admin].g_flSplashRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPlayer[admin].g_iHumanDuration, value, 1, 999999);
+		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iSplashAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iSplashAbility, value, 0, 1);
+		g_esPlayer[admin].g_iSplashMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSplashMessage, value, 0, 1);
+		g_esPlayer[admin].g_flSplashChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esPlayer[admin].g_flSplashChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flSplashDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esPlayer[admin].g_flSplashDamage, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flSplashInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esPlayer[admin].g_flSplashInterval, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flSplashRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esPlayer[admin].g_flSplashRange, value, 1.0, 999999.0);
 
-		if (StrEqual(subsection, "splashability", false) || StrEqual(subsection, "splash ability", false) || StrEqual(subsection, "splash_ability", false) || StrEqual(subsection, "splash", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -390,21 +388,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iHumanDuration = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_iHumanDuration, value, 1, 999999);
-		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iSplashAbility = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iSplashAbility, value, 0, 1);
-		g_esAbility[type].g_iSplashMessage = iGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSplashMessage, value, 0, 1);
-		g_esAbility[type].g_flSplashChance = flGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esAbility[type].g_flSplashChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flSplashDamage = flGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esAbility[type].g_flSplashDamage, value, 1.0, 999999.0);
-		g_esAbility[type].g_flSplashInterval = flGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esAbility[type].g_flSplashInterval, value, 0.1, 999999.0);
-		g_esAbility[type].g_flSplashRange = flGetKeyValue(subsection, "splashability", "splash ability", "splash_ability", "splash", key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esAbility[type].g_flSplashRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_iHumanDuration, value, 1, 999999);
+		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iSplashAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iSplashAbility, value, 0, 1);
+		g_esAbility[type].g_iSplashMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSplashMessage, value, 0, 1);
+		g_esAbility[type].g_flSplashChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplashChance", "Splash Chance", "Splash_Chance", "chance", g_esAbility[type].g_flSplashChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flSplashDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esAbility[type].g_flSplashDamage, value, 1.0, 999999.0);
+		g_esAbility[type].g_flSplashInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esAbility[type].g_flSplashInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_flSplashRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esAbility[type].g_flSplashRange, value, 1.0, 999999.0);
 
-		if (StrEqual(subsection, "splashability", false) || StrEqual(subsection, "splash ability", false) || StrEqual(subsection, "splash_ability", false) || StrEqual(subsection, "splash", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

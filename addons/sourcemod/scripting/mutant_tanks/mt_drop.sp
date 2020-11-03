@@ -38,6 +38,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "dropability"
+#define MT_CONFIG_SECTION2 "drop ability"
+#define MT_CONFIG_SECTION3 "drop_ability"
+#define MT_CONFIG_SECTION4 "drop"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_DROP "Drop Ability"
 
 char g_sMeleeScripts[][] =
@@ -367,14 +373,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("dropability");
-	list2.PushString("drop ability");
-	list3.PushString("drop_ability");
-	list4.PushString("drop");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -425,18 +423,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iDropAbility = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iDropAbility, value, 0, 1);
-		g_esPlayer[admin].g_iDropMessage = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iDropMessage, value, 0, 1);
-		g_esPlayer[admin].g_flDropChance = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropChance", "Drop Chance", "Drop_Chance", "chance", g_esPlayer[admin].g_flDropChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flDropClipChance = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropClipChance", "Drop Clip Chance", "Drop_Clip_Chance", "clipchance", g_esPlayer[admin].g_flDropClipChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iDropHandPosition = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esPlayer[admin].g_iDropHandPosition, value, 0, 3);
-		g_esPlayer[admin].g_iDropMode = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esPlayer[admin].g_iDropMode, value, 0, 2);
-		g_esPlayer[admin].g_flDropWeaponScale = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esPlayer[admin].g_flDropWeaponScale, value, 0.1, 2.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iDropAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iDropAbility, value, 0, 1);
+		g_esPlayer[admin].g_iDropMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iDropMessage, value, 0, 1);
+		g_esPlayer[admin].g_flDropChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "DropChance", "Drop Chance", "Drop_Chance", "chance", g_esPlayer[admin].g_flDropChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flDropClipChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "DropClipChance", "Drop Clip Chance", "Drop_Clip_Chance", "clipchance", g_esPlayer[admin].g_flDropClipChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iDropHandPosition = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esPlayer[admin].g_iDropHandPosition, value, 0, 3);
+		g_esPlayer[admin].g_iDropMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esPlayer[admin].g_iDropMode, value, 0, 2);
+		g_esPlayer[admin].g_flDropWeaponScale = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esPlayer[admin].g_flDropWeaponScale, value, 0.1, 2.0);
 
-		if (StrEqual(subsection, "dropability", false) || StrEqual(subsection, "drop ability", false) || StrEqual(subsection, "drop_ability", false) || StrEqual(subsection, "drop", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -451,18 +449,18 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iDropAbility = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iDropAbility, value, 0, 1);
-		g_esAbility[type].g_iDropMessage = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iDropMessage, value, 0, 1);
-		g_esAbility[type].g_flDropChance = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropChance", "Drop Chance", "Drop_Chance", "chance", g_esAbility[type].g_flDropChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flDropClipChance = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropClipChance", "Drop Clip Chance", "Drop_Clip_Chance", "clipchance", g_esAbility[type].g_flDropClipChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iDropHandPosition = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esAbility[type].g_iDropHandPosition, value, 0, 3);
-		g_esAbility[type].g_iDropMode = iGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esAbility[type].g_iDropMode, value, 0, 2);
-		g_esAbility[type].g_flDropWeaponScale = flGetKeyValue(subsection, "dropability", "drop ability", "drop_ability", "drop", key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esAbility[type].g_flDropWeaponScale, value, 0.1, 2.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iDropAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iDropAbility, value, 0, 1);
+		g_esAbility[type].g_iDropMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iDropMessage, value, 0, 1);
+		g_esAbility[type].g_flDropChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "DropChance", "Drop Chance", "Drop_Chance", "chance", g_esAbility[type].g_flDropChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flDropClipChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "DropClipChance", "Drop Clip Chance", "Drop_Clip_Chance", "clipchance", g_esAbility[type].g_flDropClipChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iDropHandPosition = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esAbility[type].g_iDropHandPosition, value, 0, 3);
+		g_esAbility[type].g_iDropMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esAbility[type].g_iDropMode, value, 0, 2);
+		g_esAbility[type].g_flDropWeaponScale = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esAbility[type].g_flDropWeaponScale, value, 0.1, 2.0);
 
-		if (StrEqual(subsection, "dropability", false) || StrEqual(subsection, "drop ability", false) || StrEqual(subsection, "drop_ability", false) || StrEqual(subsection, "drop", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

@@ -27,6 +27,7 @@
 #define MT_TAG3 "\x04[MT]\x03"
 #define MT_TAG4 "\x04[MT]\x05"
 
+#define MT_MAX_ABILITIES 100
 #define MT_MAXTYPES 1000
 #define MT_MAXHEALTH 65535
 #define MT_MAX_HEALTH_REDUCTION -65535
@@ -70,17 +71,6 @@
  * @param tank			Client index of the Tank.
  **/
 forward void MT_OnAbilityActivated(int tank);
-
-/**
- * Called before the config file is read.
- * Use this forward to store the different formats of the ability's section name.
- *
- * @param list			List to store the first format.
- * @param list2			List to store the second format.
- * @param list3			List to store the third format.
- * @param list4			List to store the fourth format.
- **/
-forward void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4);
 
 /**
  * Called when a human-controlled Mutant Tank presses a button.
@@ -560,6 +550,18 @@ native void MT_SetTankType(int tank, int type, bool mode);
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
  **/
 native void MT_SpawnTank(int tank, int type);
+
+/**
+ * Called before the config file is read.
+ * Use this forward to store the different formats of the ability's section name.
+ *
+ * @param list			List to store the first format.
+ * @param list2			List to store the second format.
+ * @param list3			List to store the third format.
+ * @param list4			List to store the fourth format.
+ **/
+#pragma deprecated No longer needed.
+forward void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4);
 
 /* Called every second to trigger the Super Tank's ability.
  * Use this forward for any passive abilities.

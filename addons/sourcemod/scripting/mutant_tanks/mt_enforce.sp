@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "enforceability"
+#define MT_CONFIG_SECTION2 "enforce ability"
+#define MT_CONFIG_SECTION3 "enforce_ability"
+#define MT_CONFIG_SECTION4 "enforce"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_ENFORCE "Enforce Ability"
 
 enum struct esPlayer
@@ -369,14 +375,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("enforceability");
-	list2.PushString("enforce ability");
-	list3.PushString("enforce_ability");
-	list4.PushString("enforce");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -437,23 +435,23 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iEnforceAbility = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iEnforceAbility, value, 0, 1);
-		g_esPlayer[admin].g_iEnforceEffect = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iEnforceEffect, value, 0, 7);
-		g_esPlayer[admin].g_iEnforceMessage = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iEnforceMessage, value, 0, 3);
-		g_esPlayer[admin].g_flEnforceChance = flGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esPlayer[admin].g_flEnforceChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flEnforceDuration = flGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esPlayer[admin].g_flEnforceDuration, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iEnforceHit = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_esPlayer[admin].g_iEnforceHit, value, 0, 1);
-		g_esPlayer[admin].g_iEnforceHitMode = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_esPlayer[admin].g_iEnforceHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flEnforceRange = flGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esPlayer[admin].g_flEnforceRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flEnforceRangeChance = flGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esPlayer[admin].g_flEnforceRangeChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iEnforceWeaponSlots = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esPlayer[admin].g_iEnforceWeaponSlots, value, 0, 31);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iEnforceAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iEnforceAbility, value, 0, 1);
+		g_esPlayer[admin].g_iEnforceEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iEnforceEffect, value, 0, 7);
+		g_esPlayer[admin].g_iEnforceMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iEnforceMessage, value, 0, 3);
+		g_esPlayer[admin].g_flEnforceChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esPlayer[admin].g_flEnforceChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flEnforceDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esPlayer[admin].g_flEnforceDuration, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iEnforceHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_esPlayer[admin].g_iEnforceHit, value, 0, 1);
+		g_esPlayer[admin].g_iEnforceHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_esPlayer[admin].g_iEnforceHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flEnforceRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esPlayer[admin].g_flEnforceRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flEnforceRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esPlayer[admin].g_flEnforceRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iEnforceWeaponSlots = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esPlayer[admin].g_iEnforceWeaponSlots, value, 0, 31);
 
-		if (StrEqual(subsection, "enforceability", false) || StrEqual(subsection, "enforce ability", false) || StrEqual(subsection, "enforce_ability", false) || StrEqual(subsection, "enforce", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -468,23 +466,23 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iEnforceAbility = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iEnforceAbility, value, 0, 1);
-		g_esAbility[type].g_iEnforceEffect = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iEnforceEffect, value, 0, 7);
-		g_esAbility[type].g_iEnforceMessage = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iEnforceMessage, value, 0, 3);
-		g_esAbility[type].g_flEnforceChance = flGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esAbility[type].g_flEnforceChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flEnforceDuration = flGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esAbility[type].g_flEnforceDuration, value, 0.1, 999999.0);
-		g_esAbility[type].g_iEnforceHit = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_esAbility[type].g_iEnforceHit, value, 0, 1);
-		g_esAbility[type].g_iEnforceHitMode = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_esAbility[type].g_iEnforceHitMode, value, 0, 2);
-		g_esAbility[type].g_flEnforceRange = flGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esAbility[type].g_flEnforceRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flEnforceRangeChance = flGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esAbility[type].g_flEnforceRangeChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iEnforceWeaponSlots = iGetKeyValue(subsection, "enforceability", "enforce ability", "enforce_ability", "enforce", key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esAbility[type].g_iEnforceWeaponSlots, value, 0, 31);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iEnforceAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iEnforceAbility, value, 0, 1);
+		g_esAbility[type].g_iEnforceEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iEnforceEffect, value, 0, 7);
+		g_esAbility[type].g_iEnforceMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iEnforceMessage, value, 0, 3);
+		g_esAbility[type].g_flEnforceChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceChance", "Enforce Chance", "Enforce_Chance", "chance", g_esAbility[type].g_flEnforceChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flEnforceDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceDuration", "Enforce Duration", "Enforce_Duration", "duration", g_esAbility[type].g_flEnforceDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iEnforceHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceHit", "Enforce Hit", "Enforce_Hit", "hit", g_esAbility[type].g_iEnforceHit, value, 0, 1);
+		g_esAbility[type].g_iEnforceHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceHitMode", "Enforce Hit Mode", "Enforce_Hit_Mode", "hitmode", g_esAbility[type].g_iEnforceHitMode, value, 0, 2);
+		g_esAbility[type].g_flEnforceRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esAbility[type].g_flEnforceRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flEnforceRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esAbility[type].g_flEnforceRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iEnforceWeaponSlots = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esAbility[type].g_iEnforceWeaponSlots, value, 0, 31);
 
-		if (StrEqual(subsection, "enforceability", false) || StrEqual(subsection, "enforce ability", false) || StrEqual(subsection, "enforce_ability", false) || StrEqual(subsection, "enforce", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

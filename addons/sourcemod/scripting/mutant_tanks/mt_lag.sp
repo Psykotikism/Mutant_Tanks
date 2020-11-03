@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "lagability"
+#define MT_CONFIG_SECTION2 "lag ability"
+#define MT_CONFIG_SECTION3 "lag_ability"
+#define MT_CONFIG_SECTION4 "lag"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_LAG "Lag Ability"
 
 enum struct esPlayer
@@ -351,14 +357,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("lagability");
-	list2.PushString("lag ability");
-	list3.PushString("lag_ability");
-	list4.PushString("lag");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -417,22 +415,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iLagAbility = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iLagAbility, value, 0, 1);
-		g_esPlayer[admin].g_iLagEffect = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iLagEffect, value, 0, 7);
-		g_esPlayer[admin].g_iLagMessage = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iLagMessage, value, 0, 3);
-		g_esPlayer[admin].g_flLagChance = flGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagChance", "Lag Chance", "Lag_Chance", "chance", g_esPlayer[admin].g_flLagChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iLagDuration = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_esPlayer[admin].g_iLagDuration, value, 1, 999999);
-		g_esPlayer[admin].g_iLagHit = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagHit", "Lag Hit", "Lag_Hit", "hit", g_esPlayer[admin].g_iLagHit, value, 0, 1);
-		g_esPlayer[admin].g_iLagHitMode = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagHitMode", "Lag Hit Mode", "Lag_Hit_Mode", "hitmode", g_esPlayer[admin].g_iLagHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flLagRange = flGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagRange", "Lag Range", "Lag_Range", "range", g_esPlayer[admin].g_flLagRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flLagRangeChance = flGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagRangeChance", "Lag Range Chance", "Lag_Range_Chance", "rangechance", g_esPlayer[admin].g_flLagRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iLagAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iLagAbility, value, 0, 1);
+		g_esPlayer[admin].g_iLagEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iLagEffect, value, 0, 7);
+		g_esPlayer[admin].g_iLagMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iLagMessage, value, 0, 3);
+		g_esPlayer[admin].g_flLagChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagChance", "Lag Chance", "Lag_Chance", "chance", g_esPlayer[admin].g_flLagChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iLagDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_esPlayer[admin].g_iLagDuration, value, 1, 999999);
+		g_esPlayer[admin].g_iLagHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagHit", "Lag Hit", "Lag_Hit", "hit", g_esPlayer[admin].g_iLagHit, value, 0, 1);
+		g_esPlayer[admin].g_iLagHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagHitMode", "Lag Hit Mode", "Lag_Hit_Mode", "hitmode", g_esPlayer[admin].g_iLagHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flLagRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagRange", "Lag Range", "Lag_Range", "range", g_esPlayer[admin].g_flLagRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flLagRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagRangeChance", "Lag Range Chance", "Lag_Range_Chance", "rangechance", g_esPlayer[admin].g_flLagRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "lagability", false) || StrEqual(subsection, "lag ability", false) || StrEqual(subsection, "lag_ability", false) || StrEqual(subsection, "lag", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -447,22 +445,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iLagAbility = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iLagAbility, value, 0, 1);
-		g_esAbility[type].g_iLagEffect = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iLagEffect, value, 0, 7);
-		g_esAbility[type].g_iLagMessage = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iLagMessage, value, 0, 3);
-		g_esAbility[type].g_flLagChance = flGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagChance", "Lag Chance", "Lag_Chance", "chance", g_esAbility[type].g_flLagChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iLagDuration = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_esAbility[type].g_iLagDuration, value, 1, 999999);
-		g_esAbility[type].g_iLagHit = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagHit", "Lag Hit", "Lag_Hit", "hit", g_esAbility[type].g_iLagHit, value, 0, 1);
-		g_esAbility[type].g_iLagHitMode = iGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagHitMode", "Lag Hit Mode", "Lag_Hit_Mode", "hitmode", g_esAbility[type].g_iLagHitMode, value, 0, 2);
-		g_esAbility[type].g_flLagRange = flGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagRange", "Lag Range", "Lag_Range", "range", g_esAbility[type].g_flLagRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flLagRangeChance = flGetKeyValue(subsection, "lagability", "lag ability", "lag_ability", "lag", key, "LagRangeChance", "Lag Range Chance", "Lag_Range_Chance", "rangechance", g_esAbility[type].g_flLagRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iLagAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iLagAbility, value, 0, 1);
+		g_esAbility[type].g_iLagEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iLagEffect, value, 0, 7);
+		g_esAbility[type].g_iLagMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iLagMessage, value, 0, 3);
+		g_esAbility[type].g_flLagChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagChance", "Lag Chance", "Lag_Chance", "chance", g_esAbility[type].g_flLagChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iLagDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagDuration", "Lag Duration", "Lag_Duration", "duration", g_esAbility[type].g_iLagDuration, value, 1, 999999);
+		g_esAbility[type].g_iLagHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagHit", "Lag Hit", "Lag_Hit", "hit", g_esAbility[type].g_iLagHit, value, 0, 1);
+		g_esAbility[type].g_iLagHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagHitMode", "Lag Hit Mode", "Lag_Hit_Mode", "hitmode", g_esAbility[type].g_iLagHitMode, value, 0, 2);
+		g_esAbility[type].g_flLagRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagRange", "Lag Range", "Lag_Range", "range", g_esAbility[type].g_flLagRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flLagRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LagRangeChance", "Lag Range Chance", "Lag_Range_Chance", "rangechance", g_esAbility[type].g_flLagRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "lagability", false) || StrEqual(subsection, "lag ability", false) || StrEqual(subsection, "lag_ability", false) || StrEqual(subsection, "lag", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "visionability"
+#define MT_CONFIG_SECTION2 "vision ability"
+#define MT_CONFIG_SECTION3 "vision_ability"
+#define MT_CONFIG_SECTION4 "vision"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_VISION "Vision Ability"
 
 enum struct esPlayer
@@ -353,14 +359,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("visionability");
-	list2.PushString("vision ability");
-	list3.PushString("vision_ability");
-	list4.PushString("vision");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -421,23 +419,23 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iVisionAbility = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iVisionAbility, value, 0, 1);
-		g_esPlayer[admin].g_iVisionEffect = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iVisionEffect, value, 0, 7);
-		g_esPlayer[admin].g_iVisionMessage = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iVisionMessage, value, 0, 3);
-		g_esPlayer[admin].g_flVisionChance = flGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esPlayer[admin].g_flVisionChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iVisionDuration = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esPlayer[admin].g_iVisionDuration, value, 1, 999999);
-		g_esPlayer[admin].g_iVisionFOV = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionFOV", "Vision FOV", "Vision_FOV", "fov", g_esPlayer[admin].g_iVisionFOV, value, 1, 160);
-		g_esPlayer[admin].g_iVisionHit = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionHit", "Vision Hit", "Vision_Hit", "hit", g_esPlayer[admin].g_iVisionHit, value, 0, 1);
-		g_esPlayer[admin].g_iVisionHitMode = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esPlayer[admin].g_iVisionHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flVisionRange = flGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esPlayer[admin].g_flVisionRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flVisionRangeChance = flGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esPlayer[admin].g_flVisionRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iVisionAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iVisionAbility, value, 0, 1);
+		g_esPlayer[admin].g_iVisionEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iVisionEffect, value, 0, 7);
+		g_esPlayer[admin].g_iVisionMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iVisionMessage, value, 0, 3);
+		g_esPlayer[admin].g_flVisionChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esPlayer[admin].g_flVisionChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iVisionDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esPlayer[admin].g_iVisionDuration, value, 1, 999999);
+		g_esPlayer[admin].g_iVisionFOV = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionFOV", "Vision FOV", "Vision_FOV", "fov", g_esPlayer[admin].g_iVisionFOV, value, 1, 160);
+		g_esPlayer[admin].g_iVisionHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionHit", "Vision Hit", "Vision_Hit", "hit", g_esPlayer[admin].g_iVisionHit, value, 0, 1);
+		g_esPlayer[admin].g_iVisionHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esPlayer[admin].g_iVisionHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flVisionRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esPlayer[admin].g_flVisionRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flVisionRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esPlayer[admin].g_flVisionRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "visionability", false) || StrEqual(subsection, "vision ability", false) || StrEqual(subsection, "vision_ability", false) || StrEqual(subsection, "vision", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -452,23 +450,23 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iVisionAbility = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iVisionAbility, value, 0, 1);
-		g_esAbility[type].g_iVisionEffect = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iVisionEffect, value, 0, 7);
-		g_esAbility[type].g_iVisionMessage = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iVisionMessage, value, 0, 3);
-		g_esAbility[type].g_flVisionChance = flGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esAbility[type].g_flVisionChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iVisionDuration = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esAbility[type].g_iVisionDuration, value, 1, 999999);
-		g_esAbility[type].g_iVisionFOV = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionFOV", "Vision FOV", "Vision_FOV", "fov", g_esAbility[type].g_iVisionFOV, value, 1, 160);
-		g_esAbility[type].g_iVisionHit = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionHit", "Vision Hit", "Vision_Hit", "hit", g_esAbility[type].g_iVisionHit, value, 0, 1);
-		g_esAbility[type].g_iVisionHitMode = iGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esAbility[type].g_iVisionHitMode, value, 0, 2);
-		g_esAbility[type].g_flVisionRange = flGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esAbility[type].g_flVisionRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flVisionRangeChance = flGetKeyValue(subsection, "visionability", "vision ability", "vision_ability", "vision", key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esAbility[type].g_flVisionRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iVisionAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iVisionAbility, value, 0, 1);
+		g_esAbility[type].g_iVisionEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iVisionEffect, value, 0, 7);
+		g_esAbility[type].g_iVisionMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iVisionMessage, value, 0, 3);
+		g_esAbility[type].g_flVisionChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionChance", "Vision Chance", "Vision_Chance", "chance", g_esAbility[type].g_flVisionChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iVisionDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionDuration", "Vision Duration", "Vision_Duration", "duration", g_esAbility[type].g_iVisionDuration, value, 1, 999999);
+		g_esAbility[type].g_iVisionFOV = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionFOV", "Vision FOV", "Vision_FOV", "fov", g_esAbility[type].g_iVisionFOV, value, 1, 160);
+		g_esAbility[type].g_iVisionHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionHit", "Vision Hit", "Vision_Hit", "hit", g_esAbility[type].g_iVisionHit, value, 0, 1);
+		g_esAbility[type].g_iVisionHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esAbility[type].g_iVisionHitMode, value, 0, 2);
+		g_esAbility[type].g_flVisionRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esAbility[type].g_flVisionRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flVisionRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esAbility[type].g_flVisionRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "visionability", false) || StrEqual(subsection, "vision ability", false) || StrEqual(subsection, "vision_ability", false) || StrEqual(subsection, "vision", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

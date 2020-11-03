@@ -39,6 +39,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "zombieability"
+#define MT_CONFIG_SECTION2 "zombie ability"
+#define MT_CONFIG_SECTION3 "zombie_ability"
+#define MT_CONFIG_SECTION4 "zombie"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_ZOMBIE "Zombie Ability"
 
 enum struct esPlayer
@@ -293,14 +299,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("zombieability");
-	list2.PushString("zombie ability");
-	list3.PushString("zombie_ability");
-	list4.PushString("zombie");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -353,20 +351,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPlayer[admin].g_iHumanDuration, value, 1, 999999);
-		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iZombieAbility = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iZombieAbility, value, 0, 1);
-		g_esPlayer[admin].g_iZombieMessage = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iZombieMessage, value, 0, 1);
-		g_esPlayer[admin].g_iZombieAmount = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esPlayer[admin].g_iZombieAmount, value, 1, 100);
-		g_esPlayer[admin].g_flZombieChance = flGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieChance", "Zombie Chance", "Zombie_Chance", "chance", g_esPlayer[admin].g_flZombieChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flZombieInterval = flGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esPlayer[admin].g_flZombieInterval, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPlayer[admin].g_iHumanDuration, value, 1, 999999);
+		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iZombieAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iZombieAbility, value, 0, 1);
+		g_esPlayer[admin].g_iZombieMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iZombieMessage, value, 0, 1);
+		g_esPlayer[admin].g_iZombieAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esPlayer[admin].g_iZombieAmount, value, 1, 100);
+		g_esPlayer[admin].g_flZombieChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieChance", "Zombie Chance", "Zombie_Chance", "chance", g_esPlayer[admin].g_flZombieChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flZombieInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esPlayer[admin].g_flZombieInterval, value, 0.1, 999999.0);
 
-		if (StrEqual(subsection, "zombieability", false) || StrEqual(subsection, "zombie ability", false) || StrEqual(subsection, "zombie_ability", false) || StrEqual(subsection, "zombie", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -377,20 +375,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iHumanDuration = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_iHumanDuration, value, 1, 999999);
-		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iZombieAbility = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iZombieAbility, value, 0, 1);
-		g_esAbility[type].g_iZombieMessage = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iZombieMessage, value, 0, 1);
-		g_esAbility[type].g_iZombieAmount = iGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esAbility[type].g_iZombieAmount, value, 1, 100);
-		g_esAbility[type].g_flZombieChance = flGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieChance", "Zombie Chance", "Zombie_Chance", "chance", g_esAbility[type].g_flZombieChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flZombieInterval = flGetKeyValue(subsection, "zombieability", "zombie ability", "zombie_ability", "zombie", key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esAbility[type].g_flZombieInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_iHumanDuration, value, 1, 999999);
+		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iZombieAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iZombieAbility, value, 0, 1);
+		g_esAbility[type].g_iZombieMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iZombieMessage, value, 0, 1);
+		g_esAbility[type].g_iZombieAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esAbility[type].g_iZombieAmount, value, 1, 100);
+		g_esAbility[type].g_flZombieChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieChance", "Zombie Chance", "Zombie_Chance", "chance", g_esAbility[type].g_flZombieChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flZombieInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esAbility[type].g_flZombieInterval, value, 0.1, 999999.0);
 
-		if (StrEqual(subsection, "zombieability", false) || StrEqual(subsection, "zombie ability", false) || StrEqual(subsection, "zombie_ability", false) || StrEqual(subsection, "zombie", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "flyability"
+#define MT_CONFIG_SECTION2 "fly ability"
+#define MT_CONFIG_SECTION3 "fly_ability"
+#define MT_CONFIG_SECTION4 "fly"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_FLY_ATTACK (1 << 0) // when tank attacks
 #define MT_FLY_HURT (1 << 1) // when tank is hurt
 #define MT_FLY_THROW (1 << 2) // when tank throws a rock
@@ -403,14 +409,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("flyability");
-	list2.PushString("fly ability");
-	list3.PushString("fly_ability");
-	list4.PushString("fly");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -465,20 +463,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 1);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iFlyAbility = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iFlyAbility, value, 0, 1);
-		g_esPlayer[admin].g_iFlyMessage = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iFlyMessage, value, 0, 1);
-		g_esPlayer[admin].g_flFlyChance = flGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esPlayer[admin].g_flFlyChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iFlyDuration = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esPlayer[admin].g_iFlyDuration, value, 1, 999999);
-		g_esPlayer[admin].g_flFlySpeed = flGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esPlayer[admin].g_flFlySpeed, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iFlyType = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "FlyType", "Fly Type", "Fly_Type", "type", g_esPlayer[admin].g_iFlyType, value, 0, 15);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 1);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iFlyAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iFlyAbility, value, 0, 1);
+		g_esPlayer[admin].g_iFlyMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iFlyMessage, value, 0, 1);
+		g_esPlayer[admin].g_flFlyChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esPlayer[admin].g_flFlyChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iFlyDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esPlayer[admin].g_iFlyDuration, value, 1, 999999);
+		g_esPlayer[admin].g_flFlySpeed = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esPlayer[admin].g_flFlySpeed, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iFlyType = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esPlayer[admin].g_iFlyType, value, 0, 15);
 
-		if (StrEqual(subsection, "flyability", false) || StrEqual(subsection, "fly ability", false) || StrEqual(subsection, "fly_ability", false) || StrEqual(subsection, "fly", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -493,20 +491,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iFlyAbility = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iFlyAbility, value, 0, 1);
-		g_esAbility[type].g_iFlyMessage = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iFlyMessage, value, 0, 1);
-		g_esAbility[type].g_flFlyChance = flGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esAbility[type].g_flFlyChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iFlyDuration = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esAbility[type].g_iFlyDuration, value, 1, 999999);
-		g_esAbility[type].g_flFlySpeed = flGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esAbility[type].g_flFlySpeed, value, 0.1, 999999.0);
-		g_esAbility[type].g_iFlyType = iGetKeyValue(subsection, "flyability", "fly ability", "fly_ability", "fly", key, "FlyType", "Fly Type", "Fly_Type", "type", g_esAbility[type].g_iFlyType, value, 0, 15);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iFlyAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iFlyAbility, value, 0, 1);
+		g_esAbility[type].g_iFlyMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iFlyMessage, value, 0, 1);
+		g_esAbility[type].g_flFlyChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FlyChance", "Fly Chance", "Fly_Chance", "chance", g_esAbility[type].g_flFlyChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iFlyDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esAbility[type].g_iFlyDuration, value, 1, 999999);
+		g_esAbility[type].g_flFlySpeed = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esAbility[type].g_flFlySpeed, value, 0.1, 999999.0);
+		g_esAbility[type].g_iFlyType = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esAbility[type].g_iFlyType, value, 0, 15);
 
-		if (StrEqual(subsection, "flyability", false) || StrEqual(subsection, "fly ability", false) || StrEqual(subsection, "fly_ability", false) || StrEqual(subsection, "fly", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

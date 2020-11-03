@@ -45,6 +45,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define SOUND_BELL "plats/churchbell_end.wav"
 
+#define MT_CONFIG_SECTION "gravityability"
+#define MT_CONFIG_SECTION2 "gravity ability"
+#define MT_CONFIG_SECTION3 "gravity_ability"
+#define MT_CONFIG_SECTION4 "gravity"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_GRAVITY "Gravity Ability"
 
 enum struct esPlayer
@@ -406,14 +412,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("gravityability");
-	list2.PushString("gravity ability");
-	list3.PushString("gravity_ability");
-	list4.PushString("gravity");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -478,25 +476,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iGravityAbility = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iGravityAbility, value, 0, 3);
-		g_esPlayer[admin].g_iGravityEffect = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iGravityEffect, value, 0, 7);
-		g_esPlayer[admin].g_iGravityMessage = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iGravityMessage, value, 0, 7);
-		g_esPlayer[admin].g_flGravityChance = flGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esPlayer[admin].g_flGravityChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iGravityDuration = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esPlayer[admin].g_iGravityDuration, value, 1, 999999);
-		g_esPlayer[admin].g_flGravityForce = flGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityForce", "Gravity Force", "Gravity_Force", "force", g_esPlayer[admin].g_flGravityForce, value, -100.0, 100.0);
-		g_esPlayer[admin].g_iGravityHit = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityHit", "Gravity Hit", "Gravity_Hit", "hit", g_esPlayer[admin].g_iGravityHit, value, 0, 1);
-		g_esPlayer[admin].g_iGravityHitMode = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityHitMode", "Gravity Hit Mode", "Gravity_Hit_Mode", "hitmode", g_esPlayer[admin].g_iGravityHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flGravityRange = flGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityRange", "Gravity Range", "Gravity_Range", "range", g_esPlayer[admin].g_flGravityRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flGravityRangeChance = flGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityRangeChance", "Gravity Range Chance", "Gravity_Range_Chance", "rangechance", g_esPlayer[admin].g_flGravityRangeChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flGravityValue = flGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esPlayer[admin].g_flGravityValue, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iGravityAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iGravityAbility, value, 0, 3);
+		g_esPlayer[admin].g_iGravityEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iGravityEffect, value, 0, 7);
+		g_esPlayer[admin].g_iGravityMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iGravityMessage, value, 0, 7);
+		g_esPlayer[admin].g_flGravityChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esPlayer[admin].g_flGravityChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iGravityDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esPlayer[admin].g_iGravityDuration, value, 1, 999999);
+		g_esPlayer[admin].g_flGravityForce = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityForce", "Gravity Force", "Gravity_Force", "force", g_esPlayer[admin].g_flGravityForce, value, -100.0, 100.0);
+		g_esPlayer[admin].g_iGravityHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityHit", "Gravity Hit", "Gravity_Hit", "hit", g_esPlayer[admin].g_iGravityHit, value, 0, 1);
+		g_esPlayer[admin].g_iGravityHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityHitMode", "Gravity Hit Mode", "Gravity_Hit_Mode", "hitmode", g_esPlayer[admin].g_iGravityHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flGravityRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityRange", "Gravity Range", "Gravity_Range", "range", g_esPlayer[admin].g_flGravityRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flGravityRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityRangeChance", "Gravity Range Chance", "Gravity_Range_Chance", "rangechance", g_esPlayer[admin].g_flGravityRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flGravityValue = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esPlayer[admin].g_flGravityValue, value, 0.1, 999999.0);
 
-		if (StrEqual(subsection, "gravityability", false) || StrEqual(subsection, "gravity ability", false) || StrEqual(subsection, "gravity_ability", false) || StrEqual(subsection, "gravity", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -511,25 +509,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iGravityAbility = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iGravityAbility, value, 0, 3);
-		g_esAbility[type].g_iGravityEffect = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iGravityEffect, value, 0, 7);
-		g_esAbility[type].g_iGravityMessage = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iGravityMessage, value, 0, 7);
-		g_esAbility[type].g_flGravityChance = flGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esAbility[type].g_flGravityChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iGravityDuration = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esAbility[type].g_iGravityDuration, value, 1, 999999);
-		g_esAbility[type].g_flGravityForce = flGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityForce", "Gravity Force", "Gravity_Force", "force", g_esAbility[type].g_flGravityForce, value, -100.0, 100.0);
-		g_esAbility[type].g_iGravityHit = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityHit", "Gravity Hit", "Gravity_Hit", "hit", g_esAbility[type].g_iGravityHit, value, 0, 1);
-		g_esAbility[type].g_iGravityHitMode = iGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityHitMode", "Gravity Hit Mode", "Gravity_Hit_Mode", "hitmode", g_esAbility[type].g_iGravityHitMode, value, 0, 2);
-		g_esAbility[type].g_flGravityRange = flGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityRange", "Gravity Range", "Gravity_Range", "range", g_esAbility[type].g_flGravityRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flGravityRangeChance = flGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityRangeChance", "Gravity Range Chance", "Gravity_Range_Chance", "rangechance", g_esAbility[type].g_flGravityRangeChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flGravityValue = flGetKeyValue(subsection, "gravityability", "gravity ability", "gravity_ability", "gravity", key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esAbility[type].g_flGravityValue, value, 0.1, 999999.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iGravityAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iGravityAbility, value, 0, 3);
+		g_esAbility[type].g_iGravityEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iGravityEffect, value, 0, 7);
+		g_esAbility[type].g_iGravityMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iGravityMessage, value, 0, 7);
+		g_esAbility[type].g_flGravityChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityChance", "Gravity Chance", "Gravity_Chance", "chance", g_esAbility[type].g_flGravityChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iGravityDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityDuration", "Gravity Duration", "Gravity_Duration", "duration", g_esAbility[type].g_iGravityDuration, value, 1, 999999);
+		g_esAbility[type].g_flGravityForce = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityForce", "Gravity Force", "Gravity_Force", "force", g_esAbility[type].g_flGravityForce, value, -100.0, 100.0);
+		g_esAbility[type].g_iGravityHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityHit", "Gravity Hit", "Gravity_Hit", "hit", g_esAbility[type].g_iGravityHit, value, 0, 1);
+		g_esAbility[type].g_iGravityHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityHitMode", "Gravity Hit Mode", "Gravity_Hit_Mode", "hitmode", g_esAbility[type].g_iGravityHitMode, value, 0, 2);
+		g_esAbility[type].g_flGravityRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityRange", "Gravity Range", "Gravity_Range", "range", g_esAbility[type].g_flGravityRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flGravityRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityRangeChance", "Gravity Range Chance", "Gravity_Range_Chance", "rangechance", g_esAbility[type].g_flGravityRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flGravityValue = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GravityValue", "Gravity Value", "Gravity_Value", "value", g_esAbility[type].g_flGravityValue, value, 0.1, 999999.0);
 
-		if (StrEqual(subsection, "gravityability", false) || StrEqual(subsection, "gravity ability", false) || StrEqual(subsection, "gravity_ability", false) || StrEqual(subsection, "gravity", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

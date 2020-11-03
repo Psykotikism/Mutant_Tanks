@@ -48,6 +48,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_HIT "animation/van_inside_hit_wall.wav"
 #define SOUND_BOMB "animation/bombing_run_01.wav"
 
+#define MT_CONFIG_SECTION "bombability"
+#define MT_CONFIG_SECTION2 "bomb ability"
+#define MT_CONFIG_SECTION3 "bomb_ability"
+#define MT_CONFIG_SECTION4 "bomb"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_BOMB "Bomb Ability"
 
 enum struct esPlayer
@@ -357,14 +363,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("bombability");
-	list2.PushString("bomb ability");
-	list3.PushString("bomb_ability");
-	list4.PushString("bomb");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -429,25 +427,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iBombAbility = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iBombAbility, value, 0, 1);
-		g_esPlayer[admin].g_iBombEffect = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iBombEffect, value, 0, 7);
-		g_esPlayer[admin].g_iBombMessage = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iBombMessage, value, 0, 7);
-		g_esPlayer[admin].g_flBombChance = flGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_esPlayer[admin].g_flBombChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iBombDeath = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombDeath", "Bomb Death", "Bomb_Death", "death", g_esPlayer[admin].g_iBombDeath, value, 0, 1);
-		g_esPlayer[admin].g_flBombDeathChance = flGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombDeathChance", "Bomb Death Chance", "Bomb_Death_Chance", "deathchance", g_esPlayer[admin].g_flBombDeathChance, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_iBombHit = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombHit", "Bomb Hit", "Bomb_Hit", "hit", g_esPlayer[admin].g_iBombHit, value, 0, 1);
-		g_esPlayer[admin].g_iBombHitMode = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombHitMode", "Bomb Hit Mode", "Bomb_Hit_Mode", "hitmode", g_esPlayer[admin].g_iBombHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flBombRange = flGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRange", "Bomb Range", "Bomb_Range", "range", g_esPlayer[admin].g_flBombRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flBombRangeChance = flGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRangeChance", "Bomb Range Chance", "Bomb_Range_Chance", "rangechance", g_esPlayer[admin].g_flBombRangeChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iBombRockBreak = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esPlayer[admin].g_iBombRockBreak, value, 0, 1);
-		g_esPlayer[admin].g_flBombRockChance = flGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esPlayer[admin].g_flBombRockChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iBombAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iBombAbility, value, 0, 1);
+		g_esPlayer[admin].g_iBombEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iBombEffect, value, 0, 7);
+		g_esPlayer[admin].g_iBombMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iBombMessage, value, 0, 7);
+		g_esPlayer[admin].g_flBombChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_esPlayer[admin].g_flBombChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iBombDeath = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombDeath", "Bomb Death", "Bomb_Death", "death", g_esPlayer[admin].g_iBombDeath, value, 0, 1);
+		g_esPlayer[admin].g_flBombDeathChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombDeathChance", "Bomb Death Chance", "Bomb_Death_Chance", "deathchance", g_esPlayer[admin].g_flBombDeathChance, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iBombHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombHit", "Bomb Hit", "Bomb_Hit", "hit", g_esPlayer[admin].g_iBombHit, value, 0, 1);
+		g_esPlayer[admin].g_iBombHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombHitMode", "Bomb Hit Mode", "Bomb_Hit_Mode", "hitmode", g_esPlayer[admin].g_iBombHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flBombRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombRange", "Bomb Range", "Bomb_Range", "range", g_esPlayer[admin].g_flBombRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flBombRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombRangeChance", "Bomb Range Chance", "Bomb_Range_Chance", "rangechance", g_esPlayer[admin].g_flBombRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iBombRockBreak = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esPlayer[admin].g_iBombRockBreak, value, 0, 1);
+		g_esPlayer[admin].g_flBombRockChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esPlayer[admin].g_flBombRockChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "bombability", false) || StrEqual(subsection, "bomb ability", false) || StrEqual(subsection, "bomb_ability", false) || StrEqual(subsection, "bomb", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -462,25 +460,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iBombAbility = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iBombAbility, value, 0, 1);
-		g_esAbility[type].g_iBombEffect = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iBombEffect, value, 0, 7);
-		g_esAbility[type].g_iBombMessage = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iBombMessage, value, 0, 7);
-		g_esAbility[type].g_flBombChance = flGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_esAbility[type].g_flBombChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iBombDeath = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombDeath", "Bomb Death", "Bomb_Death", "death", g_esAbility[type].g_iBombDeath, value, 0, 1);
-		g_esAbility[type].g_flBombDeathChance = flGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombDeathChance", "Bomb Death Chance", "Bomb_Death_Chance", "deathchance", g_esAbility[type].g_flBombDeathChance, value, 1.0, 999999.0);
-		g_esAbility[type].g_iBombHit = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombHit", "Bomb Hit", "Bomb_Hit", "hit", g_esAbility[type].g_iBombHit, value, 0, 1);
-		g_esAbility[type].g_iBombHitMode = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombHitMode", "Bomb Hit Mode", "Bomb_Hit_Mode", "hitmode", g_esAbility[type].g_iBombHitMode, value, 0, 2);
-		g_esAbility[type].g_flBombRange = flGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRange", "Bomb Range", "Bomb_Range", "range", g_esAbility[type].g_flBombRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flBombRangeChance = flGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRangeChance", "Bomb Range Chance", "Bomb_Range_Chance", "rangechance", g_esAbility[type].g_flBombRangeChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iBombRockBreak = iGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esAbility[type].g_iBombRockBreak, value, 0, 1);
-		g_esAbility[type].g_flBombRockChance = flGetKeyValue(subsection, "bombability", "bomb ability", "bomb_ability", "bomb", key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esAbility[type].g_flBombRockChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iBombAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iBombAbility, value, 0, 1);
+		g_esAbility[type].g_iBombEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iBombEffect, value, 0, 7);
+		g_esAbility[type].g_iBombMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iBombMessage, value, 0, 7);
+		g_esAbility[type].g_flBombChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombChance", "Bomb Chance", "Bomb_Chance", "chance", g_esAbility[type].g_flBombChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iBombDeath = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombDeath", "Bomb Death", "Bomb_Death", "death", g_esAbility[type].g_iBombDeath, value, 0, 1);
+		g_esAbility[type].g_flBombDeathChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombDeathChance", "Bomb Death Chance", "Bomb_Death_Chance", "deathchance", g_esAbility[type].g_flBombDeathChance, value, 1.0, 999999.0);
+		g_esAbility[type].g_iBombHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombHit", "Bomb Hit", "Bomb_Hit", "hit", g_esAbility[type].g_iBombHit, value, 0, 1);
+		g_esAbility[type].g_iBombHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombHitMode", "Bomb Hit Mode", "Bomb_Hit_Mode", "hitmode", g_esAbility[type].g_iBombHitMode, value, 0, 2);
+		g_esAbility[type].g_flBombRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombRange", "Bomb Range", "Bomb_Range", "range", g_esAbility[type].g_flBombRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flBombRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombRangeChance", "Bomb Range Chance", "Bomb_Range_Chance", "rangechance", g_esAbility[type].g_flBombRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iBombRockBreak = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esAbility[type].g_iBombRockBreak, value, 0, 1);
+		g_esAbility[type].g_flBombRockChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esAbility[type].g_flBombRockChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "bombability", false) || StrEqual(subsection, "bomb ability", false) || StrEqual(subsection, "bomb_ability", false) || StrEqual(subsection, "bomb", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

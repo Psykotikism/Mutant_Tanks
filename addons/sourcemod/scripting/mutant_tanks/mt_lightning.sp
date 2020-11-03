@@ -45,6 +45,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define SOUND_EXPLOSION "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_2.wav"
 
+#define MT_CONFIG_SECTION "lightningability"
+#define MT_CONFIG_SECTION2 "lightning ability"
+#define MT_CONFIG_SECTION3 "lightning_ability"
+#define MT_CONFIG_SECTION4 "lightning"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_LIGHTNING "Lightning Ability"
 
 enum struct esPlayer
@@ -336,14 +342,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("lightningability");
-	list2.PushString("lightning ability");
-	list3.PushString("lightning_ability");
-	list4.PushString("lightning");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -397,20 +395,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iLightningAbility = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iLightningAbility, value, 0, 1);
-		g_esPlayer[admin].g_iLightningMessage = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iLightningMessage, value, 0, 1);
-		g_esPlayer[admin].g_flLightningChance = flGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esPlayer[admin].g_flLightningChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iLightningDamage = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esPlayer[admin].g_iLightningDamage, value, 1, 999999);
-		g_esPlayer[admin].g_iLightningDuration = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esPlayer[admin].g_iLightningDuration, value, 1, 999999);
-		g_esPlayer[admin].g_flLightningInterval = flGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esPlayer[admin].g_flLightningInterval, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iLightningAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iLightningAbility, value, 0, 1);
+		g_esPlayer[admin].g_iLightningMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iLightningMessage, value, 0, 1);
+		g_esPlayer[admin].g_flLightningChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esPlayer[admin].g_flLightningChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iLightningDamage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esPlayer[admin].g_iLightningDamage, value, 1, 999999);
+		g_esPlayer[admin].g_iLightningDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esPlayer[admin].g_iLightningDuration, value, 1, 999999);
+		g_esPlayer[admin].g_flLightningInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esPlayer[admin].g_flLightningInterval, value, 0.1, 999999.0);
 
-		if (StrEqual(subsection, "lightningability", false) || StrEqual(subsection, "lightning ability", false) || StrEqual(subsection, "lightning_ability", false) || StrEqual(subsection, "lightning", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -425,20 +423,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iLightningAbility = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iLightningAbility, value, 0, 1);
-		g_esAbility[type].g_iLightningMessage = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iLightningMessage, value, 0, 1);
-		g_esAbility[type].g_flLightningChance = flGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esAbility[type].g_flLightningChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iLightningDamage = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esAbility[type].g_iLightningDamage, value, 1, 999999);
-		g_esAbility[type].g_iLightningDuration = iGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esAbility[type].g_iLightningDuration, value, 1, 999999);
-		g_esAbility[type].g_flLightningInterval = flGetKeyValue(subsection, "lightningability", "lightning ability", "lightning_ability", "lightning", key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esAbility[type].g_flLightningInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iLightningAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iLightningAbility, value, 0, 1);
+		g_esAbility[type].g_iLightningMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iLightningMessage, value, 0, 1);
+		g_esAbility[type].g_flLightningChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LightningChance", "Lightning Chance", "Lightning_Chance", "chance", g_esAbility[type].g_flLightningChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iLightningDamage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esAbility[type].g_iLightningDamage, value, 1, 999999);
+		g_esAbility[type].g_iLightningDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esAbility[type].g_iLightningDuration, value, 1, 999999);
+		g_esAbility[type].g_flLightningInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esAbility[type].g_flLightningInterval, value, 0.1, 999999.0);
 
-		if (StrEqual(subsection, "lightningability", false) || StrEqual(subsection, "lightning ability", false) || StrEqual(subsection, "lightning_ability", false) || StrEqual(subsection, "lightning", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

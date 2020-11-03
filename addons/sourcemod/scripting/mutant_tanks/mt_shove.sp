@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "shoveability"
+#define MT_CONFIG_SECTION2 "shove ability"
+#define MT_CONFIG_SECTION3 "shove_ability"
+#define MT_CONFIG_SECTION4 "shove"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_SHOVE "Shove Ability"
 
 enum struct esPlayer
@@ -388,14 +394,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("shoveability");
-	list2.PushString("shove ability");
-	list3.PushString("shove_ability");
-	list4.PushString("shove");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -462,26 +460,26 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iShoveAbility = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iShoveAbility, value, 0, 1);
-		g_esPlayer[admin].g_iShoveEffect = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iShoveEffect, value, 0, 7);
-		g_esPlayer[admin].g_iShoveMessage = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iShoveMessage, value, 0, 3);
-		g_esPlayer[admin].g_flShoveChance = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveChance", "Shove Chance", "Shove_Chance", "chance", g_esPlayer[admin].g_flShoveChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iShoveDeath = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveDeath", "Shove Death", "Shove_Death", "death", g_esPlayer[admin].g_iShoveDeath, value, 0, 1);
-		g_esPlayer[admin].g_flShoveDeathChance = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveDeathChance", "Shove Death Chance", "Shove_Death_Chance", "deathchance", g_esPlayer[admin].g_flShoveDeathChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flShoveDeathRange = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveDeathRange", "Shove Death Range", "Shove_Death_Range", "deathrange", g_esPlayer[admin].g_flShoveDeathRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_iShoveDuration = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveDuration", "Shove Duration", "Shove_Duration", "duration", g_esPlayer[admin].g_iShoveDuration, value, 1, 999999);
-		g_esPlayer[admin].g_iShoveHit = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveHit", "Shove Hit", "Shove_Hit", "hit", g_esPlayer[admin].g_iShoveHit, value, 0, 1);
-		g_esPlayer[admin].g_iShoveHitMode = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveHitMode", "Shove Hit Mode", "Shove_Hit_Mode", "hitmode", g_esPlayer[admin].g_iShoveHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flShoveInterval = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveInterval", "Shove Interval", "Shove_Interval", "interval", g_esPlayer[admin].g_flShoveInterval, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flShoveRange = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveRange", "Shove Range", "Shove_Range", "range", g_esPlayer[admin].g_flShoveRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flShoveRangeChance = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveRangeChance", "Shove Range Chance", "Shove_Range_Chance", "rangechance", g_esPlayer[admin].g_flShoveRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iShoveAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iShoveAbility, value, 0, 1);
+		g_esPlayer[admin].g_iShoveEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iShoveEffect, value, 0, 7);
+		g_esPlayer[admin].g_iShoveMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iShoveMessage, value, 0, 3);
+		g_esPlayer[admin].g_flShoveChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveChance", "Shove Chance", "Shove_Chance", "chance", g_esPlayer[admin].g_flShoveChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iShoveDeath = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveDeath", "Shove Death", "Shove_Death", "death", g_esPlayer[admin].g_iShoveDeath, value, 0, 1);
+		g_esPlayer[admin].g_flShoveDeathChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveDeathChance", "Shove Death Chance", "Shove_Death_Chance", "deathchance", g_esPlayer[admin].g_flShoveDeathChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flShoveDeathRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveDeathRange", "Shove Death Range", "Shove_Death_Range", "deathrange", g_esPlayer[admin].g_flShoveDeathRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iShoveDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveDuration", "Shove Duration", "Shove_Duration", "duration", g_esPlayer[admin].g_iShoveDuration, value, 1, 999999);
+		g_esPlayer[admin].g_iShoveHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveHit", "Shove Hit", "Shove_Hit", "hit", g_esPlayer[admin].g_iShoveHit, value, 0, 1);
+		g_esPlayer[admin].g_iShoveHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveHitMode", "Shove Hit Mode", "Shove_Hit_Mode", "hitmode", g_esPlayer[admin].g_iShoveHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flShoveInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveInterval", "Shove Interval", "Shove_Interval", "interval", g_esPlayer[admin].g_flShoveInterval, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flShoveRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveRange", "Shove Range", "Shove_Range", "range", g_esPlayer[admin].g_flShoveRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flShoveRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveRangeChance", "Shove Range Chance", "Shove_Range_Chance", "rangechance", g_esPlayer[admin].g_flShoveRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "shoveability", false) || StrEqual(subsection, "shove ability", false) || StrEqual(subsection, "shove_ability", false) || StrEqual(subsection, "shove", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -496,26 +494,26 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iShoveAbility = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iShoveAbility, value, 0, 1);
-		g_esAbility[type].g_iShoveEffect = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iShoveEffect, value, 0, 7);
-		g_esAbility[type].g_iShoveMessage = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iShoveMessage, value, 0, 3);
-		g_esAbility[type].g_flShoveChance = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveChance", "Shove Chance", "Shove_Chance", "chance", g_esAbility[type].g_flShoveChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iShoveDeath = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveDeath", "Shove Death", "Shove_Death", "death", g_esAbility[type].g_iShoveDeath, value, 0, 1);
-		g_esAbility[type].g_flShoveDeathChance = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveDeathChance", "Shove Death Chance", "Shove_Death_Chance", "deathchance", g_esAbility[type].g_flShoveDeathChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flShoveDeathRange = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveDeathRange", "Shove Death Range", "Shove_Death_Range", "deathrange", g_esAbility[type].g_flShoveDeathRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_iShoveDuration = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveDuration", "Shove Duration", "Shove_Duration", "duration", g_esAbility[type].g_iShoveDuration, value, 1, 999999);
-		g_esAbility[type].g_iShoveHit = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveHit", "Shove Hit", "Shove_Hit", "hit", g_esAbility[type].g_iShoveHit, value, 0, 1);
-		g_esAbility[type].g_iShoveHitMode = iGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveHitMode", "Shove Hit Mode", "Shove_Hit_Mode", "hitmode", g_esAbility[type].g_iShoveHitMode, value, 0, 2);
-		g_esAbility[type].g_flShoveInterval = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveInterval", "Shove Interval", "Shove_Interval", "interval", g_esAbility[type].g_flShoveInterval, value, 0.1, 999999.0);
-		g_esAbility[type].g_flShoveRange = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveRange", "Shove Range", "Shove_Range", "range", g_esAbility[type].g_flShoveRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flShoveRangeChance = flGetKeyValue(subsection, "shoveability", "shove ability", "shove_ability", "shove", key, "ShoveRangeChance", "Shove Range Chance", "Shove_Range_Chance", "rangechance", g_esAbility[type].g_flShoveRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iShoveAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iShoveAbility, value, 0, 1);
+		g_esAbility[type].g_iShoveEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iShoveEffect, value, 0, 7);
+		g_esAbility[type].g_iShoveMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iShoveMessage, value, 0, 3);
+		g_esAbility[type].g_flShoveChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveChance", "Shove Chance", "Shove_Chance", "chance", g_esAbility[type].g_flShoveChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iShoveDeath = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveDeath", "Shove Death", "Shove_Death", "death", g_esAbility[type].g_iShoveDeath, value, 0, 1);
+		g_esAbility[type].g_flShoveDeathChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveDeathChance", "Shove Death Chance", "Shove_Death_Chance", "deathchance", g_esAbility[type].g_flShoveDeathChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flShoveDeathRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveDeathRange", "Shove Death Range", "Shove_Death_Range", "deathrange", g_esAbility[type].g_flShoveDeathRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_iShoveDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveDuration", "Shove Duration", "Shove_Duration", "duration", g_esAbility[type].g_iShoveDuration, value, 1, 999999);
+		g_esAbility[type].g_iShoveHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveHit", "Shove Hit", "Shove_Hit", "hit", g_esAbility[type].g_iShoveHit, value, 0, 1);
+		g_esAbility[type].g_iShoveHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveHitMode", "Shove Hit Mode", "Shove_Hit_Mode", "hitmode", g_esAbility[type].g_iShoveHitMode, value, 0, 2);
+		g_esAbility[type].g_flShoveInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveInterval", "Shove Interval", "Shove_Interval", "interval", g_esAbility[type].g_flShoveInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_flShoveRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveRange", "Shove Range", "Shove_Range", "range", g_esAbility[type].g_flShoveRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flShoveRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ShoveRangeChance", "Shove Range Chance", "Shove_Range_Chance", "rangechance", g_esAbility[type].g_flShoveRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "shoveability", false) || StrEqual(subsection, "shove ability", false) || StrEqual(subsection, "shove_ability", false) || StrEqual(subsection, "shove", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

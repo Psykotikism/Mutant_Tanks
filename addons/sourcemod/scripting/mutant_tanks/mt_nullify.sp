@@ -43,6 +43,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
+
+#define MT_CONFIG_SECTION "nullifyability"
+#define MT_CONFIG_SECTION2 "nullify ability"
+#define MT_CONFIG_SECTION3 "nullify_ability"
+#define MT_CONFIG_SECTION4 "nullify"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_NULLIFY "Nullify Ability"
 
 enum struct esPlayer
@@ -338,6 +346,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (g_esPlayer[attacker].g_bAffected)
 			{
+				EmitSoundToAll(SOUND_METAL, victim);
+
 				return Plugin_Handled;
 			}
 		}
@@ -351,14 +361,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	char sName[32];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
-}
-
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("nullifyability");
-	list2.PushString("nullify ability");
-	list3.PushString("nullify_ability");
-	list4.PushString("nullify");
 }
 
 public void MT_OnConfigsLoad(int mode)
@@ -419,22 +421,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iNullifyAbility = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iNullifyAbility, value, 0, 1);
-		g_esPlayer[admin].g_iNullifyEffect = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iNullifyEffect, value, 0, 7);
-		g_esPlayer[admin].g_iNullifyMessage = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iNullifyMessage, value, 0, 3);
-		g_esPlayer[admin].g_flNullifyChance = flGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esPlayer[admin].g_flNullifyChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flNullifyDuration = flGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esPlayer[admin].g_flNullifyDuration, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iNullifyHit = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyHit", "Nullify Hit", "Nullify_Hit", "hit", g_esPlayer[admin].g_iNullifyHit, value, 0, 1);
-		g_esPlayer[admin].g_iNullifyHitMode = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esPlayer[admin].g_iNullifyHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flNullifyRange = flGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esPlayer[admin].g_flNullifyRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flNullifyRangeChance = flGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esPlayer[admin].g_flNullifyRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iNullifyAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iNullifyAbility, value, 0, 1);
+		g_esPlayer[admin].g_iNullifyEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iNullifyEffect, value, 0, 7);
+		g_esPlayer[admin].g_iNullifyMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iNullifyMessage, value, 0, 3);
+		g_esPlayer[admin].g_flNullifyChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esPlayer[admin].g_flNullifyChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flNullifyDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esPlayer[admin].g_flNullifyDuration, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iNullifyHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyHit", "Nullify Hit", "Nullify_Hit", "hit", g_esPlayer[admin].g_iNullifyHit, value, 0, 1);
+		g_esPlayer[admin].g_iNullifyHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esPlayer[admin].g_iNullifyHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flNullifyRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esPlayer[admin].g_flNullifyRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flNullifyRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esPlayer[admin].g_flNullifyRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "nullifyability", false) || StrEqual(subsection, "nullify ability", false) || StrEqual(subsection, "nullify_ability", false) || StrEqual(subsection, "nullify", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -449,22 +451,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iNullifyAbility = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iNullifyAbility, value, 0, 1);
-		g_esAbility[type].g_iNullifyEffect = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iNullifyEffect, value, 0, 7);
-		g_esAbility[type].g_iNullifyMessage = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iNullifyMessage, value, 0, 3);
-		g_esAbility[type].g_flNullifyChance = flGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esAbility[type].g_flNullifyChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flNullifyDuration = flGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esAbility[type].g_flNullifyDuration, value, 0.1, 999999.0);
-		g_esAbility[type].g_iNullifyHit = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyHit", "Nullify Hit", "Nullify_Hit", "hit", g_esAbility[type].g_iNullifyHit, value, 0, 1);
-		g_esAbility[type].g_iNullifyHitMode = iGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esAbility[type].g_iNullifyHitMode, value, 0, 2);
-		g_esAbility[type].g_flNullifyRange = flGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esAbility[type].g_flNullifyRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flNullifyRangeChance = flGetKeyValue(subsection, "nullifyability", "nullify ability", "nullify_ability", "nullify", key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esAbility[type].g_flNullifyRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iNullifyAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iNullifyAbility, value, 0, 1);
+		g_esAbility[type].g_iNullifyEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iNullifyEffect, value, 0, 7);
+		g_esAbility[type].g_iNullifyMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iNullifyMessage, value, 0, 3);
+		g_esAbility[type].g_flNullifyChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyChance", "Nullify Chance", "Nullify_Chance", "chance", g_esAbility[type].g_flNullifyChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flNullifyDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyDuration", "Nullify Duration", "Nullify_Duration", "duration", g_esAbility[type].g_flNullifyDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iNullifyHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyHit", "Nullify Hit", "Nullify_Hit", "hit", g_esAbility[type].g_iNullifyHit, value, 0, 1);
+		g_esAbility[type].g_iNullifyHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esAbility[type].g_iNullifyHitMode, value, 0, 2);
+		g_esAbility[type].g_flNullifyRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esAbility[type].g_flNullifyRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flNullifyRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esAbility[type].g_flNullifyRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "nullifyability", false) || StrEqual(subsection, "nullify ability", false) || StrEqual(subsection, "nullify_ability", false) || StrEqual(subsection, "nullify", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

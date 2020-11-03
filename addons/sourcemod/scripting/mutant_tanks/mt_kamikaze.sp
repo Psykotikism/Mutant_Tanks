@@ -50,6 +50,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_SMASH2 "player/charger/hit/charger_smash_02.wav" // Only exists on L4D2
 #define SOUND_SMASH1 "player/tank/hit/hulk_punch_1.wav"
 
+#define MT_CONFIG_SECTION "kamikazeability"
+#define MT_CONFIG_SECTION2 "kamikaze ability"
+#define MT_CONFIG_SECTION3 "kamikaze_ability"
+#define MT_CONFIG_SECTION4 "kamikaze"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_KAMIKAZE "Kamikaze Ability"
 
 enum struct esPlayer
@@ -332,14 +338,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("kamikazeability");
-	list2.PushString("kamikaze ability");
-	list3.PushString("kamikaze_ability");
-	list4.PushString("kamikaze");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -392,19 +390,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iKamikazeAbility = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iKamikazeAbility, value, 0, 1);
-		g_esPlayer[admin].g_iKamikazeEffect = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iKamikazeEffect, value, 0, 7);
-		g_esPlayer[admin].g_iKamikazeMessage = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iKamikazeMessage, value, 0, 3);
-		g_esPlayer[admin].g_flKamikazeChance = flGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esPlayer[admin].g_flKamikazeChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iKamikazeHit = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esPlayer[admin].g_iKamikazeHit, value, 0, 1);
-		g_esPlayer[admin].g_iKamikazeHitMode = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esPlayer[admin].g_iKamikazeHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flKamikazeRange = flGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeRange", "Kamikaze Range", "Kamikaze_Range", "range", g_esPlayer[admin].g_flKamikazeRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flKamikazeRangeChance = flGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeRangeChance", "Kamikaze Range Chance", "Kamikaze_Range_Chance", "rangechance", g_esPlayer[admin].g_flKamikazeRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iKamikazeAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iKamikazeAbility, value, 0, 1);
+		g_esPlayer[admin].g_iKamikazeEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iKamikazeEffect, value, 0, 7);
+		g_esPlayer[admin].g_iKamikazeMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iKamikazeMessage, value, 0, 3);
+		g_esPlayer[admin].g_flKamikazeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esPlayer[admin].g_flKamikazeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iKamikazeHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esPlayer[admin].g_iKamikazeHit, value, 0, 1);
+		g_esPlayer[admin].g_iKamikazeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esPlayer[admin].g_iKamikazeHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flKamikazeRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeRange", "Kamikaze Range", "Kamikaze_Range", "range", g_esPlayer[admin].g_flKamikazeRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flKamikazeRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeRangeChance", "Kamikaze Range Chance", "Kamikaze_Range_Chance", "rangechance", g_esPlayer[admin].g_flKamikazeRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "kamikazeability", false) || StrEqual(subsection, "kamikaze ability", false) || StrEqual(subsection, "kamikaze_ability", false) || StrEqual(subsection, "kamikaze", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -419,19 +417,19 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iKamikazeAbility = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iKamikazeAbility, value, 0, 1);
-		g_esAbility[type].g_iKamikazeEffect = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iKamikazeEffect, value, 0, 7);
-		g_esAbility[type].g_iKamikazeMessage = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iKamikazeMessage, value, 0, 3);
-		g_esAbility[type].g_flKamikazeChance = flGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esAbility[type].g_flKamikazeChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iKamikazeHit = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esAbility[type].g_iKamikazeHit, value, 0, 1);
-		g_esAbility[type].g_iKamikazeHitMode = iGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esAbility[type].g_iKamikazeHitMode, value, 0, 2);
-		g_esAbility[type].g_flKamikazeRange = flGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeRange", "Kamikaze Range", "Kamikaze_Range", "range", g_esAbility[type].g_flKamikazeRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flKamikazeRangeChance = flGetKeyValue(subsection, "kamikazeability", "kamikaze ability", "kamikaze_ability", "kamikaze", key, "KamikazeRangeChance", "Kamikaze Range Chance", "Kamikaze_Range_Chance", "rangechance", g_esAbility[type].g_flKamikazeRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iKamikazeAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iKamikazeAbility, value, 0, 1);
+		g_esAbility[type].g_iKamikazeEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iKamikazeEffect, value, 0, 7);
+		g_esAbility[type].g_iKamikazeMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iKamikazeMessage, value, 0, 3);
+		g_esAbility[type].g_flKamikazeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esAbility[type].g_flKamikazeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iKamikazeHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esAbility[type].g_iKamikazeHit, value, 0, 1);
+		g_esAbility[type].g_iKamikazeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esAbility[type].g_iKamikazeHitMode, value, 0, 2);
+		g_esAbility[type].g_flKamikazeRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeRange", "Kamikaze Range", "Kamikaze_Range", "range", g_esAbility[type].g_flKamikazeRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flKamikazeRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeRangeChance", "Kamikaze Range Chance", "Kamikaze_Range_Chance", "rangechance", g_esAbility[type].g_flKamikazeRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "kamikazeability", false) || StrEqual(subsection, "kamikaze ability", false) || StrEqual(subsection, "kamikaze_ability", false) || StrEqual(subsection, "kamikaze", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

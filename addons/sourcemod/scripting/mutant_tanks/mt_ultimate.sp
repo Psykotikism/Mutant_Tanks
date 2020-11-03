@@ -49,8 +49,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
 #define SOUND_GROWL1 "player/tank/voice/growl/hulk_growl_1.wav" //Only exists on L4D1
 #define SOUND_GROWL2 "player/tank/voice/growl/tank_climb_01.wav" //Only exists on L4D2
+#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #define SOUND_SMASH1 "player/tank/hit/hulk_punch_1.wav"
 #define SOUND_SMASH2 "player/charger/hit/charger_smash_02.wav" //Only exists on L4D2
+
+#define MT_CONFIG_SECTION "ultimateability"
+#define MT_CONFIG_SECTION2 "ultimate ability"
+#define MT_CONFIG_SECTION3 "ultimate_ability"
+#define MT_CONFIG_SECTION4 "ultimate"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
 
 #define MT_MENU_ULTIMATE "Ultimate Ability"
 
@@ -412,6 +419,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 			}
 		}
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags) && g_esPlayer[victim].g_bActivated)
+		{
+			EmitSoundToAll(SOUND_METAL, victim);
+
+			return Plugin_Handled;
+		}
 	}
 
 	return Plugin_Continue;
@@ -422,14 +435,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	char sName[32];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
-}
-
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("ultimateability");
-	list2.PushString("ultimate ability");
-	list3.PushString("ultimate_ability");
-	list4.PushString("ultimate");
 }
 
 public void MT_OnConfigsLoad(int mode)
@@ -488,21 +493,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iUltimateAbility = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iUltimateAbility, value, 0, 1);
-		g_esPlayer[admin].g_iUltimateMessage = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iUltimateMessage, value, 0, 1);
-		g_esPlayer[admin].g_iUltimateAmount = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateAmount", "Ultimate Amount", "Ultimate_Amount", "amount", g_esPlayer[admin].g_iUltimateAmount, value, 1, 999999);
-		g_esPlayer[admin].g_flUltimateDamageBoost = flGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDamageBoost", "Ultimate Damage Boost", "Ultimate_Damage_Boost", "dmgboost", g_esPlayer[admin].g_flUltimateDamageBoost, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flUltimateDamageRequired = flGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDamageRequired", "Ultimate Damage Required", "Ultimate_Damage_Required", "dmgrequired", g_esPlayer[admin].g_flUltimateDamageRequired, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iUltimateDuration = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDuration", "Ultimate Duration", "Ultimate_Duration", "duration", g_esPlayer[admin].g_iUltimateDuration, value, 1, 999999);
-		g_esPlayer[admin].g_iUltimateHealthLimit = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateHealthLimit", "Ultimate Health Limit", "Ultimate_Health_Limit", "healthlimit", g_esPlayer[admin].g_iUltimateHealthLimit, value, 1, MT_MAXHEALTH);
-		g_esPlayer[admin].g_flUltimateHealthPortion = flGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateHealthPortion", "Ultimate Health Portion", "Ultimate_Health_Portion", "healthportion", g_esPlayer[admin].g_flUltimateHealthPortion, value, 0.1, 1.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iUltimateAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iUltimateAbility, value, 0, 1);
+		g_esPlayer[admin].g_iUltimateMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iUltimateMessage, value, 0, 1);
+		g_esPlayer[admin].g_iUltimateAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateAmount", "Ultimate Amount", "Ultimate_Amount", "amount", g_esPlayer[admin].g_iUltimateAmount, value, 1, 999999);
+		g_esPlayer[admin].g_flUltimateDamageBoost = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateDamageBoost", "Ultimate Damage Boost", "Ultimate_Damage_Boost", "dmgboost", g_esPlayer[admin].g_flUltimateDamageBoost, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flUltimateDamageRequired = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateDamageRequired", "Ultimate Damage Required", "Ultimate_Damage_Required", "dmgrequired", g_esPlayer[admin].g_flUltimateDamageRequired, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iUltimateDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateDuration", "Ultimate Duration", "Ultimate_Duration", "duration", g_esPlayer[admin].g_iUltimateDuration, value, 1, 999999);
+		g_esPlayer[admin].g_iUltimateHealthLimit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateHealthLimit", "Ultimate Health Limit", "Ultimate_Health_Limit", "healthlimit", g_esPlayer[admin].g_iUltimateHealthLimit, value, 1, MT_MAXHEALTH);
+		g_esPlayer[admin].g_flUltimateHealthPortion = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateHealthPortion", "Ultimate Health Portion", "Ultimate_Health_Portion", "healthportion", g_esPlayer[admin].g_flUltimateHealthPortion, value, 0.1, 1.0);
 
-		if (StrEqual(subsection, "ultimateability", false) || StrEqual(subsection, "ultimate ability", false) || StrEqual(subsection, "ultimate_ability", false) || StrEqual(subsection, "ultimate", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -517,21 +522,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iUltimateAbility = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iUltimateAbility, value, 0, 1);
-		g_esAbility[type].g_iUltimateMessage = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iUltimateMessage, value, 0, 1);
-		g_esAbility[type].g_iUltimateAmount = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateAmount", "Ultimate Amount", "Ultimate_Amount", "amount", g_esAbility[type].g_iUltimateAmount, value, 1, 999999);
-		g_esAbility[type].g_flUltimateDamageBoost = flGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDamageBoost", "Ultimate Damage Boost", "Ultimate_Damage_Boost", "dmgboost", g_esAbility[type].g_flUltimateDamageBoost, value, 0.1, 999999.0);
-		g_esAbility[type].g_flUltimateDamageRequired = flGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDamageRequired", "Ultimate Damage Required", "Ultimate_Damage_Required", "dmgrequired", g_esAbility[type].g_flUltimateDamageRequired, value, 0.1, 999999.0);
-		g_esAbility[type].g_iUltimateDuration = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateDuration", "Ultimate Duration", "Ultimate_Duration", "duration", g_esAbility[type].g_iUltimateDuration, value, 1, 999999);
-		g_esAbility[type].g_iUltimateHealthLimit = iGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateHealthLimit", "Ultimate Health Limit", "Ultimate_Health_Limit", "healthlimit", g_esAbility[type].g_iUltimateHealthLimit, value, 1, MT_MAXHEALTH);
-		g_esAbility[type].g_flUltimateHealthPortion = flGetKeyValue(subsection, "ultimateability", "ultimate ability", "ultimate_ability", "ultimate", key, "UltimateHealthPortion", "Ultimate Health Portion", "Ultimate_Health_Portion", "healthportion", g_esAbility[type].g_flUltimateHealthPortion, value, 0.1, 1.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iUltimateAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iUltimateAbility, value, 0, 1);
+		g_esAbility[type].g_iUltimateMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iUltimateMessage, value, 0, 1);
+		g_esAbility[type].g_iUltimateAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateAmount", "Ultimate Amount", "Ultimate_Amount", "amount", g_esAbility[type].g_iUltimateAmount, value, 1, 999999);
+		g_esAbility[type].g_flUltimateDamageBoost = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateDamageBoost", "Ultimate Damage Boost", "Ultimate_Damage_Boost", "dmgboost", g_esAbility[type].g_flUltimateDamageBoost, value, 0.1, 999999.0);
+		g_esAbility[type].g_flUltimateDamageRequired = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateDamageRequired", "Ultimate Damage Required", "Ultimate_Damage_Required", "dmgrequired", g_esAbility[type].g_flUltimateDamageRequired, value, 0.1, 999999.0);
+		g_esAbility[type].g_iUltimateDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateDuration", "Ultimate Duration", "Ultimate_Duration", "duration", g_esAbility[type].g_iUltimateDuration, value, 1, 999999);
+		g_esAbility[type].g_iUltimateHealthLimit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateHealthLimit", "Ultimate Health Limit", "Ultimate_Health_Limit", "healthlimit", g_esAbility[type].g_iUltimateHealthLimit, value, 1, MT_MAXHEALTH);
+		g_esAbility[type].g_flUltimateHealthPortion = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "UltimateHealthPortion", "Ultimate Health Portion", "Ultimate_Health_Portion", "healthportion", g_esAbility[type].g_flUltimateHealthPortion, value, 0.1, 1.0);
 
-		if (StrEqual(subsection, "ultimateability", false) || StrEqual(subsection, "ultimate ability", false) || StrEqual(subsection, "ultimate_ability", false) || StrEqual(subsection, "ultimate", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

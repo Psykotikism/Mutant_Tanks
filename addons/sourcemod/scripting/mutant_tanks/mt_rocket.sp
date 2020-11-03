@@ -47,6 +47,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_FIRE "weapons/molotov/fire_ignite_1.wav"
 #define SOUND_LAUNCH "player/boomer/explode/explo_medium_14.wav"
 
+#define MT_CONFIG_SECTION "rocketability"
+#define MT_CONFIG_SECTION2 "rocket ability"
+#define MT_CONFIG_SECTION3 "rocket_ability"
+#define MT_CONFIG_SECTION4 "rocket"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_ROCKET "Rocket Ability"
 
 enum struct esPlayer
@@ -354,14 +360,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("rocketability");
-	list2.PushString("rocket ability");
-	list3.PushString("rocket_ability");
-	list4.PushString("rocket");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -420,22 +418,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iRocketAbility = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iRocketAbility, value, 0, 1);
-		g_esPlayer[admin].g_iRocketEffect = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iRocketEffect, value, 0, 7);
-		g_esPlayer[admin].g_iRocketMessage = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iRocketMessage, value, 0, 3);
-		g_esPlayer[admin].g_flRocketChance = flGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esPlayer[admin].g_flRocketChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flRocketDelay = flGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esPlayer[admin].g_flRocketDelay, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iRocketHit = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esPlayer[admin].g_iRocketHit, value, 0, 1);
-		g_esPlayer[admin].g_iRocketHitMode = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esPlayer[admin].g_iRocketHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flRocketRange = flGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esPlayer[admin].g_flRocketRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flRocketRangeChance = flGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esPlayer[admin].g_flRocketRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iRocketAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iRocketAbility, value, 0, 1);
+		g_esPlayer[admin].g_iRocketEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iRocketEffect, value, 0, 7);
+		g_esPlayer[admin].g_iRocketMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iRocketMessage, value, 0, 3);
+		g_esPlayer[admin].g_flRocketChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esPlayer[admin].g_flRocketChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flRocketDelay = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esPlayer[admin].g_flRocketDelay, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iRocketHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esPlayer[admin].g_iRocketHit, value, 0, 1);
+		g_esPlayer[admin].g_iRocketHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esPlayer[admin].g_iRocketHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flRocketRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esPlayer[admin].g_flRocketRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flRocketRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esPlayer[admin].g_flRocketRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "rocketability", false) || StrEqual(subsection, "rocket ability", false) || StrEqual(subsection, "rocket_ability", false) || StrEqual(subsection, "rocket", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -450,22 +448,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iRocketAbility = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iRocketAbility, value, 0, 1);
-		g_esAbility[type].g_iRocketEffect = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iRocketEffect, value, 0, 7);
-		g_esAbility[type].g_iRocketMessage = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iRocketMessage, value, 0, 3);
-		g_esAbility[type].g_flRocketChance = flGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esAbility[type].g_flRocketChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flRocketDelay = flGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esAbility[type].g_flRocketDelay, value, 0.1, 999999.0);
-		g_esAbility[type].g_iRocketHit = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esAbility[type].g_iRocketHit, value, 0, 1);
-		g_esAbility[type].g_iRocketHitMode = iGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esAbility[type].g_iRocketHitMode, value, 0, 2);
-		g_esAbility[type].g_flRocketRange = flGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esAbility[type].g_flRocketRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flRocketRangeChance = flGetKeyValue(subsection, "rocketability", "rocket ability", "rocket_ability", "rocket", key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esAbility[type].g_flRocketRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iRocketAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iRocketAbility, value, 0, 1);
+		g_esAbility[type].g_iRocketEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iRocketEffect, value, 0, 7);
+		g_esAbility[type].g_iRocketMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iRocketMessage, value, 0, 3);
+		g_esAbility[type].g_flRocketChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketChance", "Rocket Chance", "Rocket_Chance", "chance", g_esAbility[type].g_flRocketChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flRocketDelay = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketDelay", "Rocket Delay", "Rocket_Delay", "delay", g_esAbility[type].g_flRocketDelay, value, 0.1, 999999.0);
+		g_esAbility[type].g_iRocketHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketHit", "Rocket Hit", "Rocket_Hit", "hit", g_esAbility[type].g_iRocketHit, value, 0, 1);
+		g_esAbility[type].g_iRocketHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketHitMode", "Rocket Hit Mode", "Rocket_Hit_Mode", "hitmode", g_esAbility[type].g_iRocketHitMode, value, 0, 2);
+		g_esAbility[type].g_flRocketRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketRange", "Rocket Range", "Rocket_Range", "range", g_esAbility[type].g_flRocketRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flRocketRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RocketRangeChance", "Rocket Range Chance", "Rocket_Range_Chance", "rangechance", g_esAbility[type].g_flRocketRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "rocketability", false) || StrEqual(subsection, "rocket ability", false) || StrEqual(subsection, "rocket_ability", false) || StrEqual(subsection, "rocket", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

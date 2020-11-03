@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "fragileability"
+#define MT_CONFIG_SECTION2 "fragile ability"
+#define MT_CONFIG_SECTION3 "fragile_ability"
+#define MT_CONFIG_SECTION4 "fragile"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_FRAGILE "Fragile Ability"
 
 enum struct esPlayer
@@ -412,14 +418,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("fragileability");
-	list2.PushString("fragile ability");
-	list3.PushString("fragile_ability");
-	list4.PushString("fragile");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -484,25 +482,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iFragileAbility = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iFragileAbility, value, 0, 1);
-		g_esPlayer[admin].g_iFragileMessage = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iFragileMessage, value, 0, 1);
-		g_esPlayer[admin].g_flFragileBulletMultiplier = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esPlayer[admin].g_flFragileBulletMultiplier, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flFragileChance = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileChance", "Fragile Chance", "Fragile_Chance", "chance", g_esPlayer[admin].g_flFragileChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flFragileDamageBoost = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileDamageBoost", "Fragile Damage Boost", "Fragile_Damage_Boost", "dmgboost", g_esPlayer[admin].g_flFragileDamageBoost, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iFragileDuration = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esPlayer[admin].g_iFragileDuration, value, 1, 999999);
-		g_esPlayer[admin].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esPlayer[admin].g_flFragileExplosiveMultiplier, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flFragileFireMultiplier = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esPlayer[admin].g_flFragileFireMultiplier, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esPlayer[admin].g_flFragileMeleeMultiplier, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_iFragileMode = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esPlayer[admin].g_iFragileMode, value, 0, 1);
-		g_esPlayer[admin].g_flFragileSpeedBoost = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esPlayer[admin].g_flFragileSpeedBoost, value, 0.1, 3.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iFragileAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iFragileAbility, value, 0, 1);
+		g_esPlayer[admin].g_iFragileMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iFragileMessage, value, 0, 1);
+		g_esPlayer[admin].g_flFragileBulletMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esPlayer[admin].g_flFragileBulletMultiplier, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flFragileChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileChance", "Fragile Chance", "Fragile_Chance", "chance", g_esPlayer[admin].g_flFragileChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flFragileDamageBoost = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileDamageBoost", "Fragile Damage Boost", "Fragile_Damage_Boost", "dmgboost", g_esPlayer[admin].g_flFragileDamageBoost, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iFragileDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esPlayer[admin].g_iFragileDuration, value, 1, 999999);
+		g_esPlayer[admin].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esPlayer[admin].g_flFragileExplosiveMultiplier, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esPlayer[admin].g_flFragileFireMultiplier, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esPlayer[admin].g_flFragileMeleeMultiplier, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iFragileMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esPlayer[admin].g_iFragileMode, value, 0, 1);
+		g_esPlayer[admin].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esPlayer[admin].g_flFragileSpeedBoost, value, 0.1, 3.0);
 
-		if (StrEqual(subsection, "fragileability", false) || StrEqual(subsection, "fragile ability", false) || StrEqual(subsection, "fragile_ability", false) || StrEqual(subsection, "fragile", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -517,25 +515,25 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iFragileAbility = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iFragileAbility, value, 0, 1);
-		g_esAbility[type].g_iFragileMessage = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iFragileMessage, value, 0, 1);
-		g_esAbility[type].g_flFragileBulletMultiplier = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esAbility[type].g_flFragileBulletMultiplier, value, 1.0, 999999.0);
-		g_esAbility[type].g_flFragileChance = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileChance", "Fragile Chance", "Fragile_Chance", "chance", g_esAbility[type].g_flFragileChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flFragileDamageBoost = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileDamageBoost", "Fragile Damage Boost", "Fragile_Damage_Boost", "dmgboost", g_esAbility[type].g_flFragileDamageBoost, value, 0.1, 999999.0);
-		g_esAbility[type].g_iFragileDuration = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esAbility[type].g_iFragileDuration, value, 1, 999999);
-		g_esAbility[type].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esAbility[type].g_flFragileExplosiveMultiplier, value, 1.0, 999999.0);
-		g_esAbility[type].g_flFragileFireMultiplier = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esAbility[type].g_flFragileFireMultiplier, value, 1.0, 999999.0);
-		g_esAbility[type].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esAbility[type].g_flFragileMeleeMultiplier, value, 1.0, 999999.0);
-		g_esAbility[type].g_iFragileMode = iGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esAbility[type].g_iFragileMode, value, 0, 1);
-		g_esAbility[type].g_flFragileSpeedBoost = flGetKeyValue(subsection, "fragileability", "fragile ability", "fragile_ability", "fragile", key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esAbility[type].g_flFragileSpeedBoost, value, 0.1, 3.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iFragileAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iFragileAbility, value, 0, 1);
+		g_esAbility[type].g_iFragileMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iFragileMessage, value, 0, 1);
+		g_esAbility[type].g_flFragileBulletMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileBulletMultiplier", "Fragile Bullet Multiplier", "Fragile_Bullet_Multiplier", "bullet", g_esAbility[type].g_flFragileBulletMultiplier, value, 1.0, 999999.0);
+		g_esAbility[type].g_flFragileChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileChance", "Fragile Chance", "Fragile_Chance", "chance", g_esAbility[type].g_flFragileChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flFragileDamageBoost = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileDamageBoost", "Fragile Damage Boost", "Fragile_Damage_Boost", "dmgboost", g_esAbility[type].g_flFragileDamageBoost, value, 0.1, 999999.0);
+		g_esAbility[type].g_iFragileDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esAbility[type].g_iFragileDuration, value, 1, 999999);
+		g_esAbility[type].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esAbility[type].g_flFragileExplosiveMultiplier, value, 1.0, 999999.0);
+		g_esAbility[type].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esAbility[type].g_flFragileFireMultiplier, value, 1.0, 999999.0);
+		g_esAbility[type].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esAbility[type].g_flFragileMeleeMultiplier, value, 1.0, 999999.0);
+		g_esAbility[type].g_iFragileMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esAbility[type].g_iFragileMode, value, 0, 1);
+		g_esAbility[type].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esAbility[type].g_flFragileSpeedBoost, value, 0.1, 3.0);
 
-		if (StrEqual(subsection, "fragileability", false) || StrEqual(subsection, "fragile ability", false) || StrEqual(subsection, "fragile_ability", false) || StrEqual(subsection, "fragile", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

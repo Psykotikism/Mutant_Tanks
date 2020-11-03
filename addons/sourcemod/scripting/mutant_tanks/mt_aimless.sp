@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "aimlessability"
+#define MT_CONFIG_SECTION2 "aimless ability"
+#define MT_CONFIG_SECTION3 "aimless_ability"
+#define MT_CONFIG_SECTION4 "aimless"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_AIMLESS "Aimless Ability"
 
 enum struct esPlayer
@@ -366,14 +372,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("aimlessability");
-	list2.PushString("aimless ability");
-	list3.PushString("aimless_ability");
-	list4.PushString("aimless");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -432,22 +430,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iAimlessAbility = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iAimlessAbility, value, 0, 1);
-		g_esPlayer[admin].g_iAimlessEffect = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iAimlessEffect, value, 0, 7);
-		g_esPlayer[admin].g_iAimlessMessage = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iAimlessMessage, value, 0, 3);
-		g_esPlayer[admin].g_flAimlessChance = flGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessChance", "Aimless Chance", "Aimless_Chance", "chance", g_esPlayer[admin].g_flAimlessChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flAimlessDuration = flGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessDuration", "Aimless Duration", "Aimless_Duration", "duration", g_esPlayer[admin].g_flAimlessDuration, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iAimlessHit = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessHit", "Aimless Hit", "Aimless_Hit", "hit", g_esPlayer[admin].g_iAimlessHit, value, 0, 1);
-		g_esPlayer[admin].g_iAimlessHitMode = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessHitMode", "Aimless Hit Mode", "Aimless_Hit_Mode", "hitmode", g_esPlayer[admin].g_iAimlessHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flAimlessRange = flGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessRange", "Aimless Range", "Aimless_Range", "range", g_esPlayer[admin].g_flAimlessRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flAimlessRangeChance = flGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessRangeChance", "Aimless Range Chance", "Aimless_Range_Chance", "rangechance", g_esPlayer[admin].g_flAimlessRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iAimlessAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iAimlessAbility, value, 0, 1);
+		g_esPlayer[admin].g_iAimlessEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iAimlessEffect, value, 0, 7);
+		g_esPlayer[admin].g_iAimlessMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iAimlessMessage, value, 0, 3);
+		g_esPlayer[admin].g_flAimlessChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessChance", "Aimless Chance", "Aimless_Chance", "chance", g_esPlayer[admin].g_flAimlessChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flAimlessDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessDuration", "Aimless Duration", "Aimless_Duration", "duration", g_esPlayer[admin].g_flAimlessDuration, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iAimlessHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessHit", "Aimless Hit", "Aimless_Hit", "hit", g_esPlayer[admin].g_iAimlessHit, value, 0, 1);
+		g_esPlayer[admin].g_iAimlessHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessHitMode", "Aimless Hit Mode", "Aimless_Hit_Mode", "hitmode", g_esPlayer[admin].g_iAimlessHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flAimlessRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessRange", "Aimless Range", "Aimless_Range", "range", g_esPlayer[admin].g_flAimlessRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flAimlessRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessRangeChance", "Aimless Range Chance", "Aimless_Range_Chance", "rangechance", g_esPlayer[admin].g_flAimlessRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "aimlessability", false) || StrEqual(subsection, "aimless ability", false) || StrEqual(subsection, "aimless_ability", false) || StrEqual(subsection, "aimless", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -462,22 +460,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iAimlessAbility = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iAimlessAbility, value, 0, 1);
-		g_esAbility[type].g_iAimlessEffect = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iAimlessEffect, value, 0, 7);
-		g_esAbility[type].g_iAimlessMessage = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iAimlessMessage, value, 0, 3);
-		g_esAbility[type].g_flAimlessChance = flGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessChance", "Aimless Chance", "Aimless_Chance", "chance", g_esAbility[type].g_flAimlessChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flAimlessDuration = flGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessDuration", "Aimless Duration", "Aimless_Duration", "duration", g_esAbility[type].g_flAimlessDuration, value, 0.1, 999999.0);
-		g_esAbility[type].g_iAimlessHit = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessHit", "Aimless Hit", "Aimless_Hit", "hit", g_esAbility[type].g_iAimlessHit, value, 0, 1);
-		g_esAbility[type].g_iAimlessHitMode = iGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessHitMode", "Aimless Hit Mode", "Aimless_Hit_Mode", "hitmode", g_esAbility[type].g_iAimlessHitMode, value, 0, 2);
-		g_esAbility[type].g_flAimlessRange = flGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessRange", "Aimless Range", "Aimless_Range", "range", g_esAbility[type].g_flAimlessRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flAimlessRangeChance = flGetKeyValue(subsection, "aimlessability", "aimless ability", "aimless_ability", "aimless", key, "AimlessRangeChance", "Aimless Range Chance", "Aimless_Range_Chance", "rangechance", g_esAbility[type].g_flAimlessRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iAimlessAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iAimlessAbility, value, 0, 1);
+		g_esAbility[type].g_iAimlessEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iAimlessEffect, value, 0, 7);
+		g_esAbility[type].g_iAimlessMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iAimlessMessage, value, 0, 3);
+		g_esAbility[type].g_flAimlessChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessChance", "Aimless Chance", "Aimless_Chance", "chance", g_esAbility[type].g_flAimlessChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flAimlessDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessDuration", "Aimless Duration", "Aimless_Duration", "duration", g_esAbility[type].g_flAimlessDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iAimlessHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessHit", "Aimless Hit", "Aimless_Hit", "hit", g_esAbility[type].g_iAimlessHit, value, 0, 1);
+		g_esAbility[type].g_iAimlessHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessHitMode", "Aimless Hit Mode", "Aimless_Hit_Mode", "hitmode", g_esAbility[type].g_iAimlessHitMode, value, 0, 2);
+		g_esAbility[type].g_flAimlessRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessRange", "Aimless Range", "Aimless_Range", "range", g_esAbility[type].g_flAimlessRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flAimlessRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AimlessRangeChance", "Aimless Range Chance", "Aimless_Range_Chance", "rangechance", g_esAbility[type].g_flAimlessRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "aimlessability", false) || StrEqual(subsection, "aimless ability", false) || StrEqual(subsection, "aimless_ability", false) || StrEqual(subsection, "aimless", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

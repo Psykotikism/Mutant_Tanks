@@ -45,6 +45,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define SPRITE_DOT "sprites/dot.vmt"
 
+#define MT_CONFIG_SECTION "whirlability"
+#define MT_CONFIG_SECTION2 "whirl ability"
+#define MT_CONFIG_SECTION3 "whirl_ability"
+#define MT_CONFIG_SECTION4 "whirl"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_WHIRL "Whirl Ability"
 
 enum struct esPlayer
@@ -360,14 +366,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("whirlability");
-	list2.PushString("whirl ability");
-	list3.PushString("whirl_ability");
-	list4.PushString("whirl");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -430,24 +428,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iWhirlAbility = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iWhirlAbility, value, 0, 1);
-		g_esPlayer[admin].g_iWhirlEffect = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iWhirlEffect, value, 0, 7);
-		g_esPlayer[admin].g_iWhirlMessage = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iWhirlMessage, value, 0, 3);
-		g_esPlayer[admin].g_iWhirlAxis = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esPlayer[admin].g_iWhirlAxis, value, 0, 7);
-		g_esPlayer[admin].g_flWhirlChance = flGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esPlayer[admin].g_flWhirlChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iWhirlDuration = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlDuration", "Whirl Duration", "Whirl_Duration", "duration", g_esPlayer[admin].g_iWhirlDuration, value, 1, 999999);
-		g_esPlayer[admin].g_iWhirlHit = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlHit", "Whirl Hit", "Whirl_Hit", "hit", g_esPlayer[admin].g_iWhirlHit, value, 0, 1);
-		g_esPlayer[admin].g_iWhirlHitMode = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlHitMode", "Whirl Hit Mode", "Whirl_Hit_Mode", "hitmode", g_esPlayer[admin].g_iWhirlHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flWhirlRange = flGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esPlayer[admin].g_flWhirlRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flWhirlRangeChance = flGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esPlayer[admin].g_flWhirlRangeChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flWhirlSpeed = flGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esPlayer[admin].g_flWhirlSpeed, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iWhirlAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iWhirlAbility, value, 0, 1);
+		g_esPlayer[admin].g_iWhirlEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iWhirlEffect, value, 0, 7);
+		g_esPlayer[admin].g_iWhirlMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iWhirlMessage, value, 0, 3);
+		g_esPlayer[admin].g_iWhirlAxis = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esPlayer[admin].g_iWhirlAxis, value, 0, 7);
+		g_esPlayer[admin].g_flWhirlChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esPlayer[admin].g_flWhirlChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iWhirlDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlDuration", "Whirl Duration", "Whirl_Duration", "duration", g_esPlayer[admin].g_iWhirlDuration, value, 1, 999999);
+		g_esPlayer[admin].g_iWhirlHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlHit", "Whirl Hit", "Whirl_Hit", "hit", g_esPlayer[admin].g_iWhirlHit, value, 0, 1);
+		g_esPlayer[admin].g_iWhirlHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlHitMode", "Whirl Hit Mode", "Whirl_Hit_Mode", "hitmode", g_esPlayer[admin].g_iWhirlHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flWhirlRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esPlayer[admin].g_flWhirlRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flWhirlRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esPlayer[admin].g_flWhirlRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flWhirlSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esPlayer[admin].g_flWhirlSpeed, value, 1.0, 999999.0);
 
-		if (StrEqual(subsection, "whirlability", false) || StrEqual(subsection, "whirl ability", false) || StrEqual(subsection, "whirl_ability", false) || StrEqual(subsection, "whirl", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -462,24 +460,24 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iWhirlAbility = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iWhirlAbility, value, 0, 1);
-		g_esAbility[type].g_iWhirlEffect = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iWhirlEffect, value, 0, 7);
-		g_esAbility[type].g_iWhirlMessage = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iWhirlMessage, value, 0, 3);
-		g_esAbility[type].g_iWhirlAxis = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esAbility[type].g_iWhirlAxis, value, 0, 7);
-		g_esAbility[type].g_flWhirlChance = flGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esAbility[type].g_flWhirlChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iWhirlDuration = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlDuration", "Whirl Duration", "Whirl_Duration", "duration", g_esAbility[type].g_iWhirlDuration, value, 1, 999999);
-		g_esAbility[type].g_iWhirlHit = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlHit", "Whirl Hit", "Whirl_Hit", "hit", g_esAbility[type].g_iWhirlHit, value, 0, 1);
-		g_esAbility[type].g_iWhirlHitMode = iGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlHitMode", "Whirl Hit Mode", "Whirl_Hit_Mode", "hitmode", g_esAbility[type].g_iWhirlHitMode, value, 0, 2);
-		g_esAbility[type].g_flWhirlRange = flGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esAbility[type].g_flWhirlRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flWhirlRangeChance = flGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esAbility[type].g_flWhirlRangeChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flWhirlSpeed = flGetKeyValue(subsection, "whirlability", "whirl ability", "whirl_ability", "whirl", key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esAbility[type].g_flWhirlSpeed, value, 1.0, 999999.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iWhirlAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iWhirlAbility, value, 0, 1);
+		g_esAbility[type].g_iWhirlEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iWhirlEffect, value, 0, 7);
+		g_esAbility[type].g_iWhirlMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iWhirlMessage, value, 0, 3);
+		g_esAbility[type].g_iWhirlAxis = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlAxis", "Whirl Axis", "Whirl_Axis", "axis", g_esAbility[type].g_iWhirlAxis, value, 0, 7);
+		g_esAbility[type].g_flWhirlChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlChance", "Whirl Chance", "Whirl_Chance", "chance", g_esAbility[type].g_flWhirlChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iWhirlDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlDuration", "Whirl Duration", "Whirl_Duration", "duration", g_esAbility[type].g_iWhirlDuration, value, 1, 999999);
+		g_esAbility[type].g_iWhirlHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlHit", "Whirl Hit", "Whirl_Hit", "hit", g_esAbility[type].g_iWhirlHit, value, 0, 1);
+		g_esAbility[type].g_iWhirlHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlHitMode", "Whirl Hit Mode", "Whirl_Hit_Mode", "hitmode", g_esAbility[type].g_iWhirlHitMode, value, 0, 2);
+		g_esAbility[type].g_flWhirlRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlRange", "Whirl Range", "Whirl_Range", "range", g_esAbility[type].g_flWhirlRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flWhirlRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlRangeChance", "Whirl Range Chance", "Whirl_Range_Chance", "rangechance", g_esAbility[type].g_flWhirlRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flWhirlSpeed = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WhirlSpeed", "Whirl Speed", "Whirl_Speed", "speed", g_esAbility[type].g_flWhirlSpeed, value, 1.0, 999999.0);
 
-		if (StrEqual(subsection, "whirlability", false) || StrEqual(subsection, "whirl ability", false) || StrEqual(subsection, "whirl_ability", false) || StrEqual(subsection, "whirl", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

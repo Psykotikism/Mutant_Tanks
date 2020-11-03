@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "recoilability"
+#define MT_CONFIG_SECTION2 "recoil ability"
+#define MT_CONFIG_SECTION3 "recoil_ability"
+#define MT_CONFIG_SECTION4 "recoil"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_RECOIL "Recoil Ability"
 
 enum struct esPlayer
@@ -350,14 +356,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("recoilability");
-	list2.PushString("recoil ability");
-	list3.PushString("recoil_ability");
-	list4.PushString("recoil");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -416,22 +414,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iRecoilAbility = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iRecoilAbility, value, 0, 1);
-		g_esPlayer[admin].g_iRecoilEffect = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iRecoilEffect, value, 0, 7);
-		g_esPlayer[admin].g_iRecoilMessage = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iRecoilMessage, value, 0, 3);
-		g_esPlayer[admin].g_flRecoilChance = flGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esPlayer[admin].g_flRecoilChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flRecoilDuration = flGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esPlayer[admin].g_flRecoilDuration, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iRecoilHit = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esPlayer[admin].g_iRecoilHit, value, 0, 1);
-		g_esPlayer[admin].g_iRecoilHitMode = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esPlayer[admin].g_iRecoilHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flRecoilRange = flGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esPlayer[admin].g_flRecoilRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flRecoilRangeChance = flGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esPlayer[admin].g_flRecoilRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iRecoilAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iRecoilAbility, value, 0, 1);
+		g_esPlayer[admin].g_iRecoilEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iRecoilEffect, value, 0, 7);
+		g_esPlayer[admin].g_iRecoilMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iRecoilMessage, value, 0, 3);
+		g_esPlayer[admin].g_flRecoilChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esPlayer[admin].g_flRecoilChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flRecoilDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esPlayer[admin].g_flRecoilDuration, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iRecoilHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esPlayer[admin].g_iRecoilHit, value, 0, 1);
+		g_esPlayer[admin].g_iRecoilHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esPlayer[admin].g_iRecoilHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flRecoilRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esPlayer[admin].g_flRecoilRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esPlayer[admin].g_flRecoilRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "recoilability", false) || StrEqual(subsection, "recoil ability", false) || StrEqual(subsection, "recoil_ability", false) || StrEqual(subsection, "recoil", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -446,22 +444,22 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iRecoilAbility = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iRecoilAbility, value, 0, 1);
-		g_esAbility[type].g_iRecoilEffect = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iRecoilEffect, value, 0, 7);
-		g_esAbility[type].g_iRecoilMessage = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iRecoilMessage, value, 0, 3);
-		g_esAbility[type].g_flRecoilChance = flGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esAbility[type].g_flRecoilChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flRecoilDuration = flGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esAbility[type].g_flRecoilDuration, value, 0.1, 999999.0);
-		g_esAbility[type].g_iRecoilHit = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esAbility[type].g_iRecoilHit, value, 0, 1);
-		g_esAbility[type].g_iRecoilHitMode = iGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esAbility[type].g_iRecoilHitMode, value, 0, 2);
-		g_esAbility[type].g_flRecoilRange = flGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esAbility[type].g_flRecoilRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flRecoilRangeChance = flGetKeyValue(subsection, "recoilability", "recoil ability", "recoil_ability", "recoil", key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esAbility[type].g_flRecoilRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iRecoilAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iRecoilAbility, value, 0, 1);
+		g_esAbility[type].g_iRecoilEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iRecoilEffect, value, 0, 7);
+		g_esAbility[type].g_iRecoilMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iRecoilMessage, value, 0, 3);
+		g_esAbility[type].g_flRecoilChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilChance", "Recoil Chance", "Recoil_Chance", "chance", g_esAbility[type].g_flRecoilChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flRecoilDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilDuration", "Recoil Duration", "Recoil_Duration", "duration", g_esAbility[type].g_flRecoilDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_iRecoilHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilHit", "Recoil Hit", "Recoil_Hit", "hit", g_esAbility[type].g_iRecoilHit, value, 0, 1);
+		g_esAbility[type].g_iRecoilHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esAbility[type].g_iRecoilHitMode, value, 0, 2);
+		g_esAbility[type].g_flRecoilRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esAbility[type].g_flRecoilRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esAbility[type].g_flRecoilRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "recoilability", false) || StrEqual(subsection, "recoil ability", false) || StrEqual(subsection, "recoil_ability", false) || StrEqual(subsection, "recoil", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

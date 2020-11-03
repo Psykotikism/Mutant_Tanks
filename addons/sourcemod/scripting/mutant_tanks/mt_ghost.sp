@@ -53,6 +53,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_DEATH "npc/infected/action/die/male/death_42.wav"
 #define SOUND_DEATH2 "npc/infected/action/die/male/death_43.wav"
 
+#define MT_CONFIG_SECTION "ghostability"
+#define MT_CONFIG_SECTION2 "ghost ability"
+#define MT_CONFIG_SECTION3 "ghost_ability"
+#define MT_CONFIG_SECTION4 "ghost"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_GHOST "Ghost Ability"
 
 enum struct esPlayer
@@ -438,14 +444,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("ghostability");
-	list2.PushString("ghost ability");
-	list3.PushString("ghost_ability");
-	list4.PushString("ghost");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -522,31 +520,31 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPlayer[admin].g_iHumanDuration, value, 1, 999999);
-		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iGhostAbility = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iGhostAbility, value, 0, 3);
-		g_esPlayer[admin].g_iGhostEffect = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iGhostEffect, value, 0, 7);
-		g_esPlayer[admin].g_iGhostMessage = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iGhostMessage, value, 0, 7);
-		g_esPlayer[admin].g_flGhostChance = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", g_esPlayer[admin].g_flGhostChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iGhostFadeAlpha = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeAlpha", "Ghost Fade Alpha", "Ghost_Fade_Alpha", "fadealpha", g_esPlayer[admin].g_iGhostFadeAlpha, value, 0, 255);
-		g_esPlayer[admin].g_iGhostFadeDelay = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeDelay", "Ghost Fade Delay", "Ghost_Fade_Delay", "fadedelay", g_esPlayer[admin].g_iGhostFadeDelay, value, 1, 999999);
-		g_esPlayer[admin].g_iGhostFadeLimit = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeLimit", "Ghost Fade Limit", "Ghost_Fade_Limit", "fadelimit", g_esPlayer[admin].g_iGhostFadeLimit, value, 0, 255);
-		g_esPlayer[admin].g_flGhostFadeRate = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeRate", "Ghost Fade Rate", "Ghost_Fade_Rate", "faderate", g_esPlayer[admin].g_flGhostFadeRate, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iGhostHit = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostHit", "Ghost Hit", "Ghost_Hit", "hit", g_esPlayer[admin].g_iGhostHit, value, 0, 1);
-		g_esPlayer[admin].g_iGhostHitMode = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostHitMode", "Ghost Hit Mode", "Ghost_Hit_Mode", "hitmode", g_esPlayer[admin].g_iGhostHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flGhostRange = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostRange", "Ghost Range", "Ghost_Range", "range", g_esPlayer[admin].g_flGhostRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flGhostRangeChance = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostRangeChance", "Ghost Range Chance", "Ghost_Range_Chance", "rangechance", g_esPlayer[admin].g_flGhostRangeChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iGhostSpecials = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostSpecials", "Ghost Specials", "Ghost_Specials", "specials", g_esPlayer[admin].g_iGhostSpecials, value, 0, 1);
-		g_esPlayer[admin].g_flGhostSpecialsChance = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostSpecialsChance", "Ghost Specials Chance", "Ghost_Specials_Chance", "specialschance", g_esPlayer[admin].g_flGhostSpecialsChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flGhostSpecialsRange = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostSpecialsRange", "Ghost Specials Range", "Ghost_Specials_Range", "specialsrange", g_esPlayer[admin].g_flGhostSpecialsRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_iGhostWeaponSlots = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostWeaponSlots", "Ghost Weapon Slots", "Ghost_Weapon_Slots", "slots", g_esPlayer[admin].g_iGhostWeaponSlots, value, 0, 31);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esPlayer[admin].g_iHumanDuration, value, 1, 999999);
+		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iGhostAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iGhostAbility, value, 0, 3);
+		g_esPlayer[admin].g_iGhostEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iGhostEffect, value, 0, 7);
+		g_esPlayer[admin].g_iGhostMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iGhostMessage, value, 0, 7);
+		g_esPlayer[admin].g_flGhostChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", g_esPlayer[admin].g_flGhostChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iGhostFadeAlpha = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostFadeAlpha", "Ghost Fade Alpha", "Ghost_Fade_Alpha", "fadealpha", g_esPlayer[admin].g_iGhostFadeAlpha, value, 0, 255);
+		g_esPlayer[admin].g_iGhostFadeDelay = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostFadeDelay", "Ghost Fade Delay", "Ghost_Fade_Delay", "fadedelay", g_esPlayer[admin].g_iGhostFadeDelay, value, 1, 999999);
+		g_esPlayer[admin].g_iGhostFadeLimit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostFadeLimit", "Ghost Fade Limit", "Ghost_Fade_Limit", "fadelimit", g_esPlayer[admin].g_iGhostFadeLimit, value, 0, 255);
+		g_esPlayer[admin].g_flGhostFadeRate = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostFadeRate", "Ghost Fade Rate", "Ghost_Fade_Rate", "faderate", g_esPlayer[admin].g_flGhostFadeRate, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iGhostHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostHit", "Ghost Hit", "Ghost_Hit", "hit", g_esPlayer[admin].g_iGhostHit, value, 0, 1);
+		g_esPlayer[admin].g_iGhostHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostHitMode", "Ghost Hit Mode", "Ghost_Hit_Mode", "hitmode", g_esPlayer[admin].g_iGhostHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flGhostRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostRange", "Ghost Range", "Ghost_Range", "range", g_esPlayer[admin].g_flGhostRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flGhostRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostRangeChance", "Ghost Range Chance", "Ghost_Range_Chance", "rangechance", g_esPlayer[admin].g_flGhostRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iGhostSpecials = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostSpecials", "Ghost Specials", "Ghost_Specials", "specials", g_esPlayer[admin].g_iGhostSpecials, value, 0, 1);
+		g_esPlayer[admin].g_flGhostSpecialsChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostSpecialsChance", "Ghost Specials Chance", "Ghost_Specials_Chance", "specialschance", g_esPlayer[admin].g_flGhostSpecialsChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flGhostSpecialsRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostSpecialsRange", "Ghost Specials Range", "Ghost_Specials_Range", "specialsrange", g_esPlayer[admin].g_flGhostSpecialsRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iGhostWeaponSlots = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostWeaponSlots", "Ghost Weapon Slots", "Ghost_Weapon_Slots", "slots", g_esPlayer[admin].g_iGhostWeaponSlots, value, 0, 31);
 
-		if (StrEqual(subsection, "ghostability", false) || StrEqual(subsection, "ghost ability", false) || StrEqual(subsection, "ghost_ability", false) || StrEqual(subsection, "ghost", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -561,31 +559,31 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iHumanDuration = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_iHumanDuration, value, 1, 999999);
-		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iGhostAbility = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iGhostAbility, value, 0, 3);
-		g_esAbility[type].g_iGhostEffect = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iGhostEffect, value, 0, 7);
-		g_esAbility[type].g_iGhostMessage = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iGhostMessage, value, 0, 7);
-		g_esAbility[type].g_flGhostChance = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", g_esAbility[type].g_flGhostChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iGhostFadeAlpha = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeAlpha", "Ghost Fade Alpha", "Ghost_Fade_Alpha", "fadealpha", g_esAbility[type].g_iGhostFadeAlpha, value, 0, 255);
-		g_esAbility[type].g_iGhostFadeDelay = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeDelay", "Ghost Fade Delay", "Ghost_Fade_Delay", "fadedelay", g_esAbility[type].g_iGhostFadeDelay, value, 1, 999999);
-		g_esAbility[type].g_iGhostFadeLimit = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeLimit", "Ghost Fade Limit", "Ghost_Fade_Limit", "fadelimit", g_esAbility[type].g_iGhostFadeLimit, value, 0, 255);
-		g_esAbility[type].g_flGhostFadeRate = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostFadeRate", "Ghost Fade Rate", "Ghost_Fade_Rate", "faderate", g_esAbility[type].g_flGhostFadeRate, value, 0.1, 999999.0);
-		g_esAbility[type].g_iGhostHit = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostHit", "Ghost Hit", "Ghost_Hit", "hit", g_esAbility[type].g_iGhostHit, value, 0, 1);
-		g_esAbility[type].g_iGhostHitMode = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostHitMode", "Ghost Hit Mode", "Ghost_Hit_Mode", "hitmode", g_esAbility[type].g_iGhostHitMode, value, 0, 2);
-		g_esAbility[type].g_flGhostRange = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostRange", "Ghost Range", "Ghost_Range", "range", g_esAbility[type].g_flGhostRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flGhostRangeChance = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostRangeChance", "Ghost Range Chance", "Ghost_Range_Chance", "rangechance", g_esAbility[type].g_flGhostRangeChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iGhostSpecials = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostSpecials", "Ghost Specials", "Ghost_Specials", "specials", g_esAbility[type].g_iGhostSpecials, value, 0, 1);
-		g_esAbility[type].g_flGhostSpecialsChance = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostSpecialsChance", "Ghost Specials Chance", "Ghost_Specials_Chance", "specialschance", g_esAbility[type].g_flGhostSpecialsChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flGhostSpecialsRange = flGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostSpecialsRange", "Ghost Specials Range", "Ghost_Specials_Range", "specialsrange", g_esAbility[type].g_flGhostSpecialsRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_iGhostWeaponSlots = iGetKeyValue(subsection, "ghostability", "ghost ability", "ghost_ability", "ghost", key, "GhostWeaponSlots", "Ghost Weapon Slots", "Ghost_Weapon_Slots", "slots", g_esAbility[type].g_iGhostWeaponSlots, value, 0, 31);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esAbility[type].g_iHumanDuration, value, 1, 999999);
+		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iGhostAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iGhostAbility, value, 0, 3);
+		g_esAbility[type].g_iGhostEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iGhostEffect, value, 0, 7);
+		g_esAbility[type].g_iGhostMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iGhostMessage, value, 0, 7);
+		g_esAbility[type].g_flGhostChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostChance", "Ghost Chance", "Ghost_Chance", "chance", g_esAbility[type].g_flGhostChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iGhostFadeAlpha = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostFadeAlpha", "Ghost Fade Alpha", "Ghost_Fade_Alpha", "fadealpha", g_esAbility[type].g_iGhostFadeAlpha, value, 0, 255);
+		g_esAbility[type].g_iGhostFadeDelay = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostFadeDelay", "Ghost Fade Delay", "Ghost_Fade_Delay", "fadedelay", g_esAbility[type].g_iGhostFadeDelay, value, 1, 999999);
+		g_esAbility[type].g_iGhostFadeLimit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostFadeLimit", "Ghost Fade Limit", "Ghost_Fade_Limit", "fadelimit", g_esAbility[type].g_iGhostFadeLimit, value, 0, 255);
+		g_esAbility[type].g_flGhostFadeRate = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostFadeRate", "Ghost Fade Rate", "Ghost_Fade_Rate", "faderate", g_esAbility[type].g_flGhostFadeRate, value, 0.1, 999999.0);
+		g_esAbility[type].g_iGhostHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostHit", "Ghost Hit", "Ghost_Hit", "hit", g_esAbility[type].g_iGhostHit, value, 0, 1);
+		g_esAbility[type].g_iGhostHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostHitMode", "Ghost Hit Mode", "Ghost_Hit_Mode", "hitmode", g_esAbility[type].g_iGhostHitMode, value, 0, 2);
+		g_esAbility[type].g_flGhostRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostRange", "Ghost Range", "Ghost_Range", "range", g_esAbility[type].g_flGhostRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flGhostRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostRangeChance", "Ghost Range Chance", "Ghost_Range_Chance", "rangechance", g_esAbility[type].g_flGhostRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iGhostSpecials = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostSpecials", "Ghost Specials", "Ghost_Specials", "specials", g_esAbility[type].g_iGhostSpecials, value, 0, 1);
+		g_esAbility[type].g_flGhostSpecialsChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostSpecialsChance", "Ghost Specials Chance", "Ghost_Specials_Chance", "specialschance", g_esAbility[type].g_flGhostSpecialsChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flGhostSpecialsRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostSpecialsRange", "Ghost Specials Range", "Ghost_Specials_Range", "specialsrange", g_esAbility[type].g_flGhostSpecialsRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_iGhostWeaponSlots = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "GhostWeaponSlots", "Ghost Weapon Slots", "Ghost_Weapon_Slots", "slots", g_esAbility[type].g_iGhostWeaponSlots, value, 0, 31);
 
-		if (StrEqual(subsection, "ghostability", false) || StrEqual(subsection, "ghost ability", false) || StrEqual(subsection, "ghost_ability", false) || StrEqual(subsection, "ghost", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

@@ -43,6 +43,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "hypnoability"
+#define MT_CONFIG_SECTION2 "hypno ability"
+#define MT_CONFIG_SECTION3 "hypno_ability"
+#define MT_CONFIG_SECTION4 "hypno"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_HYPNO "Hypno Ability"
 
 enum struct esPlayer
@@ -394,14 +400,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("hypnoability");
-	list2.PushString("hypno ability");
-	list3.PushString("hypno_ability");
-	list4.PushString("hypno");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -470,27 +468,27 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iHypnoAbility = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iHypnoAbility, value, 0, 1);
-		g_esPlayer[admin].g_iHypnoEffect = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iHypnoEffect, value, 0, 7);
-		g_esPlayer[admin].g_iHypnoMessage = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iHypnoMessage, value, 0, 3);
-		g_esPlayer[admin].g_flHypnoBulletDivisor = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esPlayer[admin].g_flHypnoBulletDivisor, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flHypnoChance = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esPlayer[admin].g_flHypnoChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_flHypnoDuration = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoDuration", "Hypno Duration", "Hypno_Duration", "duration", g_esPlayer[admin].g_flHypnoDuration, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esPlayer[admin].g_flHypnoExplosiveDivisor, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flHypnoFireDivisor = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esPlayer[admin].g_flHypnoFireDivisor, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iHypnoHit = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoHit", "Hypno Hit", "Hypno_Hit", "hit", g_esPlayer[admin].g_iHypnoHit, value, 0, 1);
-		g_esPlayer[admin].g_iHypnoHitMode = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoHitMode", "Hypno Hit Mode", "Hypno_Hit_Mode", "hitmode", g_esPlayer[admin].g_iHypnoHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flHypnoMeleeDivisor = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoMeleeDivisor", "Hypno Melee Divisor", "Hypno_Melee_Divisor", "melee", g_esPlayer[admin].g_flHypnoMeleeDivisor, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_iHypnoMode = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esPlayer[admin].g_iHypnoMode, value, 0, 1);
-		g_esPlayer[admin].g_flHypnoRange = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esPlayer[admin].g_flHypnoRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flHypnoRangeChance = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esPlayer[admin].g_flHypnoRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iHypnoAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iHypnoAbility, value, 0, 1);
+		g_esPlayer[admin].g_iHypnoEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iHypnoEffect, value, 0, 7);
+		g_esPlayer[admin].g_iHypnoMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iHypnoMessage, value, 0, 3);
+		g_esPlayer[admin].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esPlayer[admin].g_flHypnoBulletDivisor, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flHypnoChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esPlayer[admin].g_flHypnoChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flHypnoDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoDuration", "Hypno Duration", "Hypno_Duration", "duration", g_esPlayer[admin].g_flHypnoDuration, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esPlayer[admin].g_flHypnoExplosiveDivisor, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flHypnoFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esPlayer[admin].g_flHypnoFireDivisor, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iHypnoHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoHit", "Hypno Hit", "Hypno_Hit", "hit", g_esPlayer[admin].g_iHypnoHit, value, 0, 1);
+		g_esPlayer[admin].g_iHypnoHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoHitMode", "Hypno Hit Mode", "Hypno_Hit_Mode", "hitmode", g_esPlayer[admin].g_iHypnoHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flHypnoMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoMeleeDivisor", "Hypno Melee Divisor", "Hypno_Melee_Divisor", "melee", g_esPlayer[admin].g_flHypnoMeleeDivisor, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iHypnoMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esPlayer[admin].g_iHypnoMode, value, 0, 1);
+		g_esPlayer[admin].g_flHypnoRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esPlayer[admin].g_flHypnoRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flHypnoRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esPlayer[admin].g_flHypnoRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "hypnoability", false) || StrEqual(subsection, "hypno ability", false) || StrEqual(subsection, "hypno_ability", false) || StrEqual(subsection, "hypno", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -505,27 +503,27 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iHypnoAbility = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iHypnoAbility, value, 0, 1);
-		g_esAbility[type].g_iHypnoEffect = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iHypnoEffect, value, 0, 7);
-		g_esAbility[type].g_iHypnoMessage = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iHypnoMessage, value, 0, 3);
-		g_esAbility[type].g_flHypnoBulletDivisor = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esAbility[type].g_flHypnoBulletDivisor, value, 0.1, 999999.0);
-		g_esAbility[type].g_flHypnoChance = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esAbility[type].g_flHypnoChance, value, 0.0, 100.0);
-		g_esAbility[type].g_flHypnoDuration = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoDuration", "Hypno Duration", "Hypno_Duration", "duration", g_esAbility[type].g_flHypnoDuration, value, 0.1, 999999.0);
-		g_esAbility[type].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esAbility[type].g_flHypnoExplosiveDivisor, value, 0.1, 999999.0);
-		g_esAbility[type].g_flHypnoFireDivisor = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esAbility[type].g_flHypnoFireDivisor, value, 0.1, 999999.0);
-		g_esAbility[type].g_iHypnoHit = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoHit", "Hypno Hit", "Hypno_Hit", "hit", g_esAbility[type].g_iHypnoHit, value, 0, 1);
-		g_esAbility[type].g_iHypnoHitMode = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoHitMode", "Hypno Hit Mode", "Hypno_Hit_Mode", "hitmode", g_esAbility[type].g_iHypnoHitMode, value, 0, 2);
-		g_esAbility[type].g_flHypnoMeleeDivisor = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoMeleeDivisor", "Hypno Melee Divisor", "Hypno_Melee_Divisor", "melee", g_esAbility[type].g_flHypnoMeleeDivisor, value, 0.1, 999999.0);
-		g_esAbility[type].g_iHypnoMode = iGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esAbility[type].g_iHypnoMode, value, 0, 1);
-		g_esAbility[type].g_flHypnoRange = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esAbility[type].g_flHypnoRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flHypnoRangeChance = flGetKeyValue(subsection, "hypnoability", "hypno ability", "hypno_ability", "hypno", key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esAbility[type].g_flHypnoRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iHypnoAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iHypnoAbility, value, 0, 1);
+		g_esAbility[type].g_iHypnoEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iHypnoEffect, value, 0, 7);
+		g_esAbility[type].g_iHypnoMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iHypnoMessage, value, 0, 3);
+		g_esAbility[type].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esAbility[type].g_flHypnoBulletDivisor, value, 0.1, 999999.0);
+		g_esAbility[type].g_flHypnoChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esAbility[type].g_flHypnoChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flHypnoDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoDuration", "Hypno Duration", "Hypno_Duration", "duration", g_esAbility[type].g_flHypnoDuration, value, 0.1, 999999.0);
+		g_esAbility[type].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esAbility[type].g_flHypnoExplosiveDivisor, value, 0.1, 999999.0);
+		g_esAbility[type].g_flHypnoFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esAbility[type].g_flHypnoFireDivisor, value, 0.1, 999999.0);
+		g_esAbility[type].g_iHypnoHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoHit", "Hypno Hit", "Hypno_Hit", "hit", g_esAbility[type].g_iHypnoHit, value, 0, 1);
+		g_esAbility[type].g_iHypnoHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoHitMode", "Hypno Hit Mode", "Hypno_Hit_Mode", "hitmode", g_esAbility[type].g_iHypnoHitMode, value, 0, 2);
+		g_esAbility[type].g_flHypnoMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoMeleeDivisor", "Hypno Melee Divisor", "Hypno_Melee_Divisor", "melee", g_esAbility[type].g_flHypnoMeleeDivisor, value, 0.1, 999999.0);
+		g_esAbility[type].g_iHypnoMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esAbility[type].g_iHypnoMode, value, 0, 1);
+		g_esAbility[type].g_flHypnoRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esAbility[type].g_flHypnoRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flHypnoRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esAbility[type].g_flHypnoRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "hypnoability", false) || StrEqual(subsection, "hypno ability", false) || StrEqual(subsection, "hypno_ability", false) || StrEqual(subsection, "hypno", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

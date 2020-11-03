@@ -44,6 +44,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "idleability"
+#define MT_CONFIG_SECTION2 "idle ability"
+#define MT_CONFIG_SECTION3 "idle_ability"
+#define MT_CONFIG_SECTION4 "idle"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_IDLE "Idle Ability"
 
 enum struct esGeneral
@@ -467,14 +473,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("idleability");
-	list2.PushString("idle ability");
-	list3.PushString("idle_ability");
-	list4.PushString("idle");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -531,21 +529,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iIdleAbility = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iIdleAbility, value, 0, 1);
-		g_esPlayer[admin].g_iIdleEffect = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iIdleEffect, value, 0, 7);
-		g_esPlayer[admin].g_iIdleMessage = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iIdleMessage, value, 0, 3);
-		g_esPlayer[admin].g_flIdleChance = flGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esPlayer[admin].g_flIdleChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iIdleHit = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esPlayer[admin].g_iIdleHit, value, 0, 1);
-		g_esPlayer[admin].g_iIdleHitMode = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleHitMode", "Idle Hit Mode", "Idle_Hit_Mode", "hitmode", g_esPlayer[admin].g_iIdleHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flIdleRange = flGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esPlayer[admin].g_flIdleRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flIdleRangeChance = flGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esPlayer[admin].g_flIdleRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iIdleAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iIdleAbility, value, 0, 1);
+		g_esPlayer[admin].g_iIdleEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iIdleEffect, value, 0, 7);
+		g_esPlayer[admin].g_iIdleMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iIdleMessage, value, 0, 3);
+		g_esPlayer[admin].g_flIdleChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esPlayer[admin].g_flIdleChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iIdleHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esPlayer[admin].g_iIdleHit, value, 0, 1);
+		g_esPlayer[admin].g_iIdleHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "IdleHitMode", "Idle Hit Mode", "Idle_Hit_Mode", "hitmode", g_esPlayer[admin].g_iIdleHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flIdleRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esPlayer[admin].g_flIdleRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flIdleRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esPlayer[admin].g_flIdleRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "idleability", false) || StrEqual(subsection, "idle ability", false) || StrEqual(subsection, "idle_ability", false) || StrEqual(subsection, "idle", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -560,21 +558,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iIdleAbility = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iIdleAbility, value, 0, 1);
-		g_esAbility[type].g_iIdleEffect = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iIdleEffect, value, 0, 7);
-		g_esAbility[type].g_iIdleMessage = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iIdleMessage, value, 0, 3);
-		g_esAbility[type].g_flIdleChance = flGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esAbility[type].g_flIdleChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iIdleHit = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esAbility[type].g_iIdleHit, value, 0, 1);
-		g_esAbility[type].g_iIdleHitMode = iGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleHitMode", "Idle Hit Mode", "Idle_Hit_Mode", "hitmode", g_esAbility[type].g_iIdleHitMode, value, 0, 2);
-		g_esAbility[type].g_flIdleRange = flGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esAbility[type].g_flIdleRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flIdleRangeChance = flGetKeyValue(subsection, "idleability", "idle ability", "idle_ability", "idle", key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esAbility[type].g_flIdleRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iIdleAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iIdleAbility, value, 0, 1);
+		g_esAbility[type].g_iIdleEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iIdleEffect, value, 0, 7);
+		g_esAbility[type].g_iIdleMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iIdleMessage, value, 0, 3);
+		g_esAbility[type].g_flIdleChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "IdleChance", "Idle Chance", "Idle_Chance", "chance", g_esAbility[type].g_flIdleChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iIdleHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "IdleHit", "Idle Hit", "Idle_Hit", "hit", g_esAbility[type].g_iIdleHit, value, 0, 1);
+		g_esAbility[type].g_iIdleHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "IdleHitMode", "Idle Hit Mode", "Idle_Hit_Mode", "hitmode", g_esAbility[type].g_iIdleHitMode, value, 0, 2);
+		g_esAbility[type].g_flIdleRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "IdleRange", "Idle Range", "Idle_Range", "range", g_esAbility[type].g_flIdleRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flIdleRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "IdleRangeChance", "Idle Range Chance", "Idle_Range_Chance", "rangechance", g_esAbility[type].g_flIdleRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "idleability", false) || StrEqual(subsection, "idle ability", false) || StrEqual(subsection, "idle_ability", false) || StrEqual(subsection, "idle", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{

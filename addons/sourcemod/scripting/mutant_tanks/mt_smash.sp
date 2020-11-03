@@ -50,6 +50,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_SMASH2 "player/charger/hit/charger_smash_02.wav" // Only available in L4D2
 #define SOUND_SMASH1 "player/tank/hit/hulk_punch_1.wav"
 
+#define MT_CONFIG_SECTION "smashability"
+#define MT_CONFIG_SECTION2 "smash ability"
+#define MT_CONFIG_SECTION3 "smash_ability"
+#define MT_CONFIG_SECTION4 "smash"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_SMASH "Smash Ability"
 
 enum struct esPlayer
@@ -357,14 +363,6 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
-{
-	list.PushString("smashability");
-	list2.PushString("smash ability");
-	list3.PushString("smash_ability");
-	list4.PushString("smash");
-}
-
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -421,21 +419,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
-		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
-		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
-		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
-		g_esPlayer[admin].g_iSmashAbility = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iSmashAbility, value, 0, 1);
-		g_esPlayer[admin].g_iSmashEffect = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iSmashEffect, value, 0, 7);
-		g_esPlayer[admin].g_iSmashMessage = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSmashMessage, value, 0, 3);
-		g_esPlayer[admin].g_flSmashChance = flGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashChance", "Smash Chance", "Smash_Chance", "chance", g_esPlayer[admin].g_flSmashChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iSmashHit = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashHit", "Smash Hit", "Smash_Hit", "hit", g_esPlayer[admin].g_iSmashHit, value, 0, 1);
-		g_esPlayer[admin].g_iSmashHitMode = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashHitMode", "Smash Hit Mode", "Smash_Hit_Mode", "hitmode", g_esPlayer[admin].g_iSmashHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flSmashRange = flGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashRange", "Smash Range", "Smash_Range", "range", g_esPlayer[admin].g_flSmashRange, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_flSmashRangeChance = flGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashRangeChance", "Smash Range Chance", "Smash_Range_Chance", "rangechance", g_esPlayer[admin].g_flSmashRangeChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esPlayer[admin].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_iOpenAreasOnly, value, 0, 1);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iSmashAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iSmashAbility, value, 0, 1);
+		g_esPlayer[admin].g_iSmashEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iSmashEffect, value, 0, 7);
+		g_esPlayer[admin].g_iSmashMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSmashMessage, value, 0, 3);
+		g_esPlayer[admin].g_flSmashChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashChance", "Smash Chance", "Smash_Chance", "chance", g_esPlayer[admin].g_flSmashChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iSmashHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashHit", "Smash Hit", "Smash_Hit", "hit", g_esPlayer[admin].g_iSmashHit, value, 0, 1);
+		g_esPlayer[admin].g_iSmashHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashHitMode", "Smash Hit Mode", "Smash_Hit_Mode", "hitmode", g_esPlayer[admin].g_iSmashHitMode, value, 0, 2);
+		g_esPlayer[admin].g_flSmashRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashRange", "Smash Range", "Smash_Range", "range", g_esPlayer[admin].g_flSmashRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flSmashRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashRangeChance", "Smash Range Chance", "Smash_Range_Chance", "rangechance", g_esPlayer[admin].g_flSmashRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "smashability", false) || StrEqual(subsection, "smash ability", false) || StrEqual(subsection, "smash_ability", false) || StrEqual(subsection, "smash", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -450,21 +448,21 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
-		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
-		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
-		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
-		g_esAbility[type].g_iSmashAbility = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iSmashAbility, value, 0, 1);
-		g_esAbility[type].g_iSmashEffect = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iSmashEffect, value, 0, 7);
-		g_esAbility[type].g_iSmashMessage = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSmashMessage, value, 0, 3);
-		g_esAbility[type].g_flSmashChance = flGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashChance", "Smash Chance", "Smash_Chance", "chance", g_esAbility[type].g_flSmashChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iSmashHit = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashHit", "Smash Hit", "Smash_Hit", "hit", g_esAbility[type].g_iSmashHit, value, 0, 1);
-		g_esAbility[type].g_iSmashHitMode = iGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashHitMode", "Smash Hit Mode", "Smash_Hit_Mode", "hitmode", g_esAbility[type].g_iSmashHitMode, value, 0, 2);
-		g_esAbility[type].g_flSmashRange = flGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashRange", "Smash Range", "Smash_Range", "range", g_esAbility[type].g_flSmashRange, value, 1.0, 999999.0);
-		g_esAbility[type].g_flSmashRangeChance = flGetKeyValue(subsection, "smashability", "smash ability", "smash_ability", "smash", key, "SmashRangeChance", "Smash Range Chance", "Smash_Range_Chance", "rangechance", g_esAbility[type].g_flSmashRangeChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esAbility[type].g_iOpenAreasOnly = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_iOpenAreasOnly, value, 0, 1);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iSmashAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iSmashAbility, value, 0, 1);
+		g_esAbility[type].g_iSmashEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iSmashEffect, value, 0, 7);
+		g_esAbility[type].g_iSmashMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSmashMessage, value, 0, 3);
+		g_esAbility[type].g_flSmashChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashChance", "Smash Chance", "Smash_Chance", "chance", g_esAbility[type].g_flSmashChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iSmashHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashHit", "Smash Hit", "Smash_Hit", "hit", g_esAbility[type].g_iSmashHit, value, 0, 1);
+		g_esAbility[type].g_iSmashHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashHitMode", "Smash Hit Mode", "Smash_Hit_Mode", "hitmode", g_esAbility[type].g_iSmashHitMode, value, 0, 2);
+		g_esAbility[type].g_flSmashRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashRange", "Smash Range", "Smash_Range", "range", g_esAbility[type].g_flSmashRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_flSmashRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashRangeChance", "Smash Range Chance", "Smash_Range_Chance", "rangechance", g_esAbility[type].g_flSmashRangeChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "smashability", false) || StrEqual(subsection, "smash ability", false) || StrEqual(subsection, "smash_ability", false) || StrEqual(subsection, "smash", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
