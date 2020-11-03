@@ -48,6 +48,7 @@ Bug fixes:
 42. Fixed some messages for all abilities appearing when their `Human Mode` settings are set to `1`.
 43. Fixed all abilities not resetting when the Tank is passed between two players.
 44. Fixed the `Heal` and `Track` abilities not applying/resetting glow outlines properly.
+45. Fixed the `Detect Plugins` setting not working when zero abilities are installed.
 
 Changes:
 
@@ -107,7 +108,10 @@ Changes:
 - `Glow Type`
 50. Added the `Shield Glow` setting for the `Shield` ability.
 51. Added the `Track Glow` setting for the `Track` ability.
-52. Updated all natives to have self-contained validity checks.
+52. Added sound effects for the `Nullify` and `Ultimate` abilities.
+53. Added sound effects for bullet and melee immunities.
+54. Removed the `MT_OnAbilityCheck` forward.
+55. Updated all natives to have self-contained validity checks.
 
 Files:
 

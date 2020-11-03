@@ -4,8 +4,8 @@
 > Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
-- Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 31-32 and recompile at your own risk.)
-- Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 30 and recompile at your own risk.)
+- Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 32-33 and recompile at your own risk.)
+- Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 31 and recompile at your own risk.)
 - Ability count: 76 (Suggest more if you want; limit is 100.)
 
 ## Sections
@@ -6079,8 +6079,8 @@
 			// --
 			// Example: "rifle_m60,pistol,adrenaline,defibrillator"
 			// Example: "katana,pain_pills,vomitjar"
-			// Example: "firmt_aid_kit,defibrillator,knife,adrenaline"
-			"Item Loadout"				"rifle,pistol,firmt_aid_kit,pain_pills"
+			// Example: "first_aid_kit,defibrillator,knife,adrenaline"
+			"Item Loadout"				"rifle,pistol,first_aid_kit,pain_pills"
 
 			// The mode of the Mutant Tank's item ability.
 			// Note: This setting can be overridden for specific players.
@@ -8989,7 +8989,7 @@
 			// --
 			// Example: "smg_silenced,pistol,adrenaline,defibrillator"
 			// Example: "katana,pain_pills,vomitjar"
-			// Example: "firmt_aid_kit,defibrillator,knife,adrenaline"
+			// Example: "first_aid_kit,defibrillator,knife,adrenaline"
 			"Restart Loadout"			"smg,pistol,pain_pills"
 
 			// The mode of the Mutant Tank's restart ability.
