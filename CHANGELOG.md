@@ -4,323 +4,327 @@
 
 ### Bug fixes
 
-#### Core Plugin
-1. Fixed the core plugin creating log files even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
-2. Fixed the core plugin skipping some waves. (Thanks to Tank Rush for testing and reporting!)
-3. Fixed the core plugin's glow outline not going away when Tanks are kicked.
-4. Fixed the Tank wave spawner not respecting the limits set by the `Regular Amount`, `Finale Amount`, and `Finale Waves` settings.
-5. Fixed some admin commands using the wrong access flags.
-6. Fixed parenting problems with some entities.
-7. Fixed Tanks in ghost or stasis mode having props.
-8. Fixed the log messages causing errors for some server messages.
-9. Fixed the Tank's primary attack being blocked by the friendly-fire check.
-10. Fixed the thirdperson check not working properly.
-11. Fixed the `Transformation` feature disabling itself after the first transformation ends.
+- Core Plugin
+	- Fixed the core plugin creating log files even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
+	- Fixed the core plugin skipping some waves. (Thanks to Tank Rush for testing and reporting!)
+	- Fixed the core plugin's glow outline not going away when Tanks are kicked.
+	- Fixed the Tank wave spawner not respecting the limits set by the `Regular Amount`, `Finale Amount`, and `Finale Waves` settings.
+	- Fixed some admin commands using the wrong access flags.
+	- Fixed parenting problems with some entities.
+	- Fixed Tanks in ghost or stasis mode having props.
+	- Fixed the log messages causing errors for some server messages.
+	- Fixed the Tank's primary attack being blocked by the friendly-fire check.
+	- Fixed the thirdperson check not working properly.
+	- Fixed the `Transformation` feature disabling itself after the first transformation ends.
 
-#### Config Files
-1. Fixed some of the default Mutant Tanks that use the `Boss` and `Transformation` features turning into the wrong Mutant Tank types.
+- Config Files
+	- Fixed some of the default Mutant Tanks that use the `Boss` and `Transformation` features turning into the wrong Mutant Tank types.
 
-#### Settings
-1. Fixed the `Requires Humans` setting not working in some config formats.
-2. Fixed the `Requires Humans` setting not working when the core plugin is deciding which Mutant Tank type to spawn.
-3. Fixed settings not having their values stored properly.
-4. Fixed color-related settings from not picking random colors when set to `-1`.
-5. Fixed the `Light Color` setting not working.
-6. Fixed the `Regular Amount` setting being used on finale maps when the finale has not started.
-7. Fixed the `Detect Plugins` setting not working when zero abilities are installed.
+- Settings
+	- Fixed the `Requires Humans` setting not working in some config formats.
+	- Fixed the `Requires Humans` setting not working when the core plugin is deciding which Mutant Tank type to spawn.
+	- Fixed settings not having their values stored properly.
+	- Fixed color-related settings from not picking random colors when set to `-1`.
+	- Fixed the `Light Color` setting not working.
+	- Fixed the `Regular Amount` setting being used on finale maps when the finale has not started.
+	- Fixed the `Detect Plugins` setting not working when zero abilities are installed.
 
-#### Translations
-1. Fixed global chat messages not being translated. (Thanks to Mi.Cura for testing and reporting!)
-2. Fixed some phrases not being translated for other languages.
+- Translations
+	- Fixed global chat messages not being translated. (Thanks to Mi.Cura for testing and reporting!)
+	- Fixed some phrases not being translated for other languages.
 
-#### Natives & Forwards
-1. Fixed the `MT_GetPropColors` native not returning the right color for the light prop.
-2. Fixed the `MT_SetTankType` native not reverting changes properly in some scenarios. (Thanks to Mi.Cura for testing and reporting!)
+- Natives & Forwards
+	- Fixed the `MT_GetPropColors` native not returning the right color for the light prop.
+	- Fixed the `MT_SetTankType` native not reverting changes properly in some scenarios. (Thanks to Mi.Cura for testing and reporting!)
 
-#### Abilities
-1. Fixed some abilities calling `DispatchSpawn` on entities before teleporting them.
-2. Fixed Tanks not activating their passive abilities after exiting idle mode.
-3. Fixed some abilities' damage settings not working properly.
-4. Fixed some messages for all abilities appearing when their `Human Mode` settings are set to `1`.
-5. Fixed all abilities not resetting when the Tank is passed between two players.
-6. Fixed some settings of multiple abilities having the wrong limits.
+- Abilities
+	- Fixed some abilities calling `DispatchSpawn` on entities before teleporting them.
+	- Fixed Tanks not activating their passive abilities after exiting idle mode.
+	- Fixed some abilities' damage settings not working properly.
+	- Fixed some messages for all abilities appearing when their `Human Mode` settings are set to `1`.
+	- Fixed all abilities not resetting when the Tank is passed between two players.
+	- Fixed some settings of multiple abilities having the wrong limits.
 
-##### Blind
-1. Fixed the `Blind` ability being enabled by default. (Thanks to Mi.Cura and Tank Rush for reporting!)
-2. Fixed sound effect not playing in L4D1.
+	##### Blind
+	- Fixed the ability being enabled by default. (Thanks to Mi.Cura and Tank Rush for reporting!)
+	- Fixed the sound effect not playing in L4D1.
 
-##### Bomb
-1. Fixed sound effect not playing in L4D1.
+	##### Bomb
+	- Fixed the sound effect not playing in L4D1.
 
-##### Bury
-1. Fixed the `Bury` ability sometimes leaving players under the map. (Thanks to Mi.Cura for testing and reporting!)
+	##### Bury
+	- Fixed the ability sometimes leaving players under the map. (Thanks to Mi.Cura for testing and reporting!)
 
-##### Clone
-1. Fixed clones created by the `Clone` ability being detected by the `Finale Amount` and `Finale Waves` settings.
-2. Fixed the `Clone` ability not being optional.
+	##### Clone
+	- Fixed clones being detected by the `Finale Amount` and `Finale Waves` settings.
+	- Fixed the ability not being optional.
 
-##### Drug
-1. Fixed the `Drug` ability not requiring human survivors to be present by default.
+	##### Drug
+	- Fixed the ability not requiring human survivors to be present by default.
 
-##### Drunk
-1. Fixed the `Drunk` ability requiring human survivors to be present by default.
+	##### Drunk
+	- Fixed the ability requiring human survivors to be present by default.
 
-##### Drop
-1. Fixed the `Drop Weapon Name` setting not reading weapon names properly. (Thanks to Tank Rush and moekai for testing and reporting!)
+	##### Drop
+	- Fixed the `Drop Weapon Name` setting not reading weapon names properly. (Thanks to Tank Rush and moekai for testing and reporting!)
 
-##### Electric
-1. Fixed the `Eletric` ability not working sometimes. (Thanks to Tank Rush and Mi.Cura for testing and reporting!)
+	##### Electric
+	- Fixed the ability not working sometimes. (Thanks to Tank Rush and Mi.Cura for testing and reporting!)
 
-##### Fire
-1. Fixed sound effect not playing in L4D1.
+	##### Fire
+	- Fixed the sound effect not playing in L4D1.
 
-##### Heal
-1. Fixed the `Heal` ability's glow outline not going away when Tanks die.
-2. Fixed the `Heal` ability not applying/resetting glow outlines properly.
+	##### Heal
+	- Fixed the glow outline not going away when Tanks die.
+	- Fixed the ability not applying/resetting glow outlines properly.
 
-##### Hit
-1. Fixed some of the `Hit` ability's settings not working in some config formats.
+	##### Hit
+	- Fixed some of the settings not working in some config formats.
 
-##### Omni
-1. Fixed the `Omni` ability not tracking type changes properly. (Thanks to Mi.Cura for testing and reporting!)
+	##### Omni
+	- Fixed the ability not tracking type changes properly. (Thanks to Mi.Cura for testing and reporting!)
 
-##### Respawn
-1. Fixed the `Respawn` ability not respawning the Tank consistently. (Thanks to epz for the method!)
+	##### Respawn
+	- Fixed the ability not respawning the Tank consistently. (Thanks to epz for the method!)
 
-##### Rock
-1. Fixed the `Rock` ability's rocks colliding with each other and producing lag.
+	##### Rock
+	- Fixed the rocks colliding with each other and producing lag.
 
-##### Shake
-1. Fixed one of the `Shake` ability's messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
+	##### Shake
+	- Fixed one of the messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
 
-##### Spam
-1. Fixed the `Spam` ability's rocks colliding with each other and producing lag.
+	##### Spam
+	- Fixed the rocks colliding with each other and producing lag.
 
-##### Splatter
-1. Fixed the `Splatter` ability's `Splatter Type` setting using the wrong value limit. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	##### Splatter
+	- Fixed the `Splatter Type` setting using the wrong value limit. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
-##### Track
-1. Fixed the `Track` ability's glow outline not going away when rocks break.
-2. Fixed the `Track` ability not applying/resetting glow outlines properly.
+	##### Track
+	- Fixed the glow outline not going away when rocks break.
+	- Fixed the ability not applying/resetting glow outlines properly.
 
-##### Witch
-1. Fixed the `Witch` ability spamming messages.
+	##### Witch
+	- Fixed the ability spamming messages.
 
-##### Vampire
-1. Fixed the `Vampire` ability not checking admin immunity properly.
+	##### Vampire
+	- Fixed the ability not checking admin immunity properly.
 
-##### Yell
-1. Fixed the `Yell` ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
+	##### Yell
+	- Fixed the ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
 
 ### Changes
 
-#### Core Plugin
-1. Added command aliases for `sm_tank` and `sm_tank2`.
-2. Increased the delay between each Tank wave in finales from `3` to `5` seconds.
-3. The regular waves spawner now has a delay and starts after a survivor has left the saferoom. (Requested by Tank Rush.)
-4. The core plugin now requires `DHooks 2.2.0-detours15` or higher.
-5. The arrival of Mutant Tanks is no longer announced when they are idle. Instead, the arrival is announced once the survivors trigger the Mutant Tank.
-6. Added better friendly-fire check for all abilities. (Thanks to Silvers for the code!)
-7. Human-controlled Tanks now keep the same Mutant Tank type between passes.
-8. Mutant Tank stats are now properly copied when passing Tanks between players.
-9. Added sound effects for bullet and melee immunities.
-10. Added the `sm_mt_reload` command to let admins reload all config files.
-11. Added the `@mutants` target filter to let admins target Mutant Tanks.
-12. Tanks will no longer activate their passive abilities on finale maps once the rescue vehicle leaves.
-13. Idle Tanks will no longer glow through walls even when the `Glow Type` setting is set to `1`.
-14. Idle Tanks will no longer turn into different types when the `Spawn Type` setting is set to `1`, `2`, or `3`.
+- Core Plugin
+	- Added command aliases for `sm_tank` and `sm_tank2`.
+	- Increased the delay between each Tank wave in finales from `3` to `5` seconds.
+	- The regular waves spawner now has a delay and starts after a survivor has left the saferoom. (Requested by Tank Rush.)
+	- The core plugin now requires `DHooks 2.2.0-detours15` or higher.
+	- The arrival of Mutant Tanks is no longer announced when they are idle. Instead, the arrival is announced once the survivors trigger the Mutant Tank.
+	- Added better friendly-fire check for all abilities. (Thanks to Silvers for the code!)
+	- Human-controlled Tanks now keep the same Mutant Tank type between passes.
+	- Mutant Tank stats are now properly copied when passing Tanks between players.
+	- Added sound effects for bullet and melee immunities.
+	- Added the `sm_mt_reload` command to let admins reload all config files.
+	- Added the `@mutants` target filter to let admins target Mutant Tanks.
+	- Tanks will no longer activate their passive abilities on finale maps once the rescue vehicle leaves.
+	- Idle Tanks will no longer glow through walls even when the `Glow Type` setting is set to `1`.
+	- Idle Tanks will no longer turn into different types when the `Spawn Type` setting is set to `1`, `2`, or `3`.
 
-#### Config Files
-1. Enabled the `Requires Humans` setting for some of the default Mutant Tank types.
-2. Config files now support multiple abilities using comma separation.
-3. The `all` section can now be grouped with multiple types and abilities in config files.
-4. Updated some of the default Mutant Tank types.
+- Config Files
+	- Enabled the `Requires Humans` setting for some of the default Mutant Tank types.
+	- Config files now support multiple abilities using comma separation.
+	- The `all` section can now be grouped with multiple types and abilities in config files.
+	- Updated some of the default Mutant Tank types.
 
-#### Settings
-1. The `Finale Waves` and `Finale Types` settings now support up to `10` waves. (Thanks to 3aljiyavslgazana for testing and reporting!)
-2. Added a new option for the `Announce Death` setting.
-3. Changed the default value of the `Regular Limit` setting from `2` to `999999`.
-4. Changed the default value of the `Death Revert` setting under `Plugin Settings/General` from `0` to `1`.
-5. Added the `Attack Interval` setting under `Tank #/Enhancements` section. (Thanks to epz for the code!)
-6. Added the `Regular Delay` setting under `Plugin Settings/Waves` section. (Requested by Tank Rush.)
-7. Removed the `Rename Players` setting. (Too many bugs with special characters in people's names.)
-8. Added the `Extras Delay` settings under `Plugin Settings/Waves` section.
-9. Added the `Open Areas Only` setting to determine which types or abilities are only for open areas.
-10. Added the `Flashlight` and `Crown` options for the `Props Attached` setting.
-11. Added the `Flashlight Color` setting to determine the color of the Tank's dynamic flashlight prop. (Thanks to Ernecio for the code!)
-12. Added the `Crown Color` setting to determine the color of the Tank's crown prop. (Thanks to Ernecio for the code!)
-13. The `Props Chance` setting now accepts two extra values to support the `Flashlight` and `Crown` props.
-14. Added the `Aggressive Tanks` and `Stasis Mode` settings under the `Plugin Settings/Competitive` section.
-15. Added the `Scale Damage` and `Difficulty Damage` settings under the `Plugin Settings/Difficulty` section.
-16. Moved the following settings to the `Tank #/Glow` and `STEAM_ID/Glow` sections:
-- `Glow Enabled`
-- `Glow Color`
-- `Glow Flashing`
-- `Glow Range`
-- `Glow Type`
-17. Added a new option for the `Spawn Mode` setting under the `Tank #/Spawn` section.
-18. Added the following settings under the new `Tank #/Combo` and `STEAM_ID/Combo` sections. (Thanks to 3aljiyavslgazana for suggesting!)
-- `Combo Chance`
-- `Combo Damage`
-- `Combo Death Chance`
-- `Combo Death Range`
-- `Combo Delay`
-- `Combo Duration`
-- `Combo Interval`
-- `Combo Radius`
-- `Combo Range`
-- `Combo Range Chance`
-- `Combo Rock Chance`
-- `Combo Set`
-- `Combo Speed`
-- `Combo Type Chance`
-19. Moved the following settings to the `Tank #/Boss` and `STEAM_ID/Boss` sections:
-- `Boss Health Stages`
-- `Boss Stages`
-- `Boss Types`
-20. Moved the following settings to the `Tank #/Random` and `STEAM_ID/Random` sections:
-- `Random Tank`
-- `Random Interval`
-21. Moved the following settings to the `Tank #/Transform` and `STEAM_ID/Transform` sections:
-- `Transform Delay`
-- `Transform Duration`
-- `Transform Types`
-22. Added the `Random Duration` setting under the `Tank #/Random` and `STEAM_ID/Random` sections.
-23. Renamed the `Spawn Mode` setting under the `Tank #/Spawn` section to `Spawn Type`.
-24. The `Spawn Type` setting under the `Tank #/Spawn` section can now be overridden for each player.
-25. Added the following settings under the `General/Reward`, `Tank #/Reward`, and `STEAM_ID/Reward` sections:
-- `Reward Killers`
-- `Reward Assistants`
-- `Reward Chance`
-- `Reward Duration`
-- `Damage Boost Reward`
-- `Item Reward`
-- `Respawn Loadout Reward`
-- `Speed Boost Reward`
-- `Useful Rewards`
-26. Moved the following settings to the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
-- `Announce Arrival`
-- `Announce Death`
-27. Added the `Announce Kill` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections.
+- Settings
+	- The `Finale Waves` and `Finale Types` settings now support up to `10` waves. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	- Added a new option for the `Announce Death` setting.
+	- Changed the default value of the `Regular Limit` setting from `2` to `999999`.
+	- Changed the default value of the `Death Revert` setting under `Plugin Settings/General` from `0` to `1`.
+	- Added the `Attack Interval` setting under `Tank #/Enhancements` section. (Thanks to epz for the code!)
+	- Added the `Regular Delay` setting under `Plugin Settings/Waves` section. (Requested by Tank Rush.)
+	- Removed the `Rename Players` setting. (Too many bugs with special characters in people's names.)
+	- Added the `Extras Delay` settings under `Plugin Settings/Waves` section.
+	- Added the `Open Areas Only` setting to determine which types or abilities are only for open areas.
+	- Added the `Flashlight` and `Crown` options for the `Props Attached` setting.
+	- Added the `Flashlight Color` setting to determine the color of the Tank's dynamic flashlight prop. (Thanks to Ernecio for the code!)
+	- Added the `Crown Color` setting to determine the color of the Tank's crown prop. (Thanks to Ernecio for the code!)
+	- The `Props Chance` setting now accepts two extra values to support the `Flashlight` and `Crown` props.
+	- Added the `Aggressive Tanks` and `Stasis Mode` settings under the `Plugin Settings/Competitive` section.
+	- Added the `Scale Damage` and `Difficulty Damage` settings under the `Plugin Settings/Difficulty` section.
+	- Moved the following settings to the `Tank #/Glow` and `STEAM_ID/Glow` sections:
+		- `Glow Enabled`
+		- `Glow Color`
+		- `Glow Flashing`
+		- `Glow Range`
+		- `Glow Type`
+	- Added a new option for the `Spawn Mode` setting under the `Tank #/Spawn` section.
+	- Added the following settings under the new `Tank #/Combo` and `STEAM_ID/Combo` sections. (Thanks to 3aljiyavslgazana for suggesting!)
+		- `Combo Chance`
+		- `Combo Damage`
+		- `Combo Death Chance`
+		- `Combo Death Range`
+		- `Combo Delay`
+		- `Combo Duration`
+		- `Combo Interval`
+		- `Combo Radius`
+		- `Combo Range`
+		- `Combo Range Chance`
+		- `Combo Rock Chance`
+		- `Combo Set`
+		- `Combo Speed`
+		- `Combo Type Chance`
+	- Moved the following settings to the `Tank #/Boss` and `STEAM_ID/Boss` sections:
+		- `Boss Health Stages`
+		- `Boss Stages`
+		- `Boss Types`
+	- Moved the following settings to the `Tank #/Random` and `STEAM_ID/Random` sections:
+		- `Random Tank`
+		- `Random Interval`
+	- Moved the following settings to the `Tank #/Transform` and `STEAM_ID/Transform` sections:
+		- `Transform Delay`
+		- `Transform Duration`
+		- `Transform Types`
+	- Added the `Random Duration` setting under the `Tank #/Random` and `STEAM_ID/Random` sections.
+	- Renamed the `Spawn Mode` setting under the `Tank #/Spawn` section to `Spawn Type`.
+	- The `Spawn Type` setting under the `Tank #/Spawn` section can now be overridden for each player.
+	- Added the following settings under the `General/Reward`, `Tank #/Reward`, and `STEAM_ID/Reward` sections:
+		- `Reward Killers`
+		- `Reward Assistants`
+		- `Reward Chance`
+		- `Reward Duration`
+		- `Damage Boost Reward`
+		- `Item Reward`
+		- `Respawn Loadout Reward`
+		- `Speed Boost Reward`
+		- `Useful Rewards`
+	- Moved the following settings to the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
+		- `Announce Arrival`
+		- `Announce Death`
+	- Added the `Announce Kill` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections.
 
-#### Translations
-1. The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
-2. All logs generated by Mutant Tanks and its modules are now translated to use the server's language.
+- Translations
+	- The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
+	- All logs generated by Mutant Tanks and its modules are now translated to use the server's language.
 
-#### Natives & Forwards
-1. Added the `MT_IsTankClone` native to allow developers to check if a Tank is a clone.
-2. Added the `MT_IsCustomTankSupported` native to allow developers to check if a Tank clone is able to use abilities like real Mutant Tanks.
-3. Added the `MT_GetScaledDamage` native to allow developers to get the proper scaled damage of Mutant Tanks.
-4. Added the `MT_GetGlowRange`, `MT_GetGlowType`, and `MT_IsGlowFlashing` natives to allow developers to retrieve the glow outline settings for Mutant Tanks.
-5. Added the `MT_OnCopyStats` forward to allow developers to properly copy over active Tank stats when Tanks are passed around in competitive game modes.
-6. Removed the `MT_OnAbilityCheck` forward.
-7. Added the `MT_OnCombineAbilities` forward to allow developers to combine certain abilities.
-8. Added the `MT_GetCombinationSetting` native to allow developers to retrieve values for combined abilities.
-9. Added the `MT_GetSpawnType` native to allow developers to check what spawn type a Mutant Tank has.
-10. Added the `MT_TankMaxHealth` native to allow developers to get/set the Tank's max health.
-11. Added the `MT_OnRewardSurvivor` forward to allow developers to give custom rewards to survivors.
-12. Updated all natives to have self-contained validity checks.
+- Natives & Forwards
+	- Added the `MT_IsTankClone` native to allow developers to check if a Tank is a clone.
+	- Added the `MT_IsCustomTankSupported` native to allow developers to check if a Tank clone is able to use abilities like real Mutant Tanks.
+	- Added the `MT_GetScaledDamage` native to allow developers to get the proper scaled damage of Mutant Tanks.
+	- Added the `MT_GetGlowRange`, `MT_GetGlowType`, and `MT_IsGlowFlashing` natives to allow developers to retrieve the glow outline settings for Mutant Tanks.
+	- Added the `MT_OnCopyStats` forward to allow developers to properly copy over active Tank stats when Tanks are passed around in competitive game modes.
+	- Removed the `MT_OnAbilityCheck` forward.
+	- Added the `MT_OnCombineAbilities` forward to allow developers to combine certain abilities.
+	- Added the `MT_GetCombinationSetting` native to allow developers to retrieve values for combined abilities.
+	- Added the `MT_GetSpawnType` native to allow developers to check what spawn type a Mutant Tank has.
+	- Added the `MT_TankMaxHealth` native to allow developers to get/set the Tank's max health.
+	- Added the `MT_OnRewardSurvivor` forward to allow developers to give custom rewards to survivors.
+	- Updated all natives to have self-contained validity checks.
 
-#### Abilities
-1. Enabled the `Requires Humans` setting for some more abilities by default.
-2. Added the `Fly` ability. (Thanks to Ernecio for the code!)
-3. Added the `Lightning` ability which is exclusive to Left 4 Dead 2.
-4. None of the abilities' plugins need to check if the `Clone` ability is installed anymore.
-5. Added the `Combo Ability` setting for each ability.
+- Abilities
+	- Enabled the `Requires Humans` setting for some more abilities by default.
+	- Added the `Fly` ability. (Thanks to Ernecio for the code!)
+	- Added the `Lightning` ability which is exclusive to Left 4 Dead 2.
+	- None of the abilities' plugins need to check if the `Clone` ability is installed anymore.
+	- Added the `Combo Ability` setting for each ability.
 
-##### Blind
-1. Added a sound effect for L4D1.
+	##### Blind
+	- Added a sound effect for L4D1.
 
-##### Bomb
-1. Added a sound effect for L4D1.
+	##### Bomb
+	- Added a sound effect for L4D1.
 
-##### Bury
-1. Added the `Bury Buffer` setting for the `Bury` ability. (Requested by Mi.Cura.)
-2. The `Bury` ability no longer require Left 4 DHooks.
+	##### Bury
+	- Added the `Bury Buffer` setting. (Requested by Mi.Cura.)
+	- The ability no longer require Left 4 DHooks.
 
-##### Car
-1. Added the `Car Interval` setting for the `Car` ability.
+	##### Car
+	- Added the `Car Interval` setting.
 
-##### Clone
-1. The `Clone` ability's `Clone Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
+	##### Clone
+	- The `Clone Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
 
-##### Fire
-1. Added a sound effect for L4D1.
+	##### Fire
+	- Added a sound effect for L4D1.
 
-##### Heal
-1. Changed the default value of the `Heal` ability's `Heal Buffer` setting from `25.0` to `100.0`.
-2. The `Heal` ability now contributes to the Tank's overall health.
+	##### Heal
+	- Changed the default value of the `Heal Buffer` setting from `25.0` to `100.0`.
+	- The ability now contributes to the Tank's overall health.
 
-##### Idle
-1. Applied a new idle fix method for the `Idle` ability. (Thanks to Lux for the code!)
-2. The `Idle` ability now requires DHooks.
+	##### Idle
+	- Applied a new idle fix method. (Thanks to Lux for the code!)
+	- The ability now requires DHooks.
 
-##### Leech
-1. The `Leech` ability now contributes to the Tank's overall health.
+	##### Leech
+	- The ability now contributes to the Tank's overall health.
 
-##### Medic
-1. Added the `Medic Field` and `Medic Field Color` settings for the `Medic` ability. (Thanks to Marttt and Silvers for the code!)
-2. The `Medic` ability's `Ability Enabled` setting now only has two options instead of four.
-3. Modified all of the `Medic` ability's messages.
-4. The `Medic` ability now contributes to the Tank's overall health.
+	##### Medic
+	- Added the `Medic Field` and `Medic Field Color` settings. (Thanks to Marttt and Silvers for the code!)
+	- The `Ability Enabled` setting now only has two options instead of four.
+	- Modified all of the messages.
+	- The ability now contributes to the Tank's overall health.
 
-##### Meteor
-1. Added the `Meteor Interval` setting for the `Meteor` ability.
+	##### Meteor
+	- Added the `Meteor Interval` setting.
 
-##### Nullify
-1. Added a sound effect for the `Nullify` ability.
+	##### Nullify
+	- Added a sound effect.
 
-##### Regen
-1. The `Regen` ability now contributes to the Tank's overall health.
+	##### Regen
+	- The ability now contributes to the Tank's overall health.
 
-##### Respawn
-1. The `Respawn` ability's `Respawn Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
-2. The `Respawn` ability now requires DHooks.
+	##### Respawn
+	- The `Respawn Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
+	- The ability now requires DHooks.
 
-##### Restart
-1. The `Restart` ability no longer require Left 4 DHooks.
+	##### Restart
+	- The ability no longer require Left 4 DHooks.
 
-##### Rock
-1. Added the `Immunity Flags` setting for the `Rock` ability.
-2. Added the `Rock Interval` setting for the `Rock` ability.
+	##### Rock
+	- Added the `Immunity Flags` setting.
+	- Added the `Rock Interval` setting.
 
-##### Shield
-1. Added the `Shield Glow` setting for the `Shield` ability.
-2. The `Shield` ability's `Shield Type` setting now allows combinations of options.
-3. Added the `Shield Throw Chance` setting for the `Shield` ability.
+	##### Shield
+	- Added the `Shield Glow` setting.
+	- The `Shield Type` setting now allows combinations of options.
+	- Added the `Shield Throw Chance` setting.
 
-##### Spam
-1. Added the `Immunity Flags` setting for the `Spam` ability.
-2. Added the `Spam Interval` setting for the `Spam` ability.
+	##### Spam
+	- Added the `Immunity Flags` setting.
+	- Added the `Spam Interval` setting.
 
-##### Track
-1. Added the `Track Glow` setting for the `Track` ability.
+	##### Track
+	- Added the `Track Glow` setting.
 
-##### Ultimate
-1. The `Ultimate` ability now contributes to the Tank's overall health.
-2. Added a sound effect for the `Ultimate` ability.
-3. Added the `Ultimate Chance` setting for the `Ultimate` ability.
+	##### Ultimate
+	- The ability now contributes to the Tank's overall health.
+	- Added a sound effect.
+	- Added the `Ultimate Chance` setting.
 
-##### Undead
-1. The `Undead` ability now contributes to the Tank's overall health.
+	##### Undead
+	- The ability now contributes to the Tank's overall health.
 
-##### Vampire
-1. The `Vampire` ability now contributes to the Tank's overall health.
+	##### Vampire
+	- The ability now contributes to the Tank's overall health.
 
-##### Xiphos
-1. The `Xiphos` ability now contributes to the Tank's overall health.
-2. The `Xiphos` ability's `Ability Message` setting now has an extra option.
+	##### Xiphos
+	- The ability now contributes to the Tank's overall health.
+	- The `Ability Message` setting now has an extra option.
 
-##### Yell
-1. The `Yell` ability now runs repeatedly while activated when `Human Mode` is set to `1`.
-2. The `Yell` ability no longer require Left 4 DHooks.
+	##### Yell
+	- The ability now runs repeatedly while activated when `Human Mode` is set to `1`.
+	- The ability no longer require Left 4 DHooks.
 
 ### Files
-1. The `mt_clone` include file is now used by all plugins related to Mutant Tanks.
-2. Updated config files.
-3. Updated gamedata file.
-4. Updated include files.
-5. Updated translation file.
+
+- Requirements
+	- The `mt_clone` include file is now used by all plugins related to Mutant Tanks.
+
+- Updates
+	- Updated config files.
+	- Updated gamedata file.
+	- Updated include files.
+	- Updated translation file.
 
 ## Version 8.79 (October 10, 2020)
 
