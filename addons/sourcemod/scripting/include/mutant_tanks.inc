@@ -984,6 +984,7 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 		{
 			static float flPos[3];
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
+
 			flPos[2] += origin;
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 
@@ -2124,7 +2125,7 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, b
 
 stock int iGetWeaponOffset(const char[] weapon)
 {
-	if (StrEqual(weapon, "weapon_rifle") || StrEqual(weapon, "weapon_rifle_sg552") || StrEqual(weapon, "weapon_rifle_desert") || StrEqual(weapon, "weapon_rifle_ak47"))
+	if (StrEqual(weapon, "weapon_rifle") || StrEqual(weapon, "weapon_rifle_ak47") || StrEqual(weapon, "weapon_rifle_desert") || StrEqual(weapon, "weapon_rifle_sg552"))
 	{
 		return 3;
 	}
@@ -2156,7 +2157,7 @@ stock int iGetWeaponOffset(const char[] weapon)
 	{
 		return bIsValidGame() ? 9 : 2;
 	}
-	else if (StrEqual(weapon, "weapon_sniper_scout") || StrEqual(weapon, "weapon_sniper_military") || StrEqual(weapon, "weapon_sniper_awp"))
+	else if (StrEqual(weapon, "weapon_sniper_military") || StrEqual(weapon, "weapon_sniper_scout") || StrEqual(weapon, "weapon_sniper_awp"))
 	{
 		return 10;
 	}
@@ -2216,8 +2217,9 @@ public SharedPlugin __pl_mutanttanks =
 public void __pl_mutanttanks_SetNTVOptional()
 {
 	MarkNativeAsOptional("MT_CanTypeSpawn");
-	MarkNativeAsOptional("MT_DoesTypeRequireHumans")
+	MarkNativeAsOptional("MT_DoesTypeRequireHumans");
 	MarkNativeAsOptional("MT_GetAccessFlags");
+	MarkNativeAsOptional("MT_GetCombinationSetting");
 	MarkNativeAsOptional("MT_GetCurrentFinaleWave");
 	MarkNativeAsOptional("MT_GetGlowRange");
 	MarkNativeAsOptional("MT_GetGlowType");
