@@ -700,6 +700,21 @@ forward void MT_OnButtonReleased(int tank, int button);
 forward void MT_OnChangeType(int tank, bool revert);
 
 /**
+ * Called when a Mutant Tank's abilities are combined.
+ * Use this forward to trigger any combinations.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			0 = Main/range abilities, 1 = Hit abilities, 2 = Rock throw abilities, 3 = Rock break abilities,
+ *					4 = Post-spawn abilities, 5 = Upon-death abilities, 6 = Upon-incap abilities
+ * @param random		Random value to check against for chance to trigger combination.
+ * @param combo			String containing the list of abilities to combine.
+ * @param survivor		Client index of the survivor, if any.
+ * @param weapon		Entity index of the weapon, if any.
+ * @param classname		String containing the weapon classname, if any.
+ **/
+forward void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname);
+
+/**
  * Called when the config file is about to load.
  * Use this forward to set default values for settings for the plugin.
  *
@@ -819,6 +834,19 @@ forward void MT_OnPostTankSpawn(int tank);
 forward void MT_OnResetTimers(int mode, int tank);
 
 /**
+ * Called when a survivor is rewarded.
+ * Use this forward to reward survivors or to reset their rewards.
+ *
+ * @param survivor		Client index of the survivor.
+ * @param tank			Client index of the Tank.
+ * @param type			1 = Health, 2 = Damage boost, 3 = Speed boost, 4 = Ammo, 5 = Item, 6 = God mode, 7 = Health and ammo refill,
+ *					8 = Respawn, 9-100 = Reserved for third-party plugins (use this to add custom rewards)
+ * @param killer		True if the survivor killed the Tank, false if the survivor assisted.
+ * @param apply			True if the reward is given, false otherwise.
+ **/
+forward void MT_OnRewardSurvivor(int survivor, int tank, int type, bool killer, bool apply);
+
+/**
  * Called when a Mutant Tank's rock breaks.
  * Use this forward for any after-effects.
  *
@@ -890,6 +918,18 @@ native bool MT_DoesTypeRequireHumans(int type);
  * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
 native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
+
+/**
+ * Returns the value of a combination setting based on a position.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			1 = Chance, 2 = Damage, 3 = Delay, 4 = Duration, 5 = Interval, 6 = Min radius, 7 = Max radius,
+ *					8 = Range, 9 = Range Chance, 10 = Death range, 11 = Death range chance, 12 = Rock chance, 13 = Speed
+ * @param pos			The position in the setting's array to retrieve the value from. (0-9)
+ * @return			The value stored in the setting.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native float MT_GetCombinationSetting(int tank, int type, int pos);
 
 /**
  * Returns the current finale wave.
@@ -974,6 +1014,16 @@ native float MT_GetRunSpeed(int tank);
 native float MT_GetScaledDamage(float damage);
 
 /**
+ * Returns a Mutant Tank's spawn type.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			The spawn type of the Tank.
+ *					0 = Normal, 1 = Boss, 2 = Randomized, 3 = Transformation, 4 = Combined abilities
+ * @error			Invalid client index, client is not in-game, or client is human.
+ **/
+native int MT_GetSpawnType(int tank);
+
+/**
  * Returns the RGB colors given to a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
@@ -982,7 +1032,7 @@ native float MT_GetScaledDamage(float damage);
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
- * @error			Invalid client index, client is not in-game or type is less than 1 or greater than 2.
+ * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 2.
  **/
 native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
@@ -1153,25 +1203,16 @@ native void MT_SetTankType(int tank, int type, bool mode);
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
  **/
 native void MT_SpawnTank(int tank, int type);
-```
-- Clone ability:
-```
-/**
- * Returns if the clone can use abilities.
- *
- * @param tank			Client index of the Tank.
- * @return			True if clone can use abilities, false otherwise.
- **/
-native bool MT_IsCloneSupported(int tank);
 
 /**
- * Returns if a Tank is a clone.
+ * Get or set a Tank's max health.
  *
  * @param tank			Client index of the Tank.
- * @return			True if the Tank is a clone, false otherwise.
- * @error			Invalid client index.
+ * @param mode			1 = Get the Tank's max health, 2 = Get the Tank's stored max health,
+ *					3 = Set the Tank's max health without storing it, 4 = Set the Tank's max health and store it
+ * @param newHealth		The Tank's new max health.
  **/
-native bool MT_IsTankClone(int tank);
+native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
 ```
 
 Stocks:
@@ -1198,6 +1239,7 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 	ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
 	ReplaceString(sMessage, sizeof(sMessage), "{yellow}", "\x04");
 	ReplaceString(sMessage, sizeof(sMessage), "{olive}", "\x05");
+	ReplaceString(sMessage, sizeof(sMessage), "{percent}", "%%");
 
 	PrintToChat(client, sMessage);
 }
@@ -1229,6 +1271,7 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 		ReplaceString(sBuffer, sizeof(sBuffer), "{mint}", "");
 		ReplaceString(sBuffer, sizeof(sBuffer), "{yellow}", "");
 		ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
+		ReplaceString(sBuffer, sizeof(sBuffer), "{percent}", "%%");
 
 		switch (client == 0)
 		{
@@ -1288,6 +1331,7 @@ If you are a Tank:
 // Accessible by the developer and admins with "z" (Root) flag only.
 sm_mt_config - View a section of a config file.
 sm_mt_list - View a list of installed abilities.
+sm_mt_reload - Reload the config file.
 sm_tank2 - Spawn a Mutant Tank.
 sm_mt_tank2 - Spawn a Mutant Tank.
 
@@ -1661,7 +1705,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 35-38 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines 40-43 of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
@@ -1850,6 +1894,8 @@ Examples:
 
 **Tank Rush** - For reporting issues and suggesting ideas.
 
+**3aljiyavslgazana** - For reporting issues and suggesting ideas.
+
 **Princess LadyRain** - For reporting issues.
 
 **Nekrob** - For reporting issues.
@@ -1871,8 +1917,6 @@ Examples:
 **Voevoda** - For reporting issues.
 
 **ur5efj** - For reporting issues.
-
-**3aljiyavslgazana** - For reporting issues.
 
 **What** - For reporting issues.
 
