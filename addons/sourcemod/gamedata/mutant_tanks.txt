@@ -36,6 +36,20 @@
 					}
 				}
 			}
+			"CTerrorPlayer::Event_Killed"
+			{
+				"signature"	"CTerrorPlayer::Event_Killed"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"info"
+					{
+						"type"		"objectptr"
+					}
+				}
+			}
 			"CTerrorPlayer::GoAwayFromKeyboard"
 			{
 				"signature"	"CTerrorPlayer::GoAwayFromKeyboard"
@@ -53,7 +67,7 @@
 				{
 					"AFKPlayer"
 					{
-						"type"    "cbaseentity"
+						"type"		"cbaseentity"
 					}
 				}
 			}
@@ -131,6 +145,12 @@
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter.constprop.123"
 				"windows"	"\x8B\x44\x24\x08\x53\x8B\x5C\x24\x08"
+			}
+			"CTerrorPlayer::Event_Killed"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12Event_KilledERK15CTakeDamageInfo"
+				"windows"	"\x81\xEC\xE8\x01\x00\x00"
 			}
 			"CTerrorPlayer::GoAwayFromKeyboard"
 			{
@@ -231,6 +251,11 @@
 				"windows"	"332"
 				"linux"		"340"
 			}
+			"HiddenMelee"
+			{
+				"windows"	"16340"
+				"linux"		"16320"
+			}
 		}
 		"Signatures"
 		{
@@ -252,6 +277,12 @@
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\xEC\x8B\x45\x0C\x8B\x4D\x08\x53"
 			}
+			"CTerrorPlayer::Event_Killed"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12Event_KilledERK15CTakeDamageInfo"
+				"windows"	"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\x48\x02\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x43\x08"
+			}
 			"CTerrorPlayer::Fling"
 			{
 				"library"	"server"
@@ -262,7 +293,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer18GoAwayFromKeyboardEv"
-				"windows"	"\x55\x8b\xec\x83\xec*\x53\x56\x57\x8b\xf1\x8b\x06\x8b\x90***\x00\x8b\x9e***\x00\x6a\x00\x6a\x08\x6a\x01"
+				"windows"	"\x55\x8B\xEC\x83\xEC*\x53\x56\x57\x8B\xF1\x8B\x06\x8B\x90***\x00\x8B\x9e***\x00\x6A\x00\x6A\x08\x6A\x01"
 			}
 			"CTerrorPlayer::OnRevived"
 			{

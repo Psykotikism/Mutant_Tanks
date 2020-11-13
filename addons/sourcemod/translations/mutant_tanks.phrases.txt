@@ -73,6 +73,13 @@
 		"chi"			"文件路径菜单"
 	}
 
+	"MTReloadMenu"
+	{
+		"en"			"Reload Config Menu"
+		"hu"			""
+		"chi"			"重新加载配置菜单"
+	}
+
 	"MTSettingsItem"
 	{
 		"en"			"Plugin Settings"
@@ -357,6 +364,86 @@
 		"chi"			"看来 {olive}{1}{default} 正往你们那边去..."
 	}
 
+	"Assist1"
+	{
+		"#format"		"{1:t},{2:N},{3:.0f}"
+		"en"			"{olive}{1}{default} is defeated!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} legyőzve!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 被击败了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+	}
+
+	"Assist2"
+	{
+		"#format"		"{1:t},{2:N},{3:.0f}"
+		"en"			"The survivors defeated{olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"幸存者消灭了 {olive}{1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+	}
+
+	"Assist3"
+	{
+		"#format"		"{1:t},{2:N},{3:.0f}"
+		"en"			"{olive}{1}{default} goes to hell!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} elindult a pokolba!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 被打下了地狱!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+	}
+
+	"Assist4"
+	{
+		"#format"		"{1:t},{2:N},{3:.0f}"
+		"en"			"Is{olive} {1}{default} really dead...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"A(z){olive} {1}{default} tényleg halott...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 真的死了...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+	}
+
+	"Assist5"
+	{
+		"#format"		"{1:t},{2:N},{3:.0f}"
+		"en"			"{olive}{1}{default} lost the challenge against the survivors!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} elvesztette a kihívást a túlélőkkel szemben!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 挑战幸存者失败!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+	}
+
+	"Assist6"
+	{
+		"#format"		"{1:t},{2:N},{3:.0f}"
+		"en"			"The{olive} {1}{default} failed to kill the survivors!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"A(z){olive} {1}{default} elbukta a túlélők megölését!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 未能团灭幸存者!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+	}
+
+	"Assist7"
+	{
+		"#format"		"{1:t},{2:N},{3:.0f}"
+		"en"			"{olive}{1}{default} has met their demise!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} találkozott a halállal!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 已经消逝了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+	}
+
+	"Assist8"
+	{
+		"#format"		"{1:t},{2:N},{3:.0f}"
+		"en"			"Yay!{olive} {1}{default} is dead!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"Éljen!{olive} {1}{default} halott!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"哎呀! {olive}{1}{default} 死了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+	}
+
+	"Assist9"
+	{
+		"#format"		"{1:t},{2:N},{3:.0f}"
+		"en"			"{olive}{1}{default} left the game...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} elhagyta a játékot...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 被打出游戏...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+	}
+
+	"Assist10"
+	{
+		"#format"		"{1:t},{2:N},{3:.0f}"
+		"en"			"It seems{olive} {1}{default} could not beat the survivors after all...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"看来 {olive}{1}{default} 根本无法团灭幸存者嘛...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+	}
+
 	"ChangeType"
 	{
 		"en"			"Your personal Mutant Tank type changed."
@@ -519,6 +606,86 @@
 		"chi"			"[玩家控制]"
 	}
 
+	"Kill1"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{default} finished off{mint} {2}{default}!"
+		"hu"			"{olive}{1}{default} kivégezte{mint} {2}{default}!"
+		"chi"			"{olive}{1}{default} 完成了{mint} {2}{default}!"
+	}
+
+	"Kill2"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{default} defeated{mint} {2}{default}!"
+		"hu"			"{olive}{1}{default} legyőzte{mint} {2}{default}!"
+		"chi"			"{olive}{1}{default} 被击败了{mint} {2}{default}!"
+	}
+
+	"Kill3"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{default} sent{mint} {2}{default} to hell!"
+		"hu"			"{olive}{1}{default} elküldte{mint} {2}{default} a pokolba!"
+		"chi"			"{olive}{1}{default} 发送了{mint} {2}{default}到地狱!"
+	}
+
+	"Kill4"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"Did{olive} {1}{default} actually kill{mint} {2}{default}...?"
+		"hu"			"Biztos hogy{olive} {1}{default} tényleg megölte{mint} {2}{default}...?"
+		"chi"			"{olive}{1}{default} 实际上杀死了{mint} {2}{default}...吗?"
+	}
+
+	"Kill5"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{mint}{2}{default} lost the challenge against{olive} {1}{default}!"
+		"hu"			"{mint}{2}{default} elvesztette a kihívást{olive} {1}{default} ellen!"
+		"chi"			"{mint}{2}{default} 输掉了对{olive} {1}{default}的挑战!"
+	}
+
+	"Kill6"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{mint}{2}{default} failed to kill{olive} {1}{default}!"
+		"hu"			"{mint}{2}{default}-nak nem sikerült megölnie{olive} {1}{default}!"
+		"chi"			"{mint}{2}{default} 无法杀死{olive} {1}{default}!"
+	}
+
+	"Kill7"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{mint}{2}{default} has met their demise at the hands of{olive} {1}{default}!"
+		"hu"			"{mint}{2}{default} elérte a pusztulás {olive} {1}{default} keze által!"
+		"chi"			"{mint}{2}{default} 已在{olive} {1}{default} 手中灭亡!"
+	}
+
+	"Kill8"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"Yay!{mint} {2}{default} is dead thanks to{olive} {1}{default}!"
+		"hu"			"Éljen!{mint} {2}{default} halott, hála{olive} {1}{default}!"
+		"chi"			"哎呀!{mint} {2}{default} 死了，这要感谢{olive} {1}{default}!"
+	}
+
+	"Kill9"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{default} made{mint} {2}{default} ragequit..."
+		"hu"			"{olive}{1}{default} rávette{mint} {2}{default} hogy mérgében kilépjen..."
+		"chi"			"{olive}{1}{default} 变成了{mint} {2}{default} 流行语..."
+	}
+
+	"Kill10"
+	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"It seems{mint} {2}{default} could not beat{olive} {1}{default} after all..."
+		"hu"			"Úgy látszik{mint} {2}{default} nem tudta legyőzni{olive} {1}{default} végül is..."
+		"chi"			"看来{mint} {2}{default} 毕竟无法击败{olive} {1}{default}..."
+	}
+
 	"Killer1"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
@@ -599,6 +766,22 @@
 		"chi"			"看来{olive} {2}{default} 毕竟无法击败{mint} {1}{default}...{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
+	"LogEnded"
+	{
+		"#format"		"{1:s},{2:s}"
+		"en"			"[{1}] --- LOG ENDED ON MAP: {2} ---"
+		"hu"			""
+		"chi"			"[{1}] --- 在地图上结束的日志: {2} ---"
+	}
+
+	"LogStarted"
+	{
+		"#format"		"{1:s},{2:s}"
+		"en"			"[{1}] --- LOG STARTED ON MAP: {2} ---"
+		"hu"			""
+		"chi"			"[{1}] --- 在地图上开始记录日志: {2} ---"
+	}
+
 	"MultipleMatches"
 	{
 		"en"			"Multiple{olive} Tank types{mint} matched that name. Selecting a random match..."
@@ -662,13 +845,6 @@
 		"chi"			"是"
 	}
 
-	"StartParsing"
-	{
-		"en"			"Parsing the config file..."
-		"hu"			"Konfig fájl ellenőrzése..."
-		"chi"			"正在解析配置文件..."
-	}
-
 	"PluginDisabled"
 	{
 		"en"			"Mutant Tanks{default} is disabled."
@@ -684,12 +860,19 @@
 		"chi"			"{olive}{1}{mint} 随机为{olive} {2}{mint}!"
 	}
 
+	"ReloadedConfig"
+	{
+		"en"			"All config files have been reloaded."
+		"hu"			""
+		"chi"			"所有配置文件均已重新加载."
+	}
+
 	"ReloadingConfig"
 	{
 		"#format"		"{1:s}"
 		"en"			"Reloading config file \"{1}\" file..."
 		"hu"			"Konfig fájl újratöltése \"{1}\" fájl..."
-		"chi"			"正在重新加载配置文件 \"{1}\" ..."
+		"chi"			"正在重新加载配置文件 \"{1}\"..."
 	}
 
 	"RequestFailed"
@@ -706,11 +889,167 @@
 		"chi"			"{mint}有一个坦克类型匹配该名称. 请求成功..."
 	}
 
+	"RewardAmmo"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} ammunition{default} for killing{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 收到{yellow} 弹药{default}，以杀死{olive} {2}{default}!"
+	}
+
+	"RewardAmmo2"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} ammunition{default} for assisting the most against{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 收到{yellow} 弹药{default}，以协助{olive} {2}{default} 的最大支援!"
+	}
+
+	"RewardDamageBoost"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} damage boost{default} for killing{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 获得{yellow} 伤害加成{default} 以杀死{olive} {2}{default}!"
+	}
+
+	"RewardDamageBoostEnd"
+	{
+		"en"			"Your{yellow} damage boost{default} ended!"
+		"hu"			""
+		"chi"			"您的{yellow} 伤害加成{default} 结束了!"
+	}
+
+	"RewardDamageBoost2"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} damage boost{default} for assisting the most against{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 收到{yellow} 伤害加成{default}，以协助{olive} {2}{default} 的最大支援!"
+	}
+
+	"RewardGod"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} god mode{default} for killing{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 收到{yellow} 神模式{default} 杀死{olive} {2}{default}!"
+	}
+
+	"RewardGodEnd"
+	{
+		"en"			"Your{yellow} god mode{default} ended!"
+		"hu"			""
+		"chi"			"您的{yellow} 上帝模式{default} 已结束!"
+	}
+
+	"RewardGod2"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} god mode{default} for assisting the most against{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 收到{yellow} 神模式{default}，以协助{olive} {2}{default} 的最大支援!"
+	}
+
+	"RewardHealth"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} health{default} for killing{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 收到{yellow} 健康{default} 杀死{olive} {2}{default}!"
+	}
+
+	"RewardHealth2"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} health{default} for assisting the most against{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 收到{yellow} 健康{default}，以协助{olive} {2}{default} 的最大支援!"
+	}
+
+	"RewardItem"
+	{
+		"#format"		"{1:N},{2:s},{3:t}"
+		"en"			"{1}{default} received a{yellow} {2}{default} for killing{olive} {3}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 因杀死{olive} {3}{default} 而收到{yellow} {2}{default}!"
+	}
+
+	"RewardItem2"
+	{
+		"#format"		"{1:N},{2:s},{3:t}"
+		"en"			"{1}{default} received a{yellow} {2}{default} for assisting the most against{olive} {3}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 收到{yellow} {2}{default}，以协助{olive} {3}{default} 的最大支援!"
+	}
+
+	"RewardRefill"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} health and ammunition{default} for killing{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 因杀死{olive} {2}{default} 而获得{yellow} 健康和弹药{default}!"
+	}
+
+	"RewardRefill2"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} health and ammunition{default} for assisting the most against{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 得到{yellow} 的健康和弹药{default}，以协助{olive} {2}{default}的大部分人!"
+	}
+
+	"RewardRespawn"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received a{yellow} respawn{default} for killing{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 因杀死{olive} {2}{default} 而收到了{yellow} 重生{default}!"
+	}
+
+	"RewardRespawn2"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received a{yellow} respawn{default} for assisting the most against{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 收到{yellow} 重生{default}，以协助{olive} {2}{default} 的最大支援!"
+	}
+
+	"RewardSpeedBoost"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} speed boost{default} for killing{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 获得{yellow} 提速{default} 以杀死{olive} {2}{default}!"
+	}
+
+	"RewardSpeedBoostEnd"
+	{
+		"en"			"Your{yellow} speed boost{default} ended!"
+		"hu"			""
+		"chi"			"您的{yellow} 速度提升{default} 已结束!"
+	}
+
+	"RewardSpeedBoost2"
+	{
+		"#format"		"{1:N},{2:t}"
+		"en"			"{1}{default} received{yellow} speed boost{default} for assisting the most against{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"{1}{default} 收到{yellow} 提速{default}，以协助{olive} {2}{default} 的最大支援!"
+	}
+
 	"SpawnMessage"
 	{
 		"en"			"You spawned as a Mutant Tank! You can now use the following:"
 		"hu"			"Mutáns Tank lettél! Használhatod a következőket:"
 		"chi"			"你变成突变坦克了!你可以使用以下功能:"
+	}
+
+	"StartParsing"
+	{
+		"en"			"Parsing the config file..."
+		"hu"			"Konfig fájl ellenőrzése..."
+		"chi"			"正在解析配置文件..."
 	}
 
 	"StillParsing"
@@ -816,7 +1155,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your absorption ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az elnyelő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 吸收 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 吸收 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"AbsorbMenu"
@@ -898,7 +1237,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your acid range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági sav képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 酸液  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 酸液  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"AcidMenu"
@@ -980,7 +1319,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your aimless range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági céltalan képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 禁瞄  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 禁瞄  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"AimlessMenu"
@@ -1054,7 +1393,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your ammo range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lőszer képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 掠弹  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 掠弹  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"AmmoMenu"
@@ -1136,7 +1475,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your blind range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági vakító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 致盲  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 致盲  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"BlindMenu"
@@ -1218,7 +1557,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your bomb range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bomba képességed véget ért az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 爆炸  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 爆炸  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"BombMenu"
@@ -1300,7 +1639,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your bury range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági eltemető képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 埋葬  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 埋葬  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"BuryMenu"
@@ -1382,7 +1721,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your car shower ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az autó záporod véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 汽车雨 已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 汽车雨 已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"CarMenu"
@@ -1464,7 +1803,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your choke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági fojtogató képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 窒息  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 窒息  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"ChokeMenu"
@@ -1627,7 +1966,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your cloud ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A felhő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 毒云 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 毒云 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"CloudMenu"
@@ -1760,7 +2099,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your drug range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bedrogozás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 中毒  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 中毒  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"DrugMenu"
@@ -1842,7 +2181,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your drunk range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági részegítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 醉酒  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 醉酒  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"DrunkMenu"
@@ -1924,7 +2263,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your electric range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági elektromos képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 电击  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 电击  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"ElectricMenu"
@@ -2006,7 +2345,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your enforce range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági kényszerítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 迫用  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 迫用  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"EnforceMenu"
@@ -2088,7 +2427,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your fast ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A gyorsaság képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 迅速 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 迅速 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"FastMenu"
@@ -2170,7 +2509,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your fire range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági tűz képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 火焰  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 火焰  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"FireMenu"
@@ -2244,7 +2583,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your fling range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági dobás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 抛空  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 抛空  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"FlingMenu"
@@ -2318,7 +2657,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your flight ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			""
-		"chi"			"您的飞行能力还需要另外{yellow} {1} 秒{mint} 来补充能量."
+		"chi"			"您的飞行能力还需要另外{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"FlyHuman5"
@@ -2415,7 +2754,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your fragility ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A sebzés érzékeny képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 脆弱 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 脆弱 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"FragileMenu"
@@ -2535,7 +2874,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your cloaking ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az álcázó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 伪装 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 伪装 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"GhostHuman9"
@@ -2543,7 +2882,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your disarming range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lefegyverző képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 缴械  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 缴械  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"GhostMenu"
@@ -2625,7 +2964,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your godlike ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az isteni képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 上帝 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 上帝 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"GodMenu"
@@ -2753,7 +3092,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your gravitational pull ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A gravitációs vonzás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 引力/推力 已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 引力/推力 已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"GravityHuman9"
@@ -2761,7 +3100,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your low gravity range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az alacsony gravitációs képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 重力  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 重力  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"GravityMenu"
@@ -2881,7 +3220,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your healing ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A gyógyító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 治疗 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 治疗 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"HealHuman9"
@@ -2889,7 +3228,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your bad-health range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági rossz-életerő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 败血  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 败血  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"HealMenu"
@@ -2992,7 +3331,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your hurt range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bántalmazó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 创伤  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 创伤  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"HurtMenu"
@@ -3074,7 +3413,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your hypno range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági hipnotizálás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 催眠  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 催眠  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"HypnoMenu"
@@ -3156,7 +3495,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your ice range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági fagyasztás képességed vége ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 冻结  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 冻结  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"IceMenu"
@@ -3230,7 +3569,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your idle range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági szüneteltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 闲置  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 闲置  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"IdleMenu"
@@ -3312,7 +3651,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your invert range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági megfordítás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 反向  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 反向  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"InvertMenu"
@@ -3475,7 +3814,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your periodical jumping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az időszakos ugrás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 周期性跳跃 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 周期性跳跃 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"JumpHuman9"
@@ -3483,7 +3822,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your jump range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági ugrás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 跳跃  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 跳跃  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"JumpMenu"
@@ -3615,7 +3954,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your lag range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági késleltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 滞后  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 滞后  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"LagMenu"
@@ -3697,7 +4036,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your laser ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A lézer képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 激光 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 激光 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"LaserMenu"
@@ -3779,7 +4118,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your leech range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági pióca képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 水蛭  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 水蛭  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"LeechMenu"
@@ -3881,76 +4220,77 @@
 	"Medic"
 	{
 		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} just healed nearby special infected!"
-		"hu"			"{olive}{1}{mint} épp meggyógyította a közelben lévő speciális fertőzötteket!"
-		"chi"			"{olive}{1}{mint} 治愈了附近的特殊感染者!"
+		"en"			"{olive}{1}{mint} is healing nearby special infected!"
+		"hu"			""
+		"chi"			"{olive}{1}{mint} 正在治愈附近的特殊感染者!"
 	}
 
 	"Medic2"
 	{
+		"#format"		"{1:t},{2:N}"
+		"en"			"{olive}{1}{mint} just healed{yellow} {2}{mint}!"
+		"hu"			""
+		"chi"			"{olive}{1}{mint} 刚刚恢复{yellow} {2}{mint}!"
+	}
+
+	"Medic3"
+	{
 		"#format"		"{1:t}"
-		"en"			"{olive}{1}{mint} is healing nearby special infected!"
-		"hu"			"{olive}{1}{mint} gyógyítja a közelben lévő speciális fertőzötteket!"
-		"chi"			"{olive}{1}{mint} 正在治疗附近的特殊感染者!"
+		"en"			"{olive}{1}{mint} stopped healing nearby special infected!"
+		"hu"			""
+		"chi"			"{olive}{1}{mint} 停止治愈附近的特殊感染者!"
 	}
 
 	"MedicAmmo"
 	{
-		"en"			"You've used up all your medic range ability's ammo."
-		"hu"			"Elhasználtad a távolsági medikus képességed összes lőszerét."
-		"chi"			"你已经用光了所有 医生  能力次数."
+		"en"			"You've used up all your medic ability's ammo."
+		"hu"			""
+		"chi"			"您已经用完了所有医务能力的弹药."
 	}
 
 	"MedicDetails"
 	{
-		"en"			"You heal special infected upon death."
-		"hu"			"Halálod pillanatában gyógyítod a speciális fertőzötteket."
-		"chi"			"你死亡时会治愈特殊感染者."
+		"en"			"You heal nearby special infected."
+		"hu"			""
+		"chi"			"您可以治愈附近的特殊感染者."
 	}
 
 	"MedicHuman"
 	{
-		"en"			"You will heal nearby special infected when you die!"
-		"hu"			"Gyógyítod a közelben lévő speciális fertőzötteket miután meghalsz!"
-		"chi"			"你死后会治愈附近的特殊感染者!"
+		"#format"		"{1:i},{2:i}"
+		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your medic ability!"
+		"hu"			""
+		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 您的医疗能力！"
 	}
 
 	"MedicHuman2"
 	{
-		"en"			"You will already heal nearby special infected upon death."
-		"hu"			"Azonnal gyógyítod a közelben lévő speciális fertőzötteket a halálod pillanatában."
-		"chi"			"你将在死亡后治愈附近的特殊感染者."
+		"en"			"Your medic ability failed to activate. Try again."
+		"hu"			""
+		"chi"			"您的医护技能无法激活. 再试一次."
 	}
 
 	"MedicHuman3"
 	{
-		"#format"		"{1:i},{2:i}"
-		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your medic range ability!"
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági medikus képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 医生  能力!"
+		"en"			"You already activated your medic ability."
+		"hu"			""
+		"chi"			"您已经激活了医务能力."
 	}
 
 	"MedicHuman4"
 	{
-		"en"			"You already activated your medic range ability."
-		"hu"			"Már aktiváltad a távolsági medikus képességedet."
-		"chi"			"你已经激活了你的 医生  能力."
+		"#format"		"{1:i}"
+		"en"			"Your medic ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"hu"			""
+		"chi"			"您的军医技能仍需要另外{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"MedicHuman5"
 	{
 		"#format"		"{1:i}"
-		"en"			"Your medical range ability still needs another{yellow} {1} second(s){mint} to recharge."
-		"hu"			"A távolsági medikus képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 医疗  能力还需要{yellow} {1} 秒{mint} 进行充能."
-	}
-
-	"MedicHuman6"
-	{
-		"#format"		"{1:i}"
-		"en"			"Your medical range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-		"hu"			"A távolsági medikus képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 医疗  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"en"			"Your medic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"hu"			""
+		"chi"			"您的医务能力已结束，需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"MedicMenu"
@@ -4032,7 +4372,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your meteor shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A meteor zápor képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 流星雨 已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 流星雨 已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"MeteorMenu"
@@ -4180,7 +4520,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your necro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A haláli képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 死灵 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 死灵 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"NecroMenu"
@@ -4262,7 +4602,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your damage nullifier range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági hatástalanító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 伤害无效化  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 伤害无效化  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"NullifyMenu"
@@ -4344,7 +4684,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your omni ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A mindenség képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 全能 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 全能 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"OmniMenu"
@@ -4426,7 +4766,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your panic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A pánik képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 唤潮 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 唤潮 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"PanicMenu"
@@ -4508,7 +4848,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your pimp slap range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági csapdosó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 鞭挞  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 鞭挞  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"PimpMenu"
@@ -4582,7 +4922,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your puke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági hányás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 呕吐  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 呕吐  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"PukeMenu"
@@ -4672,7 +5012,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your pyro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A piro képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 火速 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 火速 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"PyroMenu"
@@ -4754,7 +5094,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your quiet range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági csend képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 沉默  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 沉默  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"QuietMenu"
@@ -4836,7 +5176,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your recoil range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági visszarúgás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 后坐力  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 后坐力  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"RecoilMenu"
@@ -4918,7 +5258,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your regen ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A regeneráló képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 自愈 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 自愈 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"RegenMenu"
@@ -5050,7 +5390,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your restart range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági újrakezdő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 重来  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 重来  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"RestartMenu"
@@ -5206,7 +5546,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your rocket range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági rakéta képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 火箭  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 火箭  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"RocketMenu"
@@ -5288,7 +5628,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your shake range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági rázó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 震动  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 震动  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"ShakeMenu"
@@ -5370,7 +5710,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your shield broke and needs to regenerate for{yellow} {1} second(s){mint}."
 		"hu"			"A pajzsod eltört, a regenerálódáshoz még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 护盾 破了,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 护盾 破了, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"ShieldMenu"
@@ -5460,7 +5800,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your shove range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lökés képességed véget ért, Az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 推挤  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 推挤  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"ShoveMenu"
@@ -5542,7 +5882,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your slow range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lassító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 减速  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 减速  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"SlowMenu"
@@ -5616,7 +5956,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your smash range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 粉碎  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 粉碎  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"SmashMenu"
@@ -5690,7 +6030,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your smite range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 重击  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 重击  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"SmiteMenu"
@@ -5772,7 +6112,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your rock spammer ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A folyamatos szikla képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
-		"chi"			"你的 岩石连投 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 岩石连投 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"SpamMenu"
@@ -5854,7 +6194,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your splash ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A területi képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 溅射 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 溅射 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"SplashMenu"
@@ -6027,7 +6367,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your throw ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A dobó képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
-		"chi"			"你的 投掷 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 投掷 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"ThrowMenu"
@@ -6094,7 +6434,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your track ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A követő képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
-		"chi"			"你的 追踪 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 追踪 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"TrackMenu"
@@ -6191,7 +6531,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your ultimate ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A végső képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 终极 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 终极 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"UltimateMenu"
@@ -6273,7 +6613,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your undead ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az élőholt képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
-		"chi"			"你的 不死 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 不死 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"UndeadMenu"
@@ -6384,7 +6724,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your visual range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági látómező képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
-		"chi"			"你的 视觉  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 视觉  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"VisionMenu"
@@ -6504,7 +6844,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your periodical warping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az időszakos teleportáló képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 定期传送  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 定期传送  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"WarpHuman9"
@@ -6512,7 +6852,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your warp range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági teleportáló képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 传送  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 传送  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"WarpMenu"
@@ -6594,7 +6934,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your whirl range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági megpörgető képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 翻转  能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 翻转  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"WhirlMenu"
@@ -6661,7 +7001,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your witch spawner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A boszorka létrehozó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 召唤女巫 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 召唤女巫 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"WitchMenu"
@@ -6780,7 +7120,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your yell ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az üvöltő képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
-		"chi"			"你的 战吼 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 战吼 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"YellMenu"
@@ -6862,7 +7202,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your zombie spawner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A zombi létrehozó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 召唤僵尸 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 召唤僵尸 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"ZombieMenu"
