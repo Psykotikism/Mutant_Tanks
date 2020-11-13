@@ -65,6 +65,7 @@ enum struct esPlayer
 	int g_iCarOptions;
 	int g_iCooldown;
 	int g_iCount;
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -87,6 +88,7 @@ enum struct esAbility
 	int g_iCarDuration;
 	int g_iCarMessage;
 	int g_iCarOptions;
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -107,6 +109,7 @@ enum struct esCache
 	int g_iCarDuration;
 	int g_iCarMessage;
 	int g_iCarOptions;
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -309,6 +312,54 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
+public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+{
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
+	{
+		return;
+	}
+
+	static char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
+	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION);
+	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION2);
+	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION3);
+	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION4);
+	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
+	{
+		if (type == MT_COMBO_MAINRANGE && g_esCache[tank].g_iCarAbility == 1 && g_esCache[tank].g_iComboAbility == 1 && !g_esPlayer[tank].g_bActivated)
+		{
+			static char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
+			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			{
+				if (StrEqual(sSubset[iPos], MT_CONFIG_SECTION, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION2, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION3, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION4, false))
+				{
+					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
+					{
+						static float flDelay;
+						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+
+						switch (flDelay)
+						{
+							case 0.0: vCar(tank);
+							default:
+							{
+								DataPack dpCombo;
+								CreateDataTimer(flDelay, tTimerCombo, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+								dpCombo.WriteCell(GetClientUserId(tank));
+								dpCombo.WriteCell(iPos);
+							}
+						}
+					}
+
+					break;
+				}
+			}
+		}
+	}
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -318,6 +369,7 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
+				g_esAbility[iIndex].g_iComboAbility = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -341,6 +393,8 @@ public void MT_OnConfigsLoad(int mode)
 				if (bIsValidClient(iPlayer))
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esPlayer[iPlayer].g_iComboAbility = 0;
+					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
 					g_esPlayer[iPlayer].g_iHumanMode = 0;
@@ -364,6 +418,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
@@ -398,6 +453,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbility[type].g_iComboAbility, value, 0, 1);
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
@@ -442,6 +498,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iCarDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCarDuration, g_esAbility[type].g_iCarDuration);
 	g_esCache[tank].g_iCarMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCarMessage, g_esAbility[type].g_iCarMessage);
 	g_esCache[tank].g_iCarOptions = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCarOptions, g_esAbility[type].g_iCarOptions);
+	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
@@ -504,7 +561,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iCarAbility == 1 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iCarAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
 	{
 		vCarAbility(tank);
 	}
@@ -554,7 +611,7 @@ public void MT_OnButtonPressed(int tank, int button)
 								g_esPlayer[tank].g_bActivated = true;
 								g_esPlayer[tank].g_iCount++;
 
-								vCar(tank);
+								vCar2(tank);
 
 								MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
 							}
@@ -598,18 +655,43 @@ public void MT_OnChangeType(int tank, bool revert)
 	vRemoveCar(tank);
 }
 
-static void vCar(int tank)
+static void vCar(int tank, int pos = -1)
+{
+	g_esPlayer[tank].g_bActivated = true;
+
+	vCar2(tank, pos);
+
+	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	{
+		g_esPlayer[tank].g_iCount++;
+
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+	}
+
+	if (g_esCache[tank].g_iCarMessage == 1)
+	{
+		static char sTankName[33];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Car", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Car", LANG_SERVER, sTankName);
+	}
+}
+
+static void vCar2(int tank, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
 
+	static float flInterval;
+	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esCache[tank].g_flCarInterval;
 	DataPack dpCar;
-	CreateDataTimer(g_esCache[tank].g_flCarInterval, tTimerCar, dpCar, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateDataTimer(flInterval, tTimerCar, dpCar, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpCar.WriteCell(GetClientUserId(tank));
 	dpCar.WriteCell(g_esPlayer[tank].g_iTankType);
 	dpCar.WriteCell(GetTime());
+	dpCar.WriteCell(pos);
 }
 
 static void vCarAbility(int tank)
@@ -623,24 +705,7 @@ static void vCarAbility(int tank)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flCarChance)
 		{
-			g_esPlayer[tank].g_bActivated = true;
-
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
-			{
-				g_esPlayer[tank].g_iCount++;
-
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "CarHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
-			}
-
 			vCar(tank);
-
-			if (g_esCache[tank].g_iCarMessage == 1)
-			{
-				static char sTankName[33];
-				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Car", sTankName);
-				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Car", LANG_SERVER, sTankName);
-			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
@@ -714,10 +779,12 @@ public Action tTimerCar(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iCurrentTime;
+	static int iTime, iPos, iDuration, iCurrentTime;
 	iTime = pack.ReadCell();
+	iPos = pack.ReadCell();
+	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esCache[iTank].g_iCarDuration;
 	iCurrentTime = GetTime();
-	if (g_esCache[iTank].g_iCarAbility == 0 || bIsAreaNarrow(iTank, g_esCache[iTank].g_iOpenAreasOnly) || ((!MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) || (g_esCache[iTank].g_iHumanAbility == 1 && g_esCache[iTank].g_iHumanMode == 0)) && (iTime + g_esCache[iTank].g_iCarDuration) < iCurrentTime))
+	if (g_esCache[iTank].g_iCarAbility == 0 || bIsAreaNarrow(iTank, g_esCache[iTank].g_iOpenAreasOnly) || ((!MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) || (g_esCache[iTank].g_iHumanAbility == 1 && g_esCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
 	{
 		vReset2(iTank);
 
@@ -729,13 +796,13 @@ public Action tTimerCar(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flPos[3];
+	static float flPos[3], flAngles[3], flMinRadius, flMaxRadius;
 	GetClientEyePosition(iTank, flPos);
-
-	static float flAngles[3];
 	flAngles[0] = GetRandomFloat(-20.0, 20.0);
 	flAngles[1] = GetRandomFloat(-20.0, 20.0);
 	flAngles[2] = 60.0;
+	flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esCache[iTank].g_flCarRadius[0];
+	flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esCache[iTank].g_flCarRadius[1];
 
 	GetVectorAngles(flAngles, flAngles);
 
@@ -792,10 +859,10 @@ public Action tTimerCar(Handle timer, DataPack pack)
 
 			static int iCarColor[3];
 			static float flAngles2[3];
-			for (int iPos = 0; iPos < sizeof(iCarColor); iPos++)
+			for (int iIndex = 0; iIndex < sizeof(iCarColor); iIndex++)
 			{
-				iCarColor[iPos] = GetRandomInt(0, 255);
-				flAngles2[iPos] = GetRandomFloat(g_esCache[iTank].g_flCarRadius[0], g_esCache[iTank].g_flCarRadius[1]);
+				iCarColor[iIndex] = GetRandomInt(0, 255);
+				flAngles2[iIndex] = GetRandomFloat(flMinRadius, flMaxRadius);
 			}
 
 			SetEntityRenderColor(iCar, iCarColor[0], iCarColor[1], iCarColor[2], 255);
@@ -813,6 +880,22 @@ public Action tTimerCar(Handle timer, DataPack pack)
 			vDeleteEntity(iCar, 30.0);
 		}
 	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iCarAbility == 0 || g_esPlayer[iTank].g_bActivated)
+	{
+		return Plugin_Stop;
+	}
+
+	int iPos = pack.ReadCell();
+	vCar(iTank, iPos);
 
 	return Plugin_Continue;
 }

@@ -55,6 +55,7 @@ enum struct esPlayer
 	float g_flTrackSpeed;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iCount;
 	int g_iHumanAbility;
@@ -78,6 +79,7 @@ enum struct esAbility
 	float g_flTrackSpeed;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -97,6 +99,7 @@ enum struct esCache
 	float g_flTrackChance;
 	float g_flTrackSpeed;
 
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -291,6 +294,41 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
+public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+{
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
+	{
+		return;
+	}
+
+	static char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
+	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION);
+	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION2);
+	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION3);
+	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION4);
+	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
+	{
+		if (type == MT_COMBO_ROCKTHROW && g_esCache[tank].g_iTrackAbility == 1 && g_esCache[tank].g_iComboAbility == 1 && bIsValidEntity(weapon))
+		{
+			static char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
+			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			{
+				if (StrEqual(sSubset[iPos], MT_CONFIG_SECTION, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION2, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION3, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION4, false))
+				{
+					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
+					{
+						vTrack(tank, weapon);
+
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -301,6 +339,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
+				g_esAbility[iIndex].g_iComboAbility = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -322,6 +361,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esPlayer[iPlayer].g_iComboAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
@@ -343,6 +383,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
@@ -370,6 +411,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbility[type].g_iComboAbility, value, 0, 1);
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
@@ -401,6 +443,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flTrackChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flTrackChance, g_esAbility[type].g_flTrackChance);
 	g_esCache[tank].g_flTrackSpeed = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flTrackSpeed, g_esAbility[type].g_flTrackSpeed);
+	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
@@ -523,31 +566,14 @@ public void MT_OnRockBreak(int tank, int rock)
 
 public void MT_OnRockThrow(int tank, int rock)
 {
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iTrackAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flTrackChance)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iTrackAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flTrackChance)
 	{
 		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
 
-		if ((!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility == 0) && !g_esPlayer[tank].g_bActivated)
-		{
-			g_esPlayer[tank].g_bActivated = true;
-		}
-
-		DataPack dpTrack;
-		CreateDataTimer(0.5, tTimerTrack, dpTrack, TIMER_FLAG_NO_MAPCHANGE);
-		dpTrack.WriteCell(EntIndexToEntRef(rock));
-		dpTrack.WriteCell(GetClientUserId(tank));
-		dpTrack.WriteCell(g_esPlayer[tank].g_iTankType);
-
-		if (g_esCache[tank].g_iTrackMessage == 1)
-		{
-			static char sTankName[33];
-			MT_GetTankName(tank, sTankName);
-			MT_PrintToChatAll("%s %t", MT_TAG2, "Track", sTankName);
-			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Track", LANG_SERVER, sTankName);
-		}
+		vTrack(tank, rock);
 	}
 }
 
@@ -587,6 +613,28 @@ static void vSetGlow(int rock, int color, int flashing, int min, int max, int ty
 	SetEntProp(rock, Prop_Send, "m_nGlowRangeMin", min);
 	SetEntProp(rock, Prop_Send, "m_nGlowRange", max);
 	SetEntProp(rock, Prop_Send, "m_iGlowType", type);
+}
+
+static void vTrack(int tank, int rock)
+{
+	if ((!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && !g_esPlayer[tank].g_bActivated)
+	{
+		g_esPlayer[tank].g_bActivated = true;
+	}
+
+	DataPack dpTrack;
+	CreateDataTimer(0.5, tTimerTrack, dpTrack, TIMER_FLAG_NO_MAPCHANGE);
+	dpTrack.WriteCell(EntIndexToEntRef(rock));
+	dpTrack.WriteCell(GetClientUserId(tank));
+	dpTrack.WriteCell(g_esPlayer[tank].g_iTankType);
+
+	if (g_esCache[tank].g_iTrackMessage == 1)
+	{
+		static char sTankName[33];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Track", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Track", LANG_SERVER, sTankName);
+	}
 }
 
 static void vTrackThink(int rock)

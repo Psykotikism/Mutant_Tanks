@@ -254,11 +254,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 				if (!MT_IsTankSupported(attacker, MT_CHECK_FAKECLIENT) || g_esCache[attacker].g_iHumanAbility == 1)
 				{
-					static int iDamage, iHealth, iNewHealth, iFinalHealth;
+					static int iDamage, iHealth, iMaxHealth, iNewHealth, iFinalHealth;
 					iDamage = RoundToNearest(damage);
-					iHealth = GetClientHealth(attacker);
+					iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth");
+					iMaxHealth = MT_TankMaxHealth(attacker, 1);
 					iNewHealth = iHealth + iDamage;
 					iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
+					MT_TankMaxHealth(attacker, 3, iMaxHealth + iFinalHealth);
 					//SetEntityHealth(attacker, iFinalHealth);
 					SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
 

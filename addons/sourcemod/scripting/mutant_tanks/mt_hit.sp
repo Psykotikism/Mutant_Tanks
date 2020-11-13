@@ -43,10 +43,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-#define MT_CONFIG_SECTION "ability"
-#define MT_CONFIG_SECTION2 " ability"
-#define MT_CONFIG_SECTION3 "_ability"
-#define MT_CONFIG_SECTION4 ""
+#define MT_CONFIG_SECTION "hitability"
+#define MT_CONFIG_SECTION2 "hit ability"
+#define MT_CONFIG_SECTION3 "hit_ability"
+#define MT_CONFIG_SECTION4 "hit"
 #define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
 
 #define MT_MENU_HIT "Hit Ability"

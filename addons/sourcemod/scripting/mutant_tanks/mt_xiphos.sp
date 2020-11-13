@@ -400,7 +400,7 @@ static void vXiphos(int attacker, int victim, float damage, bool tank)
 
 	static int iDamage, iHealth, iMaxHealth, iNewHealth, iFinalHealth;
 	iDamage = RoundToNearest(damage);
-	iHealth = GetClientHealth(attacker);
+	iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth");
 	iMaxHealth = tank ? MT_MAXHEALTH : g_esCache[iTank].g_iXiphosMaxHealth;
 	iMaxHealth = (!tank && g_esCache[iTank].g_iXiphosMaxHealth == 0) ? GetEntProp(attacker, Prop_Data, "m_iMaxHealth") : iMaxHealth;
 	iNewHealth = iHealth + iDamage;
@@ -408,9 +408,14 @@ static void vXiphos(int attacker, int victim, float damage, bool tank)
 	//SetEntityHealth(attacker, iFinalHealth);
 	SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
 
-	static int iType;
-	iType = tank ? 1 : 2;
-	if (g_esCache[iTank].g_iXiphosMessage & iType)
+	if (tank)
+	{
+		MT_TankMaxHealth(attacker, 3, (MT_TankMaxHealth(attacker, 1) + iFinalHealth));
+	}
+
+	static int iFlag;
+	iFlag = tank ? (1 << 0) : (1 << 1);
+	if (g_esCache[iTank].g_iXiphosMessage & iFlag)
 	{
 		static char sTankName[33];
 		MT_GetTankName(iTank, sTankName);

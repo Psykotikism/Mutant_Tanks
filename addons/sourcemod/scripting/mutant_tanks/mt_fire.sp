@@ -45,7 +45,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 
-#define SOUND_EXPLODE "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_1.wav"
+#define SOUND_EXPLODE2 "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_1.wav" // Only available in L4D2
+#define SOUND_EXPLODE1 "weapons/hegrenade/explode4.wav"
 
 #define MT_CONFIG_SECTION "fireability"
 #define MT_CONFIG_SECTION2 "fire ability"
@@ -67,6 +68,7 @@ enum struct esPlayer
 	float g_flFireRockChance;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iCount;
 	int g_iFireAbility;
@@ -96,6 +98,7 @@ enum struct esAbility
 	float g_flFireRockChance;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iFireAbility;
 	int g_iFireDeath;
 	int g_iFireEffect;
@@ -121,6 +124,7 @@ enum struct esCache
 	float g_flFireRangeChance;
 	float g_flFireRockChance;
 
+	int g_iComboAbility;
 	int g_iFireAbility;
 	int g_iFireDeath;
 	int g_iFireEffect;
@@ -162,7 +166,11 @@ public void OnMapStart()
 {
 	PrecacheModel(MODEL_GASCAN, true);
 
-	PrecacheSound(SOUND_EXPLODE, true);
+	switch (bIsValidGame())
+	{
+		case true: PrecacheSound(SOUND_EXPLODE2, true);
+		case false: PrecacheSound(SOUND_EXPLODE1, true);
+	}
 
 	vReset();
 }
@@ -327,7 +335,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esCache[attacker].g_iFireHitMode == 0 || g_esCache[attacker].g_iFireHitMode == 1) && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esCache[attacker].g_iFireHitMode == 0 || g_esCache[attacker].g_iFireHitMode == 1) && bIsSurvivor(victim) && g_esCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 			{
@@ -336,10 +344,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vFireHit(victim, attacker, g_esCache[attacker].g_flFireChance, g_esCache[attacker].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vFireHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esCache[attacker].g_flFireChance, g_esCache[attacker].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esCache[victim].g_iFireHitMode == 0 || g_esCache[victim].g_iFireHitMode == 2) && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esCache[victim].g_iFireHitMode == 0 || g_esCache[victim].g_iFireHitMode == 2) && bIsSurvivor(attacker) && g_esCache[victim].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
 			{
@@ -348,7 +356,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vFireHit(attacker, victim, g_esCache[victim].g_flFireChance, g_esCache[victim].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vFireHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esCache[victim].g_flFireChance, g_esCache[victim].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -363,6 +371,97 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
+public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+{
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
+	{
+		return;
+	}
+
+	static char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
+	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION);
+	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION2);
+	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION3);
+	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION4);
+	if (g_esCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
+	{
+		static char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
+		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		{
+			if (StrEqual(sSubset[iPos], MT_CONFIG_SECTION, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION2, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION3, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION4, false))
+			{
+				static float flDelay;
+				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+
+				switch (type)
+				{
+					case MT_COMBO_MAINRANGE:
+					{
+						if (g_esCache[tank].g_iFireAbility == 1)
+						{
+							switch (flDelay)
+							{
+								case 0.0: vFireAbility(tank, random, iPos);
+								default:
+								{
+									DataPack dpCombo;
+									CreateDataTimer(flDelay, tTimerCombo, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+									dpCombo.WriteCell(GetClientUserId(tank));
+									dpCombo.WriteFloat(random);
+									dpCombo.WriteCell(iPos);
+								}
+							}
+						}
+					}
+					case MT_COMBO_MELEEHIT:
+					{
+						static float flChance;
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+
+						switch (flDelay)
+						{
+							case 0.0:
+							{
+								if ((g_esCache[tank].g_iFireHitMode == 0 || g_esCache[tank].g_iFireHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								{
+									vFireHit(survivor, tank, random, flChance, g_esCache[tank].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+								}
+								else if ((g_esCache[tank].g_iFireHitMode == 0 || g_esCache[tank].g_iFireHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								{
+									vFireHit(survivor, tank, random, flChance, g_esCache[tank].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+								}
+							}
+							default:
+							{
+								DataPack dpCombo;
+								CreateDataTimer(flDelay, tTimerCombo2, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+								dpCombo.WriteCell(GetClientUserId(survivor));
+								dpCombo.WriteCell(GetClientUserId(tank));
+								dpCombo.WriteFloat(random);
+								dpCombo.WriteFloat(flChance);
+								dpCombo.WriteString(classname);
+							}
+						}
+					}
+					case MT_COMBO_ROCKBREAK:
+					{
+						if (g_esCache[tank].g_iFireRockBreak == 1 && bIsValidEntity(weapon))
+						{
+							vFireRockBreak(tank, weapon, random, iPos);
+						}
+					}
+					case MT_COMBO_POSTSPAWN: vFireRange(tank, 0, random, iPos);
+					case MT_COMBO_UPONDEATH: vFireRange(tank, 0, random, iPos);
+				}
+
+				break;
+			}
+		}
+	}
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -373,6 +472,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
+				g_esAbility[iIndex].g_iComboAbility = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -400,6 +500,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esPlayer[iPlayer].g_iComboAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
@@ -427,6 +528,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
@@ -460,6 +562,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbility[type].g_iComboAbility, value, 0, 1);
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
@@ -507,6 +610,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iFireHitMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFireHitMode, g_esAbility[type].g_iFireHitMode);
 	g_esCache[tank].g_iFireMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFireMessage, g_esAbility[type].g_iFireMessage);
 	g_esCache[tank].g_iFireRockBreak = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFireRockBreak, g_esAbility[type].g_iFireRockBreak);
+	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
@@ -552,7 +656,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
-			vFireRange(iTank);
+			vFireRange(iTank, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveFire(iTank);
 		}
 	}
@@ -569,9 +673,9 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFireAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFireAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
-		vFireAbility(tank);
+		vFireAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -594,7 +698,7 @@ public void MT_OnButtonPressed(int tank, int button)
 				switch (g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime)
 				{
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "FireHuman3", g_esPlayer[tank].g_iCooldown - iTime);
-					case false: vFireAbility(tank);
+					case false: vFireAbility(tank, GetRandomFloat(0.1, 100.0));
 				}
 			}
 		}
@@ -620,7 +724,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnPostTankSpawn(int tank)
 {
-	vFireRange(tank);
+	vFireRange(tank, 1, GetRandomFloat(0.1, 100.0));
 }
 
 public void MT_OnRockBreak(int tank, int rock)
@@ -630,22 +734,9 @@ public void MT_OnRockBreak(int tank, int rock)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFireRockBreak == 1)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFireRockBreak == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
-		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flFireRockChance)
-		{
-			static float flPos[3];
-			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
-			vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
-
-			if (g_esCache[tank].g_iFireMessage & MT_MESSAGE_SPECIAL)
-			{
-				static char sTankName[33];
-				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Fire2", sTankName);
-				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fire2", LANG_SERVER, sTankName);
-			}
-		}
+		vFireRockBreak(tank, rock, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -655,7 +746,7 @@ static void vCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
-static void vFireAbility(int tank)
+static void vFireAbility(int tank, float random, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
@@ -670,7 +761,9 @@ static void vFireAbility(int tank)
 		static float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
-		static float flSurvivorPos[3], flDistance;
+		static float flSurvivorPos[3], flDistance, flRange, flChance;
+		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esCache[tank].g_flFireRange;
+		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esCache[tank].g_flFireRangeChance;
 		static int iSurvivorCount;
 		iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -680,9 +773,9 @@ static void vFireAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= g_esCache[tank].g_flFireRange)
+				if (flDistance <= flRange)
 				{
-					vFireHit(iSurvivor, tank, g_esCache[tank].g_flFireRangeChance, g_esCache[tank].g_iFireAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+					vFireHit(iSurvivor, tank, random, flChance, g_esCache[tank].g_iFireAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 
 					iSurvivorCount++;
 				}
@@ -703,7 +796,7 @@ static void vFireAbility(int tank)
 	}
 }
 
-static void vFireHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
+static void vFireHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[survivor].g_iImmunityFlags))
 	{
@@ -716,7 +809,7 @@ static void vFireHit(int survivor, int tank, float chance, int enabled, int mess
 		{
 			static int iTime;
 			iTime = GetTime();
-			if (GetRandomFloat(0.1, 100.0) <= chance)
+			if (random <= chance)
 			{
 				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 				{
@@ -736,7 +829,12 @@ static void vFireHit(int survivor, int tank, float chance, int enabled, int mess
 				vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
 
 				vEffect(survivor, tank, g_esCache[tank].g_iFireEffect, flags);
-				EmitSoundToAll(SOUND_EXPLODE, survivor);
+
+				switch (bIsValidGame())
+				{
+					case true: EmitSoundToAll(SOUND_EXPLODE2, survivor);
+					case false: EmitSoundToAll(SOUND_EXPLODE1, survivor);
+				}
 
 				if (g_esCache[tank].g_iFireMessage & messages)
 				{
@@ -765,11 +863,13 @@ static void vFireHit(int survivor, int tank, float chance, int enabled, int mess
 	}
 }
 
-static void vFireRange(int tank)
+static void vFireRange(int tank, int value, float random, int pos = -1)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFireDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flFireDeathChance)
+	static float flChance;
+	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esCache[tank].g_flFireDeathChance;
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFireDeath == 1 && random <= flChance)
 	{
-		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
+		if (g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -777,6 +877,26 @@ static void vFireRange(int tank)
 		static float flPos[3];
 		GetClientAbsOrigin(tank, flPos);
 		vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
+	}
+}
+
+static void vFireRockBreak(int tank, int rock, float random, int pos = -1)
+{
+	static float flChance;
+	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 12, pos) : g_esCache[tank].g_flFireRockChance;
+	if (random <= flChance)
+	{
+		static float flPos[3];
+		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
+		vSpecialAttack(tank, flPos, 10.0, MODEL_GASCAN);
+
+		if (g_esCache[tank].g_iFireMessage & MT_MESSAGE_SPECIAL)
+		{
+			static char sTankName[33];
+			MT_GetTankName(tank, sTankName);
+			MT_PrintToChatAll("%s %t", MT_TAG2, "Fire2", sTankName);
+			MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fire2", LANG_SERVER, sTankName);
+		}
 	}
 }
 
@@ -797,4 +917,52 @@ static void vReset()
 			vRemoveFire(iPlayer);
 		}
 	}
+}
+
+public Action tTimerCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iFireAbility == 0)
+	{
+		return Plugin_Stop;
+	}
+
+	float flRandom = pack.ReadFloat();
+	int iPos = pack.ReadCell();
+	vFireAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerCombo2(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!bIsSurvivor(iSurvivor))
+	{
+		return Plugin_Stop;
+	}
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iFireHit == 0)
+	{
+		return Plugin_Stop;
+	}
+
+	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
+	char sClassname[32];
+	pack.ReadString(sClassname, sizeof(sClassname));
+	if ((g_esCache[iTank].g_iFireHitMode == 0 || g_esCache[iTank].g_iFireHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	{
+		vFireHit(iSurvivor, iTank, flRandom, flChance, g_esCache[iTank].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+	}
+	else if ((g_esCache[iTank].g_iFireHitMode == 0 || g_esCache[iTank].g_iFireHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	{
+		vFireHit(iSurvivor, iTank, flRandom, flChance, g_esCache[iTank].g_iFireHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+	}
+
+	return Plugin_Continue;
 }

@@ -54,6 +54,7 @@ enum struct esPlayer
 	float g_flFastSpeed;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iCount;
 	int g_iDuration;
@@ -77,6 +78,7 @@ enum struct esAbility
 	float g_flFastSpeed;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iFastAbility;
 	int g_iFastDuration;
 	int g_iFastMessage;
@@ -95,6 +97,7 @@ enum struct esCache
 	float g_flFastChance;
 	float g_flFastSpeed;
 
+	int g_iComboAbility;
 	int g_iFastAbility;
 	int g_iFastDuration;
 	int g_iFastMessage;
@@ -318,6 +321,54 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
+public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+{
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
+	{
+		return;
+	}
+
+	static char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
+	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION);
+	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION2);
+	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION3);
+	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION4);
+	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
+	{
+		if (type == MT_COMBO_MAINRANGE && g_esCache[tank].g_iFastAbility == 1 && g_esCache[tank].g_iComboAbility == 1 && !g_esPlayer[tank].g_bActivated)
+		{
+			static char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
+			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			{
+				if (StrEqual(sSubset[iPos], MT_CONFIG_SECTION, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION2, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION3, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION4, false))
+				{
+					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
+					{
+						static float flDelay;
+						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+
+						switch (flDelay)
+						{
+							case 0.0: vFast(tank, iPos);
+							default:
+							{
+								DataPack dpCombo;
+								CreateDataTimer(flDelay, tTimerCombo, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+								dpCombo.WriteCell(GetClientUserId(tank));
+								dpCombo.WriteCell(iPos);
+							}
+						}
+
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -327,6 +378,7 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
+				g_esAbility[iIndex].g_iComboAbility = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -347,6 +399,7 @@ public void MT_OnConfigsLoad(int mode)
 				if (bIsValidClient(iPlayer))
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esPlayer[iPlayer].g_iComboAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
@@ -368,6 +421,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
@@ -391,6 +445,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbility[type].g_iComboAbility, value, 0, 1);
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
@@ -421,6 +476,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iFastAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFastAbility, g_esAbility[type].g_iFastAbility);
 	g_esCache[tank].g_iFastDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFastDuration, g_esAbility[type].g_iFastDuration);
 	g_esCache[tank].g_iFastMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFastMessage, g_esAbility[type].g_iFastMessage);
+	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
@@ -494,7 +550,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFastAbility == 1 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFastAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
 	{
 		vFastAbility(tank);
 	}
@@ -594,6 +650,33 @@ static void vCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
+static void vFast(int tank, int pos = -1)
+{
+	static int iDuration;
+	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esCache[tank].g_iFastDuration;
+	g_esPlayer[tank].g_bActivated = true;
+	g_esPlayer[tank].g_iDuration = GetTime() + iDuration;
+
+	static float flSpeed;
+	flSpeed = (pos != -1) ? MT_GetCombinationSetting(tank, 13, pos) : g_esCache[tank].g_flFastSpeed;
+	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", flSpeed);
+
+	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	{
+		g_esPlayer[tank].g_iCount++;
+
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FastHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+	}
+
+	if (g_esCache[tank].g_iFastMessage == 1)
+	{
+		static char sTankName[33];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Fast", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fast", LANG_SERVER, sTankName);
+	}
+}
+
 static void vFastAbility(int tank)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
@@ -605,25 +688,7 @@ static void vFastAbility(int tank)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flFastChance)
 		{
-			g_esPlayer[tank].g_bActivated = true;
-			g_esPlayer[tank].g_iDuration = GetTime() + g_esCache[tank].g_iFastDuration;
-
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
-			{
-				g_esPlayer[tank].g_iCount++;
-
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "FastHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
-			}
-
-			SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", g_esCache[tank].g_flFastSpeed);
-
-			if (g_esCache[tank].g_iFastMessage == 1)
-			{
-				static char sTankName[33];
-				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Fast", sTankName);
-				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fast", LANG_SERVER, sTankName);
-			}
+			vFast(tank);
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
@@ -679,4 +744,20 @@ static void vReset3(int tank)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FastHuman5", g_esPlayer[tank].g_iCooldown - iTime);
 	}
+}
+
+public Action tTimerCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iFastAbility == 0 || g_esPlayer[iTank].g_bActivated)
+	{
+		return Plugin_Stop;
+	}
+
+	int iPos = pack.ReadCell();
+	vFast(iTank, iPos);
+
+	return Plugin_Continue;
 }

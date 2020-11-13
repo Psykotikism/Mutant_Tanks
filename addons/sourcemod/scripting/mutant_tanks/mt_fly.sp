@@ -66,6 +66,7 @@ enum struct esPlayer
 	float g_flLastTime;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iCount;
 	int g_iDuration;
@@ -91,6 +92,8 @@ enum struct esAbility
 	float g_flFlySpeed;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iFlyAbility;
 	int g_iFlyDuration;
 	int g_iFlyMessage;
@@ -111,6 +114,7 @@ enum struct esCache
 	float g_flFlyChance;
 	float g_flFlySpeed;
 
+	int g_iComboAbility;
 	int g_iFlyAbility;
 	int g_iFlyDuration;
 	int g_iFlyMessage;
@@ -364,7 +368,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
 	{
-		if (MT_IsTankSupported(attacker) && !MT_IsTankSupported(attacker, MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(attacker) && g_esCache[attacker].g_iFlyAbility == 1 && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && (!MT_IsTankSupported(attacker, MT_CHECK_FAKECLIENT) || g_esCache[attacker].g_iHumanAbility == 2) && MT_IsCustomTankSupported(attacker) && g_esCache[attacker].g_iFlyAbility == 1 && bIsSurvivor(victim))
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 			{
@@ -385,7 +389,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 			}
 		}
-		else if (MT_IsTankSupported(victim) && !MT_IsTankSupported(victim, MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(victim) && g_esCache[victim].g_iFlyAbility == 1 && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && (!MT_IsTankSupported(victim, MT_CHECK_FAKECLIENT) || g_esCache[victim].g_iHumanAbility == 2) && MT_IsCustomTankSupported(victim) && g_esCache[victim].g_iFlyAbility == 1 && bIsSurvivor(attacker))
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
 			{
@@ -409,6 +413,59 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
+public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+{
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
+	{
+		g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
+		return;
+	}
+
+	g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
+	static char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
+	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION);
+	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION2);
+	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION3);
+	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION4);
+	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
+	{
+		if (type == MT_COMBO_MAINRANGE && g_esCache[tank].g_iFlyAbility == 1 && g_esCache[tank].g_iComboAbility == 1 && !g_esPlayer[tank].g_bActivated)
+		{
+			static char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
+			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			{
+				if (StrEqual(sSubset[iPos], MT_CONFIG_SECTION, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION2, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION3, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION4, false))
+				{
+					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
+					{
+						static float flDelay;
+						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
+						switch (flDelay)
+						{
+							case 0.0: vFly(tank, true, iPos);
+							default:
+							{
+								DataPack dpCombo;
+								CreateDataTimer(flDelay, tTimerCombo, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+								dpCombo.WriteCell(GetClientUserId(tank));
+								dpCombo.WriteCell(iPos);
+							}
+						}
+
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -419,6 +476,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
+				g_esAbility[iIndex].g_iComboAbility = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -441,6 +499,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esPlayer[iPlayer].g_iComboAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
@@ -463,7 +522,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 1);
+		g_esPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esPlayer[admin].g_iHumanMode, value, 0, 1);
@@ -491,7 +551,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbility[type].g_iComboAbility, value, 0, 1);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
 		g_esAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esAbility[type].g_iHumanMode, value, 0, 1);
@@ -526,6 +587,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iFlyAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFlyAbility, g_esAbility[type].g_iFlyAbility);
 	g_esCache[tank].g_iFlyDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFlyDuration, g_esAbility[type].g_iFlyDuration);
 	g_esCache[tank].g_iFlyType = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFlyType, g_esAbility[type].g_iFlyType);
+	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
@@ -570,7 +632,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "player_jump"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT))
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && (!MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) || g_esCache[iTank].g_iHumanAbility == 2))
 		{
 			if (g_esCache[iTank].g_iFlyAbility == 1 && (g_esCache[iTank].g_iFlyType == 0 || (g_esCache[iTank].g_iFlyType & MT_FLY_JUMP)) && !g_esPlayer[iTank].g_bActivated)
 			{
@@ -599,7 +661,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlyAbility == 1 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlyAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
 	{
 		vFlyAbility(tank);
 	}
@@ -689,7 +751,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnRockThrow(int tank, int rock)
 {
-	if (MT_IsTankSupported(tank) && !MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlyAbility == 1 && (g_esCache[tank].g_iFlyType == 0 || (g_esCache[tank].g_iFlyType & MT_FLY_THROW)) && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility == 2) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlyAbility == 1 && (g_esCache[tank].g_iFlyType == 0 || (g_esCache[tank].g_iFlyType & MT_FLY_THROW)) && !g_esPlayer[tank].g_bActivated)
 	{
 		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -706,7 +768,7 @@ static void vCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
-static void vFly(int tank, bool announce)
+static void vFly(int tank, bool announce, int pos = -1)
 {
 	if (bIsAreaNarrow(tank))
 	{
@@ -718,9 +780,11 @@ static void vFly(int tank, bool announce)
 		return;
 	}
 
+	static int iDuration;
+	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esCache[tank].g_iFlyDuration;
 	g_esPlayer[tank].g_bActivated = true;
 	g_esPlayer[tank].g_iCount++;
-	g_esPlayer[tank].g_iDuration = GetTime() + g_esCache[tank].g_iFlyDuration;
+	g_esPlayer[tank].g_iDuration = GetTime() + iDuration;
 	g_esPlayer[tank].g_flLastTime = GetEngineTime() - 0.01;
 
 	static float flOrigin[3], flEyeAngles[3];
@@ -740,7 +804,7 @@ static void vFly(int tank, bool announce)
 	SDKUnhook(tank, SDKHook_StartTouch, StartTouch);
 	SDKHook(tank, SDKHook_StartTouch, StartTouch);
 
-	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility > 0)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
 	}
@@ -789,6 +853,8 @@ static void vFlyThink(int tank, int buttons, float duration)
 			return;
 		}
 
+		static float flSpeed;
+		flSpeed = (g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(tank, 13, g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition) : g_esCache[tank].g_flFlySpeed;
 		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT))
 		{
 			if (buttons & IN_USE)
@@ -814,12 +880,12 @@ static void vFlyThink(int tank, int buttons, float duration)
 
 			SetEntityMoveType(tank, MOVETYPE_FLYGRAVITY); 
 
-			static float flEyeAngles[3], flOrigin[3], flTemp[3], flSpeed[3], flSpeed2, flForce[3], flForce2, flGravity, flGravity2; 
+			static float flEyeAngles[3], flOrigin[3], flTemp[3], flSpeed2[3], flSpeed3, flForce[3], flForce2, flGravity, flGravity2; 
 			flForce2 = 50.0;
 			flGravity = 0.001;
 			flGravity2 = 0.01;
 
-			GetEntPropVector(tank, Prop_Data, "m_vecVelocity", flSpeed);
+			GetEntPropVector(tank, Prop_Data, "m_vecVelocity", flSpeed2);
 			GetClientEyeAngles(tank, flEyeAngles);
 			GetClientAbsOrigin(tank, flOrigin);
 
@@ -833,7 +899,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
-				ScaleVector(flEyeAngles, g_esCache[tank].g_flFlySpeed);
+				ScaleVector(flEyeAngles, flSpeed);
 				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
 
 				return;
@@ -841,30 +907,30 @@ static void vFlyThink(int tank, int buttons, float duration)
 
 			if ((buttons & IN_SPEED) && !bJumping)
 			{
-				flSpeed2 = g_esCache[tank].g_flFlySpeed * 75.0 / 100.0;
+				flSpeed3 = flSpeed * 75.0 / 100.0;
 				if (buttons & IN_FORWARD)
 				{
-					flSpeed2 = g_esCache[tank].g_flFlySpeed;
+					flSpeed3 = flSpeed;
 				}
 
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
-				ScaleVector(flEyeAngles, flSpeed2);
+				ScaleVector(flEyeAngles, flSpeed3);
 				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
 
 				return;
 			}
 			else if (!(buttons & IN_SPEED) && (buttons & IN_DUCK) && !bJumping)
 			{
-				flSpeed2 = g_esCache[tank].g_flFlySpeed * 33.33 / 100.0;
+				flSpeed3 = flSpeed * 33.33 / 100.0;
 				if (buttons & IN_FORWARD)
 				{
-					flSpeed2 = g_esCache[tank].g_flFlySpeed * 50.0 / 100.0;
+					flSpeed3 = flSpeed * 50.0 / 100.0;
 				}
 
 				GetAngleVectors(flEyeAngles, flEyeAngles, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(flEyeAngles, flEyeAngles);
-				ScaleVector(flEyeAngles, flSpeed2);
+				ScaleVector(flEyeAngles, flSpeed3);
 				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flEyeAngles);
 
 				return;
@@ -899,14 +965,14 @@ static void vFlyThink(int tank, int buttons, float duration)
 			NormalizeVector(flForce, flForce);
 			ScaleVector(flForce, flForce2 * duration);
 
-			switch (FloatAbs(flSpeed[2]) > 40.0)
+			switch (FloatAbs(flSpeed2[2]) > 40.0)
 			{
-				case true: flGravity = flSpeed[2] * duration;
+				case true: flGravity = flSpeed2[2] * duration;
 				case false: flGravity = flGravity2;
 			}
 
-			static float flSpeed3;
-			flSpeed3 = GetVectorLength(flSpeed);
+			static float flSpeed4;
+			flSpeed4 = GetVectorLength(flSpeed2);
 
 			if (flGravity > 0.5)
 			{
@@ -917,11 +983,11 @@ static void vFlyThink(int tank, int buttons, float duration)
 				flGravity = -0.5; 
 			}
 
-			if (flSpeed3 > g_esCache[tank].g_flFlySpeed)
+			if (flSpeed4 > flSpeed)
 			{
-				NormalizeVector(flSpeed, flSpeed);
-				ScaleVector(flSpeed, g_esCache[tank].g_flFlySpeed);
-				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flSpeed);
+				NormalizeVector(flSpeed2, flSpeed2);
+				ScaleVector(flSpeed2, flSpeed);
+				TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flSpeed2);
 				flGravity = flGravity2;
 			}
 
@@ -1218,7 +1284,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 		AddVectors(flVelocity, flFront, flVelocity3);
 
 		NormalizeVector(flVelocity3, flVelocity3);
-		ScaleVector(flVelocity3, g_esCache[tank].g_flFlySpeed);
+		ScaleVector(flVelocity3, flSpeed);
 
 		SetEntityMoveType(tank, MOVETYPE_FLY);
 		vCopyVector(flVelocity3, g_esPlayer[tank].g_flCurrentVelocity);
@@ -1328,4 +1394,20 @@ static int iGetFlyTarget(float pos[3], float angle[3], int tank)
 	}
 
 	return iTarget;
+}
+
+public Action tTimerCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iFlyAbility == 0 || g_esPlayer[iTank].g_bActivated)
+	{
+		return Plugin_Stop;
+	}
+
+	int iPos = pack.ReadCell();
+	vFly(iTank, true, iPos);
+
+	return Plugin_Continue;
 }

@@ -65,6 +65,7 @@ enum struct esPlayer
 	float g_flWhirlSpeed;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iCount;
 	int g_iHumanAbility;
@@ -94,6 +95,7 @@ enum struct esAbility
 	float g_flWhirlSpeed;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -118,6 +120,7 @@ enum struct esCache
 	float g_flWhirlRangeChance;
 	float g_flWhirlSpeed;
 
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -330,7 +333,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esCache[attacker].g_iWhirlHitMode == 0 || g_esCache[attacker].g_iWhirlHitMode == 1) && bIsHumanSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esCache[attacker].g_iWhirlHitMode == 0 || g_esCache[attacker].g_iWhirlHitMode == 1) && bIsHumanSurvivor(victim) && g_esCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 			{
@@ -339,10 +342,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vWhirlHit(victim, attacker, g_esCache[attacker].g_flWhirlChance, g_esCache[attacker].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vWhirlHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esCache[attacker].g_flWhirlChance, g_esCache[attacker].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esCache[victim].g_iWhirlHitMode == 0 || g_esCache[victim].g_iWhirlHitMode == 2) && bIsHumanSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esCache[victim].g_iWhirlHitMode == 0 || g_esCache[victim].g_iWhirlHitMode == 2) && bIsHumanSurvivor(attacker) && g_esCache[victim].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
 			{
@@ -351,7 +354,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vWhirlHit(attacker, victim, g_esCache[victim].g_flWhirlChance, g_esCache[victim].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vWhirlHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esCache[victim].g_flWhirlChance, g_esCache[victim].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -366,6 +369,89 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
+public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+{
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
+	{
+		return;
+	}
+
+	static char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
+	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION);
+	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION2);
+	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION3);
+	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION4);
+	if (g_esCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
+	{
+		static char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
+		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		{
+			if (StrEqual(sSubset[iPos], MT_CONFIG_SECTION, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION2, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION3, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION4, false))
+			{
+				static float flDelay;
+				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+
+				switch (type)
+				{
+					case MT_COMBO_MAINRANGE:
+					{
+						if (g_esCache[tank].g_iWhirlAbility == 1)
+						{
+							switch (flDelay)
+							{
+								case 0.0: vWhirlAbility(tank, random, iPos);
+								default:
+								{
+									DataPack dpCombo;
+									CreateDataTimer(flDelay, tTimerCombo, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+									dpCombo.WriteCell(GetClientUserId(tank));
+									dpCombo.WriteFloat(random);
+									dpCombo.WriteCell(iPos);
+								}
+							}
+						}
+					}
+					case MT_COMBO_MELEEHIT:
+					{
+						static float flChance;
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+
+						switch (flDelay)
+						{
+							case 0.0:
+							{
+								if ((g_esCache[tank].g_iWhirlHitMode == 0 || g_esCache[tank].g_iWhirlHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								{
+									vWhirlHit(survivor, tank, random, flChance, g_esCache[tank].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
+								}
+								else if ((g_esCache[tank].g_iWhirlHitMode == 0 || g_esCache[tank].g_iWhirlHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								{
+									vWhirlHit(survivor, tank, random, flChance, g_esCache[tank].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
+								}
+							}
+							default:
+							{
+								DataPack dpCombo;
+								CreateDataTimer(flDelay, tTimerCombo2, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+								dpCombo.WriteCell(GetClientUserId(survivor));
+								dpCombo.WriteCell(GetClientUserId(tank));
+								dpCombo.WriteFloat(random);
+								dpCombo.WriteFloat(flChance);
+								dpCombo.WriteCell(iPos);
+								dpCombo.WriteString(classname);
+							}
+						}
+					}
+				}
+
+				break;
+			}
+		}
+	}
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -376,6 +462,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
+				g_esAbility[iIndex].g_iComboAbility = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -402,6 +489,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esPlayer[iPlayer].g_iComboAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
@@ -428,6 +516,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
@@ -460,6 +549,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbility[type].g_iComboAbility, value, 0, 1);
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
@@ -498,6 +588,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_flWhirlRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flWhirlRange, g_esAbility[type].g_flWhirlRange);
 	g_esCache[tank].g_flWhirlRangeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flWhirlRangeChance, g_esAbility[type].g_flWhirlRangeChance);
 	g_esCache[tank].g_flWhirlSpeed = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flWhirlSpeed, g_esAbility[type].g_flWhirlSpeed);
+	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
@@ -577,9 +668,9 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iWhirlAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iWhirlAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
-		vWhirlAbility(tank);
+		vWhirlAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -601,7 +692,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vWhirlAbility(tank);
+					case true: vWhirlAbility(tank, GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "WhirlHuman3", g_esPlayer[tank].g_iCooldown - iTime);
 				}
 			}
@@ -674,7 +765,7 @@ static void vStopWhirl(int survivor, int camera)
 	RemoveEntity(camera);
 }
 
-static void vWhirlAbility(int tank)
+static void vWhirlAbility(int tank, float random, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
@@ -689,7 +780,9 @@ static void vWhirlAbility(int tank)
 		static float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
-		static float flSurvivorPos[3], flDistance;
+		static float flSurvivorPos[3], flDistance, flRange, flChance;
+		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esCache[tank].g_flWhirlRange;
+		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esCache[tank].g_flWhirlRangeChance;
 		static int iSurvivorCount;
 		iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -699,9 +792,9 @@ static void vWhirlAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= g_esCache[tank].g_flWhirlRange)
+				if (flDistance <= flRange)
 				{
-					vWhirlHit(iSurvivor, tank, g_esCache[tank].g_flWhirlRangeChance, g_esCache[tank].g_iWhirlAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+					vWhirlHit(iSurvivor, tank, random, flChance, g_esCache[tank].g_iWhirlAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE, pos);
 
 					iSurvivorCount++;
 				}
@@ -722,7 +815,7 @@ static void vWhirlAbility(int tank)
 	}
 }
 
-static void vWhirlHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
+static void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[survivor].g_iImmunityFlags))
 	{
@@ -735,7 +828,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, int mes
 		{
 			static int iTime;
 			iTime = GetTime();
-			if (GetRandomFloat(0.1, 100.0) <= chance && !g_esPlayer[survivor].g_bAffected)
+			if (random <= chance && !g_esPlayer[survivor].g_bAffected)
 			{
 				static int iCamera;
 				iCamera = CreateEntityByName("env_sprite");
@@ -802,6 +895,7 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, int mes
 					dpWhirl.WriteCell(g_esPlayer[tank].g_iTankType);
 					dpWhirl.WriteCell(messages);
 					dpWhirl.WriteCell(enabled);
+					dpWhirl.WriteCell(pos);
 					dpWhirl.WriteCell(iAxis);
 					dpWhirl.WriteCell(GetTime());
 
@@ -833,6 +927,55 @@ static void vWhirlHit(int survivor, int tank, float chance, int enabled, int mes
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "WhirlAmmo");
 		}
 	}
+}
+
+public Action tTimerCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iWhirlAbility == 0)
+	{
+		return Plugin_Stop;
+	}
+
+	float flRandom = pack.ReadFloat();
+	int iPos = pack.ReadCell();
+	vWhirlAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerCombo2(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_bAffected)
+	{
+		return Plugin_Stop;
+	}
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iWhirlHit == 0)
+	{
+		return Plugin_Stop;
+	}
+
+	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
+	int iPos = pack.ReadCell();
+	char sClassname[32];
+	pack.ReadString(sClassname, sizeof(sClassname));
+	if ((g_esCache[iTank].g_iWhirlHitMode == 0 || g_esCache[iTank].g_iWhirlHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	{
+		vWhirlHit(iSurvivor, iTank, flRandom, flChance, g_esCache[iTank].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
+	}
+	else if ((g_esCache[iTank].g_iWhirlHitMode == 0 || g_esCache[iTank].g_iWhirlHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	{
+		vWhirlHit(iSurvivor, iTank, flRandom, flChance, g_esCache[iTank].g_iWhirlHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
+	}
+
+	return Plugin_Continue;
 }
 
 public Action tTimerWhirl(Handle timer, DataPack pack)
@@ -873,20 +1016,23 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iWhirlEnabled, iWhirlAxis, iTime;
+	static int iWhirlEnabled, iPos, iDuration, iWhirlAxis, iTime;
 	iWhirlEnabled = pack.ReadCell();
+	iPos = pack.ReadCell();
+	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esCache[iTank].g_iWhirlDuration;
 	iWhirlAxis = pack.ReadCell();
 	iTime = pack.ReadCell();
-	if (iWhirlEnabled == 0 || (iTime + g_esCache[iTank].g_iWhirlDuration) < GetTime())
+	if (iWhirlEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
 		vReset2(iSurvivor, iTank, iCamera, iMessage);
 
 		return Plugin_Stop;
 	}
 
-	static float flAngles[3];
+	static float flAngles[3], flSpeed;
 	GetEntPropVector(iCamera, Prop_Send, "m_angRotation", flAngles);
-	flAngles[iWhirlAxis] += g_esCache[iTank].g_flWhirlSpeed;
+	flSpeed = (iPos != -1) ? MT_GetCombinationSetting(iTank, 13, iPos) : g_esCache[iTank].g_flWhirlSpeed;
+	flAngles[iWhirlAxis] += flSpeed;
 	TeleportEntity(iCamera, NULL_VECTOR, flAngles, NULL_VECTOR);
 
 	return Plugin_Continue;

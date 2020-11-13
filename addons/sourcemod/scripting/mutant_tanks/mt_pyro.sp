@@ -61,6 +61,7 @@ enum struct esPlayer
 	float g_flPyroSpeedBoost;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iCount;
 	int g_iDuration;
@@ -86,6 +87,8 @@ enum struct esAbility
 	float g_flPyroSpeedBoost;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -106,6 +109,7 @@ enum struct esCache
 	float g_flPyroDamageBoost;
 	float g_flPyroSpeedBoost;
 
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -318,14 +322,16 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || !g_esPlayer[client].g_bActivated || (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1))
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || !g_esPlayer[client].g_bActivated || (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || g_esPlayer[client].g_iDuration == -1)
 	{
 		return Plugin_Continue;
 	}
 
 	if (!bIsPlayerBurning(client))
 	{
-		IgniteEntity(client, float(g_esCache[client].g_iPyroDuration));
+		static float flDuration;
+		flDuration = (g_esAbility[g_esPlayer[client].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(client, 4, g_esAbility[g_esPlayer[client].g_iTankType].g_iComboPosition) : float(g_esCache[client].g_iPyroDuration);
+		IgniteEntity(client, flDuration);
 	}
 
 	static int iTime;
@@ -354,31 +360,30 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Continue;
 			}
 
-			if (g_esCache[victim].g_iPyroAbility == 1)
+			if (g_esCache[victim].g_iPyroAbility == 1 && ((damagetype & DMG_BURN) || bIsPlayerBurning(victim)))
 			{
-				if ((damagetype & DMG_BURN) || bIsPlayerBurning(victim))
+				if (!g_esPlayer[victim].g_bActivated)
 				{
-					if (!g_esPlayer[victim].g_bActivated)
-					{
-						g_esPlayer[victim].g_bActivated = true;
-						g_esPlayer[victim].g_iDuration = GetTime() + g_esCache[victim].g_iPyroDuration;
-					}
+					static int iDuration;
+					iDuration = (g_esAbility[g_esPlayer[victim].g_iTankType].g_iComboPosition != -1) ? RoundToNearest(MT_GetCombinationSetting(victim, 4, g_esAbility[g_esPlayer[victim].g_iTankType].g_iComboPosition)) : g_esCache[victim].g_iPyroDuration;
+					g_esPlayer[victim].g_bActivated = true;
+					g_esPlayer[victim].g_iDuration = GetTime() + iDuration;
+				}
 
-					switch (g_esCache[victim].g_iPyroMode)
-					{
-						case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", MT_GetRunSpeed(victim) + g_esCache[victim].g_flPyroSpeedBoost);
-						case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", g_esCache[victim].g_flPyroSpeedBoost);
-					}
+				switch (g_esCache[victim].g_iPyroMode)
+				{
+					case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", MT_GetRunSpeed(victim) + g_esCache[victim].g_flPyroSpeedBoost);
+					case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", g_esCache[victim].g_flPyroSpeedBoost);
+				}
 
-					if (!g_esPlayer[victim].g_bActivated2 && g_esCache[victim].g_iPyroMessage == 1)
-					{
-						g_esPlayer[victim].g_bActivated2 = true;
+				if (!g_esPlayer[victim].g_bActivated2 && g_esCache[victim].g_iPyroMessage == 1)
+				{
+					g_esPlayer[victim].g_bActivated2 = true;
 
-						static char sTankName[33];
-						MT_GetTankName(victim, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro2", sTankName);
-						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pyro2", LANG_SERVER, sTankName);
-					}
+					static char sTankName[33];
+					MT_GetTankName(victim, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro2", sTankName);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pyro2", LANG_SERVER, sTankName);
 				}
 			}
 		}
@@ -389,26 +394,23 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Continue;
 			}
 
-			if (g_esCache[attacker].g_iPyroAbility == 1)
+			if (g_esCache[attacker].g_iPyroAbility == 1 && g_esPlayer[attacker].g_bActivated)
 			{
-				if (g_esPlayer[attacker].g_bActivated)
+				static char sClassname[32];
+				GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+				if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 				{
-					static char sClassname[32];
-					GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-					if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+					switch (g_esCache[attacker].g_iPyroMode)
 					{
-						switch (g_esCache[attacker].g_iPyroMode)
+						case 0:
 						{
-							case 0:
-							{
-								damage += g_esCache[attacker].g_flPyroDamageBoost;
-								damage = MT_GetScaledDamage(damage);
-							}
-							case 1: damage = MT_GetScaledDamage(g_esCache[attacker].g_flPyroDamageBoost);
+							damage += g_esCache[attacker].g_flPyroDamageBoost;
+							damage = MT_GetScaledDamage(damage);
 						}
-
-						return Plugin_Changed;
+						case 1: damage = MT_GetScaledDamage(g_esCache[attacker].g_flPyroDamageBoost);
 					}
+
+					return Plugin_Changed;
 				}
 			}
 		}
@@ -424,6 +426,59 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
+public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+{
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
+	{
+		g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
+		return;
+	}
+
+	g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
+	static char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
+	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION);
+	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION2);
+	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION3);
+	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION4);
+	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
+	{
+		if (type == MT_COMBO_MAINRANGE && g_esCache[tank].g_iPyroAbility == 1 && g_esCache[tank].g_iComboAbility == 1 && !g_esPlayer[tank].g_bActivated)
+		{
+			static char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
+			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			{
+				if (StrEqual(sSubset[iPos], MT_CONFIG_SECTION, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION2, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION3, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION4, false))
+				{
+					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
+					{
+						static float flDelay;
+						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+						g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
+						switch (flDelay)
+						{
+							case 0.0: vPyro(tank, iPos);
+							default:
+							{
+								DataPack dpCombo;
+								CreateDataTimer(flDelay, tTimerCombo, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+								dpCombo.WriteCell(GetClientUserId(tank));
+								dpCombo.WriteCell(iPos);
+							}
+						}
+
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -433,6 +488,7 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
+				g_esAbility[iIndex].g_iComboAbility = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -455,6 +511,7 @@ public void MT_OnConfigsLoad(int mode)
 				if (bIsValidClient(iPlayer))
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esPlayer[iPlayer].g_iComboAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
@@ -478,6 +535,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
@@ -503,6 +561,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbility[type].g_iComboAbility, value, 0, 1);
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
@@ -533,6 +592,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_flPyroChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flPyroChance, g_esAbility[type].g_flPyroChance);
 	g_esCache[tank].g_flPyroDamageBoost = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flPyroDamageBoost, g_esAbility[type].g_flPyroDamageBoost);
 	g_esCache[tank].g_flPyroSpeedBoost = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flPyroSpeedBoost, g_esAbility[type].g_flPyroSpeedBoost);
+	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
@@ -610,7 +670,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iPyroAbility == 1 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iPyroAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
 	{
 		vPyroAbility(tank);
 	}
@@ -660,7 +720,9 @@ public void MT_OnButtonPressed(int tank, int button)
 								g_esPlayer[tank].g_bActivated = true;
 								g_esPlayer[tank].g_iCount++;
 
-								IgniteEntity(tank, float(g_esCache[tank].g_iPyroDuration));
+								static float flDuration;
+								flDuration = (g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(tank, 4, g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition) : float(g_esCache[tank].g_iPyroDuration);
+								IgniteEntity(tank, flDuration);
 							}
 							else if (g_esPlayer[tank].g_bActivated)
 							{
@@ -708,6 +770,31 @@ static void vCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
+static void vPyro(int tank, int pos = -1)
+{
+	static int iDuration;
+	iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esCache[tank].g_iPyroDuration;
+	g_esPlayer[tank].g_bActivated = true;
+	g_esPlayer[tank].g_iDuration = GetTime() + iDuration;
+
+	IgniteEntity(tank, float(iDuration));
+
+	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	{
+		g_esPlayer[tank].g_iCount++;
+
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "PyroHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+	}
+
+	if (g_esCache[tank].g_iPyroMessage == 1)
+	{
+		static char sTankName[33];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pyro", LANG_SERVER, sTankName);
+	}
+}
+
 static void vPyroAbility(int tank)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
@@ -719,25 +806,7 @@ static void vPyroAbility(int tank)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPyroChance)
 		{
-			g_esPlayer[tank].g_bActivated = true;
-			g_esPlayer[tank].g_iDuration = GetTime() + g_esCache[tank].g_iPyroDuration;
-
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
-			{
-				g_esPlayer[tank].g_iCount++;
-
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "PyroHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
-			}
-
-			IgniteEntity(tank, float(g_esCache[tank].g_iPyroDuration));
-
-			if (g_esCache[tank].g_iPyroMessage == 1)
-			{
-				static char sTankName[33];
-				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Pyro", sTankName);
-				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Pyro", LANG_SERVER, sTankName);
-			}
+			vPyro(tank);
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
@@ -796,4 +865,20 @@ static void vReset3(int tank)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "PyroHuman5", g_esPlayer[tank].g_iCooldown - iTime);
 	}
+}
+
+public Action tTimerCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iPyroAbility == 0 || g_esPlayer[iTank].g_bActivated)
+	{
+		return Plugin_Stop;
+	}
+
+	int iPos = pack.ReadCell();
+	vPyro(iTank, iPos);
+
+	return Plugin_Continue;
 }

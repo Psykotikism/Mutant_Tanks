@@ -63,6 +63,7 @@ enum struct esPlayer
 	float g_flMeteorRadius[2];
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iCount;
 	int g_iHumanAbility;
@@ -89,6 +90,7 @@ enum struct esAbility
 	float g_flMeteorRadius[2];
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -111,6 +113,7 @@ enum struct esCache
 	float g_flMeteorInterval;
 	float g_flMeteorRadius[2];
 
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -317,6 +320,54 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
+public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+{
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
+	{
+		return;
+	}
+
+	static char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
+	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION);
+	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION2);
+	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION3);
+	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION4);
+	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
+	{
+		if (type == MT_COMBO_MAINRANGE && g_esCache[tank].g_iMeteorAbility == 1 && g_esCache[tank].g_iComboAbility == 1 && !g_esPlayer[tank].g_bActivated)
+		{
+			static char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
+			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			{
+				if (StrEqual(sSubset[iPos], MT_CONFIG_SECTION, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION2, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION3, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION4, false))
+				{
+					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
+					{
+						static float flDelay;
+						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+
+						switch (flDelay)
+						{
+							case 0.0: vMeteor(tank, iPos);
+							default:
+							{
+								DataPack dpCombo;
+								CreateDataTimer(flDelay, tTimerCombo, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+								dpCombo.WriteCell(GetClientUserId(tank));
+								dpCombo.WriteCell(iPos);
+							}
+						}
+
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -327,6 +378,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
+				g_esAbility[iIndex].g_iComboAbility = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -352,6 +404,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esPlayer[iPlayer].g_iComboAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
@@ -377,6 +430,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
@@ -416,6 +470,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbility[type].g_iComboAbility, value, 0, 1);
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
@@ -462,6 +517,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_flMeteorInterval = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorInterval, g_esAbility[type].g_flMeteorInterval);
 	g_esCache[tank].g_flMeteorRadius[0] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorRadius[0], g_esAbility[type].g_flMeteorRadius[0]);
 	g_esCache[tank].g_flMeteorRadius[1] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorRadius[1], g_esAbility[type].g_flMeteorRadius[1]);
+	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
@@ -528,7 +584,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iMeteorAbility == 1 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iMeteorAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
 	{
 		vMeteorAbility(tank);
 	}
@@ -628,7 +684,46 @@ static void vCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
-static void vMeteor(int tank, int rock)
+static void vMeteor(int tank, int pos = -1)
+{
+	g_esPlayer[tank].g_bActivated = true;
+
+	vMeteor2(tank, pos);
+
+	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	{
+		g_esPlayer[tank].g_iCount++;
+
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "MeteorHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+	}
+
+	if (g_esCache[tank].g_iMeteorMessage == 1)
+	{
+		static char sTankName[33];
+		MT_GetTankName(tank, sTankName);
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Meteor", sTankName);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Meteor", LANG_SERVER, sTankName);
+	}
+}
+
+static void vMeteor2(int tank, int pos = -1)
+{
+	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+	{
+		return;
+	}
+
+	static float flInterval;
+	flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esCache[tank].g_flMeteorInterval;
+	DataPack dpMeteor;
+	CreateDataTimer(flInterval, tTimerMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	dpMeteor.WriteCell(GetClientUserId(tank));
+	dpMeteor.WriteCell(g_esPlayer[tank].g_iTankType);
+	dpMeteor.WriteCell(GetTime());
+	dpMeteor.WriteCell(pos);
+}
+
+static void vMeteor3(int tank, int rock, int pos = -1)
 {
 	if (!MT_IsTankSupported(tank) || bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[tank].g_iTankType) || !MT_IsCustomTankSupported(tank) || !bIsValidEntity(rock))
 	{
@@ -657,7 +752,8 @@ static void vMeteor(int tank, int rock)
 			static float flTankPos[3];
 			GetClientAbsOrigin(tank, flTankPos);
 
-			static float flSurvivorPos[3], flDistance;
+			static float flSurvivorPos[3], flDistance, flDamage;
+			flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : g_esCache[tank].g_flMeteorDamage;
 			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
 				if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
@@ -667,7 +763,7 @@ static void vMeteor(int tank, int rock)
 					flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 					if (flDistance < 200.0)
 					{
-						vDamageEntity(iSurvivor, tank, MT_GetScaledDamage(g_esCache[tank].g_flMeteorDamage), "16");
+						vDamageEntity(iSurvivor, tank, MT_GetScaledDamage(flDamage), "16");
 					}
 				}
 			}
@@ -692,20 +788,6 @@ static void vMeteor(int tank, int rock)
 	}
 }
 
-static void vMeteor2(int tank)
-{
-	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
-	{
-		return;
-	}
-
-	DataPack dpMeteor;
-	CreateDataTimer(g_esCache[tank].g_flMeteorInterval, tTimerMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	dpMeteor.WriteCell(GetClientUserId(tank));
-	dpMeteor.WriteCell(g_esPlayer[tank].g_iTankType);
-	dpMeteor.WriteCell(GetTime());
-}
-
 static void vMeteorAbility(int tank)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
@@ -717,24 +799,7 @@ static void vMeteorAbility(int tank)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flMeteorChance)
 		{
-			g_esPlayer[tank].g_bActivated = true;
-
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
-			{
-				g_esPlayer[tank].g_iCount++;
-
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "MeteorHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
-			}
-
-			vMeteor2(tank);
-
-			if (g_esCache[tank].g_iMeteorMessage == 1)
-			{
-				static char sTankName[33];
-				MT_GetTankName(tank, sTankName);
-				MT_PrintToChatAll("%s %t", MT_TAG2, "Meteor", sTankName);
-				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Meteor", LANG_SERVER, sTankName);
-			}
+			vMeteor(tank);
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
@@ -788,6 +853,41 @@ static void vReset3(int tank)
 	}
 }
 
+public Action tTimerCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iMeteorAbility == 0 || g_esPlayer[iTank].g_bActivated)
+	{
+		return Plugin_Stop;
+	}
+
+	int iPos = pack.ReadCell();
+	vMeteor(iTank, iPos);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerDestroyMeteor(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	static int iMeteor, iTank;
+	iMeteor = EntRefToEntIndex(pack.ReadCell());
+	iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsTankSupported(iTank) || iMeteor == INVALID_ENT_REFERENCE || !bIsValidEntity(iMeteor))
+	{
+		return Plugin_Stop;
+	}
+
+	static int iPos;
+	iPos = pack.ReadCell();
+	vMeteor3(iTank, iMeteor, iPos);
+
+	return Plugin_Continue;
+}
+
 public Action tTimerMeteor(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -802,10 +902,12 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTime, iCurrentTime;
+	static int iTime, iPos, iDuration, iCurrentTime;
 	iTime = pack.ReadCell();
+	iPos = pack.ReadCell();
+	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esCache[iTank].g_iMeteorDuration;
 	iCurrentTime = GetTime();
-	if (g_esCache[iTank].g_iMeteorAbility == 0 || ((!MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) || (g_esCache[iTank].g_iHumanAbility == 1 && g_esCache[iTank].g_iHumanMode == 0)) && (iTime + g_esCache[iTank].g_iMeteorDuration) < iCurrentTime))
+	if (g_esCache[iTank].g_iMeteorAbility == 0 || ((!MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) || (g_esCache[iTank].g_iHumanAbility == 1 && g_esCache[iTank].g_iHumanMode == 0)) && (iTime + iDuration) < iCurrentTime))
 	{
 		vReset2(iTank);
 
@@ -817,13 +919,14 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flPos[3];
+	static float flPos[3], flAngles[3], flMinRadius, flMaxRadius;
 	GetClientEyePosition(iTank, flPos);
-
-	static float flAngles[3];
 	flAngles[0] = GetRandomFloat(-20.0, 20.0);
 	flAngles[1] = GetRandomFloat(-20.0, 20.0);
 	flAngles[2] = 60.0;
+	flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esCache[iTank].g_flMeteorRadius[0];
+	flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esCache[iTank].g_flMeteorRadius[1];
+
 	GetVectorAngles(flAngles, flAngles);
 
 	static float flHitpos[3];
@@ -849,9 +952,9 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 		if (bIsValidEntity(iMeteor))
 		{
 			static float flAngles2[3];
-			for (int iPos = 0; iPos < sizeof(flAngles2); iPos++)
+			for (int iIndex = 0; iIndex < sizeof(flAngles2); iIndex++)
 			{
-				flAngles2[iPos] = GetRandomFloat(g_esCache[iTank].g_flMeteorRadius[0], g_esCache[iTank].g_flMeteorRadius[1]);
+				flAngles2[iIndex] = GetRandomFloat(flMinRadius, flMaxRadius);
 			}
 
 			static float flVelocity[3];
@@ -872,6 +975,7 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 			CreateDataTimer(10.0, tTimerDestroyMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE);
 			dpMeteor.WriteCell(iMeteor);
 			dpMeteor.WriteCell(GetClientUserId(iTank));
+			dpMeteor.WriteCell(iPos);
 		}
 	}
 
@@ -883,26 +987,9 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 		iTank2 = GetEntPropEnt(iMeteor, Prop_Data, "m_hThrower");
 		if (iTank == iTank2 && flGetGroundUnits(iMeteor) < 200.0)
 		{
-			vMeteor(iTank2, iMeteor);
+			vMeteor3(iTank2, iMeteor, iPos);
 		}
 	}
-
-	return Plugin_Continue;
-}
-
-public Action tTimerDestroyMeteor(Handle timer, DataPack pack)
-{
-	pack.Reset();
-
-	static int iMeteor, iTank;
-	iMeteor = EntRefToEntIndex(pack.ReadCell());
-	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsTankSupported(iTank) || iMeteor == INVALID_ENT_REFERENCE || !bIsValidEntity(iMeteor))
-	{
-		return Plugin_Stop;
-	}
-
-	vMeteor(iTank, iMeteor);
 
 	return Plugin_Continue;
 }

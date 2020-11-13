@@ -68,6 +68,7 @@ enum struct esPlayer
 	float g_flShakeRangeChance;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iCount;
 	int g_iHumanAbility;
@@ -99,6 +100,7 @@ enum struct esAbility
 	float g_flShakeRangeChance;
 
 	int g_iAccessFlags;
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -125,6 +127,7 @@ enum struct esCache
 	float g_flShakeRange;
 	float g_flShakeRangeChance;
 
+	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -337,7 +340,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esCache[attacker].g_iShakeHitMode == 0 || g_esCache[attacker].g_iShakeHitMode == 1) && bIsHumanSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esCache[attacker].g_iShakeHitMode == 0 || g_esCache[attacker].g_iShakeHitMode == 1) && bIsHumanSurvivor(victim) && g_esCache[attacker].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 			{
@@ -346,10 +349,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 			{
-				vShakeHit(victim, attacker, g_esCache[attacker].g_flShakeChance, g_esCache[attacker].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				vShakeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esCache[attacker].g_flShakeChance, g_esCache[attacker].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esCache[victim].g_iShakeHitMode == 0 || g_esCache[victim].g_iShakeHitMode == 2) && bIsHumanSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esCache[victim].g_iShakeHitMode == 0 || g_esCache[victim].g_iShakeHitMode == 2) && bIsHumanSurvivor(attacker) && g_esCache[victim].g_iComboAbility == 0)
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
 			{
@@ -358,7 +361,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (StrEqual(sClassname, "weapon_melee"))
 			{
-				vShakeHit(attacker, victim, g_esCache[victim].g_flShakeChance, g_esCache[victim].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				vShakeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esCache[victim].g_flShakeChance, g_esCache[victim].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 			}
 		}
 	}
@@ -373,6 +376,91 @@ public void MT_OnPluginCheck(ArrayList &list)
 	list.PushString(sName);
 }
 
+public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+{
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
+	{
+		return;
+	}
+
+	static char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
+	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION);
+	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION2);
+	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION3);
+	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION4);
+	if (g_esCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
+	{
+		static char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
+		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		{
+			if (StrEqual(sSubset[iPos], MT_CONFIG_SECTION, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION2, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION3, false) || StrEqual(sSubset[iPos], MT_CONFIG_SECTION4, false))
+			{
+				static float flDelay;
+				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+
+				switch (type)
+				{
+					case MT_COMBO_MAINRANGE:
+					{
+						if (g_esCache[tank].g_iShakeAbility == 1)
+						{
+							switch (flDelay)
+							{
+								case 0.0: vShakeAbility(tank, random, iPos);
+								default:
+								{
+									DataPack dpCombo;
+									CreateDataTimer(flDelay, tTimerCombo, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+									dpCombo.WriteCell(GetClientUserId(tank));
+									dpCombo.WriteFloat(random);
+									dpCombo.WriteCell(iPos);
+								}
+							}
+						}
+					}
+					case MT_COMBO_MELEEHIT:
+					{
+						static float flChance;
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+
+						switch (flDelay)
+						{
+							case 0.0:
+							{
+								if ((g_esCache[tank].g_iShakeHitMode == 0 || g_esCache[tank].g_iShakeHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								{
+									vShakeHit(survivor, tank, random, flChance, g_esCache[tank].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
+								}
+								else if ((g_esCache[tank].g_iShakeHitMode == 0 || g_esCache[tank].g_iShakeHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								{
+									vShakeHit(survivor, tank, random, flChance, g_esCache[tank].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
+								}
+							}
+							default:
+							{
+								DataPack dpCombo;
+								CreateDataTimer(flDelay, tTimerCombo2, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+								dpCombo.WriteCell(GetClientUserId(survivor));
+								dpCombo.WriteCell(GetClientUserId(tank));
+								dpCombo.WriteFloat(random);
+								dpCombo.WriteFloat(flChance);
+								dpCombo.WriteCell(iPos);
+								dpCombo.WriteString(classname);
+							}
+						}
+					}
+					case MT_COMBO_POSTSPAWN: vShakeRange(tank, true, 0, random, iPos);
+					case MT_COMBO_UPONDEATH: vShakeRange(tank, false, 0, random, iPos);
+				}
+
+				break;
+			}
+		}
+	}
+}
+
 public void MT_OnConfigsLoad(int mode)
 {
 	switch (mode)
@@ -383,6 +471,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
+				g_esAbility[iIndex].g_iComboAbility = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -411,6 +500,7 @@ public void MT_OnConfigsLoad(int mode)
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esPlayer[iPlayer].g_iComboAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
 					g_esPlayer[iPlayer].g_iHumanCooldown = 0;
@@ -439,6 +529,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
+		g_esPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esPlayer[admin].g_iComboAbility, value, 0, 1);
 		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 2);
 		g_esPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esPlayer[admin].g_iHumanAmmo, value, 0, 999999);
 		g_esPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esPlayer[admin].g_iHumanCooldown, value, 0, 999999);
@@ -473,6 +564,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
+		g_esAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esAbility[type].g_iComboAbility, value, 0, 1);
 		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 2);
 		g_esAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esAbility[type].g_iHumanAmmo, value, 0, 999999);
 		g_esAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esAbility[type].g_iHumanCooldown, value, 0, 999999);
@@ -515,6 +607,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_flShakeInterval = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flShakeInterval, g_esAbility[type].g_flShakeInterval);
 	g_esCache[tank].g_flShakeRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flShakeRange, g_esAbility[type].g_flShakeRange);
 	g_esCache[tank].g_flShakeRangeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flShakeRangeChance, g_esAbility[type].g_flShakeRangeChance);
+	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
 	g_esCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanCooldown, g_esAbility[type].g_iHumanCooldown);
@@ -567,7 +660,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 		{
-			vShakeRange(iTank, false);
+			vShakeRange(iTank, false, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveShake(iTank);
 		}
 	}
@@ -584,9 +677,9 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShakeAbility == 1)
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShakeAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
-		vShakeAbility(tank);
+		vShakeAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
 }
 
@@ -608,7 +701,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 				switch (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime)
 				{
-					case true: vShakeAbility(tank);
+					case true: vShakeAbility(tank, GetRandomFloat(0.1, 100.0));
 					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShakeHuman3", g_esPlayer[tank].g_iCooldown - iTime);
 				}
 			}
@@ -623,7 +716,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnPostTankSpawn(int tank)
 {
-	vShakeRange(tank, true);
+	vShakeRange(tank, true, 1, GetRandomFloat(0.1, 100.0));
 }
 
 static void vCopyStats(int oldTank, int newTank)
@@ -695,7 +788,7 @@ static void vShake(int survivor, float duration = 1.0)
 	EndMessage();
 }
 
-static void vShakeAbility(int tank)
+static void vShakeAbility(int tank, float random, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
@@ -710,7 +803,9 @@ static void vShakeAbility(int tank)
 		static float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
-		static float flSurvivorPos[3], flDistance;
+		static float flSurvivorPos[3], flDistance, flRange, flChance;
+		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esCache[tank].g_flShakeRange;
+		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esCache[tank].g_flShakeRangeChance;
 		static int iSurvivorCount;
 		iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -720,9 +815,9 @@ static void vShakeAbility(int tank)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= g_esCache[tank].g_flShakeRange)
+				if (flDistance <= flRange)
 				{
-					vShakeHit(iSurvivor, tank, g_esCache[tank].g_flShakeRangeChance, g_esCache[tank].g_iShakeAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
+					vShakeHit(iSurvivor, tank, random, flChance, g_esCache[tank].g_iShakeAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE, pos);
 
 					iSurvivorCount++;
 				}
@@ -743,7 +838,7 @@ static void vShakeAbility(int tank)
 	}
 }
 
-static void vShakeHit(int survivor, int tank, float chance, int enabled, int messages, int flags)
+static void vShakeHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[survivor].g_iImmunityFlags))
 	{
@@ -756,7 +851,7 @@ static void vShakeHit(int survivor, int tank, float chance, int enabled, int mes
 		{
 			static int iTime;
 			iTime = GetTime();
-			if (GetRandomFloat(0.1, 100.0) <= chance && !g_esPlayer[survivor].g_bAffected)
+			if (random <= chance && !g_esPlayer[survivor].g_bAffected)
 			{
 				g_esPlayer[survivor].g_bAffected = true;
 				g_esPlayer[survivor].g_iOwner = tank;
@@ -774,13 +869,16 @@ static void vShakeHit(int survivor, int tank, float chance, int enabled, int mes
 					}
 				}
 
+				static float flInterval;
+				flInterval = (pos != -1) ? MT_GetCombinationSetting(tank, 5, pos) : g_esCache[tank].g_flShakeInterval;
 				DataPack dpShake;
-				CreateDataTimer(g_esCache[tank].g_flShakeInterval, tTimerShake, dpShake, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				CreateDataTimer(flInterval, tTimerShake, dpShake, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpShake.WriteCell(GetClientUserId(survivor));
 				dpShake.WriteCell(GetClientUserId(tank));
 				dpShake.WriteCell(g_esPlayer[tank].g_iTankType);
 				dpShake.WriteCell(messages);
 				dpShake.WriteCell(enabled);
+				dpShake.WriteCell(pos);
 				dpShake.WriteCell(GetTime());
 
 				vEffect(survivor, tank, g_esCache[tank].g_iShakeEffect, flags);
@@ -813,11 +911,13 @@ static void vShakeHit(int survivor, int tank, float chance, int enabled, int mes
 	}
 }
 
-static void vShakeRange(int tank, bool idle)
+static void vShakeRange(int tank, bool idle, int value, float random, int pos = -1)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShakeDeath == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flShakeDeathChance)
+	static float flChance;
+	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esCache[tank].g_flShakeDeathChance;
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShakeDeath == 1 && random <= flChance)
 	{
-		if ((idle && MT_IsTankIdle(tank)) || bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
+		if (g_esCache[tank].g_iComboAbility == value || (idle && MT_IsTankIdle(tank)) || bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -825,7 +925,8 @@ static void vShakeRange(int tank, bool idle)
 		static float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
-		static float flSurvivorPos[3], flDistance;
+		static float flSurvivorPos[3], flDistance, flRange;
+		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esCache[tank].g_flShakeDeathRange;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
@@ -833,13 +934,62 @@ static void vShakeRange(int tank, bool idle)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
 				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= g_esCache[tank].g_flShakeDeathRange)
+				if (flDistance <= flRange)
 				{
 					vShake(tank, 2.0);
 				}
 			}
 		}
 	}
+}
+
+public Action tTimerCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iShakeAbility == 0)
+	{
+		return Plugin_Stop;
+	}
+
+	float flRandom = pack.ReadFloat();
+	int iPos = pack.ReadCell();
+	vShakeAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerCombo2(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_bAffected)
+	{
+		return Plugin_Stop;
+	}
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iShakeHit == 0)
+	{
+		return Plugin_Stop;
+	}
+
+	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
+	int iPos = pack.ReadCell();
+	char sClassname[32];
+	pack.ReadString(sClassname, sizeof(sClassname));
+	if ((g_esCache[iTank].g_iShakeHitMode == 0 || g_esCache[iTank].g_iShakeHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	{
+		vShakeHit(iSurvivor, iTank, flRandom, flChance, g_esCache[iTank].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
+	}
+	else if ((g_esCache[iTank].g_iShakeHitMode == 0 || g_esCache[iTank].g_iShakeHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	{
+		vShakeHit(iSurvivor, iTank, flRandom, flChance, g_esCache[iTank].g_iShakeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
+	}
+
+	return Plugin_Continue;
 }
 
 public Action tTimerShake(Handle timer, DataPack pack)
@@ -867,10 +1017,12 @@ public Action tTimerShake(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iShakeEnabled, iTime;
+	static int iShakeEnabled, iPos, iDuration, iTime;
 	iShakeEnabled = pack.ReadCell();
+	iPos = pack.ReadCell();
+	iDuration = (iPos != -1) ? RoundToNearest(MT_GetCombinationSetting(iTank, 4, iPos)) : g_esCache[iTank].g_iShakeDuration;
 	iTime = pack.ReadCell();
-	if (iShakeEnabled == 0 || (iTime + g_esCache[iTank].g_iShakeDuration) < GetTime())
+	if (iShakeEnabled == 0 || (iTime + iDuration) < GetTime())
 	{
 		vReset2(iSurvivor, iTank, iMessage);
 

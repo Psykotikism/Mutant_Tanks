@@ -16,22 +16,27 @@
 
 #include <sdktools>
 
+// Core plugin information
 #define MT_NAME "Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
 #define MT_DESCRIPTION "Mutant Tanks makes fighting Tanks great again!"
 #define MT_VERSION "8.80"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
+// Chat tags
 #define MT_TAG "[MT]"
 #define MT_TAG2 "\x04[MT]\x01"
 #define MT_TAG3 "\x04[MT]\x03"
 #define MT_TAG4 "\x04[MT]\x05"
 
-#define MT_MAX_ABILITIES 100
+// Constants
+#define MT_MAXABILITIES 100
+#define MT_MAXREWARDS 100
 #define MT_MAXTYPES 1000
 #define MT_MAXHEALTH 65535
 #define MT_MAX_HEALTH_REDUCTION -65535
 
+// Buttons
 #define MT_MAIN_KEY IN_USE
 #define MT_SUB_KEY IN_RELOAD
 #define MT_SPECIAL_KEY IN_ZOOM
@@ -62,6 +67,15 @@
 #define MT_MESSAGE_RANGE (1 << 1) // range ability
 #define MT_MESSAGE_SPECIAL (1 << 2) // special ability
 #define MT_MESSAGE_SPECIAL2 (1 << 3) // special ability #2
+
+// Combination types
+#define MT_COMBO_MAINRANGE 0 // main/range ability
+#define MT_COMBO_MELEEHIT 1 // weapon_tank_claw/weapon_melee
+#define MT_COMBO_ROCKTHROW 2 // when rock is thrown
+#define MT_COMBO_ROCKBREAK 3 // tank_rock; when rock breaks
+#define MT_COMBO_POSTSPAWN 4 // after spawning
+#define MT_COMBO_UPONDEATH 5 // when dying
+#define MT_COMBO_UPONINCAP 6 // when incapacitated
 
 // Forwards
 /**
@@ -98,6 +112,21 @@ forward void MT_OnButtonReleased(int tank, int button);
  * @param revert		True if reverting to a normal Tank, false otherwise.
  **/
 forward void MT_OnChangeType(int tank, bool revert);
+
+/**
+ * Called when a Mutant Tank's abilities are combined.
+ * Use this forward to trigger any combinations.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			0 = Main/range abilities, 1 = Hit abilities, 2 = Rock throw abilities, 3 = Rock break abilities,
+ *					4 = Post-spawn abilities, 5 = Upon-death abilities, 6 = Upon-incap abilities
+ * @param random		Random value to check against for chance to trigger combination.
+ * @param combo			String containing the list of abilities to combine.
+ * @param survivor		Client index of the survivor, if any.
+ * @param weapon		Entity index of the weapon, if any.
+ * @param classname		String containing the weapon classname, if any.
+ **/
+forward void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname);
 
 /**
  * Called when the config file is about to load.
@@ -219,6 +248,19 @@ forward void MT_OnPostTankSpawn(int tank);
 forward void MT_OnResetTimers(int mode, int tank);
 
 /**
+ * Called when a survivor is rewarded.
+ * Use this forward to reward survivors or to reset their rewards.
+ *
+ * @param survivor		Client index of the survivor.
+ * @param tank			Client index of the Tank.
+ * @param type			1 = Health, 2 = Damage boost, 3 = Speed boost, 4 = Ammo, 5 = Item, 6 = God mode, 7 = Health and ammo refill,
+ *					8 = Respawn, 9-100 = Reserved for third-party plugins (use this to add custom rewards)
+ * @param killer		True if the survivor killed the Tank, false if the survivor assisted.
+ * @param apply			True if the reward is given, false otherwise.
+ **/
+forward void MT_OnRewardSurvivor(int survivor, int tank, int type, bool killer, bool apply);
+
+/**
  * Called when a Mutant Tank's rock breaks.
  * Use this forward for any after-effects.
  *
@@ -287,6 +329,18 @@ native bool MT_DoesTypeRequireHumans(int type);
  * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
 native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
+
+/**
+ * Returns the value of a combination setting based on a position.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			1 = Chance, 2 = Damage, 3 = Delay, 4 = Duration, 5 = Interval, 6 = Min radius, 7 = Max radius,
+ *					8 = Range, 9 = Range Chance, 10 = Death range, 11 = Death range chance, 12 = Rock chance, 13 = Speed
+ * @param pos			The position in the setting's array to retrieve the value from. (0-9)
+ * @return			The value stored in the setting.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native float MT_GetCombinationSetting(int tank, int type, int pos);
 
 /**
  * Returns the current finale wave.
@@ -371,6 +425,16 @@ native float MT_GetRunSpeed(int tank);
 native float MT_GetScaledDamage(float damage);
 
 /**
+ * Returns a Mutant Tank's spawn type.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			The spawn type of the Tank.
+ *					0 = Normal, 1 = Boss, 2 = Randomized, 3 = Transformation, 4 = Combined abilities
+ * @error			Invalid client index, client is not in-game, or client is human.
+ **/
+native int MT_GetSpawnType(int tank);
+
+/**
  * Returns the RGB colors given to a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
@@ -379,7 +443,7 @@ native float MT_GetScaledDamage(float damage);
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
- * @error			Invalid client index, client is not in-game or type is less than 1 or greater than 2.
+ * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 2.
  **/
 native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
@@ -550,6 +614,16 @@ native void MT_SetTankType(int tank, int type, bool mode);
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
  **/
 native void MT_SpawnTank(int tank, int type);
+
+/**
+ * Get or set a Tank's max health.
+ *
+ * @param tank			Client index of the Tank.
+ * @param mode			1 = Get the Tank's max health, 2 = Get the Tank's stored max health,
+ *					3 = Set the Tank's max health without storing it, 4 = Set the Tank's max health and store it
+ * @param newHealth		The Tank's new max health.
+ **/
+native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
 
 /**
  * Called before the config file is read.
@@ -944,10 +1018,13 @@ stock void vAttachParticle2(float pos[3], float angle[3], const char[] particlen
 
 stock void vCheatCommand(int player, const char[] command, const char[] arguments = "")
 {
-	static int iCmdFlags;
+	static int iCmdFlags, iFlagBits;
+	iFlagBits = GetUserFlagBits(player);
 	iCmdFlags = GetCommandFlags(command);
+	SetUserFlagBits(player, ADMFLAG_ROOT);
 	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
 	FakeClientCommand(player, "%s %s", command, arguments);
+	SetUserFlagBits(player, iFlagBits);
 	SetCommandFlags(command, iCmdFlags|FCVAR_CHEAT);
 }
 
@@ -1093,6 +1170,20 @@ stock void vMultiTargetFilters(int toggle)
 			AddMultiTargetFilter("@special", bSpecialFilter, "all Special Infected", false);
 			AddMultiTargetFilter("@infected", bInfectedFilter, "all Infected", false);
 			AddMultiTargetFilter("@mutants", bMutantFilter, "all Mutant Tanks", false);
+		}
+	}
+}
+
+stock void vRemoveWeapons(int survivor)
+{
+	int iWeapon = 0;
+	for (int iSlot = 0; iSlot < 5; iSlot++)
+	{
+		iWeapon = GetPlayerWeaponSlot(survivor, iSlot);
+		if (iWeapon > 0)
+		{
+			RemovePlayerItem(survivor, iWeapon);
+			RemoveEntity(iWeapon);
 		}
 	}
 }
@@ -1775,13 +1866,6 @@ stock float flGetGroundUnits(int entity)
 	return 0.0;
 }
 
-stock float flGetRayDistance(float pos[3], float angle[3], int entity, int type)
-{
-	static float flHitPos[3];
-	iGetRayHitPos(pos, angle, flHitPos, entity, false, type);
-	return GetVectorDistance(pos, flHitPos);
-}
-
 stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max)
 {
 	if (StrContains(subsection, ",") != -1)
@@ -1805,6 +1889,13 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 	}
 
 	return curVal;
+}
+
+stock float flGetRayDistance(float pos[3], float angle[3], int entity, int type)
+{
+	static float flHitPos[3];
+	iGetRayHitPos(pos, angle, flHitPos, entity, false, type);
+	return GetVectorDistance(pos, flHitPos);
 }
 
 stock float flGetSettingValue(bool apply, bool human, float playerVal, float typeVal, bool override = false)
@@ -1896,6 +1987,31 @@ stock int iGetIdlePlayer(int bot)
 	return 0;
 }
 
+stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
+{
+	if (StrContains(subsection, ",") != -1)
+	{
+		static char sSet[16][16];
+		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+		{
+			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false) || StrEqual(sSet[iPos], sub4, false))
+				&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+			{
+				return iClamp(StringToInt(value), min, max);
+			}
+		}
+	}
+	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
+		&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	{
+		return iClamp(StringToInt(value), min, max);
+	}
+
+	return curVal;
+}
+
 stock int iGetPlayerCount()
 {
 	static int iPlayerCount;
@@ -1926,8 +2042,7 @@ stock int iGetRandomSurvivor(int tank)
 		{
 			continue;
 		}
-
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
+		else if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
 		{
 			iSurvivors[iSurvivorCount++] = iSurvivor;
 		}
@@ -1993,31 +2108,6 @@ stock int iGetRGBColor(int red, int green, int blue)
 	return (blue * 65536) + (green * 256) + red;
 }
 
-stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
-{
-	if (StrContains(subsection, ",") != -1)
-	{
-		static char sSet[16][16];
-		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
-		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
-		{
-			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false) || StrEqual(sSet[iPos], sub4, false))
-				&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
-			{
-				return iClamp(StringToInt(value), min, max);
-			}
-		}
-	}
-	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
-		&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
-	{
-		return iClamp(StringToInt(value), min, max);
-	}
-
-	return curVal;
-}
-
 stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, bool override = false)
 {
 	if (apply)
@@ -2030,6 +2120,52 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, b
 	}
 
 	return override ? -1 : 0;
+}
+
+stock int iGetWeaponOffset(const char[] weapon)
+{
+	if (StrEqual(weapon, "weapon_rifle") || StrEqual(weapon, "weapon_rifle_sg552") || StrEqual(weapon, "weapon_rifle_desert") || StrEqual(weapon, "weapon_rifle_ak47"))
+	{
+		return 3;
+	}
+	else if (StrEqual(weapon, "weapon_rifle_m60"))
+	{
+		return 0;
+	}
+	else if (StrEqual(weapon, "weapon_smg") || StrEqual(weapon, "weapon_smg_silenced") || StrEqual(weapon, "weapon_smg_mp5"))
+	{
+		return 5;
+	}
+	else if (StrEqual(weapon, "weapon_shotgun_chrome"))
+	{
+		return 7;
+	}
+	else if (StrEqual(weapon, "weapon_pumpshotgun"))
+	{
+		return bIsValidGame() ? 7 : 6;
+	}
+	else if (StrEqual(weapon, "weapon_shotgun_spas"))
+	{
+		return 8;
+	}
+	else if (StrEqual(weapon, "weapon_autoshotgun"))
+	{
+		return bIsValidGame() ? 8 : 6;
+	}
+	else if (StrEqual(weapon, "weapon_hunting_rifle"))
+	{
+		return bIsValidGame() ? 9 : 2;
+	}
+	else if (StrEqual(weapon, "weapon_sniper_scout") || StrEqual(weapon, "weapon_sniper_military") || StrEqual(weapon, "weapon_sniper_awp"))
+	{
+		return 10;
+	}
+	else if (StrEqual(weapon, "weapon_grenade_launcher"))
+	{
+		return 17;
+	}
+
+	return 0;
 }
 
 stock int iGetWitchCount()
@@ -2091,6 +2227,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_GetPropColors");
 	MarkNativeAsOptional("MT_GetRunSpeed");
 	MarkNativeAsOptional("MT_GetScaledDamage");
+	MarkNativeAsOptional("MT_GetSpawnType");
 	MarkNativeAsOptional("MT_GetTankColors");
 	MarkNativeAsOptional("MT_GetTankName");
 	MarkNativeAsOptional("MT_GetTankType");
@@ -2110,5 +2247,6 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_LogMessage");
 	MarkNativeAsOptional("MT_SetTankType");
 	MarkNativeAsOptional("MT_SpawnTank");
+	MarkNativeAsOptional("MT_TankMaxHealth");
 }
 #endif
