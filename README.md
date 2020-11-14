@@ -673,6 +673,17 @@ Forwards:
 forward void MT_OnAbilityActivated(int tank);
 
 /**
+ * Called before the config file is read.
+ * Use this forward to store the different formats of the ability's section name.
+ *
+ * @param list			List to store the first format.
+ * @param list2			List to store the second format.
+ * @param list3			List to store the third format.
+ * @param list4			List to store the fourth format.
+ **/
+forward void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4);
+
+/**
  * Called when a human-controlled Mutant Tank presses a button.
  * Use this forward to trigger abilities manually.
  *
@@ -1963,7 +1974,6 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate (PayPal only)
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 - Donate to me at alfred_llagas3637@yahoo.com
-
 
 
 

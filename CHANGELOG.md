@@ -129,6 +129,7 @@
 - Tanks will no longer activate their passive abilities on finale maps once the rescue vehicle leaves.
 - Idle Tanks will no longer glow through walls even when the `Glow Type` setting is set to `1`.
 - Idle Tanks will no longer turn into different types when the `Spawn Type` setting is set to `1`, `2`, or `3`.
+- Changed the method for checking whether or not abilities are installed.
 
 #### Config Files
 - Enabled the `Requires Humans` setting for some of the default Mutant Tank types.
@@ -213,7 +214,6 @@
 - Added the `MT_GetScaledDamage` native to allow developers to get the proper scaled damage of Mutant Tanks.
 - Added the `MT_GetGlowRange`, `MT_GetGlowType`, and `MT_IsGlowFlashing` natives to allow developers to retrieve the glow outline settings for Mutant Tanks.
 - Added the `MT_OnCopyStats` forward to allow developers to properly copy over active Tank stats when Tanks are passed around in competitive game modes.
-- Removed the `MT_OnAbilityCheck` forward.
 - Added the `MT_OnCombineAbilities` forward to allow developers to combine certain abilities.
 - Added the `MT_GetCombinationSetting` native to allow developers to retrieve values for combined abilities.
 - Added the `MT_GetSpawnType` native to allow developers to check what spawn type a Mutant Tank has.

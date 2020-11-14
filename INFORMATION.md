@@ -74,8 +74,9 @@
 
 			// The plugin will automatically disable any Mutant Tank whose abilities are not installed.
 			// Note: Do not change this setting if you are unsure of how it works.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: The ability plugins cache is only updated when configs are loaded/refreshed.
 			// Note: This does not disable Mutant Tanks that do not have any abilities.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -733,8 +734,9 @@
 
 			// The plugin will automatically disable the Mutant Tank if none of its abilities are installed.
 			// Note: Do not change this setting if you are unsure of how it works.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: The ability plugins cache is only updated when configs are loaded/refreshed.
 			// Note: This does not disable the Mutant Tank if it does not have any abilities.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
