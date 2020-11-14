@@ -150,45 +150,44 @@
 		}
 		"Reward"
 		{
-			// The number of reward types to choose from.
-			// Note: This setting is used to accommodate for any third-party plugins that uses Mutant Tanks' reward system. Leave this alone if your server does not have any.
-			// --
-			// Minimum: 1
-			// Maximum: 100
-			"Max Reward Types"			"7"
-
 			// Reward survivors for killing a Mutant Tank.
-			// Note: If the killer is the same player that assisted the most against the Mutant Tank, the "Reward Assistants" setting will be used instead.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 255
 			// --
 			// -1: OFF
 			// 0: Random
 			// 1: Health reward
 			// 2: Speed boost reward (temporary)
-			// 3: Damage boost reward (temporary)
-			// 4: Ammo reward
-			// 5: Item reward
-			// 6: God mode reward (temporary)
-			// 7: Health and ammo refill reward
-			// 8: Respawn reward
-			// 9-100: Reserved for third-party plugins.
+			// 4: Damage boost reward (temporary)
+			// 8: Ammo reward
+			// 16: Item reward
+			// 32: God mode reward (temporary)
+			// 64: Health and ammo refill reward
+			// 128: Respawn reward
 			"Reward Killers"			"-1"
 
 			// Reward survivors for assisting the most against a Mutant Tank.
-			// Note: If the assistant does less than 5% damage to the Mutant Tank, the "Reward Killers" setting will be used instead if the killer is the same player that assisted the most against the Mutant Tank.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 255
 			// --
 			// -1: OFF
 			// 0: Random
 			// 1: Health reward
 			// 2: Speed boost reward (temporary)
-			// 3: Damage boost reward (temporary)
-			// 4: Ammo reward
-			// 5: Item reward
-			// 6: God mode reward (temporary)
-			// 7: Health and ammo refill reward
-			// 8: Respawn reward
-			// 9-100: Reserved for third-party plugins.
+			// 4: Damage boost reward (temporary)
+			// 8: Ammo reward
+			// 16: Item reward
+			// 32: God mode reward (temporary)
+			// 64: Health and ammo refill reward
+			// 128: Respawn reward
 			"Reward Assistants"			"-1"
 
 			// The chance to reward survivors for killing a Mutant Tank.
@@ -206,7 +205,6 @@
 			"Reward Duration"			"10.0"
 
 			// The damage boost to reward to survivors.
-			// Note: This requires the reward type to be set to "3".
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// Minimum: 1.1
@@ -214,21 +212,24 @@
 			"Damage Boost Reward"			"1.25"
 
 			// The item to reward to survivors.
-			// Note: This requires the reward type to be set to "5".
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
-			// Item limit: 1
-			// Character limit: 32
+			// Item limit: 5
+			// Character limit for each item: 64
+			// --
+			// Example: "rifle_m60,machete"
+			// Example: "katana,molotov,pain_pills"
+			// Example: "grenade_launcher,first_aid_kit,adrenaline"
 			"Item Reward"				"first_aid_kit"
 
 			// Restore the previous loadouts of survivors after respawning them.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Respawn Loadout Reward"		"1"
 
 			// The speed boost to reward to survivors.
-			// Note: This requires the reward type to be set to "2".
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// Minimum: 1.1
@@ -238,6 +239,7 @@
 			// Override chosen reward types depending on the status of the recipient.
 			// Note: If the recipient is black and white, the recipient will receive Health as a reward.
 			// Note: If the recipient is dead, the recipient will receive Respawn as a reward.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// 0: OFF
 			// 1: ON
@@ -766,33 +768,42 @@
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// -1: OFF
-			// 0: Random
-			// 1: Health reward
-			// 2: Speed boost reward (temporary)
-			// 3: Damage boost reward (temporary)
-			// 4: Ammo reward
-			// 5: Item reward
-			// 6: God mode reward (temporary)
-			// 7: Health and ammo refill reward
-			// 8-100: Reserved for third-party plugins.
-			"Reward Killers"			"0"
-
-			// Reward survivors for assisting the most against a Mutant Tank.
-			// Note: Assistants will not be rewarded if they killed the Mutant Tank when the "Reward Killers" setting is enabled.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 255
 			// --
 			// -1: OFF
 			// 0: Random
 			// 1: Health reward
 			// 2: Speed boost reward (temporary)
-			// 3: Damage boost reward (temporary)
-			// 4: Ammo reward
-			// 5: Item reward
-			// 6: God mode reward (temporary)
-			// 7: Health and ammo refill reward
-			// 8-100: Reserved for third-party plugins.
+			// 4: Damage boost reward (temporary)
+			// 8: Ammo reward
+			// 16: Item reward
+			// 32: God mode reward (temporary)
+			// 64: Health and ammo refill reward
+			// 128: Respawn reward
+			"Reward Killers"			"0"
+
+			// Reward survivors for assisting the most against a Mutant Tank.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 255
+			// --
+			// -1: OFF
+			// 0: Random
+			// 1: Health reward
+			// 2: Speed boost reward (temporary)
+			// 4: Damage boost reward (temporary)
+			// 8: Ammo reward
+			// 16: Item reward
+			// 32: God mode reward (temporary)
+			// 64: Health and ammo refill reward
+			// 128: Respawn reward
 			"Reward Assistants"			"0"
 
 			// The chance to reward survivors for killing a Mutant Tank.
@@ -812,7 +823,6 @@
 			"Reward Duration"			"10.0"
 
 			// The damage boost to reward to survivors.
-			// Note: This requires the reward type to be set to "3".
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -821,22 +831,42 @@
 			"Damage Boost Reward"			"1.25"
 
 			// The item to reward to survivors.
-			// Note: This requires the reward type to be set to "5".
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Item limit: 1
-			// Character limit: 32
+			// Item limit: 5
+			// Character limit for each item: 64
+			// --
+			// Example: "rifle_m60,machete"
+			// Example: "katana,molotov,pain_pills"
+			// Example: "grenade_launcher,first_aid_kit,adrenaline"
 			"Item Reward"				"first_aid_kit"
 
+			// Restore the previous loadouts of survivors after respawning them.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Respawn Loadout Reward"		"1"
+
 			// The speed boost to reward to survivors.
-			// Note: This requires the reward type to be set to "2".
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.1
 			// Maximum: 999999.0
 			"Speed Boost Reward"			"1.25"
+
+			// Override chosen reward types depending on the status of the recipient.
+			// Note: If the recipient is black and white, the recipient will receive Health as a reward.
+			// Note: If the recipient is dead, the recipient will receive Respawn as a reward.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Useful Rewards"			"1"
 		}
 		"Glow"
 		{

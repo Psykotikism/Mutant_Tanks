@@ -5,9 +5,9 @@
 ### Bug fixes
 
 #### Core Plugin
-- Fixed the core plugin creating log files even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
-- Fixed the core plugin skipping some waves. (Thanks to Tank Rush for testing and reporting!)
-- Fixed the core plugin's glow outline not going away when Tanks are kicked.
+- Fixed log files being created even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
+- Fixed some waves being skipped. (Thanks to Tank Rush for testing and reporting!)
+- Fixed the glow outline not going away when Tanks are kicked.
 - Fixed the Tank wave spawner not respecting the limits set by the `Regular Amount`, `Finale Amount`, and `Finale Waves` settings.
 - Fixed some admin commands using the wrong access flags.
 - Fixed parenting problems with some entities.
@@ -22,7 +22,7 @@
 
 #### Settings
 - Fixed the `Requires Humans` setting not working in some config formats.
-- Fixed the `Requires Humans` setting not working when the core plugin is deciding which Mutant Tank type to spawn.
+- Fixed the `Requires Humans` setting not working when deciding which Mutant Tank type to spawn.
 - Fixed settings not having their values stored properly.
 - Fixed color-related settings from not picking random colors when set to `-1`.
 - Fixed the `Light Color` setting not working.
@@ -318,7 +318,7 @@
 ### Files
 
 #### Requirements
-- The `mt_clone` include file is now used by all plugins related to Mutant Tanks.
+- The `mt_clone` include file is now only used by the core plugin and the `Clone` ability.
 
 #### Updates
 - Updated config files.

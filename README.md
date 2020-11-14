@@ -839,8 +839,7 @@ forward void MT_OnResetTimers(int mode, int tank);
  *
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
- * @param type			1 = Health, 2 = Damage boost, 3 = Speed boost, 4 = Ammo, 5 = Item, 6 = God mode, 7 = Health and ammo refill,
- *					8 = Respawn, 9-100 = Reserved for third-party plugins (use this to add custom rewards)
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn
  * @param killer		True if the survivor killed the Tank, false if the survivor assisted.
  * @param apply			True if the reward is given, false otherwise.
  **/
@@ -1964,6 +1963,7 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate (PayPal only)
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 - Donate to me at alfred_llagas3637@yahoo.com
+
 
 
 
