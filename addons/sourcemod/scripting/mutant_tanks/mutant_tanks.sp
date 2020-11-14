@@ -222,6 +222,7 @@ enum ConfigState
 
 enum struct esGeneral
 {
+	ArrayList g_alAbilitySections[4];
 	ArrayList g_alFilePaths;
 	ArrayList g_alPlugins;
 	ArrayList g_alSections;
@@ -274,6 +275,7 @@ enum struct esGeneral
 	float g_flSpeedBoostReward;
 
 	GlobalForward g_gfAbilityActivatedForward;
+	GlobalForward g_gfAbilityCheckForward;
 	GlobalForward g_gfButtonPressedForward;
 	GlobalForward g_gfButtonReleasedForward;
 	GlobalForward g_gfChangeTypeForward;
@@ -532,8 +534,6 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 
 enum struct esTank
 {
-	bool g_bHasAbility;
-
 	char g_sComboSet[320];
 	char g_sHealthCharacters[4];
 	char g_sItemReward[320];
@@ -569,6 +569,7 @@ enum struct esTank
 	float g_flTransformDelay;
 	float g_flTransformDuration;
 
+	int g_iAbilityCount;
 	int g_iAccessFlags;
 	int g_iAnnounceArrival;
 	int g_iAnnounceDeath;
@@ -1082,6 +1083,7 @@ public void OnAllPluginsLoaded()
 public void OnPluginStart()
 {
 	g_esGeneral.g_gfAbilityActivatedForward = new GlobalForward("MT_OnAbilityActivated", ET_Ignore, Param_Cell);
+	g_esGeneral.g_gfAbilityCheckForward = new GlobalForward("MT_OnAbilityCheck", ET_Ignore, Param_Array, Param_Array, Param_Array, Param_Array);
 	g_esGeneral.g_gfButtonPressedForward = new GlobalForward("MT_OnButtonPressed", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfButtonReleasedForward = new GlobalForward("MT_OnButtonReleased", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfChangeTypeForward = new GlobalForward("MT_OnChangeType", ET_Ignore, Param_Cell, Param_Cell);
@@ -3688,6 +3690,19 @@ static void vCacheSettings(int tank)
 	Call_Finish();
 }
 
+static void vClearAbilityList()
+{
+	for (int iPos = 0; iPos < sizeof(esGeneral::g_alAbilitySections); iPos++)
+	{
+		if (g_esGeneral.g_alAbilitySections[iPos] != null)
+		{
+			g_esGeneral.g_alAbilitySections[iPos].Clear();
+
+			delete g_esGeneral.g_alAbilitySections[iPos];
+		}
+	}
+}
+
 static void vClearPluginList()
 {
 	if (g_esGeneral.g_alPlugins != null)
@@ -3797,6 +3812,17 @@ static void vLoadConfigs(const char[] savepath, int mode)
 		Call_PushArrayEx(g_esGeneral.g_alPlugins, MT_MAXABILITIES + 1, SM_PARAM_COPYBACK);
 		Call_Finish();
 	}
+
+	Call_StartForward(g_esGeneral.g_gfAbilityCheckForward);
+
+	vClearAbilityList();
+	for (int iPos = 0; iPos < sizeof(esGeneral::g_alAbilitySections); iPos++)
+	{
+		g_esGeneral.g_alAbilitySections[iPos] = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+		Call_PushArrayEx(g_esGeneral.g_alAbilitySections[iPos], MT_MAXABILITIES + 1, SM_PARAM_COPYBACK);
+	}
+
+	Call_Finish();
 
 	for (int iPos = 0; iPos < MT_MAXABILITIES; iPos++)
 	{
@@ -3951,7 +3977,7 @@ public void SMCParseStart(SMCParser smc)
 
 		for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 		{
-			g_esTank[iIndex].g_bHasAbility = false;
+			g_esTank[iIndex].g_iAbilityCount = -1;
 
 			FormatEx(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), "Tank #%i", iIndex);
 			g_esTank[iIndex].g_iTankEnabled = 0;
@@ -4806,9 +4832,14 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							}
 						}
 
-						if (!g_esTank[iIndex].g_bHasAbility && (StrContains(g_esGeneral.g_sCurrentSubSection, "ability", false) != -1 || StrEqual(key, "aenabled", false)))
+						if (g_esTank[iIndex].g_iAbilityCount == -1 && (StrContains(g_esGeneral.g_sCurrentSubSection, "ability", false) != -1 || (((StrContains(key, "ability", false) == 0 && StrContains(key, "enabled", false) != -1) || StrEqual(key, "aenabled", false) || (StrContains(key, "hit", false) != -1 && StrContains(key, "mode", false) == -1)) && StringToInt(value) > 0)))
 						{
-							g_esTank[iIndex].g_bHasAbility = true;
+							g_esTank[iIndex].g_iAbilityCount = 0;
+						}
+						else if (g_esTank[iIndex].g_iAbilityCount != -1 && (bFoundSection(g_esGeneral.g_sCurrentSubSection, 0) || bFoundSection(g_esGeneral.g_sCurrentSubSection, 1) || bFoundSection(g_esGeneral.g_sCurrentSubSection, 2) || bFoundSection(g_esGeneral.g_sCurrentSubSection, 3))
+							&& ((StrContains(key, "enabled", false) != -1 || (StrContains(key, "hit", false) != -1 && StrContains(key, "mode", false) == -1)) && StringToInt(value) > 0))
+						{
+							g_esTank[iIndex].g_iAbilityCount++;
 						}
 
 						Call_StartForward(g_esGeneral.g_gfConfigsLoadedForward);
@@ -5242,6 +5273,8 @@ public void SMCParseEnd(SMCParser smc, bool halted, bool failed)
 	g_esGeneral.g_iIgnoreLevel = 0;
 	g_esGeneral.g_sCurrentSection[0] = '\0';
 	g_esGeneral.g_sCurrentSubSection[0] = '\0';
+
+	vClearAbilityList();
 
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
@@ -5967,6 +6000,7 @@ static void vRemoveProps(int tank, int mode = 1)
 static void vReset()
 {
 	vResetRound();
+	vClearAbilityList();
 	vClearPluginList();
 }
 
@@ -7807,6 +7841,24 @@ static bool bCanTypeSpawn(int type = 0)
 	return false;
 }
 
+static bool bFoundSection(const char[] subsection, int index)
+{
+	if (g_esGeneral.g_alAbilitySections[index] != null && g_esGeneral.g_alAbilitySections[index].Length > 0)
+	{
+		static char sSection[32];
+		for (int iPos = 0; iPos < g_esGeneral.g_alAbilitySections[index].Length; iPos++)
+		{
+			g_esGeneral.g_alAbilitySections[index].GetString(iPos, sSection, sizeof(sSection));
+			if (StrEqual(subsection, sSection, false))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 static bool bHasCoreAdminAccess(int admin, int type = 0)
 {
 	if (!bIsValidClient(admin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || bIsDeveloper(admin))
@@ -8051,7 +8103,7 @@ static bool bIsTypeAvailable(int type, int tank = 0)
 		iPluginCount++;
 	}
 
-	return !g_esTank[type].g_bHasAbility || (g_esTank[type].g_bHasAbility && iPluginCount > 0);
+	return g_esTank[type].g_iAbilityCount == -1 || (g_esTank[type].g_iAbilityCount > 0 && iPluginCount > 0);
 }
 
 static bool bTankChance(int type)
