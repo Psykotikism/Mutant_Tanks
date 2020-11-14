@@ -31,7 +31,6 @@
 
 // Constants
 #define MT_MAXABILITIES 100
-#define MT_MAXREWARDS 100
 #define MT_MAXTYPES 1000
 #define MT_MAXHEALTH 65535
 #define MT_MAX_HEALTH_REDUCTION -65535
@@ -43,12 +42,12 @@
 #define MT_SPECIAL_KEY2 IN_DUCK
 
 // Client check flags
-#define MT_CHECK_INDEX (1 << 0) // Check 0 < client <= MaxClients
-#define MT_CHECK_CONNECTED (1 << 1) // Check IsClientConnected(client)
-#define MT_CHECK_INGAME (1 << 2) // Check IsClientInGame(client)
-#define MT_CHECK_ALIVE (1 << 3) // Check IsPlayerAlive(client)
-#define MT_CHECK_INKICKQUEUE (1 << 4) // Check IsClientInKickQueue(client)
-#define MT_CHECK_FAKECLIENT (1 << 5) // Check IsFakeClient(client)
+#define MT_CHECK_INDEX (1 << 0) // check 0 < client <= MaxClients
+#define MT_CHECK_CONNECTED (1 << 1) // check IsClientConnected(client)
+#define MT_CHECK_INGAME (1 << 2) // check IsClientInGame(client)
+#define MT_CHECK_ALIVE (1 << 3) // check IsPlayerAlive(client)
+#define MT_CHECK_INKICKQUEUE (1 << 4) // check IsClientInKickQueue(client)
+#define MT_CHECK_FAKECLIENT (1 << 5) // check IsFakeClient(client)
 
 // Attack flags
 #define MT_ATTACK_CLAW (1 << 0) // weapon_tank_claw/tank_rock
@@ -67,6 +66,16 @@
 #define MT_MESSAGE_RANGE (1 << 1) // range ability
 #define MT_MESSAGE_SPECIAL (1 << 2) // special ability
 #define MT_MESSAGE_SPECIAL2 (1 << 3) // special ability #2
+
+// Reward flags
+#define MT_REWARD_HEALTH (1 << 0) // health reward
+#define MT_REWARD_SPEEDBOOST (1 << 1) // speed boost reward
+#define MT_REWARD_DAMAGEBOOST (1 << 2) // damage boost reward
+#define MT_REWARD_AMMO (1 << 3) // ammo reward
+#define MT_REWARD_ITEM (1 << 4) // item reward
+#define MT_REWARD_GODMODE (1 << 5) // god mode reward
+#define MT_REWARD_REFILL (1 << 6) // refill reward
+#define MT_REWARD_RESPAWN (1 << 7) // respawn reward
 
 // Combination types
 #define MT_COMBO_MAINRANGE 0 // main/range ability
@@ -253,8 +262,7 @@ forward void MT_OnResetTimers(int mode, int tank);
  *
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
- * @param type			1 = Health, 2 = Damage boost, 3 = Speed boost, 4 = Ammo, 5 = Item, 6 = God mode, 7 = Health and ammo refill,
- *					8 = Respawn, 9-100 = Reserved for third-party plugins (use this to add custom rewards)
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn
  * @param killer		True if the survivor killed the Tank, false if the survivor assisted.
  * @param apply			True if the reward is given, false otherwise.
  **/
@@ -1899,14 +1907,14 @@ stock float flGetRayDistance(float pos[3], float angle[3], int entity, int type)
 	return GetVectorDistance(pos, flHitPos);
 }
 
-stock float flGetSettingValue(bool apply, bool human, float playerVal, float typeVal, bool override = false)
+stock float flGetSettingValue(bool apply, bool human, float playerVal, float typeVal, bool override = false, float overrideVal = 0.0)
 {
 	if (apply)
 	{
 		switch (override)
 		{
-			case true: return (human && playerVal >= 0.0) ? playerVal : typeVal;
-			case false: return (human && playerVal > 0.0) ? playerVal : typeVal;
+			case true: return (human && playerVal >= overrideVal) ? playerVal : typeVal;
+			case false: return (human && playerVal > overrideVal) ? playerVal : typeVal;
 		}
 	}
 
@@ -2109,14 +2117,14 @@ stock int iGetRGBColor(int red, int green, int blue)
 	return (blue * 65536) + (green * 256) + red;
 }
 
-stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, bool override = false)
+stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, bool override = false, int overrideVal = 0)
 {
 	if (apply)
 	{
 		switch (override)
 		{
-			case true: return (human && playerVal >= 0) ? playerVal : typeVal;
-			case false: return (human && playerVal > 0) ? playerVal : typeVal;
+			case true: return (human && playerVal >= overrideVal) ? playerVal : typeVal;
+			case false: return (human && playerVal > overrideVal) ? playerVal : typeVal;
 		}
 	}
 
