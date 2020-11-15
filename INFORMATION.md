@@ -1,10 +1,11 @@
 # Information
 
 ## Notes
-> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
+> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
 
-- Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 36-37 and recompile at your own risk.)
-- Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 35 and recompile at your own risk.)
+- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
+- Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 86-87 and recompile at your own risk.)
+- Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile at your own risk.)
 - Ability count: 76 (Suggest more if you want; limit is 100.)
 
 ## Sections
@@ -150,13 +151,15 @@
 		}
 		"Reward"
 		{
-			// Reward survivors for killing a Mutant Tank.
+			// Reward survivors for fighting Mutant Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// Separate values with commas (",").
 			// --
 			// Add up numbers together for different results.
 			// --
-			// Minimum: 0
-			// Maximum: 255
+			// Minimum value for each: -1
+			// Maximum value for each: 255
 			// --
 			// -1: OFF
 			// 0: Random
@@ -168,82 +171,123 @@
 			// 32: God mode reward (temporary)
 			// 64: Health and ammo refill reward
 			// 128: Respawn reward
-			"Reward Killers"			"-1"
+			// --
+			// 1st number = Enable rewards for killers.
+			// 2nd number = Enable rewards for assistants.
+			// 3rd number = Enable rewards for teammates.
+			"Reward Enabled"			"-1,-1,-1"
 
-			// Reward survivors for assisting the most against a Mutant Tank.
+			// The chance to reward survivors for killing Mutant Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
-			// Add up numbers together for different results.
+			// Separate chances with commas (",").
 			// --
-			// Minimum: 0
-			// Maximum: 255
+			// Chances limit: 3
+			// Character limit for each chance: 6
 			// --
-			// -1: OFF
-			// 0: Random
-			// 1: Health reward
-			// 2: Speed boost reward (temporary)
-			// 4: Damage boost reward (temporary)
-			// 8: Ammo reward
-			// 16: Item reward
-			// 32: God mode reward (temporary)
-			// 64: Health and ammo refill reward
-			// 128: Respawn reward
-			"Reward Assistants"			"-1"
-
-			// The chance to reward survivors for killing a Mutant Tank.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Minimum value for each chance: 0.0 (No chance)
+			// Maximum value for each chance: 100.0 (Highest chance)
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
-			"Reward Chance"				"33.3"
+			// 1st number = Chance to reward killers.
+			// 2nd number = Chance to reward assistants.
+			// 3rd number = Chance to reward teammates.
+			"Reward Chance"				"33.3,33.3,33.3"
 
 			// The duration of temporary rewards.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Reward Duration"			"10.0"
+			// Separate durations with commas (",").
+			// --
+			// Durations limit: 3
+			// Character limit for each duration: 9
+			// --
+			// Minimum value for each duration: 0.1 (Shortest)
+			// Maximum value for each duration: 999999.0 (Longest)
+			// --
+			// 1st number = Duration for killer rewards.
+			// 2nd number = Duration for assistant rewards.
+			// 3rd number = Duration for teammate rewards.
+			"Reward Duration"			"10.0,10.0,10.0"
 
 			// The damage boost to reward to survivors.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
-			// Minimum: 1.1
-			// Maximum: 999999.0
-			"Damage Boost Reward"			"1.25"
+			// Separate boosts with commas (",").
+			// --
+			// Boosts limit: 3
+			// Character limit for each boost: 9
+			// --
+			// Minimum value for each boost: 1.1
+			// Maximum value for each boost: 999999.0 (Strongest)
+			// --
+			// 1st number = Boost for killers.
+			// 2nd number = Boost for assistants.
+			// 3rd number = Boost for teammates.
+			"Damage Boost Reward"			"1.25,1.25,1.25"
 
-			// The item to reward to survivors.
+			// The item(s) to reward to survivors.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
-			// Item limit: 5
-			// Character limit for each item: 64
+			// Separate item sets with commas (",").
+			// Separate items with semi-colons (";").
 			// --
-			// Example: "rifle_m60,machete"
-			// Example: "katana,molotov,pain_pills"
-			// Example: "grenade_launcher,first_aid_kit,adrenaline"
-			"Item Reward"				"first_aid_kit"
+			// Item sets limit: 3
+			// Character limit for each set: 320
+			// --
+			// 1st set = Item set to reward killers.
+			// 2nd set = Item set to reward assistants.
+			// 3rd set = Item set to reward teammates.
+			"Item Reward"				"first_aid_kit,first_aid_kit,first_aid_kit"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Respawn Loadout Reward"		"1"
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Restore loadouts for killers.
+			// 2nd number = Restore loadouts for assistants.
+			// 3rd number = Restore loadouts for teammates.
+			"Respawn Loadout Reward"		"1,1,1"
 
 			// The speed boost to reward to survivors.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
-			// Minimum: 1.1
-			// Maximum: 999999.0
-			"Speed Boost Reward"			"1.25"
+			// Separate boosts with commas (",").
+			// --
+			// Boosts limit: 3
+			// Character limit for each boost: 9
+			// --
+			// Minimum value for each boost: 1.1
+			// Maximum value for each boost: 999999.0 (Strongest)
+			// --
+			// 1st number = Boost for killers.
+			// 2nd number = Boost for assistants.
+			// 3rd number = Boost for teammates.
+			"Speed Boost Reward"			"1.25,1.25,1.25"
 
 			// Override chosen reward types depending on the status of the recipient.
 			// Note: If the recipient is black and white, the recipient will receive Health as a reward.
 			// Note: If the recipient is dead, the recipient will receive Respawn as a reward.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Useful Rewards"			"1"
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Enable useful rewards for killers.
+			// 2nd number = Enable useful rewards for assistants.
+			// 3rd number = Enable useful rewards for teammates.
+			"Useful Rewards"			"1,1,1"
 		}
 		"Competitive"
 		{
@@ -291,6 +335,7 @@
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// Minimum: 0 (OFF)
 			// Maximum: 65535
@@ -323,6 +368,19 @@
 			// 1: ON, show in hint text.
 			// 2: ON, show in center text.
 			"Display Health Type"			"1"
+
+			// Extra health given to the Mutant Tank.
+			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Disable this setting if it conflicts with other plugins.
+			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// Minimum: -65535
+			// Maximum: 65535
+			// --
+			// Positive numbers: Current health + Extra health
+			// Negative numbers: Current health - Extra health
+			"Extra Health"				"0"
 
 			// The characters used to represent the health bar of Mutant Tanks.
 			// Note: This setting only takes effect when the "Display Health" setting is enabled.
@@ -765,14 +823,16 @@
 		}
 		"Reward"
 		{
-			// Reward survivors for killing a Mutant Tank.
+			// Reward survivors for fighting Mutant Tanks.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
+			// Separate values with commas (",").
+			// --
 			// Add up numbers together for different results.
 			// --
-			// Minimum: 0
-			// Maximum: 255
+			// Minimum value for each: -1
+			// Maximum value for each: 255
 			// --
 			// -1: OFF
 			// 0: Random
@@ -784,80 +844,111 @@
 			// 32: God mode reward (temporary)
 			// 64: Health and ammo refill reward
 			// 128: Respawn reward
-			"Reward Killers"			"0"
+			// --
+			// 1st number = Enable rewards for killers.
+			// 2nd number = Enable rewards for assistants.
+			// 3rd number = Enable rewards for teammates.
+			"Reward Enabled"			"-1,-1,-1"
 
-			// Reward survivors for assisting the most against a Mutant Tank.
+			// The chance to reward survivors for killing Mutant Tanks.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Add up numbers together for different results.
+			// Separate chances with commas (",").
 			// --
-			// Minimum: 0
-			// Maximum: 255
+			// Chances limit: 3
+			// Character limit for each chance: 6
 			// --
-			// -1: OFF
-			// 0: Random
-			// 1: Health reward
-			// 2: Speed boost reward (temporary)
-			// 4: Damage boost reward (temporary)
-			// 8: Ammo reward
-			// 16: Item reward
-			// 32: God mode reward (temporary)
-			// 64: Health and ammo refill reward
-			// 128: Respawn reward
-			"Reward Assistants"			"0"
-
-			// The chance to reward survivors for killing a Mutant Tank.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
+			// Minimum value for each chance: 0.0 (No chance)
+			// Maximum value for each chance: 100.0 (Highest chance)
 			// --
-			// Minimum: 0.0 (No chance)
-			// Maximum: 100.0 (Highest chance)
-			"Reward Chance"				"33.3"
+			// 1st number = Chance to reward killers.
+			// 2nd number = Chance to reward assistants.
+			// 3rd number = Chance to reward teammates.
+			"Reward Chance"				"33.3,33.3,33.3"
 
 			// The duration of temporary rewards.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			"Reward Duration"			"10.0"
+			// Separate durations with commas (",").
+			// --
+			// Durations limit: 3
+			// Character limit for each duration: 9
+			// --
+			// Minimum value for each duration: 0.1 (Shortest)
+			// Maximum value for each duration: 999999.0 (Longest)
+			// --
+			// 1st number = Duration for killer rewards.
+			// 2nd number = Duration for assistant rewards.
+			// 3rd number = Duration for teammate rewards.
+			"Reward Duration"			"10.0,10.0,10.0"
 
 			// The damage boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.1
-			// Maximum: 999999.0
-			"Damage Boost Reward"			"1.25"
+			// Separate boosts with commas (",").
+			// --
+			// Boosts limit: 3
+			// Character limit for each boost: 9
+			// --
+			// Minimum value for each boost: 1.1
+			// Maximum value for each boost: 999999.0 (Strongest)
+			// --
+			// 1st number = Boost for killers.
+			// 2nd number = Boost for assistants.
+			// 3rd number = Boost for teammates.
+			"Damage Boost Reward"			"1.25,1.25,1.25"
 
-			// The item to reward to survivors.
+			// The item(s) to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Item limit: 5
-			// Character limit for each item: 64
+			// Separate item sets with commas (",").
+			// Separate items with semi-colons (";").
 			// --
-			// Example: "rifle_m60,machete"
-			// Example: "katana,molotov,pain_pills"
-			// Example: "grenade_launcher,first_aid_kit,adrenaline"
-			"Item Reward"				"first_aid_kit"
+			// Item sets limit: 3
+			// Character limit for each set: 320
+			// --
+			// 1st set = Item set to reward killers.
+			// 2nd set = Item set to reward assistants.
+			// 3rd set = Item set to reward teammates.
+			"Item Reward"				"first_aid_kit,first_aid_kit,first_aid_kit"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Respawn Loadout Reward"		"1"
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Restore loadouts for killers.
+			// 2nd number = Restore loadouts for assistants.
+			// 3rd number = Restore loadouts for teammates.
+			"Respawn Loadout Reward"		"1,1,1"
 
 			// The speed boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1.1
-			// Maximum: 999999.0
-			"Speed Boost Reward"			"1.25"
+			// Separate boosts with commas (",").
+			// --
+			// Boosts limit: 3
+			// Character limit for each boost: 9
+			// --
+			// Minimum value for each boost: 1.1
+			// Maximum value for each boost: 999999.0 (Strongest)
+			// --
+			// 1st number = Boost for killers.
+			// 2nd number = Boost for assistants.
+			// 3rd number = Boost for teammates.
+			"Speed Boost Reward"			"1.25,1.25,1.25"
 
 			// Override chosen reward types depending on the status of the recipient.
 			// Note: If the recipient is black and white, the recipient will receive Health as a reward.
@@ -865,9 +956,18 @@
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Useful Rewards"			"1"
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Enable useful rewards for killers.
+			// 2nd number = Enable useful rewards for assistants.
+			// 3rd number = Enable useful rewards for teammates.
+			"Useful Rewards"			"1,1,1"
 		}
 		"Glow"
 		{
@@ -1214,7 +1314,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate radiuses with commas (",").
-			// Separate values with ";".
+			// Separate values with semi-colons (";").
 			// --
 			// Radiuses limit: 10
 			// Character limit for each radius: 14
@@ -1608,6 +1708,17 @@
 		}
 		"Health"
 		{
+			// Base health given to all Mutant Tanks.
+			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Disable this setting if it conflicts with other plugins.
+			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0 (OFF)
+			// Maximum: 65535
+			"Base Health"				"0"
+
 			// Display the Mutant Tank's name and health.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
@@ -1642,6 +1753,7 @@
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: -65535

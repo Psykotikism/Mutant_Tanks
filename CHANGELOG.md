@@ -192,9 +192,9 @@
 - Added the `Random Duration` setting under the `Tank #/Random` and `STEAM_ID/Random` sections.
 - Renamed the `Spawn Mode` setting under the `Tank #/Spawn` section to `Spawn Type`.
 - The `Spawn Type` setting under the `Tank #/Spawn` section can now be overridden for each player.
+- Added a `Reward` system for fighting Mutant Tanks.
 - Added the following settings under the `General/Reward`, `Tank #/Reward`, and `STEAM_ID/Reward` sections:
-	- `Reward Killers`
-	- `Reward Assistants`
+	- `Reward Enabled`
 	- `Reward Chance`
 	- `Reward Duration`
 	- `Damage Boost Reward`
@@ -206,6 +206,8 @@
 	- `Announce Arrival`
 	- `Announce Death`
 - Added the `Announce Kill` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections.
+- The `Base Health` setting can now be overridden for each type and player.
+- The `Extra Health` setting can now be used globally for all types.
 
 #### Translations
 - The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)

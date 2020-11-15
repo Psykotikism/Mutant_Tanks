@@ -853,10 +853,10 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
  * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn
- * @param killer		True if the survivor killed the Tank, false if the survivor assisted.
+ * @param priority		1 = Killer, 2 = Assistant who did most damage, 3 = Teammate who helped
  * @param apply			True if the reward is given, false otherwise.
  **/
-forward void MT_OnRewardSurvivor(int survivor, int tank, int type, bool killer, bool apply);
+forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, bool apply);
 
 /**
  * Called when a Mutant Tank's rock breaks.
@@ -1717,7 +1717,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 40-43 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines 90-93 of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
