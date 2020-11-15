@@ -109,6 +109,9 @@
 - Vampire
 	- Fixed the ability not checking admin immunity properly.
 
+- Xiphos
+	- Fixed the ability setting survivors to full health per hit.
+
 - Yell
 	- Fixed the ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
 
@@ -310,6 +313,7 @@
 - Xiphos
 	- The ability now contributes to the Tank's overall health.
 	- The `Ability Message` setting now has an extra option.
+	- Survivors now only get a portion of their damage against the Tank as health.
 
 - Yell
 	- The ability now runs repeatedly while activated when `Human Mode` is set to `1`.

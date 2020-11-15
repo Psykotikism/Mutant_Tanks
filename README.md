@@ -37,7 +37,9 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 13. Detects idle or bugged (no behavior) Tanks.
 14. Fully compatible with all game modes.
 15. Toggle damage scaling based on difficulty.
-16. Over 70 unique abilities to choose from.
+16. Create all kinds of combinations of abilities.
+17. Fully customizable reward system.
+18. Over 70 unique abilities to choose from.
 
 ### Requirements
 1. `SourceMod 1.11.0.6511` or higher
