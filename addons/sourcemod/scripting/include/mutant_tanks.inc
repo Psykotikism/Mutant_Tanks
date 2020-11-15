@@ -16,6 +16,57 @@
 
 #include <sdktools>
 
+public SharedPlugin __pl_mutanttanks = 
+{
+	name = "mutant_tanks",
+	file = "mutant_tanks.smx",
+#if defined REQUIRE_PLUGIN
+	required = 1,
+#else
+	required = 0,
+#endif
+};
+
+#if !defined REQUIRE_PLUGIN
+public void __pl_mutanttanks_SetNTVOptional()
+{
+	MarkNativeAsOptional("MT_CanTypeSpawn");
+	MarkNativeAsOptional("MT_DoesTypeRequireHumans");
+	MarkNativeAsOptional("MT_GetAccessFlags");
+	MarkNativeAsOptional("MT_GetCombinationSetting");
+	MarkNativeAsOptional("MT_GetCurrentFinaleWave");
+	MarkNativeAsOptional("MT_GetGlowRange");
+	MarkNativeAsOptional("MT_GetGlowType");
+	MarkNativeAsOptional("MT_GetImmunityFlags");
+	MarkNativeAsOptional("MT_GetMaxType");
+	MarkNativeAsOptional("MT_GetMinType");
+	MarkNativeAsOptional("MT_GetPropColors");
+	MarkNativeAsOptional("MT_GetRunSpeed");
+	MarkNativeAsOptional("MT_GetScaledDamage");
+	MarkNativeAsOptional("MT_GetSpawnType");
+	MarkNativeAsOptional("MT_GetTankColors");
+	MarkNativeAsOptional("MT_GetTankName");
+	MarkNativeAsOptional("MT_GetTankType");
+	MarkNativeAsOptional("MT_HasAdminAccess");
+	MarkNativeAsOptional("MT_HasChanceToSpawn");
+	MarkNativeAsOptional("MT_HideEntity");
+	MarkNativeAsOptional("MT_IsAdminImmune");
+	MarkNativeAsOptional("MT_IsCorePluginEnabled");
+	MarkNativeAsOptional("MT_IsCustomTankSupported");
+	MarkNativeAsOptional("MT_IsFinaleType");
+	MarkNativeAsOptional("MT_IsGlowEnabled");
+	MarkNativeAsOptional("MT_IsGlowFlashing");
+	MarkNativeAsOptional("MT_IsNonFinaleType");
+	MarkNativeAsOptional("MT_IsTankIdle");
+	MarkNativeAsOptional("MT_IsTankSupported");
+	MarkNativeAsOptional("MT_IsTypeEnabled");
+	MarkNativeAsOptional("MT_LogMessage");
+	MarkNativeAsOptional("MT_SetTankType");
+	MarkNativeAsOptional("MT_SpawnTank");
+	MarkNativeAsOptional("MT_TankMaxHealth");
+}
+#endif
+
 // Core plugin information
 #define MT_NAME "Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
@@ -274,10 +325,10 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
  * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn
- * @param killer		True if the survivor killed the Tank, false if the survivor assisted.
+ * @param priority		1 = Killer, 2 = Assistant who did most damage, 3 = Teammate who helped
  * @param apply			True if the reward is given, false otherwise.
  **/
-forward void MT_OnRewardSurvivor(int survivor, int tank, int type, bool killer, bool apply);
+forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, bool apply);
 
 /**
  * Called when a Mutant Tank's rock breaks.
@@ -1406,7 +1457,6 @@ stock bool bIsAreaNarrow(int tank, int setting = -1)
 				if (GetVectorDistance(flPos, flOrigin) <= 100.0)
 				{
 					delete hTrace;
-
 					return true;
 				}
 			}
@@ -1802,7 +1852,6 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
-
 			return false;
 		}
 
@@ -1817,11 +1866,11 @@ stock float flClamp(float value, float min, float max)
 {
 	if (value < min)
 	{
-		value = min;
+		return min;
 	}
 	else if (value > max)
 	{
-		value = max;
+		return max;
 	}
 
 	return value;
@@ -1863,7 +1912,6 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
-
 				return flUnits;
 			}
 
@@ -1924,11 +1972,11 @@ stock int iClamp(int value, int min, int max)
 {
 	if (value < min)
 	{
-		value = min;
+		return min;
 	}
 	else if (value > max)
 	{
-		value = max;
+		return max;
 	}
 
 	return value;
@@ -2037,7 +2085,7 @@ stock int iGetPlayerCount()
 
 stock int iGetRandomColor(int color)
 {
-	return (color == -1) ? GetRandomInt(0, 255) : color;
+	return (color == -1 || color < 0 || color > 255) ? GetRandomInt(0, 255) : color;
 }
 
 stock int iGetRandomSurvivor(int tank)
@@ -2136,10 +2184,6 @@ stock int iGetWeaponOffset(const char[] weapon)
 	{
 		return 3;
 	}
-	else if (StrEqual(weapon, "weapon_rifle_m60"))
-	{
-		return 0;
-	}
 	else if (StrEqual(weapon, "weapon_smg") || StrEqual(weapon, "weapon_smg_silenced") || StrEqual(weapon, "weapon_smg_mp5"))
 	{
 		return 5;
@@ -2208,54 +2252,3 @@ stock int iPrecacheParticle(const char[] particlename)
 
 	return iIndex;
 }
-
-public SharedPlugin __pl_mutanttanks = 
-{
-	name = "mutant_tanks",
-	file = "mutant_tanks.smx",
-#if defined REQUIRE_PLUGIN
-	required = 1,
-#else
-	required = 0,
-#endif
-};
-
-#if !defined REQUIRE_PLUGIN
-public void __pl_mutanttanks_SetNTVOptional()
-{
-	MarkNativeAsOptional("MT_CanTypeSpawn");
-	MarkNativeAsOptional("MT_DoesTypeRequireHumans");
-	MarkNativeAsOptional("MT_GetAccessFlags");
-	MarkNativeAsOptional("MT_GetCombinationSetting");
-	MarkNativeAsOptional("MT_GetCurrentFinaleWave");
-	MarkNativeAsOptional("MT_GetGlowRange");
-	MarkNativeAsOptional("MT_GetGlowType");
-	MarkNativeAsOptional("MT_GetImmunityFlags");
-	MarkNativeAsOptional("MT_GetMaxType");
-	MarkNativeAsOptional("MT_GetMinType");
-	MarkNativeAsOptional("MT_GetPropColors");
-	MarkNativeAsOptional("MT_GetRunSpeed");
-	MarkNativeAsOptional("MT_GetScaledDamage");
-	MarkNativeAsOptional("MT_GetSpawnType");
-	MarkNativeAsOptional("MT_GetTankColors");
-	MarkNativeAsOptional("MT_GetTankName");
-	MarkNativeAsOptional("MT_GetTankType");
-	MarkNativeAsOptional("MT_HasAdminAccess");
-	MarkNativeAsOptional("MT_HasChanceToSpawn");
-	MarkNativeAsOptional("MT_HideEntity");
-	MarkNativeAsOptional("MT_IsAdminImmune");
-	MarkNativeAsOptional("MT_IsCorePluginEnabled");
-	MarkNativeAsOptional("MT_IsCustomTankSupported");
-	MarkNativeAsOptional("MT_IsFinaleType");
-	MarkNativeAsOptional("MT_IsGlowEnabled");
-	MarkNativeAsOptional("MT_IsGlowFlashing");
-	MarkNativeAsOptional("MT_IsNonFinaleType");
-	MarkNativeAsOptional("MT_IsTankIdle");
-	MarkNativeAsOptional("MT_IsTankSupported");
-	MarkNativeAsOptional("MT_IsTypeEnabled");
-	MarkNativeAsOptional("MT_LogMessage");
-	MarkNativeAsOptional("MT_SetTankType");
-	MarkNativeAsOptional("MT_SpawnTank");
-	MarkNativeAsOptional("MT_TankMaxHealth");
-}
-#endif
