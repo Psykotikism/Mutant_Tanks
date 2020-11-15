@@ -138,8 +138,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTION_ANNOUNCE "Announcements"
 #define MT_CONFIG_SECTION_ANNOUNCE2 "announce"
 #define MT_CONFIG_SECTIONS_ANNOUNCE MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE, MT_CONFIG_SECTION_ANNOUNCE2
-#define MT_CONFIG_SECTION_REWARD "Reward"
-#define MT_CONFIG_SECTIONS_REWARD MT_CONFIG_SECTION_REWARD, MT_CONFIG_SECTION_REWARD, MT_CONFIG_SECTION_REWARD, MT_CONFIG_SECTION_REWARD
+#define MT_CONFIG_SECTION_REWARDS "Rewards"
 #define MT_CONFIG_SECTION_COMP "Competitive"
 #define MT_CONFIG_SECTION_COMP2 "comp"
 #define MT_CONFIG_SECTIONS_COMP MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP, MT_CONFIG_SECTION_COMP2
@@ -274,6 +273,7 @@ enum struct esGeneral
 	float g_flRegularInterval;
 	float g_flRewardChance[3];
 	float g_flRewardDuration[3];
+	float g_flRewardPercentage[3];
 	float g_flSpeedBoostReward[3];
 
 	GlobalForward g_gfAbilityActivatedForward;
@@ -458,6 +458,7 @@ enum struct esPlayer
 	float g_flRandomInterval;
 	float g_flRewardChance[3];
 	float g_flRewardDuration[3];
+	float g_flRewardPercentage[3];
 	float g_flRockDamage;
 	float g_flRunSpeed;
 	float g_flSpeedBoost;
@@ -567,6 +568,7 @@ enum struct esTank
 	float g_flRandomInterval;
 	float g_flRewardChance[3];
 	float g_flRewardDuration[3];
+	float g_flRewardPercentage[3];
 	float g_flRockDamage;
 	float g_flRunSpeed;
 	float g_flSpeedBoostReward[3];
@@ -665,6 +667,7 @@ enum struct esCache
 	float g_flRandomInterval;
 	float g_flRewardChance[3];
 	float g_flRewardDuration[3];
+	float g_flRewardPercentage[3];
 	float g_flRockDamage;
 	float g_flRunSpeed;
 	float g_flSpeedBoostReward[3];
@@ -3642,6 +3645,8 @@ static void vCacheSettings(int tank)
 			g_esCache[tank].g_flRewardChance[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRewardChance[iPos], g_esCache[tank].g_flRewardChance[iPos]);
 			g_esCache[tank].g_flRewardDuration[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flRewardDuration[iPos], g_esGeneral.g_flRewardDuration[iPos]);
 			g_esCache[tank].g_flRewardDuration[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRewardDuration[iPos], g_esCache[tank].g_flRewardDuration[iPos]);
+			g_esCache[tank].g_flRewardPercentage[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flRewardPercentage[iPos], g_esGeneral.g_flRewardPercentage[iPos]);
+			g_esCache[tank].g_flRewardPercentage[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRewardPercentage[iPos], g_esCache[tank].g_flRewardPercentage[iPos]);
 			g_esCache[tank].g_iRewardEnabled[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRewardEnabled[iPos], g_esGeneral.g_iRewardEnabled[iPos], true);
 			g_esCache[tank].g_iRewardEnabled[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRewardEnabled[iPos], g_esCache[tank].g_iRewardEnabled[iPos], true);
 			g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRespawnLoadoutReward[iPos], g_esGeneral.g_iRespawnLoadoutReward[iPos]);
@@ -3986,6 +3991,7 @@ public void SMCParseStart(SMCParser smc)
 				g_esGeneral.g_iRewardEnabled[iPos] = -1;
 				g_esGeneral.g_flRewardChance[iPos] = 33.3;
 				g_esGeneral.g_flRewardDuration[iPos] = 10.0;
+				g_esGeneral.g_flRewardPercentage[iPos] = 10.0;
 				g_esGeneral.g_flDamageBoostReward[iPos] = 1.25;
 				g_esGeneral.g_iRespawnLoadoutReward[iPos] = 1;
 				g_esGeneral.g_flSpeedBoostReward[iPos] = 1.25;
@@ -4066,6 +4072,7 @@ public void SMCParseStart(SMCParser smc)
 					g_esTank[iIndex].g_iRewardEnabled[iPos] = -1;
 					g_esTank[iIndex].g_flRewardChance[iPos] = 0.0;
 					g_esTank[iIndex].g_flRewardDuration[iPos] = 0.0;
+					g_esTank[iIndex].g_flRewardPercentage[iPos] = 0.0;
 					g_esTank[iIndex].g_flDamageBoostReward[iPos] = 0.0;
 					g_esTank[iIndex].g_iRespawnLoadoutReward[iPos] = 0;
 					g_esTank[iIndex].g_flSpeedBoostReward[iPos] = 0.0;
@@ -4185,6 +4192,7 @@ public void SMCParseStart(SMCParser smc)
 						g_esPlayer[iPlayer].g_iRewardEnabled[iPos] = -1;
 						g_esPlayer[iPlayer].g_flRewardChance[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_flRewardDuration[iPos] = 0.0;
+						g_esPlayer[iPlayer].g_flRewardPercentage[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_flDamageBoostReward[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iRespawnLoadoutReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_flSpeedBoostReward[iPos] = 0.0;
@@ -4396,7 +4404,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					g_esGeneral.g_iMaxType = (sRange[1][0] != '\0') ? iClamp(StringToInt(sRange[1]), 1, MT_MAXTYPES) : g_esGeneral.g_iMaxType;
 				}
 			}
-			else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARD, false))
+			else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARDS, false))
 			{
 				static char sValue[960];
 				strcopy(sValue, sizeof(sValue), value);
@@ -4417,7 +4425,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					}
 					else if (StrEqual(key, "RewardDuration", false) || StrEqual(key, "Reward Duration", false) || StrEqual(key, "Reward_Duration", false) || StrEqual(key, "duration", false))
 					{
-						g_esGeneral.g_flRewardDuration[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.1, 100.0) : g_esGeneral.g_flRewardDuration[iPos];
+						g_esGeneral.g_flRewardDuration[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.1, 999999.0) : g_esGeneral.g_flRewardDuration[iPos];
+					}
+					else if (StrEqual(key, "RewardPercentage", false) || StrEqual(key, "Reward Percentage", false) || StrEqual(key, "Reward_Percentage", false) || StrEqual(key, "percent", false))
+					{
+						g_esGeneral.g_flRewardPercentage[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.1, 100.0) : g_esGeneral.g_flRewardPercentage[iPos];
 					}
 					else if (StrEqual(key, "DamageBoostReward", false) || StrEqual(key, "Damage Boost Reward", false) || StrEqual(key, "Damage_Boost_Reward", false) || StrEqual(key, "dmgboost", false))
 					{
@@ -4653,7 +4665,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 							}
 						}
-						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARD, false))
+						else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARDS, false))
 						{
 							static char sValue[960];
 							strcopy(sValue, sizeof(sValue), value);
@@ -4674,7 +4686,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else if (StrEqual(key, "RewardDuration", false) || StrEqual(key, "Reward Duration", false) || StrEqual(key, "Reward_Duration", false) || StrEqual(key, "duration", false))
 								{
-									g_esTank[iIndex].g_flRewardDuration[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.1, 100.0) : g_esTank[iIndex].g_flRewardDuration[iPos];
+									g_esTank[iIndex].g_flRewardDuration[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.1, 999999.0) : g_esTank[iIndex].g_flRewardDuration[iPos];
+								}
+								else if (StrEqual(key, "RewardPercentage", false) || StrEqual(key, "Reward Percentage", false) || StrEqual(key, "Reward_Percentage", false) || StrEqual(key, "percent", false))
+								{
+									g_esTank[iIndex].g_flRewardPercentage[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.1, 100.0) : g_esTank[iIndex].g_flRewardPercentage[iPos];
 								}
 								else if (StrEqual(key, "DamageBoostReward", false) || StrEqual(key, "Damage Boost Reward", false) || StrEqual(key, "Damage_Boost_Reward", false) || StrEqual(key, "dmgboost", false))
 								{
@@ -5031,7 +5047,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									}
 								}
 							}
-							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARD, false))
+							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARDS, false))
 							{
 								static char sValue[960];
 								strcopy(sValue, sizeof(sValue), value);
@@ -5052,7 +5068,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									}
 									else if (StrEqual(key, "RewardDuration", false) || StrEqual(key, "Reward Duration", false) || StrEqual(key, "Reward_Duration", false) || StrEqual(key, "duration", false))
 									{
-										g_esPlayer[iPlayer].g_flRewardDuration[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.1, 100.0) : g_esPlayer[iPlayer].g_flRewardDuration[iPos];
+										g_esPlayer[iPlayer].g_flRewardDuration[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.1, 999999.0) : g_esPlayer[iPlayer].g_flRewardDuration[iPos];
+									}
+									else if (StrEqual(key, "RewardPercentage", false) || StrEqual(key, "Reward Percentage", false) || StrEqual(key, "Reward_Percentage", false) || StrEqual(key, "percent", false))
+									{
+										g_esPlayer[iPlayer].g_flRewardPercentage[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.1, 100.0) : g_esPlayer[iPlayer].g_flRewardPercentage[iPos];
 									}
 									else if (StrEqual(key, "DamageBoostReward", false) || StrEqual(key, "Damage Boost Reward", false) || StrEqual(key, "Damage_Boost_Reward", false) || StrEqual(key, "dmgboost", false))
 									{
@@ -5541,6 +5561,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						}
 					}
 
+					char sTankName[33];
+					vGetTranslatedName(sTankName, sizeof(sTankName), iVictim);
+
 					float flPercentage = (float(g_esPlayer[iAssistant].g_iTankDamage[iVictim]) / float(g_esPlayer[iVictim].g_iTankHealth)) * 100;
 
 					switch (g_esCache[iVictim].g_iAnnounceDeath)
@@ -5548,9 +5571,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						case 1: vAnnounceDeath(iVictim);
 						case 2:
 						{
-							char sPhrase[32], sTankName[33];
+							char sPhrase[32];
 							int iOption = GetRandomInt(1, 10);
-							vGetTranslatedName(sTankName, sizeof(sTankName), iVictim);
 							if (bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 							{
 								FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
@@ -5571,14 +5593,15 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					}
 
 					float flRandom = GetRandomFloat(0.1, 100.0);
-					if (bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esCache[iVictim].g_iRewardEnabled[0] != -1 && flRandom <= g_esCache[iVictim].g_flRewardChance[0] && (g_esCache[iVictim].g_iRewardEnabled[1] == -1 || (g_esCache[iVictim].g_iRewardEnabled[1] != -1 && (iAssistant != iAttacker || ((g_esCache[iVictim].g_iRewardEnabled[1] != g_esCache[iVictim].g_iRewardEnabled[0] || flPercentage < 5.0) && iAssistant == iAttacker)))))
-					{
-						vChooseReward(iAttacker, iVictim, 0);
-					}
-
-					if (g_esCache[iVictim].g_iRewardEnabled[1] != -1 && flRandom <= g_esCache[iVictim].g_flRewardChance[1] && (g_esCache[iVictim].g_iRewardEnabled[0] == -1 || (g_esCache[iVictim].g_iRewardEnabled[0] != -1 && (iAttacker != iAssistant || ((g_esCache[iVictim].g_iRewardEnabled[0] != g_esCache[iVictim].g_iRewardEnabled[1] || flPercentage >= 5.0) && iAttacker == iAssistant)))))
+					if (g_esCache[iVictim].g_iRewardEnabled[1] != -1 && flRandom <= g_esCache[iVictim].g_flRewardChance[1] && flPercentage >= g_esCache[iVictim].g_flRewardPercentage[1])
 					{
 						vChooseReward(iAssistant, iVictim, 1);
+					}
+
+					flPercentage = (float(g_esPlayer[iAttacker].g_iTankDamage[iVictim]) / float(g_esPlayer[iVictim].g_iTankHealth)) * 100;
+					if (bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esCache[iVictim].g_iRewardEnabled[0] != -1 && flRandom <= g_esCache[iVictim].g_flRewardChance[0] && flPercentage >= g_esCache[iVictim].g_flRewardPercentage[0])
+					{
+						vChooseReward(iAttacker, iVictim, 0);
 					}
 
 					if (g_esCache[iVictim].g_iRewardEnabled[2] != -1 && flRandom <= g_esCache[iVictim].g_flRewardChance[2])
@@ -5588,10 +5611,14 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 							if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && iTeammate != iAttacker && iTeammate != iAssistant)
 							{
 								flPercentage = (float(g_esPlayer[iTeammate].g_iTankDamage[iVictim]) / float(g_esPlayer[iVictim].g_iTankHealth)) * 100;
-								if (flPercentage >= 1.0)
+								if (flPercentage >= g_esCache[iVictim].g_flRewardPercentage[2])
 								{
 									vChooseReward(iTeammate, iVictim, 2);
 									vResetSurvivorStats2(iTeammate);
+								}
+								else
+								{
+									MT_PrintToChat(iTeammate, "%s %t", MT_TAG3, "RewardNone", sTankName);
 								}
 							}
 						}
