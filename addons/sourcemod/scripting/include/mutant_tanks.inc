@@ -1514,7 +1514,7 @@ stock bool bIsGunWeapon(int survivor)
 {
 	static char sWeapon[32];
 	GetClientWeapon(survivor, sWeapon, sizeof(sWeapon));
-	return GetPlayerWeaponSlot(survivor, 0) > 0 || (GetPlayerWeaponSlot(survivor, 1) > 0 && StrContains(sWeapon, "pistol", false) != -1);
+	return GetPlayerWeaponSlot(survivor, 0) > MaxClients || (GetPlayerWeaponSlot(survivor, 1) > MaxClients && StrContains(sWeapon, "pistol", false) != -1);
 }
 
 stock bool bIsHumanSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)

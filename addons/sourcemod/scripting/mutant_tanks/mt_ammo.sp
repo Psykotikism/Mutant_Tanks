@@ -730,7 +730,7 @@ static void vAmmoHit(int survivor, int tank, float random, float chance, int ena
 
 	static int iSlot;
 	iSlot = GetPlayerWeaponSlot(survivor, 0);
-	if (enabled == 1 && bIsSurvivor(survivor) && iSlot > 0)
+	if (enabled == 1 && bIsSurvivor(survivor) && iSlot > MaxClients)
 	{
 		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{

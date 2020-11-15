@@ -691,9 +691,9 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void MT_OnRewardSurvivor(int survivor, int tank, int type, bool killer, bool apply)
+public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, bool apply)
 {
-	if (bIsSurvivor(survivor) && type == 6)
+	if (bIsSurvivor(survivor) && (type & MT_REWARD_GODMODE))
 	{
 		g_esPlayer[survivor].g_bRewarded = apply;
 	}

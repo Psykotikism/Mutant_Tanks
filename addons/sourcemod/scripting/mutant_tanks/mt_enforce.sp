@@ -330,7 +330,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	if (bIsSurvivor(client) && g_esPlayer[client].g_bAffected)
 	{
-		weapon = GetPlayerWeaponSlot(client, g_esPlayer[client].g_iEnforceSlot);
+		int iWeapon = GetPlayerWeaponSlot(client, g_esPlayer[client].g_iEnforceSlot);
+		if (iWeapon > MaxClients)
+		{
+			weapon = iWeapon;
+		}
 	}
 
 	return Plugin_Continue;
