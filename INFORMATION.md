@@ -1,18 +1,124 @@
 # Information
 
 ## Notes
-> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples.
+> Everything you need to know about each ability/setting is below. Do not expect any help from the developer if you do not take the time to read everything below first. This file uses the first (original) config format for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 
-- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 86-87 and recompile at your own risk.)
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile at your own risk.)
 - Ability count: 76 (Suggest more if you want; limit is 100.)
 
 ## Sections
 - Plugin Settings
+	- General
+	- Reward
+	- Competitive
+	- Difficulty
+	- Health
+	- Administration
+	- Human Support
+	- Waves
+	- Game Modes
+	- Custom
+
 - Tank Settings
+	- General
+	- Reward
+	- Glow
+	- Administration
+	- Human Support
+	- Spawn
+	- Boss
+	- Combo
+	- Random
+	- Transform
+	- Props
+	- Particles
+	- Health
+	- Enhancements
+	- Immunities
+
 - Abilities
+	- Absorb
+	- Acid
+	- Aimless
+	- Ammo
+	- Blind
+	- Bomb
+	- Bury
+	- Car
+	- Choke
+	- Clone
+	- Cloud
+	- Drop
+	- Drug
+	- Drunk
+	- Electric
+	- Enforce
+	- Fast
+	- Fire
+	- Fling
+	- Fly
+	- Fragile
+	- Ghost
+	- God
+	- Gravity
+	- Heal
+	- Hit
+	- Hurt
+	- Hypno
+	- Ice
+	- Idle
+	- Invert
+	- Item
+	- Jump
+	- Kamikaze
+	- Lag
+	- Laser
+	- Leech
+	- Lightning
+	- Medic
+	- Meteor
+	- Minion
+	- Necro
+	- Nullify
+	- Omni
+	- Panic
+	- Pimp
+	- Puke
+	- Pyro
+	- Quiet
+	- Recoil
+	- Regen
+	- Respawn
+	- Restart
+	- Rock
+	- Rocket
+	- Shake
+	- Shield
+	- Shove
+	- Slow
+	- Smash
+	- Smite
+	- Spam
+	- Splash
+	- Splatter
+	- Throw
+	- Track
+	- Ultimate
+	- Undead
+	- Vampire
+	- Vision
+	- Warp
+	- Whirl
+	- Witch
+	- Xiphos
+	- Yell
+	- Zombie
+
 - Administration System
+	- Administration
+	- Tank Settings
+	- Abilities
 
 ### Plugin Settings
 ```
@@ -686,7 +792,7 @@
 
 ### Tank Settings
 
-#### General, Administration, Human Support, Spawn, Props, Particles, Health, Enhancements, Immunities
+#### General, Reward, Glow, Administration, Human Support, Spawn, Boss, Combo, Random, Transform, Props, Particles, Health, Enhancements, Immunities
 ```
 "Mutant Tanks"
 {

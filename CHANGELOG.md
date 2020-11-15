@@ -4,6 +4,9 @@
 
 ### Bug fixes
 
+#### General
+- Fixed some potential errors caused by invalid weapon slots.
+
 #### Core Plugin
 - Fixed log files being created even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
 - Fixed some waves being skipped. (Thanks to Tank Rush for testing and reporting!)
@@ -71,6 +74,9 @@
 - Electric
 	- Fixed the ability not working sometimes. (Thanks to Tank Rush and Mi.Cura for testing and reporting!)
 
+- Enforce
+	- Fixed the ability causing errors when the enforced weapon slot doesn't contain a valid weapon.
+
 - Fire
 	- Fixed the sound effect not playing in L4D1.
 
@@ -116,6 +122,10 @@
 	- Fixed the ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
 
 ### Changes
+
+#### General
+- Provided full support for competitive game modes. (Thanks to What for bringing up the subject!)
+- Slightly more optimized code.
 
 #### Core Plugin
 - Added command aliases for `sm_tank` and `sm_tank2`.
