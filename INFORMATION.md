@@ -10,7 +10,7 @@
 ## Sections
 - Plugin Settings
 	- General
-	- Reward
+	- Rewards
 	- Competitive
 	- Difficulty
 	- Health
@@ -19,10 +19,9 @@
 	- Waves
 	- Game Modes
 	- Custom
-
 - Tank Settings
 	- General
-	- Reward
+	- Rewards
 	- Glow
 	- Administration
 	- Human Support
@@ -36,7 +35,6 @@
 	- Health
 	- Enhancements
 	- Immunities
-
 - Abilities
 	- Absorb
 	- Acid
@@ -114,7 +112,6 @@
 	- Xiphos
 	- Yell
 	- Zombie
-
 - Administration System
 	- Administration
 	- Tank Settings
@@ -255,7 +252,7 @@
 			// 2nd number = Maximum value
 			"Type Range"				"1-1000"
 		}
-		"Reward"
+		"Rewards"
 		{
 			// Reward survivors for fighting Mutant Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
@@ -314,6 +311,22 @@
 			// 2nd number = Duration for assistant rewards.
 			// 3rd number = Duration for teammate rewards.
 			"Reward Duration"			"10.0,10.0,10.0"
+
+			// The minimum amount of damage in percentage required to receive a reward.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// Separate percentages with commas (",").
+			// --
+			// Percentages limit: 3
+			// Character limit for each percentage: 6
+			// --
+			// Minimum value for each percentage: 0.1 (Least)
+			// Maximum value for each percentage: 100.0 (All)
+			// --
+			// 1st number = Percentage of damage required for killer rewards.
+			// 2nd number = Percentage of damage required for assistant rewards.
+			// 3rd number = Percentage of damage required for teammate rewards.
+			"Reward Percentage"			"10.0,10.0,10.0"
 
 			// The damage boost to reward to survivors.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
@@ -792,7 +805,7 @@
 
 ### Tank Settings
 
-#### General, Reward, Glow, Administration, Human Support, Spawn, Boss, Combo, Random, Transform, Props, Particles, Health, Enhancements, Immunities
+#### General, Rewards, Glow, Administration, Human Support, Spawn, Boss, Combo, Random, Transform, Props, Particles, Health, Enhancements, Immunities
 ```
 "Mutant Tanks"
 {
@@ -883,7 +896,7 @@
 			// --
 			// 0: OFF
 			// 1: ON.
-			"Announce Kill"				"1"
+			"Announce Kill"				"0"
 
 			// The Mutant Tank reverts back to default a Tank upon death.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -927,7 +940,7 @@
 			// 1-32: ON, the number of human survivors required to be present for this Mutant Tank to be effective.
 			"Requires Humans"			"0"
 		}
-		"Reward"
+		"Rewards"
 		{
 			// Reward survivors for fighting Mutant Tanks.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -971,7 +984,7 @@
 			// 1st number = Chance to reward killers.
 			// 2nd number = Chance to reward assistants.
 			// 3rd number = Chance to reward teammates.
-			"Reward Chance"				"33.3,33.3,33.3"
+			"Reward Chance"				"0.0,0.0,0.0"
 
 			// The duration of temporary rewards.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -988,7 +1001,24 @@
 			// 1st number = Duration for killer rewards.
 			// 2nd number = Duration for assistant rewards.
 			// 3rd number = Duration for teammate rewards.
-			"Reward Duration"			"10.0,10.0,10.0"
+			"Reward Duration"			"0.0,0.0,0.0"
+
+			// The minimum amount of damage in percentage required to receive a reward.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate percentages with commas (",").
+			// --
+			// Percentages limit: 3
+			// Character limit for each percentage: 6
+			// --
+			// Minimum value for each percentage: 0.1 (Least)
+			// Maximum value for each percentage: 100.0 (All)
+			// --
+			// 1st number = Percentage of damage required for killer rewards.
+			// 2nd number = Percentage of damage required for assistant rewards.
+			// 3rd number = Percentage of damage required for teammate rewards.
+			"Reward Percentage"			"0.0,0.0,0.0"
 
 			// The damage boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -1005,7 +1035,7 @@
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
-			"Damage Boost Reward"			"1.25,1.25,1.25"
+			"Damage Boost Reward"			"0.0,0.0,0.0"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -1020,7 +1050,7 @@
 			// 1st set = Item set to reward killers.
 			// 2nd set = Item set to reward assistants.
 			// 3rd set = Item set to reward teammates.
-			"Item Reward"				"first_aid_kit,first_aid_kit,first_aid_kit"
+			"Item Reward"				""
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -1037,7 +1067,7 @@
 			// 1st number = Restore loadouts for killers.
 			// 2nd number = Restore loadouts for assistants.
 			// 3rd number = Restore loadouts for teammates.
-			"Respawn Loadout Reward"		"1,1,1"
+			"Respawn Loadout Reward"		"0,0,0"
 
 			// The speed boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -1054,7 +1084,7 @@
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
-			"Speed Boost Reward"			"1.25,1.25,1.25"
+			"Speed Boost Reward"			"0.0,0.0,0.0"
 
 			// Override chosen reward types depending on the status of the recipient.
 			// Note: If the recipient is black and white, the recipient will receive Health as a reward.
@@ -1073,7 +1103,7 @@
 			// 1st number = Enable useful rewards for killers.
 			// 2nd number = Enable useful rewards for assistants.
 			// 3rd number = Enable useful rewards for teammates.
-			"Useful Rewards"			"1,1,1"
+			"Useful Rewards"			"0,0,0"
 		}
 		"Glow"
 		{

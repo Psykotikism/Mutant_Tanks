@@ -44,7 +44,7 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
 ### Requirements
 1. `SourceMod 1.11.0.6511` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
+3. [`Left 4 DHooks Direct`](https://forums.alliedmods.net/showthread.php?t=321696)
 
 ### Notes
 1. I do not provide support for listen servers but the plugin and its modules should still work properly on them.

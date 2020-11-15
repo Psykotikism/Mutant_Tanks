@@ -125,7 +125,6 @@
 
 #### General
 - Provided full support for competitive game modes. (Thanks to What for bringing up the subject!)
-- Slightly more optimized code.
 
 #### Core Plugin
 - Added command aliases for `sm_tank` and `sm_tank2`.
@@ -203,10 +202,11 @@
 - Renamed the `Spawn Mode` setting under the `Tank #/Spawn` section to `Spawn Type`.
 - The `Spawn Type` setting under the `Tank #/Spawn` section can now be overridden for each player.
 - Added a `Reward` system for fighting Mutant Tanks.
-- Added the following settings under the `General/Reward`, `Tank #/Reward`, and `STEAM_ID/Reward` sections:
+- Added the following settings under the `General/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Reward Enabled`
 	- `Reward Chance`
 	- `Reward Duration`
+	- `Reward Percentage`
 	- `Damage Boost Reward`
 	- `Item Reward`
 	- `Respawn Loadout Reward`
