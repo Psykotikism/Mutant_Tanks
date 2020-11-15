@@ -987,7 +987,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 				iExtraHealth = (iNewHealth > iGetMaxHealth(iTank, iInfected)) ? iGetMaxHealth(iTank, iInfected) : iNewHealth;
 				iExtraHealth2 = (iNewHealth < iHealth) ? 1 : iNewHealth;
 				iRealHealth = (iNewHealth >= 0) ? iExtraHealth : iExtraHealth2;
-				MT_TankMaxHealth(iInfected, 3, iMaxHealth + iRealHealth);
+				MT_TankMaxHealth(iInfected, 3, iMaxHealth + iGetHealth(iTank, iInfected));
 				//SetEntityHealth(iInfected, iRealHealth);
 				SetEntProp(iInfected, Prop_Data, "m_iHealth", iRealHealth);
 

@@ -432,7 +432,7 @@ static void vXiphos(int attacker, int victim, float damage, bool tank)
 
 	if (tank)
 	{
-		MT_TankMaxHealth(attacker, 3, (MT_TankMaxHealth(attacker, 1) + iFinalHealth));
+		MT_TankMaxHealth(attacker, 3, (MT_TankMaxHealth(attacker, 1) + iDamage));
 	}
 
 	static int iFlag;

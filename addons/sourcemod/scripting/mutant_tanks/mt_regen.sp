@@ -792,7 +792,7 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 	iNewHealth2 = (iExtraHealth <= 1) ? iHealth : iExtraHealth;
 	iRealHealth = (g_esCache[iTank].g_iRegenHealth >= 1) ? iNewHealth : iNewHealth2;
 	iFinalHealth = (g_esCache[iTank].g_iRegenHealth >= 1 && iRealHealth >= g_esCache[iTank].g_iRegenLimit) ? g_esCache[iTank].g_iRegenLimit : iRealHealth;
-	MT_TankMaxHealth(iTank, 3, iMaxHealth + iFinalHealth);
+	MT_TankMaxHealth(iTank, 3, iMaxHealth + g_esCache[iTank].g_iRegenHealth);
 	//SetEntityHealth(iTank, iFinalHealth);
 	SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth);
 

@@ -1271,7 +1271,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 			iRealHealth = (iCommonHealth >= 0) ? iExtraHealth : iExtraHealth2;
 			if (iHealth > 500)
 			{
-				MT_TankMaxHealth(iTank, 3, iMaxHealth + iRealHealth);
+				MT_TankMaxHealth(iTank, 3, iMaxHealth + g_esCache[iTank].g_iHealCommon);
 				//SetEntityHealth(iTank, iRealHealth);
 				SetEntProp(iTank, Prop_Data, "m_iHealth", iRealHealth);
 
@@ -1306,7 +1306,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 				iRealHealth = (iSpecialHealth >= 0) ? iExtraHealth : iExtraHealth2;
 				if (iHealth > 500)
 				{
-					MT_TankMaxHealth(iTank, 3, iMaxHealth + iRealHealth);
+					MT_TankMaxHealth(iTank, 3, iMaxHealth + g_esCache[iTank].g_iHealSpecial);
 					//SetEntityHealth(iTank, iRealHealth);
 					SetEntProp(iTank, Prop_Data, "m_iHealth", iRealHealth);
 
@@ -1341,7 +1341,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 				iRealHealth = (iTankHealth >= 0) ? iExtraHealth : iExtraHealth2;
 				if (iHealth > 500)
 				{
-					MT_TankMaxHealth(iTank, 3, iMaxHealth + iRealHealth);
+					MT_TankMaxHealth(iTank, 3, iMaxHealth + g_esCache[iTank].g_iHealTank);
 					//SetEntityHealth(iTank, iRealHealth);
 					SetEntProp(iTank, Prop_Data, "m_iHealth", iRealHealth);
 

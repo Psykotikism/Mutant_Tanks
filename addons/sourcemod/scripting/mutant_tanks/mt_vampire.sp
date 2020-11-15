@@ -260,7 +260,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					iMaxHealth = MT_TankMaxHealth(attacker, 1);
 					iNewHealth = iHealth + iDamage;
 					iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-					MT_TankMaxHealth(attacker, 3, iMaxHealth + iFinalHealth);
+					MT_TankMaxHealth(attacker, 3, iMaxHealth + iDamage);
 					//SetEntityHealth(attacker, iFinalHealth);
 					SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
 
