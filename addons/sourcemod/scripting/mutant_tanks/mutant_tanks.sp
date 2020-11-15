@@ -6182,6 +6182,52 @@ static void vResetTimersForward(int mode = 0, int tank = 0)
 	Call_Finish();
 }
 
+static void vChooseReward(int survivor, int tank, bool killer)
+{
+	int iType = -1, iSetting = killer ? g_esCache[tank].g_iRewardKillers : g_esCache[tank].g_iRewardAssistants;
+	if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
+	{
+		if (g_esCache[tank].g_iUsefulRewards == 1)
+		{
+			int iAmmo = -1, iWeapon = GetPlayerWeaponSlot(survivor, 0);
+			if (iWeapon > 0)
+			{
+				char sWeapon[32];
+				GetEntityClassname(iWeapon, sWeapon, sizeof(sWeapon));
+				iAmmo = GetEntProp(survivor, Prop_Send, "m_iAmmo", _, iGetWeaponOffset(sWeapon));
+			}
+
+			if (g_esPlayer[survivor].g_bLastLife && -1 < iAmmo <= 10)
+			{
+				iType = MT_REWARD_REFILL;
+			}
+			else if (g_esPlayer[survivor].g_bLastLife)
+			{
+				iType = MT_REWARD_HEALTH;
+			}
+			else if (-1 < iAmmo <= 10)
+			{
+				iType = MT_REWARD_AMMO;
+			}
+			else
+			{
+				iType = (iSetting > 0) ? iSetting : (1 << GetRandomInt(0, 7));
+			}
+		}
+		else
+		{
+			iType = (iSetting > 0) ? iSetting : (1 << GetRandomInt(0, 7));
+		}
+	}
+	else if (g_esCache[tank].g_iUsefulRewards == 1)
+	{
+		iType = MT_REWARD_RESPAWN;
+	}
+
+	vRewardSurvivor(survivor, tank, iType, killer, true);
+	vStartRewardTimer(survivor, tank, iType, killer);
+}
+
 static void vRewardSurvivor(int survivor, int tank, int type, bool killer, bool apply)
 {
 	switch (apply)
@@ -6211,6 +6257,81 @@ static void vRewardSurvivor(int survivor, int tank, int type, bool killer, bool 
 
 				g_esPlayer[survivor].g_bLastLife = false;
 				g_esPlayer[survivor].g_bRewardedHealth = true;
+			}
+
+			if ((type & MT_REWARD_AMMO) && !g_esPlayer[survivor].g_bRewardedAmmo)
+			{
+				vCheatCommand(survivor, "give", "ammo");
+
+				switch (killer)
+				{
+					case true:
+					{
+						MT_PrintToChatAll("%s %t", MT_TAG3, "RewardAmmo", survivor, sTankName);
+						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardAmmo", LANG_SERVER, survivor, sTankName);
+					}
+					case false:
+					{
+						MT_PrintToChatAll("%s %t", MT_TAG3, "RewardAmmo2", survivor, sTankName);
+						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardAmmo2", LANG_SERVER, survivor, sTankName);
+					}
+				}
+
+				g_esPlayer[survivor].g_bRewardedAmmo = true;
+			}
+
+			if ((type & MT_REWARD_REFILL) && !g_esPlayer[survivor].g_bRewardedRefill)
+			{
+				vCheatCommand(survivor, "give", "health");
+				vCheatCommand(survivor, "give", "ammo");
+
+				switch (killer)
+				{
+					case true:
+					{
+						MT_PrintToChatAll("%s %t", MT_TAG3, "RewardRefill", survivor, sTankName);
+						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardRefill", LANG_SERVER, survivor, sTankName);
+					}
+					case false:
+					{
+						MT_PrintToChatAll("%s %t", MT_TAG3, "RewardRefill2", survivor, sTankName);
+						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardRefill2", LANG_SERVER, survivor, sTankName);
+					}
+				}
+
+				g_esPlayer[survivor].g_bLastLife = false;
+				g_esPlayer[survivor].g_bRewardedRefill = true;
+			}
+
+			if ((type & MT_REWARD_ITEM) && !g_esPlayer[survivor].g_bRewardedItem)
+			{
+				char sItems[320], sItem[5][64];
+				strcopy(sItems, sizeof(sItems), g_esCache[tank].g_sItemReward);
+				ExplodeString(sItems, ",", sItem, sizeof(sItem), sizeof(sItem[]));
+				for (int iPos = 0; iPos < sizeof(sItem); iPos++)
+				{
+					if (sItem[iPos][0] != '\0')
+					{
+						vCheatCommand(survivor, "give", sItem[iPos]);
+						ReplaceString(sItem[iPos], sizeof(sItem[]), "_", " ");
+
+						switch (killer)
+						{
+							case true:
+							{
+								MT_PrintToChatAll("%s %t", MT_TAG3, "RewardItem", survivor, sItem[iPos], sTankName);
+								vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardItem", LANG_SERVER, survivor, sItem[iPos], sTankName);
+							}
+							case false:
+							{
+								MT_PrintToChatAll("%s %t", MT_TAG3, "RewardItem2", survivor, sItem[iPos], sTankName);
+								vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardItem2", LANG_SERVER, survivor, sItem[iPos], sTankName);
+							}
+						}
+					}
+				}
+
+				g_esPlayer[survivor].g_bRewardedItem = true;
 			}
 
 			if ((type & MT_REWARD_SPEEDBOOST) && !g_esPlayer[survivor].g_bRewardedSpeed)
@@ -6255,58 +6376,6 @@ static void vRewardSurvivor(int survivor, int tank, int type, bool killer, bool 
 				g_esPlayer[survivor].g_flDamageBoost = g_esCache[tank].g_flDamageBoostReward;
 			}
 
-			if ((type & MT_REWARD_AMMO) && !g_esPlayer[survivor].g_bRewardedAmmo)
-			{
-				vCheatCommand(survivor, "give", "ammo");
-
-				switch (killer)
-				{
-					case true:
-					{
-						MT_PrintToChatAll("%s %t", MT_TAG3, "RewardAmmo", survivor, sTankName);
-						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardAmmo", LANG_SERVER, survivor, sTankName);
-					}
-					case false:
-					{
-						MT_PrintToChatAll("%s %t", MT_TAG3, "RewardAmmo2", survivor, sTankName);
-						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardAmmo2", LANG_SERVER, survivor, sTankName);
-					}
-				}
-
-				g_esPlayer[survivor].g_bRewardedAmmo = true;
-			}
-
-			if ((type & MT_REWARD_ITEM) && !g_esPlayer[survivor].g_bRewardedItem)
-			{
-				char sItems[320], sItem[5][64];
-				strcopy(sItems, sizeof(sItems), g_esCache[tank].g_sItemReward);
-				ExplodeString(sItems, ",", sItem, sizeof(sItem), sizeof(sItem[]));
-				for (int iPos = 0; iPos < sizeof(sItem); iPos++)
-				{
-					if (sItem[iPos][0] != '\0')
-					{
-						vCheatCommand(survivor, "give", sItem[iPos]);
-						ReplaceString(sItem[iPos], sizeof(sItem[]), "_", " ");
-
-						switch (killer)
-						{
-							case true:
-							{
-								MT_PrintToChatAll("%s %t", MT_TAG3, "RewardItem", survivor, sItem[iPos], sTankName);
-								vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardItem", LANG_SERVER, survivor, sItem[iPos], sTankName);
-							}
-							case false:
-							{
-								MT_PrintToChatAll("%s %t", MT_TAG3, "RewardItem2", survivor, sItem[iPos], sTankName);
-								vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardItem2", LANG_SERVER, survivor, sItem[iPos], sTankName);
-							}
-						}
-					}
-				}
-
-				g_esPlayer[survivor].g_bRewardedItem = true;
-			}
-
 			if ((type & MT_REWARD_GODMODE) && !g_esPlayer[survivor].g_bRewardedGod)
 			{
 				SetEntProp(survivor, Prop_Data, "m_takedamage", 0, 1);
@@ -6328,29 +6397,6 @@ static void vRewardSurvivor(int survivor, int tank, int type, bool killer, bool 
 				g_esPlayer[survivor].g_bRewardedGod = true;
 			}
 
-			if ((type & MT_REWARD_REFILL) && !g_esPlayer[survivor].g_bRewardedRefill)
-			{
-				vCheatCommand(survivor, "give", "health");
-				vCheatCommand(survivor, "give", "ammo");
-
-				switch (killer)
-				{
-					case true:
-					{
-						MT_PrintToChatAll("%s %t", MT_TAG3, "RewardRefill", survivor, sTankName);
-						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardRefill", LANG_SERVER, survivor, sTankName);
-					}
-					case false:
-					{
-						MT_PrintToChatAll("%s %t", MT_TAG3, "RewardRefill2", survivor, sTankName);
-						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG3, "RewardRefill2", LANG_SERVER, survivor, sTankName);
-					}
-				}
-
-				g_esPlayer[survivor].g_bLastLife = false;
-				g_esPlayer[survivor].g_bRewardedRefill = true;
-			}
-
 			if ((type & MT_REWARD_RESPAWN) && !g_esPlayer[survivor].g_bRewardedRespawn)
 			{
 				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
@@ -6360,14 +6406,6 @@ static void vRewardSurvivor(int survivor, int tank, int type, bool killer, bool 
 
 				SDKCall(g_esGeneral.g_hSDKRespawnPlayer, survivor);
 				TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, g_esPlayer[survivor].g_flLastAngles, NULL_VECTOR);
-
-				g_esPlayer[survivor].g_flLastPosition[0] = 0.0;
-				g_esPlayer[survivor].g_flLastPosition[1] = 0.0;
-				g_esPlayer[survivor].g_flLastPosition[2] = 0.0;
-
-				g_esPlayer[survivor].g_flLastAngles[0] = 0.0;
-				g_esPlayer[survivor].g_flLastAngles[1] = 0.0;
-				g_esPlayer[survivor].g_flLastAngles[2] = 0.0;
 
 				if (g_esCache[tank].g_iRespawnLoadoutReward == 1)
 				{
@@ -6425,8 +6463,6 @@ static void vRewardSurvivor(int survivor, int tank, int type, bool killer, bool 
 
 				g_esPlayer[survivor].g_bRewardedGod = false;
 			}
-
-			vResetSurvivorStats(survivor);
 		}
 	}
 
@@ -6446,52 +6482,6 @@ static void vStartRewardTimer(int survivor, int tank, int type, bool killer)
 	dpReward.WriteCell(GetClientUserId(survivor));
 	dpReward.WriteCell(type);
 	dpReward.WriteCell(killer);
-}
-
-static void vChooseReward(int survivor, int tank, bool killer)
-{
-	int iType = -1, iSetting = killer ? g_esCache[tank].g_iRewardKillers : g_esCache[tank].g_iRewardAssistants;
-	if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
-	{
-		if (g_esCache[tank].g_iUsefulRewards == 1)
-		{
-			int iAmmo = -1, iWeapon = GetPlayerWeaponSlot(survivor, 0);
-			if (iWeapon > 0)
-			{
-				char sWeapon[32];
-				GetEntityClassname(iWeapon, sWeapon, sizeof(sWeapon));
-				iAmmo = GetEntProp(survivor, Prop_Send, "m_iAmmo", _, iGetWeaponOffset(sWeapon));
-			}
-
-			if (g_esPlayer[survivor].g_bLastLife && -1 < iAmmo <= 10)
-			{
-				iType = MT_REWARD_REFILL;
-			}
-			else if (g_esPlayer[survivor].g_bLastLife)
-			{
-				iType = MT_REWARD_HEALTH;
-			}
-			else if (-1 < iAmmo <= 10)
-			{
-				iType = MT_REWARD_AMMO;
-			}
-			else
-			{
-				iType = (iSetting > 0) ? iSetting : (1 << GetRandomInt(0, 7));
-			}
-		}
-		else
-		{
-			iType = (iSetting > 0) ? iSetting : (1 << GetRandomInt(0, 7));
-		}
-	}
-	else if (g_esCache[tank].g_iUsefulRewards == 1)
-	{
-		iType = MT_REWARD_RESPAWN;
-	}
-
-	vRewardSurvivor(survivor, tank, iType, killer, true);
-	vStartRewardTimer(survivor, tank, iType, killer);
 }
 
 static void vGiveWeapons(int survivor)
