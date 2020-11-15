@@ -667,7 +667,7 @@
 		"#format"		"{1:t},{2:N}"
 		"en"			"Yay!{mint} {2}{default} is dead thanks to{olive} {1}{default}!"
 		"hu"			"Éljen!{mint} {2}{default} halott, hála{olive} {1}{default}!"
-		"chi"			"哎呀!{mint} {2}{default} 死了，这要感谢{olive} {1}{default}!"
+		"chi"			"哎呀!{mint} {2}{default} 死了, 这要感谢{olive} {1}{default}!"
 	}
 
 	"Kill9"
@@ -747,7 +747,7 @@
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 		"hu"			"Éljen!{olive} {2}{default} halott, hála{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
-		"chi"			"哎呀!{olive} {2}{default} 死了，这要感谢{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"哎呀!{olive} {2}{default} 死了, 这要感谢{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer9"
@@ -891,26 +891,50 @@
 
 	"RewardAmmo"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} ammunition{default} for killing{olive} {2}{default}!"
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} ammunition{default} for killing{olive} {1}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 收到{yellow} 弹药{default}，以杀死{olive} {2}{default}!"
+		"chi"			"您{default} 收到{yellow} 弹药{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardAmmo2"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} ammunition{default} for assisting the most against{olive} {2}{default}!"
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} ammunition{default} for assisting the most against{olive} {1}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 收到{yellow} 弹药{default}，以协助{olive} {2}{default} 的最大支援!"
+		"chi"			"您{default} 收到{yellow} 弹药{default}, 以协助{olive} {1}{default} 的最大支援!"
+	}
+
+	"RewardAmmo3"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} ammunition{default} for assisting against{olive} {1}{default}!"
+		"hu"			""
+		"chi"			"您{default} 收到{yellow} 弹药{default}, 以协助{olive} {1}{default}!"
 	}
 
 	"RewardDamageBoost"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} damage boost{default} for killing{olive} {2}{default}!"
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} damage boost{default} for killing{olive} {1}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 获得{yellow} 伤害加成{default} 以杀死{olive} {2}{default}!"
+		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以杀死{olive} {1}{default}!"
+	}
+
+	"RewardDamageBoost2"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} damage boost{default} for assisting the most against{olive} {1}{default}!"
+		"hu"			""
+		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以协助{olive} {1}{default} 的最大支援!"
+	}
+
+	"RewardDamageBoost3"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} damage boost{default} for assisting against{olive} {1}{default}!"
+		"hu"			""
+		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以协助{olive} {1}{default}!"
 	}
 
 	"RewardDamageBoostEnd"
@@ -920,20 +944,28 @@
 		"chi"			"您的{yellow} 伤害加成{default} 结束了!"
 	}
 
-	"RewardDamageBoost2"
-	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} damage boost{default} for assisting the most against{olive} {2}{default}!"
-		"hu"			""
-		"chi"			"{1}{default} 收到{yellow} 伤害加成{default}，以协助{olive} {2}{default} 的最大支援!"
-	}
-
 	"RewardGod"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} god mode{default} for killing{olive} {2}{default}!"
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} god mode{default} for killing{olive} {1}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 收到{yellow} 神模式{default} 杀死{olive} {2}{default}!"
+		"chi"			"您{default} 收到{yellow} 神模式{default}, 以杀死{olive} {1}{default}!"
+	}
+
+	"RewardGod2"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} god mode{default} for assisting the most against{olive} {1}{default}!"
+		"hu"			""
+		"chi"			"您{default} 收到{yellow} 神模式{default}, 以协助{olive} {1}{default} 的最大支援!"
+	}
+
+	"RewardGod3"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} god mode{default} for assisting against{olive} {1}{default}!"
+		"hu"			""
+		"chi"			"您{default} 收到{yellow} 神模式{default}, 以协助{olive} {1}{default}!"
 	}
 
 	"RewardGodEnd"
@@ -943,84 +975,124 @@
 		"chi"			"您的{yellow} 上帝模式{default} 已结束!"
 	}
 
-	"RewardGod2"
-	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} god mode{default} for assisting the most against{olive} {2}{default}!"
-		"hu"			""
-		"chi"			"{1}{default} 收到{yellow} 神模式{default}，以协助{olive} {2}{default} 的最大支援!"
-	}
-
 	"RewardHealth"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} health{default} for killing{olive} {2}{default}!"
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} health{default} for killing{olive} {1}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 收到{yellow} 健康{default} 杀死{olive} {2}{default}!"
+		"chi"			"您{default} 收到{yellow} 健康{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardHealth2"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} health{default} for assisting the most against{olive} {2}{default}!"
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} health{default} for assisting the most against{olive} {1}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 收到{yellow} 健康{default}，以协助{olive} {2}{default} 的最大支援!"
+		"chi"			"您{default} 收到{yellow} 健康{default}, 以协助{olive} {1}{default} 的最大支援!"
+	}
+
+	"RewardHealth3"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} health{default} for assisting against{olive} {1}{default}!"
+		"hu"			""
+		"chi"			"您{default} 收到{yellow} 健康{default}, 以协助{olive} {1}{default}!"
 	}
 
 	"RewardItem"
 	{
-		"#format"		"{1:N},{2:s},{3:t}"
-		"en"			"{1}{default} received a{yellow} {2}{default} for killing{olive} {3}{default}!"
+		"#format"		"{1:s},{2:t}"
+		"en"			"You{default} received a(n){yellow} {1}{default} for killing{olive} {2}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 因杀死{olive} {3}{default} 而收到{yellow} {2}{default}!"
+		"chi"			"您{default} 收到{yellow} {1}{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardItem2"
 	{
-		"#format"		"{1:N},{2:s},{3:t}"
-		"en"			"{1}{default} received a{yellow} {2}{default} for assisting the most against{olive} {3}{default}!"
+		"#format"		"{1:s},{2:t}"
+		"en"			"You{default} received a(n){yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 收到{yellow} {2}{default}，以协助{olive} {3}{default} 的最大支援!"
+		"chi"			"您{default} 收到了{yellow} {1}{default}, 以协助{olive} {2}{default} 的最大支援!"
+	}
+
+	"RewardItem3"
+	{
+		"#format"		"{1:s},{2:t}"
+		"en"			"You{default} received a(n){yellow} {1}{default} for assisting against{olive} {2}{default}!"
+		"hu"			""
+		"chi"			"您{default} 收到了{yellow} {1}{default}, 以协助{olive} {2}{default}!"
 	}
 
 	"RewardRefill"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} health and ammunition{default} for killing{olive} {2}{default}!"
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} health and ammunition{default} for killing{olive} {1}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 因杀死{olive} {2}{default} 而获得{yellow} 健康和弹药{default}!"
+		"chi"			"您{default} 收到{yellow} 健康和弹药{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardRefill2"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} health and ammunition{default} for assisting the most against{olive} {2}{default}!"
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} health and ammunition{default} for assisting the most against{olive} {1}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 得到{yellow} 的健康和弹药{default}，以协助{olive} {2}{default}的大部分人!"
+		"chi"			"您{default} 收到{yellow} 的健康和弹药{default}, 以协助{olive} {1}{default} 的最大支援!"
+	}
+
+	"RewardRefill3"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} health and ammunition{default} for assisting against{olive} {1}{default}!"
+		"hu"			""
+		"chi"			"您{default} 收到{yellow} 的健康和弹药{default}, 以协助{olive} {1}{default}!"
 	}
 
 	"RewardRespawn"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received a{yellow} respawn{default} for killing{olive} {2}{default}!"
+		"#format"		"{1:t}"
+		"en"			"You{default} received a(n){yellow} respawn{default} for killing{olive} {1}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 因杀死{olive} {2}{default} 而收到了{yellow} 重生{default}!"
+		"chi"			"您{default} 收到{yellow} 重生{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardRespawn2"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received a{yellow} respawn{default} for assisting the most against{olive} {2}{default}!"
+		"#format"		"{1:t}"
+		"en"			"You{default} received a(n){yellow} respawn{default} for assisting the most against{olive} {1}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 收到{yellow} 重生{default}，以协助{olive} {2}{default} 的最大支援!"
+		"chi"			"您{default} 收到了{yellow} 重生{default}, 以协助{olive} {2}{default} 的最大支援!"
+	}
+
+	"RewardRespawn3"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received a(n){yellow} respawn{default} for assisting against{olive} {1}{default}!"
+		"hu"			""
+		"chi"			"您{default} 收到了{yellow} 重生{default}, 以协助{olive} {2}{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} speed boost{default} for killing{olive} {2}{default}!"
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} speed boost{default} for killing{olive} {1}{default}!"
 		"hu"			""
-		"chi"			"{1}{default} 获得{yellow} 提速{default} 以杀死{olive} {2}{default}!"
+		"chi"			"您{default} 收到{yellow} 提速{default}, 以杀死{olive} {1}{default}!"
+	}
+
+	"RewardSpeedBoost2"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} speed boost{default} for assisting the most against{olive} {1}{default}!"
+		"hu"			""
+		"chi"			"您{default} 收到{yellow} 提速{default}, 以协助{olive} {1}{default} 的最大支援!"
+	}
+
+	"RewardSpeedBoost3"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} speed boost{default} for assisting against{olive} {1}{default}!"
+		"hu"			""
+		"chi"			"您{default} 收到{yellow} 提速{default}, 以协助{olive} {1}{default}!"
 	}
 
 	"RewardSpeedBoostEnd"
@@ -1028,14 +1100,6 @@
 		"en"			"Your{yellow} speed boost{default} ended!"
 		"hu"			""
 		"chi"			"您的{yellow} 速度提升{default} 已结束!"
-	}
-
-	"RewardSpeedBoost2"
-	{
-		"#format"		"{1:N},{2:t}"
-		"en"			"{1}{default} received{yellow} speed boost{default} for assisting the most against{olive} {2}{default}!"
-		"hu"			""
-		"chi"			"{1}{default} 收到{yellow} 提速{default}，以协助{olive} {2}{default} 的最大支援!"
 	}
 
 	"SpawnMessage"
@@ -2665,14 +2729,14 @@
 		"#format"		"{1:i}"
 		"en"			"Your flight ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			""
-		"chi"			"您的飞行能力已结束，需要充电{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"您的飞行能力已结束, 需要充电{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"FlyHuman6"
 	{
 		"en"			"The place you are in is too narrow for you to fly around."
 		"hu"			""
-		"chi"			"您所处的地方太狭窄，无法四处飞翔."
+		"chi"			"您所处的地方太狭窄, 无法四处飞翔."
 	}
 
 	"FlyMenu"
@@ -4200,7 +4264,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your lightning storm ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			""
-		"chi"			"您的闪电风暴结束了，需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"您的闪电风暴结束了, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"LightningMenu"
@@ -4290,7 +4354,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your medic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			""
-		"chi"			"您的医务能力已结束，需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"您的医务能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"MedicMenu"
@@ -6276,7 +6340,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your splatter ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A fröcskölő képességed véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
-		"chi"			"您的飞溅能力结束，需要{yellow} {1} 秒{mint}补充能量."
+		"chi"			"您的飞溅能力结束, 需要{yellow} {1} 秒{mint}补充能量."
 	}
 
 	"SplatterMenu"
@@ -7916,7 +7980,7 @@
 	{
 		"en"			"{mint}This Tank is loyal to the survivors and loves to give hugs."
 		"hu"			"{mint}Ez a Tank lojális a túlélőkhöz és szeret öleléseket adni."
-		"chi"			"{mint}这辆坦克忠于幸存者，喜欢拥抱."
+		"chi"			"{mint}这辆坦克忠于幸存者, 喜欢拥抱."
 	}
 
 	"Tank #51 Name"
@@ -8896,7 +8960,7 @@
 	{
 		"en"			"{mint}Goodbye everyone!"
 		"hu"			"{mint}Viszlát mindenki!"
-		"chi"			"{mint}再见了，大家!"
+		"chi"			"{mint}再见了, 大家!"
 	}
 
 	"Tank #121 Name"
