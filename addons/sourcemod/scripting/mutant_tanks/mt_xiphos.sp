@@ -253,13 +253,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			static char sClassname[32];
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			if ((!MT_IsTankSupported(attacker, MT_CHECK_FAKECLIENT) || g_esCache[attacker].g_iHumanAbility == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
 			{
-				if (!MT_IsTankSupported(attacker, MT_CHECK_FAKECLIENT) || g_esCache[attacker].g_iHumanAbility == 1)
-				{
-					vXiphos(attacker, victim, damage, true);
-					vEffect(victim, attacker, g_esCache[attacker].g_iXiphosEffect, 1);
-				}
+				vXiphos(attacker, victim, damage, true);
+				vEffect(victim, attacker, g_esCache[attacker].g_iXiphosEffect, 1);
 			}
 		}
 		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esCache[victim].g_iXiphosAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[victim].g_flXiphosChance && bIsSurvivor(attacker))
@@ -271,6 +268,23 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (!MT_IsTankSupported(victim, MT_CHECK_FAKECLIENT) || g_esCache[victim].g_iHumanAbility == 1)
 			{
+				if (damagetype & DMG_BULLET)
+				{
+					damage /= 20.0;
+				}
+				else if ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA))
+				{
+					damage /= 20.0;
+				}
+				else if (damagetype & DMG_BURN)
+				{
+					damage /= 200.0;
+				}
+				else if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
+				{
+					damage /= 200.0;
+				}
+
 				vXiphos(attacker, victim, damage, false);
 			}
 		}

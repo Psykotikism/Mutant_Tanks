@@ -134,7 +134,7 @@ esCache g_esCache[MAXPLAYERS + 1];
 
 float g_flDrugAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0};
 
-UserMsg g_umFadeUserMsgId;
+UserMsg g_umFade;
 
 public void OnPluginStart()
 {
@@ -143,7 +143,7 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_mt_drug", cmdDrugInfo, "View information about the Drug ability.");
 
-	g_umFadeUserMsgId = GetUserMessageId("Fade");
+	g_umFade = GetUserMessageId("Fade");
 
 	if (g_bLateLoad)
 	{
@@ -742,7 +742,7 @@ static void vDrug(int survivor, bool toggle, float angles[20])
 	}
 
 	static Handle hTarget;
-	hTarget = StartMessageEx(g_umFadeUserMsgId, iClients, 1);
+	hTarget = StartMessageEx(g_umFade, iClients, 1);
 
 	switch (GetUserMessageType() == UM_Protobuf)
 	{

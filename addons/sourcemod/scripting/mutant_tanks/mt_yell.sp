@@ -933,9 +933,10 @@ public Action tTimerYell(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTank, iType;
+	static int iTank, iType, iPos;
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
+	iPos = pack.ReadCell();
 	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || !MT_HasAdminAccess(iTank) || !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags) || !MT_IsTypeEnabled(iTank) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) || !g_esPlayer[iSurvivor].g_bAffected || !g_esPlayer[iTank].g_bActivated || g_esCache[iTank].g_iYellAbility == 0)
 	{
 		g_esPlayer[iTank].g_bActivated = false;
@@ -944,9 +945,6 @@ public Action tTimerYell(Handle timer, DataPack pack)
 
 		return Plugin_Stop;
 	}
-
-	static int iPos;
-	iPos = pack.ReadCell();
 
 	static float flTankPos[3], flSurvivorPos[3], flDistance, flRange;
 	GetClientAbsOrigin(iTank, flTankPos);

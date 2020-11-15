@@ -135,7 +135,7 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-UserMsg g_umFadeUserMsgId;
+UserMsg g_umFade;
 
 public void OnPluginStart()
 {
@@ -144,7 +144,7 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_mt_blind", cmdBlindInfo, "View information about the Blind ability.");
 
-	g_umFadeUserMsgId = GetUserMessageId("Fade");
+	g_umFade = GetUserMessageId("Fade");
 
 	if (g_bLateLoad)
 	{
@@ -731,7 +731,7 @@ static void vBlind(int survivor, int intensity)
 	iColor[3] = intensity;
 
 	static Handle hTarget;
-	hTarget = StartMessageEx(g_umFadeUserMsgId, iTargets, 1);
+	hTarget = StartMessageEx(g_umFade, iTargets, 1);
 
 	switch (GetUserMessageType() == UM_Protobuf)
 	{
