@@ -255,6 +255,7 @@
 		"Rewards"
 		{
 			// Reward survivors for fighting Mutant Tanks.
+			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// Separate values with commas (",").
@@ -943,6 +944,7 @@
 		"Rewards"
 		{
 			// Reward survivors for fighting Mutant Tanks.
+			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --

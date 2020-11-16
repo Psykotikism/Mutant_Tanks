@@ -47,6 +47,7 @@
 - Fixed some messages for all abilities appearing when their `Human Mode` settings are set to `1`.
 - Fixed all abilities not resetting when the Tank is passed between two players.
 - Fixed some settings of multiple abilities having the wrong limits.
+- Fixed abilities activating when the Tank is dying, which caused the Tank being stuck in a looped dying animation.
 
 - Blind
 	- Fixed the ability being enabled by default. (Thanks to Mi.Cura and Tank Rush for reporting!)
@@ -125,6 +126,7 @@
 
 #### General
 - Provided full support for competitive game modes. (Thanks to What for bringing up the subject!)
+- Slightly optimized code.
 
 #### Core Plugin
 - Added command aliases for `sm_tank` and `sm_tank2`.

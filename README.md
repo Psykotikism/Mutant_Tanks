@@ -1962,6 +1962,8 @@ Examples:
 
 **Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
 
+**Oliver** - For helping me test the Reward system, Combination feature, and overall support.
+
 **SourceMod Team** - For the blind, drug, and ice source codes, and for miscellaneous reasons.
 
 # Contact Me
