@@ -6462,7 +6462,11 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 
 			if ((type & MT_REWARD_REFILL) && !g_esPlayer[survivor].g_bRewardedRefill)
 			{
-				vCheatCommand(survivor, "give", "health");
+				if (GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerIncapacitated(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")))
+				{
+					vCheatCommand(survivor, "give", "health");
+				}
+
 				vCheatCommand(survivor, "give", "ammo");
 
 				switch (priority)
