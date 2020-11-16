@@ -1026,7 +1026,7 @@
 	"RewardNone"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} did not do enough damage to{olive} {1}{default} to earn any rewards."
+		"en"			"You{default} did not do enough damage to{olive} {1}{default} to receive any rewards."
 		"hu"			""
 		"chi"			"您{default} 对{olive} {1}{default} 的伤害不足，无法获得任何奖励."
 	}
