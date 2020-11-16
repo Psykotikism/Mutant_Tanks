@@ -900,7 +900,7 @@ forward Action MT_OnTypeChosen(int &type, int tank);
 ```
 
 Natives:
-- Core plugin:
+- Core plugin
 ```
 /**
  * Returns if a certain Mutant Tank type can spawn.
@@ -1225,6 +1225,25 @@ native void MT_SpawnTank(int tank, int type);
  * @param newHealth		The Tank's new max health.
  **/
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
+```
+- Clone ability
+```
+/**
+ * Returns if the clone can use abilities.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if clone can use abilities, false otherwise.
+ **/
+native bool MT_IsCloneSupported(int tank);
+
+/**
+ * Returns if a Tank is a clone.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the Tank is a clone, false otherwise.
+ * @error			Invalid client index.
+ **/
+native bool MT_IsTankClone(int tank);
 ```
 
 Stocks:
@@ -1978,6 +1997,7 @@ If you would like to share your own revisions of this plugin, please rename the 
 # Donate (PayPal only)
 - [Donate to SourceMod](https://www.sourcemod.net/donate.php)
 - Donate to me at alfred_llagas3637@yahoo.com
+
 
 
 
