@@ -923,10 +923,10 @@ static void vRestartHit(int survivor, int tank, float random, float chance, int 
 					}
 				}
 
+				static bool bTeleport;
+				bTeleport = true;
 				if (g_esPlayer[survivor].g_bRecorded && g_esCache[tank].g_iRestartMode == 0)
 				{
-					static bool bTeleport;
-					bTeleport = true;
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
 						if (bIsSurvivor(iSurvivor) && g_esPlayer[iSurvivor].g_bRecorded)
@@ -934,6 +934,8 @@ static void vRestartHit(int survivor, int tank, float random, float chance, int 
 							bTeleport = false;
 
 							TeleportEntity(survivor, g_esPlayer[iSurvivor].g_flPosition, NULL_VECTOR, NULL_VECTOR);
+
+							break;
 						}
 					}
 
@@ -944,18 +946,24 @@ static void vRestartHit(int survivor, int tank, float random, float chance, int 
 				}
 				else
 				{
-					static float flCurrentOrigin[3];
-					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+					static float flOrigin[3], flAngles[3];
+					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
-						if (!bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsPlayerIncapacitated(iPlayer) || iPlayer == survivor)
+						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && iSurvivor != survivor)
 						{
-							continue;
+							bTeleport = false;
+
+							GetClientAbsOrigin(iSurvivor, flOrigin);
+							GetClientEyeAngles(iSurvivor, flAngles);
+							TeleportEntity(survivor, flOrigin, flAngles, NULL_VECTOR);
+
+							break;
 						}
+					}
 
-						GetClientAbsOrigin(iPlayer, flCurrentOrigin);
-						TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
-
-						break;
+					if (bTeleport)
+					{
+						TeleportEntity(survivor, g_esPlayer[survivor].g_flPosition, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 

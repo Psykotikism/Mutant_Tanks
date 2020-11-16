@@ -924,9 +924,6 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
 	g_esPlayer[tank].g_bRewarded = false;
-	g_esPlayer[tank].g_flLastPosition[0] = 0.0;
-	g_esPlayer[tank].g_flLastPosition[1] = 0.0;
-	g_esPlayer[tank].g_flLastPosition[2] = 0.0;
 	g_esPlayer[tank].g_iCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }
@@ -958,14 +955,16 @@ static void vStopBury(int survivor, int tank)
 	}
 
 	bool bTeleport = true;
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	float flAngles[3];
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerIncapacitated(iPlayer) && !g_esPlayer[iPlayer].g_bAffected && iPlayer != survivor)
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !g_esPlayer[iSurvivor].g_bAffected && iSurvivor != survivor)
 		{
 			bTeleport = false;
 
-			GetClientAbsOrigin(iPlayer, flOrigin);
-			TeleportEntity(survivor, flOrigin, NULL_VECTOR, NULL_VECTOR);
+			GetClientAbsOrigin(iSurvivor, flOrigin);
+			GetClientEyeAngles(iSurvivor, flAngles);
+			TeleportEntity(survivor, flOrigin, flAngles, NULL_VECTOR);
 
 			break;
 		}
@@ -975,10 +974,6 @@ static void vStopBury(int survivor, int tank)
 	{
 		TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, NULL_VECTOR, NULL_VECTOR);
 	}
-
-	g_esPlayer[survivor].g_flLastPosition[0] = 0.0;
-	g_esPlayer[survivor].g_flLastPosition[1] = 0.0;
-	g_esPlayer[survivor].g_flLastPosition[2] = 0.0;
 
 	if (GetEntityMoveType(survivor) == MOVETYPE_NONE)
 	{

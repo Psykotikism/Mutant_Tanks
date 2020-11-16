@@ -1553,6 +1553,16 @@ stock bool bIsPlayerBurning(int player)
 	return GetEntPropFloat(player, Prop_Send, "m_burnPercent") > 0.0 || GetEntProp(player, Prop_Data, "m_fFlags") & FL_ONFIRE;
 }
 
+stock bool bIsPlayerDisabled(int survivor)
+{
+	return bIsPlayerHanging(survivor) || bIsPlayerIncapacitated(survivor);
+}
+
+stock bool bIsPlayerHanging(int survivor)
+{
+	return GetEntProp(survivor, Prop_Send, "m_isHangingFromLedge") == 1 || GetEntProp(survivor, Prop_Send, "m_isFallingFromLedge") == 1;
+}
+
 stock bool bIsPlayerIdle(int survivor)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -1582,7 +1592,7 @@ stock bool bIsPlayerIdle(int survivor)
 
 stock bool bIsPlayerIncapacitated(int survivor)
 {
-	return GetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1) == 1;
+	return GetEntProp(survivor, Prop_Send, "m_isIncapacitated") == 1;
 }
 
 stock bool bIsSmoker(int smoker, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE)

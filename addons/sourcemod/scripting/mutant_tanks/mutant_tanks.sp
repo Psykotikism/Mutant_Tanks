@@ -3462,19 +3462,24 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 			return Plugin_Changed;
 		}
-		else if (bIsTankAllowed(attacker) && bHasCoreAdminAccess(attacker) && bIsSurvivor(victim) && !bIsCoreAdminImmune(victim, attacker))
+		else if (bIsTankAllowed(attacker) && bIsSurvivor(victim))
 		{
-			if (StrEqual(sClassname, "weapon_tank_claw") && g_esCache[attacker].g_flClawDamage >= 0.0)
-			{
-				damage = flGetScaledDamage(g_esCache[attacker].g_flClawDamage);
+			vSaveSurvivorStats(victim, true);
 
-				return (g_esCache[attacker].g_flClawDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
-			}
-			else if (StrEqual(sClassname, "tank_rock") && g_esCache[attacker].g_flRockDamage >= 0.0)
+			if (bHasCoreAdminAccess(attacker) && !bIsCoreAdminImmune(victim, attacker))
 			{
-				damage = flGetScaledDamage(g_esCache[attacker].g_flRockDamage);
+				if (StrEqual(sClassname, "weapon_tank_claw") && g_esCache[attacker].g_flClawDamage >= 0.0)
+				{
+					damage = flGetScaledDamage(g_esCache[attacker].g_flClawDamage);
 
-				return (g_esCache[attacker].g_flRockDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
+					return (g_esCache[attacker].g_flClawDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
+				}
+				else if (StrEqual(sClassname, "tank_rock") && g_esCache[attacker].g_flRockDamage >= 0.0)
+				{
+					damage = flGetScaledDamage(g_esCache[attacker].g_flRockDamage);
+
+					return (g_esCache[attacker].g_flRockDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
+				}
 			}
 		}
 		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsCommonInfected(victim) || bIsWitch(victim))
@@ -6308,12 +6313,13 @@ static void vResetSurvivorStats2(int survivor)
 	g_esPlayer[survivor].g_bRewardedRespawn = false;
 }
 
-static void vSaveSurvivorStats(int survivor)
+static void vSaveSurvivorStats(int survivor, bool override = false)
 {
-	g_esPlayer[survivor].g_bLastLife = false;
-
-	GetClientAbsOrigin(survivor, g_esPlayer[survivor].g_flLastPosition);
-	GetClientEyeAngles(survivor, g_esPlayer[survivor].g_flLastAngles);
+	if (bIsEntityGrounded(survivor) || override)
+	{
+		GetClientAbsOrigin(survivor, g_esPlayer[survivor].g_flLastPosition);
+		GetClientEyeAngles(survivor, g_esPlayer[survivor].g_flLastAngles);
+	}
 
 	vSaveWeapons(survivor);
 	vResetSurvivorStats(survivor);
@@ -6547,11 +6553,33 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 			{
 				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
 				{
+					g_esPlayer[survivor].g_bLastLife = false;
+
 					vSaveSurvivorStats(survivor);
 				}
 
 				SDKCall(g_esGeneral.g_hSDKRespawnPlayer, survivor);
-				TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, g_esPlayer[survivor].g_flLastAngles, NULL_VECTOR);
+
+				bool bTeleport = true;
+				float flOrigin[3], flAngles[3];
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				{
+					if (bIsSurvivor(iSurvivor) && !bIsPlayerHanging(iSurvivor) && iSurvivor != survivor)
+					{
+						bTeleport = false;
+
+						GetClientAbsOrigin(iSurvivor, flOrigin);
+						GetClientEyeAngles(iSurvivor, flAngles);
+						TeleportEntity(survivor, flOrigin, flAngles, NULL_VECTOR);
+
+						break;
+					}
+				}
+
+				if (bTeleport)
+				{
+					TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, g_esPlayer[survivor].g_flLastAngles, NULL_VECTOR);
+				}
 
 				if (g_esCache[tank].g_iRespawnLoadoutReward[priority] == 1)
 				{
@@ -8516,6 +8544,8 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 {
 	if (bIsSurvivor(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
 	{
+		g_esPlayer[pThis].g_bLastLife = false;
+
 		vSaveSurvivorStats(pThis);
 	}
 	else if (bIsTankAllowed(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCustomTankAllowed(pThis))
@@ -9148,7 +9178,7 @@ public Action tTimerTankUpdate(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsCustomTankAllowed(iTank) || g_esGeneral.g_bFinaleEnded)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsCustomTankAllowed(iTank) || bIsPlayerIncapacitated(iTank) || g_esGeneral.g_bFinaleEnded)
 	{
 		return Plugin_Stop;
 	}
