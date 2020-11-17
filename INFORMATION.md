@@ -10,6 +10,7 @@
 ## Sections
 - Plugin Settings
 	- General
+	- Announcements
 	- Rewards
 	- Competitive
 	- Difficulty
@@ -21,6 +22,7 @@
 	- Custom
 - Tank Settings
 	- General
+	- Announcements
 	- Rewards
 	- Glow
 	- Administration
@@ -136,37 +138,6 @@
 			// 1: ON
 			"Plugin Enabled"			"1"
 
-			// Announce each Mutant Tank's arrival.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
-			// --
-			// Add up numbers together for different results.
-			// --
-			// Minimum: 0
-			// Maximum: 31
-			// --
-			// 0: OFF
-			// 1: Announce when a Mutant Tank spawns.
-			// 2: Announce when a Mutant Tank evolves. (Only works when "Spawn Type" is set to "1".)
-			// 4: Announce when a Mutant Tank randomizes. (Only works when "Spawn Type" is set to "2".)
-			// 8: Announce when a Mutant Tank transforms. (Only works when "Spawn Type" is set to "3".)
-			// 16: Announce when a Mutant Tank untransforms. (Only works when "Spawn Type" is set to "3".)
-			"Announce Arrival"			"31"
-
-			// Announce each Mutant Tank's death.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
-			// --
-			// 0: OFF
-			// 1: ON, announce deaths only.
-			// 2: ON, announce deaths with killers.
-			"Announce Death"			"1"
-
-			// Announce each Mutant Tank's kill.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
-			// --
-			// 0: OFF
-			// 1: ON.
-			"Announce Kill"				"1"
-
 			// Mutant Tanks revert back to default Tanks upon death.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// Note: This feature is simply for cosmetic purposes. You do not need to worry about this setting.
@@ -251,6 +222,39 @@
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			"Type Range"				"1-1000"
+		}
+		"Announcements"
+		{
+			// Announce each Mutant Tank's arrival.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0: OFF
+			// 1: Announce when a Mutant Tank spawns.
+			// 2: Announce when a Mutant Tank evolves. (Only works when "Spawn Type" is set to "1".)
+			// 4: Announce when a Mutant Tank randomizes. (Only works when "Spawn Type" is set to "2".)
+			// 8: Announce when a Mutant Tank transforms. (Only works when "Spawn Type" is set to "3".)
+			// 16: Announce when a Mutant Tank untransforms. (Only works when "Spawn Type" is set to "3".)
+			"Announce Arrival"			"31"
+
+			// Announce each Mutant Tank's death.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// 0: OFF
+			// 1: ON, announce deaths only.
+			// 2: ON, announce deaths with killers.
+			"Announce Death"			"1"
+
+			// Announce each Mutant Tank's kill.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Announce Kill"				"1"
 		}
 		"Rewards"
 		{
@@ -454,7 +458,7 @@
 			// Base health given to all Mutant Tanks.
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// Minimum: 0 (OFF)
@@ -492,7 +496,7 @@
 			// Extra health given to the Mutant Tank.
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// Minimum: -65535
@@ -806,7 +810,7 @@
 
 ### Tank Settings
 
-#### General, Rewards, Glow, Administration, Human Support, Spawn, Boss, Combo, Random, Transform, Props, Particles, Health, Enhancements, Immunities
+#### General, Announcements, Rewards, Glow, Administration, Human Support, Spawn, Boss, Combo, Random, Transform, Props, Particles, Health, Enhancements, Immunities
 ```
 "Mutant Tanks"
 {
@@ -841,7 +845,7 @@
 			"Tank Chance"				"100.0"
 
 			// Display a note for the Mutant Tank when it spawns.
-			// Note: This note can also be displayed for clones if "Clone Mode" is set to "1", so the chat could be spammed if multiple clones spawn.
+			// Note: This note can also be displayed for clones if the "Clone Mode" setting is set to "1", so the chat could be spammed if multiple clones spawn.
 			// Note: A note must be manually created in the translation file.
 			// Note: Tank notes support chat color tags in the translation file.
 			// Note: This setting can be overridden for specific players.
@@ -864,40 +868,6 @@
 			// 0: OFF
 			// 1: ON
 			"Menu Enabled"				"1"
-
-			// Announce the Mutant Tank's arrival.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Add up numbers together for different results.
-			// --
-			// Minimum: 0
-			// Maximum: 31
-			// --
-			// 0: OFF
-			// 1: Announce when the Mutant Tank spawns.
-			// 2: Announce when the Mutant Tank evolves. (Only works when "Spawn Type" is set to "1".)
-			// 4: Announce when the Mutant Tank randomizes. (Only works when "Spawn Type" is set to "2".)
-			// 8: Announce when the Mutant Tank transforms. (Only works when "Spawn Type" is set to "3".)
-			// 16: Announce when the Mutant Tank untransforms. (Only works when "Spawn Type" is set to "3".)
-			"Announce Arrival"			"0"
-
-			// Announce the Mutant Tank's death.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// 0: OFF
-			// 1: ON, announce deaths only.
-			// 2: ON, announce deaths with killers.
-			"Announce Death"			"0"
-
-			// Announce the Mutant Tank's kill.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// 0: OFF
-			// 1: ON.
-			"Announce Kill"				"0"
 
 			// The Mutant Tank reverts back to default a Tank upon death.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -940,6 +910,42 @@
 			// 0: OFF
 			// 1-32: ON, the number of human survivors required to be present for this Mutant Tank to be effective.
 			"Requires Humans"			"0"
+		}
+		"Announcements"
+		{
+			// Announce the Mutant Tank's arrival.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 31
+			// --
+			// 0: OFF
+			// 1: Announce when the Mutant Tank spawns.
+			// 2: Announce when the Mutant Tank evolves. (Only works when "Spawn Type" is set to "1".)
+			// 4: Announce when the Mutant Tank randomizes. (Only works when "Spawn Type" is set to "2".)
+			// 8: Announce when the Mutant Tank transforms. (Only works when "Spawn Type" is set to "3".)
+			// 16: Announce when the Mutant Tank untransforms. (Only works when "Spawn Type" is set to "3".)
+			"Announce Arrival"			"0"
+
+			// Announce the Mutant Tank's death.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON, announce deaths only.
+			// 2: ON, announce deaths with killers.
+			"Announce Death"			"0"
+
+			// Announce the Mutant Tank's kill.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Announce Kill"				"0"
 		}
 		"Rewards"
 		{
@@ -1849,7 +1855,7 @@
 			// Base health given to all Mutant Tanks.
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -1890,7 +1896,7 @@
 			// Extra health given to the Mutant Tank.
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health," the Mutant Tank's health will be multiplied based on player count.
+			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --

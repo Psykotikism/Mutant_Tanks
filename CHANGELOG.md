@@ -52,10 +52,10 @@
 
 - Blind
 	- Fixed the ability being enabled by default. (Thanks to Mi.Cura and Tank Rush for reporting!)
-	- Fixed the sound effect not playing in L4D1.
+	- Fixed the sound effect not playing in L4D1 due to the file not existing.
 
 - Bomb
-	- Fixed the sound effect not playing in L4D1.
+	- Fixed the sound effect not playing in L4D1 due to the file not existing.
 
 - Bury
 	- Fixed the ability sometimes leaving players under the map. (Thanks to Mi.Cura for testing and reporting!)
@@ -81,7 +81,7 @@
 	- Fixed the ability causing errors when the enforced weapon slot doesn't contain a valid weapon.
 
 - Fire
-	- Fixed the sound effect not playing in L4D1.
+	- Fixed the sound effect not playing in L4D1 due to the file not existing.
 
 - Heal
 	- Fixed the glow outline not going away when Tanks die.
