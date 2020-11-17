@@ -5,7 +5,7 @@
 
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
 - Maximum types: 1000 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins.)
-- Ability count: 76 (Suggest more if you want; limit is 100.)
+- Ability count: 76
 
 ## Sections
 - Plugin Settings

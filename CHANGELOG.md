@@ -6,6 +6,7 @@
 
 #### General
 - Fixed some potential errors caused by invalid weapon slots.
+- Fixed the SourceMod admin menu plugin not being optional.
 
 #### Core Plugin
 - Fixed log files being created even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
@@ -127,6 +128,7 @@
 
 #### General
 - Provided full support for competitive game modes. (Thanks to What for bringing up the subject!)
+- Slightly more optimized code.
 
 #### Core Plugin
 - Added command aliases for `sm_tank` and `sm_tank2`.

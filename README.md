@@ -1994,10 +1994,6 @@ If you wish to contact me for any questions, concerns, suggestions, or criticism
 # 3rd-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files! I do not want to create confusion for end-users and it will avoid conflict and negative feedback on the official versions of my work. If you choose to keep the same file names for your revisions, it will cause users to assume that the official versions are the source of any problems your revisions may have. This is to protect you (the reviser) and me (the developer)! Thank you!
 
-# Donate (PayPal only)
-- [Donate to SourceMod](https://www.sourcemod.net/donate.php)
-- Donate to me at alfred_llagas3637@yahoo.com
-
 
 
 
