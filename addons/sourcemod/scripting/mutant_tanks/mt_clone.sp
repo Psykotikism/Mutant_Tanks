@@ -343,7 +343,7 @@ public void MT_OnCombineAbilities(int tank, int type, float random, const char[]
 	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_CONFIG_SECTION4);
 	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
 	{
-		if (type == MT_COMBO_MAINRANGE && g_esCache[tank].g_iCloneAbility == 1 && g_esCache[tank].g_iComboAbility == 1)
+		if (type == MT_COMBO_MAINRANGE && g_esCache[tank].g_iCloneAbility == 1 && g_esCache[tank].g_iComboAbility == 1 && !g_esPlayer[tank].g_bCloned)
 		{
 			static char sSubset[10][32];
 			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
@@ -651,7 +651,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && g_esCache[tank].g_iCloneAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < GetTime()))
+	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && g_esCache[tank].g_iCloneAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < GetTime()) && !g_esPlayer[tank].g_bCloned)
 	{
 		vCloneAbility(tank);
 	}
