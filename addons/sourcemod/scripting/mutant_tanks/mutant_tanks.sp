@@ -11,12 +11,12 @@
 
 #include <sourcemod>
 #include <sdkhooks>
-#include <adminmenu>
 #include <dhooks>
 #include <left4dhooks>
 #include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
+#tryinclude <adminmenu>
 #tryinclude <mt_clone>
 #define REQUIRE_PLUGIN
 
