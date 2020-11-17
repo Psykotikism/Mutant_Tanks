@@ -61,6 +61,7 @@
 
 - Clone
 	- Fixed clones being detected by the `Finale Amount` and `Finale Waves` settings.
+	- Fixed clones being able to clone themselves.
 	- Fixed the ability not being optional.
 
 - Drug
@@ -126,7 +127,6 @@
 
 #### General
 - Provided full support for competitive game modes. (Thanks to What for bringing up the subject!)
-- Slightly optimized code.
 
 #### Core Plugin
 - Added command aliases for `sm_tank` and `sm_tank2`.

@@ -3660,7 +3660,7 @@
 			"Clone Health"				"1000"
 
 			// The Mutant Tank's clone will be treated as a real Mutant Tank.
-			// Note: Clones cannot clone themselves for obvious safety reasons.
+			// Note: Clones cannot clone themselves regardless of the value for this setting for obvious safety reasons.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF, the clone cannot use abilities like real Mutant Tanks.
