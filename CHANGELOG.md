@@ -128,7 +128,6 @@
 
 #### General
 - Provided full support for competitive game modes. (Thanks to What for bringing up the subject!)
-- Slightly more optimized code.
 
 #### Core Plugin
 - Added command aliases for `sm_tank` and `sm_tank2`.
@@ -222,6 +221,7 @@
 - Added the `Announce Kill` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections.
 - The `Base Health` setting can now be overridden for each type and player.
 - The `Extra Health` setting can now be used globally for all types.
+- The `Requires Humans` setting can no longer be overridden for each player.
 
 #### Translations
 - The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)

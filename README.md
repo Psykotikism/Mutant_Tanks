@@ -1913,63 +1913,11 @@ Examples:
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
-**ReCreator** - For reporting issues and suggesting ideas.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, 3aljiyavslgazana** - For reporting issues and suggesting ideas.
 
-**SilentBr** - For reporting issues and suggesting ideas.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai** - For reporting issues.
 
-**Neptunia** - For reporting issues and suggesting ideas.
-
-**Zytheus** - For reporting issues and suggesting ideas.
-
-**huwong** - For reporting issues and suggesting ideas.
-
-**Tank Rush** - For reporting issues and suggesting ideas.
-
-**3aljiyavslgazana** - For reporting issues and suggesting ideas.
-
-**Princess LadyRain** - For reporting issues.
-
-**Nekrob** - For reporting issues.
-
-**fig101** - For reporting issues.
-
-**BloodyBlade** - For reporting issues.
-
-**user2000** - For reporting issues.
-
-**MedicDTI** - For reporting issues.
-
-**ben12398** - For reporting issues.
-
-**AK978** - For reporting issues.
-
-**ricksfishin** - For reporting issues.
-
-**Voevoda** - For reporting issues.
-
-**ur5efj** - For reporting issues.
-
-**What** - For reporting issues.
-
-**moekai** - For reporting issues.
-
-**Electr000999** - For suggesting ideas.
-
-**foquaxticity** - For suggesting ideas.
-
-**foxhound27** - For suggesting ideas.
-
-**sxslmk** - For suggesting ideas.
-
-**yuzumi** - For suggesting ideas.
-
-**FatalOE71** - For suggesting ideas.
-
-**zaviier** - For suggesting ideas.
-
-**RDiver** - For suggesting ideas.
-
-**BHaType** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, yuzumi, FatalOE71, zaviier, RDiver, BHaType** - For suggesting ideas.
 
 **Marttt** - For helping me with many things and the pull requests.
 
@@ -1984,12 +1932,6 @@ Examples:
 **Oliver** - For helping me test the Reward system, Combination feature, and overall support.
 
 **SourceMod Team** - For the blind, drug, and ice source codes, and for miscellaneous reasons.
-
-# Contact Me
-If you wish to contact me for any questions, concerns, suggestions, or criticism, I can be found here:
-- [AlliedModders Forum](https://forums.alliedmods.net/member.php?u=181166) (Use this for just reporting bugs/issues or giving suggestions/ideas.)
-- [Steam](https://steamcommunity.com/profiles/76561198056665335) (Use this for getting to know me or wanting to be friends with me.)
-- Psyk0tik#6898 on Discord (Use this for pitching in new/better code.)
 
 # 3rd-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.

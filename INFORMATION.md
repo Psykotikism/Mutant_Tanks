@@ -902,7 +902,6 @@
 
 			// The Mutant Tank is only effective toward human survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
 			// Maximum: 32
@@ -914,7 +913,7 @@
 		"Announcements"
 		{
 			// Announce the Mutant Tank's arrival.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
@@ -931,7 +930,7 @@
 			"Announce Arrival"			"0"
 
 			// Announce the Mutant Tank's death.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -940,7 +939,7 @@
 			"Announce Death"			"0"
 
 			// Announce the Mutant Tank's kill.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -951,7 +950,7 @@
 		{
 			// Reward survivors for fighting Mutant Tanks.
 			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate values with commas (",").
@@ -978,7 +977,7 @@
 			"Reward Enabled"			"-1,-1,-1"
 
 			// The chance to reward survivors for killing Mutant Tanks.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate chances with commas (",").
@@ -995,7 +994,7 @@
 			"Reward Chance"				"0.0,0.0,0.0"
 
 			// The duration of temporary rewards.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate durations with commas (",").
@@ -1012,7 +1011,7 @@
 			"Reward Duration"			"0.0,0.0,0.0"
 
 			// The minimum amount of damage in percentage required to receive a reward.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate percentages with commas (",").
@@ -1029,7 +1028,7 @@
 			"Reward Percentage"			"0.0,0.0,0.0"
 
 			// The damage boost to reward to survivors.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate boosts with commas (",").
@@ -1046,7 +1045,7 @@
 			"Damage Boost Reward"			"0.0,0.0,0.0"
 
 			// The item(s) to reward to survivors.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate item sets with commas (",").
@@ -1061,7 +1060,7 @@
 			"Item Reward"				""
 
 			// Restore the previous loadouts of survivors after respawning them.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate values with commas (",").
@@ -1078,7 +1077,7 @@
 			"Respawn Loadout Reward"		"0,0,0"
 
 			// The speed boost to reward to survivors.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate boosts with commas (",").
@@ -1097,7 +1096,7 @@
 			// Override chosen reward types depending on the status of the recipient.
 			// Note: If the recipient is black and white, the recipient will receive Health as a reward.
 			// Note: If the recipient is dead, the recipient will receive Respawn as a reward.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate values with commas (",").
@@ -1856,7 +1855,7 @@
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0 (OFF)
@@ -1864,7 +1863,7 @@
 			"Base Health"				"0"
 
 			// Display the Mutant Tank's name and health.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0
@@ -1885,7 +1884,7 @@
 			"Display Health"			"0"
 
 			// Display type of the Mutant Tank's names and health.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -1897,7 +1896,7 @@
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: -65535
@@ -1908,7 +1907,7 @@
 			"Extra Health"				"0"
 
 			// The characters used to represent the health bar of the Mutant Tank.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting only takes effect when the "Display Health" setting is enabled.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -1922,7 +1921,7 @@
 			"Health Characters"			""
 
 			// The number of human survivors required for "Multiply Health" to take effect.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -1933,7 +1932,7 @@
 			"Minimum Humans"			"0"
 
 			// Multiply the Mutant Tank's health.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: Health multiplication only occurs when the requirement for "Minimum Humans" is met.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2035,9 +2034,10 @@
 		"Absorb Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -2193,13 +2193,15 @@
 		"Acid Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -2300,7 +2302,7 @@
 			"Acid Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -2324,7 +2326,7 @@
 			"Acid Death Range"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -2393,13 +2395,15 @@
 		"Aimless Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -2558,13 +2562,15 @@
 		"Ammo Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -2671,7 +2677,7 @@
 			"Ammo Count"				"0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -2723,13 +2729,15 @@
 		"Blind Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -2837,7 +2845,7 @@
 			"Blind Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -2898,13 +2906,15 @@
 		"Bomb Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -3005,7 +3015,7 @@
 			"Bomb Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -3073,13 +3083,15 @@
 		"Bury Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -3201,7 +3213,7 @@
 			"Bury Height"				"50.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -3247,9 +3259,10 @@
 		"Car Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -3394,13 +3407,15 @@
 		"Choke Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -3575,9 +3590,10 @@
 		"Clone Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -3714,13 +3730,15 @@
 		"Cloud Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -3835,9 +3853,10 @@
 		"Drop Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -3962,13 +3981,15 @@
 		"Drug Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -4076,7 +4097,7 @@
 			"Drug Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -4136,13 +4157,15 @@
 		"Drunk Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -4315,13 +4338,15 @@
 		"Electric Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -4437,7 +4462,7 @@
 			"Electric Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -4497,13 +4522,15 @@
 		"Enforce Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -4611,7 +4638,7 @@
 			"Enforce Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -4673,9 +4700,10 @@
 		"Fast Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -4796,13 +4824,15 @@
 		"Fire Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -4903,7 +4933,7 @@
 			"Fire Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -4974,13 +5004,15 @@
 		"Fling Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -5080,7 +5112,7 @@
 			"Fling Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -5104,7 +5136,7 @@
 			"Fling Death Range"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -5159,9 +5191,10 @@
 		"Fly Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -5290,9 +5323,10 @@
 		"Fragile Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -5476,13 +5510,15 @@
 		"Ghost Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -5631,7 +5667,7 @@
 			"Ghost Fade Rate"			"0.1"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" to be on.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -5715,9 +5751,10 @@
 		"God Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -5804,7 +5841,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
-			// Maximum: 999999.0
+			// Maximum: 999999
 			"God Duration"				"5"
 		}
 	}
@@ -5830,13 +5867,15 @@
 		"Gravity Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -5952,7 +5991,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
-			// Maximum: 999999.0
+			// Maximum: 999999
 			"Gravity Duration"			"5"
 
 			// The Mutant Tank's gravity force.
@@ -5966,7 +6005,7 @@
 			"Gravity Force"				"-50.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" to be on.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -6028,13 +6067,15 @@
 		"Heal Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -6167,7 +6208,7 @@
 			"Heal Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" to be on.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -6251,13 +6292,15 @@
 		"Hit Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -6343,13 +6386,15 @@
 		"Hurt Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -6465,7 +6510,7 @@
 			"Hurt Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -6525,13 +6570,15 @@
 		"Hypno Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -6669,7 +6716,7 @@
 			"Hypno Fire Divisor"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -6738,13 +6785,15 @@
 		"Ice Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -6852,7 +6901,7 @@
 			"Ice Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -6905,13 +6954,15 @@
 		"Idle Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -7011,7 +7062,7 @@
 			"Idle Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -7063,13 +7114,15 @@
 		"Invert Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -7222,13 +7275,15 @@
 		"Item Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -7335,13 +7390,15 @@
 		"Jump Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -7468,7 +7525,7 @@
 			"Jump Height"				"300.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" to be on.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -7551,13 +7608,15 @@
 		"Kamikaze Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -7643,7 +7702,7 @@
 			"Kamikaze Chance"			"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -7695,13 +7754,15 @@
 		"Lag Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -7854,13 +7915,15 @@
 		"Laser Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -7997,13 +8060,15 @@
 		"Leech Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -8111,7 +8176,7 @@
 			"Leech Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -8166,13 +8231,15 @@
 		"Lightning Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -8295,9 +8362,10 @@
 		"Medic Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -8368,7 +8436,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
-			// 1: ON, the Mutant Tank can heal nearby special infected periodically.
+			// 1: ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -8467,13 +8535,15 @@
 		"Meteor Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -8618,9 +8688,10 @@
 		"Minion Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -8740,9 +8811,10 @@
 		"Necro Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -8860,13 +8932,15 @@
 		"Nullify Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -9019,9 +9093,10 @@
 		"Omni Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -9140,9 +9215,10 @@
 		"Panic Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -9260,13 +9336,15 @@
 		"Pimp Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -9382,7 +9460,7 @@
 			"Pimp Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -9445,13 +9523,15 @@
 		"Puke Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -9551,7 +9631,7 @@
 			"Puke Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -9575,7 +9655,7 @@
 			"Puke Death Range"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -9621,9 +9701,10 @@
 		"Pyro Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -9759,13 +9840,15 @@
 		"Quiet Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -9873,7 +9956,7 @@
 			"Quiet Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -9925,13 +10008,15 @@
 		"Recoil Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -10084,9 +10169,10 @@
 		"Regen Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -10216,9 +10302,10 @@
 		"Respawn Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -10278,7 +10365,6 @@
 			"Ability Message"			"0"
 
 			// The Mutant Tank respawns up to this many times.
-			// Note: This setting only applies if the "Respawn Random" setting is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
@@ -10333,13 +10419,15 @@
 		"Restart Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -10502,13 +10590,15 @@
 		"Rock Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -10651,13 +10741,15 @@
 		"Rocket Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -10818,13 +10910,15 @@
 		"Shake Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -10924,7 +11018,7 @@
 			"Shake Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -10956,7 +11050,7 @@
 			"Shake Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -11010,13 +11104,15 @@
 		"Shield Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -11226,13 +11322,15 @@
 		"Shove Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -11332,7 +11430,7 @@
 			"Shove Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -11364,7 +11462,7 @@
 			"Shove Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -11424,13 +11522,15 @@
 		"Slow Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -11538,7 +11638,7 @@
 			"Slow Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -11598,13 +11698,15 @@
 		"Smash Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -11704,7 +11806,7 @@
 			"Smash Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -11756,13 +11858,15 @@
 		"Smite Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -11862,7 +11966,7 @@
 			"Smite Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -11908,13 +12012,15 @@
 		"Spam Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -12038,13 +12144,15 @@
 		"Splash Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -12176,9 +12284,10 @@
 		"Splatter Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -12315,9 +12424,10 @@
 		"Throw Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -12454,13 +12564,15 @@
 		"Track Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -12575,13 +12687,15 @@
 		"Ultimate Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -12715,9 +12829,10 @@
 		"Undead Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
@@ -12813,13 +12928,15 @@
 		"Vampire Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -12900,13 +13017,15 @@
 		"Vision Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -13021,7 +13140,7 @@
 			"Vision FOV"				"160"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -13076,13 +13195,15 @@
 		"Warp Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -13201,7 +13322,7 @@
 			"Warp Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" to be on.
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -13270,13 +13391,15 @@
 		"Whirl Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -13398,7 +13521,7 @@
 			"Whirl Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
-			// Note: This setting does not need "Ability Enabled" set to "1".
+			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -13452,13 +13575,15 @@
 		"Witch Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -13574,13 +13699,15 @@
 		"Xiphos Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -13665,13 +13792,15 @@
 		"Yell Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to this ability's effects.
 			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.
@@ -13786,9 +13915,10 @@
 		"Zombie Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
+			// Note: This setting can be overridden for specific players.
 			// --
-			// Empty: No access flags are immune.
-			// Not empty: These access flags are immune.
+			// Empty: No access flags have access.
+			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Use this ability in conjunction with other abilities.
