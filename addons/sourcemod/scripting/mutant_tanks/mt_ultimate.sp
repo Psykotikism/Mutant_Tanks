@@ -270,9 +270,10 @@ public int iUltimateMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		}
 		case MenuAction_DisplayItem:
 		{
-			char sMenuOption[PLATFORM_MAX_PATH];
 			if (param2 >= 0)
 			{
+				char sMenuOption[PLATFORM_MAX_PATH];
+
 				switch (param2)
 				{
 					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
