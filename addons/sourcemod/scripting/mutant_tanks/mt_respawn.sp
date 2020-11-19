@@ -222,39 +222,18 @@ public int iRespawnMenuHandler(Menu menu, MenuAction action, int param1, int par
 		case MenuAction_DisplayItem:
 		{
 			char sMenuOption[PLATFORM_MAX_PATH];
-
-			switch (param2)
+			if (param2 >= 0)
 			{
-				case 0:
+				switch (param2)
 				{
-					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-
-					return RedrawMenuItem(sMenuOption);
+					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
 				}
-				case 1:
-				{
-					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
 
-					return RedrawMenuItem(sMenuOption);
-				}
-				case 2:
-				{
-					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-
-					return RedrawMenuItem(sMenuOption);
-				}
-				case 3:
-				{
-					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-
-					return RedrawMenuItem(sMenuOption);
-				}
-				case 4:
-				{
-					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
-
-					return RedrawMenuItem(sMenuOption);
-				}
+				return RedrawMenuItem(sMenuOption);
 			}
 		}
 	}
