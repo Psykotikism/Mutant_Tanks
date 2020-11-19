@@ -1,5 +1,4 @@
 # Mutant Tanks
-Originally an extended version of [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752), Mutant Tanks takes Tank fights to the next level by enabling full customization of different Tank types to make gameplay more interesting.
 
 ## License
 > The following license is also placed inside the source code of each plugin and include file.
@@ -14,12 +13,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## About
-> Mutant Tanks makes fighting Tanks great again!
-
-Mutant Tanks will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
+Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, Last Boss Extended, and Super Tanks to grant Tanks unique powers and abilities that enhance the player experience.
 
 ### What makes Mutant Tanks worth installing?
-Mutant Tanks enhances the experience and fun that players get from Tank fights by 1,000. This plugin gives server owners an arsenal of Mutant Tanks to test players' skills with and create a unique experience in every Tank fight.
+Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank.
 
 ## Features
 1. Enable/disable the plugin in all game modes.
@@ -1935,6 +1932,7 @@ Examples:
 
 # 3rd-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
+
 
 
 Enjoy all my hard work and have fun with it!

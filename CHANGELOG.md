@@ -18,7 +18,7 @@
 - Fixed Tanks in ghost or stasis mode having props and particle effects.
 - Fixed the log messages causing errors for some server messages.
 - Fixed the Tank's primary attack being blocked by the friendly-fire check.
-- Fixed the thirdperson check not working properly.
+- Fixed some cases where Tanks don't have props in thirdperson.
 - Fixed the `Transformation` feature disabling itself after the first transformation ends.
 
 #### Config Files
