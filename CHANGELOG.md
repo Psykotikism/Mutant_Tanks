@@ -20,6 +20,7 @@
 - Fixed the Tank's primary attack being blocked by the friendly-fire check.
 - Fixed some cases where Tanks don't have props in thirdperson.
 - Fixed the `Transformation` feature disabling itself after the first transformation ends.
+- Fixed the blur effect prop not deleting itself. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 #### Config Files
 - Fixed some of the default Mutant Tanks that use the `Boss` and `Transformation` features turning into the wrong Mutant Tank types.
@@ -262,6 +263,9 @@
 
 - Clone
 	- The `Clone Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
+
+- Drop
+	- Dropped weapons now have normal size. (Thanks to 3aljiyavslgazana for suggesting!)
 
 - Fire
 	- Added a sound effect for L4D1.

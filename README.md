@@ -30,7 +30,7 @@ Mutant Tanks enhances the fun and excitement players get from Tank fights by cre
 9. Custom target filters for targeting survivors and special infected.
 10. Supports multiple languages.
 11. Chat color tags for translation files.
-12. Administration system designed for access to and immunity from Mutant Tanks.
+12. Administration system designed for access and immunity to Mutant Tanks.
 13. Detects idle or bugged (no behavior) Tanks.
 14. Fully compatible with all game modes.
 15. Toggle damage scaling based on difficulty.
