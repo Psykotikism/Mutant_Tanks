@@ -55,6 +55,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esPlayer
 {
 	bool g_bCloned;
+	bool g_bFiltered;
 
 	float g_flCloneChance;
 
@@ -130,13 +131,9 @@ esCache g_esCache[MAXPLAYERS + 1];
 public any aNative_IsCloneSupported(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esPlayer[iTank].g_bFiltered)
 	{
-		int iOwner = g_esPlayer[iTank].g_iOwner;
-		if (bIsTank(iOwner, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iOwner].g_iCloneMode == 0 && g_esPlayer[iTank].g_bCloned)
-		{
-			return false;
-		}
+		return false;
 	}
 
 	return true;
@@ -737,6 +734,11 @@ static void vClone(int tank)
 						g_esPlayer[iSelectedType].g_iOwner = tank;
 						g_esPlayer[tank].g_iCount++;
 
+						if (g_esCache[tank].g_iCloneMode == 0)
+						{
+							g_esPlayer[iSelectedType].g_bFiltered = true;
+						}
+
 						static int iNewHealth;
 						iNewHealth = (g_esCache[tank].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esCache[tank].g_iCloneHealth;
 						//SetEntityHealth(iSelectedType, iNewHealth);
@@ -820,6 +822,7 @@ static void vCloneAbility(int tank)
 static void vCopyStats(int oldTank, int newTank)
 {
 	g_esPlayer[newTank].g_bCloned = g_esPlayer[oldTank].g_bCloned;
+	g_esPlayer[newTank].g_bFiltered = g_esPlayer[oldTank].g_bFiltered;
 	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
@@ -832,6 +835,7 @@ static void vRemoveClone(int tank, bool revert = false)
 		g_esPlayer[tank].g_bCloned = false;
 	}
 
+	g_esPlayer[tank].g_bFiltered = false;
 	g_esPlayer[tank].g_iCount = 0;
 	g_esPlayer[tank].g_iCount2 = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
