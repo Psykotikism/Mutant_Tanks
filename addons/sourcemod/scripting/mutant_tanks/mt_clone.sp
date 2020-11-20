@@ -714,36 +714,36 @@ static void vClone(int tank)
 						case false: vClone2(tank, g_esCache[tank].g_iCloneMinType, g_esCache[tank].g_iCloneMaxType);
 					}
 
-					static int iSelectedType;
-					iSelectedType = 0;
+					static int iTank;
+					iTank = 0;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
 						{
-							iSelectedType = iPlayer;
+							iTank = iPlayer;
 
 							break;
 						}
 					}
 
-					if (bIsTank(iSelectedType))
+					if (bIsTank(iTank))
 					{
-						TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(iTank, flHitPosition, NULL_VECTOR, NULL_VECTOR);
 
-						g_esPlayer[iSelectedType].g_bCloned = true;
-						g_esPlayer[iSelectedType].g_iOwner = tank;
+						g_esPlayer[iTank].g_bCloned = true;
+						g_esPlayer[iTank].g_iOwner = tank;
 						g_esPlayer[tank].g_iCount++;
 
 						if (g_esCache[tank].g_iCloneMode == 0)
 						{
-							g_esPlayer[iSelectedType].g_bFiltered = true;
+							g_esPlayer[iTank].g_bFiltered = true;
 						}
 
 						static int iNewHealth;
 						iNewHealth = (g_esCache[tank].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esCache[tank].g_iCloneHealth;
-						//SetEntityHealth(iSelectedType, iNewHealth);
-						SetEntProp(iSelectedType, Prop_Data, "m_iHealth", iNewHealth);
-						SetEntProp(iSelectedType, Prop_Data, "m_iMaxHealth", iNewHealth);
+						//SetEntityHealth(iTank, iNewHealth);
+						SetEntProp(iTank, Prop_Data, "m_iHealth", iNewHealth);
+						SetEntProp(iTank, Prop_Data, "m_iMaxHealth", iNewHealth);
 
 						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 						{

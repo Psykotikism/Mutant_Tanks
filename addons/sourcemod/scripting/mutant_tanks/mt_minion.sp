@@ -645,25 +645,25 @@ static void vMinion(int tank)
 						}
 					}
 
-					static int iSelectedType;
-					iSelectedType = 0;
+					static int iSpecial;
+					iSpecial = 0;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
 						{
-							iSelectedType = iPlayer;
+							iSpecial = iPlayer;
 
 							break;
 						}
 					}
 
-					if (bIsInfected(iSelectedType))
+					if (bIsInfected(iSpecial))
 					{
-						TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(iSpecial, flHitPosition, NULL_VECTOR, NULL_VECTOR);
 
-						g_esPlayer[iSelectedType].g_bMinion = true;
+						g_esPlayer[iSpecial].g_bMinion = true;
 						g_esPlayer[tank].g_iCount++;
-						g_esPlayer[iSelectedType].g_iOwner = tank;
+						g_esPlayer[iSpecial].g_iOwner = tank;
 
 						static int iTime;
 						iTime = GetTime();

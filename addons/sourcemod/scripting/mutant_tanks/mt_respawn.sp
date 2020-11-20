@@ -629,16 +629,16 @@ static void vRespawn(int tank)
 			case false: vRespawn2(tank, g_esCache[tank].g_iRespawnMinType, g_esCache[tank].g_iRespawnMaxType);
 		}
 
-		static int iNewTank;
-		iNewTank = 0;
+		static int iTank;
+		iTank = 0;
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer] && iPlayer != tank)
 			{
-				iNewTank = iPlayer;
-				g_esPlayer[iNewTank].g_bActivated = false;
-				g_esPlayer[iNewTank].g_iCount = g_esPlayer[tank].g_iCount;
-				g_esPlayer[iNewTank].g_iAmmoCount = g_esPlayer[tank].g_iAmmoCount;
+				iTank = iPlayer;
+				g_esPlayer[iTank].g_bActivated = false;
+				g_esPlayer[iTank].g_iCount = g_esPlayer[tank].g_iCount;
+				g_esPlayer[iTank].g_iAmmoCount = g_esPlayer[tank].g_iAmmoCount;
 
 				vRemoveRespawn(tank);
 
@@ -646,12 +646,12 @@ static void vRespawn(int tank)
 			}
 		}
 
-		if (bIsTank(iNewTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			static float flPos[3], flAngles[3];
 			GetClientAbsOrigin(tank, flPos);
 			GetClientEyeAngles(tank, flAngles);
-			TeleportEntity(iNewTank, flPos, flAngles, NULL_VECTOR);
+			TeleportEntity(iTank, flPos, flAngles, NULL_VECTOR);
 
 			if (g_esCache[tank].g_iRespawnMessage == 1)
 			{

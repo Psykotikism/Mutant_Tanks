@@ -679,23 +679,24 @@ static void vNecro(int tank, float pos[3], const char[] type)
 	}
 
 	bool[] bExists = new bool[MaxClients + 1];
-	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
+	for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
 	{
-		bExists[iNecro] = false;
-		if (bIsSpecialInfected(iNecro, MT_CHECK_INGAME))
+		bExists[iSpecial] = false;
+		if (bIsSpecialInfected(iSpecial, MT_CHECK_INGAME))
 		{
-			bExists[iNecro] = true;
+			bExists[iSpecial] = true;
 		}
 	}
 
 	vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", type);
 
 	static int iInfected;
-	for (int iNecro = 1; iNecro <= MaxClients; iNecro++)
+	iInfected = 0;
+	for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
 	{
-		if (bIsSpecialInfected(iNecro, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iNecro])
+		if (bIsSpecialInfected(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iSpecial])
 		{
-			iInfected = iNecro;
+			iInfected = iSpecial;
 
 			break;
 		}
