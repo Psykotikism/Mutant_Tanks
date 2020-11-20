@@ -1,7 +1,7 @@
 # Mutant Tanks
 
 ## License
-> The following license is also placed inside the source code of each plugin and include file.
+> The following license is placed inside the source code of each plugin and include file.
 
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
 Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas

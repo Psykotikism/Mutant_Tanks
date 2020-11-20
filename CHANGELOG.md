@@ -7,6 +7,7 @@
 #### General
 - Fixed some potential errors caused by invalid weapon slots.
 - Fixed the SourceMod admin menu plugin not being optional.
+- Fixed rare cases where non-Mutant Tanks are given some abilities.
 
 #### Core Plugin
 - Fixed log files being created even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
@@ -63,7 +64,6 @@
 
 - Clone
 	- Fixed clones being detected by the `Finale Amount` and `Finale Waves` settings.
-	- Fixed clones being able to clone themselves.
 	- Fixed the ability not being optional.
 
 - Drug
