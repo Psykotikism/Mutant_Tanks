@@ -55,9 +55,9 @@ enum struct esPlayer
 	float g_flTrackSpeed;
 
 	int g_iAccessFlags;
+	int g_iAmmoCount;
 	int g_iComboAbility;
 	int g_iCooldown;
-	int g_iCount;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -189,7 +189,7 @@ public int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param
 			switch (param2)
 			{
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iTrackAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iCount, g_esCache[param1].g_iHumanAmmo);
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iAmmoCount, g_esCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons4");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "TrackDetails");
@@ -504,14 +504,14 @@ public void MT_OnButtonPressed(int tank, int button)
 				bRecharging = g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime;
 				if (!g_esPlayer[tank].g_bActivated && !bRecharging)
 				{
-					switch (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)
+					switch (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)
 					{
 						case true:
 						{
 							g_esPlayer[tank].g_bActivated = true;
-							g_esPlayer[tank].g_iCount++;
+							g_esPlayer[tank].g_iAmmoCount++;
 
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackHuman", g_esPlayer[tank].g_iAmmoCount, g_esCache[tank].g_iHumanAmmo);
 						}
 						case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "TrackAmmo");
 					}
@@ -562,15 +562,15 @@ public void MT_OnRockThrow(int tank, int rock)
 
 static void vCopyStats(int oldTank, int newTank)
 {
+	g_esPlayer[newTank].g_iAmmoCount = g_esPlayer[oldTank].g_iAmmoCount;
 	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
 static void vRemoveTrack(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
+	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
-	g_esPlayer[tank].g_iCount = 0;
 }
 
 static void vReset()
@@ -966,7 +966,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 	{
 		g_esPlayer[iTank].g_bActivated = false;
 
-		g_esPlayer[iTank].g_iCooldown = (g_esPlayer[iTank].g_iCount < g_esCache[iTank].g_iHumanAmmo && g_esCache[iTank].g_iHumanAmmo > 0) ? (iTime + g_esCache[iTank].g_iHumanCooldown) : -1;
+		g_esPlayer[iTank].g_iCooldown = (g_esPlayer[iTank].g_iAmmoCount < g_esCache[iTank].g_iHumanAmmo && g_esCache[iTank].g_iHumanAmmo > 0) ? (iTime + g_esCache[iTank].g_iHumanCooldown) : -1;
 		if (g_esPlayer[iTank].g_iCooldown != -1 && g_esPlayer[iTank].g_iCooldown > iTime)
 		{
 			MT_PrintToChat(iTank, "%s %t", MT_TAG3, "TrackHuman4", g_esPlayer[iTank].g_iCooldown - iTime);

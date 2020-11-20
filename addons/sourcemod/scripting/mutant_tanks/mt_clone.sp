@@ -60,6 +60,7 @@ enum struct esPlayer
 	float g_flCloneChance;
 
 	int g_iAccessFlags;
+	int g_iAmmoCount;
 	int g_iCloneAbility;
 	int g_iCloneAmount;
 	int g_iCloneHealth;
@@ -71,7 +72,6 @@ enum struct esPlayer
 	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iCount;
-	int g_iCount2;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -221,7 +221,7 @@ public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param
 			switch (param2)
 			{
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iCloneAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iCount2, g_esCache[param1].g_iHumanAmmo);
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iAmmoCount, g_esCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "CloneDetails");
@@ -556,7 +556,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 					{
 						for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 						{
-							if (MT_IsTankSupported(iOwner, MT_CHECK_INGAME) && g_esPlayer[iTank].g_iOwner == iOwner)
+							if (MT_IsTankSupported(iOwner, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTank].g_iOwner == iOwner)
 							{
 								g_esPlayer[iTank].g_bCloned = false;
 								g_esPlayer[iTank].g_iOwner = 0;
@@ -565,7 +565,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 								{
 									case 0, 1:
 									{
-										g_esPlayer[iOwner].g_iCount = 0;
+										g_esPlayer[iOwner].g_iCount = (g_esCache[iOwner].g_iCloneReplace == 1) ? 0 : g_esPlayer[iOwner].g_iCount;
 
 										static int iTime;
 										iTime = GetTime();
@@ -600,7 +600,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 					{
 						for (int iClone = 1; iClone <= MaxClients; iClone++)
 						{
-							if (MT_IsTankSupported(iTank, MT_CHECK_INGAME) && g_esPlayer[iClone].g_iOwner == iTank)
+							if (g_esPlayer[iClone].g_iOwner == iTank)
 							{
 								g_esPlayer[iClone].g_iOwner = 0;
 							}
@@ -747,9 +747,9 @@ static void vClone(int tank)
 
 						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 						{
-							g_esPlayer[tank].g_iCount2++;
+							g_esPlayer[tank].g_iAmmoCount++;
 
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloneHuman", g_esPlayer[tank].g_iCount2, g_esCache[tank].g_iHumanAmmo);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloneHuman", g_esPlayer[tank].g_iAmmoCount, g_esCache[tank].g_iHumanAmmo);
 						}
 
 						if (g_esCache[tank].g_iCloneMessage == 1)
@@ -802,7 +802,7 @@ static void vCloneAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iCloneAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
+	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iCloneAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flCloneChance)
 		{
@@ -823,9 +823,9 @@ static void vCopyStats(int oldTank, int newTank)
 {
 	g_esPlayer[newTank].g_bCloned = g_esPlayer[oldTank].g_bCloned;
 	g_esPlayer[newTank].g_bFiltered = g_esPlayer[oldTank].g_bFiltered;
+	g_esPlayer[newTank].g_iAmmoCount = g_esPlayer[oldTank].g_iAmmoCount;
 	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
 }
 
 static void vRemoveClone(int tank, bool revert = false)
@@ -836,8 +836,8 @@ static void vRemoveClone(int tank, bool revert = false)
 	}
 
 	g_esPlayer[tank].g_bFiltered = false;
+	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCount = 0;
-	g_esPlayer[tank].g_iCount2 = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }
 

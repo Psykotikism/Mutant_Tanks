@@ -56,9 +56,9 @@ enum struct esPlayer
 	float g_flRespawnChance;
 
 	int g_iAccessFlags;
+	int g_iAmmoCount;
 	int g_iComboAbility;
 	int g_iCount;
-	int g_iAmmoCount;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iOpenAreasOnly;
@@ -564,15 +564,15 @@ public void MT_OnChangeType(int tank, bool revert)
 static void vCopyStats(int oldTank, int newTank)
 {
 	g_esPlayer[newTank].g_bActivated = g_esPlayer[oldTank].g_bActivated;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 	g_esPlayer[newTank].g_iAmmoCount = g_esPlayer[oldTank].g_iAmmoCount;
+	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
 static void vRemoveRespawn(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
-	g_esPlayer[tank].g_iCount = 0;
 	g_esPlayer[tank].g_iAmmoCount = 0;
+	g_esPlayer[tank].g_iCount = 0;
 }
 
 static void vReset()
@@ -637,8 +637,8 @@ static void vRespawn(int tank)
 			{
 				iTank = iPlayer;
 				g_esPlayer[iTank].g_bActivated = false;
-				g_esPlayer[iTank].g_iCount = g_esPlayer[tank].g_iCount;
 				g_esPlayer[iTank].g_iAmmoCount = g_esPlayer[tank].g_iAmmoCount;
+				g_esPlayer[iTank].g_iCount = g_esPlayer[tank].g_iCount;
 
 				vRemoveRespawn(tank);
 

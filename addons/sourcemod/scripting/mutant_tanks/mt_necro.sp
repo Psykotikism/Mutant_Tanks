@@ -54,9 +54,9 @@ enum struct esPlayer
 	float g_flNecroRange;
 
 	int g_iAccessFlags;
+	int g_iAmmoCount;
 	int g_iComboAbility;
 	int g_iCooldown;
-	int g_iCount;
 	int g_iDuration;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
@@ -190,7 +190,7 @@ public int iNecroMenuHandler(Menu menu, MenuAction action, int param1, int param
 			switch (param2)
 			{
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iNecroAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iCount, g_esCache[param1].g_iHumanAmmo);
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iAmmoCount, g_esCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esCache[param1].g_iHumanCooldown);
@@ -519,30 +519,23 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 							flRange = (g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 8, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition) : g_esCache[iTank].g_flNecroRange;
 						if (flDistance <= flRange)
 						{
-							switch (GetEntProp(iInfected, Prop_Send, "m_zombieClass"))
+							int iClass = GetEntProp(iInfected, Prop_Send, "m_zombieClass");
+
+							switch (iClass)
 							{
 								case 1: vNecro(iTank, flInfectedPos, "smoker");
 								case 2: vNecro(iTank, flInfectedPos, "boomer");
 								case 3: vNecro(iTank, flInfectedPos, "hunter");
-								case 4:
+								case 4, 5, 6:
 								{
 									if (bIsValidGame())
 									{
-										vNecro(iTank, flInfectedPos, "spitter");
-									}
-								}
-								case 5:
-								{
-									if (bIsValidGame())
-									{
-										vNecro(iTank, flInfectedPos, "jockey");
-									}
-								}
-								case 6:
-								{
-									if (bIsValidGame())
-									{
-										vNecro(iTank, flInfectedPos, "charger");
+										switch (iClass)
+										{
+											case 4: vNecro(iTank, flInfectedPos, "spitter");
+											case 5: vNecro(iTank, flInfectedPos, "jockey");
+											case 6: vNecro(iTank, flInfectedPos, "charger");
+										}
 									}
 								}
 							}
@@ -615,14 +608,14 @@ public void MT_OnButtonPressed(int tank, int button)
 					}
 					case 1:
 					{
-						if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)
+						if (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)
 						{
 							if (!g_esPlayer[tank].g_bActivated && !bRecharging)
 							{
 								g_esPlayer[tank].g_bActivated = true;
-								g_esPlayer[tank].g_iCount++;
+								g_esPlayer[tank].g_iAmmoCount++;
 
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_esPlayer[tank].g_iAmmoCount, g_esCache[tank].g_iHumanAmmo);
 							}
 							else if (g_esPlayer[tank].g_bActivated)
 							{
@@ -667,8 +660,8 @@ public void MT_OnChangeType(int tank, bool revert)
 
 static void vCopyStats(int oldTank, int newTank)
 {
+	g_esPlayer[newTank].g_iAmmoCount = g_esPlayer[oldTank].g_iAmmoCount;
 	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
 static void vNecro(int tank, float pos[3], const char[] type)
@@ -723,7 +716,7 @@ static void vNecroAbility(int tank)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flNecroChance)
 		{
@@ -731,10 +724,10 @@ static void vNecroAbility(int tank)
 
 			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 			{
-				g_esPlayer[tank].g_iCount++;
+				g_esPlayer[tank].g_iAmmoCount++;
 				g_esPlayer[tank].g_iDuration = GetTime() + g_esCache[tank].g_iHumanDuration;
 
-				MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman", g_esPlayer[tank].g_iAmmoCount, g_esCache[tank].g_iHumanAmmo);
 			}
 		}
 		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -751,9 +744,9 @@ static void vNecroAbility(int tank)
 static void vRemoveNecro(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
+	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iDuration = -1;
-	g_esPlayer[tank].g_iCount = 0;
 }
 
 static void vReset()
@@ -770,7 +763,7 @@ static void vReset()
 static void vReset2(int tank)
 {
 	int iTime = GetTime();
-	g_esPlayer[tank].g_iCooldown = (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
+	g_esPlayer[tank].g_iCooldown = (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
 	if (g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "NecroHuman5", g_esPlayer[tank].g_iCooldown - iTime);

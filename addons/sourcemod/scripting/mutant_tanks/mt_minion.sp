@@ -53,10 +53,10 @@ enum struct esPlayer
 	float g_flMinionChance;
 
 	int g_iAccessFlags;
+	int g_iAmmoCount;
 	int g_iComboAbility;
 	int g_iCooldown;
 	int g_iCount;
-	int g_iCount2;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -188,7 +188,7 @@ public int iMinionMenuHandler(Menu menu, MenuAction action, int param1, int para
 			switch (param2)
 			{
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iMinionAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iCount2, g_esCache[param1].g_iHumanAmmo);
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iAmmoCount, g_esCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons3");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esCache[param1].g_iHumanCooldown);
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "MinionDetails");
@@ -485,7 +485,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 			{
-				if (MT_IsTankSupported(iOwner, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(iOwner) && g_esPlayer[iInfected].g_iOwner == iOwner)
+				if (MT_IsTankSupported(iOwner, MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_IsCustomTankSupported(iOwner) && g_esPlayer[iInfected].g_iOwner == iOwner)
 				{
 					g_esPlayer[iInfected].g_bMinion = false;
 					g_esPlayer[iInfected].g_iOwner = 0;
@@ -494,7 +494,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 					{
 						switch (g_esPlayer[iOwner].g_iCount)
 						{
-							case 0, 1: g_esPlayer[iOwner].g_iCount = 0;
+							case 0, 1: g_esPlayer[iOwner].g_iCount = (g_esCache[iOwner].g_iMinionReplace == 1) ? 0 : g_esPlayer[iOwner].g_iCount;
 							default:
 							{
 								if (g_esCache[iOwner].g_iMinionReplace == 1)
@@ -564,9 +564,9 @@ public void MT_OnChangeType(int tank, bool revert)
 
 static void vCopyStats(int oldTank, int newTank)
 {
+	g_esPlayer[newTank].g_iAmmoCount = g_esPlayer[oldTank].g_iAmmoCount;
 	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
 }
 
 static void vMinion(int tank)
@@ -603,7 +603,7 @@ static void vMinion(int tank)
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
 						bExists[iPlayer] = false;
-						if (bIsInfected(iPlayer, MT_CHECK_INGAME))
+						if (bIsSpecialInfected(iPlayer, MT_CHECK_INGAME))
 						{
 							bExists[iPlayer] = true;
 						}
@@ -649,7 +649,7 @@ static void vMinion(int tank)
 					iSpecial = 0;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
+						if (bIsSpecialInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
 						{
 							iSpecial = iPlayer;
 
@@ -657,7 +657,7 @@ static void vMinion(int tank)
 						}
 					}
 
-					if (bIsInfected(iSpecial))
+					if (bIsSpecialInfected(iSpecial))
 					{
 						TeleportEntity(iSpecial, flHitPosition, NULL_VECTOR, NULL_VECTOR);
 
@@ -669,9 +669,9 @@ static void vMinion(int tank)
 						iTime = GetTime();
 						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 						{
-							g_esPlayer[tank].g_iCount2++;
+							g_esPlayer[tank].g_iAmmoCount++;
 
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman", g_esPlayer[tank].g_iCount2, g_esCache[tank].g_iHumanAmmo);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman", g_esPlayer[tank].g_iAmmoCount, g_esCache[tank].g_iHumanAmmo);
 
 							g_esPlayer[tank].g_iCooldown = (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
 							if (g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime)
@@ -703,7 +703,7 @@ static void vMinionAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iMinionAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
+	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iMinionAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flMinionChance)
 		{
@@ -727,9 +727,9 @@ static void vRemoveMinion(int tank, bool revert = false)
 		g_esPlayer[tank].g_bMinion = false;
 	}
 
+	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCount = 0;
-	g_esPlayer[tank].g_iCount2 = 0;
 }
 
 static void vReset()

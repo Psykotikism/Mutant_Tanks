@@ -2685,7 +2685,7 @@ public Action cmdTank(int client, int args)
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 	iAmount = iClamp(GetCmdArgInt(2), 1, 32);
-	iMode = GetCmdArgInt(3);
+	iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -2750,7 +2750,7 @@ public Action cmdTank2(int client, int args)
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 	iAmount = iClamp(GetCmdArgInt(2), 1, 32);
-	iMode = GetCmdArgInt(3);
+	iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -2813,7 +2813,7 @@ public Action cmdMutantTank(int client, int args)
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 	iAmount = iClamp(GetCmdArgInt(2), 1, 32);
-	iMode = GetCmdArgInt(3);
+	iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -2993,15 +2993,9 @@ static void vQueueTank(int admin, int type, bool mode = true)
 
 static void vSpawnTank(int admin, int type, int amount, int mode)
 {
-	g_esGeneral.g_bForceSpawned = true;
-
 	char sParameter[32];
-
-	switch (mode)
-	{
-		case 0: sParameter = "tank";
-		case 1: sParameter = "tank auto";
-	}
+	sParameter = mode ? "tank" : "tank auto";
+	g_esGeneral.g_bForceSpawned = true;
 
 	switch (amount)
 	{
@@ -3015,6 +3009,7 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 					if (bIsValidClient(admin))
 					{
 						vCheatCommand(admin, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
+
 						g_esGeneral.g_iChosenType = type;
 					}
 				}
@@ -8661,7 +8656,6 @@ public Action tTimerAnnounce(Handle timer, DataPack pack)
 
 		static int iMode;
 		iMode = pack.ReadCell();
-
 		vAnnounce(iTank, sOldName, sNewName, iMode);
 
 		return Plugin_Stop;

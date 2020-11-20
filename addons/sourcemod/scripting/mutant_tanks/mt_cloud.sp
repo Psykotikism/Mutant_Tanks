@@ -56,11 +56,11 @@ enum struct esPlayer
 	float g_flCloudDamage;
 
 	int g_iAccessFlags;
+	int g_iAmmoCount;
 	int g_iCloudAbility;
 	int g_iCloudMessage;
 	int g_iComboAbility;
 	int g_iCooldown;
-	int g_iCount;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -194,7 +194,7 @@ public int iCloudMenuHandler(Menu menu, MenuAction action, int param1, int param
 			switch (param2)
 			{
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iCloudAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iCount, g_esCache[param1].g_iHumanAmmo);
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iAmmoCount, g_esCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esCache[param1].g_iHumanCooldown);
@@ -548,16 +548,16 @@ public void MT_OnButtonPressed(int tank, int button)
 					}
 					case 1:
 					{
-						if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)
+						if (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)
 						{
 							if (!g_esPlayer[tank].g_bActivated && !bRecharging)
 							{
 								g_esPlayer[tank].g_bActivated = true;
-								g_esPlayer[tank].g_iCount++;
+								g_esPlayer[tank].g_iAmmoCount++;
 
 								vCloud2(tank);
 
-								MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloudHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloudHuman", g_esPlayer[tank].g_iAmmoCount, g_esCache[tank].g_iHumanAmmo);
 							}
 							else if (g_esPlayer[tank].g_bActivated)
 							{
@@ -607,9 +607,9 @@ static void vCloud(int tank, int pos = -1)
 
 	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
-		g_esPlayer[tank].g_iCount++;
+		g_esPlayer[tank].g_iAmmoCount++;
 
-		MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloudHuman", g_esPlayer[tank].g_iCount, g_esCache[tank].g_iHumanAmmo);
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloudHuman", g_esPlayer[tank].g_iAmmoCount, g_esCache[tank].g_iHumanAmmo);
 	}
 
 	if (g_esCache[tank].g_iCloudMessage == 1)
@@ -643,7 +643,7 @@ static void vCloudAbility(int tank)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flCloudChance)
 		{
@@ -662,14 +662,14 @@ static void vCloudAbility(int tank)
 
 static void vCopyStats(int oldTank, int newTank)
 {
+	g_esPlayer[newTank].g_iAmmoCount = g_esPlayer[oldTank].g_iAmmoCount;
 	g_esPlayer[newTank].g_iCooldown = g_esPlayer[oldTank].g_iCooldown;
-	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
 static void vRemoveCloud(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
-	g_esPlayer[tank].g_iCount = 0;
+	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }
 
@@ -700,7 +700,7 @@ static void vReset2(int tank)
 static void vReset3(int tank)
 {
 	int iTime = GetTime();
-	g_esPlayer[tank].g_iCooldown = (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
+	g_esPlayer[tank].g_iCooldown = (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
 	if (g_esPlayer[tank].g_iCooldown != -1 && g_esPlayer[tank].g_iCooldown > iTime)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloudHuman5", g_esPlayer[tank].g_iCooldown - iTime);
