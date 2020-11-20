@@ -130,10 +130,10 @@ esCache g_esCache[MAXPLAYERS + 1];
 public any aNative_IsCloneSupported(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+	if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		int iOwner = g_esPlayer[iTank].g_iOwner;
-		if (g_esPlayer[iTank].g_iTankType == g_esPlayer[iOwner].g_iTankType && g_esCache[iOwner].g_iCloneMode == 0 && g_esPlayer[iTank].g_bCloned)
+		if (bIsTank(iOwner, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iOwner].g_iCloneMode == 0 && g_esPlayer[iTank].g_bCloned)
 		{
 			return false;
 		}
@@ -145,7 +145,7 @@ public any aNative_IsCloneSupported(Handle plugin, int numParams)
 public any aNative_IsTankClone(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	return MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esPlayer[iTank].g_bCloned;
+	return MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esPlayer[iTank].g_bCloned;
 }
 
 public void OnPluginStart()
@@ -185,7 +185,7 @@ public Action cmdCloneInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
@@ -231,7 +231,7 @@ public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vCloneMenu(param1, menu.Selection);
 			}
@@ -511,7 +511,7 @@ public void MT_OnPluginEnd()
 {
 	for (int iClone = 1; iClone <= MaxClients; iClone++)
 	{
-		if (bIsTank(iClone, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_esPlayer[iClone].g_bCloned)
+		if (bIsTank(iClone, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iClone].g_bCloned)
 		{
 			switch (bIsValidClient(iClone, MT_CHECK_FAKECLIENT))
 			{
@@ -547,7 +547,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			vRemoveClone(iTank, true);
 
@@ -559,7 +559,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 					{
 						for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 						{
-							if (MT_IsTankSupported(iOwner, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esPlayer[iTank].g_iOwner == iOwner)
+							if (MT_IsTankSupported(iOwner, MT_CHECK_INGAME) && g_esPlayer[iTank].g_iOwner == iOwner)
 							{
 								g_esPlayer[iTank].g_bCloned = false;
 								g_esPlayer[iTank].g_iOwner = 0;
@@ -603,7 +603,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 					{
 						for (int iClone = 1; iClone <= MaxClients; iClone++)
 						{
-							if (MT_IsTankSupported(iTank, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esPlayer[iClone].g_iOwner == iTank)
+							if (MT_IsTankSupported(iTank, MT_CHECK_INGAME) && g_esPlayer[iClone].g_iOwner == iTank)
 							{
 								g_esPlayer[iClone].g_iOwner = 0;
 							}
@@ -621,7 +621,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -634,7 +634,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT))
 	{
 		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -673,7 +673,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 static void vClone(int tank)
 {
-	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iCloneAmount)
+	if (!g_esPlayer[tank].g_bCloned && g_esPlayer[tank].g_iCount < g_esCache[tank].g_iCloneAmount)
 	{
 		static float flHitPosition[3], flPosition[3], flAngles[3], flVector[3];
 		GetClientEyePosition(tank, flPosition);
@@ -701,13 +701,13 @@ static void vClone(int tank)
 				flDistance = GetVectorDistance(flHitPosition, flPosition);
 				if (40.0 < flDistance < 200.0)
 				{
-					bool[] bTankBoss = new bool[MaxClients + 1];
+					bool[] bExists = new bool[MaxClients + 1];
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						bTankBoss[iPlayer] = false;
-						if (MT_IsTankSupported(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
+						bExists[iPlayer] = false;
+						if (bIsTank(iPlayer, MT_CHECK_INGAME))
 						{
-							bTankBoss[iPlayer] = true;
+							bExists[iPlayer] = true;
 						}
 					}
 
@@ -721,7 +721,7 @@ static void vClone(int tank)
 					iSelectedType = 0;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (MT_IsTankSupported(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && !bTankBoss[iPlayer])
+						if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
 						{
 							iSelectedType = iPlayer;
 
@@ -734,8 +734,8 @@ static void vClone(int tank)
 						TeleportEntity(iSelectedType, flHitPosition, NULL_VECTOR, NULL_VECTOR);
 
 						g_esPlayer[iSelectedType].g_bCloned = true;
-						g_esPlayer[tank].g_iCount++;
 						g_esPlayer[iSelectedType].g_iOwner = tank;
+						g_esPlayer[tank].g_iCount++;
 
 						static int iNewHealth;
 						iNewHealth = (g_esCache[tank].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esCache[tank].g_iCloneHealth;
@@ -779,7 +779,7 @@ static void vClone2(int tank, int min = 0, int max = 0)
 	iTypeCount = 0;
 	for (int iIndex = iMin; iIndex <= iMax; iIndex++)
 	{
-		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex) || g_esAbility[iIndex].g_iCloneAbility == 1 || g_esPlayer[tank].g_iTankType == iIndex)
+		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex))
 		{
 			continue;
 		}
@@ -841,7 +841,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
 			vRemoveClone(iPlayer);
 
@@ -853,7 +853,7 @@ static void vReset()
 public Action tTimerCombo(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iCloneAbility == 0)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || g_esPlayer[iTank].g_bCloned || g_esCache[iTank].g_iCloneAbility == 0)
 	{
 		return Plugin_Stop;
 	}

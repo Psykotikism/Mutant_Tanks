@@ -58,7 +58,7 @@ enum struct esPlayer
 	int g_iAccessFlags;
 	int g_iComboAbility;
 	int g_iCount;
-	int g_iCount2;
+	int g_iAmmoCount;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iOpenAreasOnly;
@@ -163,7 +163,7 @@ public Action cmdRespawnInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
@@ -201,13 +201,13 @@ public int iRespawnMenuHandler(Menu menu, MenuAction action, int param1, int par
 			switch (param2)
 			{
 				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iRespawnAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
-				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iCount2, g_esCache[param1].g_iHumanAmmo);
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esCache[param1].g_iHumanAmmo - g_esPlayer[param1].g_iAmmoCount, g_esCache[param1].g_iHumanAmmo);
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons4");
 				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "RespawnDetails");
 				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vRespawnMenu(param1, menu.Selection);
 			}
@@ -265,7 +265,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 {
-	if (MT_IsTankSupported(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && MT_IsCustomTankSupported(pThis) && g_esCache[pThis].g_iRespawnAbility == 1 && g_esCache[pThis].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[pThis].g_flRespawnChance)
+	if (MT_IsTankSupported(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(pThis) && g_esCache[pThis].g_iRespawnAbility == 1 && g_esCache[pThis].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[pThis].g_flRespawnChance)
 	{
 		vRespawn(pThis);
 	}
@@ -523,7 +523,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
 		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -539,7 +539,7 @@ public void MT_OnButtonPressed(int tank, int button)
 					case true: MT_PrintToChat(tank, "%s %t", MT_TAG3, "RespawnHuman2");
 					case false:
 					{
-						switch (g_esPlayer[tank].g_iCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)
+						switch (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)
 						{
 							case true:
 							{
@@ -565,21 +565,21 @@ static void vCopyStats(int oldTank, int newTank)
 {
 	g_esPlayer[newTank].g_bActivated = g_esPlayer[oldTank].g_bActivated;
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
-	g_esPlayer[newTank].g_iCount2 = g_esPlayer[oldTank].g_iCount2;
+	g_esPlayer[newTank].g_iAmmoCount = g_esPlayer[oldTank].g_iAmmoCount;
 }
 
 static void vRemoveRespawn(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_iCount = 0;
-	g_esPlayer[tank].g_iCount2 = 0;
+	g_esPlayer[tank].g_iAmmoCount = 0;
 }
 
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
 			vRemoveRespawn(iPlayer);
 		}
@@ -601,25 +601,25 @@ static void vRespawn(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iRespawnAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
+	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iRespawnAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
 	{
 		g_esPlayer[tank].g_bActivated = false;
 		g_esPlayer[tank].g_iCount++;
 
 		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
-			g_esPlayer[tank].g_iCount2++;
+			g_esPlayer[tank].g_iAmmoCount++;
 
-			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RespawnHuman3", g_esPlayer[tank].g_iCount2, g_esCache[tank].g_iHumanAmmo);
+			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RespawnHuman3", g_esPlayer[tank].g_iAmmoCount, g_esCache[tank].g_iHumanAmmo);
 		}
 
 		bool[] bExists = new bool[MaxClients + 1];
-		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			bExists[iRespawn] = false;
-			if (MT_IsTankSupported(iRespawn, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && MT_IsCustomTankSupported(iRespawn))
+			bExists[iPlayer] = false;
+			if (bIsTank(iPlayer, MT_CHECK_INGAME))
 			{
-				bExists[iRespawn] = true;
+				bExists[iPlayer] = true;
 			}
 		}
 
@@ -631,14 +631,14 @@ static void vRespawn(int tank)
 
 		static int iNewTank;
 		iNewTank = 0;
-		for (int iRespawn = 1; iRespawn <= MaxClients; iRespawn++)
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (MT_IsTankSupported(iRespawn, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && MT_IsCustomTankSupported(iRespawn) && !bExists[iRespawn] && iRespawn != tank)
+			if (bIsTank(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer] && iPlayer != tank)
 			{
-				iNewTank = iRespawn;
+				iNewTank = iPlayer;
 				g_esPlayer[iNewTank].g_bActivated = false;
 				g_esPlayer[iNewTank].g_iCount = g_esPlayer[tank].g_iCount;
-				g_esPlayer[iNewTank].g_iCount2 = g_esPlayer[tank].g_iCount2;
+				g_esPlayer[iNewTank].g_iAmmoCount = g_esPlayer[tank].g_iAmmoCount;
 
 				vRemoveRespawn(tank);
 
@@ -646,7 +646,7 @@ static void vRespawn(int tank)
 			}
 		}
 
-		if (bIsTank(iNewTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+		if (bIsTank(iNewTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			static float flPos[3], flAngles[3];
 			GetClientAbsOrigin(tank, flPos);
@@ -685,7 +685,7 @@ static void vRespawn2(int tank, int min = 0, int max = 0)
 	iTypeCount = 0;
 	for (int iIndex = iMin; iIndex <= iMax; iIndex++)
 	{
-		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex) || g_esAbility[iIndex].g_iRespawnAbility == 1 || g_esPlayer[tank].g_iTankType == iIndex)
+		if (!MT_IsTypeEnabled(iIndex) || !MT_CanTypeSpawn(iIndex) || MT_DoesTypeRequireHumans(iIndex))
 		{
 			continue;
 		}

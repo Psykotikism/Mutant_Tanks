@@ -149,7 +149,7 @@ public Action cmdMinionInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
@@ -195,7 +195,7 @@ public int iMinionMenuHandler(Menu menu, MenuAction action, int param1, int para
 				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vMinionMenu(param1, menu.Selection);
 			}
@@ -440,7 +440,7 @@ public void MT_OnPluginEnd()
 {
 	for (int iMinion = 1; iMinion <= MaxClients; iMinion++)
 	{
-		if ((bIsTank(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsSpecialInfected(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)) && g_esPlayer[iMinion].g_bMinion)
+		if ((bIsTank(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsSpecialInfected(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE)) && g_esPlayer[iMinion].g_bMinion)
 		{
 			switch (bIsValidClient(iMinion, MT_CHECK_FAKECLIENT))
 			{
@@ -476,7 +476,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "player_death"))
 	{
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
-		if (MT_IsTankSupported(iInfected, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+		if (MT_IsTankSupported(iInfected, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			vRemoveMinion(iInfected);
 		}
@@ -485,7 +485,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 			{
-				if (MT_IsTankSupported(iOwner, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && MT_IsCustomTankSupported(iOwner) && g_esPlayer[iInfected].g_iOwner == iOwner)
+				if (MT_IsTankSupported(iOwner, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(iOwner) && g_esPlayer[iInfected].g_iOwner == iOwner)
 				{
 					g_esPlayer[iInfected].g_bMinion = false;
 					g_esPlayer[iInfected].g_iOwner = 0;
@@ -520,7 +520,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
 	{
 		return;
 	}
@@ -533,7 +533,7 @@ public void MT_OnAbilityActivated(int tank)
 
 public void MT_OnButtonPressed(int tank, int button)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
 		if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -599,13 +599,13 @@ static void vMinion(int tank)
 				flDistance = GetVectorDistance(flHitPosition, flPosition);
 				if (40.0 < flDistance < 200.0)
 				{
-					bool[] bSpecialInfected = new bool[MaxClients + 1];
+					bool[] bExists = new bool[MaxClients + 1];
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						bSpecialInfected[iPlayer] = false;
-						if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+						bExists[iPlayer] = false;
+						if (bIsInfected(iPlayer, MT_CHECK_INGAME))
 						{
-							bSpecialInfected[iPlayer] = true;
+							bExists[iPlayer] = true;
 						}
 					}
 
@@ -649,7 +649,7 @@ static void vMinion(int tank)
 					iSelectedType = 0;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && !bSpecialInfected[iPlayer])
+						if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
 						{
 							iSelectedType = iPlayer;
 
@@ -736,7 +736,7 @@ static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
 			vRemoveMinion(iPlayer);
 

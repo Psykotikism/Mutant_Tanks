@@ -750,7 +750,7 @@ public any aNative_GetAccessFlags(Handle plugin, int numParams)
 public any aNative_GetCombinationSetting(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1), iType = iClamp(GetNativeCell(2), 1, 13), iPos = iClamp(GetNativeCell(3), 0, 9);
-	if (bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	if (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		switch (iType)
 		{
@@ -782,7 +782,7 @@ public any aNative_GetGlowRange(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
 	bool bMode = GetNativeCell(2);
-	if (bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	if (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		switch (bMode)
 		{
@@ -797,7 +797,7 @@ public any aNative_GetGlowRange(Handle plugin, int numParams)
 public any aNative_GetGlowType(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	return bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) ? g_esCache[iTank].g_iGlowType : 0;
+	return bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) ? g_esCache[iTank].g_iGlowType : 0;
 }
 
 public any aNative_GetImmunityFlags(Handle plugin, int numParams)
@@ -827,7 +827,7 @@ public any aNative_GetMinType(Handle plugin, int numParams)
 public any aNative_GetPropColors(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1), iType = iClamp(GetNativeCell(2), 1, 8);
-	if (bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	if (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		int iColor[4];
 		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
@@ -852,7 +852,7 @@ public any aNative_GetPropColors(Handle plugin, int numParams)
 public any aNative_GetRunSpeed(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	if (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		return (g_esCache[iTank].g_flRunSpeed > 0.0) ? g_esCache[iTank].g_flRunSpeed : 1.0;
 	}
@@ -868,13 +868,13 @@ public any aNative_GetScaledDamage(Handle plugin, int numParams)
 public any aNative_GetSpawnType(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	return (bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && !bIsTank(iTank, MT_CHECK_FAKECLIENT)) ? g_esCache[iTank].g_iSpawnType : 0;
+	return (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && !bIsTank(iTank, MT_CHECK_FAKECLIENT)) ? g_esCache[iTank].g_iSpawnType : 0;
 }
 
 public any aNative_GetTankColors(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1), iType = iClamp(GetNativeCell(2), 1, 2);
-	if (bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	if (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		int iColor[4];
 		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
@@ -899,7 +899,7 @@ public any aNative_GetTankColors(Handle plugin, int numParams)
 public any aNative_GetTankName(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	if (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), iTank);
@@ -910,13 +910,13 @@ public any aNative_GetTankName(Handle plugin, int numParams)
 public any aNative_GetTankType(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	return bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) ? g_esPlayer[iTank].g_iTankType : 0;
+	return bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) ? g_esPlayer[iTank].g_iTankType : 0;
 }
 
 public any aNative_HasAdminAccess(Handle plugin, int numParams)
 {
 	int iAdmin = GetNativeCell(1);
-	return bIsTankAllowed(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME) && bHasCoreAdminAccess(iAdmin);
+	return bIsTankSupported(iAdmin, MT_CHECK_INDEX|MT_CHECK_INGAME) && bHasCoreAdminAccess(iAdmin);
 }
 
 public any aNative_HasChanceToSpawn(Handle plugin, int numParams)
@@ -942,7 +942,7 @@ public any aNative_HideEntity(Handle plugin, int numParams)
 public any aNative_IsAdminImmune(Handle plugin, int numParams)
 {
 	int iSurvivor = GetNativeCell(1), iTank = GetNativeCell(2);
-	return bIsHumanSurvivor(iSurvivor) && bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsCoreAdminImmune(iSurvivor, iTank);
+	return bIsHumanSurvivor(iSurvivor) && bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsCoreAdminImmune(iSurvivor, iTank);
 }
 
 public any aNative_IsCorePluginEnabled(Handle plugin, int numParams)
@@ -953,7 +953,7 @@ public any aNative_IsCorePluginEnabled(Handle plugin, int numParams)
 public any aNative_IsCustomTankSupported(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	return bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsCustomTankAllowed(iTank);
+	return bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsCustomTankSupported(iTank);
 }
 
 public any aNative_IsFinaleType(Handle plugin, int numParams)
@@ -965,13 +965,13 @@ public any aNative_IsFinaleType(Handle plugin, int numParams)
 public any aNative_IsGlowEnabled(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	return bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iTank].g_iGlowEnabled == 1;
+	return bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iTank].g_iGlowEnabled == 1;
 }
 
 public any aNative_IsGlowFlashing(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	return bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iTank].g_iGlowFlashing == 1;
+	return bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iTank].g_iGlowFlashing == 1;
 }
 
 public any aNative_IsNonFinaleType(Handle plugin, int numParams)
@@ -983,13 +983,13 @@ public any aNative_IsNonFinaleType(Handle plugin, int numParams)
 public any aNative_IsTankIdle(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1), iType = iClamp(GetNativeCell(2), 0, 2);
-	return bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsTankIdle(iTank, iType);
+	return bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsTankIdle(iTank, iType);
 }
 
 public any aNative_IsTankSupported(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	return bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsTankAllowed(iTank, GetNativeCell(2));
+	return bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsTankSupported(iTank, GetNativeCell(2));
 }
 
 public any aNative_IsTypeEnabled(Handle plugin, int numParams)
@@ -1048,7 +1048,7 @@ public any aNative_SpawnTank(Handle plugin, int numParams)
 public any aNative_TankMaxHealth(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1), iMode = iClamp(GetNativeCell(2), 1, 3), iNewHealth = GetNativeCell(3);
-	if (bIsTankAllowed(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+	if (bIsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
 	{
 		switch (iMode)
 		{
@@ -1304,7 +1304,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 			{
 				OnClientPutInServer(iPlayer);
 				OnClientPostAdminCheck(iPlayer);
@@ -1364,7 +1364,7 @@ public void OnClientPutInServer(int client)
 
 public void OnClientPostAdminCheck(int client)
 {
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
 	}
@@ -1632,7 +1632,7 @@ public void OnPluginEnd()
 
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
 			vReset2(iTank);
 		}
@@ -1775,7 +1775,7 @@ public Action cmdMTConfig(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
@@ -1847,7 +1847,7 @@ static void vParseConfig(int client)
 
 public void SMCParseStart2(SMCParser smc)
 {
-	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		g_esGeneral.g_csState2 = ConfigState_None;
 		g_esGeneral.g_iIgnoreLevel2 = 0;
@@ -1858,7 +1858,7 @@ public void SMCParseStart2(SMCParser smc)
 
 public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quotes)
 {
-	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		if (g_esGeneral.g_iIgnoreLevel2)
 		{
@@ -1957,7 +1957,7 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 
 public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
-	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		if (g_esGeneral.g_iIgnoreLevel2)
 		{
@@ -1978,7 +1978,7 @@ public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] val
 
 public SMCResult SMCEndSection2(SMCParser smc)
 {
-	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		if (g_esGeneral.g_iIgnoreLevel2)
 		{
@@ -2114,7 +2114,7 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
 			g_esGeneral.g_sChosenPath = sInfo;
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vConfigMenu(param1, 0);
 			}
@@ -2262,7 +2262,7 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 			vParseConfig(param1);
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vConfigMenu(param1, menu.Selection);
 			}
@@ -2329,7 +2329,7 @@ public void SMCParseEnd3(SMCParser smc, bool halted, bool failed)
 
 public Action cmdMTInfo(int client, int args)
 {
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
@@ -2395,7 +2395,7 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			Call_PushString(sInfo);
 			Call_Finish();
 
-			if (param2 < 3 && bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (param2 < 3 && bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vInfoMenu(param1, menu.Selection);
 			}
@@ -2449,7 +2449,7 @@ public Action cmdMTList(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
+	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -2464,7 +2464,7 @@ public Action cmdMTList(int client, int args)
 static void vListAbilities(int admin)
 {
 	static bool bHuman;
-	bHuman = bIsValidClient(admin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT);
+	bHuman = bIsValidClient(admin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
 	if (g_esGeneral.g_alPlugins != null)
 	{
 		static int iListSize;
@@ -2661,7 +2661,7 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
@@ -2722,7 +2722,7 @@ public Action cmdTank2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 		{
@@ -2799,7 +2799,7 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
@@ -3132,7 +3132,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				}
 			}
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vTankMenu(param1, menu.Selection);
 			}
@@ -3200,7 +3200,7 @@ public void OnEntityDestroyed(int entity)
 		{
 			static int iThrower;
 			iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-			if (bIsTankAllowed(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esTank[g_esPlayer[iThrower].g_iTankType].g_iTankEnabled == 1)
+			if (bIsTankSupported(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esTank[g_esPlayer[iThrower].g_iTankType].g_iTankEnabled == 1)
 			{
 				Call_StartForward(g_esGeneral.g_gfRockBreakForward);
 				Call_PushCell(iThrower);
@@ -3228,7 +3228,7 @@ public void OnGameFrame()
 		static int iTarget, iHealth, iMaxHealth;
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 			{
 				iTarget = GetClientAimTarget(iPlayer);
 				if (bIsTank(iTarget))
@@ -3311,7 +3311,7 @@ public void OnGameFrame()
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(client))
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(client))
 	{
 		return Plugin_Continue;
 	}
@@ -3321,7 +3321,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		g_esPlayer[client].g_bAttackedAgain = true;
 	}
 
-	if (bIsTankAllowed(client, MT_CHECK_FAKECLIENT))
+	if (bIsTankSupported(client, MT_CHECK_FAKECLIENT))
 	{
 		static int iButton;
 		for (int iBit = 0; iBit < 26; iBit++)
@@ -3392,11 +3392,11 @@ public void OnSpeedPreThinkPost(int survivor)
 
 public Action OnTakeCombineDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (g_esGeneral.g_bPluginEnabled && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
+	if (g_esGeneral.g_bPluginEnabled && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (bIsTankAllowed(attacker) && bIsSurvivor(victim))
+		if (bIsTankSupported(attacker) && bIsSurvivor(victim))
 		{
 			if (!bHasCoreAdminAccess(attacker) || bIsCoreAdminImmune(victim, attacker))
 			{
@@ -3408,7 +3408,7 @@ public Action OnTakeCombineDamage(int victim, int &attacker, int &inflictor, flo
 				vCombineAbilitiesForward(attacker, MT_COMBO_MELEEHIT, victim, _, sClassname);
 			}
 		}
-		else if (bIsTankAllowed(victim) && bIsSurvivor(attacker))
+		else if (bIsTankSupported(victim) && bIsSurvivor(attacker))
 		{
 			if (!bHasCoreAdminAccess(victim) || bIsCoreAdminImmune(attacker, victim))
 			{
@@ -3444,7 +3444,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 			return Plugin_Changed;
 		}
-		else if (bIsTankAllowed(attacker) && bIsSurvivor(victim))
+		else if (bIsTankSupported(attacker) && bIsSurvivor(victim))
 		{
 			vSaveSurvivorStats(victim, true);
 
@@ -3464,9 +3464,9 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				}
 			}
 		}
-		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) || bIsCommonInfected(victim) || bIsWitch(victim))
+		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsCommonInfected(victim) || bIsWitch(victim))
 		{
-			if ((bIsTankAllowed(attacker) && victim != attacker) || (bIsTankAllowed(iTank) && victim != iTank) || (bIsTankAllowed(iTank2) && victim != iTank2))
+			if ((bIsTankSupported(attacker) && victim != attacker) || (bIsTankSupported(iTank) && victim != iTank) || (bIsTankSupported(iTank2) && victim != iTank2))
 			{
 				if (StrEqual(sClassname, "weapon_tank_claw"))
 				{
@@ -3484,7 +3484,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				}
 			}
 
-			if (bIsTankAllowed(victim) && bHasCoreAdminAccess(victim))
+			if (bIsTankSupported(victim) && bHasCoreAdminAccess(victim))
 			{
 				static bool bBlockBullets, bBlockExplosives, bBlockFire, bBlockMelee;
 				bBlockBullets = (damagetype & DMG_BULLET) && g_esCache[victim].g_iBulletImmunity == 1;
@@ -3555,7 +3555,7 @@ public Action SetTransmit(int entity, int client)
 static void vCacheSettings(int tank)
 {
 	static bool bAccess, bHuman;
-	bAccess = bIsTankAllowed(tank) && bHasCoreAdminAccess(tank);
+	bAccess = bIsTankSupported(tank) && bHasCoreAdminAccess(tank);
 	bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	static int iType;
 	iType = g_esPlayer[tank].g_iTankType;
@@ -3732,7 +3732,7 @@ static void vClearSectionList()
 
 static void vCombineAbilitiesForward(int tank, int type, int survivor = 0, int weapon = 0, const char[] classname = "")
 {
-	if (bIsTankAllowed(tank) && bIsCustomTankAllowed(tank) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flComboTypeChance[type] && g_esPlayer[tank].g_bCombo)
+	if (bIsTankSupported(tank) && bIsCustomTankSupported(tank) && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flComboTypeChance[type] && g_esPlayer[tank].g_bCombo)
 	{
 		Call_StartForward(g_esGeneral.g_gfCombineAbilitiesForward);
 		Call_PushCell(tank);
@@ -4118,7 +4118,7 @@ public void SMCParseStart(SMCParser smc)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 			{
 				g_esPlayer[iPlayer].g_sTankName[0] = '\0';
 				g_esPlayer[iPlayer].g_iTankNote = 0;
@@ -4966,7 +4966,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			static char sSteamID32[32], sSteam3ID[32];
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
-				if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+				if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 				{
 					if (GetClientAuthId(iPlayer, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)) && GetClientAuthId(iPlayer, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
 					{
@@ -5438,7 +5438,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		if (StrEqual(name, "ability_use"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-			if (bIsTankAllowed(iTank) && bHasCoreAdminAccess(iTank))
+			if (bIsTankSupported(iTank) && bHasCoreAdminAccess(iTank))
 			{
 				vThrowInterval(iTank);
 			}
@@ -5524,18 +5524,18 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_death"))
 		{
 			int iVictimId = event.GetInt("userid"), iVictim = GetClientOfUserId(iVictimId), iAttacker = GetClientOfUserId(event.GetInt("attacker"));
-			if (bIsTankAllowed(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsTankSupported(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
 				g_esPlayer[iVictim].g_bDied = true;
 				g_esPlayer[iVictim].g_bDying = false;
 				g_esPlayer[iVictim].g_bTriggered = false;
 
-				if (bIsCustomTankAllowed(iVictim))
+				if (bIsCustomTankSupported(iVictim))
 				{
-					int iAssistant = bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) ? iAttacker : 0;
+					int iAssistant = bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME) ? iAttacker : 0;
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+						if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 						{
 							if (g_esPlayer[iPlayer].g_iTankDamage[iVictim] > g_esPlayer[iAssistant].g_iTankDamage[iVictim])
 							{
@@ -5556,7 +5556,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						{
 							char sPhrase[32];
 							int iOption = GetRandomInt(1, 10);
-							if (bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+							if (bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME))
 							{
 								FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
 								MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, iAttacker, sTankName, iAssistant, flPercentage);
@@ -5582,7 +5582,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					}
 
 					flPercentage = (float(g_esPlayer[iAttacker].g_iTankDamage[iVictim]) / float(g_esPlayer[iVictim].g_iTankHealth)) * 100;
-					if (bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esCache[iVictim].g_iRewardEnabled[0] != -1 && flRandom <= g_esCache[iVictim].g_flRewardChance[0] && flPercentage >= g_esCache[iVictim].g_flRewardPercentage[0])
+					if (bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iVictim].g_iRewardEnabled[0] != -1 && flRandom <= g_esCache[iVictim].g_flRewardChance[0] && flPercentage >= g_esCache[iVictim].g_flRewardPercentage[0])
 					{
 						vChooseReward(iAttacker, iVictim, 0);
 					}
@@ -5591,7 +5591,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					{
 						for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 						{
-							if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && iTeammate != iAttacker && iTeammate != iAssistant)
+							if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME) && iTeammate != iAttacker && iTeammate != iAssistant)
 							{
 								flPercentage = (float(g_esPlayer[iTeammate].g_iTankDamage[iVictim]) / float(g_esPlayer[iVictim].g_iTankHealth)) * 100;
 								if (flPercentage >= g_esCache[iVictim].g_flRewardPercentage[2])
@@ -5625,9 +5625,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				CreateTimer(1.0, tTimerResetType, iVictimId, TIMER_FLAG_NO_MAPCHANGE);
 				CreateTimer(5.0, tTimerTankWave, _, TIMER_FLAG_NO_MAPCHANGE);
 			}
-			else if (bIsSurvivor(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			else if (bIsSurvivor(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
-				if (bIsTankAllowed(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && g_esCache[iAttacker].g_iAnnounceKill == 1)
+				if (bIsTankSupported(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iAttacker].g_iAnnounceKill == 1)
 				{
 					char sPhrase[32], sTankName[33];
 					int iOption = GetRandomInt(1, 10);
@@ -5650,12 +5650,12 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_incapacitated"))
 		{
 			int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
-			if (bIsTank(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsTank(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
 				g_esPlayer[iPlayer].g_bDied = false;
 				g_esPlayer[iPlayer].g_bDying = true;
 
-				CreateTimer(7.5, tTimerKillStuckTank, iPlayerId, TIMER_FLAG_NO_MAPCHANGE);
+				CreateTimer(10.0, tTimerKillStuckTank, iPlayerId, TIMER_FLAG_NO_MAPCHANGE);
 
 				vCombineAbilitiesForward(iPlayer, MT_COMBO_UPONINCAP);
 			}
@@ -5663,7 +5663,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_now_it"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
- 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsValidGame())
+ 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidGame())
 			{
 				vRemoveGlow(iTank);
 			}
@@ -5671,7 +5671,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_no_longer_it"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
- 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && bIsValidGame() && !bIsPlayerIncapacitated(iTank) && g_esCache[iTank].g_iGlowEnabled == 1)
+ 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidGame() && !bIsPlayerIncapacitated(iTank) && g_esCache[iTank].g_iGlowEnabled == 1)
 			{
 				vSetGlow(iTank);
 			}
@@ -5697,7 +5697,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			static int iTankId, iTank;
 			iTankId = event.GetInt("userid");
 			iTank = GetClientOfUserId(iTankId);
-			if (bIsTankAllowed(iTank) && g_esCache[iTank].g_flAttackInterval > 0.0)
+			if (bIsTankSupported(iTank) && g_esCache[iTank].g_flAttackInterval > 0.0)
 			{
 				static char sWeapon[32];
 				event.GetString("weapon", sWeapon, sizeof(sWeapon));
@@ -6030,7 +6030,7 @@ static void vRegularSpawn()
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsValidClient(iTank, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+		if (bIsValidClient(iTank, MT_CHECK_INGAME))
 		{
 			vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank auto");
 
@@ -6229,7 +6229,7 @@ static void vResetRound()
 
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
 			vReset2(iPlayer);
 			vReset3(iPlayer);
@@ -6325,7 +6325,7 @@ static void vResetTimers(bool delay = false)
 
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTankAllowed(iTank))
+		if (bIsTankSupported(iTank))
 		{
 			vResetTimersForward(1, iTank);
 		}
@@ -6861,7 +6861,7 @@ static void vSetGlow(int tank)
 
 static void vSetName(int tank, const char[] oldname, const char[] name, int mode)
 {
-	if (bIsTankAllowed(tank))
+	if (bIsTankSupported(tank))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT))
 		{
@@ -6893,7 +6893,7 @@ static void vSetName(int tank, const char[] oldname, const char[] name, int mode
 
 static void vSetProps(int tank)
 {
-	if (bIsTankAllowed(tank))
+	if (bIsTankSupported(tank))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[0] && (g_esCache[tank].g_iPropsAttached & MT_PROP_BLUR) && !g_esPlayer[tank].g_bBlur)
 		{
@@ -7339,7 +7339,7 @@ static void vAnnounce(int tank, const char[] oldname, const char[] name, int mod
 		}
 	}
 
-	if (mode >= 0 && g_esCache[tank].g_iTankNote == 1 && bIsCustomTankAllowed(tank))
+	if (mode >= 0 && g_esCache[tank].g_iTankNote == 1 && bIsCustomTankSupported(tank))
 	{
 		char sPhrase[32], sSteamID32[32], sSteam3ID[32], sSteamIDFinal[32], sTankNote[32];
 		if (GetClientAuthId(tank, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)) && GetClientAuthId(tank, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
@@ -7530,7 +7530,7 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 
 static void vParticleEffects(int tank)
 {
-	if (bIsTankAllowed(tank) && g_esCache[tank].g_iBodyEffects > 0)
+	if (bIsTankSupported(tank) && g_esCache[tank].g_iBodyEffects > 0)
 	{
 		if ((g_esCache[tank].g_iBodyEffects & MT_PARTICLE_BLOOD) && !g_esPlayer[tank].g_bBlood)
 		{
@@ -7776,7 +7776,7 @@ public void vPlayerSpawnFrame(int userid)
 		{
 			case 0:
 			{
-				switch (bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT))
+				switch (bIsTankSupported(iTank, MT_CHECK_FAKECLIENT))
 				{
 					case true:
 					{
@@ -7807,7 +7807,7 @@ public void vRockThrowFrame(int ref)
 	{
 		static int iThrower;
 		iThrower = GetEntPropEnt(iRock, Prop_Data, "m_hThrower");
-		if (bIsTankAllowed(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esTank[g_esPlayer[iThrower].g_iTankType].g_iTankEnabled == 1)
+		if (bIsTankSupported(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esTank[g_esPlayer[iThrower].g_iTankType].g_iTankEnabled == 1)
 		{
 			SetEntityRenderColor(iRock, iGetRandomColor(g_esCache[iThrower].g_iRockColor[0]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[1]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[2]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[3]));
 			vSetRockModel(iThrower, iRock);
@@ -7837,7 +7837,7 @@ public void vTankSpawnFrame(DataPack pack)
 	static int iTank, iMode;
 	iTank = GetClientOfUserId(pack.ReadCell()), iMode = pack.ReadCell();
 	delete pack;
-	if (bIsTankAllowed(iTank) && bHasCoreAdminAccess(iTank))
+	if (bIsTankSupported(iTank) && bHasCoreAdminAccess(iTank))
 	{
 		vCacheSettings(iTank);
 
@@ -7865,7 +7865,7 @@ public void vTankSpawnFrame(DataPack pack)
 			}
 			case 0:
 			{
-				if (bIsCustomTankAllowed(iTank))
+				if (bIsCustomTankSupported(iTank))
 				{
 					static int iHumanCount, iSpawnHealth, iExtraHealthNormal, iExtraHealthBoost, iExtraHealthBoost2, iExtraHealthBoost3, iNoBoost, iBoost,
 						iBoost2, iBoost3, iNegaNoBoost, iNegaBoost, iNegaBoost2, iNegaBoost3, iFinalNoHealth, iFinalHealth, iFinalHealth2, iFinalHealth3;
@@ -7913,7 +7913,7 @@ public void vTankSpawnFrame(DataPack pack)
 						}
 					}
 
-					if (bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT) && g_esTank[g_esPlayer[iTank].g_iTankType].g_iHumanSupport == 1 && bHasCoreAdminAccess(iTank))
+					if (bIsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esTank[g_esPlayer[iTank].g_iTankType].g_iHumanSupport == 1 && bHasCoreAdminAccess(iTank))
 					{
 						MT_PrintToChat(iTank, "%s %t", MT_TAG3, "SpawnMessage");
 						MT_PrintToChat(iTank, "%s %t", MT_TAG2, "AbilityButtons");
@@ -7937,7 +7937,7 @@ public void vTankSpawnFrame(DataPack pack)
 
 static void vAttackInterval(int tank)
 {
-	if (bIsTankAllowed(tank) && g_esCache[tank].g_flAttackInterval > 0.0)
+	if (bIsTankSupported(tank) && g_esCache[tank].g_flAttackInterval > 0.0)
 	{
 		static int iWeapon;
 		iWeapon = GetPlayerWeaponSlot(tank, 0);
@@ -7952,7 +7952,7 @@ static void vAttackInterval(int tank)
 
 static void vThrowInterval(int tank)
 {
-	if (bIsTankAllowed(tank) && g_esCache[tank].g_flThrowInterval > 0.0)
+	if (bIsTankSupported(tank) && g_esCache[tank].g_flThrowInterval > 0.0)
 	{
 		int iAbility = GetEntPropEnt(tank, Prop_Send, "m_customAbility");
 		if (iAbility > 0)
@@ -8007,7 +8007,7 @@ static bool bFoundSection(const char[] subsection, int index)
 
 static bool bHasCoreAdminAccess(int admin, int type = 0)
 {
-	if (!bIsValidClient(admin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) || bIsDeveloper(admin))
+	if (!bIsValidClient(admin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || bIsDeveloper(admin))
 	{
 		return true;
 	}
@@ -8051,7 +8051,7 @@ static bool bIsCoreAdminImmune(int survivor, int tank)
 		|| (iGlobalFlags != 0 && ((iTypePlayerFlags != 0 && ((iGlobalFlags & iTypePlayerFlags) || (iTypePlayerFlags & iGlobalFlags))) || (iPlayerFlags != 0 && ((iGlobalFlags & iPlayerFlags) || (iPlayerFlags & iGlobalFlags))) || (iAdminFlags != 0 && ((iGlobalFlags & iAdminFlags) || (iAdminFlags & iGlobalFlags)))));
 }
 
-static bool bIsCustomTankAllowed(int tank)
+static bool bIsCustomTankSupported(int tank)
 {
 	if (g_esGeneral.g_bCloneInstalled && !MT_IsCloneSupported(tank))
 	{
@@ -8168,9 +8168,9 @@ static bool bIsPluginEnabled()
 	return true;
 }
 
-static bool bIsTankAllowed(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE)
+static bool bIsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	if (!bIsTank(tank, flags) || g_esPlayer[tank].g_iTankType <= 0 || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esTank[g_esPlayer[tank].g_iTankType].g_iHumanSupport == 0))
+	if (!bIsTank(tank, flags) || (g_esPlayer[tank].g_iTankType <= 0) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esTank[g_esPlayer[tank].g_iTankType].g_iHumanSupport == 0))
 	{
 		return false;
 	}
@@ -8423,7 +8423,7 @@ static int iGetTankCount(bool include = false)
 	iTankCount = 0;
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE))
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
 			if (!include && g_esGeneral.g_bCloneInstalled && MT_IsTankClone(iTank))
 			{
@@ -8443,7 +8443,7 @@ static int iGetTypeCount(int type)
 	iTypeCount = 0;
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
-		if (bIsTankAllowed(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && g_esPlayer[iTank].g_iTankType == type)
+		if (bIsTankSupported(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTank].g_iTankType == type)
 		{
 			iTypeCount++;
 		}
@@ -8459,7 +8459,7 @@ static Address adGetFirstContainedResponder(Address address)
 
 public void L4D_OnEnterGhostState(int client)
 {
-	if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_iTankType > 0)
+	if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_iTankType > 0)
 	{
 		g_esPlayer[client].g_bKeepCurrentType = true;
 
@@ -8531,13 +8531,13 @@ public MRESReturn mreEnterStasisPost(int pThis)
 
 public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 {
-	if (bIsSurvivor(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+	if (bIsSurvivor(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		g_esPlayer[pThis].g_bLastLife = false;
 
 		vSaveSurvivorStats(pThis);
 	}
-	else if (bIsTankAllowed(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE) && bIsCustomTankAllowed(pThis))
+	else if (bIsTankSupported(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsCustomTankSupported(pThis))
 	{
 		vCombineAbilitiesForward(pThis, MT_COMBO_UPONDEATH);
 	}
@@ -8580,7 +8580,7 @@ public MRESReturn mreTankRockPost(DHookReturn hReturn)
 
 		static int iTank;
 		iTank = GetEntPropEnt(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity");
-		if (bIsTankAllowed(iTank))
+		if (bIsTankSupported(iTank))
 		{
 			SetEntPropEnt(iRock, Prop_Data, "m_hThrower", iTank);
 			SetEntPropEnt(iRock, Prop_Send, "m_hOwnerEntity", g_esGeneral.g_iLauncher);
@@ -8666,7 +8666,7 @@ public Action tTimerAnnounce(Handle timer, DataPack pack)
 
 	static int iTank;
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankAllowed(iTank))
+	if (!bIsTankSupported(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -8700,7 +8700,7 @@ public Action tTimerBloodEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_BLOOD) || !g_esPlayer[iTank].g_bBlood)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_BLOOD) || !g_esPlayer[iTank].g_bBlood)
 	{
 		g_esPlayer[iTank].g_bBlood = false;
 
@@ -8726,7 +8726,7 @@ public Action tTimerBlurEffect(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iPropsAttached & MT_PROP_BLUR) || !g_esPlayer[iTank].g_bBlur)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iPropsAttached & MT_PROP_BLUR) || !g_esPlayer[iTank].g_bBlur)
 	{
 		g_esPlayer[iTank].g_bBlur = false;
 
@@ -8755,7 +8755,7 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 
 	static int iTank;
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsCustomTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !g_esPlayer[iTank].g_bBoss)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bIsCustomTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !g_esPlayer[iTank].g_bBoss)
 	{
 		vSpawnModes(iTank, false);
 
@@ -8793,7 +8793,7 @@ public Action tTimerCheckView(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank))
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -8814,7 +8814,7 @@ public Action tTimerElectricEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ELECTRICITY) || !g_esPlayer[iTank].g_bElectric)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ELECTRICITY) || !g_esPlayer[iTank].g_bElectric)
 	{
 		g_esPlayer[iTank].g_bElectric = false;
 
@@ -8865,7 +8865,7 @@ public Action tTimerFireEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_FIRE) || !g_esPlayer[iTank].g_bFire)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_FIRE) || !g_esPlayer[iTank].g_bFire)
 	{
 		g_esPlayer[iTank].g_bFire = false;
 
@@ -8880,7 +8880,7 @@ public Action tTimerFireEffect(Handle timer, int userid)
 public Action tTimerForceSpawnTank(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0)
 	{
 		return Plugin_Stop;
 	}
@@ -8898,7 +8898,7 @@ public Action tTimerIceEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ICE) || !g_esPlayer[iTank].g_bIce)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ICE) || !g_esPlayer[iTank].g_bIce)
 	{
 		g_esPlayer[iTank].g_bIce = false;
 
@@ -8914,7 +8914,7 @@ public Action tTimerKillIdleTank(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsTankAllowed(iTank, MT_CHECK_ALIVE) || bIsTankAllowed(iTank, MT_CHECK_FAKECLIENT))
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bIsTankSupported(iTank, MT_CHECK_ALIVE) || bIsTankSupported(iTank, MT_CHECK_FAKECLIENT))
 	{
 		return Plugin_Stop;
 	}
@@ -8932,7 +8932,7 @@ public Action tTimerKillIdleTank(Handle timer, int userid)
 public Action tTimerKillStuckTank(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsPlayerIncapacitated(iTank))
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bIsPlayerIncapacitated(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -8946,7 +8946,7 @@ public Action tTimerMeteorEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_METEOR) || !g_esPlayer[iTank].g_bMeteor)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_METEOR) || !g_esPlayer[iTank].g_bMeteor)
 	{
 		g_esPlayer[iTank].g_bMeteor = false;
 
@@ -8966,7 +8966,7 @@ public Action tTimerRandomize(Handle timer, DataPack pack)
 	iTank = GetClientOfUserId(pack.ReadCell());
 	static float flTime;
 	flTime = pack.ReadFloat();
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCustomTankAllowed(iTank) || !g_esPlayer[iTank].g_bRandomized || flTime + g_esCache[iTank].g_flRandomDuration < GetEngineTime())
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCustomTankSupported(iTank) || !g_esPlayer[iTank].g_bRandomized || flTime + g_esCache[iTank].g_flRandomDuration < GetEngineTime())
 	{
 		vSpawnModes(iTank, false);
 
@@ -9035,7 +9035,7 @@ public Action tTimerReloadConfigs(Handle timer)
 public Action tTimerResetDelay(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankAllowed(iTank))
+	if (!bIsTankSupported(iTank))
 	{
 		return Plugin_Stop;
 	}
@@ -9074,7 +9074,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 
 	static int iTank;
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || g_esCache[iTank].g_iRockEffects == 0)
+	if (!bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || g_esCache[iTank].g_iRockEffects == 0)
 	{
 		return Plugin_Stop;
 	}
@@ -9114,7 +9114,7 @@ public Action tTimerSmokeEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SMOKE) || !g_esPlayer[iTank].g_bSmoke)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SMOKE) || !g_esPlayer[iTank].g_bSmoke)
 	{
 		g_esPlayer[iTank].g_bSmoke = false;
 
@@ -9130,7 +9130,7 @@ public Action tTimerSpitEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SPIT) || !g_esPlayer[iTank].g_bSpit)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SPIT) || !g_esPlayer[iTank].g_bSpit)
 	{
 		g_esPlayer[iTank].g_bSpit = false;
 
@@ -9164,7 +9164,7 @@ public Action tTimerTankUpdate(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bIsCustomTankAllowed(iTank) || bIsPlayerIncapacitated(iTank) || g_esGeneral.g_bFinaleEnded)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bIsCustomTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || g_esGeneral.g_bFinaleEnded)
 	{
 		return Plugin_Stop;
 	}
@@ -9198,7 +9198,7 @@ public Action tTimerTankWave(Handle timer)
 public Action tTimerTransform(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCustomTankAllowed(iTank) || !g_esPlayer[iTank].g_bTransformed)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCustomTankSupported(iTank) || !g_esPlayer[iTank].g_bTransformed)
 	{
 		vSpawnModes(iTank, false);
 
@@ -9222,7 +9222,7 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankAllowed(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0)
+	if (!bIsTankSupported(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0)
 	{
 		vSpawnModes(iTank, false);
 
