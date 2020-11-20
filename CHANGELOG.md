@@ -7,7 +7,7 @@
 #### General
 - Fixed some potential errors caused by invalid weapon slots.
 - Fixed the SourceMod admin menu plugin not being optional.
-- Fixed rare cases where non-Mutant Tanks are given some abilities.
+- Fixed rare cases where non-Mutant Tanks are counted as Mutant Tanks.
 
 #### Core Plugin
 - Fixed log files being created even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
