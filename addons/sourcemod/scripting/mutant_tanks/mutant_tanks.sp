@@ -3585,7 +3585,7 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iAnnounceDeath = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iAnnounceDeath, g_esCache[tank].g_iAnnounceDeath);
 	g_esCache[tank].g_iAnnounceKill = iGetSettingValue(bAccess, true, g_esTank[iType].g_iAnnounceKill, g_esGeneral.g_iAnnounceKill);
 	g_esCache[tank].g_iAnnounceKill = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iAnnounceKill, g_esCache[tank].g_iAnnounceKill);
-	g_esCache[tank].g_iBaseHealth = iGetSettingValue(bAccess, bHuman, g_esTank[iType].g_iBaseHealth, g_esGeneral.g_iBaseHealth);
+	g_esCache[tank].g_iBaseHealth = iGetSettingValue(bAccess, true, g_esTank[iType].g_iBaseHealth, g_esGeneral.g_iBaseHealth);
 	g_esCache[tank].g_iBaseHealth = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iBaseHealth, g_esCache[tank].g_iBaseHealth);
 	g_esCache[tank].g_iBodyEffects = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iBodyEffects, g_esTank[iType].g_iBodyEffects);
 	g_esCache[tank].g_iBossStages = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iBossStages, g_esTank[iType].g_iBossStages);
@@ -3599,7 +3599,7 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iDisplayHealthType = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDisplayHealthType, g_esGeneral.g_iDisplayHealthType);
 	g_esCache[tank].g_iDisplayHealthType = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDisplayHealthType, g_esCache[tank].g_iDisplayHealthType);
 	g_esCache[tank].g_iExplosiveImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iExplosiveImmunity, g_esTank[iType].g_iExplosiveImmunity);
-	g_esCache[tank].g_iExtraHealth = iGetSettingValue(bAccess, bHuman, g_esTank[iType].g_iExtraHealth, g_esGeneral.g_iExtraHealth);
+	g_esCache[tank].g_iExtraHealth = iGetSettingValue(bAccess, true, g_esTank[iType].g_iExtraHealth, g_esGeneral.g_iExtraHealth);
 	g_esCache[tank].g_iExtraHealth = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth);
 	g_esCache[tank].g_iFireImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iFireImmunity, g_esTank[iType].g_iFireImmunity);
 	g_esCache[tank].g_iGlowEnabled = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGlowEnabled, g_esTank[iType].g_iGlowEnabled);
@@ -6912,7 +6912,7 @@ static void vSetProps(int tank)
 		{
 			g_esPlayer[tank].g_bBlur = true;
 
-			CreateTimer(0.25, tTimerBlurEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateTimer(0.3, tTimerBlurEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
 		float flOrigin[3], flAngles[3];
@@ -8735,7 +8735,7 @@ public Action tTimerBlurEffect(Handle timer, int userid)
 		SDKHook(g_esPlayer[iTank].g_iTankModel, SDKHook_SetTransmit, SetTransmit);
 
 		g_esPlayer[iTank].g_iTankModel = EntIndexToEntRef(g_esPlayer[iTank].g_iTankModel);
-		vDeleteEntity(g_esPlayer[iTank].g_iTankModel, 0.3);
+		vDeleteEntity(g_esPlayer[iTank].g_iTankModel, 0.15);
 	}
 
 	return Plugin_Continue;

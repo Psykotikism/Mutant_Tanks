@@ -659,11 +659,6 @@ static void vDropWeapon(int tank, int value, float random, int pos = -1)
 				TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
 				DispatchSpawn(iDrop);
 
-				if (bIsValidGame())
-				{
-					SetEntPropFloat(iDrop , Prop_Send, "m_flModelScale", g_esCache[tank].g_flDropWeaponScale);
-				}
-
 				static int iAmmo, iClip;
 				iAmmo = 0;
 				iClip = 0;
@@ -729,7 +724,6 @@ static void vDropWeapon(int tank, int value, float random, int pos = -1)
 				DispatchKeyValue(iDrop, "melee_script_name", sWeapon);
 				TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
 				DispatchSpawn(iDrop);
-				SetEntPropFloat(iDrop, Prop_Send, "m_flModelScale", g_esCache[tank].g_flDropWeaponScale);
 
 				if (g_esCache[tank].g_iDropMessage == 1)
 				{
