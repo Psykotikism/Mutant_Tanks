@@ -522,7 +522,6 @@ enum struct esPlayer
 	int g_iSpawnType;
 	int g_iTankDamage[MAXPLAYERS + 1];
 	int g_iTankHealth;
-	int g_iTankModel;
 	int g_iTankNote;
 	int g_iTankType;
 	int g_iTire[2];
@@ -6049,18 +6048,6 @@ static void vRemoveGlow(int tank)
 
 static void vRemoveProps(int tank, int mode = 1)
 {
-	if (bIsValidEntRef(g_esPlayer[tank].g_iTankModel))
-	{
-		g_esPlayer[tank].g_iTankModel = EntRefToEntIndex(g_esPlayer[tank].g_iTankModel);
-		if (bIsValidEntity(g_esPlayer[tank].g_iTankModel))
-		{
-			SDKUnhook(g_esPlayer[tank].g_iTankModel, SDKHook_SetTransmit, SetTransmit);
-			RemoveEntity(g_esPlayer[tank].g_iTankModel);
-		}
-	}
-
-	g_esPlayer[tank].g_iTankModel = INVALID_ENT_REFERENCE;
-
 	for (int iLight = 0; iLight < sizeof(esPlayer::g_iLight); iLight++)
 	{
 		if (bIsValidEntRef(g_esPlayer[tank].g_iLight[iLight]))
@@ -6910,9 +6897,33 @@ static void vSetProps(int tank)
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flPropsChance[0] && (g_esCache[tank].g_iPropsAttached & MT_PROP_BLUR) && !g_esPlayer[tank].g_bBlur)
 		{
-			g_esPlayer[tank].g_bBlur = true;
+			float flTankPos[3], flTankAng[3];
+			GetClientAbsOrigin(tank, flTankPos);
+			GetClientAbsAngles(tank, flTankAng);
 
-			CreateTimer(0.3, tTimerBlurEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			int iTankModel = CreateEntityByName("prop_dynamic");
+			if (bIsValidEntity(iTankModel))
+			{
+				g_esPlayer[tank].g_bBlur = true;
+
+				SetEntityModel(iTankModel, MODEL_TANK);
+
+				TeleportEntity(iTankModel, flTankPos, flTankAng, NULL_VECTOR);
+				DispatchSpawn(iTankModel);
+
+				AcceptEntityInput(iTankModel, "DisableCollision");
+
+				SetEntityRenderColor(iTankModel, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
+				SetEntProp(iTankModel, Prop_Send, "m_nSequence", GetEntProp(tank, Prop_Send, "m_nSequence"));
+				SetEntPropFloat(iTankModel, Prop_Send, "m_flPlaybackRate", 5.0);
+
+				SDKHook(iTankModel, SDKHook_SetTransmit, SetTransmit);
+
+				DataPack dpBlur;
+				CreateDataTimer(0.25, tTimerBlurEffect, dpBlur, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpBlur.WriteCell(EntIndexToEntRef(iTankModel));
+				dpBlur.WriteCell(GetClientUserId(tank));
+			}
 		}
 
 		float flOrigin[3], flAngles[3];
@@ -8701,13 +8712,26 @@ public Action tTimerBloodEffect(Handle timer, int userid)
 	return Plugin_Continue;
 }
 
-public Action tTimerBlurEffect(Handle timer, int userid)
+public Action tTimerBlurEffect(Handle timer, DataPack pack)
 {
-	static int iTank;
-	iTank = GetClientOfUserId(userid);
+	pack.Reset();
+
+	static int iTankModel, iTank;
+	iTankModel = EntRefToEntIndex(pack.ReadCell());
+	iTank = GetClientOfUserId(pack.ReadCell());
+	if (!g_esGeneral.g_bPluginEnabled || iTankModel == INVALID_ENT_REFERENCE || !bIsValidEntity(iTankModel))
+	{
+		g_esPlayer[iTank].g_bBlur = false;
+
+		return Plugin_Stop;
+	}
+
 	if (!g_esGeneral.g_bPluginEnabled || !bIsTankAllowed(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !(g_esCache[iTank].g_iPropsAttached & MT_PROP_BLUR) || !g_esPlayer[iTank].g_bBlur)
 	{
 		g_esPlayer[iTank].g_bBlur = false;
+
+		SDKUnhook(iTankModel, SDKHook_SetTransmit, SetTransmit);
+		RemoveEntity(iTankModel);
 
 		return Plugin_Stop;
 	}
@@ -8716,26 +8740,10 @@ public Action tTimerBlurEffect(Handle timer, int userid)
 	GetClientAbsOrigin(iTank, flTankPos);
 	GetClientAbsAngles(iTank, flTankAng);
 
-	g_esPlayer[iTank].g_iTankModel = CreateEntityByName("prop_dynamic");
-	if (bIsValidEntity(g_esPlayer[iTank].g_iTankModel))
+	if (bIsValidEntity(iTankModel))
 	{
-		SetEntityModel(g_esPlayer[iTank].g_iTankModel, MODEL_TANK);
-		SetEntPropEnt(g_esPlayer[iTank].g_iTankModel, Prop_Send, "m_hOwnerEntity", iTank);
-
-		TeleportEntity(g_esPlayer[iTank].g_iTankModel, flTankPos, flTankAng, NULL_VECTOR);
-		DispatchSpawn(g_esPlayer[iTank].g_iTankModel);
-
-		AcceptEntityInput(g_esPlayer[iTank].g_iTankModel, "DisableCollision");
-
-		SetEntityRenderColor(g_esPlayer[iTank].g_iTankModel, iGetRandomColor(g_esCache[iTank].g_iSkinColor[0]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[1]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[2]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[3]));
-
-		SetEntProp(g_esPlayer[iTank].g_iTankModel, Prop_Send, "m_nSequence", GetEntProp(iTank, Prop_Send, "m_nSequence"));
-		SetEntPropFloat(g_esPlayer[iTank].g_iTankModel, Prop_Send, "m_flPlaybackRate", 5.0);
-
-		SDKHook(g_esPlayer[iTank].g_iTankModel, SDKHook_SetTransmit, SetTransmit);
-
-		g_esPlayer[iTank].g_iTankModel = EntIndexToEntRef(g_esPlayer[iTank].g_iTankModel);
-		vDeleteEntity(g_esPlayer[iTank].g_iTankModel, 0.15);
+		TeleportEntity(iTankModel, flTankPos, flTankAng, NULL_VECTOR);
+		SetEntProp(iTankModel, Prop_Send, "m_nSequence", GetEntProp(iTank, Prop_Send, "m_nSequence"));
 	}
 
 	return Plugin_Continue;
