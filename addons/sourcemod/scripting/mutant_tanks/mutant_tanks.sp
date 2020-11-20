@@ -2684,13 +2684,8 @@ public Action cmdTank(int client, int args)
 	GetCmdArg(1, sType, sizeof(sType));
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-	iAmount = GetCmdArgInt(2);
+	iAmount = iClamp(GetCmdArgInt(2), 1, 32);
 	iMode = GetCmdArgInt(3);
-
-	if (iAmount == 0)
-	{
-		iAmount = 1;
-	}
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -2754,13 +2749,8 @@ public Action cmdTank2(int client, int args)
 	GetCmdArg(1, sType, sizeof(sType));
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-	iAmount = GetCmdArgInt(2);
+	iAmount = iClamp(GetCmdArgInt(2), 1, 32);
 	iMode = GetCmdArgInt(3);
-
-	if (iAmount == 0)
-	{
-		iAmount = 1;
-	}
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -2822,13 +2812,8 @@ public Action cmdMutantTank(int client, int args)
 	GetCmdArg(1, sType, sizeof(sType));
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-	iAmount = GetCmdArgInt(2);
+	iAmount = iClamp(GetCmdArgInt(2), 1, 32);
 	iMode = GetCmdArgInt(3);
-
-	if (iAmount == 0)
-	{
-		iAmount = 1;
-	}
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -2893,10 +2878,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 				}
 			}
 		}
-		default:
-		{
-			g_esGeneral.g_iChosenType = iClamp(iType, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-		}
+		default: g_esGeneral.g_iChosenType = iClamp(iType, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 	}
 
 	switch (bIsTank(admin))
