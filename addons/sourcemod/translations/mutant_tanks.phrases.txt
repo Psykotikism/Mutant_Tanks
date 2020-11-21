@@ -8707,292 +8707,320 @@
 
 	"Tank #102 Name"
 	{
+		"en"			"Trap Tank"
+		"hu"			""
+		"chi"			"陷阱坦克"
+	}
+
+	"Tank #102"
+	{
+		"en"			"{mint}This Tank is not what it seems..."
+		"hu"			""
+		"chi"			"{mint}这辆战车看起来并不像..."
+	}
+
+	"Tank #103 Name"
+	{
 		"en"			"Dread Tank"
 		"hu"			"Félelemkeltő Tank"
 		"chi"			"恐惧坦克"
 	}
 
-	"Tank #102"
+	"Tank #103"
 	{
 		"en"			"{mint}This Tank can partially blind and drug survivors."
 		"hu"			"{mint}Ez a Tank részben megvakítja és bedrogozza a túlélőket."
 		"chi"			"{mint}这个坦克可以让幸存者失明和中毒."
 	}
 
-	"Tank #103 Name"
+	"Tank #104 Name"
 	{
 		"en"			"Rabid Tank"
 		"hu"			"Fanatikus Tank"
 		"chi"			"狂暴坦克"
 	}
 
-	"Tank #103"
+	"Tank #104"
 	{
 		"en"			"{mint}This Tank can partially drug and hurt survivors."
 		"hu"			"{mint}Ez a Tank részben bedrogozza és bántja a túlélőket."
 		"chi"			"{mint}这个坦克可以让幸存者中毒和受到持续伤害."
 	}
 
-	"Tank #104 Name"
+	"Tank #105 Name"
 	{
 		"en"			"Tremor Tank"
 		"hu"			"Remegő Tank"
 		"chi"			"震荡坦克"
 	}
 
-	"Tank #104"
+	"Tank #105"
 	{
 		"en"			"{mint}This Tank can start rock showers and spam rocks at survivors."
 		"hu"			"{mint}Ez a Tank szikla záporokat hoz létre, és folyamatosan sziklákat dobál a túlélőkre."
 		"chi"			"{mint}这个坦克会召唤岩石雨和向幸存者投掷一堆岩石."
 	}
 
-	"Tank #105 Name"
+	"Tank #106 Name"
 	{
 		"en"			"Psyk0tik Tank"
 		"hu"			"Elmeb3teg Tank"
 		"chi"			"Psyk0tik坦克"
 	}
 
-	"Tank #105"
+	"Tank #106"
 	{
 		"en"			"{mint}This Tank does extra damage, runs really fast, clones itself, creates acid puddles, explosions, and fires, cloaks itself, starts rock showers, spams rocks at survivors, and throws rocks that track nearby survivors."
 		"hu"			"{mint}Ez a Tank többet sebez, nagyon gyorsan fut, klónozza magát, savas pocsolyákat, robbanásokat, és tüzet hoz létre, álcázza magát, szikla záport indít, folyamatosan sziklákat dobál a túlélőkre, sziklákat dob amik követik a közeli túlélőket."
 		"chi"			"{mint}这个坦克能对幸存者造成更多伤害,跑得快,还会自我复制,制造酸液地带/爆炸和火焰,会伪装自己,召唤岩石雨和向幸存者投掷岩石或一堆岩石."
 	}
 
-	"Tank #106 Name"
+	"Tank #107 Name"
 	{
 		"en"			"Apocalyptic Tank"
 		"hu"			"Apokalipszis Tank"
 		"chi"			"世界末日坦克"
 	}
 
-	"Tank #106"
+	"Tank #107"
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
 		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,会召唤流星雨/尸潮和岩石雨"
 	}
 
-	"Tank #107 Name"
+	"Tank #108 Name"
 	{
 		"en"			"Darth Vader Tank"
 		"hu"			"Darth Vader Tank"
 		"chi"			"达斯·维达（Darth Vader）背心"
 	}
 
-	"Tank #107"
+	"Tank #108"
 	{
 		"en"			"{mint}It's Darth Vader... And he is... A Mutant Tank with the Force!"
 		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Tank az erővel!"
 		"chi"			"{mint}是..是达斯·维达..它..它是帝国的突变坦克!"
 	}
 
-	"Tank #108 Name"
+	"Tank #109 Name"
+	{
+		"en"			"Drug Addict Tank"
+		"hu"			""
+		"chi"			"吸毒者坦克"
+	}
+
+	"Tank #109"
+	{
+		"en"			"{mint}This Tank has a contagious addiction..."
+		"hu"			""
+		"chi"			"{mint}这辆战车具有传染性上瘾..."
+	}
+
+	"Tank #110 Name"
 	{
 		"en"			"Grim Reaper Tank"
 		"hu"			"Zord Kaszás Tank"
 		"chi"			"死神坦克"
 	}
 
-	"Tank #108"
+	"Tank #110"
 	{
 		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
 		"chi"			"{mint}这个坦克跑的比一般的快,会伪装自己,可以埋葬幸存者和传送到幸存者身边."
 	}
 
-	"Tank #109 Name"
+	"Tank #111 Name"
 	{
 		"en"			"Horde Tank"
 		"hu"			"Horda Tank"
 		"chi"			"部落坦克"
 	}
 
-	"Tank #109"
+	"Tank #111"
 	{
 		"en"			"{mint}This Tank can start panic events and spawn Boomers to help prolong them."
 		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, és segítségül Pukkancsokat hozhat létre."
 		"chi"			"{mint}这个坦克可以召唤尸潮,并生成Boomer来帮助自己延长尸潮持续时间."
 	}
 
-	"Tank #110 Name"
+	"Tank #112 Name"
 	{
 		"en"			"Hulk Tank"
 		"hu"			"Hulk Tank"
 		"chi"			"绿巨人坦克"
 	}
 
-	"Tank #110"
+	"Tank #112"
 	{
 		"en"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
 		"hu"			"{mint}Bemutatom a Hihetetlen Hulk-ot! Ennek a Tanknak nagyrészt olyan képességei vannak mint Hulk-nak!"
 		"chi"			"{mint}遇到难以置信的绿巨人!这个坦克拥有绿巨人的大部分能力!"
 	}
 
-	"Tank #111 Name"
+	"Tank #113 Name"
 	{
 		"en"			"Ninja Tank"
 		"hu"			"Nindzsa Tank"
 		"chi"			"忍者坦克"
 	}
 
-	"Tank #111"
+	"Tank #113"
 	{
 		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
 		"hu"			"{mint}Ez a Tank tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
 		"chi"			"{mint}这个坦克可以瞬移,消无声息的移动和伪装自己.需要特别小心!"
 	}
 
-	"Tank #112 Name"
+	"Tank #114 Name"
 	{
 		"en"			"Zen Tank"
 		"hu"			"Zen Tank"
 		"chi"			"禅宗坦克"
 	}
 
-	"Tank #112"
+	"Tank #114"
 	{
 		"en"			"{mint}This Tank is too busy meditating to care about you."
 		"hu"			"{mint}Ez a Tank éppen meditál, túl elfoglalt hogy foglalkozzon veled."
 		"chi"			"{mint}这个坦克沉迷冥思,根本对你毫无兴趣."
 	}
 
-	"Tank #113 Name"
+	"Tank #115 Name"
 	{
 		"en"			"The Boss (1st Form)"
 		"hu"			"A Főnök (1. alak)"
 		"chi"			"老板（第一形式）"
 	}
 
-	"Tank #113"
+	"Tank #115"
 	{
 		"en"			"{mint}This Tank throws explosive rocks and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank robbanó sziklákat dob és időszakosan teleportál egy túlélőkhöz."
 		"chi"			"{mint}这个坦克会对幸存者投掷会爆炸的岩石并会定期进行传送."
 	}
 
-	"Tank #114 Name"
+	"Tank #116 Name"
 	{
 		"en"			"Steel Overlord (2nd Form)"
 		"hu"			"Acél Hűbérúr (2. Alak)"
 		"chi"			"钢铁霸主（第二种形式）"
 	}
 
-	"Tank #114"
+	"Tank #116"
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, robbanó sziklákat dob, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
 		"chi"			"{mint}这个坦克跑得比一般的快,免疫近战伤害,比一般的坦克强一点,会投掷爆炸的岩石,可以改变幸存者的重力值和传送到幸存者身边."
 	}
 
-	"Tank #115 Name"
+	"Tank #117 Name"
 	{
 		"en"			"Night Stalker (3rd Form)"
 		"hu"			"Éjjeli Orvvadász (3. Alak)"
 		"chi"			"暗夜魔王（第三形式）"
 	}
 
-	"Tank #115"
+	"Tank #117"
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, robbanó sziklákat dob, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
 		"chi"			"{mint}这个坦克跑得比一般的快,免疫火焰伤害,比一般的坦克弱一点,会投掷爆炸的岩石,可以让幸存者失明和伪装自己,并会定期传送到幸存者身边."
 	}
 
-	"Tank #116 Name"
+	"Tank #118 Name"
 	{
 		"en"			"Spirit of Fire (4th Form)"
 		"hu"			"Tűz Szelleme (4. Alak)"
 		"chi"			"火灵（第四形式）"
 	}
 
-	"Tank #116"
+	"Tank #118"
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, robbanó sziklákat dob, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
 		"chi"			"{mint}这个坦克跑的比一般的快,免疫火焰伤害,比一般的坦克强一点,会投掷爆炸的岩石和引发火灾,给予幸存者临时生命值,会定期进行跳跃和传送到幸存者身边."
 	}
 
-	"Tank #117 Name"
+	"Tank #119 Name"
 	{
 		"en"			"Randomizer Tank"
 		"hu"			"Randomizáló Tank"
 		"chi"			"随机坦克"
 	}
 
-	"Tank #117"
+	"Tank #119"
 	{
 		"en"			"{mint}This Tank randomly switches into different Mutant Tank types and deals increased damage. Be careful..."
 		"hu"			"{mint}Ez a tank véletlenszerűen átalakul egy másik típusú Mutáns Tankká, a sebzése megnő. Légy óvatos..."
 		"chi"			"{mint}这个坦克会随机转化成其他突变坦克类型,会造成巨大威胁.请小心..."
 	}
 
-	"Tank #118 Name"
+	"Tank #120 Name"
 	{
 		"en"			"Shapeshifter Tank"
 		"hu"			"Alakváltó Tank"
 		"chi"			"变形坦克"
 	}
 
-	"Tank #118"
+	"Tank #120"
 	{
 		"en"			"{mint}This Tank can shapeshift into different Mutant Tank types. Don't underestimate it..."
 		"hu"			"{mint}Ez a tank át tud alakulni egy másik típusú Mutáns Tankká. Ne becsüld le..."
 		"chi"			"{mint}这个坦克可以变成其他突变坦克类型,要特别小心..."
 	}
 
-	"Tank #119 Name"
+	"Tank #121 Name"
 	{
 		"en"			"Mudman Tank"
 		"hu"			"Mocsárember Tank"
 		"chi"			"泥浆坦克"
 	}
 
-	"Tank #119"
+	"Tank #121"
 	{
 		"en"			"{mint}This Tank is as annoying as any mudman."
 		"hu"			"{mint}Ez a Tank ugyanolyan bosszantó mint bármelyik sárember."
 		"chi"			"{mint}这辆坦克像任何泥人一样令人讨厌."
 	}
 
-	"Tank #120 Name"
+	"Tank #122 Name"
 	{
 		"en"			"Endgame Tank"
 		"hu"			"Végjáték Tank"
 		"chi"			"残局坦克"
 	}
 
-	"Tank #120"
+	"Tank #122"
 	{
 		"en"			"{mint}Goodbye everyone!"
 		"hu"			"{mint}Viszlát mindenki!"
 		"chi"			"{mint}再见了, 大家!"
 	}
 
-	"Tank #121 Name"
+	"Tank #123 Name"
 	{
 		"en"			"Playful Tank"
 		"hu"			"Játékos Tank"
 		"chi"			"俏皮坦克"
 	}
 
-	"Tank #121"
+	"Tank #123"
 	{
 		"en"			"{mint}This Tank doesn't do any damage. It just wants to play!"
 		"hu"			"{mint}Ez a Tank nem okoz sebzést. Csak játszani szeretne!"
 		"chi"			"{mint}该坦克不会造成任何伤害. 它只是想玩!"
 	}
 
-	"Tank #122 Name"
+	"Tank #124 Name"
 	{
 		"en"			"Annoying Tank"
 		"hu"			"Bosszantó Tank"
 		"chi"			"烦人的坦克"
 	}
 
-	"Tank #122"
+	"Tank #124"
 	{
 		"en"			"{mint}This Tank just won't go away..."
 		"hu"			"{mint}Ez a Tank egyszerűen csak nem megy el..."
