@@ -120,6 +120,8 @@
 	- Abilities
 
 ### Plugin Settings
+
+#### General, Announcements, Rewards, Competitive, Difficulty, Health, Administration, Human Support, Waves, Game Modes, Custom
 ```
 "Mutant Tanks"
 {
@@ -14027,6 +14029,8 @@
 ```
 
 ### Administration System
+
+#### Administration, Tank Settings, Abilities
 ```
 "Mutant Tanks"
 {

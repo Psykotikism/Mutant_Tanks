@@ -23,9 +23,6 @@
 - Fixed the `Transformation` feature disabling itself after the first transformation ends.
 - Fixed the blur effect prop not deleting itself. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
-#### Config Files
-- Fixed some of the default Mutant Tanks that use the `Boss` and `Transformation` features turning into the wrong Mutant Tank types.
-
 #### Settings
 - Fixed the `Requires Humans` setting not working in some config formats.
 - Fixed the `Requires Humans` setting not working when deciding which Mutant Tank type to spawn.
@@ -74,6 +71,7 @@
 
 - Drop
 	- Fixed the `Drop Weapon Name` setting not reading weapon names properly. (Thanks to Tank Rush and moekai for testing and reporting!)
+	- Fixed weapons attached to Tanks not disappearing on mission loss or round restart.
 
 - Electric
 	- Fixed the ability not working sometimes. (Thanks to Tank Rush and Mi.Cura for testing and reporting!)
@@ -102,6 +100,9 @@
 
 - Shake
 	- Fixed one of the messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
+
+- Shield
+	- Fixed shields not disappearing on mission loss or round restart.
 
 - Spam
 	- Fixed the rocks colliding with each other and producing lag.
@@ -152,6 +153,7 @@
 - Config files now support multiple abilities using comma separation.
 - The `all` section can now be grouped with multiple types and abilities in config files.
 - Updated some of the default Mutant Tank types.
+- Added two more default Mutant Tank types: `Trap Tank` and `Drug Addict Tank`
 
 #### Settings
 - The `Finale Waves` and `Finale Types` settings now support up to `10` waves. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -256,7 +258,7 @@
 
 - Bury
 	- Added the `Bury Buffer` setting. (Requested by Mi.Cura.)
-	- The ability no longer require Left 4 DHooks.
+	- The ability no longer requires Left 4 DHooks.
 
 - Car
 	- Added the `Car Interval` setting.
@@ -301,7 +303,7 @@
 	- The ability now requires DHooks.
 
 - Restart
-	- The ability no longer require Left 4 DHooks.
+	- The ability no longer requires Left 4 DHooks.
 
 - Rock
 	- Added the `Immunity Flags` setting.
@@ -337,7 +339,7 @@
 
 - Yell
 	- The ability now runs repeatedly while activated when `Human Mode` is set to `1`.
-	- The ability no longer require Left 4 DHooks.
+	- The ability no longer requires Left 4 DHooks.
 
 ### Files
 

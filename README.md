@@ -1902,7 +1902,7 @@ Examples:
 
 **Impact** - For the [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254) include.
 
-**hmmmmm** - For showing me how to pick a random character out of a dynamic string.
+**hmmmmm (SlidyBat)** - For showing how to pick a random character out of a dynamic string.
 
 **KasperH** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
 
@@ -1916,7 +1916,7 @@ Examples:
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, yuzumi, FatalOE71, zaviier, RDiver, BHaType** - For suggesting ideas.
 
-**Marttt** - For helping me with many things and the pull requests.
+**Marttt** - For helping with many things and the pull requests.
 
 **Dragokas** - For reporting issues, suggesting ideas, and providing fixes.
 
@@ -1926,7 +1926,7 @@ Examples:
 
 **Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
 
-**Oliver** - For helping me test the Reward system, Combination feature, and overall support.
+**Oliver** - For helping to test the Reward system, Combination feature, and overall support.
 
 **SourceMod Team** - For the blind, drug, and ice source codes, and for miscellaneous reasons.
 
