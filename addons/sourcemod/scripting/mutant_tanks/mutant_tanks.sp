@@ -4334,7 +4334,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iBaseHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "BaseHealth", "Base Health", "Base_Health", "basehp", g_esGeneral.g_iBaseHealth, value, 0, MT_MAXHEALTH);
 			g_esGeneral.g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esGeneral.g_iDisplayHealth, value, 0, 11);
 			g_esGeneral.g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esGeneral.g_iDisplayHealthType, value, 0, 2);
-			g_esGeneral.g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "exhp", g_esGeneral.g_iExtraHealth, value, 0, MT_MAXHEALTH);
+			g_esGeneral.g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", g_esGeneral.g_iExtraHealth, value, 0, MT_MAXHEALTH);
 			g_esGeneral.g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esGeneral.g_iMinimumHumans, value, 1, 32);
 			g_esGeneral.g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esGeneral.g_iMultiHealth, value, 0, 3);
 			g_esGeneral.g_iAllowDeveloper = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ADMIN, key, "AllowDeveloper", "Allow Developer", "Allow_Developer", "developer", g_esGeneral.g_iAllowDeveloper, value, 0, 1);
@@ -4577,7 +4577,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esTank[iIndex].g_iBaseHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "BaseHealth", "Base Health", "Base_Health", "basehp", g_esTank[iIndex].g_iBaseHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 						g_esTank[iIndex].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esTank[iIndex].g_iDisplayHealth, value, 0, 11);
 						g_esTank[iIndex].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esTank[iIndex].g_iDisplayHealthType, value, 0, 2);
-						g_esTank[iIndex].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "exhp", g_esTank[iIndex].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+						g_esTank[iIndex].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", g_esTank[iIndex].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 						g_esTank[iIndex].g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esTank[iIndex].g_iMinimumHumans, value, 1, 32);
 						g_esTank[iIndex].g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esTank[iIndex].g_iMultiHealth, value, 0, 3);
 						g_esTank[iIndex].g_iHumanSupport = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HUMAN, key, MT_CONFIG_SECTIONS_HUMAN, g_esTank[iIndex].g_iHumanSupport, value, 0, 2);
@@ -4961,7 +4961,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_iBaseHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "BaseHealth", "Base Health", "Base_Health", "basehp", g_esPlayer[iPlayer].g_iBaseHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 							g_esPlayer[iPlayer].g_iDisplayHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "DisplayHealth", "Display Health", "Display_Health", "displayhp", g_esPlayer[iPlayer].g_iDisplayHealth, value, 0, 11);
 							g_esPlayer[iPlayer].g_iDisplayHealthType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "DisplayHealthType", "Display Health Type", "Display_Health_Type", "displaytype", g_esPlayer[iPlayer].g_iDisplayHealthType, value, 0, 2);
-							g_esPlayer[iPlayer].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "exhp", g_esPlayer[iPlayer].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
+							g_esPlayer[iPlayer].g_iExtraHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "ExtraHealth", "Extra Health", "Extra_Health", "extrahp", g_esPlayer[iPlayer].g_iExtraHealth, value, MT_MAX_HEALTH_REDUCTION, MT_MAXHEALTH);
 							g_esPlayer[iPlayer].g_iMinimumHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esPlayer[iPlayer].g_iMinimumHumans, value, 1, 32);
 							g_esPlayer[iPlayer].g_iMultiHealth = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esPlayer[iPlayer].g_iMultiHealth, value, 0, 3);
 							g_esPlayer[iPlayer].g_iBossStages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_BOSS, key, "BossStages", "Boss Stages", "Boss_Stages", "bossstages", g_esPlayer[iPlayer].g_iBossStages, value, 1, 4);
@@ -7268,7 +7268,7 @@ static void vSetRockModel(int tank, int rock)
 	{
 		case 0: SetEntityModel(rock, MODEL_CONCRETE_CHUNK);
 		case 1: SetEntityModel(rock, MODEL_TREE_TRUNK);
-		case 2: SetEntityModel(rock, (GetRandomInt(0, 1) == 0 ? MODEL_CONCRETE_CHUNK : MODEL_TREE_TRUNK));
+		case 2: SetEntityModel(rock, ((GetRandomInt(0, 1) == 0) ? MODEL_CONCRETE_CHUNK : MODEL_TREE_TRUNK));
 	}
 }
 
@@ -7564,7 +7564,7 @@ static void vMutateTank(int tank)
 {
 	if (bCanTypeSpawn())
 	{
-		int iType;
+		int iType = 0;
 		if (g_esGeneral.g_iChosenType <= 0 && g_esPlayer[tank].g_iTankType <= 0)
 		{
 			switch (bIsFinaleMap() && g_esGeneral.g_iTankWave > 0)
@@ -7583,7 +7583,7 @@ static void vMutateTank(int tank)
 				{
 					switch (g_esGeneral.g_iTankWave)
 					{
-						case 0: dpCountCheck.WriteCell(0);
+						case 0: dpCountCheck.WriteCell(g_esGeneral.g_iTankWave);
 						default:
 						{
 							switch (g_esGeneral.g_iFinaleAmount)
@@ -7617,6 +7617,7 @@ static void vMutateTank(int tank)
 
 		switch (g_esCache[tank].g_iSpawnType)
 		{
+			case 0: vSpawnModes(tank, false);
 			case 1:
 			{
 				if (!g_esPlayer[tank].g_bBoss)
@@ -8323,20 +8324,18 @@ static int iFindSectionType(const char[] section, int type)
 	static char sSection[PLATFORM_MAX_PATH], sSet[16][10];
 	if (StrContains(section, ",") != -1 || StrContains(section, "-") != -1)
 	{
+		static int iType;
 		strcopy(sSection, sizeof(sSection), section);
-
 		if (StrContains(section, ",") != -1)
 		{
+			static char sRange[2][5];
 			ExplodeString(sSection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 			for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 			{
 				if (StrContains(sSet[iPos], "-") != -1)
 				{
-					static char sRange[2][5];
 					ExplodeString(sSet[iPos], "-", sRange, sizeof(sRange), sizeof(sRange[]));
-
-					for (int iType = StringToInt(sRange[0]); iType <= StringToInt(sRange[1]); iType++)
+					for (iType = StringToInt(sRange[0]); iType <= StringToInt(sRange[1]); iType++)
 					{
 						if (type == iType)
 						{
@@ -8346,7 +8345,6 @@ static int iFindSectionType(const char[] section, int type)
 				}
 				else
 				{
-					static int iType;
 					iType = StringToInt(sSet[iPos]);
 					if (type == iType)
 					{
@@ -8358,8 +8356,7 @@ static int iFindSectionType(const char[] section, int type)
 		else if (StrContains(section, "-") != -1)
 		{
 			ExplodeString(sSection, "-", sSet, sizeof(sSet), sizeof(sSet[]));
-
-			for (int iType = StringToInt(sSet[0]); iType <= StringToInt(sSet[1]); iType++)
+			for (iType = StringToInt(sSet[0]); iType <= StringToInt(sSet[1]); iType++)
 			{
 				if (type == iType)
 				{
@@ -8715,7 +8712,6 @@ public Action tTimerBlurEffect(Handle timer, DataPack pack)
 	static float flTankPos[3], flTankAng[3];
 	GetClientAbsOrigin(iTank, flTankPos);
 	GetClientAbsAngles(iTank, flTankAng);
-
 	if (bIsValidEntity(iTankModel))
 	{
 		TeleportEntity(iTankModel, flTankPos, flTankAng, NULL_VECTOR);
@@ -8745,14 +8741,10 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 
 	static int iBossStages, iBossHealth, iType, iBossHealth2, iType2, iBossHealth3, iType3, iBossHealth4, iType4;
 	iBossStages = pack.ReadCell();
-	iBossHealth = pack.ReadCell();
-	iType = pack.ReadCell();
-	iBossHealth2 = pack.ReadCell();
-	iType2 = pack.ReadCell();
-	iBossHealth3 = pack.ReadCell(),
-	iType3 = pack.ReadCell();
-	iBossHealth4 = pack.ReadCell();
-	iType4 = pack.ReadCell();
+	iBossHealth = pack.ReadCell(), iType = pack.ReadCell();
+	iBossHealth2 = pack.ReadCell(), iType2 = pack.ReadCell();
+	iBossHealth3 = pack.ReadCell(), iType3 = pack.ReadCell();
+	iBossHealth4 = pack.ReadCell(), iType4 = pack.ReadCell();
 
 	switch (g_esPlayer[iTank].g_iBossStageCount)
 	{
@@ -8942,7 +8934,7 @@ public Action tTimerRandomize(Handle timer, DataPack pack)
 	iTank = GetClientOfUserId(pack.ReadCell());
 	static float flTime;
 	flTime = pack.ReadFloat();
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCustomTankSupported(iTank) || !g_esPlayer[iTank].g_bRandomized || flTime + g_esCache[iTank].g_flRandomDuration < GetEngineTime())
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0 || !bIsCustomTankSupported(iTank) || !g_esPlayer[iTank].g_bRandomized || (flTime + g_esCache[iTank].g_flRandomDuration < GetEngineTime()))
 	{
 		vSpawnModes(iTank, false);
 

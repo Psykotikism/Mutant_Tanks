@@ -71,7 +71,6 @@ enum struct esPlayer
 	int g_iEnforceHit;
 	int g_iEnforceHitMode;
 	int g_iEnforceMessage;
-	int g_iEnforceSlot;
 	int g_iEnforceWeaponSlots;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
@@ -80,6 +79,7 @@ enum struct esPlayer
 	int g_iOpenAreasOnly;
 	int g_iOwner;
 	int g_iRequiresHumans;
+	int g_iSlot;
 	int g_iTankType;
 }
 
@@ -300,7 +300,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	if (bIsSurvivor(client) && g_esPlayer[client].g_bAffected)
 	{
-		int iWeapon = GetPlayerWeaponSlot(client, g_esPlayer[client].g_iEnforceSlot);
+		int iWeapon = GetPlayerWeaponSlot(client, g_esPlayer[client].g_iSlot);
 		if (iWeapon > MaxClients)
 		{
 			weapon = iWeapon;
@@ -783,22 +783,12 @@ static void vEnforceHit(int survivor, int tank, float random, float chance, int 
 
 				switch (iSlots[GetRandomInt(0, iSlotCount - 1)])
 				{
-					case 1: g_esPlayer[survivor].g_iEnforceSlot = 0;
-					case 2: g_esPlayer[survivor].g_iEnforceSlot = 1;
-					case 4: g_esPlayer[survivor].g_iEnforceSlot = 2;
-					case 8: g_esPlayer[survivor].g_iEnforceSlot = 3;
-					case 16: g_esPlayer[survivor].g_iEnforceSlot = 4;
-					default:
-					{
-						switch (GetRandomInt(1, 5))
-						{
-							case 1: g_esPlayer[survivor].g_iEnforceSlot = 0;
-							case 2: g_esPlayer[survivor].g_iEnforceSlot = 1;
-							case 3: g_esPlayer[survivor].g_iEnforceSlot = 2;
-							case 4: g_esPlayer[survivor].g_iEnforceSlot = 3;
-							case 5: g_esPlayer[survivor].g_iEnforceSlot = 4;
-						}
-					}
+					case 1: g_esPlayer[survivor].g_iSlot = 0;
+					case 2: g_esPlayer[survivor].g_iSlot = 1;
+					case 4: g_esPlayer[survivor].g_iSlot = 2;
+					case 8: g_esPlayer[survivor].g_iSlot = 3;
+					case 16: g_esPlayer[survivor].g_iSlot = 4;
+					default: g_esPlayer[survivor].g_iSlot = GetRandomInt(0, 4);
 				}
 
 				static float flDuration;
@@ -815,8 +805,8 @@ static void vEnforceHit(int survivor, int tank, float random, float chance, int 
 				{
 					static char sTankName[33];
 					MT_GetTankName(tank, sTankName);
-					MT_PrintToChatAll("%s %t", MT_TAG2, "Enforce", sTankName, survivor, g_esPlayer[survivor].g_iEnforceSlot + 1);
-					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Enforce", LANG_SERVER, sTankName, survivor, g_esPlayer[survivor].g_iEnforceSlot + 1);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Enforce", sTankName, survivor, g_esPlayer[survivor].g_iSlot + 1);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Enforce", LANG_SERVER, sTankName, survivor, g_esPlayer[survivor].g_iSlot + 1);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -846,7 +836,7 @@ static void vRemoveEnforce(int tank)
 		{
 			g_esPlayer[iSurvivor].g_bAffected = false;
 			g_esPlayer[iSurvivor].g_iOwner = 0;
-			g_esPlayer[iSurvivor].g_iEnforceSlot = INVALID_ENT_REFERENCE;
+			g_esPlayer[iSurvivor].g_iSlot = -1;
 		}
 	}
 
@@ -862,7 +852,7 @@ static void vReset()
 			vReset2(iPlayer);
 
 			g_esPlayer[iPlayer].g_iOwner = 0;
-			g_esPlayer[iPlayer].g_iEnforceSlot = INVALID_ENT_REFERENCE;
+			g_esPlayer[iPlayer].g_iSlot = -1;
 		}
 	}
 }
@@ -880,7 +870,7 @@ static void vReset3(int survivor)
 {
 	g_esPlayer[survivor].g_bAffected = false;
 	g_esPlayer[survivor].g_iOwner = 0;
-	g_esPlayer[survivor].g_iEnforceSlot = INVALID_ENT_REFERENCE;
+	g_esPlayer[survivor].g_iSlot = -1;
 }
 
 public Action tTimerCombo(Handle timer, DataPack pack)
