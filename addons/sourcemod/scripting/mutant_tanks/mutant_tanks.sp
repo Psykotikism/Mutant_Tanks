@@ -2994,7 +2994,7 @@ static void vQueueTank(int admin, int type, bool mode = true)
 static void vSpawnTank(int admin, int type, int amount, int mode)
 {
 	char sParameter[32];
-	sParameter = mode ? "tank" : "tank auto";
+	sParameter = (mode == 0) ? "tank" : "tank auto";
 	g_esGeneral.g_bForceSpawned = true;
 
 	switch (amount)

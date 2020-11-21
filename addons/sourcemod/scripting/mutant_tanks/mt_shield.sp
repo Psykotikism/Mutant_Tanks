@@ -958,8 +958,8 @@ static void vReset()
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
-			vReset2(iPlayer);
 			vShieldAbility(iPlayer, false);
+			vReset2(iPlayer);
 		}
 	}
 }
