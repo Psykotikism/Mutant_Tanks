@@ -3443,7 +3443,11 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		}
 		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsCommonInfected(victim) || bIsWitch(victim))
 		{
-			if ((bIsTankSupported(attacker) && victim != attacker) || (bIsTankSupported(iTank) && victim != iTank) || (bIsTankSupported(iTank2) && victim != iTank2))
+			if (bIsSurvivor(attacker))
+			{
+				return Plugin_Continue;
+			}
+			else if ((bIsTankSupported(attacker) && victim != attacker) || (bIsTankSupported(iTank) && victim != iTank) || (bIsTankSupported(iTank2) && victim != iTank2))
 			{
 				if (StrEqual(sClassname, "weapon_tank_claw"))
 				{
@@ -7583,7 +7587,7 @@ static void vMutateTank(int tank)
 				{
 					switch (g_esGeneral.g_iTankWave)
 					{
-						case 0: dpCountCheck.WriteCell(g_esGeneral.g_iTankWave);
+						case 0: dpCountCheck.WriteCell(0);
 						default:
 						{
 							switch (g_esGeneral.g_iFinaleAmount)
@@ -8481,8 +8485,8 @@ public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 				{
 					switch (g_esGeneral.g_iFinaleAmount)
 					{
-						case 0: bBlock = g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount;
-						default: bBlock = g_esGeneral.g_iFinaleAmount <= iCount;
+						case 0: bBlock = 0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount;
+						default: bBlock = 0 < g_esGeneral.g_iFinaleAmount <= iCount;
 					}
 				}
 			}
