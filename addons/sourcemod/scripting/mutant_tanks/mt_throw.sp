@@ -10,6 +10,7 @@
  **/
 
 #include <sourcemod>
+#include <sdkhooks>
 #include <mutant_tanks>
 
 #pragma semicolon 1
@@ -260,6 +261,13 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	{
 		FormatEx(buffer, size, "%T", "ThrowMenu2", client);
 	}
+}
+
+public Action StartTouch(int car, int other)
+{
+	TeleportEntity(car, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+
+	SDKUnhook(car, SDKHook_StartTouch, StartTouch);
 }
 
 public void MT_OnPluginCheck(ArrayList &list)
@@ -670,7 +678,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
 						DispatchSpawn(iCar);
 
-						CreateTimer(1.0, tTimerSetCarVelocity, EntIndexToEntRef(iCar), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+						SDKHook(iCar, SDKHook_StartTouch, StartTouch);
 
 						iCar = EntIndexToEntRef(iCar);
 						vDeleteEntity(iCar, 10.0);
@@ -812,23 +820,4 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 	}
 
 	return Plugin_Continue;
-}
-
-public Action tTimerSetCarVelocity(Handle timer, int ref)
-{
-	static int iCar;
-	iCar = EntRefToEntIndex(ref);
-	if (iCar == INVALID_ENT_REFERENCE || !bIsValidEntity(iCar))
-	{
-		return Plugin_Stop;
-	}
-
-	if (!bIsEntityGrounded(iCar))
-	{
-		return Plugin_Continue;
-	}
-
-	TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-
-	return Plugin_Stop;
 }

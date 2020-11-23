@@ -326,7 +326,7 @@ public Action PreThink(int tank)
 
 public Action StartTouch(int tank, int other)
 {
-	vStopFly(tank); 
+	vStopFly(tank);
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -851,9 +851,9 @@ static void vFlyThink(int tank, int buttons, float duration)
 				return;
 			}
 
-			SetEntityMoveType(tank, MOVETYPE_FLYGRAVITY); 
+			SetEntityMoveType(tank, MOVETYPE_FLYGRAVITY);
 
-			static float flEyeAngles[3], flOrigin[3], flTemp[3], flSpeed2[3], flSpeed3, flForce[3], flForce2, flGravity, flGravity2; 
+			static float flEyeAngles[3], flOrigin[3], flTemp[3], flSpeed2[3], flSpeed3, flForce[3], flForce2, flGravity, flGravity2;
 			flForce2 = 50.0;
 			flGravity = 0.001;
 			flGravity2 = 0.01;
@@ -918,20 +918,20 @@ static void vFlyThink(int tank, int buttons, float duration)
 			else if (buttons & IN_BACK)
 			{
 				GetAngleVectors(flEyeAngles, flTemp, NULL_VECTOR, NULL_VECTOR);
-				NormalizeVector(flTemp, flTemp); 
+				NormalizeVector(flTemp, flTemp);
 				SubtractVectors(flForce, flTemp, flForce);
 			}
 
 			if (buttons & IN_MOVELEFT)
 			{
 				GetAngleVectors(flEyeAngles, NULL_VECTOR, flTemp, NULL_VECTOR);
-				NormalizeVector(flTemp, flTemp); 
+				NormalizeVector(flTemp, flTemp);
 				SubtractVectors(flForce, flTemp, flForce);
 			}
 			else if (buttons & IN_MOVERIGHT)
 			{
 				GetAngleVectors(flEyeAngles, NULL_VECTOR, flTemp, NULL_VECTOR);
-				NormalizeVector(flTemp, flTemp); 
+				NormalizeVector(flTemp, flTemp);
 				AddVectors(flForce, flTemp, flForce);
 			}
 
@@ -953,7 +953,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 			}
 			else if (flGravity < -0.5)
 			{
-				flGravity = -0.5; 
+				flGravity = -0.5;
 			}
 
 			if (flSpeed4 > flSpeed)
@@ -992,7 +992,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 		{
 			float flDirection[3];
 			GetClientEyeAngles(tank, flDirection);
-			GetAngleVectors(flDirection, flDirection, NULL_VECTOR, NULL_VECTOR); 
+			GetAngleVectors(flDirection, flDirection, NULL_VECTOR, NULL_VECTOR);
 			NormalizeVector(flDirection, flDirection);
 			iTarget = iGetFlyTarget(flPos, flDirection, tank);
 		}
