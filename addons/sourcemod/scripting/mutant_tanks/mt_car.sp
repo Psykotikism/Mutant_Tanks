@@ -849,7 +849,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 			DispatchSpawn(iCar);
 
 			iCar = EntIndexToEntRef(iCar);
-			CreateTimer(6.0, tTimerSetCarVelocity, iCar, TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(1.0, tTimerSetCarVelocity, iCar, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			vDeleteEntity(iCar, 30.0);
 		}
 	}
@@ -882,7 +882,12 @@ public Action tTimerSetCarVelocity(Handle timer, int ref)
 		return Plugin_Stop;
 	}
 
+	if (!bIsEntityGrounded(iCar))
+	{
+		return Plugin_Continue;
+	}
+
 	TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 
-	return Plugin_Continue;
+	return Plugin_Stop;
 }

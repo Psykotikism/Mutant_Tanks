@@ -5696,7 +5696,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 						vAttackInterval(iTank);
 					}
-					else if (g_esPlayer[iTank].g_flAttackDelay < GetEngineTime())
+					else if (g_esPlayer[iTank].g_flAttackDelay < GetGameTime())
 					{
 						g_esPlayer[iTank].g_flAttackDelay = -1.0;
 					}
@@ -7925,7 +7925,7 @@ static void vAttackInterval(int tank)
 		iWeapon = GetPlayerWeaponSlot(tank, 0);
 		if (iWeapon > MaxClients)
 		{
-			g_esPlayer[tank].g_flAttackDelay = GetEngineTime() + g_esCache[tank].g_flAttackInterval;
+			g_esPlayer[tank].g_flAttackDelay = GetGameTime() + g_esCache[tank].g_flAttackInterval;
 			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", g_esCache[tank].g_flAttackInterval, 0);
 			SetEntPropFloat(iWeapon, Prop_Send, "m_attackTimer", g_esPlayer[tank].g_flAttackDelay, 1);
 		}
@@ -7940,7 +7940,7 @@ static void vThrowInterval(int tank)
 		if (iAbility > 0)
 		{
 			SetEntPropFloat(iAbility, Prop_Send, "m_duration", g_esCache[tank].g_flThrowInterval);
-			SetEntPropFloat(iAbility, Prop_Send, "m_timestamp", GetEngineTime() + g_esCache[tank].g_flThrowInterval);
+			SetEntPropFloat(iAbility, Prop_Send, "m_timestamp", GetGameTime() + g_esCache[tank].g_flThrowInterval);
 		}
 	}
 }

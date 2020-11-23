@@ -670,7 +670,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
 						DispatchSpawn(iCar);
 
-						CreateTimer(2.0, tTimerSetCarVelocity, EntIndexToEntRef(iCar), TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(1.0, tTimerSetCarVelocity, EntIndexToEntRef(iCar), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 						iCar = EntIndexToEntRef(iCar);
 						vDeleteEntity(iCar, 10.0);
@@ -782,14 +782,14 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						DispatchSpawn(iWitch);
 						ActivateEntity(iWitch);
 						SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
-					}
 
-					if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL2)
-					{
-						static char sTankName[33];
-						MT_GetTankName(iTank, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Throw4", sTankName);
-						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Throw4", LANG_SERVER, sTankName);
+						if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL2)
+						{
+							static char sTankName[33];
+							MT_GetTankName(iTank, sTankName);
+							MT_PrintToChatAll("%s %t", MT_TAG2, "Throw4", sTankName);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Throw4", LANG_SERVER, sTankName);
+						}
 					}
 				}
 			}
@@ -823,7 +823,12 @@ public Action tTimerSetCarVelocity(Handle timer, int ref)
 		return Plugin_Stop;
 	}
 
+	if (!bIsEntityGrounded(iCar))
+	{
+		return Plugin_Continue;
+	}
+
 	TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 
-	return Plugin_Continue;
+	return Plugin_Stop;
 }
