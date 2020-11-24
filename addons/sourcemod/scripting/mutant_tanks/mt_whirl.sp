@@ -755,10 +755,8 @@ static void vWhirlAbility(int tank, float random, int pos = -1)
 		g_esPlayer[tank].g_bFailed = false;
 		g_esPlayer[tank].g_bNoAmmo = false;
 
-		static float flTankPos[3];
+		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
 		GetClientAbsOrigin(tank, flTankPos);
-
-		static float flSurvivorPos[3], flDistance, flRange, flChance;
 		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esCache[tank].g_flWhirlRange;
 		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esCache[tank].g_flWhirlRangeChance;
 		static int iSurvivorCount;
@@ -768,9 +766,7 @@ static void vWhirlAbility(int tank, float random, int pos = -1)
 			if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flRange)
+				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
 					vWhirlHit(iSurvivor, tank, random, flChance, g_esCache[tank].g_iWhirlAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE, pos);
 

@@ -760,15 +760,13 @@ static void vReset3(int tank)
 
 static int iGetNearestSurvivor(int tank, float pos[3])
 {
-	static float flSurvivorPos[3], flDistance;
+	static float flSurvivorPos[3];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 		{
 			GetClientEyePosition(iSurvivor, flSurvivorPos);
-
-			flDistance = GetVectorDistance(pos, flSurvivorPos);
-			if (flDistance <= g_esCache[tank].g_flLaserRange && bVisiblePosition(pos, flSurvivorPos, tank, 1))
+			if (GetVectorDistance(pos, flSurvivorPos) <= g_esCache[tank].g_flLaserRange && bVisiblePosition(pos, flSurvivorPos, tank, 1))
 			{
 				return iSurvivor;
 			}

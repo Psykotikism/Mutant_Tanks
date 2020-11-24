@@ -655,12 +655,7 @@ static void vTrackThink(int rock)
 					static float flPos2[3], flVelocity2[3];
 					GetClientEyePosition(iTarget, flPos2);
 					GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity2);
-
-					static bool bVisible;
-					bVisible = bVisiblePosition(flPos, flPos2, rock, 2);
-					static float flDistance;
-					flDistance = GetVectorDistance(flPos, flPos2);
-					if (!bVisible || flDistance > 500.0)
+					if (!bVisiblePosition(flPos, flPos2, rock, 2) || GetVectorDistance(flPos, flPos2) > 500.0)
 					{
 						return;
 					}

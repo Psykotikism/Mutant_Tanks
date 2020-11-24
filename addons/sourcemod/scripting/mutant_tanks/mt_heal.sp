@@ -899,7 +899,7 @@ static void vHealAbility(int tank, bool main, float random = 0.0, int pos = -1)
 					static float flTankPos[3];
 					GetClientAbsOrigin(tank, flTankPos);
 
-					static float flSurvivorPos[3], flDistance, flRange, flChance;
+					static float flSurvivorPos[3], flRange, flChance;
 					flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esCache[tank].g_flHealRange;
 					flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esCache[tank].g_flHealRangeChance;
 					static int iSurvivorCount;
@@ -909,9 +909,7 @@ static void vHealAbility(int tank, bool main, float random = 0.0, int pos = -1)
 						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 						{
 							GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-							flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-							if (flDistance <= flRange)
+							if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 							{
 								vHealHit(iSurvivor, tank, random, flChance, g_esCache[tank].g_iHealAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 
@@ -1215,7 +1213,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flTankPos[3], flInfectedPos[3], flDistance;
+	static float flTankPos[3], flInfectedPos[3];
 	static int iCommon, iCommonHealth, iExtraHealth, iExtraHealth2, iHealth, iHealType, iMaxHealth, iRealHealth, iSpecialHealth, iTankHealth;
 	iCommon = -1;
 	iHealType = 0;
@@ -1225,9 +1223,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 	{
 		GetClientAbsOrigin(iTank, flTankPos);
 		GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flInfectedPos);
-
-		flDistance = GetVectorDistance(flInfectedPos, flTankPos);
-		if (flDistance <= g_esCache[iTank].g_flHealAbsorbRange)
+		if (GetVectorDistance(flTankPos, flInfectedPos) <= g_esCache[iTank].g_flHealAbsorbRange)
 		{
 			iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
 			iCommonHealth = iHealth + g_esCache[iTank].g_iHealCommon;
@@ -1260,9 +1256,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		{
 			GetClientAbsOrigin(iTank, flTankPos);
 			GetClientAbsOrigin(iInfected, flInfectedPos);
-
-			flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-			if (flDistance <= g_esCache[iTank].g_flHealAbsorbRange)
+			if (GetVectorDistance(flTankPos, flInfectedPos) <= g_esCache[iTank].g_flHealAbsorbRange)
 			{
 				iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
 				iSpecialHealth = iHealth + g_esCache[iTank].g_iHealSpecial;
@@ -1295,9 +1289,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		{
 			GetClientAbsOrigin(iTank, flTankPos);
 			GetClientAbsOrigin(iInfected, flInfectedPos);
-
-			flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-			if (flDistance <= g_esCache[iTank].g_flHealAbsorbRange)
+			if (GetVectorDistance(flTankPos, flInfectedPos) <= g_esCache[iTank].g_flHealAbsorbRange)
 			{
 				iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
 				iTankHealth = iHealth + g_esCache[iTank].g_iHealTank;

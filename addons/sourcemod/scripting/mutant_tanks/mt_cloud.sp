@@ -735,19 +735,15 @@ public Action tTimerCloud(Handle timer, DataPack pack)
 
 	vAttachParticle(iTank, PARTICLE_SMOKE, 1.5);
 
-	static float flTankPos[3], flDamage;
+	static float flTankPos[3], flSurvivorPos[3], flDamage;
 	GetClientAbsOrigin(iTank, flTankPos);
 	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esCache[iTank].g_flCloudDamage;
-
-	static float flSurvivorPos[3], flDistance;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 		{
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-			flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-			if (flDistance <= 200.0)
+			if (GetVectorDistance(flTankPos, flSurvivorPos) <= 200.0)
 			{
 				vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "65536");
 			}

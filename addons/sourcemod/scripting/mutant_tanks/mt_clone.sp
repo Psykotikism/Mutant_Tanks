@@ -693,10 +693,7 @@ static void vClone(int tank)
 				NormalizeVector(flVector, flVector);
 				ScaleVector(flVector, -40.0);
 				AddVectors(flHitPosition, flVector, flHitPosition);
-
-				static float flDistance;
-				flDistance = GetVectorDistance(flHitPosition, flPosition);
-				if (40.0 < flDistance < 200.0)
+				if (40.0 < GetVectorDistance(flHitPosition, flPosition) < 200.0)
 				{
 					bool[] bExists = new bool[MaxClients + 1];
 					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)

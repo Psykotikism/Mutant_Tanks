@@ -273,25 +273,22 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsWitch(attacker) && bIsSurvivor(victim) && damage >= 0.5)
 	{
-		if (bIsWitch(attacker) && bIsSurvivor(victim))
+		static int iTank;
+		iTank = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;
+		if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esCache[iTank].g_iWitchAbility == 1)
 		{
-			static int iTank;
-			iTank = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;
-			if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank))
+			if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 			{
-				if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
-				{
-					return Plugin_Handled;
-				}
-
-				static float flDamage;
-				flDamage = (g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition) : g_esCache[iTank].g_flWitchDamage;
-				damage = MT_GetScaledDamage(flDamage);
-
-				return Plugin_Changed;
+				return Plugin_Handled;
 			}
+
+			static float flDamage;
+			flDamage = (g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition) : g_esCache[iTank].g_flWitchDamage;
+			damage = MT_GetScaledDamage(flDamage);
+
+			return Plugin_Changed;
 		}
 	}
 
@@ -377,6 +374,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
 				g_esAbility[iIndex].g_iComboAbility = 0;
+				g_esAbility[iIndex].g_iComboPosition = -1;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -616,7 +614,7 @@ static void vWitch(int tank, int pos = -1)
 {
 	static bool bConverted;
 	bConverted = false;
-	static float flTankPos[3], flInfectedPos[3], flInfectedAngles[3], flDistance, flRange;
+	static float flTankPos[3], flInfectedPos[3], flInfectedAngles[3], flRange;
 	flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esCache[tank].g_flWitchRange;
 	static int iInfected;
 	iInfected = -1;
@@ -627,9 +625,7 @@ static void vWitch(int tank, int pos = -1)
 			GetClientAbsOrigin(tank, flTankPos);
 			GetEntPropVector(iInfected, Prop_Send, "m_vecOrigin", flInfectedPos);
 			GetEntPropVector(iInfected, Prop_Send, "m_angRotation", flInfectedAngles);
-
-			flDistance = GetVectorDistance(flInfectedPos, flTankPos);
-			if (flDistance <= flRange)
+			if (GetVectorDistance(flInfectedPos, flTankPos) <= flRange)
 			{
 				bConverted = true;
 

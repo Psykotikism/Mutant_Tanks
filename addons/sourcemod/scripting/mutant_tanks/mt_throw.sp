@@ -266,7 +266,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 public Action StartTouch(int car, int other)
 {
 	TeleportEntity(car, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-
 	SDKUnhook(car, SDKHook_StartTouch, StartTouch);
 }
 
@@ -675,8 +674,9 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						NormalizeVector(flVelocity, flVelocity);
 						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
-						TeleportEntity(iCar, flPos, NULL_VECTOR, flVelocity);
+						TeleportEntity(iCar, flPos, NULL_VECTOR, NULL_VECTOR);
 						DispatchSpawn(iCar);
+						TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, flVelocity);
 
 						SDKHook(iCar, SDKHook_StartTouch, StartTouch);
 
@@ -786,10 +786,10 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						NormalizeVector(flVelocity, flVelocity);
 						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
-						TeleportEntity(iWitch, flPos, NULL_VECTOR, flVelocity);
+						TeleportEntity(iWitch, flPos, NULL_VECTOR, NULL_VECTOR);
 						DispatchSpawn(iWitch);
 						ActivateEntity(iWitch);
-						SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
+						TeleportEntity(iWitch, NULL_VECTOR, NULL_VECTOR, flVelocity);
 
 						if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL2)
 						{

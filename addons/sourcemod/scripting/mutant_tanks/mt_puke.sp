@@ -722,7 +722,7 @@ static void vPukeAbility(int tank, float random, int pos = -1)
 		static float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
-		static float flSurvivorPos[3], flDistance, flRange, flChance;
+		static float flSurvivorPos[3], flRange, flChance;
 		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esCache[tank].g_flPukeRange;
 		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esCache[tank].g_flPukeRangeChance;
 		static int iSurvivorCount;
@@ -732,9 +732,7 @@ static void vPukeAbility(int tank, float random, int pos = -1)
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flRange)
+				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
 					vPukeHit(iSurvivor, tank, random, flChance, g_esCache[tank].g_iPukeAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE);
 
@@ -829,19 +827,15 @@ static void vPukeRange(int tank, bool idle, int value, float random, int pos = -
 
 		vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
 
-		static float flTankPos[3];
+		static float flTankPos[3], flSurvivorPos[3], flRange;
 		GetClientAbsOrigin(tank, flTankPos);
-
-		static float flSurvivorPos[3], flDistance, flRange;
 		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esCache[tank].g_flPukeDeathRange;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
 			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-				if (flDistance <= flRange)
+				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
 					SDKCall(g_hSDKPukePlayer, iSurvivor, tank, true);
 				}

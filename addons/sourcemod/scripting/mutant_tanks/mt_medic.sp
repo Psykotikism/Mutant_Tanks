@@ -924,7 +924,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flTankPos[3], flRange;
+	static float flTankPos[3], flInfectedPos[3], flRange;
 	GetClientAbsOrigin(iTank, flTankPos);
 	flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esCache[iTank].g_flMedicRange;
 
@@ -935,16 +935,13 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 		TE_SendToAll();
 	}
 
-	static float flInfectedPos[3], flDistance;
 	static int iHealth, iMaxHealth, iNewHealth, iExtraHealth, iExtraHealth2, iRealHealth;
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
 		if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE)) && iTank != iInfected)
 		{
 			GetClientAbsOrigin(iInfected, flInfectedPos);
-
-			flDistance = GetVectorDistance(flTankPos, flInfectedPos);
-			if (flDistance <= flRange)
+			if (GetVectorDistance(flTankPos, flInfectedPos) <= flRange)
 			{
 				iHealth = GetEntProp(iInfected, Prop_Data, "m_iHealth");
 				iMaxHealth = MT_TankMaxHealth(iInfected, 1);

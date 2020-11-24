@@ -353,6 +353,7 @@ public void MT_OnConfigsLoad(int mode)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iComboAbility = 0;
+				g_esAbility[iIndex].g_iComboPosition = -1;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -512,12 +513,9 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 					bRandom = (g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? true : GetRandomFloat(0.1, 100.0) <= g_esCache[iTank].g_flNecroChance;
 					if (g_esCache[iTank].g_iNecroAbility == 1 && bRandom)
 					{
-						float flTankPos[3];
+						float flTankPos[3], flRange = (g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 8, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition) : g_esCache[iTank].g_flNecroRange;
 						GetClientAbsOrigin(iTank, flTankPos);
-
-						float flDistance = GetVectorDistance(flInfectedPos, flTankPos),
-							flRange = (g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 8, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition) : g_esCache[iTank].g_flNecroRange;
-						if (flDistance <= flRange)
+						if (GetVectorDistance(flInfectedPos, flTankPos) <= flRange)
 						{
 							int iClass = GetEntProp(iInfected, Prop_Send, "m_zombieClass");
 

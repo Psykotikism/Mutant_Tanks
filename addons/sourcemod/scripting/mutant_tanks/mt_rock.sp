@@ -281,13 +281,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (StrEqual(sClassname, "tank_rock"))
 		{
-			static int iLauncher;
+			static int iLauncher, iThrower;
 			iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0;
-			if (bIsValidEntity(iLauncher))
+			iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
+			if (bIsValidEntity(iLauncher) && bIsTank(iThrower, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
 				static int iTank;
 				iTank = HasEntProp(iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
-				if (g_esPlayer[iTank].g_iLauncher != INVALID_ENT_REFERENCE && iLauncher == EntRefToEntIndex(g_esPlayer[iTank].g_iLauncher) && MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)))
+				if (iThrower == iTank && MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esCache[iTank].g_iRockAbility == 1 && g_esPlayer[iTank].g_iLauncher != INVALID_ENT_REFERENCE && iLauncher == EntRefToEntIndex(g_esPlayer[iTank].g_iLauncher) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)))
 				{
 					if (bIsInfected(victim) || (bIsSurvivor(victim) && (MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))))
 					{
@@ -386,6 +387,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
 				g_esAbility[iIndex].g_iComboAbility = 0;
+				g_esAbility[iIndex].g_iComboPosition = -1;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -447,7 +449,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_flRockChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RockChance", "Rock Chance", "Rock_Chance", "chance", g_esPlayer[admin].g_flRockChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iRockDamage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", g_esPlayer[admin].g_iRockDamage, value, 1, 999999);
 		g_esPlayer[admin].g_iRockDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", g_esPlayer[admin].g_iRockDuration, value, 1, 999999);
-		g_esPlayer[admin].g_flRockInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esPlayer[admin].g_flRockInterval, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flRockInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esPlayer[admin].g_flRockInterval, value, 0.1, 1.0);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
@@ -486,7 +488,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_flRockChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RockChance", "Rock Chance", "Rock_Chance", "chance", g_esAbility[type].g_flRockChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iRockDamage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RockDamage", "Rock Damage", "Rock_Damage", "damage", g_esAbility[type].g_iRockDamage, value, 1, 999999);
 		g_esAbility[type].g_iRockDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RockDuration", "Rock Duration", "Rock_Duration", "duration", g_esAbility[type].g_iRockDuration, value, 1, 999999);
-		g_esAbility[type].g_flRockInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esAbility[type].g_flRockInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_flRockInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RockInterval", "Rock Interval", "Rock_Interval", "interval", g_esAbility[type].g_flRockInterval, value, 0.1, 1.0);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
@@ -894,26 +896,24 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	flAngles[0] = GetRandomFloat(-1.0, 1.0);
 	flAngles[1] = GetRandomFloat(-1.0, 1.0);
 	flAngles[2] = 2.0;
+	GetVectorAngles(flAngles, flAngles);
+
 	flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esCache[iTank].g_flRockRadius[0];
 	flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esCache[iTank].g_flRockRadius[1];
 
-	GetVectorAngles(flAngles, flAngles);
-
-	static float flHitPos[3];
+	static float flHitPos[3], flDistance;
 	iGetRayHitPos(flPos, flAngles, flHitPos, iTank, true, 2);
-
-	static float flDistance, flVector[3];
 	flDistance = GetVectorDistance(flPos, flHitPos);
 	if (flDistance > 800.0)
 	{
 		flDistance = 800.0;
 	}
 
+	static float flVector[3];
 	MakeVectorFromPoints(flPos, flHitPos, flVector);
 	NormalizeVector(flVector, flVector);
 	ScaleVector(flVector, flDistance - 40.0);
 	AddVectors(flPos, flVector, flHitPos);
-
 	if (flDistance > 300.0)
 	{
 		static float flAngles2[3];

@@ -10,6 +10,7 @@
  **/
 
 #include <sourcemod>
+#include <sdkhooks>
 #include <mutant_tanks>
 
 #pragma semicolon 1
@@ -26,6 +27,8 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
+bool g_bLateLoad;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
@@ -34,6 +37,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 		return APLRes_SilentFailure;
 	}
+
+	g_bLateLoad = late;
 
 	return APLRes_Success;
 }
@@ -128,12 +133,27 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+int g_iUserID[2048];
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_meteor", cmdMeteorInfo, "View information about the Meteor ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
 }
 
 public void OnMapStart()
@@ -147,6 +167,8 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+
 	vRemoveMeteor(client);
 }
 
@@ -276,6 +298,45 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	{
 		FormatEx(buffer, size, "%T", "MeteorMenu2", client);
 	}
+}
+
+public void OnEntityCreated(int entity, const char[] classname)
+{
+	if (bIsValidEntity(entity))
+	{
+		g_iUserID[entity] = 0;
+
+		if (StrEqual(classname, "pipe_bomb_projectile"))
+		{
+			SDKHook(entity, SDKHook_SpawnPost, OnPropSpawn);
+		}
+	}
+}
+
+static void OnPropSpawn(int prop)
+{
+	int iTank = GetEntPropEnt(prop, Prop_Send, "m_hOwnerEntity");
+	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		g_iUserID[prop] = GetClientUserId(iTank);
+	}
+}
+
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage >= 0.5)
+	{
+		static char sClassname[32];
+		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+		static int iTank;
+		iTank = GetClientOfUserId(g_iUserID[inflictor]);
+		if (MT_IsTankSupported(iTank) && g_esCache[iTank].g_iMeteorAbility == 1 && g_esCache[iTank].g_iMeteorMode == 1 && StrEqual(sClassname, "pipe_bomb_projectile") && damagetype == 134217792)
+		{
+			return Plugin_Handled;
+		}
+	}
+
+	return Plugin_Continue;
 }
 
 public void MT_OnPluginCheck(ArrayList &list)
@@ -415,7 +476,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_flMeteorChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esPlayer[admin].g_flMeteorChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_flMeteorDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esPlayer[admin].g_flMeteorDamage, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_iMeteorDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esPlayer[admin].g_iMeteorDuration, value, 1, 999999);
-		g_esPlayer[admin].g_flMeteorInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esPlayer[admin].g_flMeteorInterval, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flMeteorInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esPlayer[admin].g_flMeteorInterval, value, 0.1, 1.0);
 		g_esPlayer[admin].g_iMeteorMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esPlayer[admin].g_iMeteorMode, value, 0, 1);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -455,7 +516,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_flMeteorChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorChance", "Meteor Chance", "Meteor_Chance", "chance", g_esAbility[type].g_flMeteorChance, value, 0.0, 100.0);
 		g_esAbility[type].g_flMeteorDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esAbility[type].g_flMeteorDamage, value, 1.0, 999999.0);
 		g_esAbility[type].g_iMeteorDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esAbility[type].g_iMeteorDuration, value, 1, 999999);
-		g_esAbility[type].g_flMeteorInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esAbility[type].g_flMeteorInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_flMeteorInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esAbility[type].g_flMeteorInterval, value, 0.1, 1.0);
 		g_esAbility[type].g_iMeteorMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esAbility[type].g_iMeteorMode, value, 0, 1);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -704,7 +765,6 @@ static void vMeteor3(int tank, int rock, int pos = -1)
 	}
 
 	RemoveEntity(rock);
-
 	CreateTimer(3.0, tTimerStopRockSound, _, TIMER_FLAG_NO_MAPCHANGE);
 
 	switch (g_esCache[tank].g_iMeteorMode)
@@ -713,28 +773,24 @@ static void vMeteor3(int tank, int rock, int pos = -1)
 		{
 			static float flRockPos[3];
 			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flRockPos);
-			vSpecialAttack(tank, flRockPos, 50.0, MODEL_GASCAN);
-			vSpecialAttack(tank, flRockPos, 50.0, MODEL_PROPANETANK);
+			vSpawnBreakProp(tank, flRockPos, 50.0, MODEL_GASCAN);
+			vSpawnBreakProp(tank, flRockPos, 50.0, MODEL_PROPANETANK);
 		}
 		case 1:
 		{
 			static float flRockPos[3];
 			GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flRockPos);
-			vSpecialAttack(tank, flRockPos, 50.0, MODEL_PROPANETANK);
+			vSpawnBreakProp(tank, flRockPos, 50.0, MODEL_PROPANETANK);
 
-			static float flTankPos[3];
+			static float flTankPos[3], flSurvivorPos[3], flDamage;
 			GetClientAbsOrigin(tank, flTankPos);
-
-			static float flSurvivorPos[3], flDistance, flDamage;
 			flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : g_esCache[tank].g_flMeteorDamage;
 			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 			{
 				if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 				{
 					GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-					flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-					if (flDistance < 200.0)
+					if (GetVectorDistance(flTankPos, flSurvivorPos) <= 200.0)
 					{
 						vDamageEntity(iSurvivor, tank, MT_GetScaledDamage(flDamage), "16");
 					}
@@ -897,15 +953,13 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 	flAngles[0] = GetRandomFloat(-20.0, 20.0);
 	flAngles[1] = GetRandomFloat(-20.0, 20.0);
 	flAngles[2] = 60.0;
+	GetVectorAngles(flAngles, flAngles);
+
 	flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esCache[iTank].g_flMeteorRadius[0];
 	flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esCache[iTank].g_flMeteorRadius[1];
 
-	GetVectorAngles(flAngles, flAngles);
-
-	static float flHitpos[3];
+	static float flHitpos[3], flDistance;
 	iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
-
-	static float flDistance;
 	flDistance = GetVectorDistance(flPos, flHitpos);
 	if (flDistance > 1600.0)
 	{
@@ -917,7 +971,6 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 	NormalizeVector(flVector, flVector);
 	ScaleVector(flVector, flDistance - 40.0);
 	AddVectors(flPos, flVector, flHitpos);
-
 	if (flDistance > 100.0)
 	{
 		static int iMeteor;
@@ -935,10 +988,11 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 			flVelocity[1] = GetRandomFloat(0.0, 350.0);
 			flVelocity[2] = GetRandomFloat(0.0, 30.0);
 
-			TeleportEntity(iMeteor, flHitpos, flAngles2, flVelocity);
+			TeleportEntity(iMeteor, flHitpos, flAngles2, NULL_VECTOR);
 			DispatchSpawn(iMeteor);
 			ActivateEntity(iMeteor);
 			AcceptEntityInput(iMeteor, "Ignite");
+			TeleportEntity(iMeteor, NULL_VECTOR, NULL_VECTOR, flVelocity);
 
 			SetEntPropEnt(iMeteor, Prop_Data, "m_hThrower", iTank);
 			iMeteor = EntIndexToEntRef(iMeteor);

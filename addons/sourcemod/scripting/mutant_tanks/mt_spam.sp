@@ -278,13 +278,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (StrEqual(sClassname, "tank_rock"))
 		{
-			static int iLauncher;
+			static int iLauncher, iThrower;
 			iLauncher = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0;
-			if (bIsValidEntity(iLauncher))
+			iThrower = GetEntPropEnt(inflictor, Prop_Data, "m_hThrower");
+			if (bIsValidEntity(iLauncher) && bIsTank(iThrower, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
 				static int iTank;
 				iTank = HasEntProp(iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
-				if (g_esPlayer[iTank].g_iLauncher != INVALID_ENT_REFERENCE && iLauncher == EntRefToEntIndex(g_esPlayer[iTank].g_iLauncher) && MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)))
+				if (iThrower == iTank && MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && g_esCache[iTank].g_iSpamAbility == 1 && g_esPlayer[iTank].g_iLauncher != INVALID_ENT_REFERENCE && iLauncher == EntRefToEntIndex(g_esPlayer[iTank].g_iLauncher) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)))
 				{
 					if (bIsInfected(victim) || (bIsSurvivor(victim) && (MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))))
 					{
@@ -383,6 +384,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
 				g_esAbility[iIndex].g_iComboAbility = 0;
+				g_esAbility[iIndex].g_iComboPosition = -1;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -440,7 +442,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_flSpamChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esPlayer[admin].g_flSpamChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iSpamDamage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esPlayer[admin].g_iSpamDamage, value, 1, 999999);
 		g_esPlayer[admin].g_iSpamDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esPlayer[admin].g_iSpamDuration, value, 1, 999999);
-		g_esPlayer[admin].g_flSpamInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esPlayer[admin].g_flSpamInterval, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flSpamInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esPlayer[admin].g_flSpamInterval, value, 0.1, 1.0);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
@@ -469,7 +471,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_flSpamChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SpamChance", "Spam Chance", "Spam_Chance", "chance", g_esAbility[type].g_flSpamChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iSpamDamage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esAbility[type].g_iSpamDamage, value, 1, 999999);
 		g_esAbility[type].g_iSpamDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esAbility[type].g_iSpamDuration, value, 1, 999999);
-		g_esAbility[type].g_flSpamInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esAbility[type].g_flSpamInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_flSpamInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esAbility[type].g_flSpamInterval, value, 0.1, 1.0);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{

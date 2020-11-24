@@ -795,19 +795,15 @@ static void vYell(int tank, int pos = -1)
 
 static void vYell2(int tank, bool repeat, int pos = -1)
 {
-	static float flTankPos[3];
+	static float flTankPos[3], flSurvivorPos[3], flRange;
 	GetClientAbsOrigin(tank, flTankPos);
-
-	static float flSurvivorPos[3], flDistance, flRange;
 	flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esCache[tank].g_flYellRange;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) && !g_esPlayer[iSurvivor].g_bAffected)
 		{
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-			flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
-			if (flDistance <= flRange)
+			if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 			{
 				g_esPlayer[iSurvivor].g_bAffected = true;
 				g_esPlayer[iSurvivor].g_iOwner = tank;
@@ -911,12 +907,11 @@ public Action tTimerYell(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flTankPos[3], flSurvivorPos[3], flDistance, flRange;
+	static float flTankPos[3], flSurvivorPos[3], flRange;
 	GetClientAbsOrigin(iTank, flTankPos);
 	GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-	flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 	flRange = (iPos != -1) ? MT_GetCombinationSetting(iTank, 8, iPos) : g_esCache[iTank].g_flYellRange;
-	if (flDistance <= flRange)
+	if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 	{
 		vYell3(iSurvivor);
 	}

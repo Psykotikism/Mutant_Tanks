@@ -708,10 +708,8 @@ static void vOmni2(int tank, int pos = -1)
 	g_esPlayer[tank].g_iOmniType = g_esPlayer[tank].g_iTankType;
 	vCacheOriginalSettings(tank);
 
-	static float flTankPos[3];
+	static float flTankPos[3], flTankPos2[3], flRange;
 	GetClientAbsOrigin(tank, flTankPos);
-
-	static float flTankPos2[3], flDistance, flRange;
 	flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esOmni[tank].g_flOmniRange;
 	static int iTypeCount, iTypes[MT_MAXTYPES + 1];
 	iTypeCount = 0;
@@ -720,9 +718,7 @@ static void vOmni2(int tank, int pos = -1)
 		if (MT_IsTankSupported(iTank, MT_CHECK_INGAME) && MT_IsCustomTankSupported(iTank) && iTank != tank)
 		{
 			GetClientAbsOrigin(iTank, flTankPos2);
-
-			flDistance = GetVectorDistance(flTankPos, flTankPos2);
-			if (flDistance <= flRange && g_esCache[iTank].g_iOmniAbility == 0)
+			if (GetVectorDistance(flTankPos, flTankPos2) <= flRange && g_esCache[iTank].g_iOmniAbility == 0)
 			{
 				iTypes[iTypeCount + 1] = MT_GetTankType(iTank);
 				iTypeCount++;

@@ -1121,7 +1121,7 @@ stock void vDamageEntity(int victim, int attacker, float damage, const char[] da
 	if (bIsValidEntity(iPointHurt))
 	{
 		static char sTargetName[32];
-		FormatEx(sTargetName, sizeof(sTargetName), "target%i", EntIndexToEntRef(victim));
+		FormatEx(sTargetName, sizeof(sTargetName), "mt_target_%i", GetClientUserId(victim));
 		DispatchKeyValue(victim, "targetname", sTargetName);
 
 		DispatchKeyValueFloat(iPointHurt, "Damage", damage);
@@ -1265,14 +1265,7 @@ stock void vSetVector(float target[3], float x, float y, float z)
 	target[2] = z;
 }
 
-stock void vSpawnInfected(int tank, const char[] infected)
-{
-	ChangeClientTeam(tank, 3);
-	vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", infected);
-	KickClient(tank);
-}
-
-stock void vSpecialAttack(int tank, float pos[3], float offset, const char[] model)
+stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] model)
 {
 	int iProp = CreateEntityByName("prop_physics");
 	if (bIsValidEntity(iProp))
@@ -1284,6 +1277,7 @@ stock void vSpecialAttack(int tank, float pos[3], float offset, const char[] mod
 		TeleportEntity(iProp, pos, NULL_VECTOR, NULL_VECTOR);
 		DispatchSpawn(iProp);
 
+		SetEntPropEnt(iProp, Prop_Send, "m_hOwnerEntity", tank);
 		SetEntPropEnt(iProp, Prop_Data, "m_hPhysicsAttacker", tank);
 		SetEntPropFloat(iProp, Prop_Data, "m_flLastPhysicsInfluenceTime", GetGameTime());
 
@@ -1291,8 +1285,15 @@ stock void vSpecialAttack(int tank, float pos[3], float offset, const char[] mod
 		SetEntityRenderMode(iProp, RENDER_TRANSCOLOR);
 		SetEntityRenderColor(iProp, 0, 0, 0, 0);
 
-		AcceptEntityInput(iProp, "Break");
+		AcceptEntityInput(iProp, "Break", tank);
 	}
+}
+
+stock void vSpawnInfected(int tank, const char[] infected)
+{
+	ChangeClientTeam(tank, 3);
+	vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", infected);
+	KickClient(tank);
 }
 
 stock void vStopSound(int client, const char[] sound)

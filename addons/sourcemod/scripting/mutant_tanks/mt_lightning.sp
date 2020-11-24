@@ -798,16 +798,14 @@ public Action tTimerLightning(Handle timer, DataPack pack)
 		AcceptEntityInput(iTarget, "FireUser2");
 	}
 
-	static float flSurvivorPos[3], flDistance, flDamage;
+	static float flSurvivorPos[3], flDamage;
 	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esCache[iTank].g_flLightningDamage;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, iTank) && !bIsAdminImmune(iSurvivor, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 		{
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
-			flDistance = GetVectorDistance(flOrigin, flSurvivorPos);
-			if (flDistance <= 100.0)
+			if (GetVectorDistance(flOrigin, flSurvivorPos) <= 200.0)
 			{
 				vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
 				EmitSoundToAll(g_sZapSounds[GetRandomInt(0, 7)], iSurvivor);

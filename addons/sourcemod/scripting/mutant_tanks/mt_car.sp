@@ -274,7 +274,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 public Action StartTouch(int car, int other)
 {
 	TeleportEntity(car, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-
 	SDKUnhook(car, SDKHook_StartTouch, StartTouch);
 }
 
@@ -410,7 +409,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iCarMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iCarMessage, value, 0, 1);
 		g_esPlayer[admin].g_flCarChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esPlayer[admin].g_flCarChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iCarDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esPlayer[admin].g_iCarDuration, value, 1, 999999);
-		g_esPlayer[admin].g_flCarInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esPlayer[admin].g_flCarInterval, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flCarInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esPlayer[admin].g_flCarInterval, value, 0.1, 1.0);
 		g_esPlayer[admin].g_iCarOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarOptions", "Car Options", "Car_Options", "options", g_esPlayer[admin].g_iCarOptions, value, 0, 7);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -445,7 +444,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iCarMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iCarMessage, value, 0, 1);
 		g_esAbility[type].g_flCarChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esAbility[type].g_flCarChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iCarDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esAbility[type].g_iCarDuration, value, 1, 999999);
-		g_esAbility[type].g_flCarInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esAbility[type].g_flCarInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_flCarInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esAbility[type].g_flCarInterval, value, 0.1, 1.0);
 		g_esAbility[type].g_iCarOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarOptions", "Car Options", "Car_Options", "options", g_esAbility[type].g_iCarOptions, value, 0, 7);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -782,15 +781,13 @@ public Action tTimerCar(Handle timer, DataPack pack)
 	flAngles[0] = GetRandomFloat(-20.0, 20.0);
 	flAngles[1] = GetRandomFloat(-20.0, 20.0);
 	flAngles[2] = 60.0;
+	GetVectorAngles(flAngles, flAngles);
+
 	flMinRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 6, iPos) : g_esCache[iTank].g_flCarRadius[0];
 	flMaxRadius = (iPos != -1) ? MT_GetCombinationSetting(iTank, 7, iPos) : g_esCache[iTank].g_flCarRadius[1];
 
-	GetVectorAngles(flAngles, flAngles);
-
-	static float flHitpos[3];
+	static float flHitpos[3], flDistance;
 	iGetRayHitPos(flPos, flAngles, flHitpos, iTank, true, 2);
-
-	static float flDistance;
 	flDistance = GetVectorDistance(flPos, flHitpos);
 	if (flDistance > 1600.0)
 	{
@@ -802,10 +799,10 @@ public Action tTimerCar(Handle timer, DataPack pack)
 	NormalizeVector(flVector, flVector);
 	ScaleVector(flVector, flDistance - 40.0);
 	AddVectors(flPos, flVector, flHitpos);
-
 	if (flDistance > 100.0)
 	{
-		int iCar = CreateEntityByName("prop_physics");
+		static int iCar;
+		iCar = CreateEntityByName("prop_physics");
 		if (bIsValidEntity(iCar))
 		{
 			static int iOptionCount, iOptions[3], iFlag;
@@ -853,8 +850,9 @@ public Action tTimerCar(Handle timer, DataPack pack)
 			flVelocity[1] = GetRandomFloat(0.0, 350.0);
 			flVelocity[2] = GetRandomFloat(0.0, 30.0);
 
-			TeleportEntity(iCar, flHitpos, flAngles2, flVelocity);
+			TeleportEntity(iCar, flHitpos, flAngles2, NULL_VECTOR);
 			DispatchSpawn(iCar);
+			TeleportEntity(iCar, NULL_VECTOR, NULL_VECTOR, flVelocity);
 
 			SDKHook(iCar, SDKHook_StartTouch, StartTouch);
 

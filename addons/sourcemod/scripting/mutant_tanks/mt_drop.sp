@@ -938,7 +938,7 @@ public void vDropFrame(int userid)
 
 		if (bIsValidGame())
 		{
-			SetEntPropFloat(g_esPlayer[iTank].g_iWeapon , Prop_Send, "m_flModelScale", flScale);
+			SetEntPropFloat(g_esPlayer[iTank].g_iWeapon, Prop_Send, "m_flModelScale", flScale);
 		}
 
 		g_esPlayer[iTank].g_bActivated = true;

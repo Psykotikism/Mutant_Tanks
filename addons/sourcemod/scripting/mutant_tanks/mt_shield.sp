@@ -989,18 +989,18 @@ static void vReset3(int tank)
 	}
 }
 
-static void vSetGlow(int tank, int color, int flashing, int min, int max, int type)
+static void vSetGlow(int entity, int color, int flashing, int min, int max, int type)
 {
 	if (!bIsValidGame())
 	{
 		return;
 	}
 
-	SetEntProp(tank, Prop_Send, "m_glowColorOverride", color);
-	SetEntProp(tank, Prop_Send, "m_bFlashing", flashing);
-	SetEntProp(tank, Prop_Send, "m_nGlowRangeMin", min);
-	SetEntProp(tank, Prop_Send, "m_nGlowRange", max);
-	SetEntProp(tank, Prop_Send, "m_iGlowType", type);
+	SetEntProp(entity, Prop_Send, "m_glowColorOverride", color);
+	SetEntProp(entity, Prop_Send, "m_bFlashing", flashing);
+	SetEntProp(entity, Prop_Send, "m_nGlowRangeMin", min);
+	SetEntProp(entity, Prop_Send, "m_nGlowRange", max);
+	SetEntProp(entity, Prop_Send, "m_iGlowType", type);
 }
 
 static void vShield(int tank)
@@ -1032,7 +1032,6 @@ static void vShield(int tank)
 	}
 
 	SetEntProp(g_esPlayer[tank].g_iShield, Prop_Send, "m_CollisionGroup", 1);
-
 	MT_HideEntity(g_esPlayer[tank].g_iShield, true);
 	g_esPlayer[tank].g_iShield = EntIndexToEntRef(g_esPlayer[tank].g_iShield);
 }
@@ -1200,8 +1199,9 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
-			TeleportEntity(iThrowable, flPos, NULL_VECTOR, flVelocity);
+			TeleportEntity(iThrowable, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iThrowable);
+			TeleportEntity(iThrowable, NULL_VECTOR, NULL_VECTOR, flVelocity);
 		}
 
 		return Plugin_Stop;
