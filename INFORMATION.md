@@ -587,6 +587,14 @@
 		}
 		"Waves"
 		{
+			// Limit Tank spawns according to Mutant Tanks' limits.
+			// Note: Set this setting to "0" for maps like Tank Challenge or Tanks Playground.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// 0: OFF, let the game, map, or other plugins determine the limit.
+			// 1: ON, let Mutant Tanks limit Tank spawns.
+			"Limit Extras"				"1"
+
 			// Wait this many seconds before spawning an extra Tank.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
@@ -3358,7 +3366,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
-			// Maximum: 999999.0
+			// Maximum: 1.0
 			"Car Interval"				"0.6"
 
 			// The Mutant Tank create car showers with these cars.
@@ -8652,7 +8660,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
-			// Maximum: 999999.0
+			// Maximum: 1.0
 			"Meteor Interval"			"0.6"
 
 			// The mode of the Mutant Tank's meteor shower ability.
@@ -10706,7 +10714,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
-			// Maximum: 999999.0
+			// Maximum: 1.0
 			"Rock Interval"				"0.2"
 
 			// The radius of the Mutant Tank's rock shower.
@@ -11252,6 +11260,8 @@
 			"Shield Display Health Type"		"2"
 
 			// The Mutant Tank's shield has a glow outline when activated.
+			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
+			// Note: The glow outline may not appear most of the time when the "Glow Type" setting is set to "0" because the shield must be fully visible to the player in order for the glow outline to appear. Since a part of the shield is always under the ground, it is only fully visible when the Tank is climbing or is in the air.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF
@@ -12128,7 +12138,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.1
-			// Maximum: 999999.0
+			// Maximum: 1.0
 			"Spam Interval"				"0.5"
 		}
 	}
@@ -12652,6 +12662,8 @@
 			"Track Chance"				"33.3"
 
 			// The Mutant Tank's heat-seeking rocks have glow outlines when activated.
+			// Note: This setting relies on the glow settings under the "Tank #/Glow" section.
+			// Note: The glow outline may not appear when the "Glow Type" setting is set to "0" if the rock is not fully visible to the player.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: OFF

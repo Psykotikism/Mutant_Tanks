@@ -59,7 +59,11 @@
 - Bury
 	- Fixed the ability sometimes leaving players under the map. (Thanks to Mi.Cura for testing and reporting!)
 
+- Car
+	- Fixed cars giving players accelerated velocity when standing on them.
+
 - Clone
+	- Fixed clones spawning uncontrollably.
 	- Fixed clones being detected by the `Finale Amount` and `Finale Waves` settings.
 	- Fixed the ability not being optional.
 
@@ -89,6 +93,12 @@
 - Hit
 	- Fixed some of the settings not working in some config formats.
 
+- Meteor
+	- Fixed the `Meteor Damage` setting not working properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Minion
+	- Fixed minions being replaced even when the `Minion Replace` setting is set to `0`.
+
 - Omni
 	- Fixed the ability not tracking type changes properly. (Thanks to Mi.Cura for testing and reporting!)
 
@@ -97,18 +107,25 @@
 
 - Rock
 	- Fixed the rocks colliding with each other and producing lag.
+	- Fixed the `Rock Damage` setting not working properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Shake
 	- Fixed one of the messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
 
 - Shield
 	- Fixed shields not disappearing on mission loss or round restart.
+	- Fixed propane tanks and gas cans not having velocity when thrown.
 
 - Spam
 	- Fixed the rocks colliding with each other and producing lag.
+	- Fixed the `Spam Damage` setting not working properly.
 
 - Splatter
 	- Fixed the `Splatter Type` setting using the wrong value limit. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Throw
+	- Fixed cars giving players accelerated velocity when standing on them.
+	- Fixed cars not having velocity when thrown. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Track
 	- Fixed the glow outline not going away when rocks break.
@@ -116,6 +133,7 @@
 
 - Witch
 	- Fixed the ability spamming messages.
+	- Fixed witches not dealing any damage to survivors. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Vampire
 	- Fixed the ability not checking admin immunity properly.
@@ -130,6 +148,7 @@
 
 #### General
 - Provided full support for competitive game modes. (Thanks to What for bringing up the subject!)
+- More code optimization.
 
 #### Core Plugin
 - Added command aliases for `sm_tank` and `sm_tank2`.
@@ -225,6 +244,7 @@
 - The `Base Health` setting can now be overridden for each type and player.
 - The `Extra Health` setting can now be used globally for all types.
 - The `Requires Humans` setting can no longer be overridden for each player.
+- Added the `Limit Extras` setting under the `Plugin Settings/Waves` section.
 
 #### Translations
 - The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
