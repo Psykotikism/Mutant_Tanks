@@ -8165,44 +8165,36 @@ static bool bIsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAM
 
 static bool bIsTankIdle(int tank, int type = 0)
 {
-	if (!bIsTank(tank) || bIsTank(tank, MT_CHECK_FAKECLIENT))
+	if (bIsTank(tank) && !bIsTank(tank, MT_CHECK_FAKECLIENT))
 	{
-		return false;
+		Address adTank = GetEntityAddress(tank);
+		if (adTank != Address_Null)
+		{
+			Address adIntention = view_as<Address>(LoadFromAddress(adTank + view_as<Address>(g_esGeneral.g_iIntentionOffset), NumberType_Int32));
+			if (adIntention != Address_Null)
+			{
+				Address adBehavior = view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, adIntention));
+				if (adBehavior != Address_Null)
+				{
+					Address adAction = view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, adBehavior));
+					if (adAction != Address_Null)
+					{
+						Address adChildAction = Address_Null;
+						while ((adChildAction = view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, adAction))) != Address_Null)
+						{
+							adAction = adChildAction;
+						}
+
+						char sAction[64];
+						SDKCall(g_esGeneral.g_hSDKGetName, adAction, sAction, sizeof(sAction));
+						return (type != 2 && StrEqual(sAction, "TankIdle")) || (type != 1 && (StrEqual(sAction, "TankBehavior") || adAction == adBehavior));
+					}
+				}
+			}
+		}
 	}
 
-	Address adTank = GetEntityAddress(tank);
-	if (adTank == Address_Null)
-	{
-		return false;
-	}
-
-	Address adIntention = view_as<Address>(iDereference(adTank, g_esGeneral.g_iIntentionOffset));
-	if (adIntention == Address_Null)
-	{
-		return false;
-	}
-
-	Address adBehavior = adGetFirstContainedResponder(adIntention);
-	if (adBehavior == Address_Null)
-	{
-		return false;
-	}
-
-	Address adAction = adGetFirstContainedResponder(adBehavior);
-	if (adAction == Address_Null)
-	{
-		return false;
-	}
-
-	Address adChildAction = Address_Null;
-	while ((adChildAction = adGetFirstContainedResponder(adAction)) != Address_Null)
-	{
-		adAction = adChildAction;
-	}
-
-	char sAction[64];
-	SDKCall(g_esGeneral.g_hSDKGetName, adAction, sAction, sizeof(sAction));
-	return (type != 2 && StrEqual(sAction, "TankIdle")) || (type != 1 && (StrEqual(sAction, "TankBehavior") || adAction == adBehavior));
+	return false;
 }
 
 static bool bIsTankInStasis(int tank)
@@ -8314,16 +8306,6 @@ static int iChooseType(int exclude, int tank = 0, int min = 0, int max = 0)
 	}
 
 	return 0;
-}
-
-static int iDereference(Address address, int offset = 0)
-{
-	if (address == Address_Null)
-	{
-		return -1;
-	}
-
-	return LoadFromAddress(address + view_as<Address>(offset), NumberType_Int32);
 }
 
 static int iFindSectionType(const char[] section, int type)
@@ -8440,11 +8422,6 @@ static int iGetTypeCount(int type)
 	}
 
 	return iTypeCount;
-}
-
-static Address adGetFirstContainedResponder(Address address)
-{
-	return view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, address));
 }
 
 public void L4D_OnEnterGhostState(int client)
