@@ -2847,7 +2847,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 		case 0:
 		{
 			char sPhrase[32], sTankName[33];
-			int iTypeCount, iTankTypes[MT_MAXTYPES + 1];
+			int iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
 			for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 			{
 				vGetTranslatedName(sPhrase, sizeof(sPhrase), _, iIndex);
@@ -8194,7 +8194,7 @@ static bool bIsTankIdle(int tank, int type = 0)
 		return false;
 	}
 
-	Address adChildAction;
+	Address adChildAction = Address_Null;
 	while ((adChildAction = adGetFirstContainedResponder(adAction)) != Address_Null)
 	{
 		adAction = adChildAction;
