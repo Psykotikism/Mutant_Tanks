@@ -363,11 +363,8 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 
 You have 2 options:
 
-- Enable/disable in certain game mode types.
-- Enable/disable in specific game modes.
-
-For option 1: You must add numbers up together in `Game Mode Types`.
-For option 2: You must specify the game modes in `Enabled Game Modes` and `Disabled Game Modes`.
+- Enable/disable in certain game mode types. (You must add numbers up together in `Game Mode Types`.)
+- Enable/disable in specific game modes. (You must specify the game modes in `Enabled Game Modes` and `Disabled Game Modes`.)
 
 Here are some scenarios and their outcomes:
 
@@ -1927,7 +1924,6 @@ Examples:
 
 # 3rd-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
-
 
 
 

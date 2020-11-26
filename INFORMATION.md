@@ -3552,7 +3552,7 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
-			"Choke Height"				"300.0"
+			"Choke Height"				"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting can be overridden for specific players.
@@ -13696,6 +13696,14 @@
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
 			"Witch Range"				"500.0"
+
+			// Remove all Witches spawned by the Mutant Tank when it dies.
+			// Note: This setting spawns a Witch on the Mutant Tank's corpse if it is set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Witch Remove"				"1"
 		}
 	}
 }

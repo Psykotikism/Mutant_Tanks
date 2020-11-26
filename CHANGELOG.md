@@ -58,6 +58,7 @@
 
 - Bury
 	- Fixed the ability sometimes leaving players under the map. (Thanks to Mi.Cura for testing and reporting!)
+	- Fixed players keeping their original velocity after being teleported.
 
 - Car
 	- Fixed cars giving players accelerated velocity when standing on them.
@@ -148,7 +149,6 @@
 
 #### General
 - Provided full support for competitive game modes. (Thanks to What for bringing up the subject!)
-- More code optimization.
 
 #### Core Plugin
 - Added command aliases for `sm_tank` and `sm_tank2`.
@@ -283,6 +283,9 @@
 - Car
 	- Added the `Car Interval` setting.
 
+- Choke
+	- Changed the default value of the `Choke Height` setting from `300.0` to `200.0`.
+
 - Clone
 	- The `Clone Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
 
@@ -351,6 +354,9 @@
 
 - Vampire
 	- The ability now contributes to the Tank's overall health.
+
+- Witch
+	- Added the `Witch Remove` setting.
 
 - Xiphos
 	- The ability now contributes to the Tank's overall health.
