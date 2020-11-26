@@ -452,7 +452,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_flChokeDamage = 5.0;
 				g_esAbility[iIndex].g_flChokeDelay = 1.0;
 				g_esAbility[iIndex].g_iChokeDuration = 5;
-				g_esAbility[iIndex].g_flChokeHeight = 300.0;
+				g_esAbility[iIndex].g_flChokeHeight = 200.0;
 				g_esAbility[iIndex].g_iChokeHit = 0;
 				g_esAbility[iIndex].g_iChokeHitMode = 0;
 				g_esAbility[iIndex].g_flChokeRange = 150.0;

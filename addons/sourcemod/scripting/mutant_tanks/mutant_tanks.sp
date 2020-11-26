@@ -3327,12 +3327,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		g_esPlayer[client].g_iLastButtons = buttons;
 	}
 
-	if (g_esCache[client].g_iFireImmunity == 1 && bIsPlayerBurning(client))
-	{
-		ExtinguishEntity(client);
-		SetEntPropFloat(client, Prop_Send, "m_burnPercent", 1.0);
-	}
-
 	return Plugin_Continue;
 }
 
@@ -3444,6 +3438,30 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		}
 		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsCommonInfected(victim) || bIsWitch(victim))
 		{
+			if (bIsTankSupported(victim) && bHasCoreAdminAccess(victim))
+			{
+				static bool bBlockBullets, bBlockExplosives, bBlockFire, bBlockMelee;
+				bBlockBullets = (damagetype & DMG_BULLET) && g_esCache[victim].g_iBulletImmunity == 1;
+				bBlockExplosives = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iExplosiveImmunity == 1;
+				bBlockFire = (damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1;
+				bBlockMelee = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1;
+				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockMelee)
+				{
+					if (bBlockBullets || bBlockMelee)
+					{
+						EmitSoundToAll(SOUND_METAL, victim);
+					}
+
+					if (bBlockFire)
+					{
+						ExtinguishEntity(victim);
+						SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 1.0);
+					}
+
+					return Plugin_Handled;
+				}
+			}
+
 			if (bIsSurvivor(attacker))
 			{
 				return Plugin_Continue;
@@ -3460,24 +3478,6 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					if (damagetype & DMG_BURN)
 					{
 						ExtinguishEntity(victim);
-					}
-
-					return Plugin_Handled;
-				}
-			}
-
-			if (bIsTankSupported(victim) && bHasCoreAdminAccess(victim))
-			{
-				static bool bBlockBullets, bBlockExplosives, bBlockFire, bBlockMelee;
-				bBlockBullets = (damagetype & DMG_BULLET) && g_esCache[victim].g_iBulletImmunity == 1;
-				bBlockExplosives = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iExplosiveImmunity == 1;
-				bBlockFire = (damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1;
-				bBlockMelee = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1;
-				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockMelee)
-				{
-					if (bBlockBullets || bBlockMelee)
-					{
-						EmitSoundToAll(SOUND_METAL, victim);
 					}
 
 					return Plugin_Handled;
@@ -3728,7 +3728,7 @@ static void vCombineAbilitiesForward(int tank, int type, int survivor = 0, int w
 	}
 }
 
-static void vCopyDamage(int oldSurvivor, int newSurvivor)
+static void vCopySurvivorStats(int oldSurvivor, int newSurvivor)
 {
 	g_esPlayer[newSurvivor].g_bRewardedAmmo = g_esPlayer[oldSurvivor].g_bRewardedAmmo;
 	g_esPlayer[newSurvivor].g_bRewardedDamage = g_esPlayer[oldSurvivor].g_bRewardedDamage;
@@ -3747,7 +3747,7 @@ static void vCopyDamage(int oldSurvivor, int newSurvivor)
 	}
 }
 
-static void vCopyStats(int tank, int newtank)
+static void vCopyTankStats(int tank, int newtank)
 {
 	SetEntProp(newtank, Prop_Data, "m_iMaxHealth", GetEntProp(tank, Prop_Data, "m_iMaxHealth"));
 
@@ -5436,7 +5436,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				if (bIsTank(iPlayer))
 				{
 					vSetColor(iPlayer, g_esPlayer[iBot].g_iTankType);
-					vCopyStats(iBot, iPlayer);
+					vCopyTankStats(iBot, iPlayer);
 					vTankSpawn(iPlayer, -1);
 					vReset2(iBot, 0);
 					vReset3(iBot);
@@ -5444,7 +5444,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 				else if (bIsSurvivor(iPlayer))
 				{
-					vCopyDamage(iBot, iPlayer);
+					vCopySurvivorStats(iBot, iPlayer);
 				}
 			}
 		}
@@ -5491,7 +5491,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				if (bIsTank(iBot))
 				{
 					vSetColor(iBot, g_esPlayer[iPlayer].g_iTankType);
-					vCopyStats(iPlayer, iBot);
+					vCopyTankStats(iPlayer, iBot);
 					vTankSpawn(iBot, -1);
 					vReset2(iPlayer, 0);
 					vReset3(iPlayer);
@@ -5499,7 +5499,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 				else if (bIsSurvivor(iBot))
 				{
-					vCopyDamage(iPlayer, iBot);
+					vCopySurvivorStats(iPlayer, iBot);
 				}
 			}
 		}
@@ -8444,7 +8444,7 @@ public void L4D_OnReplaceTank(int tank, int newtank)
 	g_esPlayer[newtank].g_bReplaceSelf = true;
 
 	vSetColor(newtank, g_esPlayer[tank].g_iTankType);
-	vCopyStats(tank, newtank);
+	vCopyTankStats(tank, newtank);
 	vTankSpawn(newtank, -1);
 	vReset2(tank, 0);
 	vReset3(tank);

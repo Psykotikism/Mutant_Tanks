@@ -71,6 +71,7 @@ enum struct esPlayer
 	int g_iWitchAbility;
 	int g_iWitchAmount;
 	int g_iWitchMessage;
+	int g_iWitchRemove;
 }
 
 esPlayer g_esPlayer[MAXPLAYERS + 1];
@@ -93,6 +94,7 @@ enum struct esAbility
 	int g_iWitchAbility;
 	int g_iWitchAmount;
 	int g_iWitchMessage;
+	int g_iWitchRemove;
 }
 
 esAbility g_esAbility[MT_MAXTYPES + 1];
@@ -112,6 +114,7 @@ enum struct esCache
 	int g_iWitchAbility;
 	int g_iWitchAmount;
 	int g_iWitchMessage;
+	int g_iWitchRemove;
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
@@ -386,6 +389,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_flWitchChance = 33.3;
 				g_esAbility[iIndex].g_flWitchDamage = 5.0;
 				g_esAbility[iIndex].g_flWitchRange = 500.0;
+				g_esAbility[iIndex].g_iWitchRemove = 1;
 			}
 		}
 		case 3:
@@ -408,6 +412,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_flWitchChance = 0.0;
 					g_esPlayer[iPlayer].g_flWitchDamage = 0.0;
 					g_esPlayer[iPlayer].g_flWitchRange = 0.0;
+					g_esPlayer[iPlayer].g_iWitchRemove = 0;
 				}
 			}
 		}
@@ -430,6 +435,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_flWitchChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esPlayer[admin].g_flWitchChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_flWitchDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esPlayer[admin].g_flWitchDamage, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flWitchRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esPlayer[admin].g_flWitchRange, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iWitchRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esPlayer[admin].g_iWitchRemove, value, 0, 1);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
@@ -458,6 +464,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_flWitchChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esAbility[type].g_flWitchChance, value, 0.0, 100.0);
 		g_esAbility[type].g_flWitchDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esAbility[type].g_flWitchDamage, value, 1.0, 999999.0);
 		g_esAbility[type].g_flWitchRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esAbility[type].g_flWitchRange, value, 1.0, 999999.0);
+		g_esAbility[type].g_iWitchRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esAbility[type].g_iWitchRemove, value, 0, 1);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
@@ -488,6 +495,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iWitchAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iWitchAbility, g_esAbility[type].g_iWitchAbility);
 	g_esCache[tank].g_iWitchAmount = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iWitchAmount, g_esAbility[type].g_iWitchAmount);
 	g_esCache[tank].g_iWitchMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iWitchMessage, g_esAbility[type].g_iWitchMessage);
+	g_esCache[tank].g_iWitchRemove = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iWitchRemove, g_esAbility[type].g_iWitchRemove);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
@@ -528,7 +536,22 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vWitchRange(iTank);
+			switch (g_esCache[iTank].g_iWitchRemove)
+			{
+				case 0: vWitchRange(iTank);
+				case 1:
+				{
+					int iWitch = -1;
+					while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
+					{
+						if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") == iTank)
+						{
+							RemoveEntity(iWitch);
+						}
+					}
+				}
+			}
+
 			vRemoveWitch(iTank);
 		}
 	}
@@ -673,10 +696,10 @@ static void vWitch2(int tank, float pos[3], float angles[3])
 	iWitch = CreateEntityByName("witch");
 	if (bIsValidEntity(iWitch))
 	{
+		SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", tank);
 		TeleportEntity(iWitch, pos, angles, NULL_VECTOR);
 		DispatchSpawn(iWitch);
 		ActivateEntity(iWitch);
-		SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", tank);
 	}
 }
 

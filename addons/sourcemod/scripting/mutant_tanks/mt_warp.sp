@@ -859,13 +859,13 @@ static void vWarp2(int tank, int other)
 
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0, 0.0);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
-	TeleportEntity(tank, flOtherOrigin, flOtherAngles, NULL_VECTOR);
+	TeleportEntity(tank, flOtherOrigin, flOtherAngles, view_as<float>({0.0, 0.0, 0.0}));
 
 	if (g_esCache[tank].g_iWarpMode == 1 || g_esCache[tank].g_iWarpMode == 3)
 	{
 		vAttachParticle(other, PARTICLE_ELECTRICITY, 1.0, 0.0);
 		EmitSoundToAll(SOUND_ELECTRICITY2, other);
-		TeleportEntity(other, flTankOrigin, flTankAngles, NULL_VECTOR);
+		TeleportEntity(other, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 	}
 
 	if (g_esCache[tank].g_iWarpMessage & MT_MESSAGE_SPECIAL)
@@ -998,7 +998,7 @@ static void vWarpHit(int survivor, int tank, float random, float chance, int ena
 						}
 
 						GetClientAbsOrigin(iPlayer, flCurrentOrigin);
-						TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 
 						if (g_esCache[tank].g_iWarpMessage & messages)
 						{

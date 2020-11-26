@@ -930,7 +930,7 @@ static void vStopBury(int survivor, int tank)
 
 			GetClientAbsOrigin(iSurvivor, flOrigin);
 			GetClientEyeAngles(iSurvivor, flAngles);
-			TeleportEntity(survivor, flOrigin, flAngles, NULL_VECTOR);
+			TeleportEntity(survivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
 
 			break;
 		}
@@ -938,7 +938,7 @@ static void vStopBury(int survivor, int tank)
 
 	if (bTeleport)
 	{
-		TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 	}
 
 	if (GetEntityMoveType(survivor) == MOVETYPE_NONE)

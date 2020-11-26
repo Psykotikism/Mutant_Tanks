@@ -788,8 +788,8 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 						TeleportEntity(iWitch, flPos, NULL_VECTOR, NULL_VECTOR);
 						DispatchSpawn(iWitch);
-						ActivateEntity(iWitch);
 						TeleportEntity(iWitch, NULL_VECTOR, NULL_VECTOR, flVelocity);
+						ActivateEntity(iWitch);
 
 						if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL2)
 						{

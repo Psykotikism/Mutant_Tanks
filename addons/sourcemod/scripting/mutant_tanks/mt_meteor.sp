@@ -990,9 +990,9 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 
 			TeleportEntity(iMeteor, flHitpos, flAngles2, NULL_VECTOR);
 			DispatchSpawn(iMeteor);
+			TeleportEntity(iMeteor, NULL_VECTOR, NULL_VECTOR, flVelocity);
 			ActivateEntity(iMeteor);
 			AcceptEntityInput(iMeteor, "Ignite");
-			TeleportEntity(iMeteor, NULL_VECTOR, NULL_VECTOR, flVelocity);
 
 			SetEntPropEnt(iMeteor, Prop_Data, "m_hThrower", iTank);
 			iMeteor = EntIndexToEntRef(iMeteor);
