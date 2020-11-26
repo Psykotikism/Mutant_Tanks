@@ -307,28 +307,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-public Action PreThink(int tank)
-{
-	switch (MT_IsTankSupported(tank) && g_esPlayer[tank].g_bActivated)
-	{
-		case true:
-		{
-			static float flDuration;
-			static int iButtons;
-			flDuration = GetEngineTime() - g_esPlayer[tank].g_flLastTime;
-			iButtons = GetClientButtons(tank);
-
-			vFlyThink(tank, iButtons, flDuration);
-		}
-		case false: SDKUnhook(tank, SDKHook_PreThink, PreThink);
-	}
-}
-
-public Action StartTouch(int tank, int other)
-{
-	vStopFly(tank);
-}
-
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
@@ -369,6 +347,28 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 
 	return Plugin_Continue;
+}
+
+public Action PreThink(int tank)
+{
+	switch (MT_IsTankSupported(tank) && g_esPlayer[tank].g_bActivated)
+	{
+		case true:
+		{
+			static float flDuration;
+			static int iButtons;
+			flDuration = GetEngineTime() - g_esPlayer[tank].g_flLastTime;
+			iButtons = GetClientButtons(tank);
+
+			vFlyThink(tank, iButtons, flDuration);
+		}
+		case false: SDKUnhook(tank, SDKHook_PreThink, PreThink);
+	}
+}
+
+public Action StartTouch(int tank, int other)
+{
+	vStopFly(tank);
 }
 
 public void MT_OnPluginCheck(ArrayList &list)

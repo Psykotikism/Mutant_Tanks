@@ -3332,10 +3332,15 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public void OnSpawnPost(int entity)
 {
-	int iAttacker = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (bIsTank(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	char sClassname[32];
+	GetEntityClassname(entity, sClassname, sizeof(sClassname));
+	if (!StrEqual(sClassname, "witch"))
 	{
-		g_esGeneral.g_iTeamID[entity] = GetClientTeam(iAttacker);
+		int iAttacker = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+		if (bIsTank(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			g_esGeneral.g_iTeamID[entity] = GetClientTeam(iAttacker);
+		}
 	}
 }
 
@@ -3525,10 +3530,15 @@ public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float 
 
 public Action SetTransmit(int entity, int client)
 {
-	int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (g_esGeneral.g_bPluginEnabled && bIsValidClient(iOwner) && bIsValidClient(client) && iOwner == client && !bIsTankInThirdPerson(client))
+	char sClassname[32];
+	GetEntityClassname(entity, sClassname, sizeof(sClassname));
+	if (!StrEqual(sClassname, "witch"))
 	{
-		return Plugin_Handled;
+		int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+		if (g_esGeneral.g_bPluginEnabled && bIsValidClient(iOwner) && bIsValidClient(client) && iOwner == client && !bIsTankInThirdPerson(client))
+		{
+			return Plugin_Handled;
+		}
 	}
 
 	return Plugin_Continue;
@@ -6383,6 +6393,7 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 
 			if ((type & MT_REWARD_HEALTH) && GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerIncapacitated(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")) && !g_esPlayer[survivor].g_bRewardedHealth)
 			{
+				vSaveCaughtSurvivor(survivor);
 				vCheatCommand(survivor, "give", "health");
 
 				switch (priority)
@@ -6414,6 +6425,7 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 			{
 				if (GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerIncapacitated(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")))
 				{
+					vSaveCaughtSurvivor(survivor);
 					vCheatCommand(survivor, "give", "health");
 				}
 
@@ -6750,6 +6762,23 @@ static void vSaveWeapons(int survivor)
 	{
 		GetEntityClassname(iSlot5, sWeapon, sizeof(sWeapon));
 		strcopy(g_esPlayer[survivor].g_sWeaponPills, sizeof(esPlayer::g_sWeaponPills), sWeapon);
+	}
+}
+
+static void vSaveCaughtSurvivor(int survivor)
+{
+	int iSpecial = GetEntPropEnt(survivor, Prop_Send, "m_pounceAttacker");
+	iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_tongueOwner") : iSpecial;
+	if (bIsValidGame())
+	{
+		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_pummelAttacker") : iSpecial;
+		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_carryAttacker") : iSpecial;
+		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_jockeyAttacker") : iSpecial;
+	}
+
+	if (iSpecial > 0)
+	{
+		ForcePlayerSuicide(iSpecial);
 	}
 }
 

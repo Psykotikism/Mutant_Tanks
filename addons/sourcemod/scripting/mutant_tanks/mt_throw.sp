@@ -27,6 +27,8 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
+bool g_bLateLoad;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if (!bIsValidGame(false) && !bIsValidGame())
@@ -35,6 +37,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 		return APLRes_SilentFailure;
 	}
+
+	g_bLateLoad = late;
 
 	return APLRes_Success;
 }
@@ -54,8 +58,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esPlayer
 {
 	bool g_bActivated;
+	bool g_bThrown;
 
 	float g_flThrowChance;
+	float g_flThrowWitchDamage;
 
 	int g_iAccessFlags;
 	int g_iAmmoCount;
@@ -64,13 +70,17 @@ enum struct esPlayer
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iImmunityFlags;
 	int g_iOpenAreasOnly;
+	int g_iOwner;
 	int g_iRequiresHumans;
 	int g_iTankType;
 	int g_iThrowAbility;
 	int g_iThrowCarOptions;
 	int g_iThrowInfectedOptions;
+	int g_iThrowInfectedRemove;
 	int g_iThrowMessage;
+	int g_iThrowWitchRemove;
 }
 
 esPlayer g_esPlayer[MAXPLAYERS + 1];
@@ -78,18 +88,23 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 enum struct esAbility
 {
 	float g_flThrowChance;
+	float g_flThrowWitchDamage;
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
+	int g_iComboPosition;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
+	int g_iImmunityFlags;
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iThrowAbility;
 	int g_iThrowCarOptions;
 	int g_iThrowInfectedOptions;
+	int g_iThrowInfectedRemove;
 	int g_iThrowMessage;
+	int g_iThrowWitchRemove;
 }
 
 esAbility g_esAbility[MT_MAXTYPES + 1];
@@ -97,6 +112,7 @@ esAbility g_esAbility[MT_MAXTYPES + 1];
 enum struct esCache
 {
 	float g_flThrowChance;
+	float g_flThrowWitchDamage;
 
 	int g_iComboAbility;
 	int g_iHumanAbility;
@@ -107,7 +123,9 @@ enum struct esCache
 	int g_iThrowAbility;
 	int g_iThrowCarOptions;
 	int g_iThrowInfectedOptions;
+	int g_iThrowInfectedRemove;
 	int g_iThrowMessage;
+	int g_iThrowWitchRemove;
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
@@ -122,6 +140,19 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_mt_throw", cmdThrowInfo, "View information about the Throw ability.");
 
 	g_cvMTTankThrowForce = FindConVar("z_tank_throw_force");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
 }
 
 public void OnMapStart()
@@ -135,6 +166,8 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+
 	vRemoveThrow(client);
 }
 
@@ -263,6 +296,45 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (MT_IsCorePluginEnabled() && bIsSurvivor(victim) && damage >= 0.5)
+	{
+		if (bIsInfected(attacker) && g_esPlayer[attacker].g_bThrown)
+		{
+			static int iTank;
+			iTank = g_esPlayer[attacker].g_iOwner;
+			if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && (g_esCache[iTank].g_iThrowAbility & (1 << 1)))
+			{
+				if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
+				{
+					return Plugin_Handled;
+				}
+			}
+		}
+		else if (bIsWitch(attacker))
+		{
+			static int iTank;
+			iTank = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;
+			if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && (g_esCache[iTank].g_iThrowAbility & (1 << 3)))
+			{
+				if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
+				{
+					return Plugin_Handled;
+				}
+
+				static float flDamage;
+				flDamage = (g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(iTank, 2, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iComboPosition) : g_esCache[iTank].g_flThrowWitchDamage;
+				damage = MT_GetScaledDamage(flDamage);
+
+				return Plugin_Changed;
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
 public Action StartTouch(int car, int other)
 {
 	TeleportEntity(car, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
@@ -288,8 +360,12 @@ public void MT_OnCombineAbilities(int tank, int type, float random, const char[]
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
+		g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition = -1;
+
 		return;
 	}
+
+	g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition = -1;
 
 	static char sAbilities[320], sSet[4][32];
 	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
@@ -309,6 +385,8 @@ public void MT_OnCombineAbilities(int tank, int type, float random, const char[]
 				{
 					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
 					{
+						g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition = iPos;
+
 						vThrow(tank, weapon);
 
 						break;
@@ -328,7 +406,9 @@ public void MT_OnConfigsLoad(int mode)
 			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
 			{
 				g_esAbility[iIndex].g_iAccessFlags = 0;
+				g_esAbility[iIndex].g_iImmunityFlags = 0;
 				g_esAbility[iIndex].g_iComboAbility = 0;
+				g_esAbility[iIndex].g_iComboPosition = -1;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
 				g_esAbility[iIndex].g_iHumanAmmo = 5;
 				g_esAbility[iIndex].g_iHumanCooldown = 30;
@@ -339,6 +419,9 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iThrowCarOptions = 0;
 				g_esAbility[iIndex].g_flThrowChance = 33.3;
 				g_esAbility[iIndex].g_iThrowInfectedOptions = 0;
+				g_esAbility[iIndex].g_iThrowInfectedRemove = 1;
+				g_esAbility[iIndex].g_flThrowWitchDamage = 5.0;
+				g_esAbility[iIndex].g_iThrowWitchRemove = 1;
 			}
 		}
 		case 3:
@@ -348,6 +431,7 @@ public void MT_OnConfigsLoad(int mode)
 				if (bIsValidClient(iPlayer))
 				{
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
 					g_esPlayer[iPlayer].g_iComboAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
 					g_esPlayer[iPlayer].g_iHumanAmmo = 0;
@@ -359,6 +443,9 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iThrowCarOptions = 0;
 					g_esPlayer[iPlayer].g_flThrowChance = 0.0;
 					g_esPlayer[iPlayer].g_iThrowInfectedOptions = 0;
+					g_esPlayer[iPlayer].g_iThrowInfectedRemove = 0;
+					g_esPlayer[iPlayer].g_flThrowWitchDamage = 0.0;
+					g_esPlayer[iPlayer].g_iThrowWitchRemove = 0;
 				}
 			}
 		}
@@ -379,13 +466,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iThrowMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iThrowMessage, value, 0, 15);
 		g_esPlayer[admin].g_iThrowCarOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "car", g_esPlayer[admin].g_iThrowCarOptions, value, 0, 7);
 		g_esPlayer[admin].g_flThrowChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esPlayer[admin].g_flThrowChance, value, 0.0, 100.0);
-		g_esPlayer[admin].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infected", g_esPlayer[admin].g_iThrowInfectedOptions, value, 0, 127);
+		g_esPlayer[admin].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esPlayer[admin].g_iThrowInfectedOptions, value, 0, 127);
+		g_esPlayer[admin].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esPlayer[admin].g_iThrowInfectedRemove, value, 0, 1);
+		g_esPlayer[admin].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esPlayer[admin].g_flThrowWitchDamage, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esPlayer[admin].g_iThrowWitchRemove, value, 0, 1);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
 				g_esPlayer[admin].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_esPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
 			}
 		}
 	}
@@ -402,13 +496,20 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iThrowMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iThrowMessage, value, 0, 15);
 		g_esAbility[type].g_iThrowCarOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "car", g_esAbility[type].g_iThrowCarOptions, value, 0, 7);
 		g_esAbility[type].g_flThrowChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esAbility[type].g_flThrowChance, value, 0.0, 100.0);
-		g_esAbility[type].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infected", g_esAbility[type].g_iThrowInfectedOptions, value, 0, 127);
+		g_esAbility[type].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esAbility[type].g_iThrowInfectedOptions, value, 0, 127);
+		g_esAbility[type].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esAbility[type].g_iThrowInfectedRemove, value, 0, 1);
+		g_esAbility[type].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esAbility[type].g_flThrowWitchDamage, value, 1.0, 999999.0);
+		g_esAbility[type].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esAbility[type].g_iThrowWitchRemove, value, 0, 1);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
 				g_esAbility[type].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_esAbility[type].g_iImmunityFlags = ReadFlagString(value);
 			}
 		}
 	}
@@ -418,6 +519,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flThrowChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowChance, g_esAbility[type].g_flThrowChance);
+	g_esCache[tank].g_flThrowWitchDamage = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowWitchDamage, g_esAbility[type].g_flThrowWitchDamage);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
@@ -427,7 +529,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iThrowAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowAbility, g_esAbility[type].g_iThrowAbility);
 	g_esCache[tank].g_iThrowCarOptions = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowCarOptions, g_esAbility[type].g_iThrowCarOptions);
 	g_esCache[tank].g_iThrowInfectedOptions = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowInfectedOptions, g_esAbility[type].g_iThrowInfectedOptions);
+	g_esCache[tank].g_iThrowInfectedRemove = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowInfectedRemove, g_esAbility[type].g_iThrowInfectedRemove);
 	g_esCache[tank].g_iThrowMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowMessage, g_esAbility[type].g_iThrowMessage);
+	g_esCache[tank].g_iThrowWitchRemove = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowWitchRemove, g_esAbility[type].g_iThrowWitchRemove);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
@@ -438,6 +542,26 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	if (oldTank != newTank)
 	{
 		vRemoveThrow(oldTank);
+	}
+}
+
+public void MT_OnPluginEnd()
+{
+	for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
+	{
+		if (bIsInfected(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iSpecial].g_bThrown)
+		{
+			ForcePlayerSuicide(iSpecial);
+		}
+	}
+
+	int iWitch = -1;
+	while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
+	{
+		if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") > 0)
+		{
+			RemoveEntity(iWitch);
+		}
 	}
 }
 
@@ -465,10 +589,42 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
+		if (MT_IsTankSupported(iInfected, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveThrow(iTank);
+			for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
+			{
+				if (g_esPlayer[iSpecial].g_iOwner == iInfected)
+				{
+					g_esPlayer[iSpecial].g_iOwner = 0;
+
+					if (g_esPlayer[iSpecial].g_bThrown && g_esCache[iInfected].g_iThrowInfectedRemove == 1 && bIsValidClient(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+					{
+						g_esPlayer[iSpecial].g_bThrown = false;
+
+						ForcePlayerSuicide(iSpecial);
+					}
+				}
+			}
+
+			if (g_esCache[iInfected].g_iThrowWitchRemove == 1)
+			{
+				int iWitch = -1;
+				while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
+				{
+					if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") == iInfected)
+					{
+						RemoveEntity(iWitch);
+					}
+				}
+			}
+
+			vRemoveThrow(iInfected);
+		}
+		else if (bIsSpecialInfected(iInfected) && g_esPlayer[iInfected].g_bThrown)
+		{
+			g_esPlayer[iInfected].g_bThrown = false;
+			g_esPlayer[iInfected].g_iOwner = 0;
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
@@ -548,8 +704,10 @@ static void vCopyStats(int oldTank, int newTank)
 static void vRemoveThrow(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
+	g_esPlayer[tank].g_bThrown = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
+	g_esPlayer[tank].g_iOwner = 0;
 }
 
 static void vReset()
@@ -694,56 +852,79 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 				}
 				case 2:
 				{
-					static int iInfected;
-					iInfected = CreateFakeClient("Infected");
-					if (bIsValidClient(iInfected))
+					bool[] bExists = new bool[MaxClients + 1];
+					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 					{
-						static int iOptionCount, iOptions[7], iFlag;
-						iOptionCount = 0;
-						for (int iBit = 0; iBit < sizeof(iOptions); iBit++)
+						bExists[iPlayer] = false;
+						if (bIsInfected(iPlayer, MT_CHECK_INGAME))
 						{
-							iFlag = (1 << iBit);
-							if (!(g_esCache[iTank].g_iThrowInfectedOptions & iFlag))
-							{
-								continue;
-							}
+							bExists[iPlayer] = true;
+						}
+					}
 
-							iOptions[iOptionCount] = iFlag;
-							iOptionCount++;
+					static int iOptionCount, iOptions[7], iFlag;
+					iOptionCount = 0;
+					for (int iBit = 0; iBit < sizeof(iOptions); iBit++)
+					{
+						iFlag = (1 << iBit);
+						if (!(g_esCache[iTank].g_iThrowInfectedOptions & iFlag))
+						{
+							continue;
 						}
 
-						switch (iOptions[GetRandomInt(0, iOptionCount - 1)])
+						iOptions[iOptionCount] = iFlag;
+						iOptionCount++;
+					}
+
+					switch (iOptions[GetRandomInt(0, iOptionCount - 1)])
+					{
+						case 1: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "smoker");
+						case 2: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "boomer");
+						case 4: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "hunter");
+						case 8: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "spitter" : "boomer");
+						case 16: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "jockey" : "hunter");
+						case 32: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "charger" : "smoker");
+						case 64: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank");
+						default:
 						{
-							case 1: vSpawnInfected(iInfected, "smoker");
-							case 2: vSpawnInfected(iInfected, "boomer");
-							case 4: vSpawnInfected(iInfected, "hunter");
-							case 8: vSpawnInfected(iInfected, bIsValidGame() ? "spitter" : "boomer");
-							case 16: vSpawnInfected(iInfected, bIsValidGame() ? "jockey" : "hunter");
-							case 32: vSpawnInfected(iInfected, bIsValidGame() ? "charger" : "smoker");
-							case 64: vSpawnInfected(iInfected, "tank");
-							default:
+							switch (GetRandomInt(1, 7))
 							{
-								switch (GetRandomInt(1, 7))
-								{
-									case 1: vSpawnInfected(iInfected, "smoker");
-									case 2: vSpawnInfected(iInfected, "boomer");
-									case 3: vSpawnInfected(iInfected, "hunter");
-									case 4: vSpawnInfected(iInfected, bIsValidGame() ? "spitter" : "boomer");
-									case 5: vSpawnInfected(iInfected, bIsValidGame() ? "jockey" : "hunter");
-									case 6: vSpawnInfected(iInfected, bIsValidGame() ? "charger" : "smoker");
-									case 7: vSpawnInfected(iInfected, "tank");
-								}
+								case 1: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "smoker");
+								case 2: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "boomer");
+								case 3: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "hunter");
+								case 4: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "spitter" : "boomer");
+								case 5: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "jockey" : "hunter");
+								case 6: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "charger" : "smoker");
+								case 7: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank");
 							}
 						}
+					}
 
+					static int iSpecial;
+					iSpecial = 0;
+					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+					{
+						if (bIsInfected(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bExists[iPlayer])
+						{
+							iSpecial = iPlayer;
+
+							break;
+						}
+					}
+
+					if (bIsInfected(iSpecial))
+					{
 						static float flPos[3];
 						GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
 						RemoveEntity(iRock);
 
+						g_esPlayer[iSpecial].g_bThrown = true;
+						g_esPlayer[iSpecial].g_iOwner = iTank;
+
 						NormalizeVector(flVelocity, flVelocity);
 						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
-						TeleportEntity(iInfected, flPos, NULL_VECTOR, flVelocity);
+						TeleportEntity(iSpecial, flPos, NULL_VECTOR, flVelocity);
 
 						if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_RANGE)
 						{
@@ -786,6 +967,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						NormalizeVector(flVelocity, flVelocity);
 						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
+						SetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity", iTank);
 						TeleportEntity(iWitch, flPos, NULL_VECTOR, NULL_VECTOR);
 						DispatchSpawn(iWitch);
 						TeleportEntity(iWitch, NULL_VECTOR, NULL_VECTOR, flVelocity);

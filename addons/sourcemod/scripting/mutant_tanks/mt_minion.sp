@@ -63,6 +63,7 @@ enum struct esPlayer
 	int g_iMinionAbility;
 	int g_iMinionAmount;
 	int g_iMinionMessage;
+	int g_iMinionRemove;
 	int g_iMinionReplace;
 	int g_iMinionTypes;
 	int g_iOpenAreasOnly;
@@ -85,6 +86,7 @@ enum struct esAbility
 	int g_iMinionAbility;
 	int g_iMinionAmount;
 	int g_iMinionMessage;
+	int g_iMinionRemove;
 	int g_iMinionReplace;
 	int g_iMinionTypes;
 	int g_iOpenAreasOnly;
@@ -104,6 +106,7 @@ enum struct esCache
 	int g_iMinionAbility;
 	int g_iMinionAmount;
 	int g_iMinionMessage;
+	int g_iMinionRemove;
 	int g_iMinionReplace;
 	int g_iMinionTypes;
 	int g_iOpenAreasOnly;
@@ -328,6 +331,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iMinionMessage = 0;
 				g_esAbility[iIndex].g_iMinionAmount = 5;
 				g_esAbility[iIndex].g_flMinionChance = 33.3;
+				g_esAbility[iIndex].g_iMinionRemove = 1;
 				g_esAbility[iIndex].g_iMinionReplace = 1;
 				g_esAbility[iIndex].g_iMinionTypes = 0;
 			}
@@ -349,6 +353,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iMinionMessage = 0;
 					g_esPlayer[iPlayer].g_iMinionAmount = 0;
 					g_esPlayer[iPlayer].g_flMinionChance = 0.0;
+					g_esPlayer[iPlayer].g_iMinionRemove = 0;
 					g_esPlayer[iPlayer].g_iMinionReplace = 0;
 					g_esPlayer[iPlayer].g_iMinionTypes = 0;
 				}
@@ -371,6 +376,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iMinionMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iMinionMessage, value, 0, 1);
 		g_esPlayer[admin].g_iMinionAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esPlayer[admin].g_iMinionAmount, value, 1, 15);
 		g_esPlayer[admin].g_flMinionChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esPlayer[admin].g_flMinionChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iMinionRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esPlayer[admin].g_iMinionRemove, value, 0, 1);
 		g_esPlayer[admin].g_iMinionReplace = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esPlayer[admin].g_iMinionReplace, value, 0, 1);
 		g_esPlayer[admin].g_iMinionTypes = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esPlayer[admin].g_iMinionTypes, value, 0, 63);
 
@@ -395,6 +401,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iMinionMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iMinionMessage, value, 0, 1);
 		g_esAbility[type].g_iMinionAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esAbility[type].g_iMinionAmount, value, 1, 15);
 		g_esAbility[type].g_flMinionChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esAbility[type].g_flMinionChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iMinionRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esAbility[type].g_iMinionRemove, value, 0, 1);
 		g_esAbility[type].g_iMinionReplace = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esAbility[type].g_iMinionReplace, value, 0, 1);
 		g_esAbility[type].g_iMinionTypes = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esAbility[type].g_iMinionTypes, value, 0, 63);
 
@@ -419,6 +426,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iMinionAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMinionAbility, g_esAbility[type].g_iMinionAbility);
 	g_esCache[tank].g_iMinionAmount = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMinionAmount, g_esAbility[type].g_iMinionAmount);
 	g_esCache[tank].g_iMinionMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMinionMessage, g_esAbility[type].g_iMinionMessage);
+	g_esCache[tank].g_iMinionRemove = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMinionRemove, g_esAbility[type].g_iMinionRemove);
 	g_esCache[tank].g_iMinionReplace = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMinionReplace, g_esAbility[type].g_iMinionReplace);
 	g_esCache[tank].g_iMinionTypes = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMinionTypes, g_esAbility[type].g_iMinionTypes);
 	g_esCache[tank].g_iOpenAreasOnly = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iOpenAreasOnly, g_esAbility[type].g_iOpenAreasOnly);
@@ -442,11 +450,7 @@ public void MT_OnPluginEnd()
 	{
 		if ((bIsTank(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsSpecialInfected(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE)) && g_esPlayer[iMinion].g_bMinion)
 		{
-			switch (bIsValidClient(iMinion, MT_CHECK_FAKECLIENT))
-			{
-				case true: ForcePlayerSuicide(iMinion);
-				case false: KickClient(iMinion);
-			}
+			ForcePlayerSuicide(iMinion);
 		}
 	}
 }
@@ -478,10 +482,22 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
 		if (MT_IsTankSupported(iInfected, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
+			for (int iMinion = 1; iMinion <= MaxClients; iMinion++)
+			{
+				if (g_esPlayer[iMinion].g_iOwner == iInfected)
+				{
+					g_esPlayer[iMinion].g_iOwner = 0;
+
+					if (g_esPlayer[iMinion].g_bMinion && g_esCache[iInfected].g_iMinionRemove == 1 && bIsValidClient(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+					{
+						ForcePlayerSuicide(iMinion);
+					}
+				}
+			}
+
 			vRemoveMinion(iInfected);
 		}
-
-		if (bIsSpecialInfected(iInfected) && g_esPlayer[iInfected].g_bMinion)
+		else if (bIsSpecialInfected(iInfected) && g_esPlayer[iInfected].g_bMinion)
 		{
 			for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 			{
