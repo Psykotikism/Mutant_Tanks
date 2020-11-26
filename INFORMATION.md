@@ -2050,6 +2050,14 @@
 			// Not empty: These access flags have access.
 			"Access Flags"				""
 
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Use this ability in conjunction with other abilities.
 			// Note: Only use this when "Spawn Type" is set to "4" for the Mutant Tank.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
@@ -3699,6 +3707,13 @@
 			// 1: ON, the clone can use abilities like real Mutant Tanks.
 			"Clone Mode"				"0"
 
+			// Remove all clones created by the Mutant Tank when it dies.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Clone Remove"				"1"
+
 			// The Mutant Tank's clones are replaced with new ones when they die.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -5207,6 +5222,14 @@
 			// Not empty: These access flags have access.
 			"Access Flags"				""
 
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Use this ability in conjunction with other abilities.
 			// Note: Only use this when "Spawn Type" is set to "4" for the Mutant Tank.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
@@ -5338,6 +5361,14 @@
 			// Empty: No access flags have access.
 			// Not empty: These access flags have access.
 			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
 
 			// Use this ability in conjunction with other abilities.
 			// Note: Only use this when "Spawn Type" is set to "4" for the Mutant Tank.
@@ -5766,6 +5797,14 @@
 			// Empty: No access flags have access.
 			// Not empty: These access flags have access.
 			"Access Flags"				""
+
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
 
 			// Use this ability in conjunction with other abilities.
 			// Note: Only use this when "Spawn Type" is set to "4" for the Mutant Tank.
@@ -8781,6 +8820,13 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Minion Chance"				"33.3"
+
+			// Remove all minions spawned by the Mutant Tank when it dies.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Minion Remove"				"1"
 
 			// The Mutant Tank's minions are replaced with new ones when they die.
 			// Note: This setting can be overridden for specific players.
@@ -12442,6 +12488,14 @@
 			// Not empty: These access flags have access.
 			"Access Flags"				""
 
+			// Admins with one or more of these immunity flags are immune to this ability's effects.
+			// Note: If the Mutant Tank has one or more of these immunity flags or has the same immunity flags as the survivor victim, the immunity is cancelled.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Empty: No immunity flags are immune.
+			// Not empty: These immunity flags are immune.
+			"Immunity Flags"			""
+
 			// Use this ability in conjunction with other abilities.
 			// Note: Only use this when "Spawn Type" is set to "4" for the Mutant Tank.
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
@@ -12560,6 +12614,28 @@
 			// 32: Charger (Switches to Smoker in Left 4 Dead 1.)
 			// 64: Tank
 			"Throw Infected Options"		"0"
+
+			// Remove all special infected thrown by the Mutant Tank when it dies.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Throw Infected Remove"			"1"
+
+			// The Mutant Tank's thrown Witch causes this much damage per hit.
+			// Note: This is ignored when the "Combo Ability" setting is set to "1".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0
+			// Maximum: 999999.0
+			"Throw Witch Damage"			"5.0"
+
+			// Remove all Witches thrown by the Mutant Tank when it dies.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Throw Witch Remove"			"1"
 		}
 	}
 }
@@ -13685,9 +13761,9 @@
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 1
-			// Maximum: 999999
-			"Witch Damage"				"5"
+			// Minimum: 1.0
+			// Maximum: 999999.0
+			"Witch Damage"				"5.0"
 
 			// The distance between a common infected and the Mutant Tank needed to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".

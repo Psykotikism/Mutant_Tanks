@@ -270,6 +270,9 @@
 - None of the abilities' plugins need to check if the `Clone` ability is installed anymore.
 - Added the `Combo Ability` setting for each ability.
 
+- Absorb
+	- Added the `Immunity Flags` setting.
+
 - Blind
 	- Added a sound effect for L4D1.
 
@@ -288,12 +291,23 @@
 
 - Clone
 	- The `Clone Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
+	- Added the `Clone Remove` setting.
+	- AI clones are now killed instead of kicked when the plugin is unloaded.
 
 - Drop
 	- Dropped weapons now have normal size. (Thanks to 3aljiyavslgazana for suggesting!)
 
 - Fire
 	- Added a sound effect for L4D1.
+
+- Fly
+	- Added the `Immunity Flags` setting.
+
+- Fragile
+	- Added the `Immunity Flags` setting.
+
+- God
+	- Added the `Immunity Flags` setting.
 
 - Heal
 	- Changed the default value of the `Heal Buffer` setting from `25.0` to `100.0`.
@@ -314,6 +328,10 @@
 
 - Meteor
 	- Added the `Meteor Interval` setting.
+
+- Minion
+	- Added the `Minion Remove` setting.
+	- AI minions are now killed instead of kicked when the plugin is unloaded.
 
 - Nullify
 	- Added a sound effect.
@@ -340,6 +358,12 @@
 - Spam
 	- Added the `Immunity Flags` setting.
 	- Added the `Spam Interval` setting.
+
+- Throw
+	- Added the `Immunity Flags` setting.
+	- Added the `Throw Infected Remove` setting.
+	- Added the `Throw Witch Damage` setting.
+	- Added the `Throw Witch Remove` setting.
 
 - Track
 	- Added the `Track Glow` setting.
