@@ -928,7 +928,7 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 	MT_TankMaxHealth(iTank, 3, iMaxHealth + 1);
 	//SetEntityHealth(iTank, iFinalHealth);
 	SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth);
-	vDamageEntity(iSurvivor, iTank, 1.0);
+	vDamagePlayer(iSurvivor, iTank, 1.0);
 
 	return Plugin_Continue;
 }

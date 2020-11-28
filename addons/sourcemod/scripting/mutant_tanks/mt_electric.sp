@@ -997,7 +997,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 
 	static float flDamage;
 	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esCache[iTank].g_flElectricDamage;
-	vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
+	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
 
 	static char sEffect[32];
 	vGetRandomParticle(sEffect, sizeof(sEffect));

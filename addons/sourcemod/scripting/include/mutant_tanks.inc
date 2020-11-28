@@ -1114,7 +1114,7 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 	}
 }
 
-stock void vDamageEntity(int victim, int attacker, float damage, const char[] damagetype = "0")
+stock void vDamagePlayer(int victim, int attacker, float damage, const char[] damagetype = "0")
 {
 	static int iPointHurt;
 	iPointHurt = CreateEntityByName("point_hurt");
@@ -1130,7 +1130,6 @@ stock void vDamageEntity(int victim, int attacker, float damage, const char[] da
 
 		DispatchSpawn(iPointHurt);
 		AcceptEntityInput(iPointHurt, "Hurt", attacker);
-
 		RemoveEntity(iPointHurt);
 	}
 }
@@ -1593,7 +1592,7 @@ stock bool bIsPlayerIdle(int survivor)
 
 stock bool bIsPlayerIncapacitated(int survivor)
 {
-	return GetEntProp(survivor, Prop_Send, "m_isIncapacitated") == 1;
+	return GetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1) == 1;
 }
 
 stock bool bIsSmoker(int smoker, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
@@ -1977,6 +1976,14 @@ stock float flGetSettingValue(bool apply, bool human, float playerVal, float typ
 	}
 
 	return override ? -1.0 : 0.0;
+}
+
+stock float flGetTemporaryHealth(int player, float decay)
+{
+	static float flHealth;
+	flHealth = GetEntPropFloat(player, Prop_Send, "m_healthBuffer");
+	flHealth -= (GetGameTime() - GetEntPropFloat(player, Prop_Send, "m_healthBufferTime")) * decay;
+	return flHealth < 0.0 ? 0.0 : flHealth;
 }
 
 stock int iClamp(int value, int min, int max)

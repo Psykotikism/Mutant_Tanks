@@ -807,7 +807,7 @@ public Action tTimerLightning(Handle timer, DataPack pack)
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 			if (GetVectorDistance(flOrigin, flSurvivorPos) <= 200.0)
 			{
-				vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
+				vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
 				EmitSoundToAll(g_sZapSounds[GetRandomInt(0, 7)], iSurvivor);
 			}
 		}

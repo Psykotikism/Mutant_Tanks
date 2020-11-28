@@ -356,7 +356,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				static char sDamageType[32];
 				IntToString(damagetype, sDamageType, sizeof(sDamageType));
 
-				vDamageEntity(iTarget, attacker, damage, sDamageType);
+				vDamagePlayer(iTarget, attacker, damage, sDamageType);
 
 				return Plugin_Changed;
 			}

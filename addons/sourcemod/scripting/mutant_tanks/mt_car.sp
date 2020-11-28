@@ -57,6 +57,7 @@ enum struct esPlayer
 
 	float g_flCarChance;
 	float g_flCarInterval;
+	float g_flCarLifetime;
 	float g_flCarRadius[2];
 
 	int g_iAccessFlags;
@@ -82,6 +83,7 @@ enum struct esAbility
 {
 	float g_flCarChance;
 	float g_flCarInterval;
+	float g_flCarLifetime;
 	float g_flCarRadius[2];
 
 	int g_iAccessFlags;
@@ -104,6 +106,7 @@ enum struct esCache
 {
 	float g_flCarChance;
 	float g_flCarInterval;
+	float g_flCarLifetime;
 	float g_flCarRadius[2];
 
 	int g_iCarAbility;
@@ -362,6 +365,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iCarDuration = 5;
 				g_esAbility[iIndex].g_iCarOptions = 0;
 				g_esAbility[iIndex].g_flCarInterval = 0.6;
+				g_esAbility[iIndex].g_flCarLifetime = 30.0;
 				g_esAbility[iIndex].g_flCarRadius[0] = -180.0;
 				g_esAbility[iIndex].g_flCarRadius[1] = 180.0;
 			}
@@ -386,6 +390,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iCarDuration = 0;
 					g_esPlayer[iPlayer].g_iCarOptions = 0;
 					g_esPlayer[iPlayer].g_flCarInterval = 0.0;
+					g_esPlayer[iPlayer].g_flCarLifetime = 0.0;
 					g_esPlayer[iPlayer].g_flCarRadius[0] = 0.0;
 					g_esPlayer[iPlayer].g_flCarRadius[1] = 0.0;
 				}
@@ -410,6 +415,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_flCarChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esPlayer[admin].g_flCarChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iCarDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esPlayer[admin].g_iCarDuration, value, 1, 999999);
 		g_esPlayer[admin].g_flCarInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esPlayer[admin].g_flCarInterval, value, 0.1, 1.0);
+		g_esPlayer[admin].g_flCarLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarLifetime", "Car Lifetime", "Car_Lifetime", "lifetime", g_esPlayer[admin].g_flCarLifetime, value, 0.1, 999999.0);
 		g_esPlayer[admin].g_iCarOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarOptions", "Car Options", "Car_Options", "options", g_esPlayer[admin].g_iCarOptions, value, 0, 7);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -445,6 +451,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_flCarChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarChance", "Car Chance", "Car_Chance", "chance", g_esAbility[type].g_flCarChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iCarDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarDuration", "Car Duration", "Car_Duration", "duration", g_esAbility[type].g_iCarDuration, value, 1, 999999);
 		g_esAbility[type].g_flCarInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarInterval", "Car Interval", "Car_Interval", "interval", g_esAbility[type].g_flCarInterval, value, 0.1, 1.0);
+		g_esAbility[type].g_flCarLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarLifetime", "Car Lifetime", "Car_Lifetime", "lifetime", g_esAbility[type].g_flCarLifetime, value, 0.1, 999999.0);
 		g_esAbility[type].g_iCarOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CarOptions", "Car Options", "Car_Options", "options", g_esAbility[type].g_iCarOptions, value, 0, 7);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -472,6 +479,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flCarChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCarChance, g_esAbility[type].g_flCarChance);
 	g_esCache[tank].g_flCarInterval = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCarInterval, g_esAbility[type].g_flCarInterval);
+	g_esCache[tank].g_flCarLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCarLifetime, g_esAbility[type].g_flCarLifetime);
 	g_esCache[tank].g_flCarRadius[0] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCarRadius[0], g_esAbility[type].g_flCarRadius[0]);
 	g_esCache[tank].g_flCarRadius[1] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCarRadius[1], g_esAbility[type].g_flCarRadius[1]);
 	g_esCache[tank].g_iCarAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCarAbility, g_esAbility[type].g_iCarAbility);
@@ -857,7 +865,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 			SDKHook(iCar, SDKHook_StartTouch, StartTouch);
 
 			iCar = EntIndexToEntRef(iCar);
-			vDeleteEntity(iCar, 30.0);
+			vDeleteEntity(iCar, g_esCache[iTank].g_flCarLifetime);
 		}
 	}
 

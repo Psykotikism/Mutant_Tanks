@@ -946,7 +946,7 @@ public Action tTimerHurt(Handle timer, DataPack pack)
 
 	static float flDamage;
 	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esCache[iTank].g_flHurtDamage;
-	vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(flDamage));
+	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage));
 	EmitSoundToAll(SOUND_ATTACK, iSurvivor);
 
 	return Plugin_Continue;

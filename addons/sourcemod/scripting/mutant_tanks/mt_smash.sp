@@ -78,6 +78,7 @@ enum struct esPlayer
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iSmashAbility;
+	int g_iSmashBody;
 	int g_iSmashEffect;
 	int g_iSmashHit;
 	int g_iSmashHitMode;
@@ -102,6 +103,7 @@ enum struct esAbility
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iSmashAbility;
+	int g_iSmashBody;
 	int g_iSmashEffect;
 	int g_iSmashHit;
 	int g_iSmashHitMode;
@@ -123,6 +125,7 @@ enum struct esCache
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iSmashAbility;
+	int g_iSmashBody;
 	int g_iSmashEffect;
 	int g_iSmashHit;
 	int g_iSmashHitMode;
@@ -131,12 +134,16 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+ConVar g_cvPainPillsDecayRate;
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_smash", cmdSmashInfo, "View information about the Smash ability.");
+
+	g_cvPainPillsDecayRate = FindConVar("pain_pills_decay_rate");
 
 	if (g_bLateLoad)
 	{
@@ -448,6 +455,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iOpenAreasOnly = 0;
 				g_esAbility[iIndex].g_iRequiresHumans = 0;
 				g_esAbility[iIndex].g_iSmashAbility = 0;
+				g_esAbility[iIndex].g_iSmashBody = 1;
 				g_esAbility[iIndex].g_iSmashEffect = 0;
 				g_esAbility[iIndex].g_iSmashMessage = 0;
 				g_esAbility[iIndex].g_flSmashChance = 33.3;
@@ -472,6 +480,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iOpenAreasOnly = 0;
 					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iSmashAbility = 0;
+					g_esPlayer[iPlayer].g_iSmashBody = 0;
 					g_esPlayer[iPlayer].g_iSmashEffect = 0;
 					g_esPlayer[iPlayer].g_iSmashMessage = 0;
 					g_esPlayer[iPlayer].g_flSmashChance = 0.0;
@@ -498,6 +507,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iSmashAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iSmashAbility, value, 0, 1);
 		g_esPlayer[admin].g_iSmashEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iSmashEffect, value, 0, 7);
 		g_esPlayer[admin].g_iSmashMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSmashMessage, value, 0, 3);
+		g_esPlayer[admin].g_iSmashBody = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashBody", "Smash Body", "Smash_Body", "body", g_esPlayer[admin].g_iSmashBody, value, 0, 1);
 		g_esPlayer[admin].g_flSmashChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashChance", "Smash Chance", "Smash_Chance", "chance", g_esPlayer[admin].g_flSmashChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iSmashHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashHit", "Smash Hit", "Smash_Hit", "hit", g_esPlayer[admin].g_iSmashHit, value, 0, 1);
 		g_esPlayer[admin].g_iSmashHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashHitMode", "Smash Hit Mode", "Smash_Hit_Mode", "hitmode", g_esPlayer[admin].g_iSmashHitMode, value, 0, 2);
@@ -528,6 +538,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iSmashAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iSmashAbility, value, 0, 1);
 		g_esAbility[type].g_iSmashEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iSmashEffect, value, 0, 7);
 		g_esAbility[type].g_iSmashMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSmashMessage, value, 0, 3);
+		g_esAbility[type].g_iSmashBody = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashBody", "Smash Body", "Smash_Body", "body", g_esAbility[type].g_iSmashBody, value, 0, 1);
 		g_esAbility[type].g_flSmashChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashChance", "Smash Chance", "Smash_Chance", "chance", g_esAbility[type].g_flSmashChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iSmashHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashHit", "Smash Hit", "Smash_Hit", "hit", g_esAbility[type].g_iSmashHit, value, 0, 1);
 		g_esAbility[type].g_iSmashHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmashHitMode", "Smash Hit Mode", "Smash_Hit_Mode", "hitmode", g_esAbility[type].g_iSmashHitMode, value, 0, 2);
@@ -561,6 +572,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iOpenAreasOnly = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iOpenAreasOnly, g_esAbility[type].g_iOpenAreasOnly);
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esCache[tank].g_iSmashAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSmashAbility, g_esAbility[type].g_iSmashAbility);
+	g_esCache[tank].g_iSmashBody = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSmashBody, g_esAbility[type].g_iSmashBody);
 	g_esCache[tank].g_iSmashEffect = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSmashEffect, g_esAbility[type].g_iSmashEffect);
 	g_esCache[tank].g_iSmashHit = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSmashHit, g_esAbility[type].g_iSmashHit);
 	g_esCache[tank].g_iSmashHitMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSmashHitMode, g_esAbility[type].g_iSmashHitMode);
@@ -602,10 +614,24 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveSmash(iTank);
+			vRemoveSmash(iPlayer);
+		}
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsValidGame())
+		{
+			int iBody = -1;
+			while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+			{
+				float flSurvivorPos[3], flBodyPos[3];
+				GetClientAbsOrigin(iPlayer, flSurvivorPos);
+				GetEntPropVector(iBody, Prop_Send, "m_vecOrigin", flBodyPos);
+				if (GetEntProp(iBody, Prop_Send, "m_nCharacterType") == GetEntProp(iPlayer, Prop_Send, "m_survivorCharacter") && GetVectorDistance(flSurvivorPos, flBodyPos) == 0.0)
+				{
+					SetEntPropEnt(iBody, Prop_Send, "m_hOwnerEntity", iPlayer);
+				}
+			}
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
@@ -780,8 +806,12 @@ static void vSmashHit(int survivor, int tank, float random, float chance, int en
 
 				vSmash(survivor, tank);
 				ForcePlayerSuicide(survivor);
-
 				vEffect(survivor, tank, g_esCache[tank].g_iSmashEffect, flags);
+
+				if (g_esCache[tank].g_iSmashBody == 1)
+				{
+					RequestFrame(vRemoveBody, GetClientUserId(survivor));
+				}
 
 				if (g_esCache[tank].g_iSmashMessage & messages)
 				{
@@ -806,6 +836,25 @@ static void vSmashHit(int survivor, int tank, float random, float chance, int en
 			g_esPlayer[tank].g_bNoAmmo = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmashAmmo");
+		}
+	}
+}
+
+public void vRemoveBody(int userid)
+{
+	int iSurvivor = GetClientOfUserId(userid);
+	if (!bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return;
+	}
+
+	int iBody = -1;
+	while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+	{
+		int iOwner = GetEntPropEnt(iBody, Prop_Send, "m_hOwnerEntity");
+		if (iSurvivor == iOwner)
+		{
+			RemoveEntity(iBody);
 		}
 	}
 }

@@ -8695,7 +8695,7 @@ public Action tTimerAnnounce(Handle timer, DataPack pack)
 
 		static int iHealth;
 		iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
-		vDamageEntity(iTank, iGetRandomSurvivor(iTank), 1.0, "0");
+		vDamagePlayer(iTank, iGetRandomSurvivor(iTank), 1.0);
 		SetEntProp(iTank, Prop_Data, "m_iHealth", iHealth);
 	}
 

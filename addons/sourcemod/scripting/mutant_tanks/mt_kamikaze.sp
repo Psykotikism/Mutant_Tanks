@@ -71,6 +71,7 @@ enum struct esPlayer
 	int g_iHumanAbility;
 	int g_iImmunityFlags;
 	int g_iKamikazeAbility;
+	int g_iKamikazeBody;
 	int g_iKamikazeEffect;
 	int g_iKamikazeHit;
 	int g_iKamikazeHitMode;
@@ -93,6 +94,7 @@ enum struct esAbility
 	int g_iHumanAbility;
 	int g_iImmunityFlags;
 	int g_iKamikazeAbility;
+	int g_iKamikazeBody;
 	int g_iKamikazeEffect;
 	int g_iKamikazeHit;
 	int g_iKamikazeHitMode;
@@ -112,6 +114,7 @@ enum struct esCache
 	int g_iComboAbility;
 	int g_iHumanAbility;
 	int g_iKamikazeAbility;
+	int g_iKamikazeBody;
 	int g_iKamikazeEffect;
 	int g_iKamikazeHit;
 	int g_iKamikazeHitMode;
@@ -122,12 +125,16 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+ConVar g_cvPainPillsDecayRate;
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_kamikaze", cmdKamikazeInfo, "View information about the Kamikaze ability.");
+
+	g_cvPainPillsDecayRate = FindConVar("pain_pills_decay_rate");
 
 	if (g_bLateLoad)
 	{
@@ -431,6 +438,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iOpenAreasOnly = 0;
 				g_esAbility[iIndex].g_iRequiresHumans = 0;
 				g_esAbility[iIndex].g_iKamikazeAbility = 0;
+				g_esAbility[iIndex].g_iKamikazeBody = 1;
 				g_esAbility[iIndex].g_iKamikazeEffect = 0;
 				g_esAbility[iIndex].g_iKamikazeMessage = 0;
 				g_esAbility[iIndex].g_flKamikazeChance = 33.3;
@@ -453,6 +461,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iOpenAreasOnly = 0;
 					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iKamikazeAbility = 0;
+					g_esPlayer[iPlayer].g_iKamikazeBody = 0;
 					g_esPlayer[iPlayer].g_iKamikazeEffect = 0;
 					g_esPlayer[iPlayer].g_iKamikazeMessage = 0;
 					g_esPlayer[iPlayer].g_flKamikazeChance = 0.0;
@@ -477,6 +486,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iKamikazeAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iKamikazeAbility, value, 0, 1);
 		g_esPlayer[admin].g_iKamikazeEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iKamikazeEffect, value, 0, 7);
 		g_esPlayer[admin].g_iKamikazeMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iKamikazeMessage, value, 0, 3);
+		g_esPlayer[admin].g_iKamikazeBody = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeBody", "Kamikaze Body", "Kamikaze_Body", "body", g_esPlayer[admin].g_iKamikazeBody, value, 0, 1);
 		g_esPlayer[admin].g_flKamikazeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esPlayer[admin].g_flKamikazeChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iKamikazeHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esPlayer[admin].g_iKamikazeHit, value, 0, 1);
 		g_esPlayer[admin].g_iKamikazeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esPlayer[admin].g_iKamikazeHitMode, value, 0, 2);
@@ -505,6 +515,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iKamikazeAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iKamikazeAbility, value, 0, 1);
 		g_esAbility[type].g_iKamikazeEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iKamikazeEffect, value, 0, 7);
 		g_esAbility[type].g_iKamikazeMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iKamikazeMessage, value, 0, 3);
+		g_esAbility[type].g_iKamikazeBody = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeBody", "Kamikaze Body", "Kamikaze_Body", "body", g_esAbility[type].g_iKamikazeBody, value, 0, 1);
 		g_esAbility[type].g_flKamikazeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeChance", "Kamikaze Chance", "Kamikaze_Chance", "chance", g_esAbility[type].g_flKamikazeChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iKamikazeHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeHit", "Kamikaze Hit", "Kamikaze_Hit", "hit", g_esAbility[type].g_iKamikazeHit, value, 0, 1);
 		g_esAbility[type].g_iKamikazeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "KamikazeHitMode", "Kamikaze Hit Mode", "Kamikaze_Hit_Mode", "hitmode", g_esAbility[type].g_iKamikazeHitMode, value, 0, 2);
@@ -535,6 +546,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iKamikazeAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iKamikazeAbility, g_esAbility[type].g_iKamikazeAbility);
 	g_esCache[tank].g_iKamikazeEffect = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iKamikazeEffect, g_esAbility[type].g_iKamikazeEffect);
+	g_esCache[tank].g_iKamikazeBody = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iKamikazeBody, g_esAbility[type].g_iKamikazeBody);
 	g_esCache[tank].g_iKamikazeHit = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iKamikazeHit, g_esAbility[type].g_iKamikazeHit);
 	g_esCache[tank].g_iKamikazeHitMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iKamikazeHitMode, g_esAbility[type].g_iKamikazeHitMode);
 	g_esCache[tank].g_iKamikazeMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iKamikazeMessage, g_esAbility[type].g_iKamikazeMessage);
@@ -574,10 +586,24 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveKamikaze(iTank);
+			vRemoveKamikaze(iPlayer);
+		}
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsValidGame())
+		{
+			int iBody = -1;
+			while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+			{
+				float flSurvivorPos[3], flBodyPos[3];
+				GetClientAbsOrigin(iPlayer, flSurvivorPos);
+				GetEntPropVector(iBody, Prop_Send, "m_vecOrigin", flBodyPos);
+				if (GetEntProp(iBody, Prop_Send, "m_nCharacterType") == GetEntProp(iPlayer, Prop_Send, "m_survivorCharacter") && GetVectorDistance(flSurvivorPos, flBodyPos) == 0.0)
+				{
+					SetEntPropEnt(iBody, Prop_Send, "m_hOwnerEntity", iPlayer);
+				}
+			}
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
@@ -680,12 +706,16 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 			EmitSoundToAll((bIsValidGame()) ? SOUND_SMASH2 : SOUND_SMASH1, survivor);
 			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
 			ForcePlayerSuicide(survivor);
+			vEffect(survivor, tank, g_esCache[tank].g_iKamikazeEffect, flags);
+
+			if (g_esCache[tank].g_iKamikazeBody == 1)
+			{
+				RequestFrame(vRemoveBody, GetClientUserId(survivor));
+			}
 
 			EmitSoundToAll((bIsValidGame()) ? SOUND_GROWL2 : SOUND_GROWL1, survivor);
 			vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
 			ForcePlayerSuicide(tank);
-
-			vEffect(survivor, tank, g_esCache[tank].g_iKamikazeEffect, flags);
 
 			if (g_esCache[tank].g_iKamikazeMessage & messages)
 			{
@@ -719,6 +749,25 @@ static void vReset()
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
 			vRemoveKamikaze(iPlayer);
+		}
+	}
+}
+
+public void vRemoveBody(int userid)
+{
+	int iSurvivor = GetClientOfUserId(userid);
+	if (!bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return;
+	}
+
+	int iBody = -1;
+	while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+	{
+		int iOwner = GetEntPropEnt(iBody, Prop_Send, "m_hOwnerEntity");
+		if (iSurvivor == iOwner)
+		{
+			RemoveEntity(iBody);
 		}
 	}
 }

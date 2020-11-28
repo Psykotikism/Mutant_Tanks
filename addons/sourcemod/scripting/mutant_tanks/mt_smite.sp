@@ -73,6 +73,7 @@ enum struct esPlayer
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iSmiteAbility;
+	int g_iSmiteBody;
 	int g_iSmiteEffect;
 	int g_iSmiteHit;
 	int g_iSmiteHitMode;
@@ -97,6 +98,7 @@ enum struct esAbility
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iSmiteAbility;
+	int g_iSmiteBody;
 	int g_iSmiteEffect;
 	int g_iSmiteHit;
 	int g_iSmiteHitMode;
@@ -118,6 +120,7 @@ enum struct esCache
 	int g_iOpenAreasOnly;
 	int g_iRequiresHumans;
 	int g_iSmiteAbility;
+	int g_iSmiteBody;
 	int g_iSmiteEffect;
 	int g_iSmiteHit;
 	int g_iSmiteHitMode;
@@ -125,6 +128,8 @@ enum struct esCache
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
+
+ConVar g_cvPainPillsDecayRate;
 
 int g_iSmiteSprite = -1;
 
@@ -134,6 +139,8 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_smite", cmdSmiteInfo, "View information about the Smite ability.");
+
+	g_cvPainPillsDecayRate = FindConVar("pain_pills_decay_rate");
 
 	if (g_bLateLoad)
 	{
@@ -436,6 +443,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iOpenAreasOnly = 0;
 				g_esAbility[iIndex].g_iRequiresHumans = 0;
 				g_esAbility[iIndex].g_iSmiteAbility = 0;
+				g_esAbility[iIndex].g_iSmiteBody = 1;
 				g_esAbility[iIndex].g_iSmiteEffect = 0;
 				g_esAbility[iIndex].g_iSmiteMessage = 0;
 				g_esAbility[iIndex].g_flSmiteChance = 33.3;
@@ -460,6 +468,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iOpenAreasOnly = 0;
 					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iSmiteAbility = 0;
+					g_esPlayer[iPlayer].g_iSmiteBody = 0;
 					g_esPlayer[iPlayer].g_iSmiteEffect = 0;
 					g_esPlayer[iPlayer].g_iSmiteMessage = 0;
 					g_esPlayer[iPlayer].g_flSmiteChance = 0.0;
@@ -486,6 +495,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iSmiteAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iSmiteAbility, value, 0, 1);
 		g_esPlayer[admin].g_iSmiteEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iSmiteEffect, value, 0, 7);
 		g_esPlayer[admin].g_iSmiteMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iSmiteMessage, value, 0, 3);
+		g_esPlayer[admin].g_iSmiteBody = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteBody", "Smite Body", "Smite_Body", "body", g_esPlayer[admin].g_iSmiteBody, value, 0, 1);
 		g_esPlayer[admin].g_flSmiteChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esPlayer[admin].g_flSmiteChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iSmiteHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteHit", "Smite Hit", "Smite_Hit", "hit", g_esPlayer[admin].g_iSmiteHit, value, 0, 1);
 		g_esPlayer[admin].g_iSmiteHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteHitMode", "Smite Hit Mode", "Smite_Hit_Mode", "hitmode", g_esPlayer[admin].g_iSmiteHitMode, value, 0, 2);
@@ -516,6 +526,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iSmiteAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iSmiteAbility, value, 0, 1);
 		g_esAbility[type].g_iSmiteEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iSmiteEffect, value, 0, 7);
 		g_esAbility[type].g_iSmiteMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iSmiteMessage, value, 0, 3);
+		g_esAbility[type].g_iSmiteBody = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteBody", "Smite Body", "Smite_Body", "body", g_esAbility[type].g_iSmiteBody, value, 0, 1);
 		g_esAbility[type].g_flSmiteChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteChance", "Smite Chance", "Smite_Chance", "chance", g_esAbility[type].g_flSmiteChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iSmiteHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteHit", "Smite Hit", "Smite_Hit", "hit", g_esAbility[type].g_iSmiteHit, value, 0, 1);
 		g_esAbility[type].g_iSmiteHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "SmiteHitMode", "Smite Hit Mode", "Smite_Hit_Mode", "hitmode", g_esAbility[type].g_iSmiteHitMode, value, 0, 2);
@@ -549,6 +560,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iOpenAreasOnly = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iOpenAreasOnly, g_esAbility[type].g_iOpenAreasOnly);
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esCache[tank].g_iSmiteAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSmiteAbility, g_esAbility[type].g_iSmiteAbility);
+	g_esCache[tank].g_iSmiteBody = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSmiteBody, g_esAbility[type].g_iSmiteBody);
 	g_esCache[tank].g_iSmiteEffect = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSmiteEffect, g_esAbility[type].g_iSmiteEffect);
 	g_esCache[tank].g_iSmiteHit = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSmiteHit, g_esAbility[type].g_iSmiteHit);
 	g_esCache[tank].g_iSmiteHitMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iSmiteHitMode, g_esAbility[type].g_iSmiteHitMode);
@@ -590,10 +602,24 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveSmite(iTank);
+			vRemoveSmite(iPlayer);
+		}
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsValidGame())
+		{
+			int iBody = -1;
+			while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+			{
+				float flSurvivorPos[3], flBodyPos[3];
+				GetClientAbsOrigin(iPlayer, flSurvivorPos);
+				GetEntPropVector(iBody, Prop_Send, "m_vecOrigin", flBodyPos);
+				if (GetEntProp(iBody, Prop_Send, "m_nCharacterType") == GetEntProp(iPlayer, Prop_Send, "m_survivorCharacter") && GetVectorDistance(flSurvivorPos, flBodyPos) == 0.0)
+				{
+					SetEntPropEnt(iBody, Prop_Send, "m_hOwnerEntity", iPlayer);
+				}
+			}
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
@@ -770,8 +796,12 @@ static void vSmiteHit(int survivor, int tank, float random, float chance, int en
 
 				vSmite(survivor);
 				ForcePlayerSuicide(survivor);
-
 				vEffect(survivor, tank, g_esCache[tank].g_iSmiteEffect, flags);
+
+				if (g_esCache[tank].g_iSmiteBody == 1)
+				{
+					RequestFrame(vRemoveBody, GetClientUserId(survivor));
+				}
 
 				if (g_esCache[tank].g_iSmiteMessage & messages)
 				{
@@ -796,6 +826,25 @@ static void vSmiteHit(int survivor, int tank, float random, float chance, int en
 			g_esPlayer[tank].g_bNoAmmo = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmiteAmmo");
+		}
+	}
+}
+
+public void vRemoveBody(int userid)
+{
+	int iSurvivor = GetClientOfUserId(userid);
+	if (!bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return;
+	}
+
+	int iBody = -1;
+	while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
+	{
+		int iOwner = GetEntPropEnt(iBody, Prop_Send, "m_hOwnerEntity");
+		if (iSurvivor == iOwner)
+		{
+			RemoveEntity(iBody);
 		}
 	}
 }

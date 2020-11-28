@@ -950,7 +950,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 
 	static float flDamage;
 	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esCache[iTank].g_flChokeDamage;
-	vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "16384");
+	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "16384");
 
 	return Plugin_Continue;
 }

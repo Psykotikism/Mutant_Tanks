@@ -745,7 +745,7 @@ public Action tTimerCloud(Handle timer, DataPack pack)
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 			if (GetVectorDistance(flTankPos, flSurvivorPos) <= 200.0)
 			{
-				vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "65536");
+				vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "65536");
 			}
 		}
 	}

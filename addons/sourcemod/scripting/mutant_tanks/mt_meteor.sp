@@ -65,6 +65,7 @@ enum struct esPlayer
 	float g_flMeteorChance;
 	float g_flMeteorDamage;
 	float g_flMeteorInterval;
+	float g_flMeteorLifetime;
 	float g_flMeteorRadius[2];
 
 	int g_iAccessFlags;
@@ -92,6 +93,7 @@ enum struct esAbility
 	float g_flMeteorChance;
 	float g_flMeteorDamage;
 	float g_flMeteorInterval;
+	float g_flMeteorLifetime;
 	float g_flMeteorRadius[2];
 
 	int g_iAccessFlags;
@@ -116,6 +118,7 @@ enum struct esCache
 	float g_flMeteorChance;
 	float g_flMeteorDamage;
 	float g_flMeteorInterval;
+	float g_flMeteorLifetime;
 	float g_flMeteorRadius[2];
 
 	int g_iComboAbility;
@@ -425,6 +428,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_flMeteorDamage = 5.0;
 				g_esAbility[iIndex].g_iMeteorDuration = 5;
 				g_esAbility[iIndex].g_flMeteorInterval = 0.6;
+				g_esAbility[iIndex].g_flMeteorLifetime = 15.0;
 				g_esAbility[iIndex].g_iMeteorMode = 0;
 				g_esAbility[iIndex].g_flMeteorRadius[0] = -180.0;
 				g_esAbility[iIndex].g_flMeteorRadius[1] = 180.0;
@@ -451,6 +455,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_flMeteorDamage = 0.0;
 					g_esPlayer[iPlayer].g_iMeteorDuration = 0;
 					g_esPlayer[iPlayer].g_flMeteorInterval = 0.0;
+					g_esPlayer[iPlayer].g_flMeteorLifetime = 0.0;
 					g_esPlayer[iPlayer].g_iMeteorMode = 0;
 					g_esPlayer[iPlayer].g_flMeteorRadius[0] = 0.0;
 					g_esPlayer[iPlayer].g_flMeteorRadius[1] = 0.0;
@@ -477,6 +482,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_flMeteorDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esPlayer[admin].g_flMeteorDamage, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_iMeteorDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esPlayer[admin].g_iMeteorDuration, value, 1, 999999);
 		g_esPlayer[admin].g_flMeteorInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esPlayer[admin].g_flMeteorInterval, value, 0.1, 1.0);
+		g_esPlayer[admin].g_flMeteorLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esPlayer[admin].g_flMeteorLifetime, value, 0.1, 999999.0);
 		g_esPlayer[admin].g_iMeteorMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esPlayer[admin].g_iMeteorMode, value, 0, 1);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -517,6 +523,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_flMeteorDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorDamage", "Meteor Damage", "Meteor_Damage", "damage", g_esAbility[type].g_flMeteorDamage, value, 1.0, 999999.0);
 		g_esAbility[type].g_iMeteorDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorDuration", "Meteor Duration", "Meteor_Duration", "duration", g_esAbility[type].g_iMeteorDuration, value, 1, 999999);
 		g_esAbility[type].g_flMeteorInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esAbility[type].g_flMeteorInterval, value, 0.1, 1.0);
+		g_esAbility[type].g_flMeteorLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esAbility[type].g_flMeteorLifetime, value, 0.1, 999999.0);
 		g_esAbility[type].g_iMeteorMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esAbility[type].g_iMeteorMode, value, 0, 1);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -549,6 +556,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_flMeteorChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorChance, g_esAbility[type].g_flMeteorChance);
 	g_esCache[tank].g_flMeteorDamage = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorDamage, g_esAbility[type].g_flMeteorDamage);
 	g_esCache[tank].g_flMeteorInterval = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorInterval, g_esAbility[type].g_flMeteorInterval);
+	g_esCache[tank].g_flMeteorLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorLifetime, g_esAbility[type].g_flMeteorLifetime);
 	g_esCache[tank].g_flMeteorRadius[0] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorRadius[0], g_esAbility[type].g_flMeteorRadius[0]);
 	g_esCache[tank].g_flMeteorRadius[1] = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMeteorRadius[1], g_esAbility[type].g_flMeteorRadius[1]);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
@@ -792,7 +800,7 @@ static void vMeteor3(int tank, int rock, int pos = -1)
 					GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 					if (GetVectorDistance(flTankPos, flSurvivorPos) <= 200.0)
 					{
-						vDamageEntity(iSurvivor, tank, MT_GetScaledDamage(flDamage), "16");
+						vDamagePlayer(iSurvivor, tank, MT_GetScaledDamage(flDamage), "16");
 					}
 				}
 			}
@@ -996,7 +1004,7 @@ public Action tTimerMeteor(Handle timer, DataPack pack)
 
 			SetEntPropEnt(iMeteor, Prop_Data, "m_hThrower", iTank);
 			iMeteor = EntIndexToEntRef(iMeteor);
-			vDeleteEntity(iMeteor, 15.0);
+			vDeleteEntity(iMeteor, g_esCache[iTank].g_flMeteorLifetime);
 
 			DataPack dpMeteor;
 			CreateDataTimer(10.0, tTimerDestroyMeteor, dpMeteor, TIMER_FLAG_NO_MAPCHANGE);

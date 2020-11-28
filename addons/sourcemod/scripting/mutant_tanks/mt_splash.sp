@@ -774,7 +774,7 @@ public Action tTimerSplash(Handle timer, DataPack pack)
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 			if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 			{
-				vDamageEntity(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "65536");
+				vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "65536");
 			}
 		}
 	}

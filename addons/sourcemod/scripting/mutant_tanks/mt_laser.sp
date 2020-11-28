@@ -681,7 +681,7 @@ static void vLaser2(int tank, int pos = -1)
 
 		static float flDamage;
 		flDamage = (pos != -1) ? MT_GetCombinationSetting(tank, 2, pos) : g_esCache[tank].g_flLaserDamage;
-		vDamageEntity(iSurvivor, tank, MT_GetScaledDamage(flDamage), "1024");
+		vDamagePlayer(iSurvivor, tank, MT_GetScaledDamage(flDamage), "1024");
 
 		if (g_esCache[tank].g_iLaserMessage == 1)
 		{
