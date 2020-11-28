@@ -134,16 +134,12 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-ConVar g_cvPainPillsDecayRate;
-
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_smash", cmdSmashInfo, "View information about the Smash ability.");
-
-	g_cvPainPillsDecayRate = FindConVar("pain_pills_decay_rate");
 
 	if (g_bLateLoad)
 	{

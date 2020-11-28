@@ -136,8 +136,6 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-ConVar g_cvPainPillsDecayRate;
-
 int g_iRocketSprite = -1;
 
 public void OnPluginStart()
@@ -146,8 +144,6 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_rocket", cmdRocketInfo, "View information about the Rocket ability.");
-
-	g_cvPainPillsDecayRate = FindConVar("pain_pills_decay_rate");
 
 	if (g_bLateLoad)
 	{
@@ -1028,9 +1024,8 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static float flPosition[3], flDamage;
+	static float flPosition[3];
 	GetClientAbsOrigin(iSurvivor, flPosition);
-	flDamage = flGetTemporaryHealth(iSurvivor, g_cvPainPillsDecayRate.FloatValue);
 
 	TE_SetupExplosion(flPosition, g_iRocketSprite, 10.0, 1, 0, 600, 5000);
 	TE_SendToAll();

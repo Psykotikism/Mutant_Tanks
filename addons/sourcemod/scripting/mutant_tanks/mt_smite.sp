@@ -129,8 +129,6 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-ConVar g_cvPainPillsDecayRate;
-
 int g_iSmiteSprite = -1;
 
 public void OnPluginStart()
@@ -139,8 +137,6 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_smite", cmdSmiteInfo, "View information about the Smite ability.");
-
-	g_cvPainPillsDecayRate = FindConVar("pain_pills_decay_rate");
 
 	if (g_bLateLoad)
 	{
