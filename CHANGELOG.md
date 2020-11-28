@@ -87,12 +87,22 @@
 - Fire
 	- Fixed the sound effect not playing in L4D1 due to the file not existing.
 
+- Ghost
+	- Fixed the range ability checking for the wrong ammo count.
+
+- Gravity
+	- Fixed the range ability checking for the wrong ammo count.
+
 - Heal
 	- Fixed the glow outline not going away when Tanks die.
 	- Fixed the ability not applying/resetting glow outlines properly.
+	- Fixed the range ability checking for the wrong ammo count.
 
 - Hit
 	- Fixed some of the settings not working in some config formats.
+
+- Jump
+	- Fixed the range ability checking for the wrong ammo count.
 
 - Meteor
 	- Fixed the `Meteor Damage` setting not working properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -131,6 +141,9 @@
 - Track
 	- Fixed the glow outline not going away when rocks break.
 	- Fixed the ability not applying/resetting glow outlines properly.
+
+- Warp
+	- Fixed the range ability checking for the wrong ammo count.
 
 - Witch
 	- Fixed the ability spamming messages.
@@ -285,6 +298,7 @@
 
 - Car
 	- Added the `Car Interval` setting.
+	- Added the `Car Lifetime` setting.
 
 - Choke
 	- Changed the default value of the `Choke Height` setting from `300.0` to `200.0`.
@@ -317,6 +331,9 @@
 	- Applied a new idle fix method. (Thanks to Lux for the code!)
 	- The ability now requires DHooks.
 
+- Kamikaze
+	- Added the `Kamikaze Body` setting.
+
 - Leech
 	- The ability now contributes to the Tank's overall health.
 
@@ -328,6 +345,7 @@
 
 - Meteor
 	- Added the `Meteor Interval` setting.
+	- Added the `Meteor Lifetime` setting.
 
 - Minion
 	- Added the `Minion Remove` setting.
@@ -350,10 +368,19 @@
 	- Added the `Immunity Flags` setting.
 	- Added the `Rock Interval` setting.
 
+- Rocket
+	- Added the `Rocket Body` setting.
+
 - Shield
 	- Added the `Shield Glow` setting.
 	- The `Shield Type` setting now allows combinations of options.
 	- Added the `Shield Throw Chance` setting.
+
+- Smash
+	- Added the `Smash Body` setting.
+
+- Smite
+	- Added the `Smite Body` setting.
 
 - Spam
 	- Added the `Immunity Flags` setting.
@@ -361,7 +388,10 @@
 
 - Throw
 	- Added the `Immunity Flags` setting.
+	- Added the `Throw Car Lifetime` setting.
+	- Added the `Throw Infected Amount` setting.
 	- Added the `Throw Infected Remove` setting.
+	- Added the `Throw Witch Amount` setting.
 	- Added the `Throw Witch Damage` setting.
 	- Added the `Throw Witch Remove` setting.
 

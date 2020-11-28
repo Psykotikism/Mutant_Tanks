@@ -3377,6 +3377,14 @@
 			// Maximum: 1.0
 			"Car Interval"				"0.6"
 
+			// Cars dropped by the Mutant Tank's car shower will disappear after this many seconds.
+			// Note: The timer starts when the car spawns, so take into account the time it takes to fall to the ground.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Car Lifetime"				"30.0"
+
 			// The Mutant Tank create car showers with these cars.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -7742,6 +7750,13 @@
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
 
+			// Removes the death model of the survivor when killed.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Kamikaze Body"				"1"
+
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -8701,6 +8716,14 @@
 			// Minimum: 0.1
 			// Maximum: 1.0
 			"Meteor Interval"			"0.6"
+
+			// Meteorites dropped by the Mutant Tank's meteor shower will disappear after this many seconds.
+			// Note: The timer starts when the meteorite spawns, so take into account the time it takes to fall to the ground.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Meteor Lifetime"				"15.0"
 
 			// The mode of the Mutant Tank's meteor shower ability.
 			// Note: This setting can be overridden for specific players.
@@ -10896,6 +10919,13 @@
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
 
+			// Removes the death model of the survivor when killed.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Rocket Body"				"1"
+
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -11855,6 +11885,13 @@
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
 
+			// Removes the death model of the survivor when killed.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Smash Body"				"1"
+
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -12014,6 +12051,13 @@
 			// 1: Display message only when "Smite Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			"Ability Message"			"0"
+
+			// Removes the death model of the survivor when killed.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Smite Body"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
@@ -12575,6 +12619,14 @@
 			// 8: Display message only when "Ability Enabled" is set to "4".
 			"Ability Message"			"0"
 
+			// Cars thrown by the Mutant Tank will disappear after this many seconds.
+			// Note: The timer starts when the car spawns, so take into account the time it takes to hit something.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			"Throw Car Lifetime"				"10.0"
+
 			// The Mutant Tank throws these cars.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -12596,6 +12648,13 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Throw Chance"				"33.3"
+
+			// The amount of special infected the Mutant Tank can throw at any given time.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 15
+			"Throw Infected Amount"			"2"
 
 			// The Mutant Tank throws these special infected.
 			// Note: This setting can be overridden for specific players.
@@ -12621,6 +12680,13 @@
 			// 0: OFF
 			// 1: ON
 			"Throw Infected Remove"			"1"
+
+			// The amount of Witches the Mutant Tank can throw at any given time.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1
+			// Maximum: 25
+			"Throw Witch Amount"			"3"
 
 			// The Mutant Tank's thrown Witch causes this much damage per hit.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
@@ -14143,14 +14209,14 @@
 			"Favorite Type"				"0"
 
 			// Admins with one or more of these access flags have access to all Mutant Tank types that have any of these flags.
-			// Note: This setting overrides all other "Access Flags" settings above.
+			// Note: This setting overrides all the settings with the same name above.
 			// --
 			// Empty: No access flags have access.
 			// Not empty: These access flags have access.
 			"Access Flags"				""
 
 			// Admins with one or more of these immunity flags are immune to all attacks of Mutant Tanks that have any of these flags.
-			// Note: This setting overrides all other "Immunity Flags" settings above.
+			// Note: This setting overrides all the settings with the same name above.
 			// --
 			// Empty: No immunity flags are immune.
 			// Not empty: These immunity flags are immune.

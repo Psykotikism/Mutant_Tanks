@@ -27,7 +27,7 @@ Mutant Tanks enhances the fun and excitement players get from Tank fights by cre
 6. Auto-reload the config file when changes are made mid-game.
 7. Choose which abilities to install.
 8. Add custom abilities and features through the use of forwards and natives.
-9. Custom target filters for targeting survivors and special infected.
+9. Custom target filters for targeting survivors, special infected, and Mutant Tanks.
 10. Supports multiple languages.
 11. Chat color tags for translation files.
 12. Administration system designed for access and immunity to Mutant Tanks.
