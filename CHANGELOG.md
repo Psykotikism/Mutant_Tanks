@@ -421,6 +421,10 @@
 	- The ability now runs repeatedly while activated when `Human Mode` is set to `1`.
 	- The ability no longer requires Left 4 DHooks.
 
+- Zombie
+	- Added the `Zombie Mode` setting.
+	- Added the `Zombie Type` setting.
+
 ### Files
 
 #### Requirements

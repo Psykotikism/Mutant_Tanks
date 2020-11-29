@@ -19,9 +19,9 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank.
 
 ## Features
-1. Enable/disable the plugin in all game modes.
+1. Fully compatible with all game modes.
 2. Supports custom configurations whether per difficulty, per map, per game mode, per day, per player count, or per finale stage.
-3. Fully customize all Mutant Tanks.
+3. Fully customizable Mutant Tanks.
 4. Store up to 1,000 Mutant Tank types.
 5. Four different formats for the config file.
 6. Auto-reload the config file when changes are made mid-game.
@@ -32,7 +32,7 @@ Mutant Tanks enhances the fun and excitement players get from Tank fights by cre
 11. Chat color tags for translation files.
 12. Administration system designed for access and immunity to Mutant Tanks.
 13. Detects idle or bugged (no behavior) Tanks.
-14. Fully compatible with all game modes.
+14. Over 1,400 optional settings to configure.
 15. Toggle damage scaling based on difficulty.
 16. Create all kinds of combinations of abilities.
 17. Fully customizable reward system.
@@ -1926,5 +1926,5 @@ Examples:
 If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
 
 
-
+# Final Words
 Enjoy all my hard work and have fun with it!

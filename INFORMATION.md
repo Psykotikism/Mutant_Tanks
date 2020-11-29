@@ -6,6 +6,7 @@
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
 - Maximum types: 1,000 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins.)
+- Most of the settings below can be overridden for each player.
 
 ## Sections
 - Plugin Settings
@@ -14185,6 +14186,33 @@
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			"Zombie Interval"			"5.0"
+
+			// The mode of the Mutant Tank's zombie mob spawn ability.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Both
+			// 1: The Mutant Tank spawns common infected.
+			// 2: The Mutant Tank spawns uncommon infected.
+			"Zombie Mode"				"0"
+
+			// The type of zombies to spawn.
+			// Note: This setting only works when the "Zombie Mode" setting is set to "0" or "2".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 127
+			// --
+			// 0 OR 127: Pick randomly between the 7 options.
+			// 1: CEDA Worker (Dead Center)
+			// 2: Jimmy Gibbs Jr. (Dead Center)
+			// 4: Fallen Survivor (The Passing)
+			// 8: Clown (Dark Carnival)
+			// 16: Mudman (Swamp Fever)
+			// 32: Roadcrew Worker (Hard Rain)
+			// 64: Riot Cop (The Parish)
+			"Zombie Type"				"0"
 		}
 	}
 }
