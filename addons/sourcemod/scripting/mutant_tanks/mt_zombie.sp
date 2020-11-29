@@ -231,9 +231,9 @@ public int iZombieMenuHandler(Menu menu, MenuAction action, int param1, int para
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pZombie = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "ZombieMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pZombie.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

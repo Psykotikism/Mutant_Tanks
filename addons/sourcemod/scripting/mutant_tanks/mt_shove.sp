@@ -276,9 +276,9 @@ public int iShoveMenuHandler(Menu menu, MenuAction action, int param1, int param
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pShove = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "ShoveMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pShove.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

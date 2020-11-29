@@ -237,9 +237,9 @@ public int iSplatterMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pSplatter = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "SplatterMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pSplatter.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

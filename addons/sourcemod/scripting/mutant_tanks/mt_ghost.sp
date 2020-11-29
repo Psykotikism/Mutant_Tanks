@@ -292,9 +292,9 @@ public int iGhostMenuHandler(Menu menu, MenuAction action, int param1, int param
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pGhost = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "GhostMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pGhost.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

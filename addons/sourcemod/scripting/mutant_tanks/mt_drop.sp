@@ -289,9 +289,9 @@ public int iDropMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pDrop = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "DropMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pDrop.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
@@ -302,12 +302,9 @@ public int iDropMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				switch (param2)
 				{
 					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
-					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
-					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
-					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
-					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
-					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
 				}
 
 				return RedrawMenuItem(sMenuOption);

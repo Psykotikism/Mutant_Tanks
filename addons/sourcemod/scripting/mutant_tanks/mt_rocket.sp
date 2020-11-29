@@ -250,9 +250,9 @@ public int iRocketMenuHandler(Menu menu, MenuAction action, int param1, int para
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pRocket = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "RocketMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pRocket.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

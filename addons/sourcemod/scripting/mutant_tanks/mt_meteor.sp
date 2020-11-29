@@ -252,9 +252,9 @@ public int iMeteorMenuHandler(Menu menu, MenuAction action, int param1, int para
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pMeteor = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MeteorMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pMeteor.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

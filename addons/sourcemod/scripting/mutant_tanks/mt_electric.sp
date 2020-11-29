@@ -275,9 +275,9 @@ public int iElectricMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pElectric = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "ElectricMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pElectric.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

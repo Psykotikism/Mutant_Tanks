@@ -274,9 +274,9 @@ public int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int para
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pShield = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "ShieldMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pShield.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

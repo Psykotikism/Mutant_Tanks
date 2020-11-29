@@ -241,9 +241,9 @@ public int iEnforceMenuHandler(Menu menu, MenuAction action, int param1, int par
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pEnforce = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "EnforceMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pEnforce.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

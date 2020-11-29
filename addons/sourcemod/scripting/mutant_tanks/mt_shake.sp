@@ -254,9 +254,9 @@ public int iShakeMenuHandler(Menu menu, MenuAction action, int param1, int param
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pShake = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "ShakeMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pShake.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

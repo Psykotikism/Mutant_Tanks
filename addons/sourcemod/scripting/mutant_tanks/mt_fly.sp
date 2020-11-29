@@ -239,9 +239,9 @@ public int iFlyMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pFly = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "FlyMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pFly.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

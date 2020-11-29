@@ -265,9 +265,9 @@ public int iWarpMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pWarp = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "WarpMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pWarp.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

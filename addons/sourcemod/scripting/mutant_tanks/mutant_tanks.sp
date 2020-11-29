@@ -2124,9 +2124,9 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pPath = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTPathMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pPath.SetTitle(sMenuTitle);
 		}
 	}
 
@@ -2272,9 +2272,9 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pConfig = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTConfigMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pConfig.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
@@ -2405,9 +2405,9 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pInfo = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTInfoMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pInfo.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
@@ -3119,9 +3119,9 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pMain = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pMain.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
@@ -7734,9 +7734,9 @@ public int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pFavorite = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTFavoriteMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pFavorite.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

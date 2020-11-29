@@ -215,9 +215,9 @@ public int iRespawnMenuHandler(Menu menu, MenuAction action, int param1, int par
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pRespawn = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "RespawnMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pRespawn.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

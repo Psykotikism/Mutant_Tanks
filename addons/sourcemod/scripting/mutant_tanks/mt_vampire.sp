@@ -181,9 +181,9 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pVampire = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "VampireMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pVampire.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{

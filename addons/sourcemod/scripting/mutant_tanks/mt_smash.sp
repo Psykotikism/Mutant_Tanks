@@ -253,9 +253,9 @@ public int iSmashMenuHandler(Menu menu, MenuAction action, int param1, int param
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pSmash = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "SmashMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pSmash.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
