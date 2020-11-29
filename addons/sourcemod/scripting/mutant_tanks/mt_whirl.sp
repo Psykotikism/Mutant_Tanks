@@ -858,7 +858,7 @@ static void vWhirlHit(int survivor, int tank, float random, float chance, int en
 						case 1: iAxis = 0;
 						case 2: iAxis = 1;
 						case 4: iAxis = 2;
-						default: iAxis = GetRandomInt(0, 2);
+						default: iAxis = GetRandomInt(0, sizeof(iAxes) - 1);
 					}
 
 					DataPack dpWhirl;

@@ -1983,7 +1983,7 @@ stock float flGetTemporaryHealth(int player, float decay)
 	static float flHealth;
 	flHealth = GetEntPropFloat(player, Prop_Send, "m_healthBuffer");
 	flHealth -= (GetGameTime() - GetEntPropFloat(player, Prop_Send, "m_healthBufferTime")) * decay;
-	return flHealth < 0.0 ? 0.0 : flHealth;
+	return (flHealth < 0.0) ? 0.0 : flHealth;
 }
 
 stock int iClamp(int value, int min, int max)

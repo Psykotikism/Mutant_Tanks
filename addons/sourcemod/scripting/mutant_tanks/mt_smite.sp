@@ -699,10 +699,10 @@ static void vSmite(int survivor)
 	static int iColor[4] = {255, 255, 255, 255};
 
 	GetClientAbsOrigin(survivor, flPosition);
-	flPosition[2] -= 26;
-	flStartPosition[0] = flPosition[0] + GetRandomInt(-500, 500);
-	flStartPosition[1] = flPosition[1] + GetRandomInt(-500, 500);
-	flStartPosition[2] = flPosition[2] + 800;
+	flPosition[2] -= 26.0;
+	flStartPosition[0] = flPosition[0] + GetRandomFloat(-500.0, 500.0);
+	flStartPosition[1] = flPosition[1] + GetRandomFloat(-500.0, 500.0);
+	flStartPosition[2] = flPosition[2] + 800.0;
 
 	TE_SetupBeamPoints(flStartPosition, flPosition, g_iSmiteSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, iColor, 3);
 	TE_SendToAll();

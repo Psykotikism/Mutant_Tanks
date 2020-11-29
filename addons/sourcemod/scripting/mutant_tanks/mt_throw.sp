@@ -862,7 +862,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							case 4: SetEntityModel(iCar, MODEL_CAR3);
 							default:
 							{
-								switch (GetRandomInt(1, 3))
+								switch (GetRandomInt(1, sizeof(iOptions)))
 								{
 									case 1: SetEntityModel(iCar, MODEL_CAR);
 									case 2: SetEntityModel(iCar, MODEL_CAR2);
@@ -943,7 +943,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							case 64: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank");
 							default:
 							{
-								switch (GetRandomInt(1, 7))
+								switch (GetRandomInt(1, sizeof(iOptions)))
 								{
 									case 1: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "smoker");
 									case 2: vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "boomer");

@@ -530,7 +530,7 @@ static void vItemAbility(int tank)
 		{
 			switch (g_esCache[tank].g_iItemMode)
 			{
-				case 0: vCheatCommand(iSurvivor, "give", sItems[GetRandomInt(1, 5) - 1]);
+				case 0: vCheatCommand(iSurvivor, "give", sItems[GetRandomInt(1, sizeof(sItems)) - 1]);
 				case 1:
 				{
 					for (int iItem = 0; iItem < sizeof(sItems); iItem++)

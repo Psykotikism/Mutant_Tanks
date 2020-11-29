@@ -39,6 +39,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MODEL_CEDA "models/infected/common_male_ceda.mdl"
+#define MODEL_CLOWN "models/infected/common_male_clown.mdl"
+#define MODEL_FALLEN "models/infected/common_male_fallen_survivor.mdl"
+#define MODEL_JIMMY "models/infected/common_male_jimmy.mdl"
+#define MODEL_MUDMAN "models/infected/common_male_mud.mdl"
+#define MODEL_RIOTCOP "models/infected/common_male_riot.mdl"
+#define MODEL_ROADCREW "models/infected/common_male_roadcrew.mdl"
+
 #define MT_CONFIG_SECTION "zombieability"
 #define MT_CONFIG_SECTION2 "zombie ability"
 #define MT_CONFIG_SECTION3 "zombie_ability"
@@ -69,6 +77,8 @@ enum struct esPlayer
 	int g_iZombieAbility;
 	int g_iZombieAmount;
 	int g_iZombieMessage;
+	int g_iZombieMode;
+	int g_iZombieType;
 }
 
 esPlayer g_esPlayer[MAXPLAYERS + 1];
@@ -90,6 +100,8 @@ enum struct esAbility
 	int g_iZombieAbility;
 	int g_iZombieAmount;
 	int g_iZombieMessage;
+	int g_iZombieMode;
+	int g_iZombieType;
 }
 
 esAbility g_esAbility[MT_MAXTYPES + 1];
@@ -110,6 +122,8 @@ enum struct esCache
 	int g_iZombieAbility;
 	int g_iZombieAmount;
 	int g_iZombieMessage;
+	int g_iZombieMode;
+	int g_iZombieType;
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
@@ -124,6 +138,14 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
+	PrecacheModel(MODEL_CEDA, true);
+	PrecacheModel(MODEL_CLOWN, true);
+	PrecacheModel(MODEL_FALLEN, true);
+	PrecacheModel(MODEL_JIMMY, true);
+	PrecacheModel(MODEL_MUDMAN, true);
+	PrecacheModel(MODEL_RIOTCOP, true);
+	PrecacheModel(MODEL_ROADCREW, true);
+
 	vReset();
 }
 
@@ -345,6 +367,8 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iZombieAmount = 10;
 				g_esAbility[iIndex].g_flZombieChance = 33.3;
 				g_esAbility[iIndex].g_flZombieInterval = 5.0;
+				g_esAbility[iIndex].g_iZombieMode = 0;
+				g_esAbility[iIndex].g_iZombieType = 0;
 			}
 		}
 		case 3:
@@ -367,6 +391,8 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iZombieAmount = 0;
 					g_esPlayer[iPlayer].g_flZombieChance = 0.0;
 					g_esPlayer[iPlayer].g_flZombieInterval = 0.0;
+					g_esPlayer[iPlayer].g_iZombieMode = 0;
+					g_esPlayer[iPlayer].g_iZombieType = 0;
 				}
 			}
 		}
@@ -390,6 +416,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iZombieAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esPlayer[admin].g_iZombieAmount, value, 1, 100);
 		g_esPlayer[admin].g_flZombieChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieChance", "Zombie Chance", "Zombie_Chance", "chance", g_esPlayer[admin].g_flZombieChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_flZombieInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esPlayer[admin].g_flZombieInterval, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_iZombieMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieMode", "Zombie Mode", "Zombie_Mode", "mode", g_esPlayer[admin].g_iZombieMode, value, 0, 2);
+		g_esPlayer[admin].g_iZombieType = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieType", "Zombie Type", "Zombie_Type", "type", g_esPlayer[admin].g_iZombieType, value, 0, 127);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
@@ -415,6 +443,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iZombieAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieAmount", "Zombie Amount", "Zombie_Amount", "amount", g_esAbility[type].g_iZombieAmount, value, 1, 100);
 		g_esAbility[type].g_flZombieChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieChance", "Zombie Chance", "Zombie_Chance", "chance", g_esAbility[type].g_flZombieChance, value, 0.0, 100.0);
 		g_esAbility[type].g_flZombieInterval = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esAbility[type].g_flZombieInterval, value, 0.1, 999999.0);
+		g_esAbility[type].g_iZombieMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieMode", "Zombie Mode", "Zombie_Mode", "mode", g_esAbility[type].g_iZombieMode, value, 0, 2);
+		g_esAbility[type].g_iZombieType = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ZombieType", "Zombie Type", "Zombie_Type", "type", g_esAbility[type].g_iZombieType, value, 0, 127);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
@@ -442,6 +472,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iZombieAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iZombieAbility, g_esAbility[type].g_iZombieAbility);
 	g_esCache[tank].g_iZombieAmount = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iZombieAmount, g_esAbility[type].g_iZombieAmount);
 	g_esCache[tank].g_iZombieMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iZombieMessage, g_esAbility[type].g_iZombieMessage);
+	g_esCache[tank].g_iZombieMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iZombieMode, g_esAbility[type].g_iZombieMode);
+	g_esCache[tank].g_iZombieType = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iZombieType, g_esAbility[type].g_iZombieType);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
@@ -633,6 +665,83 @@ static void vReset2(int tank)
 	}
 }
 
+static void vSpawnUncommon(int tank, const char[] model)
+{
+	static int iInfected;
+	iInfected = CreateEntityByName("infected");
+	if (bIsValidEntity(iInfected))
+	{
+		SetEntityModel(iInfected, model);
+		SetEntProp(iInfected, Prop_Data, "m_nNextThinkTick", RoundToNearest(GetGameTime() / GetTickInterval()) + 5);
+		DispatchSpawn(iInfected);
+		ActivateEntity(iInfected);
+
+		static float flOrigin[3], flAngles[3];
+		GetClientAbsOrigin(tank, flOrigin);
+		GetClientEyeAngles(tank, flAngles);
+
+		flOrigin[0] += 50 * (Cosine(DegToRad(flAngles[1])));
+		flOrigin[1] += 50 * (Sine(DegToRad(flAngles[1])));
+		flOrigin[2] += 5.0;
+
+		TeleportEntity(iInfected, flOrigin, NULL_VECTOR, NULL_VECTOR);
+	}
+}
+
+static void vSpawnZombie(int tank, bool uncommon)
+{
+	switch (uncommon)
+	{
+		case true:
+		{
+			static int iTypeCount, iTypes[7], iFlag;
+			iTypeCount = 0;
+			for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
+			{
+				iFlag = (1 << iBit);
+				if (!(g_esCache[tank].g_iZombieType & iFlag))
+				{
+					continue;
+				}
+
+				iTypes[iTypeCount] = iFlag;
+				iTypeCount++;
+			}
+
+			switch (iTypes[GetRandomInt(0, iTypeCount - 1)])
+			{
+				case 1: vSpawnUncommon(tank, MODEL_CEDA);
+				case 2: vSpawnUncommon(tank, MODEL_JIMMY);
+				case 4: vSpawnUncommon(tank, MODEL_FALLEN);
+				case 8: vSpawnUncommon(tank, MODEL_CLOWN);
+				case 16: vSpawnUncommon(tank, MODEL_MUDMAN);
+				case 32: vSpawnUncommon(tank, MODEL_ROADCREW);
+				case 64: vSpawnUncommon(tank, MODEL_RIOTCOP);
+				default:
+				{
+					switch (GetRandomInt(1, sizeof(iTypes)))
+					{
+						case 1: vSpawnUncommon(tank, MODEL_CEDA);
+						case 2: vSpawnUncommon(tank, MODEL_JIMMY);
+						case 3: vSpawnUncommon(tank, MODEL_FALLEN);
+						case 4: vSpawnUncommon(tank, MODEL_CLOWN);
+						case 5: vSpawnUncommon(tank, MODEL_MUDMAN);
+						case 6: vSpawnUncommon(tank, MODEL_ROADCREW);
+						case 7: vSpawnUncommon(tank, MODEL_RIOTCOP);
+					}
+				}
+			}
+		}
+		case false:
+		{
+			if (bIsValidClient(tank))
+			{
+				vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "zombie area");
+			}
+		}
+	}
+}
+
 static void vZombie(int tank, int pos = -1)
 {
 	g_esPlayer[tank].g_bActivated = true;
@@ -680,9 +789,11 @@ static void vZombie3(int tank)
 
 	for (int iZombie = 1; iZombie <= g_esCache[tank].g_iZombieAmount; iZombie++)
 	{
-		if (bIsValidClient(tank))
+		switch (g_esCache[tank].g_iZombieMode)
 		{
-			vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "zombie area");
+			case 0: vSpawnZombie(tank, ((GetRandomInt(1, 2) == 2) ? true : false));
+			case 1: vSpawnZombie(tank, false);
+			case 2: vSpawnZombie(tank, true);
 		}
 	}
 }

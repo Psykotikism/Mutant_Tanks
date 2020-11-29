@@ -1003,7 +1003,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 	vGetRandomParticle(sEffect, sizeof(sEffect));
 	vAttachParticle(iSurvivor, sEffect, 2.0, 30.0);
 
-	EmitSoundToAll(g_sZapSounds[GetRandomInt(0, 7)], iSurvivor);
+	EmitSoundToAll(g_sZapSounds[GetRandomInt(0, sizeof(g_sZapSounds) - 1)], iSurvivor);
 
 	return Plugin_Continue;
 }

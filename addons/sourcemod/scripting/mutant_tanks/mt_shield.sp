@@ -1164,7 +1164,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 		iThrowable = CreateEntityByName("prop_physics");
 		if (bIsValidEntity(iThrowable))
 		{
-			static int iTypeCount, iTypes[3], iFlag;
+			static int iTypeCount, iTypes[4], iFlag;
 			iTypeCount = 0;
 			for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
 			{

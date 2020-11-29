@@ -834,7 +834,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 				case 4: SetEntityModel(iCar, MODEL_CAR3);
 				default:
 				{
-					switch (GetRandomInt(1, 3))
+					switch (GetRandomInt(1, sizeof(iOptions)))
 					{
 						case 1: SetEntityModel(iCar, MODEL_CAR);
 						case 2: SetEntityModel(iCar, MODEL_CAR2);

@@ -646,7 +646,7 @@ static void vMinion(int tank)
 						case 32: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", bIsValidGame() ? "charger" : "smoker");
 						default:
 						{
-							switch (GetRandomInt(1, 6))
+							switch (GetRandomInt(1, sizeof(iTypes)))
 							{
 								case 1: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "smoker");
 								case 2: vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "boomer");

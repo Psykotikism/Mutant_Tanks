@@ -9212,7 +9212,7 @@ public Action tTimerTransform(Handle timer, int userid)
 		return Plugin_Continue;
 	}
 
-	int iPos = GetRandomInt(0, 9);
+	int iPos = GetRandomInt(0, sizeof(esCache::g_iTransformType) - 1);
 	vSetColor(iTank, g_esCache[iTank].g_iTransformType[iPos]);
 	vTankSpawn(iTank, 3);
 
