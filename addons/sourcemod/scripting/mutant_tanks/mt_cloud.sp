@@ -15,8 +15,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//#file "Cloud Ability v8.80"
-
 public Plugin myinfo =
 {
 	name = "[MT] Cloud Ability",

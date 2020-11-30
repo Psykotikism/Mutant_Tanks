@@ -16,8 +16,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//#file "Ghost Ability v8.80"
-
 public Plugin myinfo =
 {
 	name = "[MT] Ghost Ability",
@@ -1189,31 +1187,34 @@ static void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 	}
 }
 
-static void vRenderSpecials(int tank, bool mode, int red, int green, int blue)
+static void vRenderSpecials(int tank, bool mode, int red = 255, int green = 255, int blue = 255)
 {
-	if (!MT_IsTankSupported(tank))
-	{
-		return;
-	}
-
 	static float flTankPos[3], flInfectedPos[3];
 	GetClientAbsOrigin(tank, flTankPos);
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
 		if (bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			if (!mode && !g_esPlayer[tank].g_bAffected[iInfected])
+			switch (mode)
 			{
-				continue;
-			}
+				case true:
+				{
+					GetClientAbsOrigin(iInfected, flInfectedPos);
+					if (g_esPlayer[tank].g_bAffected[iInfected] || GetVectorDistance(flTankPos, flInfectedPos) <= g_esCache[tank].g_flGhostSpecialsRange)
+					{
+						g_esPlayer[tank].g_bAffected[iInfected] = true;
 
-			g_esPlayer[tank].g_bAffected[iInfected] = mode;
+						SetEntityRenderMode(iInfected, RENDER_TRANSCOLOR);
+						SetEntityRenderColor(iInfected, red, green, blue, g_esPlayer[tank].g_iGhostAlpha);
+					}
+				}
+				case false:
+				{
+					g_esPlayer[tank].g_bAffected[iInfected] = false;
 
-			GetClientAbsOrigin(iInfected, flInfectedPos);
-			if (GetVectorDistance(flTankPos, flInfectedPos) <= g_esCache[tank].g_flGhostSpecialsRange)
-			{
-				SetEntityRenderMode(iInfected, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(iInfected, red, green, blue, g_esPlayer[tank].g_iGhostAlpha);
+					SetEntityRenderMode(iInfected, RENDER_NORMAL);
+					SetEntityRenderColor(iInfected, red, green, blue, 255);
+				}
 			}
 		}
 	}
@@ -1328,7 +1329,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 		g_esPlayer[iTank].g_bActivated = false;
 		g_esPlayer[iTank].g_iGhostAlpha = 255;
 
-		vRenderSpecials(iTank, false, 255, 255, 255);
+		vRenderSpecials(iTank, false);
 
 		return Plugin_Stop;
 	}
@@ -1338,7 +1339,7 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 	iCurrentTime = GetTime();
 	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && g_esCache[iTank].g_iHumanMode == 0 && (iTime + g_esCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
-		vRenderSpecials(iTank, false, 255, 255, 255);
+		vRenderSpecials(iTank, false);
 		vReset2(iTank);
 
 		return Plugin_Stop;

@@ -15,8 +15,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//#file "Medic Ability v8.80"
-
 public Plugin myinfo =
 {
 	name = "[MT] Medic Ability",

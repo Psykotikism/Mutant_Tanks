@@ -16,8 +16,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//#file "Acid Ability v8.80"
-
 public Plugin myinfo =
 {
 	name = "[MT] Acid Ability",

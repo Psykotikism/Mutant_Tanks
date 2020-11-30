@@ -17,8 +17,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//#file "Idle Ability v8.80"
-
 public Plugin myinfo =
 {
 	name = "[MT] Idle Ability",

@@ -16,8 +16,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//#file "Enforce Ability v8.80"
-
 public Plugin myinfo =
 {
 	name = "[MT] Enforce Ability",

@@ -15,8 +15,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//#file "Drop Ability v8.80"
-
 public Plugin myinfo =
 {
 	name = "[MT] Drop Ability",
