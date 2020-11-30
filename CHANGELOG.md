@@ -258,6 +258,8 @@
 - The `Extra Health` setting can now be used globally for all types.
 - The `Requires Humans` setting can no longer be overridden for each player.
 - Added the `Limit Extras` setting under the `Plugin Settings/Waves` section.
+- Added `Survivor count (Humans only)` as an option for the `Create Config Types` and `Execute Config Types` settings.
+- Added `Infected count (Humans only)` as an option for the `Create Config Types` and `Execute Config Types` settings.
 
 #### Translations
 - The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)

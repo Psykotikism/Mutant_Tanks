@@ -786,7 +786,7 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
-			// Maximum: 63
+			// Maximum: 255
 			// --
 			// 0: OFF
 			// 1: Difficulties
@@ -794,7 +794,9 @@
 			// 4: Game modes
 			// 8: Days
 			// 16: Player count
-			// 32: Finale stages
+			// 32: Survivor count (Humans only)
+			// 64: Infected count (Humans only)
+			// 128: Finale stages
 			"Create Config Types"			"0"
 
 			// The type of custom config that Mutant Tanks executes.
@@ -804,7 +806,7 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum: 0
-			// Maximum: 63
+			// Maximum: 255
 			// --
 			// 0: OFF
 			// 1: Difficulties
@@ -812,7 +814,9 @@
 			// 4: Game modes
 			// 8: Days
 			// 16: Player count
-			// 32: Finale stages
+			// 32: Survivor count (Humans only)
+			// 64: Infected count (Humans only)
+			// 128: Finale stages
 			"Execute Config Types"			"0"
 		}
 	}

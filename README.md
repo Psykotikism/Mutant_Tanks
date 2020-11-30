@@ -20,7 +20,7 @@ Mutant Tanks enhances the fun and excitement players get from Tank fights by cre
 
 ## Features
 1. Fully compatible with all game modes.
-2. Supports custom configurations whether per difficulty, per map, per game mode, per day, per player count, or per finale stage.
+2. Supports custom configurations whether per difficulty, per map, per game mode, per day, per player (survivor/infected/all) count, or per finale stage.
 3. Fully customizable Mutant Tanks.
 4. Store up to 1,000 Mutant Tank types.
 5. Four different formats for the config file.
@@ -122,12 +122,12 @@ By default, Mutant Tanks can create and execute the following types of configura
 2. Map - Files are created/executed based on the current map. (Example: If the current map is `c1m1_hotel`, then `c1m1_hotel.cfg` is executed (or created if it doesn't exist already).
 3. Game mode - Files are created/executed based on the current game mode. (Example: If the current game mode is Versus, then `versus.cfg` is executed (or created if it doesn't exist already).
 4. Daily - Files are created/executed based on the current day. (Example: If the current day is Friday, then `friday.cfg` is executed (or created if it doesn't exist already).
-5. Player count - Files are created/executed based on the current number of human players. (Example: If the current number is 8, then `8.cfg` is executed (or created if it doesn't exist already).
+5. Player (survivor/infected/all) count - Files are created/executed based on the current number of human players. (Example: If the current number is 8, then `8.cfg` is executed (or created if it doesn't exist already).
 6. Finale stages - Files are created/executed based on the finale stages called by the game. (Example: If the finale starts, then `finale_start.cfg` is executed (or created if it doesn't exist already)).
 
 #### Features
-1. Create custom config files (can be based on difficulty, map, game mode, day, player count, or finale stage).
-2. Execute custom config files (can be based on difficulty, map, game mode, day, player count, or finale stage).
+1. Create custom config files (can be based on difficulty, map, game mode, day, player (survivor/infected/all) count, or finale stage).
+2. Execute custom config files (can be based on difficulty, map, game mode, day, player (survivor/infected/all) count, or finale stage).
 3. Automatically generate config files for up to 66 players, all difficulties specified by `z_difficulty`, maps installed on the server, game modes specified by `sv_gametypes` and `mp_gamemode`, days of the `week`, and all possible `finale stages`.
 
 ## Questions You May Have
@@ -1819,7 +1819,7 @@ Examples:
 "Create Config Types" "7" // Creates the folders and config files for each difficulty, map, and game mode.
 "Create Config Types" "8" // Creates the folder and config files for each day.
 "Create Config Types" "31" // Creates the folders and config files for each difficulty, map, game mode, day, and player count.
-"Create Config Types" "63" // Creates the folders and config files for each difficulty, map, game mode, day, player count, and finale stage.
+"Create Config Types" "255" // Creates the folders and config files for each difficulty, map, game mode, day, player (survivor/infected/all) count, and finale stage.
 ```
 
 3. How do I tell the plugin to only execute certain custom config files?
@@ -1832,7 +1832,7 @@ Examples:
 "Execute Config Types" "7" // Executes the config file for the current difficulty, map, and game mode.
 "Execute Config Types" "8" // Executes the config file for the current day.
 "Execute Config Types" "31" // Executes the config file for the current difficulty, map, game mode, day, and player count.
-"Execute Config Types" "63" // Executes the config file for the current difficulty, map, game mode, day, player count, and finale stage.
+"Execute Config Types" "255" // Executes the config file for the current difficulty, map, game mode, day, player (survivor/infected/all) count, and finale stage.
 ```
 
 ## Credits
