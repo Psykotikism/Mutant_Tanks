@@ -123,8 +123,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_MAP (1 << 1) // l4d_map_configs/l4d2_map_configs
 #define MT_CONFIG_GAMEMODE (1 << 2) // l4d_gamemode_configs/l4d2_gamemode_configs
 #define MT_CONFIG_DAY (1 << 3) // daily_configs
-#define MT_CONFIG_COUNT (1 << 4) // playercount_configs
-#define MT_CONFIG_FINALE (1 << 5) // l4d_finale_configs/l4d2_finale_configs
+#define MT_CONFIG_PLAYERCOUNT (1 << 4) // playercount_configs
+#define MT_CONFIG_SURVIVORCOUNT (1 << 5) // survivorcount_configs
+#define MT_CONFIG_INFECTEDCOUNT (1 << 6) // infectedcount_configs
+#define MT_CONFIG_FINALE (1 << 7) // l4d_finale_configs/l4d2_finale_configs
 
 #define MT_CONFIG_SECTION_MAIN "MutantTanks"
 #define MT_CONFIG_SECTION_MAIN2 "Mutant_Tanks"
@@ -326,8 +328,8 @@ enum struct esGeneral
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
 	int g_iExtraHealth;
-	int g_iFileTimeOld[6];
-	int g_iFileTimeNew[6];
+	int g_iFileTimeOld[8];
+	int g_iFileTimeNew[8];
 	int g_iFinaleAmount;
 	int g_iFinaleMaxTypes[10];
 	int g_iFinaleMinTypes[10];
@@ -350,7 +352,7 @@ enum struct esGeneral
 	int g_iMinimumHumans;
 	int g_iMultiHealth;
 	int g_iParserViewer;
-	int g_iPlayerCount[2];
+	int g_iPlayerCount[6];
 	int g_iPluginEnabled;
 	int g_iRegularAmount;
 	int g_iRegularCount;
@@ -1372,6 +1374,8 @@ public void OnClientPostAdminCheck(int client)
 	}
 
 	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
+	g_esGeneral.g_iPlayerCount[2] = iGetPlayerCount();
+	g_esGeneral.g_iPlayerCount[4] = iGetPlayerCount();
 }
 
 public void OnClientDisconnect_Post(int client)
@@ -1380,6 +1384,8 @@ public void OnClientDisconnect_Post(int client)
 	vResetCore(client);
 
 	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
+	g_esGeneral.g_iPlayerCount[2] = iGetPlayerCount();
+	g_esGeneral.g_iPlayerCount[4] = iGetPlayerCount();
 }
 
 public void OnConfigsExecuted()
@@ -1400,214 +1406,266 @@ public void OnConfigsExecuted()
 		CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 
-	if ((g_esGeneral.g_iConfigCreate & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_iConfigEnable == 1)
+	if (g_esGeneral.g_iConfigEnable == 1)
 	{
-		char sSMPath[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/difficulty_configs/");
-		CreateDirectory(sSMPath, 511);
-
-		char sDifficulty[11];
-		for (int iDifficulty = 0; iDifficulty <= 3; iDifficulty++)
+		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DIFFICULTY)
 		{
-			switch (iDifficulty)
+			char sSMPath[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/difficulty_configs/");
+			CreateDirectory(sSMPath, 511);
+
+			char sDifficulty[11];
+			for (int iDifficulty = 0; iDifficulty <= 3; iDifficulty++)
 			{
-				case 0: sDifficulty = "easy";
-				case 1: sDifficulty = "normal";
-				case 2: sDifficulty = "hard";
-				case 3: sDifficulty = "impossible";
-			}
-
-			vCreateConfigFile("difficulty_configs/", sDifficulty);
-		}
-	}
-
-	if ((g_esGeneral.g_iConfigCreate & MT_CONFIG_MAP) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		char sSMPath[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"));
-		CreateDirectory(sSMPath, 511);
-
-		char sMap[128];
-		ArrayList alMaps = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
-		if (alMaps != null)
-		{
-			int iSerial = -1;
-			ReadMapList(alMaps, iSerial, "default", MAPLIST_FLAG_MAPSFOLDER);
-			ReadMapList(alMaps, iSerial, "allexistingmaps__", MAPLIST_FLAG_MAPSFOLDER|MAPLIST_FLAG_NO_DEFAULT);
-
-			int iMapCount = (alMaps.Length > 0) ? alMaps.Length : 0;
-			if (iMapCount > 0)
-			{
-				for (int iPos = 0; iPos < iMapCount; iPos++)
+				switch (iDifficulty)
 				{
-					alMaps.GetString(iPos, sMap, sizeof(sMap));
-					vCreateConfigFile((bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMap);
+					case 0: sDifficulty = "easy";
+					case 1: sDifficulty = "normal";
+					case 2: sDifficulty = "hard";
+					case 3: sDifficulty = "impossible";
+				}
+
+				vCreateConfigFile("difficulty_configs/", sDifficulty);
+			}
+		}
+
+		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_MAP)
+		{
+			char sSMPath[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"));
+			CreateDirectory(sSMPath, 511);
+
+			char sMap[128];
+			ArrayList alMaps = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+			if (alMaps != null)
+			{
+				int iSerial = -1;
+				ReadMapList(alMaps, iSerial, "default", MAPLIST_FLAG_MAPSFOLDER);
+				ReadMapList(alMaps, iSerial, "allexistingmaps__", MAPLIST_FLAG_MAPSFOLDER|MAPLIST_FLAG_NO_DEFAULT);
+
+				int iMapCount = (alMaps.Length > 0) ? alMaps.Length : 0;
+				if (iMapCount > 0)
+				{
+					for (int iPos = 0; iPos < iMapCount; iPos++)
+					{
+						alMaps.GetString(iPos, sMap, sizeof(sMap));
+						vCreateConfigFile((bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMap);
+					}
+				}
+
+				delete alMaps;
+			}
+		}
+
+		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_GAMEMODE)
+		{
+			char sSMPath[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"));
+			CreateDirectory(sSMPath, 511);
+
+			char sGameType[2049], sTypes[64][32];
+			g_esGeneral.g_cvMTGameTypes.GetString(sGameType, sizeof(sGameType));
+			ReplaceString(sGameType, sizeof(sGameType), " ", "");
+			ExplodeString(sGameType, ",", sTypes, sizeof(sTypes), sizeof(sTypes[]));
+
+			for (int iMode = 0; iMode < sizeof(sTypes); iMode++)
+			{
+				if (StrContains(sGameType, sTypes[iMode]) != -1 && sTypes[iMode][0] != '\0')
+				{
+					vCreateConfigFile((bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode]);
 				}
 			}
-
-			delete alMaps;
 		}
-	}
 
-	if ((g_esGeneral.g_iConfigCreate & MT_CONFIG_GAMEMODE) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		char sSMPath[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"));
-		CreateDirectory(sSMPath, 511);
-
-		char sGameType[2049], sTypes[64][32];
-		g_esGeneral.g_cvMTGameTypes.GetString(sGameType, sizeof(sGameType));
-		ReplaceString(sGameType, sizeof(sGameType), " ", "");
-		ExplodeString(sGameType, ",", sTypes, sizeof(sTypes), sizeof(sTypes[]));
-
-		for (int iMode = 0; iMode < sizeof(sTypes); iMode++)
+		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_DAY)
 		{
-			if (StrContains(sGameType, sTypes[iMode]) != -1 && sTypes[iMode][0] != '\0')
+			char sSMPath[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/daily_configs/");
+			CreateDirectory(sSMPath, 511);
+
+			char sWeekday[32];
+			for (int iDay = 0; iDay < 7; iDay++)
 			{
-				vCreateConfigFile((bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode]);
+				switch (iDay)
+				{
+					case 0: sWeekday = "monday";
+					case 1: sWeekday = "tuesday";
+					case 2: sWeekday = "wednesday";
+					case 3: sWeekday = "thursday";
+					case 4: sWeekday = "friday";
+					case 5: sWeekday = "saturday";
+					case 6: sWeekday = "sunday";
+				}
+
+				vCreateConfigFile("daily_configs/", sWeekday);
 			}
 		}
-	}
 
-	if ((g_esGeneral.g_iConfigCreate & MT_CONFIG_DAY) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		char sSMPath[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/daily_configs/");
-		CreateDirectory(sSMPath, 511);
-
-		char sWeekday[32];
-		for (int iDay = 0; iDay < 7; iDay++)
+		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_PLAYERCOUNT)
 		{
-			switch (iDay)
+			char sSMPath[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/playercount_configs/");
+			CreateDirectory(sSMPath, 511);
+
+			char sPlayerCount[32];
+			for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
 			{
-				case 0: sWeekday = "monday";
-				case 1: sWeekday = "tuesday";
-				case 2: sWeekday = "wednesday";
-				case 3: sWeekday = "thursday";
-				case 4: sWeekday = "friday";
-				case 5: sWeekday = "saturday";
-				case 6: sWeekday = "sunday";
+				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
+				vCreateConfigFile("playercount_configs/", sPlayerCount);
+			}
+		}
+
+		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_SURVIVORCOUNT)
+		{
+			char sSMPath[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/survivorcount_configs/");
+			CreateDirectory(sSMPath, 511);
+
+			char sPlayerCount[32];
+			for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
+			{
+				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
+				vCreateConfigFile("survivorcount_configs/", sPlayerCount);
+			}
+		}
+
+		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_INFECTEDCOUNT)
+		{
+			char sSMPath[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/infectedcount_configs/");
+			CreateDirectory(sSMPath, 511);
+
+			char sPlayerCount[32];
+			for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
+			{
+				IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
+				vCreateConfigFile("infectedcount_configs/", sPlayerCount);
+			}
+		}
+
+		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_FINALE)
+		{
+			char sSMPath[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_finale_configs/" : "l4d_finale_configs/"));
+			CreateDirectory(sSMPath, 511);
+
+			char sEvent[32];
+			int iAmount = bIsValidGame() ? 11 : 8;
+			for (int iType = 0; iType < iAmount; iType++)
+			{
+				switch (iType)
+				{
+					case 0: sEvent = "finale_start";
+					case 1: sEvent = "finale_escape_start";
+					case 2: sEvent = "finale_vehicle_ready";
+					case 3: sEvent = "finale_vehicle_leaving";
+					case 4: sEvent = "finale_rush";
+					case 5: sEvent = "finale_radio_start";
+					case 6: sEvent = "finale_radio_damaged";
+					case 7: sEvent = "finale_win";
+					case 8: sEvent = "finale_vehicle_incoming";
+					case 9: sEvent = "finale_bridge_lowering";
+					case 10: sEvent = "gauntlet_finale_start";
+				}
+
+				vCreateConfigFile((bIsValidGame() ? "l4d2_finale_configs/" : "l4d_finale_configs/"), sEvent);
+			}
+		}
+
+		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_cvMTDifficulty != null)
+		{
+			char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
+			g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
+
+			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
+			if (FileExists(sDifficultyConfig, true))
+			{
+				vCustomConfig(sDifficultyConfig);
+				g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+			}
+		}
+
+		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && IsMapValid(sMapName))
+		{
+			char sMapConfig[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMapName);
+			if (FileExists(sMapConfig, true))
+			{
+				vCustomConfig(sMapConfig);
+				g_esGeneral.g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+			}
+		}
+
+		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE)
+		{
+			char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
+			g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
+
+			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
+			if (FileExists(sModeConfig, true))
+			{
+				vCustomConfig(sModeConfig);
+				g_esGeneral.g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
+			}
+		}
+
+		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_DAY)
+		{
+			char sDay[9], sDayNumber[2], sDayConfig[PLATFORM_MAX_PATH];
+			FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
+
+			int iDayNumber = StringToInt(sDayNumber);
+
+			switch (iDayNumber)
+			{
+				case 1: sDay = "monday";
+				case 2: sDay = "tuesday";
+				case 3: sDay = "wednesday";
+				case 4: sDay = "thursday";
+				case 5: sDay = "friday";
+				case 6: sDay = "saturday";
+				default: sDay = "sunday";
 			}
 
-			vCreateConfigFile("daily_configs/", sWeekday);
-		}
-	}
-
-	if ((g_esGeneral.g_iConfigCreate & MT_CONFIG_COUNT) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		char sSMPath[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/playercount_configs/");
-		CreateDirectory(sSMPath, 511);
-
-		char sPlayerCount[32];
-		for (int iCount = 0; iCount <= MAXPLAYERS + 1; iCount++)
-		{
-			IntToString(iCount, sPlayerCount, sizeof(sPlayerCount));
-			vCreateConfigFile("playercount_configs/", sPlayerCount);
-		}
-	}
-
-	if ((g_esGeneral.g_iConfigCreate & MT_CONFIG_FINALE) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		char sSMPath[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_finale_configs/" : "l4d_finale_configs/"));
-		CreateDirectory(sSMPath, 511);
-
-		char sEvent[32];
-		int iAmount = bIsValidGame() ? 11 : 8;
-		for (int iType = 0; iType < iAmount; iType++)
-		{
-			switch (iType)
+			BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
+			if (FileExists(sDayConfig, true))
 			{
-				case 0: sEvent = "finale_start";
-				case 1: sEvent = "finale_escape_start";
-				case 2: sEvent = "finale_vehicle_ready";
-				case 3: sEvent = "finale_vehicle_leaving";
-				case 4: sEvent = "finale_rush";
-				case 5: sEvent = "finale_radio_start";
-				case 6: sEvent = "finale_radio_damaged";
-				case 7: sEvent = "finale_win";
-				case 8: sEvent = "finale_vehicle_incoming";
-				case 9: sEvent = "finale_bridge_lowering";
-				case 10: sEvent = "gauntlet_finale_start";
+				vCustomConfig(sDayConfig);
+				g_esGeneral.g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
 			}
-
-			vCreateConfigFile((bIsValidGame() ? "l4d2_finale_configs/" : "l4d_finale_configs/"), sEvent);
-		}
-	}
-
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_iConfigEnable == 1 && g_esGeneral.g_cvMTDifficulty != null)
-	{
-		char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
-		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-
-		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
-		if (FileExists(sDifficultyConfig, true))
-		{
-			vCustomConfig(sDifficultyConfig);
-			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
-		}
-	}
-
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
-		GetCurrentMap(sMap, sizeof(sMap));
-		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
-		if (FileExists(sMapConfig, true))
-		{
-			vCustomConfig(sMapConfig);
-			g_esGeneral.g_iFileTimeOld[2] = GetFileTime(sMapConfig, FileTime_LastChange);
-		}
-	}
-
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
-		g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-
-		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
-		if (FileExists(sModeConfig, true))
-		{
-			vCustomConfig(sModeConfig);
-			g_esGeneral.g_iFileTimeOld[3] = GetFileTime(sModeConfig, FileTime_LastChange);
-		}
-	}
-
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DAY) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		char sDay[9], sDayNumber[2], sDayConfig[PLATFORM_MAX_PATH];
-		FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
-
-		int iDayNumber = StringToInt(sDayNumber);
-
-		switch (iDayNumber)
-		{
-			case 1: sDay = "monday";
-			case 2: sDay = "tuesday";
-			case 3: sDay = "wednesday";
-			case 4: sDay = "thursday";
-			case 5: sDay = "friday";
-			case 6: sDay = "saturday";
-			default: sDay = "sunday";
 		}
 
-		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
-		if (FileExists(sDayConfig, true))
+		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_PLAYERCOUNT)
 		{
-			vCustomConfig(sDayConfig);
-			g_esGeneral.g_iFileTimeOld[4] = GetFileTime(sDayConfig, FileTime_LastChange);
+			char sCountConfig[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iGetPlayerCount());
+			if (FileExists(sCountConfig, true))
+			{
+				vCustomConfig(sCountConfig);
+				g_esGeneral.g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+			}
 		}
-	}
 
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_COUNT) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		char sCountConfig[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iGetPlayerCount());
-		if (FileExists(sCountConfig, true))
+		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_SURVIVORCOUNT)
 		{
-			vCustomConfig(sCountConfig);
-			g_esGeneral.g_iFileTimeOld[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+			char sCountConfig[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/survivorcount_configs/%i.cfg", iGetHumanCount());
+			if (FileExists(sCountConfig, true))
+			{
+				vCustomConfig(sCountConfig);
+				g_esGeneral.g_iFileTimeOld[6] = GetFileTime(sCountConfig, FileTime_LastChange);
+			}
+		}
+
+		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_INFECTEDCOUNT)
+		{
+			char sCountConfig[PLATFORM_MAX_PATH];
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/infectedcount_configs/%i.cfg", iGetHumanCount(true));
+			if (FileExists(sCountConfig, true))
+			{
+				vCustomConfig(sCountConfig);
+				g_esGeneral.g_iFileTimeOld[7] = GetFileTime(sCountConfig, FileTime_LastChange);
+			}
 		}
 	}
 }
@@ -2527,110 +2585,165 @@ static void vConfig(bool manual)
 		}
 	}
 
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_iConfigEnable == 1 && g_esGeneral.g_cvMTDifficulty != null)
+	if (g_esGeneral.g_iConfigEnable == 1)
 	{
-		static char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
-		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
-		if (FileExists(sDifficultyConfig, true))
+		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_cvMTDifficulty != null)
 		{
-			g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
-			if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1] || manual)
+			static char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
+			g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
+			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
+			if (FileExists(sDifficultyConfig, true))
 			{
-				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDifficultyConfig);
-				vCustomConfig(sDifficultyConfig);
-				g_esGeneral.g_iFileTimeOld[1] = g_esGeneral.g_iFileTimeNew[1];
+				g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
+				if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1] || manual)
+				{
+					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDifficultyConfig);
+					vCustomConfig(sDifficultyConfig);
+					g_esGeneral.g_iFileTimeOld[1] = g_esGeneral.g_iFileTimeNew[1];
+				}
 			}
 		}
-	}
 
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		static char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
-		GetCurrentMap(sMap, sizeof(sMap));
-		BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
-		if (FileExists(sMapConfig, true))
+		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP)
 		{
-			g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
-			if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2] || manual)
+			static char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
+			GetCurrentMap(sMap, sizeof(sMap));
+			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
+			if (FileExists(sMapConfig, true))
 			{
-				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sMapConfig);
-				vCustomConfig(sMapConfig);
-				g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
+				g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+				if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2] || manual)
+				{
+					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sMapConfig);
+					vCustomConfig(sMapConfig);
+					g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
+				}
 			}
 		}
-	}
 
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		static char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
-		g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-		BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
-		if (FileExists(sModeConfig, true))
+		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE)
 		{
-			g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
-			if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3] || manual)
+			static char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
+			g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
+			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
+			if (FileExists(sModeConfig, true))
 			{
-				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sModeConfig);
-				vCustomConfig(sModeConfig);
-				g_esGeneral.g_iFileTimeOld[3] = g_esGeneral.g_iFileTimeNew[3];
+				g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
+				if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3] || manual)
+				{
+					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sModeConfig);
+					vCustomConfig(sModeConfig);
+					g_esGeneral.g_iFileTimeOld[3] = g_esGeneral.g_iFileTimeNew[3];
+				}
 			}
 		}
-	}
 
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DAY) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		static char sDay[9], sDayNumber[2], sDayConfig[PLATFORM_MAX_PATH];
-		FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
-		static int iDayNumber;
-		iDayNumber = StringToInt(sDayNumber);
-
-		switch (iDayNumber)
+		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_DAY)
 		{
-			case 1: sDay = "monday";
-			case 2: sDay = "tuesday";
-			case 3: sDay = "wednesday";
-			case 4: sDay = "thursday";
-			case 5: sDay = "friday";
-			case 6: sDay = "saturday";
-			default: sDay = "sunday";
-		}
+			static char sDay[9], sDayNumber[2], sDayConfig[PLATFORM_MAX_PATH];
+			FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
+			static int iDayNumber;
+			iDayNumber = StringToInt(sDayNumber);
 
-		BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
-		if (FileExists(sDayConfig, true))
-		{
-			g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
-			if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4] || manual)
+			switch (iDayNumber)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDayConfig);
-				vCustomConfig(sDayConfig);
-				g_esGeneral.g_iFileTimeOld[4] = g_esGeneral.g_iFileTimeNew[4];
+				case 1: sDay = "monday";
+				case 2: sDay = "tuesday";
+				case 3: sDay = "wednesday";
+				case 4: sDay = "thursday";
+				case 5: sDay = "friday";
+				case 6: sDay = "saturday";
+				default: sDay = "sunday";
+			}
+
+			BuildPath(Path_SM, sDayConfig, sizeof(sDayConfig), "data/mutant_tanks/daily_configs/%s.cfg", sDay);
+			if (FileExists(sDayConfig, true))
+			{
+				g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
+				if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4] || manual)
+				{
+					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDayConfig);
+					vCustomConfig(sDayConfig);
+					g_esGeneral.g_iFileTimeOld[4] = g_esGeneral.g_iFileTimeNew[4];
+				}
 			}
 		}
-	}
 
-	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_COUNT) && g_esGeneral.g_iConfigEnable == 1)
-	{
-		static char sCountConfig[PLATFORM_MAX_PATH];
-		static int iCount;
-		iCount = iGetPlayerCount();
-		BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iCount);
-		if (FileExists(sCountConfig, true))
+		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_PLAYERCOUNT)
 		{
-			g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
-			if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5] || manual)
+			static char sCountConfig[PLATFORM_MAX_PATH];
+			static int iCount;
+			iCount = iGetPlayerCount();
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iCount);
+			if (FileExists(sCountConfig, true))
 			{
-				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
-				vCustomConfig(sCountConfig);
-				g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
-				g_esGeneral.g_iPlayerCount[1] = iCount;
-				g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+				g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
+				if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5] || manual)
+				{
+					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
+					vCustomConfig(sCountConfig);
+					g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
+					g_esGeneral.g_iPlayerCount[1] = iCount;
+					g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+				}
+				else if (g_esGeneral.g_iPlayerCount[0] != g_esGeneral.g_iPlayerCount[1] || manual)
+				{
+					vCustomConfig(sCountConfig);
+					g_esGeneral.g_iPlayerCount[1] = iCount;
+					g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+				}
 			}
-			else if (g_esGeneral.g_iPlayerCount[0] != g_esGeneral.g_iPlayerCount[1] || manual)
+		}
+
+		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_SURVIVORCOUNT)
+		{
+			static char sCountConfig[PLATFORM_MAX_PATH];
+			static int iCount;
+			iCount = iGetHumanCount();
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/survivorcount_configs/%i.cfg", iCount);
+			if (FileExists(sCountConfig, true))
 			{
-				vCustomConfig(sCountConfig);
-				g_esGeneral.g_iPlayerCount[1] = iCount;
-				g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+				g_esGeneral.g_iFileTimeNew[6] = GetFileTime(sCountConfig, FileTime_LastChange);
+				if (g_esGeneral.g_iFileTimeOld[6] != g_esGeneral.g_iFileTimeNew[6] || manual)
+				{
+					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
+					vCustomConfig(sCountConfig);
+					g_esGeneral.g_iFileTimeOld[6] = g_esGeneral.g_iFileTimeNew[6];
+					g_esGeneral.g_iPlayerCount[3] = iCount;
+					g_esGeneral.g_iPlayerCount[2] = g_esGeneral.g_iPlayerCount[3];
+				}
+				else if (g_esGeneral.g_iPlayerCount[2] != g_esGeneral.g_iPlayerCount[3] || manual)
+				{
+					vCustomConfig(sCountConfig);
+					g_esGeneral.g_iPlayerCount[3] = iCount;
+					g_esGeneral.g_iPlayerCount[2] = g_esGeneral.g_iPlayerCount[3];
+				}
+			}
+		}
+
+		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_INFECTEDCOUNT)
+		{
+			static char sCountConfig[PLATFORM_MAX_PATH];
+			static int iCount;
+			iCount = iGetHumanCount(true);
+			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/infectedcount_configs/%i.cfg", iCount);
+			if (FileExists(sCountConfig, true))
+			{
+				g_esGeneral.g_iFileTimeNew[7] = GetFileTime(sCountConfig, FileTime_LastChange);
+				if (g_esGeneral.g_iFileTimeOld[7] != g_esGeneral.g_iFileTimeNew[7] || manual)
+				{
+					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
+					vCustomConfig(sCountConfig);
+					g_esGeneral.g_iFileTimeOld[7] = g_esGeneral.g_iFileTimeNew[7];
+					g_esGeneral.g_iPlayerCount[5] = iCount;
+					g_esGeneral.g_iPlayerCount[4] = g_esGeneral.g_iPlayerCount[5];
+				}
+				else if (g_esGeneral.g_iPlayerCount[4] != g_esGeneral.g_iPlayerCount[5] || manual)
+				{
+					vCustomConfig(sCountConfig);
+					g_esGeneral.g_iPlayerCount[5] = iCount;
+					g_esGeneral.g_iPlayerCount[4] = g_esGeneral.g_iPlayerCount[5];
+				}
 			}
 		}
 	}
@@ -4528,8 +4641,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			{
 				g_esGeneral.g_iGameModeTypes = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GAMEMODES, key, "GameModeTypes", "Game Mode Types", "Game_Mode_Types", "types", g_esGeneral.g_iGameModeTypes, value, 0, 15);
 				g_esGeneral.g_iConfigEnable = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_CUSTOM, key, "EnableCustomConfigs", "Enable Custom Configs", "Enable_Custom_Configs", "cenabled", g_esGeneral.g_iConfigEnable, value, 0, 1);
-				g_esGeneral.g_iConfigCreate = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_CUSTOM, key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_esGeneral.g_iConfigCreate, value, 0, 63);
-				g_esGeneral.g_iConfigExecute = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_CUSTOM, key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_esGeneral.g_iConfigExecute, value, 0, 63);
+				g_esGeneral.g_iConfigCreate = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_CUSTOM, key, "CreateConfigTypes", "Create Config Types", "Create_Config_Types", "create", g_esGeneral.g_iConfigCreate, value, 0, 255);
+				g_esGeneral.g_iConfigExecute = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_CUSTOM, key, "ExecuteConfigTypes", "Execute Config Types", "Execute_Config_Types", "execute", g_esGeneral.g_iConfigExecute, value, 0, 255);
 
 				if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GAMEMODES, false) || StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GAMEMODES2, false) || StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GAMEMODES3, false) || StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_GAMEMODES4, false))
 				{
