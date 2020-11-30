@@ -2013,13 +2013,16 @@ stock int iGetBotSurvivor()
 	return -1;
 }
 
-stock int iGetHumanCount()
+stock int iGetHumanCount(bool infected = false)
 {
+	static bool bValidPlayer;
+	bValidPlayer = false;
 	static int iHumanCount;
 	iHumanCount = 0;
 	for (int iHuman = 1; iHuman <= MaxClients; iHuman++)
 	{
-		if (bIsHumanSurvivor(iHuman, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+		bValidPlayer = infected ? bIsInfected(iHuman, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) : bIsHumanSurvivor(iHuman, MT_CHECK_INGAME|MT_CHECK_ALIVE);
+		if (bValidPlayer)
 		{
 			iHumanCount++;
 		}
