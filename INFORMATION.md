@@ -6,7 +6,6 @@
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
 - Maximum types: 1,000 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins.)
-- Most of the settings below can be overridden for each player.
 
 ## Sections
 - Plugin Settings
@@ -3712,6 +3711,13 @@
 			// Maximum: 65535
 			"Clone Health"				"1000"
 
+			// Clones created by the Mutant Tank die after this many seconds.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (Until death)
+			// Maximum: 999999.0 (Longest)
+			"Clone Lifetime"			"0.0"
+
 			// The Mutant Tank's clone will be treated as a real Mutant Tank.
 			// Note: Clones cannot clone themselves regardless of the value for this setting for obvious safety reasons.
 			// Note: This setting can be overridden for specific players.
@@ -5364,7 +5370,7 @@
 {
 	"Tank #1"
 	{
-		// The Mutant Tank takes more damage.
+		// The Mutant Tank takes more damage but becomes stronger.
 		// Requires "mt_fragile.smx" to be installed.
 		"Fragile Ability"
 		{
@@ -8848,6 +8854,13 @@
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
 			"Minion Chance"				"33.3"
+
+			// Minions spawned by the Mutant Tank die after this many seconds.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (Until death)
+			// Maximum: 999999.0 (Longest)
+			"Minion Lifetime"			"0.0"
 
 			// Remove all minions spawned by the Mutant Tank when it dies.
 			// Note: This setting can be overridden for specific players.
@@ -12661,6 +12674,13 @@
 			// Maximum: 15
 			"Throw Infected Amount"			"2"
 
+			// Special infected thrown by the Mutant Tank die after this many seconds.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (Until death)
+			// Maximum: 999999.0 (Longest)
+			"Throw Infected Lifetime"		"0.0"
+
 			// The Mutant Tank throws these special infected.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -12700,6 +12720,13 @@
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Throw Witch Damage"			"5.0"
+
+			// Witches thrown by the Mutant Tank die after this many seconds.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (Until death)
+			// Maximum: 999999.0 (Longest)
+			"Throw Witch Lifetime"			"0.0"
 
 			// Remove all Witches thrown by the Mutant Tank when it dies.
 			// Note: This setting can be overridden for specific players.
@@ -13835,6 +13862,13 @@
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Witch Damage"				"5.0"
+
+			// Witches spawned by the Mutant Tank die after this many seconds.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (Until death)
+			// Maximum: 999999.0 (Longest)
+			"Witch Lifetime"			"0.0"
 
 			// The distance between a common infected and the Mutant Tank needed to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".

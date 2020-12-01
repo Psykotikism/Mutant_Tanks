@@ -31,6 +31,7 @@
 - Fixed the `Light Color` setting not working.
 - Fixed the `Regular Amount` setting being used on finale maps when the finale has not started.
 - Fixed the `Detect Plugins` setting not working when zero abilities are installed.
+- Fixed the `Rock Damage` setting under the `Enhancements` section affecting rocks thrown by the `Rock` and `Spam` abilities. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 #### Translations
 - Fixed global chat messages not being translated. (Thanks to Mi.Cura for testing and reporting!)
@@ -89,6 +90,7 @@
 
 - Ghost
 	- Fixed the range ability checking for the wrong ammo count.
+	- Fixed special infected remaining transparent after the Tank dies.
 
 - Gravity
 	- Fixed the range ability checking for the wrong ammo count.
@@ -308,10 +310,12 @@
 - Clone
 	- The `Clone Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
 	- Added the `Clone Remove` setting.
+	- Added the `Clone Lifetime` setting. (Requested by 3aljiyavslgazana.)
 	- AI clones are now killed instead of kicked when the plugin is unloaded.
+	- The `Clone Health` setting will now always determine clones' health. (Requested by 3aljiyavslgazana.)
 
 - Drop
-	- Dropped weapons now have normal size. (Thanks to 3aljiyavslgazana for suggesting!)
+	- Dropped weapons now have normal size. (Requested by 3aljiyavslgazana.)
 
 - Fire
 	- Added a sound effect for L4D1.
@@ -351,6 +355,7 @@
 
 - Minion
 	- Added the `Minion Remove` setting.
+	- Added the `Minion Lifetime` setting.
 	- AI minions are now killed instead of kicked when the plugin is unloaded.
 
 - Nullify
@@ -392,9 +397,11 @@
 	- Added the `Immunity Flags` setting.
 	- Added the `Throw Car Lifetime` setting.
 	- Added the `Throw Infected Amount` setting.
+	- Added the `Throw Infected Lifetime` setting.
 	- Added the `Throw Infected Remove` setting.
 	- Added the `Throw Witch Amount` setting.
 	- Added the `Throw Witch Damage` setting.
+	- Added the `Throw Witch Lifetime` setting.
 	- Added the `Throw Witch Remove` setting.
 
 - Track
@@ -413,6 +420,7 @@
 
 - Witch
 	- Added the `Witch Remove` setting.
+	- Added the `Witch Lifetime` setting.
 
 - Xiphos
 	- The ability now contributes to the Tank's overall health.
