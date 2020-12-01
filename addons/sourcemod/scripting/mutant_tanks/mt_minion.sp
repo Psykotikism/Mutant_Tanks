@@ -49,6 +49,7 @@ enum struct esPlayer
 	bool g_bMinion;
 
 	float g_flMinionChance;
+	float g_flMinionLifetime;
 
 	int g_iAccessFlags;
 	int g_iAmmoCount;
@@ -75,6 +76,7 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 enum struct esAbility
 {
 	float g_flMinionChance;
+	float g_flMinionLifetime;
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
@@ -96,6 +98,7 @@ esAbility g_esAbility[MT_MAXTYPES + 1];
 enum struct esCache
 {
 	float g_flMinionChance;
+	float g_flMinionLifetime;
 
 	int g_iComboAbility;
 	int g_iHumanAbility;
@@ -329,6 +332,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iMinionMessage = 0;
 				g_esAbility[iIndex].g_iMinionAmount = 5;
 				g_esAbility[iIndex].g_flMinionChance = 33.3;
+				g_esAbility[iIndex].g_flMinionLifetime = 0.0;
 				g_esAbility[iIndex].g_iMinionRemove = 1;
 				g_esAbility[iIndex].g_iMinionReplace = 1;
 				g_esAbility[iIndex].g_iMinionTypes = 0;
@@ -351,6 +355,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iMinionMessage = 0;
 					g_esPlayer[iPlayer].g_iMinionAmount = 0;
 					g_esPlayer[iPlayer].g_flMinionChance = 0.0;
+					g_esPlayer[iPlayer].g_flMinionLifetime = 0.0;
 					g_esPlayer[iPlayer].g_iMinionRemove = 0;
 					g_esPlayer[iPlayer].g_iMinionReplace = 0;
 					g_esPlayer[iPlayer].g_iMinionTypes = 0;
@@ -374,6 +379,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iMinionMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iMinionMessage, value, 0, 1);
 		g_esPlayer[admin].g_iMinionAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esPlayer[admin].g_iMinionAmount, value, 1, 15);
 		g_esPlayer[admin].g_flMinionChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esPlayer[admin].g_flMinionChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_flMinionLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionLifetime", "Minion Lifetime", "Minion_Lifetime", "lifetime", g_esPlayer[admin].g_flMinionLifetime, value, 0.0, 999999.0);
 		g_esPlayer[admin].g_iMinionRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esPlayer[admin].g_iMinionRemove, value, 0, 1);
 		g_esPlayer[admin].g_iMinionReplace = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esPlayer[admin].g_iMinionReplace, value, 0, 1);
 		g_esPlayer[admin].g_iMinionTypes = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esPlayer[admin].g_iMinionTypes, value, 0, 63);
@@ -399,6 +405,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iMinionMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iMinionMessage, value, 0, 1);
 		g_esAbility[type].g_iMinionAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionAmount", "Minion Amount", "Minion_Amount", "amount", g_esAbility[type].g_iMinionAmount, value, 1, 15);
 		g_esAbility[type].g_flMinionChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionChance", "Minion Chance", "Minion_Chance", "chance", g_esAbility[type].g_flMinionChance, value, 0.0, 100.0);
+		g_esAbility[type].g_flMinionLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionLifetime", "Minion Lifetime", "Minion_Lifetime", "lifetime", g_esAbility[type].g_flMinionLifetime, value, 0.0, 999999.0);
 		g_esAbility[type].g_iMinionRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionRemove", "Minion Remove", "Minion_Remove", "remove", g_esAbility[type].g_iMinionRemove, value, 0, 1);
 		g_esAbility[type].g_iMinionReplace = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionReplace", "Minion Replace", "Minion_Replace", "replace", g_esAbility[type].g_iMinionReplace, value, 0, 1);
 		g_esAbility[type].g_iMinionTypes = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "MinionTypes", "Minion Types", "Minion_Types", "types", g_esAbility[type].g_iMinionTypes, value, 0, 63);
@@ -417,6 +424,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flMinionChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMinionChance, g_esAbility[type].g_flMinionChance);
+	g_esCache[tank].g_flMinionLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMinionLifetime, g_esAbility[type].g_flMinionLifetime);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
@@ -676,6 +684,11 @@ static void vMinion(int tank)
 						g_esPlayer[tank].g_iCount++;
 						g_esPlayer[iSpecial].g_iOwner = tank;
 
+						if (g_esCache[tank].g_flMinionLifetime > 0.0)
+						{
+							CreateTimer(g_esCache[tank].g_flMinionLifetime, tTimerKillMinion, GetClientUserId(iSpecial), TIMER_FLAG_NO_MAPCHANGE);
+						}
+
 						static int iTime;
 						iTime = GetTime();
 						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -765,6 +778,19 @@ public Action tTimerCombo(Handle timer, int userid)
 	}
 
 	vMinion(iTank);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerKillMinion(Handle timer, int userid)
+{
+	int iSpecial = GetClientOfUserId(userid);
+	if (!bIsSpecialInfected(iSpecial) || !g_esPlayer[iSpecial].g_bMinion)
+	{
+		return Plugin_Stop;
+	}
+
+	ForcePlayerSuicide(iSpecial);
 
 	return Plugin_Continue;
 }

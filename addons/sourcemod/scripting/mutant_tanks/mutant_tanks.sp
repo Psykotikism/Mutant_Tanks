@@ -3544,7 +3544,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 					return (g_esCache[attacker].g_flClawDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 				}
-				else if (StrEqual(sClassname, "tank_rock") && g_esCache[attacker].g_flRockDamage >= 0.0)
+				else if (StrEqual(sClassname, "tank_rock") && iTank == 0 && g_esCache[attacker].g_flRockDamage >= 0.0)
 				{
 					damage = flGetScaledDamage(g_esCache[attacker].g_flRockDamage);
 
@@ -7031,13 +7031,14 @@ static void vSetProps(int tank)
 				g_esPlayer[tank].g_bBlur = true;
 
 				SetEntityModel(iTankModel, MODEL_TANK);
+				SetEntityRenderColor(iTankModel, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
+				SetEntPropEnt(iTankModel, Prop_Send, "m_hOwnerEntity", tank);
 
 				TeleportEntity(iTankModel, flTankPos, flTankAng, NULL_VECTOR);
 				DispatchSpawn(iTankModel);
 
 				AcceptEntityInput(iTankModel, "DisableCollision");
 
-				SetEntityRenderColor(iTankModel, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
 				SetEntProp(iTankModel, Prop_Send, "m_nSequence", GetEntProp(tank, Prop_Send, "m_nSequence"));
 				SetEntPropFloat(iTankModel, Prop_Send, "m_flPlaybackRate", 5.0);
 
@@ -7632,7 +7633,7 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 			}
 
 			flAngles[2] = 0.0;
-			flOrigin[2] = 80.0;
+			flOrigin[2] = 70.0;
 		}
 
 		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "Enable");
@@ -7990,7 +7991,7 @@ public void vTankSpawnFrame(DataPack pack)
 			}
 			case 0:
 			{
-				if (bIsCustomTankSupported(iTank))
+				if (!g_esGeneral.g_bCloneInstalled || (g_esGeneral.g_bCloneInstalled && !MT_IsTankClone(iTank)))
 				{
 					static int iHumanCount, iSpawnHealth, iExtraHealthNormal, iExtraHealthBoost, iExtraHealthBoost2, iExtraHealthBoost3, iNoBoost, iBoost,
 						iBoost2, iBoost3, iNegaNoBoost, iNegaBoost, iNegaBoost2, iNegaBoost3, iFinalNoHealth, iFinalHealth, iFinalHealth2, iFinalHealth3;

@@ -53,6 +53,7 @@ enum struct esPlayer
 {
 	float g_flWitchChance;
 	float g_flWitchDamage;
+	float g_flWitchLifetime;
 	float g_flWitchRange;
 
 	int g_iAccessFlags;
@@ -78,6 +79,7 @@ enum struct esAbility
 {
 	float g_flWitchChance;
 	float g_flWitchDamage;
+	float g_flWitchLifetime;
 	float g_flWitchRange;
 
 	int g_iAccessFlags;
@@ -101,6 +103,7 @@ enum struct esCache
 {
 	float g_flWitchChance;
 	float g_flWitchDamage;
+	float g_flWitchLifetime;
 	float g_flWitchRange;
 
 	int g_iComboAbility;
@@ -386,6 +389,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iWitchAmount = 3;
 				g_esAbility[iIndex].g_flWitchChance = 33.3;
 				g_esAbility[iIndex].g_flWitchDamage = 5.0;
+				g_esAbility[iIndex].g_flWitchLifetime = 0.0;
 				g_esAbility[iIndex].g_flWitchRange = 500.0;
 				g_esAbility[iIndex].g_iWitchRemove = 1;
 			}
@@ -409,6 +413,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iWitchAmount = 0;
 					g_esPlayer[iPlayer].g_flWitchChance = 0.0;
 					g_esPlayer[iPlayer].g_flWitchDamage = 0.0;
+					g_esPlayer[iPlayer].g_flWitchLifetime = 0.0;
 					g_esPlayer[iPlayer].g_flWitchRange = 0.0;
 					g_esPlayer[iPlayer].g_iWitchRemove = 0;
 				}
@@ -432,6 +437,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iWitchAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esPlayer[admin].g_iWitchAmount, value, 1, 25);
 		g_esPlayer[admin].g_flWitchChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esPlayer[admin].g_flWitchChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_flWitchDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esPlayer[admin].g_flWitchDamage, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flWitchLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esPlayer[admin].g_flWitchLifetime, value, 0.0, 999999.0);
 		g_esPlayer[admin].g_flWitchRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esPlayer[admin].g_flWitchRange, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_iWitchRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esPlayer[admin].g_iWitchRemove, value, 0, 1);
 
@@ -461,6 +467,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iWitchAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchAmount", "Witch Amount", "Witch_Amount", "amount", g_esAbility[type].g_iWitchAmount, value, 1, 25);
 		g_esAbility[type].g_flWitchChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchChance", "Witch Chance", "Witch_Chance", "chance", g_esAbility[type].g_flWitchChance, value, 0.0, 100.0);
 		g_esAbility[type].g_flWitchDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchDamage", "Witch Damage", "Witch_Damage", "damage", g_esAbility[type].g_flWitchDamage, value, 1.0, 999999.0);
+		g_esAbility[type].g_flWitchLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esAbility[type].g_flWitchLifetime, value, 0.0, 999999.0);
 		g_esAbility[type].g_flWitchRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esAbility[type].g_flWitchRange, value, 1.0, 999999.0);
 		g_esAbility[type].g_iWitchRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esAbility[type].g_iWitchRemove, value, 0, 1);
 
@@ -483,6 +490,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flWitchChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flWitchChance, g_esAbility[type].g_flWitchChance);
 	g_esCache[tank].g_flWitchDamage = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flWitchDamage, g_esAbility[type].g_flWitchDamage);
+	g_esCache[tank].g_flWitchLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flWitchLifetime, g_esAbility[type].g_flWitchLifetime);
 	g_esCache[tank].g_flWitchRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flWitchRange, g_esAbility[type].g_flWitchRange);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
@@ -698,6 +706,11 @@ static void vWitch2(int tank, float pos[3], float angles[3])
 		TeleportEntity(iWitch, pos, angles, NULL_VECTOR);
 		DispatchSpawn(iWitch);
 		ActivateEntity(iWitch);
+
+		if (g_esCache[tank].g_flWitchLifetime > 0.0)
+		{
+			CreateTimer(g_esCache[tank].g_flWitchLifetime, tTimerKillWitch, EntIndexToEntRef(iWitch), TIMER_FLAG_NO_MAPCHANGE);
+		}
 	}
 }
 
@@ -753,6 +766,19 @@ public Action tTimerCombo(Handle timer, DataPack pack)
 
 	int iPos = pack.ReadCell();
 	vWitch(iTank, iPos);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerKillWitch(Handle timer, int ref)
+{
+	int iWitch = EntRefToEntIndex(ref);
+	if (iWitch == INVALID_ENT_REFERENCE || !bIsValidEntity(iWitch) || !bIsWitch(iWitch))
+	{
+		return Plugin_Stop;
+	}
+
+	RemoveEntity(iWitch);
 
 	return Plugin_Continue;
 }

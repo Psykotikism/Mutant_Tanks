@@ -60,7 +60,9 @@ enum struct esPlayer
 
 	float g_flThrowCarLifetime;
 	float g_flThrowChance;
+	float g_flThrowInfectedLifetime;
 	float g_flThrowWitchDamage;
+	float g_flThrowWitchLifetime;
 
 	int g_iAccessFlags;
 	int g_iAmmoCount;
@@ -90,7 +92,9 @@ enum struct esAbility
 {
 	float g_flThrowCarLifetime;
 	float g_flThrowChance;
+	float g_flThrowInfectedLifetime;
 	float g_flThrowWitchDamage;
+	float g_flThrowWitchLifetime;
 
 	int g_iAccessFlags;
 	int g_iComboAbility;
@@ -117,7 +121,9 @@ enum struct esCache
 {
 	float g_flThrowCarLifetime;
 	float g_flThrowChance;
+	float g_flThrowInfectedLifetime;
 	float g_flThrowWitchDamage;
+	float g_flThrowWitchLifetime;
 
 	int g_iComboAbility;
 	int g_iHumanAbility;
@@ -427,10 +433,12 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iThrowCarOptions = 0;
 				g_esAbility[iIndex].g_flThrowChance = 33.3;
 				g_esAbility[iIndex].g_iThrowInfectedAmount = 2;
+				g_esAbility[iIndex].g_flThrowInfectedLifetime = 0.0;
 				g_esAbility[iIndex].g_iThrowInfectedOptions = 0;
 				g_esAbility[iIndex].g_iThrowInfectedRemove = 1;
 				g_esAbility[iIndex].g_iThrowWitchAmount = 3;
 				g_esAbility[iIndex].g_flThrowWitchDamage = 5.0;
+				g_esAbility[iIndex].g_flThrowWitchLifetime = 0.0;
 				g_esAbility[iIndex].g_iThrowWitchRemove = 1;
 			}
 		}
@@ -454,10 +462,12 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iThrowCarOptions = 0;
 					g_esPlayer[iPlayer].g_flThrowChance = 0.0;
 					g_esPlayer[iPlayer].g_iThrowInfectedAmount = 0;
+					g_esPlayer[iPlayer].g_flThrowInfectedLifetime = 0.0;
 					g_esPlayer[iPlayer].g_iThrowInfectedOptions = 0;
 					g_esPlayer[iPlayer].g_iThrowInfectedRemove = 0;
 					g_esPlayer[iPlayer].g_iThrowWitchAmount = 0;
 					g_esPlayer[iPlayer].g_flThrowWitchDamage = 0.0;
+					g_esPlayer[iPlayer].g_flThrowWitchLifetime = 0.0;
 					g_esPlayer[iPlayer].g_iThrowWitchRemove = 0;
 				}
 			}
@@ -481,10 +491,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iThrowCarOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esPlayer[admin].g_iThrowCarOptions, value, 0, 7);
 		g_esPlayer[admin].g_flThrowChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esPlayer[admin].g_flThrowChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iThrowInfectedAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedAmount", "Throw Infected Amount", "Throw_Infected_Amount", "infamount", g_esPlayer[admin].g_iThrowInfectedAmount, value, 1, 32);
+		g_esPlayer[admin].g_flThrowInfectedLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedLifetime", "Throw Infected Lifetime", "Throw_Infected_Lifetime", "inflifetime", g_esPlayer[admin].g_flThrowInfectedLifetime, value, 0.0, 999999.0);
 		g_esPlayer[admin].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esPlayer[admin].g_iThrowInfectedOptions, value, 0, 127);
 		g_esPlayer[admin].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esPlayer[admin].g_iThrowInfectedRemove, value, 0, 1);
 		g_esPlayer[admin].g_iThrowWitchAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchAmount", "Throw Witch Amount", "Throw_Witch_Amount", "witchamount", g_esPlayer[admin].g_iThrowWitchAmount, value, 1, 25);
 		g_esPlayer[admin].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esPlayer[admin].g_flThrowWitchDamage, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flThrowWitchLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchLifetime", "Throw Witch Lifetime", "Throw_Witch_Lifetime", "witchlifetime", g_esPlayer[admin].g_flThrowWitchLifetime, value, 0.0, 999999.0);
 		g_esPlayer[admin].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esPlayer[admin].g_iThrowWitchRemove, value, 0, 1);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -514,10 +526,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iThrowCarOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esAbility[type].g_iThrowCarOptions, value, 0, 7);
 		g_esAbility[type].g_flThrowChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esAbility[type].g_flThrowChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iThrowInfectedAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedAmount", "Throw Infected Amount", "Throw_Infected_Amount", "infamount", g_esAbility[type].g_iThrowInfectedAmount, value, 1, 32);
+		g_esAbility[type].g_flThrowInfectedLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedLifetime", "Throw Infected Lifetime", "Throw_Infected_Lifetime", "inflifetime", g_esAbility[type].g_flThrowInfectedLifetime, value, 0.0, 999999.0);
 		g_esAbility[type].g_iThrowInfectedOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedOptions", "Throw Infected Options", "Throw_Infected_Options", "infoptions", g_esAbility[type].g_iThrowInfectedOptions, value, 0, 127);
 		g_esAbility[type].g_iThrowInfectedRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedRemove", "Throw Infected Remove", "Throw_Infected_Remove", "infremove", g_esAbility[type].g_iThrowInfectedRemove, value, 0, 1);
 		g_esAbility[type].g_iThrowWitchAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchAmount", "Throw Witch Amount", "Throw_Witch_Amount", "witchamount", g_esAbility[type].g_iThrowWitchAmount, value, 1, 25);
 		g_esAbility[type].g_flThrowWitchDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchDamage", "Throw Witch Damage", "Throw_Witch_Damage", "witchdmg", g_esAbility[type].g_flThrowWitchDamage, value, 1.0, 999999.0);
+		g_esAbility[type].g_flThrowWitchLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchLifetime", "Throw Witch Lifetime", "Throw_Witch_Lifetime", "witchlifetime", g_esAbility[type].g_flThrowWitchLifetime, value, 0.0, 999999.0);
 		g_esAbility[type].g_iThrowWitchRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowWitchRemove", "Throw Witch Remove", "Throw_Witch_Remove", "witchremove", g_esAbility[type].g_iThrowWitchRemove, value, 0, 1);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -539,7 +553,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flThrowCarLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowCarLifetime, g_esAbility[type].g_flThrowCarLifetime);
 	g_esCache[tank].g_flThrowChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowChance, g_esAbility[type].g_flThrowChance);
+	g_esCache[tank].g_flThrowInfectedLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowInfectedLifetime, g_esAbility[type].g_flThrowInfectedLifetime);
 	g_esCache[tank].g_flThrowWitchDamage = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowWitchDamage, g_esAbility[type].g_flThrowWitchDamage);
+	g_esCache[tank].g_flThrowWitchLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowWitchLifetime, g_esAbility[type].g_flThrowWitchLifetime);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);
@@ -787,6 +803,32 @@ static int iGetThrownWitchCount(int tank)
 	return iWitchCount;
 }
 
+public Action tTimerKillInfected(Handle timer, int userid)
+{
+	int iSpecial = GetClientOfUserId(userid);
+	if (!bIsInfected(iSpecial) || !g_esPlayer[iSpecial].g_bThrown)
+	{
+		return Plugin_Stop;
+	}
+
+	ForcePlayerSuicide(iSpecial);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerKillWitch(Handle timer, int ref)
+{
+	int iWitch = EntRefToEntIndex(ref);
+	if (iWitch == INVALID_ENT_REFERENCE || !bIsValidEntity(iWitch) || !bIsWitch(iWitch))
+	{
+		return Plugin_Stop;
+	}
+
+	RemoveEntity(iWitch);
+
+	return Plugin_Continue;
+}
+
 public Action tTimerThrow(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -975,6 +1017,11 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							g_esPlayer[iSpecial].g_bThrown = true;
 							g_esPlayer[iSpecial].g_iOwner = iTank;
 
+							if (g_esCache[iTank].g_flThrowInfectedLifetime > 0.0)
+							{
+								CreateTimer(g_esCache[iTank].g_flThrowInfectedLifetime, tTimerKillInfected, GetClientUserId(iSpecial), TIMER_FLAG_NO_MAPCHANGE);
+							}
+
 							NormalizeVector(flVelocity, flVelocity);
 							ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
 
@@ -1029,6 +1076,11 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							DispatchSpawn(iWitch);
 							TeleportEntity(iWitch, NULL_VECTOR, NULL_VECTOR, flVelocity);
 							ActivateEntity(iWitch);
+
+							if (g_esCache[iTank].g_flThrowWitchLifetime > 0.0)
+							{
+								CreateTimer(g_esCache[iTank].g_flThrowWitchLifetime, tTimerKillWitch, EntIndexToEntRef(iWitch), TIMER_FLAG_NO_MAPCHANGE);
+							}
 
 							if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL2)
 							{

@@ -56,6 +56,7 @@ enum struct esPlayer
 	bool g_bFiltered;
 
 	float g_flCloneChance;
+	float g_flCloneLifetime;
 
 	int g_iAccessFlags;
 	int g_iAmmoCount;
@@ -85,6 +86,7 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 enum struct esAbility
 {
 	float g_flCloneChance;
+	float g_flCloneLifetime;
 
 	int g_iAccessFlags;
 	int g_iCloneAbility;
@@ -109,6 +111,7 @@ esAbility g_esAbility[MT_MAXTYPES + 1];
 enum struct esCache
 {
 	float g_flCloneChance;
+	float g_flCloneLifetime;
 
 	int g_iCloneAbility;
 	int g_iCloneAmount;
@@ -363,6 +366,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iCloneAmount = 2;
 				g_esAbility[iIndex].g_flCloneChance = 33.3;
 				g_esAbility[iIndex].g_iCloneHealth = 1000;
+				g_esAbility[iIndex].g_flCloneLifetime = 0.0;
 				g_esAbility[iIndex].g_iCloneMaxType = 0;
 				g_esAbility[iIndex].g_iCloneMinType = 0;
 				g_esAbility[iIndex].g_iCloneMode = 0;
@@ -388,6 +392,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iCloneAmount = 0;
 					g_esPlayer[iPlayer].g_flCloneChance = 0.0;
 					g_esPlayer[iPlayer].g_iCloneHealth = 0;
+					g_esPlayer[iPlayer].g_flCloneLifetime = 0.0;
 					g_esPlayer[iPlayer].g_iCloneMaxType = 0;
 					g_esPlayer[iPlayer].g_iCloneMinType = 0;
 					g_esPlayer[iPlayer].g_iCloneMode = 0;
@@ -414,6 +419,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iCloneAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esPlayer[admin].g_iCloneAmount, value, 1, 15);
 		g_esPlayer[admin].g_flCloneChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneChance", "Clone Chance", "Clone_Chance", "chance", g_esPlayer[admin].g_flCloneChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iCloneHealth = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esPlayer[admin].g_iCloneHealth, value, 1, MT_MAXHEALTH);
+		g_esPlayer[admin].g_flCloneLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneLifetime", "Clone Lifetime", "Clone_Lifetime", "lifetime", g_esPlayer[admin].g_flCloneLifetime, value, 0.0, 999999.0);
 		g_esPlayer[admin].g_iCloneMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esPlayer[admin].g_iCloneMode, value, 0, 1);
 		g_esPlayer[admin].g_iCloneRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esPlayer[admin].g_iCloneRemove, value, 0, 1);
 		g_esPlayer[admin].g_iCloneReplace = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esPlayer[admin].g_iCloneReplace, value, 0, 1);
@@ -452,6 +458,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iCloneAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneAmount", "Clone Amount", "Clone_Amount", "amount", g_esAbility[type].g_iCloneAmount, value, 1, 15);
 		g_esAbility[type].g_flCloneChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneChance", "Clone Chance", "Clone_Chance", "chance", g_esAbility[type].g_flCloneChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iCloneHealth = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneHealth", "Clone Health", "Clone_Health", "health", g_esAbility[type].g_iCloneHealth, value, 1, MT_MAXHEALTH);
+		g_esAbility[type].g_flCloneLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneLifetime", "Clone Lifetime", "Clone_Lifetime", "lifetime", g_esAbility[type].g_flCloneLifetime, value, 0.0, 999999.0);
 		g_esAbility[type].g_iCloneMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneMode", "Clone Mode", "Clone_Mode", "mode", g_esAbility[type].g_iCloneMode, value, 0, 1);
 		g_esAbility[type].g_iCloneRemove = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneRemove", "Clone Remove", "Clone_Remove", "remove", g_esAbility[type].g_iCloneRemove, value, 0, 1);
 		g_esAbility[type].g_iCloneReplace = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "CloneReplace", "Clone Replace", "Clone_Replace", "replace", g_esAbility[type].g_iCloneReplace, value, 0, 1);
@@ -482,6 +489,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flCloneChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCloneChance, g_esAbility[type].g_flCloneChance);
+	g_esCache[tank].g_flCloneLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCloneLifetime, g_esAbility[type].g_flCloneLifetime);
 	g_esCache[tank].g_iCloneAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneAbility, g_esAbility[type].g_iCloneAbility);
 	g_esCache[tank].g_iCloneAmount = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneAmount, g_esAbility[type].g_iCloneAmount);
 	g_esCache[tank].g_iCloneHealth = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneHealth, g_esAbility[type].g_iCloneHealth);
@@ -743,6 +751,11 @@ static void vClone(int tank)
 							g_esPlayer[iTank].g_bFiltered = true;
 						}
 
+						if (g_esCache[tank].g_flCloneLifetime > 0.0)
+						{
+							CreateTimer(g_esCache[tank].g_flCloneLifetime, tTimerKillClone, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+						}
+
 						static int iNewHealth;
 						iNewHealth = (g_esCache[tank].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esCache[tank].g_iCloneHealth;
 						//SetEntityHealth(iTank, iNewHealth);
@@ -867,6 +880,19 @@ public Action tTimerCombo(Handle timer, int userid)
 	}
 
 	vClone(iTank);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerKillClone(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!MT_IsTankSupported(iTank) || !g_esPlayer[iTank].g_bCloned)
+	{
+		return Plugin_Stop;
+	}
+
+	ForcePlayerSuicide(iTank);
 
 	return Plugin_Continue;
 }
