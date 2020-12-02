@@ -558,19 +558,19 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveClone(iTank, true);
 
-			if (g_esCache[iTank].g_iCloneAbility == 1)
+			switch (g_esPlayer[iTank].g_bCloned)
 			{
-				switch (g_esPlayer[iTank].g_bCloned)
+				case true:
 				{
-					case true:
+					for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
 					{
-						for (int iOwner = 1; iOwner <= MaxClients; iOwner++)
+						if (MT_IsTankSupported(iOwner, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTank].g_iOwner == iOwner)
 						{
-							if (MT_IsTankSupported(iOwner, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTank].g_iOwner == iOwner)
-							{
-								g_esPlayer[iTank].g_bCloned = false;
-								g_esPlayer[iTank].g_iOwner = 0;
+							g_esPlayer[iTank].g_bCloned = false;
+							g_esPlayer[iTank].g_iOwner = 0;
 
+							if (g_esCache[iOwner].g_iCloneAbility == 1)
+							{
 								switch (g_esPlayer[iOwner].g_iCount)
 								{
 									case 0, 1:
@@ -601,23 +601,23 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 										}
 									}
 								}
-
-								break;
 							}
+
+							break;
 						}
 					}
-					case false:
+				}
+				case false:
+				{
+					for (int iClone = 1; iClone <= MaxClients; iClone++)
 					{
-						for (int iClone = 1; iClone <= MaxClients; iClone++)
+						if (g_esPlayer[iClone].g_iOwner == iTank)
 						{
-							if (g_esPlayer[iClone].g_iOwner == iTank)
-							{
-								g_esPlayer[iClone].g_iOwner = 0;
+							g_esPlayer[iClone].g_iOwner = 0;
 
-								if (g_esPlayer[iClone].g_bCloned && g_esCache[iTank].g_iCloneRemove == 1 && bIsValidClient(iClone, MT_CHECK_INGAME|MT_CHECK_ALIVE))
-								{
-									ForcePlayerSuicide(iClone);
-								}
+							if (g_esPlayer[iClone].g_bCloned && g_esCache[iTank].g_iCloneRemove == 1 && bIsValidClient(iClone, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+							{
+								ForcePlayerSuicide(iClone);
 							}
 						}
 					}

@@ -3544,7 +3544,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 					return (g_esCache[attacker].g_flClawDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 				}
-				else if (StrEqual(sClassname, "tank_rock") && iTank == 0 && g_esCache[attacker].g_flRockDamage >= 0.0)
+				else if (StrEqual(sClassname, "tank_rock") && !bIsValidEntity(iTank) && g_esCache[attacker].g_flRockDamage >= 0.0)
 				{
 					damage = flGetScaledDamage(g_esCache[attacker].g_flRockDamage);
 
@@ -8377,17 +8377,17 @@ static bool bTankChance(int type)
 
 static float flGetScaledDamage(float damage)
 {
-	if (g_esGeneral.g_iCurrentMode == 1 && g_esGeneral.g_iScaleDamage == 1)
+	if (g_esGeneral.g_cvMTDifficulty != null && g_esGeneral.g_iScaleDamage == 1)
 	{
 		static char sDifficulty[11];
 		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
 
 		switch (sDifficulty[0])
 		{
-			case 'e': return (g_esGeneral.g_flDifficultyDamage[0] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[0]) : damage;
-			case 'n': return (g_esGeneral.g_flDifficultyDamage[1] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[1]) : damage;
-			case 'h': return (g_esGeneral.g_flDifficultyDamage[2] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[2]) : damage;
-			case 'i': return (g_esGeneral.g_flDifficultyDamage[3] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[3]) : damage;
+			case 'e', 'E': return (g_esGeneral.g_flDifficultyDamage[0] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[0]) : damage;
+			case 'n', 'N': return (g_esGeneral.g_flDifficultyDamage[1] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[1]) : damage;
+			case 'h', 'H': return (g_esGeneral.g_flDifficultyDamage[2] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[2]) : damage;
+			case 'i', 'I': return (g_esGeneral.g_flDifficultyDamage[3] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[3]) : damage;
 		}
 	}
 
@@ -8801,7 +8801,7 @@ public Action tTimerAnnounce(Handle timer, DataPack pack)
 
 		return Plugin_Stop;
 	}
-	else if (bIsTankIdle(iTank, 1) && g_esGeneral.g_iCurrentMode == 1 && g_esGeneral.g_iAggressiveTanks == 1 && !g_esPlayer[iTank].g_bTriggered)
+	else if (bIsTankIdle(iTank, 1) && g_esGeneral.g_cvMTDifficulty != null && g_esGeneral.g_iAggressiveTanks == 1 && !g_esPlayer[iTank].g_bTriggered)
 	{
 		g_esPlayer[iTank].g_bTriggered = true;
 
