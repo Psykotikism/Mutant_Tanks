@@ -6739,8 +6739,16 @@ static void vGiveWeapons(int survivor)
 		{
 			SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iWeaponInfo[0]);
 			SetEntProp(survivor, Prop_Send, "m_iAmmo", g_esPlayer[survivor].g_iWeaponInfo[1], _, iGetWeaponOffset(g_esPlayer[survivor].g_sWeaponPrimary));
-			SetEntProp(iSlot, Prop_Send, "m_upgradeBitVec", g_esPlayer[survivor].g_iWeaponInfo[2]);
-			SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", g_esPlayer[survivor].g_iWeaponInfo[3]);
+
+			if (g_esPlayer[survivor].g_iWeaponInfo[2] > 0)
+			{
+				SetEntProp(iSlot, Prop_Send, "m_upgradeBitVec", g_esPlayer[survivor].g_iWeaponInfo[2]);
+			}
+
+			if (bIsValidGame())
+			{
+				SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", g_esPlayer[survivor].g_iWeaponInfo[3]);
+			}
 		}
 	}
 
@@ -6804,8 +6812,16 @@ static void vSaveWeapons(int survivor)
 		strcopy(g_esPlayer[survivor].g_sWeaponPrimary, sizeof(esPlayer::g_sWeaponPrimary), sWeapon);
 		g_esPlayer[survivor].g_iWeaponInfo[0] = GetEntProp(iSlot, Prop_Send, "m_iClip1");
 		g_esPlayer[survivor].g_iWeaponInfo[1] = GetEntProp(survivor, Prop_Send, "m_iAmmo", _, iGetWeaponOffset(sWeapon));
-		g_esPlayer[survivor].g_iWeaponInfo[2] = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
-		g_esPlayer[survivor].g_iWeaponInfo[3] = GetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded");
+
+		if (HasEntProp(iSlot, Prop_Send, "m_upgradeBitVec"))
+		{
+			g_esPlayer[survivor].g_iWeaponInfo[2] = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
+		}
+
+		if (bIsValidGame())
+		{
+			g_esPlayer[survivor].g_iWeaponInfo[3] = GetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded");
+		}
 	}
 
 	int iSlot2 = 0;
