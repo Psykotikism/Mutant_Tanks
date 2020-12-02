@@ -1733,7 +1733,7 @@ public void OnAdminMenuReady(Handle topmenu)
 
 	g_esGeneral.g_tmMTMenu = tmMTMenu;
 
-	TopMenuObject tmoCommands = g_esGeneral.g_tmMTMenu.AddCategory(MT_CONFIG_SECTION_MAIN, iMTAdminMenuHandler);
+	TopMenuObject tmoCommands = g_esGeneral.g_tmMTMenu.AddCategory(MT_CONFIG_SECTION_MAIN, vMTAdminMenuHandler);
 	if (tmoCommands != INVALID_TOPMENUOBJECT)
 	{
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_tank", vMutantTanksMenu, tmoCommands, "sm_mt_tank", ADMFLAG_ROOT);
@@ -1745,21 +1745,19 @@ public void OnAdminMenuReady(Handle topmenu)
 	}
 }
 
-public int iMTAdminMenuHandler(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
+public void vMTAdminMenuHandler(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
 {
 	switch (action)
 	{
-		case TopMenuAction_DisplayTitle, TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%s", MT_NAME);
+		case TopMenuAction_DisplayTitle, TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", MT_CONFIG_SECTION_MAIN, param);
 	}
-
-	return 0;
 }
 
 public void vMutantTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
 {
 	switch (action)
 	{
-		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTMenu", param);
+		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTListMenu", param);
 		case TopMenuAction_SelectOption:
 		{
 			g_esPlayer[param].g_bAdminMenu = true;
@@ -1801,7 +1799,7 @@ public void vMTListMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject obj
 {
 	switch (action)
 	{
-		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTListMenu", param);
+		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTAbilitiesMenu", param);
 		case TopMenuAction_SelectOption: vListAbilities(param);
 	}
 }
@@ -2480,7 +2478,6 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 					{
 						char sInfo[33];
 						menu.GetItem(param2, sInfo, sizeof(sInfo));
-
 						Call_StartForward(g_esGeneral.g_gfMenuItemDisplayedForward);
 						Call_PushCell(param1);
 						Call_PushString(sInfo);
@@ -2490,7 +2487,10 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 					}
 				}
 
-				return RedrawMenuItem(sMenuOption);
+				if (sMenuOption[0] != '\0')
+				{
+					return RedrawMenuItem(sMenuOption);
+				}
 			}
 		}
 	}
@@ -3138,7 +3138,7 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 static void vTankMenu(int admin, int item)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
-	mTankMenu.SetTitle("%s Menu", MT_NAME);
+	mTankMenu.SetTitle("%s List", MT_NAME);
 
 	static int iCount;
 	iCount = 0;
@@ -3231,7 +3231,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
 			Panel pMain = view_as<Panel>(param2);
-			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTMenu", param1);
+			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTListMenu", param1);
 			pMain.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
