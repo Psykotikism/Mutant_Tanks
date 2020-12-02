@@ -23,11 +23,17 @@
 	// "{olive}" Yellow-green - \x05
 	// "{olive}" Sárgászöld - \x05
 	// "{olive}" 黄绿色 - \x05
-	"MTMenu"
+	"MutantTanks"
 	{
-		"en"			"Mutant Tanks Menu"
-		"hu"			"Mutáns Tankok Menü"
-		"chi"			"突变坦克列表"
+		"en"			"Mutant Tanks"
+		"hu"			"Mutáns Tankok"
+		"chi"			"突变坦克"
+	}
+	"MTAbilitiesMenu"
+	{
+		"en"			"Mutant Tanks Abilities"
+		"hu"			"Mutáns Tank Képességek"
+		"chi"			"突变坦克能力"
 	}
 	"MTConfigMenu"
 	{
@@ -55,9 +61,9 @@
 	}
 	"MTListMenu"
 	{
-		"en"			"Mutant Tanks Abilities"
-		"hu"			"Mutáns Tank Képességek"
-		"chi"			"突变坦克能力"
+		"en"			"Mutant Tanks List"
+		"hu"			"Mutáns Tankok Listája"
+		"chi"			"突变坦克清单"
 	}
 	"MTPathMenu"
 	{
