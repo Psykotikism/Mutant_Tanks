@@ -631,15 +631,22 @@ static void vPanic2(int tank, int pos = -1)
 	dpPanic.WriteCell(GetTime());
 }
 
-static void vPanic3()
+static void vPanic3(int tank)
 {
-	static int iDirector;
-	iDirector = CreateEntityByName("info_director");
-	if (IsValidEntity(iDirector))
+	switch (bIsValidGame())
 	{
-		DispatchSpawn(iDirector);
-		AcceptEntityInput(iDirector, "ForcePanicEvent");
-		RemoveEntity(iDirector);
+		case true:
+		{
+			static int iDirector;
+			iDirector = CreateEntityByName("info_director");
+			if (IsValidEntity(iDirector))
+			{
+				DispatchSpawn(iDirector);
+				AcceptEntityInput(iDirector, "ForcePanicEvent");
+				RemoveEntity(iDirector);
+			}
+		}
+		case false: vCheatCommand(tank, "director_force_panic_event");
 	}
 }
 
@@ -676,7 +683,7 @@ static void vPanicRange(int tank, bool idle)
 			return;
 		}
 
-		vPanic3();
+		vPanic3(tank);
 	}
 }
 
@@ -750,7 +757,7 @@ public Action tTimerPanic(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	vPanic3();
+	vPanic3(iTank);
 
 	if (g_esCache[iTank].g_iPanicMessage == 1)
 	{
