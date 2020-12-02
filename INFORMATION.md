@@ -6,6 +6,7 @@
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
 - Maximum types: 1,000 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins.)
+- Most of the settings below can be overridden for each player.
 
 ## Sections
 - Plugin Settings
@@ -20,6 +21,7 @@
 	- Waves
 	- Game Modes
 	- Custom
+
 - Tank Settings
 	- General
 	- Announcements
@@ -37,6 +39,7 @@
 	- Health
 	- Enhancements
 	- Immunities
+
 - Abilities
 	- Absorb
 	- Acid
@@ -114,6 +117,7 @@
 	- Xiphos
 	- Yell
 	- Zombie
+
 - Administration System
 	- Administration
 	- Tank Settings

@@ -15,9 +15,6 @@ You should have received a copy of the GNU General Public License along with thi
 ## About
 Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, Last Boss Extended, and Super Tanks to grant Tanks unique powers and abilities that enhance the player experience.
 
-### What makes Mutant Tanks worth installing?
-Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank.
-
 ## Features
 1. Fully compatible with all game modes.
 2. Supports custom configurations whether per difficulty, per map, per game mode, per day, per player (survivor/infected/all) count, or per finale stage.
@@ -142,6 +139,7 @@ By default, Mutant Tanks can create and execute the following types of configura
 Examples:
 
 This is okay:
+
 ```
 "Mutant Tanks"
 {
@@ -162,6 +160,7 @@ This is okay:
 ```
 
 This is not okay:
+
 ```
 "Mutant Tanks"
 {
@@ -182,6 +181,7 @@ This is not okay:
 ```
 
 This is okay:
+
 ```
 "Mutant Tanks"
 {
@@ -202,6 +202,7 @@ This is okay:
 ```
 
 This is not okay:
+
 ```
 "Mutant Tanks"
 {
@@ -224,6 +225,7 @@ This is not okay:
 - Adding the entry to the roster.
 
 Here's our final entry:
+
 ```
 "Mutant Tanks"
 {
@@ -601,7 +603,7 @@ These are basically temporary Tanks that you can create for certain situations, 
 
 14. How can I move the Mutant Tanks category around on the admin menu?
 
-- You have to open up addons/sourcemod/configs/adminmenu_sorting.txt.
+- You have to open up `addons/sourcemod/configs/adminmenu_sorting.txt`.
 - Enter the `MutantTanks` category.
 
 Example:
@@ -641,10 +643,11 @@ Example:
 
 	"MutantTanks"
 	{
-		"item"		"sm_tank"
+		"item"		"sm_mt_tank"
 		"item"		"sm_mt_config"
 		"item"		"sm_mt_info"
 		"item"		"sm_mt_list"
+		"item"		"sm_mt_reload"
 		"item"		"sm_mt_version"
 	}
 }
@@ -655,6 +658,7 @@ Example:
 Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Mutant Tank.
 
 Forwards:
+
 ```
 /**
  * Called every second to trigger a Mutant Tank's ability.
@@ -890,7 +894,9 @@ forward Action MT_OnTypeChosen(int &type, int tank);
 ```
 
 Natives:
+
 - Core plugin
+
 ```
 /**
  * Returns if a certain Mutant Tank type can spawn.
@@ -1216,7 +1222,9 @@ native void MT_SpawnTank(int tank, int type);
  **/
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
 ```
+
 - Clone ability
+
 ```
 /**
  * Returns if the clone can use abilities.
