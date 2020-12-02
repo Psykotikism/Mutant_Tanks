@@ -22,6 +22,7 @@
 - Fixed some cases where Tanks don't have props in thirdperson.
 - Fixed some cases where props appear even when Tanks are in firstperson.
 - Fixed the `Transformation` feature disabling itself after the first transformation ends.
+- Fixed the `Transformation` feature only firing once. (Thanks to Mi.Cura for testing and reporting!)
 - Fixed the blur effect prop not deleting itself. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 #### Settings
@@ -116,6 +117,9 @@
 
 - Omni
 	- Fixed the ability not tracking type changes properly. (Thanks to Mi.Cura for testing and reporting!)
+
+- Panic
+	- Fixed panic events not being called on L4D1.
 
 - Respawn
 	- Fixed the ability not respawning the Tank consistently. (Thanks to epz for the method!)

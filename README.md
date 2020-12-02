@@ -1923,6 +1923,8 @@ Examples:
 
 **login101** - For providing some source code.
 
+**peachie** - For the love and support behind the scenes.
+
 **Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (v8.66), helping to set up the wiki pages, and overall support.
 
 **Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
