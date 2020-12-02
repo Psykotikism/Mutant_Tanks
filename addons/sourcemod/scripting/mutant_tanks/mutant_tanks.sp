@@ -7663,7 +7663,6 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		}
 
 		DispatchSpawn(g_esPlayer[tank].g_iLight[light]);
-
 		SDKHook(g_esPlayer[tank].g_iLight[light], SDKHook_SetTransmit, SetTransmit);
 		g_esPlayer[tank].g_iLight[light] = EntIndexToEntRef(g_esPlayer[tank].g_iLight[light]);
 	}
@@ -7777,55 +7776,6 @@ static void vMutateTank(int tank)
 		if (g_esGeneral.g_flIdleCheck > 0.0)
 		{
 			CreateTimer(g_esGeneral.g_flIdleCheck, tTimerKillIdleTank, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-		}
-
-		switch (g_esCache[tank].g_iSpawnType)
-		{
-			case 0: vSpawnModes(tank, false);
-			case 1:
-			{
-				if (!g_esPlayer[tank].g_bBoss)
-				{
-					vSpawnModes(tank, true);
-
-					DataPack dpBoss;
-					CreateDataTimer(1.0, tTimerBoss, dpBoss, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-					dpBoss.WriteCell(GetClientUserId(tank));
-					dpBoss.WriteCell(g_esCache[tank].g_iBossStages);
-
-					for (int iPos = 0; iPos < sizeof(esCache::g_iBossHealth); iPos++)
-					{
-						dpBoss.WriteCell(g_esCache[tank].g_iBossHealth[iPos]);
-						dpBoss.WriteCell(g_esCache[tank].g_iBossType[iPos]);
-					}
-				}
-			}
-			case 2:
-			{
-				if (!g_esPlayer[tank].g_bRandomized)
-				{
-					vSpawnModes(tank, true);
-
-					DataPack dpRandom;
-					CreateDataTimer(g_esCache[tank].g_flRandomInterval, tTimerRandomize, dpRandom, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-					dpRandom.WriteCell(GetClientUserId(tank));
-					dpRandom.WriteFloat(GetEngineTime());
-				}
-			}
-			case 3:
-			{
-				if (!g_esPlayer[tank].g_bTransformed)
-				{
-					vSpawnModes(tank, true);
-					CreateTimer(g_esCache[tank].g_flTransformDelay, tTimerTransform, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
-
-					DataPack dpUntransform;
-					CreateDataTimer(g_esCache[tank].g_flTransformDuration + g_esCache[tank].g_flTransformDelay, tTimerUntransform, dpUntransform, TIMER_FLAG_NO_MAPCHANGE);
-					dpUntransform.WriteCell(GetClientUserId(tank));
-					dpUntransform.WriteCell(g_esPlayer[tank].g_iTankType);
-				}
-			}
-			case 4: vSpawnModes(tank, true);
 		}
 
 		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iFavoriteType > 0 && iType != g_esPlayer[tank].g_iFavoriteType)
@@ -9304,6 +9254,55 @@ public Action tTimerTankUpdate(Handle timer, int userid)
 		return Plugin_Continue;
 	}
 
+	switch (g_esCache[iTank].g_iSpawnType)
+	{
+		case 0: vSpawnModes(iTank, false);
+		case 1:
+		{
+			if (!g_esPlayer[iTank].g_bBoss)
+			{
+				vSpawnModes(iTank, true);
+
+				DataPack dpBoss;
+				CreateDataTimer(1.0, tTimerBoss, dpBoss, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpBoss.WriteCell(GetClientUserId(iTank));
+				dpBoss.WriteCell(g_esCache[iTank].g_iBossStages);
+
+				for (int iPos = 0; iPos < sizeof(esCache::g_iBossHealth); iPos++)
+				{
+					dpBoss.WriteCell(g_esCache[iTank].g_iBossHealth[iPos]);
+					dpBoss.WriteCell(g_esCache[iTank].g_iBossType[iPos]);
+				}
+			}
+		}
+		case 2:
+		{
+			if (!g_esPlayer[iTank].g_bRandomized)
+			{
+				vSpawnModes(iTank, true);
+
+				DataPack dpRandom;
+				CreateDataTimer(g_esCache[iTank].g_flRandomInterval, tTimerRandomize, dpRandom, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				dpRandom.WriteCell(GetClientUserId(iTank));
+				dpRandom.WriteFloat(GetEngineTime());
+			}
+		}
+		case 3:
+		{
+			if (!g_esPlayer[iTank].g_bTransformed)
+			{
+				vSpawnModes(iTank, true);
+				CreateTimer(g_esCache[iTank].g_flTransformDelay, tTimerTransform, GetClientUserId(iTank), TIMER_FLAG_NO_MAPCHANGE);
+
+				DataPack dpUntransform;
+				CreateDataTimer(g_esCache[iTank].g_flTransformDuration + g_esCache[iTank].g_flTransformDelay, tTimerUntransform, dpUntransform, TIMER_FLAG_NO_MAPCHANGE);
+				dpUntransform.WriteCell(GetClientUserId(iTank));
+				dpUntransform.WriteCell(g_esPlayer[iTank].g_iTankType);
+			}
+		}
+		case 4: vSpawnModes(iTank, true);
+	}
+
 	Call_StartForward(g_esGeneral.g_gfAbilityActivatedForward);
 	Call_PushCell(iTank);
 	Call_Finish();
@@ -9367,6 +9366,7 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 	int iTankType = pack.ReadCell();
 	vSetColor(iTank, iTankType);
 	vTankSpawn(iTank, 4);
+	vSpawnModes(iTank, false);
 
 	return Plugin_Continue;
 }
