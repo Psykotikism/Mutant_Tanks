@@ -977,7 +977,7 @@ static void vWarpHit(int survivor, int tank, float random, float chance, int ena
 			if (random <= chance)
 			{
 				static char sTankName[33];
-				static float flCurrentOrigin[3];
+				static float flCurrentOrigin[3], flCurrentAngles[3];
 				for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 				{
 					if (bIsSurvivor(iPlayer) && !bIsPlayerIncapacitated(iPlayer) && iPlayer != survivor)
@@ -996,7 +996,8 @@ static void vWarpHit(int survivor, int tank, float random, float chance, int ena
 						}
 
 						GetClientAbsOrigin(iPlayer, flCurrentOrigin);
-						TeleportEntity(survivor, flCurrentOrigin, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+						GetClientEyeAngles(iPlayer, flCurrentAngles);
+						TeleportEntity(survivor, flCurrentOrigin, flCurrentAngles, view_as<float>({0.0, 0.0, 0.0}));
 
 						if (g_esCache[tank].g_iWarpMessage & messages)
 						{

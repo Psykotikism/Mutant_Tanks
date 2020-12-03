@@ -940,6 +940,11 @@ public void vDropFrame(int userid)
 		g_esPlayer[iTank].g_iWeaponIndex = iWeapon;
 		MT_HideEntity(g_esPlayer[iTank].g_iWeapon, true);
 		g_esPlayer[iTank].g_iWeapon = EntIndexToEntRef(g_esPlayer[iTank].g_iWeapon);
+
+		DataPack dpDrop;
+		CreateDataTimer(0.1, tTimerRenderWeapon, dpDrop, TIMER_FLAG_NO_MAPCHANGE);
+		dpDrop.WriteCell(g_esPlayer[iTank].g_iWeapon);
+		dpDrop.WriteCell(GetClientUserId(iTank));
 	}
 }
 
@@ -956,6 +961,27 @@ public Action tTimerCombo(Handle timer, DataPack pack)
 	float flRandom = pack.ReadFloat();
 	int iPos = pack.ReadCell();
 	vDropWeapon(iTank, 0, flRandom, iPos);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerRenderWeapon(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	static int iWeapon, iTank;
+	iWeapon = EntRefToEntIndex(pack.ReadCell());
+	iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || iWeapon == INVALID_ENT_REFERENCE || !bIsValidEntity(iWeapon) || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iDropAbility == 0 || !g_esPlayer[iTank].g_bActivated)
+	{
+		return Plugin_Stop;
+	}
+
+	static int iRed, iGreen, iBlue, iAlpha;
+	iRed = 0, iGreen = 0, iBlue = 0, iAlpha = 0;
+	GetEntityRenderColor(iTank, iRed, iGreen, iBlue, iAlpha);
+	SetEntityRenderMode(iWeapon, GetEntityRenderMode(iTank));
+	SetEntityRenderColor(iWeapon, iRed, iGreen, iBlue, iAlpha);
 
 	return Plugin_Continue;
 }

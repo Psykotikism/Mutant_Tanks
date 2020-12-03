@@ -319,16 +319,18 @@ forward void MT_OnPostTankSpawn(int tank);
 forward void MT_OnResetTimers(int mode, int tank);
 
 /**
- * Called when a survivor is rewarded.
+ * Called when a survivor is rewarded or their reward ends.
  * Use this forward to reward survivors or to reset their rewards.
  *
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
- * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
+ *					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
  * @param priority		1 = Killer, 2 = Assistant who did most damage, 3 = Teammate who helped
+ * @param duration		The duration of the reward.
  * @param apply			True if the reward is given, false otherwise.
  **/
-forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, bool apply);
+forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply);
 
 /**
  * Called when a Mutant Tank's rock breaks.
@@ -1871,7 +1873,6 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 	return true;
 }
 
-// Values
 stock float flClamp(float value, float min, float max)
 {
 	if (value < min)

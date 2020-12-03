@@ -758,7 +758,6 @@ static void vClone(int tank)
 
 						static int iNewHealth;
 						iNewHealth = (g_esCache[tank].g_iCloneHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : g_esCache[tank].g_iCloneHealth;
-						//SetEntityHealth(iTank, iNewHealth);
 						SetEntProp(iTank, Prop_Data, "m_iHealth", iNewHealth);
 						SetEntProp(iTank, Prop_Data, "m_iMaxHealth", iNewHealth);
 

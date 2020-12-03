@@ -415,7 +415,6 @@ static void vXiphos(int attacker, int victim, float damage, bool tank)
 	iMaxHealth = (!tank && g_esCache[iTank].g_iXiphosMaxHealth == 0) ? GetEntProp(attacker, Prop_Data, "m_iMaxHealth") : iMaxHealth;
 	iNewHealth = iHealth + iDamage;
 	iFinalHealth = (iNewHealth > iMaxHealth) ? iMaxHealth : iNewHealth;
-	//SetEntityHealth(attacker, iFinalHealth);
 	SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
 
 	if (tank)

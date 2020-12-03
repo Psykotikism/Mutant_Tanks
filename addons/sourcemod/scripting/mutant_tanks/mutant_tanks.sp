@@ -92,7 +92,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 #define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
-#define MODEL_TANK "models/infected/hulk.mdl"
+#define MODEL_TANK_MAIN "models/infected/hulk.mdl"
+#define MODEL_TANK_DLC "models/infected/hulk_dlc3.mdl"
+#define MODEL_TANK_L4D1 "models/infected/hulk_l4d1.mdl"
 #define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
 #define MODEL_TREE_TRUNK "models/props_foliage/tree_trunk.mdl"
 #define MODEL_WITCH "models/infected/witch.mdl"
@@ -367,6 +369,7 @@ enum struct esGeneral
 	int g_iSpawnMode;
 	int g_iStasisMode;
 	int g_iTankCount;
+	int g_iTankModel;
 	int g_iTankWave;
 	int g_iTeamID[2048];
 	int g_iUsefulRewards[3];
@@ -524,6 +527,7 @@ enum struct esPlayer
 	int g_iSpawnType;
 	int g_iTankDamage[MAXPLAYERS + 1];
 	int g_iTankHealth;
+	int g_iTankModel;
 	int g_iTankNote;
 	int g_iTankType;
 	int g_iTire[2];
@@ -628,6 +632,7 @@ enum struct esTank
 	int g_iSpawnEnabled;
 	int g_iSpawnType;
 	int g_iTankEnabled;
+	int g_iTankModel;
 	int g_iTankNote;
 	int g_iTireColor[4];
 	int g_iTransformType[10];
@@ -715,6 +720,7 @@ enum struct esCache
 	int g_iRockModel;
 	int g_iSkinColor[4];
 	int g_iSpawnType;
+	int g_iTankModel;
 	int g_iTankNote;
 	int g_iTireColor[4];
 	int g_iTransformType[10];
@@ -1111,7 +1117,7 @@ public void OnPluginStart()
 	g_esGeneral.g_gfPluginEndForward = new GlobalForward("MT_OnPluginEnd", ET_Ignore);
 	g_esGeneral.g_gfPostTankSpawnForward = new GlobalForward("MT_OnPostTankSpawn", ET_Ignore, Param_Cell);
 	g_esGeneral.g_gfResetTimersForward = new GlobalForward("MT_OnResetTimers", ET_Ignore, Param_Cell, Param_Cell);
-	g_esGeneral.g_gfRewardSurvivorForward = new GlobalForward("MT_OnRewardSurvivor", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
+	g_esGeneral.g_gfRewardSurvivorForward = new GlobalForward("MT_OnRewardSurvivor", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Float, Param_Cell);
 	g_esGeneral.g_gfRockBreakForward = new GlobalForward("MT_OnRockBreak", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfRockThrowForward = new GlobalForward("MT_OnRockThrow", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfSettingsCachedForward = new GlobalForward("MT_OnSettingsCached", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
@@ -1246,14 +1252,14 @@ public void OnPluginStart()
 				vLogMessage(MT_LOG_SERVER, "%s Failed to load offset: Tank::GetIntentionInterface", MT_TAG);
 			}
 
-			int iOffset = gdMutantTanks.GetOffset("TankIntention::FirstContainedResponder");
+			int iOffset = gdMutantTanks.GetOffset("Action<Tank>::FirstContainedResponder");
 			StartPrepSDKCall(SDKCall_Raw);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_esGeneral.g_hSDKFirstContainedResponder = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKFirstContainedResponder == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Your \"TankIntention::FirstContainedResponder\" offsets are outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, "%s Your \"Action<Tank>::FirstContainedResponder\" offsets are outdated.", MT_TAG);
 			}
 
 			iOffset = gdMutantTanks.GetOffset("TankIdle::GetName");
@@ -1321,6 +1327,9 @@ public void OnMapStart()
 {
 	g_esGeneral.g_bMapStarted = true;
 
+	PrecacheModel(MODEL_TANK_MAIN, true);
+	PrecacheModel(MODEL_TANK_DLC, true);
+
 	PrecacheModel(MODEL_CONCRETE_CHUNK, true);
 	PrecacheModel(MODEL_FIREWORKCRATE, true);
 	PrecacheModel(MODEL_GASCAN, true);
@@ -1342,13 +1351,13 @@ public void OnMapStart()
 	PrecacheSound(SOUND_ELECTRICITY, true);
 	PrecacheSound(SOUND_METAL, true);
 
-	if (bIsValidGame())
+	switch (bIsValidGame())
 	{
-		PrecacheSound(SOUND_SPIT, true);
+		case true: PrecacheSound(SOUND_SPIT, true);
+		case false: PrecacheModel(MODEL_TANK_L4D1, true);
 	}
 
 	vReset();
-
 	vToggleLogging(1);
 }
 
@@ -1673,7 +1682,6 @@ public void OnMapEnd()
 	g_esGeneral.g_bMapStarted = false;
 
 	vReset();
-
 	vToggleLogging(0);
 }
 
@@ -1732,7 +1740,6 @@ public void OnAdminMenuReady(Handle topmenu)
 	}
 
 	g_esGeneral.g_tmMTMenu = tmMTMenu;
-
 	TopMenuObject tmoCommands = g_esGeneral.g_tmMTMenu.AddCategory(MT_CONFIG_SECTION_MAIN, vMTAdminMenuHandler);
 	if (tmoCommands != INVALID_TOPMENUOBJECT)
 	{
@@ -1889,7 +1896,6 @@ static void vParseConfig(int client)
 		{
 			char sSmcError[64];
 			smcParser.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
-
 			vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
 		}
 
@@ -2216,7 +2222,6 @@ static void vConfigMenu(int admin, int item)
 			{
 				char sSmcError[64];
 				smcConfig.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
-
 				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
 
 				delete smcConfig;
@@ -3230,9 +3235,9 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel pMain = view_as<Panel>(param2);
+			Panel pList = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "MTListMenu", param1);
-			pMain.SetTitle(sMenuTitle);
+			pList.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
@@ -3443,7 +3448,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public void OnSpawnPost(int entity)
 {
-	char sClassname[32];
+	static char sClassname[32];
 	GetEntityClassname(entity, sClassname, sizeof(sClassname));
 	if (!StrEqual(sClassname, "witch"))
 	{
@@ -3457,7 +3462,7 @@ public void OnSpawnPost(int entity)
 
 public void OnPropSpawnPost(int entity)
 {
-	static char sModel[64];
+	static char sModel[45];
 	GetEntPropString(entity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 	if (StrEqual(sModel, MODEL_JETPACK) || StrEqual(sModel, MODEL_PROPANETANK) || StrEqual(sModel, MODEL_GASCAN) || (bIsValidGame() && StrEqual(sModel, MODEL_FIREWORKCRATE)))
 	{
@@ -3641,11 +3646,12 @@ public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float 
 
 public Action SetTransmit(int entity, int client)
 {
-	char sClassname[32];
+	static char sClassname[32];
 	GetEntityClassname(entity, sClassname, sizeof(sClassname));
 	if (!StrEqual(sClassname, "witch"))
 	{
-		int iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+		static int iOwner;
+		iOwner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
 		if (g_esGeneral.g_bPluginEnabled && bIsValidClient(iOwner) && bIsValidClient(client) && iOwner == client && !bIsTankInThirdPerson(client))
 		{
 			return Plugin_Handled;
@@ -3719,6 +3725,8 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iRockEffects = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRockEffects, g_esTank[iType].g_iRockEffects);
 	g_esCache[tank].g_iRockModel = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRockModel, g_esTank[iType].g_iRockModel);
 	g_esCache[tank].g_iSpawnType = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSpawnType, g_esTank[iType].g_iSpawnType);
+	g_esCache[tank].g_iTankModel = iGetSettingValue(bAccess, true, g_esTank[iType].g_iTankModel, g_esGeneral.g_iTankModel);
+	g_esCache[tank].g_iTankModel = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iTankModel, g_esCache[tank].g_iTankModel);
 	g_esCache[tank].g_iTankNote = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iTankNote, g_esTank[iType].g_iTankNote);
 
 	for (int iPos = 0; iPos < sizeof(esCache::g_iTransformType); iPos++)
@@ -3998,7 +4006,6 @@ static void vLoadConfigs(const char[] savepath, int mode)
 		{
 			char sSmcError[64];
 			smcLoader.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
-
 			vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, savepath, sSmcError);
 		}
 
@@ -4026,6 +4033,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_flIdleCheck = 10.0;
 		g_esGeneral.g_iIdleCheckMode = 2;
 		g_esGeneral.g_iLogMessages = 0;
+		g_esGeneral.g_iTankModel = 0;
 		g_esGeneral.g_iMinType = 1;
 		g_esGeneral.g_iMaxType = MT_MAXTYPES;
 		g_esGeneral.g_iRequiresHumans = 0;
@@ -4100,6 +4108,7 @@ public void SMCParseStart(SMCParser smc)
 			FormatEx(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), "Tank #%i", iIndex);
 			g_esTank[iIndex].g_iTankEnabled = 0;
 			g_esTank[iIndex].g_flTankChance = 100.0;
+			g_esTank[iIndex].g_iTankModel = 0;
 			g_esTank[iIndex].g_iTankNote = 0;
 			g_esTank[iIndex].g_iSpawnEnabled = 1;
 			g_esTank[iIndex].g_iMenuEnabled = 1;
@@ -4225,6 +4234,7 @@ public void SMCParseStart(SMCParser smc)
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 			{
 				g_esPlayer[iPlayer].g_sTankName[0] = '\0';
+				g_esPlayer[iPlayer].g_iTankModel = 0;
 				g_esPlayer[iPlayer].g_iTankNote = 0;
 				g_esPlayer[iPlayer].g_iDeathRevert = 0;
 				g_esPlayer[iPlayer].g_iDetectPlugins = 0;
@@ -4452,6 +4462,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			g_esGeneral.g_iIdleCheckMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "IdleCheckMode", "Idle Check Mode", "Idle_Check_Mode", "idlemode", g_esGeneral.g_iIdleCheckMode, value, 0, 2);
 			g_esGeneral.g_iLogMessages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "LogMessages", "Log Messages", "Log_Messages", "log", g_esGeneral.g_iLogMessages, value, 0, 31);
 			g_esGeneral.g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGeneral.g_iRequiresHumans, value, 0, 32);
+			g_esGeneral.g_iTankModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esGeneral.g_iTankModel, value, 0, 7);
 			g_esGeneral.g_iAnnounceArrival = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esGeneral.g_iAnnounceArrival, value, 0, 31);
 			g_esGeneral.g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esGeneral.g_iAnnounceDeath, value, 0, 2);
 			g_esGeneral.g_iAnnounceKill = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceKill", "Announce Kill", "Announce_Kill", "kill", g_esGeneral.g_iAnnounceKill, value, 0, 1);
@@ -4506,7 +4517,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				{
 					if (StrEqual(key, "RewardEnabled", false) || StrEqual(key, "Reward Enabled", false) || StrEqual(key, "Reward_Enabled", false) || StrEqual(key, "renabled", false))
 					{
-						g_esGeneral.g_iRewardEnabled[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 255) : g_esGeneral.g_iRewardEnabled[iPos];
+						g_esGeneral.g_iRewardEnabled[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 2147483647) : g_esGeneral.g_iRewardEnabled[iPos];
 					}
 					else if (StrEqual(key, "RewardChance", false) || StrEqual(key, "Reward Chance", false) || StrEqual(key, "Reward_Chance", false) || StrEqual(key, "chance", false))
 					{
@@ -4690,6 +4701,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					{
 						g_esTank[iIndex].g_iTankEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankEnabled", "Tank Enabled", "Tank_Enabled", "tenabled", g_esTank[iIndex].g_iTankEnabled, value, 0, 1);
 						g_esTank[iIndex].g_flTankChance = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankChance", "Tank Chance", "Tank_Chance", "chance", g_esTank[iIndex].g_flTankChance, value, 0.0, 100.0);
+						g_esTank[iIndex].g_iTankModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esTank[iIndex].g_iTankModel, value, 0, 7);
 						g_esTank[iIndex].g_iTankNote = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankNote", "Tank Note", "Tank_Note", "note", g_esTank[iIndex].g_iTankNote, value, 0, 1);
 						g_esTank[iIndex].g_iSpawnEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_esTank[iIndex].g_iSpawnEnabled, value, 0, 1);
 						g_esTank[iIndex].g_iMenuEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "MenuEnabled", "Menu Enabled", "Menu_Enabled", "menu", g_esTank[iIndex].g_iMenuEnabled, value, 0, 1);
@@ -4767,7 +4779,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "RewardEnabled", false) || StrEqual(key, "Reward Enabled", false) || StrEqual(key, "Reward_Enabled", false) || StrEqual(key, "renabled", false))
 								{
-									g_esTank[iIndex].g_iRewardEnabled[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 255) : g_esTank[iIndex].g_iRewardEnabled[iPos];
+									g_esTank[iIndex].g_iRewardEnabled[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 2147483647) : g_esTank[iIndex].g_iRewardEnabled[iPos];
 								}
 								else if (StrEqual(key, "RewardChance", false) || StrEqual(key, "Reward Chance", false) || StrEqual(key, "Reward_Chance", false) || StrEqual(key, "chance", false))
 								{
@@ -5077,6 +5089,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					{
 						if (StrEqual(sSteamID32, g_esGeneral.g_sCurrentSection, false) || StrEqual(sSteam3ID, g_esGeneral.g_sCurrentSection, false))
 						{
+							g_esPlayer[iPlayer].g_iTankModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esPlayer[iPlayer].g_iTankModel, value, 0, 7);
 							g_esPlayer[iPlayer].g_iTankNote = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankNote", "Tank Note", "Tank_Note", "note", g_esPlayer[iPlayer].g_iTankNote, value, 0, 1);
 							g_esPlayer[iPlayer].g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esPlayer[iPlayer].g_iDeathRevert, value, 0, 1);
 							g_esPlayer[iPlayer].g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esPlayer[iPlayer].g_iDetectPlugins, value, 0, 1);
@@ -5148,7 +5161,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								{
 									if (StrEqual(key, "RewardEnabled", false) || StrEqual(key, "Reward Enabled", false) || StrEqual(key, "Reward_Enabled", false) || StrEqual(key, "renabled", false))
 									{
-										g_esPlayer[iPlayer].g_iRewardEnabled[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 255) : g_esPlayer[iPlayer].g_iRewardEnabled[iPos];
+										g_esPlayer[iPlayer].g_iRewardEnabled[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 2147483647) : g_esPlayer[iPlayer].g_iRewardEnabled[iPos];
 									}
 									else if (StrEqual(key, "RewardChance", false) || StrEqual(key, "Reward Chance", false) || StrEqual(key, "Reward_Chance", false) || StrEqual(key, "chance", false))
 									{
@@ -5814,7 +5827,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					}
 					else if (g_esPlayer[iTank].g_flAttackDelay == -1.0 && g_esPlayer[iTank].g_bAttackedAgain)
 					{
-						CreateTimer(g_esCache[iTank].g_flAttackInterval, tTimerResetDelay, iTankId, TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(g_esCache[iTank].g_flAttackInterval, tTimerResetAttackDelay, iTankId, TIMER_FLAG_NO_MAPCHANGE);
 
 						vAttackInterval(iTank);
 					}
@@ -6110,7 +6123,6 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 			static int iNewHealth, iFinalHealth;
 			iNewHealth = GetEntProp(tank, Prop_Data, "m_iMaxHealth") + limit;
 			iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-			//SetEntityHealth(tank, iFinalHealth);
 			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
 			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth);
 
@@ -6715,6 +6727,7 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 	Call_PushCell(tank);
 	Call_PushCell(type);
 	Call_PushCell(priority);
+	Call_PushFloat(g_esCache[tank].g_flRewardDuration[priority]);
 	Call_PushCell(apply);
 	Call_Finish();
 }
@@ -6754,14 +6767,14 @@ static void vGiveWeapons(int survivor)
 
 	if (g_esPlayer[survivor].g_sWeaponSecondary[0] != '\0')
 	{
-		if (g_esPlayer[survivor].g_bDualWielding)
+		switch (g_esPlayer[survivor].g_bDualWielding)
 		{
-			vCheatCommand(survivor, "give", "weapon_pistol");
-			vCheatCommand(survivor, "give", "weapon_pistol");
-		}
-		else
-		{
-			vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sWeaponSecondary);
+			case true:
+			{
+				vCheatCommand(survivor, "give", "weapon_pistol");
+				vCheatCommand(survivor, "give", "weapon_pistol");
+			}
+			case false: vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sWeaponSecondary);
 		}
 
 		int iSlot2 = GetPlayerWeaponSlot(survivor, 1);
@@ -6947,6 +6960,7 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 	g_esPlayer[tank].g_bReplaceSelf = false;
 
 	vCacheSettings(tank);
+	vSetTankModel(tank);
 
 	SetEntityRenderMode(tank, RENDER_NORMAL);
 	SetEntityRenderColor(tank, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
@@ -7046,7 +7060,16 @@ static void vSetProps(int tank)
 			{
 				g_esPlayer[tank].g_bBlur = true;
 
-				SetEntityModel(iTankModel, MODEL_TANK);
+				char sModel[32];
+				GetEntPropString(tank, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+
+				switch (sModel[21])
+				{
+					case 'm': SetEntityModel(iTankModel, MODEL_TANK_MAIN);
+					case 'd': SetEntityModel(iTankModel, MODEL_TANK_DLC);
+					case 'l': SetEntityModel(iTankModel, MODEL_TANK_L4D1);
+				}
+
 				SetEntityRenderColor(iTankModel, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
 				SetEntPropEnt(iTankModel, Prop_Send, "m_hOwnerEntity", tank);
 
@@ -7433,6 +7456,42 @@ static void vSetRockModel(int tank, int rock)
 		case 0: SetEntityModel(rock, MODEL_CONCRETE_CHUNK);
 		case 1: SetEntityModel(rock, MODEL_TREE_TRUNK);
 		case 2: SetEntityModel(rock, ((GetRandomInt(0, 1) == 0) ? MODEL_CONCRETE_CHUNK : MODEL_TREE_TRUNK));
+	}
+}
+
+static void vSetTankModel(int tank)
+{
+	if (g_esCache[tank].g_iTankModel > 0)
+	{
+		static int iModelCount, iModels[3], iFlag;
+		iModelCount = 0;
+		for (int iBit = 0; iBit < sizeof(iModels); iBit++)
+		{
+			iFlag = (1 << iBit);
+			if (!(g_esCache[tank].g_iTankModel & iFlag))
+			{
+				continue;
+			}
+
+			iModels[iModelCount] = iFlag;
+			iModelCount++;
+		}
+
+		switch (iModels[GetRandomInt(0, iModelCount - 1)])
+		{
+			case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
+			case 2: SetEntityModel(tank, MODEL_TANK_DLC);
+			case 4: SetEntityModel(tank, (bIsValidGame() ? MODEL_TANK_MAIN : MODEL_TANK_L4D1));
+			default:
+			{
+				switch (GetRandomInt(1, sizeof(iModels)))
+				{
+					case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
+					case 2: SetEntityModel(tank, MODEL_TANK_DLC);
+					case 3: SetEntityModel(tank, (bIsValidGame() ? MODEL_TANK_MAIN : MODEL_TANK_L4D1));
+				}
+			}
+		}
 	}
 }
 
@@ -7979,7 +8038,6 @@ public void vTankSpawnFrame(DataPack pack)
 					iFinalHealth = (iExtraHealthNormal >= 0) ? iBoost : iNegaBoost;
 					iFinalHealth2 = (iExtraHealthNormal >= 0) ? iBoost2 : iNegaBoost2;
 					iFinalHealth3 = (iExtraHealthNormal >= 0) ? iBoost3 : iNegaBoost3;
-					//SetEntityHealth(iTank, iFinalNoHealth);
 					SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalNoHealth);
 					SetEntProp(iTank, Prop_Data, "m_iMaxHealth", iFinalNoHealth);
 
@@ -7987,19 +8045,16 @@ public void vTankSpawnFrame(DataPack pack)
 					{
 						case 1:
 						{
-							//SetEntityHealth(iTank, iFinalHealth);
 							SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth);
 							SetEntProp(iTank, Prop_Data, "m_iMaxHealth", iFinalHealth);
 						}
 						case 2:
 						{
-							//SetEntityHealth(iTank, iFinalHealth2);
 							SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth2);
 							SetEntProp(iTank, Prop_Data, "m_iMaxHealth", iFinalHealth2);
 						}
 						case 3:
 						{
-							//SetEntityHealth(iTank, iFinalHealth3);
 							SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth3);
 							SetEntProp(iTank, Prop_Data, "m_iMaxHealth", iFinalHealth3);
 						}
@@ -8471,7 +8526,6 @@ static int iGetRealType(int type, int exclude = 0, int tank = 0, int min = 0, in
 	aResult = Plugin_Continue;
 	static int iType;
 	iType = type;
-
 	Call_StartForward(g_esGeneral.g_gfTypeChosenForward);
 	Call_PushCellRef(iType);
 	Call_PushCell(tank);
@@ -8709,7 +8763,6 @@ public void vMTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 	{
 		static char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 		g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-
 		BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
 		if (FileExists(sDifficultyConfig, true))
 		{
@@ -8760,7 +8813,6 @@ public Action tTimerAnnounce(Handle timer, DataPack pack)
 		static char sOldName[33], sNewName[33];
 		pack.ReadString(sOldName, sizeof(sOldName));
 		pack.ReadString(sNewName, sizeof(sNewName));
-
 		static int iMode;
 		iMode = pack.ReadCell();
 		vAnnounce(iTank, sOldName, sNewName, iMode);
@@ -8803,7 +8855,7 @@ public Action tTimerBlurEffect(Handle timer, DataPack pack)
 	static int iTankModel, iTank;
 	iTankModel = EntRefToEntIndex(pack.ReadCell());
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!g_esGeneral.g_bPluginEnabled || iTankModel == INVALID_ENT_REFERENCE || !bIsValidEntity(iTankModel))
+	if (iTankModel == INVALID_ENT_REFERENCE || !bIsValidEntity(iTankModel))
 	{
 		g_esPlayer[iTank].g_bBlur = false;
 
@@ -9112,7 +9164,7 @@ public Action tTimerReloadConfigs(Handle timer)
 	return Plugin_Continue;
 }
 
-public Action tTimerResetDelay(Handle timer, int userid)
+public Action tTimerResetAttackDelay(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
 	if (!bIsTankSupported(iTank))

@@ -924,7 +924,6 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 	iNewHealth = iTankHealth + 1;
 	iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
 	MT_TankMaxHealth(iTank, 3, iMaxHealth + 1);
-	//SetEntityHealth(iTank, iFinalHealth);
 	SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth);
 	vDamagePlayer(iSurvivor, iTank, 1.0);
 

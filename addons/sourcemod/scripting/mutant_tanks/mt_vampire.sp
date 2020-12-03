@@ -249,7 +249,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					iNewHealth = iHealth + iDamage;
 					iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
 					MT_TankMaxHealth(attacker, 3, iMaxHealth + iDamage);
-					//SetEntityHealth(attacker, iFinalHealth);
 					SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
 
 					vEffect(victim, attacker, g_esCache[attacker].g_iVampireEffect, 1);

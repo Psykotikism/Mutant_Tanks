@@ -793,7 +793,6 @@ static void vUltimate(int tank, int pos = -1)
 		iMaxHealth = MT_TankMaxHealth(tank, 1);
 		iNewHealth = RoundToNearest(GetEntProp(tank, Prop_Data, "m_iMaxHealth") * g_esCache[tank].g_flUltimateHealthPortion);
 		MT_TankMaxHealth(tank, 3, iMaxHealth + iNewHealth);
-		//SetEntityHealth(tank, iNewHealth);
 		SetEntProp(tank, Prop_Data, "m_iHealth", iNewHealth);
 		SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
 
