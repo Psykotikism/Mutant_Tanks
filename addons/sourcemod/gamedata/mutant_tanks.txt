@@ -121,7 +121,7 @@
 				"windows"	"35"
 				"linux"		"36"
 			}
-			"TankIntention::FirstContainedResponder"
+			"Action<Tank>::FirstContainedResponder"
 			{
 				"windows"	"1"
 				"linux"		"2"
@@ -241,7 +241,7 @@
 				"windows"	"40"
 				"linux"		"41"
 			}
-			"TankIntention::FirstContainedResponder"
+			"Action<Tank>::FirstContainedResponder"
 			{
 				"windows"	"1"
 				"linux"		"2"
