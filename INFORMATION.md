@@ -6,7 +6,6 @@
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
 - Maximum types: 1,000 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins, but expect potential server lag.)
-- Most of the settings below can be overridden for each player.
 
 ## Sections
 - Plugin Settings
@@ -215,6 +214,20 @@
 			// 1-32: ON, the number of human survivors required to be present for all Mutant Tanks to be effective.
 			"Requires Humans"			"0"
 
+			// The model used by all Mutant Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF (Let the game decide.)
+			// 1: Default model
+			// 2: The Sacrifice model
+			// 4: L4D1 model (Only available in Left 4 Dead 2.)
+			"Tank Model"				"0"
+
 			// The range of types to check for.
 			// --
 			// Separate values with "-".
@@ -273,7 +286,7 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum value for each: -1
-			// Maximum value for each: 255
+			// Maximum value for each: 2147483647
 			// --
 			// -1: OFF
 			// 0: Random
@@ -285,6 +298,8 @@
 			// 32: God mode reward (temporary)
 			// 64: Health and ammo refill reward
 			// 128: Respawn reward
+			// 255: All above rewards
+			// 256-2147483647: Reserved for third-party plugins
 			// --
 			// 1st number = Enable rewards for killers.
 			// 2nd number = Enable rewards for assistants.
@@ -927,6 +942,21 @@
 			// 0: OFF
 			// 1-32: ON, the number of human survivors required to be present for this Mutant Tank to be effective.
 			"Requires Humans"			"0"
+
+			// The model used by the Mutant Tank.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 7
+			// --
+			// 0: OFF (Let the game decide.)
+			// 1: Default model
+			// 2: The Sacrifice model
+			// 4: L4D1 model (Only available in Left 4 Dead 2.)
+			"Tank Model"				"0"
 		}
 		"Announcements"
 		{
@@ -976,7 +1006,7 @@
 			// Add up numbers together for different results.
 			// --
 			// Minimum value for each: -1
-			// Maximum value for each: 255
+			// Maximum value for each: 2147483647
 			// --
 			// -1: OFF
 			// 0: Random
@@ -988,6 +1018,8 @@
 			// 32: God mode reward (temporary)
 			// 64: Health and ammo refill reward
 			// 128: Respawn reward
+			// 255: All above rewards
+			// 256-2147483647: Reserved for third-party plugins
 			// --
 			// 1st number = Enable rewards for killers.
 			// 2nd number = Enable rewards for assistants.

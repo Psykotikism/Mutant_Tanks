@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.80 (December 31, 2020)
+## Version 8.80 (December 25, 2020)
 
 ### Bug fixes
 
@@ -24,6 +24,7 @@
 - Fixed the `Transformation` feature disabling itself after the first transformation ends.
 - Fixed the `Transformation` feature only firing once. (Thanks to Mi.Cura for testing and reporting!)
 - Fixed the blur effect prop not deleting itself. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed the blur effect prop not using the Tank's model.
 
 #### Settings
 - Fixed the `Requires Humans` setting not working in some config formats.
@@ -152,6 +153,7 @@
 
 - Warp
 	- Fixed the range ability checking for the wrong ammo count.
+	- Fixed players keeping their original velocity after being teleported.
 
 - Witch
 	- Fixed the ability spamming messages.
@@ -268,6 +270,7 @@
 - Added the `Limit Extras` setting under the `Plugin Settings/Waves` section.
 - Added `Survivor count (Humans only)` as an option for the `Create Config Types` and `Execute Config Types` settings.
 - Added `Infected count (Humans only)` as an option for the `Create Config Types` and `Execute Config Types` settings.
+- Added the `Tank Model` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` settings. (Thanks to Marttt for the code!)
 
 #### Translations
 - The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
@@ -322,6 +325,7 @@
 
 - Drop
 	- Dropped weapons now have normal size. (Requested by 3aljiyavslgazana.)
+	- Weapons attached to Tanks are now affected by the `Ghost` ability's fade feature. (Requested by 3aljiyavslgazana.)
 
 - Fire
 	- Added a sound effect for L4D1.
