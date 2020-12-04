@@ -548,7 +548,7 @@ public void MT_OnConfigsLoad(int mode)
 
 				for (int iPos = 0; iPos < sizeof(esAbility::g_iShieldColor); iPos++)
 				{
-					g_esAbility[iIndex].g_iShieldColor[iPos] = -1;
+					g_esAbility[iIndex].g_iShieldColor[iPos] = 255;
 				}
 			}
 		}

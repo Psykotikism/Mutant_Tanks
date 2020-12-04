@@ -4206,22 +4206,22 @@ public void SMCParseStart(SMCParser smc)
 
 				if (iPos < sizeof(esTank::g_iSkinColor))
 				{
-					g_esTank[iIndex].g_iSkinColor[iPos] = -1;
+					g_esTank[iIndex].g_iSkinColor[iPos] = 255;
 					g_esTank[iIndex].g_iBossHealth[iPos] = 5000 / (iPos + 1);
 					g_esTank[iIndex].g_iBossType[iPos] = iPos + 2;
-					g_esTank[iIndex].g_iLightColor[iPos] = -1;
-					g_esTank[iIndex].g_iOzTankColor[iPos] = -1;
-					g_esTank[iIndex].g_iFlameColor[iPos] = -1;
-					g_esTank[iIndex].g_iRockColor[iPos] = -1;
-					g_esTank[iIndex].g_iTireColor[iPos] = -1;
-					g_esTank[iIndex].g_iPropTankColor[iPos] = -1;
-					g_esTank[iIndex].g_iFlashlightColor[iPos] = -1;
-					g_esTank[iIndex].g_iCrownColor[iPos] = -1;
+					g_esTank[iIndex].g_iLightColor[iPos] = 255;
+					g_esTank[iIndex].g_iOzTankColor[iPos] = 255;
+					g_esTank[iIndex].g_iFlameColor[iPos] = 255;
+					g_esTank[iIndex].g_iRockColor[iPos] = 255;
+					g_esTank[iIndex].g_iTireColor[iPos] = 255;
+					g_esTank[iIndex].g_iPropTankColor[iPos] = 255;
+					g_esTank[iIndex].g_iFlashlightColor[iPos] = 255;
+					g_esTank[iIndex].g_iCrownColor[iPos] = 255;
 				}
 
 				if (iPos < sizeof(esTank::g_iGlowColor))
 				{
-					g_esTank[iIndex].g_iGlowColor[iPos] = -1;
+					g_esTank[iIndex].g_iGlowColor[iPos] = 255;
 				}
 			}
 		}
