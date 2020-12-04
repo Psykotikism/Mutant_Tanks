@@ -7814,7 +7814,7 @@
 	}
 	// This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
 	// Ez egy valós Steam32ID. Ne töröld! Ez csak egy példa.
-	// 这实际上是一个有效的 Steam32ID ,所以请不要取消注释,这只是一个示例
+	// 这实际上是一个有效的 Steam32ID, 所以请不要取消注释, 这只是一个示例
 	// --
 	// "STEAM_0:1:23456789 Name"
 	// {
