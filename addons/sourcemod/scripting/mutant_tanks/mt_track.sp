@@ -534,15 +534,7 @@ public void MT_OnChangeType(int tank, bool revert)
 
 public void MT_OnRockBreak(int tank, int rock)
 {
-	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
-	{
-		return;
-	}
-
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank))
-	{
-		vSetGlow(rock, 0, 0, 0, 0, 0);
-	}
+	vSetGlow(rock, 0, 0, 0, 0, 0);
 }
 
 public void MT_OnRockThrow(int tank, int rock)

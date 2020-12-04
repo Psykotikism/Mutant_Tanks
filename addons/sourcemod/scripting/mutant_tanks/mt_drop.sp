@@ -941,10 +941,10 @@ public void vDropFrame(int userid)
 		MT_HideEntity(g_esPlayer[iTank].g_iWeapon, true);
 		g_esPlayer[iTank].g_iWeapon = EntIndexToEntRef(g_esPlayer[iTank].g_iWeapon);
 
-		DataPack dpDrop;
-		CreateDataTimer(0.1, tTimerRenderWeapon, dpDrop, TIMER_FLAG_NO_MAPCHANGE);
-		dpDrop.WriteCell(g_esPlayer[iTank].g_iWeapon);
-		dpDrop.WriteCell(GetClientUserId(iTank));
+		DataPack dpRender;
+		CreateDataTimer(0.1, tTimerRenderWeapon, dpRender, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpRender.WriteCell(g_esPlayer[iTank].g_iWeapon);
+		dpRender.WriteCell(GetClientUserId(iTank));
 	}
 }
 

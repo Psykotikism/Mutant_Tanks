@@ -873,6 +873,17 @@ public void MT_OnPostTankSpawn(int tank)
 	}
 }
 
+public void MT_OnRockThrow(int tank, int rock)
+{
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && (g_esCache[tank].g_iGhostAbility == 2 || g_esCache[tank].g_iGhostAbility == 3))
+	{
+		DataPack dpRender;
+		CreateDataTimer(0.1, tTimerRenderRock, dpRender, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpRender.WriteCell(EntIndexToEntRef(rock));
+		dpRender.WriteCell(GetClientUserId(tank));
+	}
+}
+
 static void vCopyStats(int oldTank, int newTank)
 {
 	g_esPlayer[newTank].g_iAmmoCount = g_esPlayer[oldTank].g_iAmmoCount;
@@ -1369,6 +1380,26 @@ public Action tTimerGhost(Handle timer, DataPack pack)
 		MT_GetTankColors(iTank, 1, iSkinColor[0], iSkinColor[1], iSkinColor[2], iSkinColor[3]);
 		vRenderSpecials(iTank, true, iSkinColor[0], iSkinColor[1], iSkinColor[2]);
 	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerRenderRock(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	static int iRock, iTank;
+	iRock = EntRefToEntIndex(pack.ReadCell());
+	iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock) || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || (g_esCache[iTank].g_iGhostAbility != 2 && g_esCache[iTank].g_iGhostAbility != 3) || !g_esPlayer[iTank].g_bActivated)
+	{
+		return Plugin_Stop;
+	}
+
+	static int iRockColor[4];
+	MT_GetPropColors(iTank, 4, iRockColor[0], iRockColor[1], iRockColor[2], iRockColor[3]);
+	SetEntityRenderMode(iRock, GetEntityRenderMode(iTank));
+	SetEntityRenderColor(iRock, iRockColor[0], iRockColor[1], iRockColor[2], g_esPlayer[iTank].g_iGhostAlpha);
 
 	return Plugin_Continue;
 }
