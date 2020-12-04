@@ -271,6 +271,7 @@
 - Added `Survivor count (Humans only)` as an option for the `Create Config Types` and `Execute Config Types` settings.
 - Added `Infected count (Humans only)` as an option for the `Create Config Types` and `Execute Config Types` settings.
 - Added the `Tank Model` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Thanks to Marttt for the code!)
+- Several color settings' default values have been changed from `-1` to `255`.
 
 #### Translations
 - The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
@@ -335,6 +336,9 @@
 
 - Fragile
 	- Added the `Immunity Flags` setting.
+
+- Ghost
+	- Rocks thrown by Tanks are now affected by the fade feature. (Requested by 3aljiyavslgazana.)
 
 - God
 	- Added the `Immunity Flags` setting.

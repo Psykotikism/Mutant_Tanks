@@ -932,7 +932,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Skin Color"				"-1,-1,-1,-1"
+			"Skin Color"				"255,255,255,255"
 
 			// The Mutant Tank is only effective toward human survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
@@ -1181,7 +1181,7 @@
 			// 1st number = Red
 			// 2nd number = Green
 			// 3rd number = Blue
-			"Glow Color"				"-1,-1,-1"
+			"Glow Color"				"255,255,255"
 
 			// The Mutant Tank's glow outline will flash.
 			// Note: Only available in Left 4 Dead 2.
@@ -1778,7 +1778,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Light Color"				"-1,-1,-1,-1"
+			"Light Color"				"255,255,255,255"
 
 			// These are the RGBA values of the Mutant Tank's oxygen tank prop's color.
 			// Note: The oxygen tanks will be found on both outer sides of the Tank's legs.
@@ -1789,7 +1789,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Oxygen Tank Color"			"-1,-1,-1,-1"
+			"Oxygen Tank Color"			"255,255,255,255"
 
 			// These are the RGBA values of the Mutant Tank's oxygen tank prop's flame's color.
 			// Note: The flames will be found under the oxygen tanks.
@@ -1800,7 +1800,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Flame Color"				"-1,-1,-1,-1"
+			"Flame Color"				"255,255,255,255"
 
 			// These are the RGBA values of the Mutant Tank's rock prop's color.
 			// Note: The rocks will be found all over both of the Tank's arms in random angles.
@@ -1811,7 +1811,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Rock Color"				"-1,-1,-1,-1"
+			"Rock Color"				"255,255,255,255"
 
 			// This is the model of the Mutant Tank's rocks, which includes the rocks attached to it and the ones that it throws/spawns.
 			// Note: This setting can be overridden for specific players.
@@ -1830,7 +1830,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Tire Color"				"-1,-1,-1,-1"
+			"Tire Color"				"255,255,255,255"
 
 			// These are the RGBA values of the Mutant Tank's propane tank prop's color.
 			// Note: The propane tank will be found on the Tank's head acting like a helmet.
@@ -1841,7 +1841,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Propane Tank Color"			"-1,-1,-1,-1"
+			"Propane Tank Color"			"255,255,255,255"
 
 			// These are the RGBA values of the Mutant Tank's flashlight's color.
 			// Note: The flashlight will be found above the Tank shining down wherever the Tank is standing.
@@ -1852,7 +1852,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Flashlight Color"			"-1,-1,-1,-1"
+			"Flashlight Color"			"255,255,255,255"
 
 			// These are the RGBA values of the Mutant Tank's crown prop's color.
 			// Note: The crown will be found above the Tank.
@@ -1863,7 +1863,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Crown Color"				"-1,-1,-1,-1"
+			"Crown Color"				"255,255,255,255"
 		}
 		"Particles"
 		{
@@ -11353,7 +11353,7 @@
 			// 2nd number = Green
 			// 3rd number = Blue
 			// 4th number = Alpha
-			"Shield Color"				"-1,-1,-1,-1"
+			"Shield Color"				"255,255,255,255"
 
 			// The Mutant Tank's shield reactivates after this many seconds passes upon destroying the shield.
 			// Note: This setting can be overridden for specific players.
