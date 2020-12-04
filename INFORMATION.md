@@ -6,6 +6,7 @@
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
 - Maximum types: 1,000 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins, but expect potential server lag.)
+- Most of the settings below can be overridden for each player.
 
 ## Sections
 - Plugin Settings
@@ -14324,6 +14325,7 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
+
 		// Each Mutant Tank type can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above.
 		"Tank #1"
 		{
@@ -14341,6 +14343,7 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
+
 		// Each ability can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above.
 		"Absorb Ability"
 		{
@@ -14358,6 +14361,7 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
+
 		// Note: Admins can each have their own personalized/custom Mutant Tanks by using the same settings above in the "Tank Settings" and "X Ability" sections.
 	}
 }

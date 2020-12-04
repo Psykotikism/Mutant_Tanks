@@ -358,9 +358,7 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 
 2. Can you add more abilities or features?
 
-- That depends on whether it's doable/possible and if I want to add it.
-- If it's from another plugin, it would depend on whether the code is too long, and if it is, I most likely won't go through all that effort for just 1 ability.
-- Post on the AM thread or PM me.
+- Mutant Tanks already uses a lot of files, so there's no room for anymore abilities or features as of `v8.80`.
 
 3. How do I enable/disable the plugin in certain game modes?
 
@@ -409,7 +407,7 @@ It may be due to one or more of the following:
 - The `Spawn Enabled` setting for that Mutant Tank may be set to 0.
 - You have created a new Mutant Tank and didn't raise the maximum value of `Type Range`.
 - You have misspelled one of the settings.
-- You are still using the `Tank Character` setting which is no longer used since v8.16.
+- You are still using the `Tank Character` setting which is no longer used since `v8.16`.
 - You didn't set up the Mutant Tank properly.
 - You are missing quotation marks.
 - You are missing curly braces.
@@ -456,7 +454,7 @@ Each prop has X out of 100.0% chance to appear on Mutant Tanks when they spawn. 
 
 10. Why are the Tanks spawning with more than the extra health given to them?
 
-Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
+Since `v8.10`, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
 11. How do I add more Mutant Tanks?
 
@@ -1927,9 +1925,9 @@ Examples:
 
 **peachie** - For the love and support behind the scenes.
 
-**Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (v8.66), helping to set up the wiki pages, and overall support.
+**Angelace113** - For the default colors (before `v8.12`), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (`v8.66`), helping to set up the wiki pages, and overall support.
 
-**Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
+**Sipow** - For the default colors (before `v8.12`), suggesting ideas, and overall support.
 
 **Oliver** - For helping to test the Reward system, Combination feature, and overall support.
 
