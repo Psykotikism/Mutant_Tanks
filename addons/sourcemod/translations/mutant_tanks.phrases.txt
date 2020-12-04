@@ -23,6 +23,7 @@
 	// "{olive}" Yellow-green - \x05
 	// "{olive}" Sárgászöld - \x05
 	// "{olive}" 黄绿色 - \x05
+
 	"MutantTanks"
 	{
 		"en"			"Mutant Tanks"
@@ -7812,6 +7813,7 @@
 		"hu"			"{mint}Ez a Tank egyszerűen csak nem megy el..."
 		"chi"			"{mint}这辆坦克不会消失..."
 	}
+
 	// This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
 	// Ez egy valós Steam32ID. Ne töröld! Ez csak egy példa.
 	// 这实际上是一个有效的 Steam32ID, 所以请不要取消注释, 这只是一个示例
