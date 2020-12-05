@@ -21,7 +21,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 3. Flexible config file.
 4. Auto-reload the config file when changes are made mid-game.
 5. Supports custom configurations for different scenarios/setups.
-6. Store up to 1,000 Mutant Tank types.
+6. Store up to 500 Mutant Tank types.
 7. Administration system designed for access and immunity to Mutant Tanks.
 8. Custom target filters for targeting survivors, special infected, and Mutant Tanks.
 9. Over 1,400 optional settings to configure.
@@ -411,7 +411,7 @@ It may be due to one or more of the following:
 - You didn't set up the Mutant Tank properly.
 - You are missing quotation marks.
 - You are missing curly braces.
-- You have more than 1,000 Mutant Tanks in your config file.
+- You have more than 500 Mutant Tanks in your config file.
 - You didn't format your config file properly.
 - The Mutant Tanks requires X human-controlled survivors around and there are none.
 - The Mutant Tank needs to be in an open area to spawn and it's currently in a narrow place.
@@ -700,9 +700,11 @@ forward void MT_OnButtonReleased(int tank, int button);
  * Use this forward to trigger any features/abilities/settings when a Mutant Tank changes types.
  *
  * @param tank			Client index of the Tank.
+ * @param oldType		The Tank's previous Mutant Tank type.
+ * @param newType		The Tank's new Mutant Tank type.
  * @param revert		True if reverting to a normal Tank, false otherwise.
  **/
-forward void MT_OnChangeType(int tank, bool revert);
+forward void MT_OnChangeType(int tank, int oldType, int newType, bool revert);
 
 /**
  * Called when a Mutant Tank's abilities are combined.
@@ -1340,7 +1342,7 @@ sm_mt_tank - Spawn a Mutant Tank.
 
 Valid inputs:
 
-1. sm_tank <type 1*-1000*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is "1000" though.)
+1. sm_tank <type 1*-500*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is "500" though.)
 2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The plugin will attempt to match the name with any of the Mutant Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
 
 The command has 4 functions.

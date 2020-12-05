@@ -5,7 +5,7 @@
 
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
-- Maximum types: 1,000 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins, but expect potential server lag.)
+- Maximum types: 500 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins, but expect potential server lag.)
 
 ## Sections
 - Plugin Settings
@@ -236,11 +236,11 @@
 			// Character limit for each value: 4
 			// --
 			// Minimum number for each value: 1
-			// Maximum number for each value: 1000
+			// Maximum number for each value: 500
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
-			"Type Range"				"1-1000"
+			"Type Range"				"1-500"
 		}
 		"Announcements"
 		{
@@ -736,13 +736,13 @@
 			// Character limit for each value: 4
 			// --
 			// Minimum number for each value: 0 (OFF)
-			// Maximum number for each value: 1000
+			// Maximum number for each value: 500
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			// --
 			// 0: OFF, use the randomization feature.
-			// 1-1000: ON, the type that will spawn.
+			// 1-500: ON, the type that will spawn.
 			"Regular Type"				"0-0"
 
 			// Spawn Tanks on non-finale maps periodically.
@@ -774,13 +774,13 @@
 			// Character limit for each wave: 10
 			// --
 			// Minimum value for each wave: 0 (OFF)
-			// Maximum value for each wave: 1000
+			// Maximum value for each wave: 500
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			// --
 			// 0: OFF, use the randomization feature.
-			// 1-1000: ON, the type that will spawn.
+			// 1-500: ON, the type that will spawn.
 			"Finale Types"				"0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0"
 
 			// Number of Tanks to spawn for each finale wave.
@@ -1455,7 +1455,7 @@
 			// Character limit for each stage type: 5
 			// --
 			// Minimum: 1
-			// Maximum: 1000
+			// Maximum: 500
 			// --
 			// 1st number = 2nd stage type
 			// 2nd number = 3rd stage type
@@ -1852,7 +1852,7 @@
 			// Example: "97,98,99,100,101,102,103,104,105,106"
 			// --
 			// Minimum: 1
-			// Maximum: 1000
+			// Maximum: 500
 			"Transform Types"			"1,2,3,4,5,6,7,8,9,10"
 		}
 		"Props"
@@ -3917,13 +3917,13 @@
 			// Character limit for each value: 4
 			// --
 			// Minimum number for each value: 0 (OFF)
-			// Maximum number for each value: 1000
+			// Maximum number for each value: 500
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			// --
 			// 0: OFF, use the randomization feature.
-			// 1-1000: ON, the type of the clone.
+			// 1-500: ON, the type of the clone.
 			"Clone Type"				"0-0"
 		}
 	}
@@ -10653,13 +10653,13 @@
 			// Character limit for each value: 4
 			// --
 			// Minimum number for each value: 0 (OFF)
-			// Maximum number for each value: 1000
+			// Maximum number for each value: 500
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			// --
 			// 0: OFF, use the randomization feature.
-			// 1-1000: ON, the type to respawn as.
+			// 1-500: ON, the type to respawn as.
 			"Respawn Type"				"0-0"
 		}
 	}
@@ -14438,7 +14438,7 @@
 			// Note: If the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to "1", the admin will be prompted a menu asking if the admin wants to use this type.
 			// --
 			// 0: OFF, use the randomization feature.
-			// 1-1000: ON, the type that will be favorited.
+			// 1-500: ON, the type that will be favorited.
 			"Favorite Type"				"0"
 
 			// Admins with one or more of these access flags have access to all Mutant Tank types that have any of these flags.
