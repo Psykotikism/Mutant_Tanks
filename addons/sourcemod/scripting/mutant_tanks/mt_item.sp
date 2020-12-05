@@ -491,7 +491,7 @@ public void MT_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void MT_OnChangeType(int tank, bool revert)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
 	{

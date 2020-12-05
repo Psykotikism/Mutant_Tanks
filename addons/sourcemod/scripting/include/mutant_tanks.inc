@@ -82,7 +82,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 
 // Constants
 #define MT_MAXABILITIES 100
-#define MT_MAXTYPES 1000
+#define MT_MAXTYPES 500
 #define MT_MAXHEALTH 65535
 #define MT_MAX_HEALTH_REDUCTION -65535
 
@@ -180,9 +180,11 @@ forward void MT_OnButtonReleased(int tank, int button);
  * Use this forward to trigger any features/abilities/settings when a Mutant Tank changes types.
  *
  * @param tank			Client index of the Tank.
+ * @param oldType		The Tank's previous Mutant Tank type.
+ * @param newType		The Tank's new Mutant Tank type.
  * @param revert		True if reverting to a normal Tank, false otherwise.
  **/
-forward void MT_OnChangeType(int tank, bool revert);
+forward void MT_OnChangeType(int tank, int oldType, int newType, bool revert);
 
 /**
  * Called when a Mutant Tank's abilities are combined.

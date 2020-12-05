@@ -1047,7 +1047,8 @@ public any aNative_SetTankType(Handle plugin, int numParams)
 			}
 			case false:
 			{
-				vNewTankSettings(iTank);
+				vResetTank(iTank);
+				vChangeTypeForward(iTank, g_esPlayer[iTank].g_iTankType, iType);
 				g_esPlayer[iTank].g_iOldTankType = g_esPlayer[iTank].g_iTankType;
 				g_esPlayer[iTank].g_iTankType = iType;
 				vCacheSettings(iTank);
@@ -1114,7 +1115,7 @@ public void OnPluginStart()
 	g_esGeneral.g_gfAbilityCheckForward = new GlobalForward("MT_OnAbilityCheck", ET_Ignore, Param_Array, Param_Array, Param_Array, Param_Array);
 	g_esGeneral.g_gfButtonPressedForward = new GlobalForward("MT_OnButtonPressed", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfButtonReleasedForward = new GlobalForward("MT_OnButtonReleased", ET_Ignore, Param_Cell, Param_Cell);
-	g_esGeneral.g_gfChangeTypeForward = new GlobalForward("MT_OnChangeType", ET_Ignore, Param_Cell, Param_Cell);
+	g_esGeneral.g_gfChangeTypeForward = new GlobalForward("MT_OnChangeType", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfCombineAbilitiesForward = new GlobalForward("MT_OnCombineAbilities", ET_Ignore, Param_Cell, Param_Cell, Param_Float, Param_String, Param_Cell, Param_Cell, Param_String);
 	g_esGeneral.g_gfConfigsLoadForward = new GlobalForward("MT_OnConfigsLoad", ET_Ignore, Param_Cell);
 	g_esGeneral.g_gfConfigsLoadedForward = new GlobalForward("MT_OnConfigsLoaded", ET_Ignore, Param_String, Param_String, Param_String, Param_Cell, Param_Cell, Param_Cell);
@@ -6173,12 +6174,12 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 	}
 }
 
-static void vNewTankSettings(int tank, bool revert = false)
+static void vChangeTypeForward(int tank, int oldType, int newType, bool revert = false)
 {
-	vResetTank(tank);
-
 	Call_StartForward(g_esGeneral.g_gfChangeTypeForward);
 	Call_PushCell(tank);
+	Call_PushCell(oldType);
+	Call_PushCell(newType);
 	Call_PushCell(revert);
 	Call_Finish();
 }
@@ -6976,20 +6977,22 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 {
 	if (change)
 	{
-		vNewTankSettings(tank, revert);
+		vResetTank(tank);
 	}
 
 	if (type == 0)
 	{
 		vRemoveProps(tank);
+		vChangeTypeForward(tank, g_esPlayer[tank].g_iTankType, type, revert);
+		g_esPlayer[tank].g_iTankType = type;
 
 		return;
 	}
 	else if (g_esPlayer[tank].g_iTankType > 0 && g_esPlayer[tank].g_iTankType == type && !g_esPlayer[tank].g_bReplaceSelf && !g_esPlayer[tank].g_bKeepCurrentType)
 	{
 		vRemoveProps(tank);
-
 		g_esPlayer[tank].g_iTankType = 0;
+		vChangeTypeForward(tank, type, g_esPlayer[tank].g_iTankType, revert);
 
 		return;
 	}
@@ -7001,6 +7004,7 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 	g_esPlayer[tank].g_iTankType = type;
 	g_esPlayer[tank].g_bReplaceSelf = false;
 
+	vChangeTypeForward(tank, g_esPlayer[tank].g_iOldTankType, g_esPlayer[tank].g_iTankType, revert);
 	vCacheSettings(tank);
 	vSetTankModel(tank);
 

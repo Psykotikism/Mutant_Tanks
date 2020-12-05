@@ -676,7 +676,7 @@ public void MT_OnButtonPressed(int tank, int button)
 	}
 }
 
-public void MT_OnChangeType(int tank, bool revert)
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
 	vRemoveWhirl(tank);
 }
