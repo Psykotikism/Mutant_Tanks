@@ -17,23 +17,23 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 
 ## Features
 1. Fully compatible with all game modes.
-2. Supports custom configurations whether per difficulty, per map, per game mode, per day, per player (survivor/infected/all) count, or per finale stage.
-3. Fully customizable Mutant Tanks.
-4. Store up to 1,000 Mutant Tank types.
-5. Four different formats for the config file.
-6. Auto-reload the config file when changes are made mid-game.
-7. Choose which abilities to install.
-8. Add custom abilities and features through the use of forwards and natives.
-9. Custom target filters for targeting survivors, special infected, and Mutant Tanks.
-10. Supports multiple languages.
-11. Chat color tags for translation files.
-12. Administration system designed for access and immunity to Mutant Tanks.
-13. Detects idle or bugged (no behavior) Tanks.
-14. Over 1,400 optional settings to configure.
-15. Toggle damage scaling based on difficulty.
-16. Create all kinds of combinations of abilities.
-17. Fully customizable reward system.
-18. Over 70 unique abilities to choose from.
+2. Fully customizable Mutant Tanks.
+3. Flexible config file.
+4. Auto-reload the config file when changes are made mid-game.
+5. Supports custom configurations for different scenarios/setups.
+6. Store up to 1,000 Mutant Tank types.
+7. Administration system designed for access and immunity to Mutant Tanks.
+8. Custom target filters for targeting survivors, special infected, and Mutant Tanks.
+9. Over 1,400 optional settings to configure.
+10. Over 70 unique abilities to choose from.
+11. Choose which abilities to install.
+12. Add custom abilities and features through the use of forwards and natives.
+13. Create all kinds of combinations of abilities.
+14. Supports multiple languages.
+15. Chat color tags for translation files.
+16. Detects idle or bugged (no behavior) Tanks.
+17. Toggle damage scaling based on difficulty.
+18. Fully customizable reward system.
 
 ### Requirements
 1. `SourceMod 1.11.0.6511` or higher

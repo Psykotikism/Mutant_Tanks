@@ -250,7 +250,7 @@
 - Renamed the `Spawn Mode` setting under the `Tank #/Spawn` section to `Spawn Type`.
 - The `Spawn Type` setting under the `Tank #/Spawn` section can now be overridden for each player.
 - Added a `Reward` system for fighting Mutant Tanks.
-- Added the following settings under the `General/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Reward Enabled`
 	- `Reward Chance`
 	- `Reward Duration`
@@ -263,7 +263,11 @@
 - Moved the following settings to the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
 	- `Announce Arrival`
 	- `Announce Death`
-- Added the `Announce Kill` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections.
+- Added the following settings under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
+	- `Announce Kill`
+	- `Arrival Message`
+	- `Death Message`
+	- `Kill Message`
 - The `Base Health` setting can now be overridden for each type and player.
 - The `Extra Health` setting can now be used globally for all types.
 - The `Requires Humans` setting can no longer be overridden for each player.

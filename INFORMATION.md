@@ -6,7 +6,6 @@
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
 - Maximum types: 1,000 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins, but expect potential server lag.)
-- Most of the settings below can be overridden for each player.
 
 ## Sections
 - Plugin Settings
@@ -246,7 +245,7 @@
 		"Announcements"
 		{
 			// Announce each Mutant Tank's arrival.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// Add up numbers together for different results.
 			// --
@@ -262,7 +261,7 @@
 			"Announce Arrival"			"31"
 
 			// Announce each Mutant Tank's death.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// 0: OFF
 			// 1: ON, announce deaths only.
@@ -270,17 +269,81 @@
 			"Announce Death"			"1"
 
 			// Announce each Mutant Tank's kill.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// 0: OFF
 			// 1: ON
 			"Announce Kill"				"1"
+
+			// The message shown to players when a Mutant Tank arrives.
+			// Note: This setting only works for the first option of the "Announce Arrival" setting.
+			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 1023
+			// --
+			// 0 OR 1023: Pick randomly between the 10 messages.
+			// 1: Message #1
+			// 2: Message #2
+			// 4: Message #3
+			// 8: Message #4
+			// 16: Message #5
+			// 32: Message #6
+			// 64: Message #7
+			// 128: Message #8
+			// 256: Message #9
+			// 512: Message #10
+			"Arrival Message"			"0"
+
+			// The message shown to players when a Mutant Tank dies.
+			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 1023
+			// --
+			// 0 OR 1023: Pick randomly between the 10 messages.
+			// 1: Message #1
+			// 2: Message #2
+			// 4: Message #3
+			// 8: Message #4
+			// 16: Message #5
+			// 32: Message #6
+			// 64: Message #7
+			// 128: Message #8
+			// 256: Message #9
+			// 512: Message #10
+			"Death Message"				"0"
+
+			// The message shown to players when a Mutant Tank kills a survivor.
+			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 1023
+			// --
+			// 0 OR 1023: Pick randomly between the 10 messages.
+			// 1: Message #1
+			// 2: Message #2
+			// 4: Message #3
+			// 8: Message #4
+			// 16: Message #5
+			// 32: Message #6
+			// 64: Message #7
+			// 128: Message #8
+			// 256: Message #9
+			// 512: Message #10
+			"Kill Message"				"0"
 		}
 		"Rewards"
 		{
 			// Reward survivors for fighting Mutant Tanks.
 			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate values with commas (",").
 			// --
@@ -308,7 +371,7 @@
 			"Reward Enabled"			"-1,-1,-1"
 
 			// The chance to reward survivors for killing Mutant Tanks.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate chances with commas (",").
 			// --
@@ -324,7 +387,7 @@
 			"Reward Chance"				"33.3,33.3,33.3"
 
 			// The duration of temporary rewards.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate durations with commas (",").
 			// --
@@ -340,7 +403,7 @@
 			"Reward Duration"			"10.0,10.0,10.0"
 
 			// The minimum amount of damage in percentage required to receive a reward.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate percentages with commas (",").
 			// --
@@ -356,7 +419,7 @@
 			"Reward Percentage"			"10.0,10.0,10.0"
 
 			// The damage boost to reward to survivors.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate boosts with commas (",").
 			// --
@@ -372,7 +435,7 @@
 			"Damage Boost Reward"			"1.25,1.25,1.25"
 
 			// The item(s) to reward to survivors.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate item sets with commas (",").
 			// Separate items with semi-colons (";").
@@ -386,7 +449,7 @@
 			"Item Reward"				"first_aid_kit,first_aid_kit,first_aid_kit"
 
 			// Restore the previous loadouts of survivors after respawning them.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate values with commas (",").
 			// --
@@ -402,7 +465,7 @@
 			"Respawn Loadout Reward"		"1,1,1"
 
 			// The speed boost to reward to survivors.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate boosts with commas (",").
 			// --
@@ -420,7 +483,7 @@
 			// Override chosen reward types depending on the status of the recipient.
 			// Note: If the recipient is black and white, the recipient will receive Health as a reward.
 			// Note: If the recipient is dead, the recipient will receive Respawn as a reward.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate values with commas (",").
 			// --
@@ -481,14 +544,14 @@
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// Minimum: 0 (OFF)
 			// Maximum: 65535
 			"Base Health"				"0"
 
 			// Display Mutant Tanks' names and health.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// Minimum: 0
 			// Maximum: 11
@@ -508,7 +571,7 @@
 			"Display Health"			"11"
 
 			// Display type of Mutant Tanks' names and health.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// 0: OFF
 			// 1: ON, show in hint text.
@@ -519,7 +582,7 @@
 			// Note: Tank's health limit on any difficulty is 65,535.
 			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// Minimum: -65535
 			// Maximum: 65535
@@ -541,7 +604,7 @@
 			"Health Characters"			"|,-"
 
 			// The number of human survivors required for "Multiply Health" to take effect.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// Minimum: 1
 			// Maximum: 32
@@ -551,7 +614,7 @@
 			"Minimum Humans"			"2"
 
 			// Multiply Mutant Tanks' health.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// Note: Health multiplication only occurs when the requirement for "Minimum Humans" is met.
 			// --
 			// 0: No changes to health.
@@ -994,6 +1057,73 @@
 			// 0: OFF
 			// 1: ON
 			"Announce Kill"				"0"
+
+			// The message shown to players when the Mutant Tank arrives.
+			// Note: This setting only works for the first option of the "Announce Arrival" setting.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 1023
+			// --
+			// 0 OR 1023: Pick randomly between the 10 messages.
+			// 1: Message #1
+			// 2: Message #2
+			// 4: Message #3
+			// 8: Message #4
+			// 16: Message #5
+			// 32: Message #6
+			// 64: Message #7
+			// 128: Message #8
+			// 256: Message #9
+			// 512: Message #10
+			"Arrival Message"			"0"
+
+			// The message shown to players when the Mutant Tank dies.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 1023
+			// --
+			// 0 OR 1023: Pick randomly between the 10 messages.
+			// 1: Message #1
+			// 2: Message #2
+			// 4: Message #3
+			// 8: Message #4
+			// 16: Message #5
+			// 32: Message #6
+			// 64: Message #7
+			// 128: Message #8
+			// 256: Message #9
+			// 512: Message #10
+			"Death Message"				"0"
+
+			// The message shown to players when the Mutant Tank kills a survivor.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 1023
+			// --
+			// 0 OR 1023: Pick randomly between the 10 messages.
+			// 1: Message #1
+			// 2: Message #2
+			// 4: Message #3
+			// 8: Message #4
+			// 16: Message #5
+			// 32: Message #6
+			// 64: Message #7
+			// 128: Message #8
+			// 256: Message #9
+			// 512: Message #10
+			"Kill Message"				"0"
 		}
 		"Rewards"
 		{
