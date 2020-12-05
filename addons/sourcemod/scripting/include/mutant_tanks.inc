@@ -2022,7 +2022,7 @@ stock int iGetHumanCount(bool infected = false)
 	iHumanCount = 0;
 	for (int iHuman = 1; iHuman <= MaxClients; iHuman++)
 	{
-		bValidPlayer = infected ? bIsInfected(iHuman, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) : bIsHumanSurvivor(iHuman, MT_CHECK_INGAME|MT_CHECK_ALIVE);
+		bValidPlayer = infected ? bIsInfected(iHuman, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) : bIsSurvivor(iHuman, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
 		if (bValidPlayer)
 		{
 			iHumanCount++;
