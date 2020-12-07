@@ -745,6 +745,8 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1;
+
 public any aNative_CanTypeSpawn(Handle plugin, int numParams)
 {
 	int iType = iClamp(GetNativeCell(1), 1, MT_MAXTYPES);
@@ -1374,6 +1376,8 @@ public void OnMapStart()
 	PrecacheSound(SOUND_ELECTRICITY, true);
 	PrecacheSound(SOUND_METAL, true);
 
+	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
+	g_iBossHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
 	PrecacheModel(SPRITE_EXPLODE, true);
 
 	switch (bIsValidGame())
@@ -6276,6 +6280,8 @@ static void vSurvivorReactions(int tank)
 	}
 
 	vPushNearbyEntities(tank, flTankPos);
+	TE_SetupBeamRingPoint(flTankPos, 10.0, 500.0, g_iBossBeamSprite, g_iBossHaloSprite, 0, 35, 0.75, 88.0, 3.0, { 255, 255, 255, 75 }, 1000, 0);
+	TE_SendToAll();
 }
 
 static void vChangeTypeForward(int tank, int oldType, int newType, bool revert = false)
