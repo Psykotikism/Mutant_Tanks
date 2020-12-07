@@ -6231,24 +6231,24 @@ static void vSurvivorReactions(int tank)
 				{
 					vShakePlayerScreen(iSurvivor, 2.0);
 				}
+			}
 
-				switch (GetRandomInt(1, 5))
+			switch (GetRandomInt(1, 5))
+			{
+				case 1:
 				{
-					case 1:
-					{
-						GetEntPropString(iSurvivor, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+					GetEntPropString(iSurvivor, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 
-						switch (sModel[29])
-						{
-							case 'c', 'b', 'h', 'd': FakeClientCommand(iSurvivor, "vocalize C2M1Falling #%i", iTimestamp);
-							case 'v', 'e', 'a', 'n': FakeClientCommand(iSurvivor, "vocalize PlaneCrashResponse #%i", iTimestamp);
-						}
+					switch (sModel[29])
+					{
+						case 'c', 'b', 'h', 'd': FakeClientCommand(iSurvivor, "vocalize C2M1Falling #%i", iTimestamp);
+						case 'v', 'e', 'a', 'n': FakeClientCommand(iSurvivor, "vocalize PlaneCrashResponse #%i", iTimestamp);
 					}
-					case 2: FakeClientCommand(iSurvivor, "vocalize PlayerYellRun #%i", iTimestamp);
-					case 3: FakeClientCommand(iSurvivor, "vocalize %s #%i", (bIsValidGame() ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
-					case 4: FakeClientCommand(iSurvivor, "vocalize PlayerBackUp #%i", iTimestamp);
-					case 5: FakeClientCommand(iSurvivor, "vocalize PlayerEmphaticGo #%i", iTimestamp);
 				}
+				case 2: FakeClientCommand(iSurvivor, "vocalize PlayerYellRun #%i", iTimestamp);
+				case 3: FakeClientCommand(iSurvivor, "vocalize %s #%i", (bIsValidGame() ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
+				case 4: FakeClientCommand(iSurvivor, "vocalize PlayerBackUp #%i", iTimestamp);
+				case 5: FakeClientCommand(iSurvivor, "vocalize PlayerEmphaticGo #%i", iTimestamp);
 			}
 		}
 	}
