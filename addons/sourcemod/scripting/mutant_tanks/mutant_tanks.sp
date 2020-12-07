@@ -109,9 +109,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define PARTICLE_SPIT "spitter_projectile"
 
 #define SOUND_ELECTRICITY "items/suitchargeok1.wav"
+#define SOUND_EXPLOSION2 "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_2.wav" // Only available in L4D2
+#define SOUND_EXPLOSION1 "animation/van_inside_debris.wav"
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #define SOUND_MISSILE "player/tank/attack/thrown_missile_loop_1.wav"
 #define SOUND_SPIT "player/spitter/voice/warn/spitter_spit_02.wav"
+
+#define SPRITE_EXPLODE "sprites/zerogxplode.spr"
 
 #define MT_ARRIVAL_SPAWN (1 << 0) // announce spawn
 #define MT_ARRIVAL_BOSS (1 << 1) // announce evolution
@@ -1361,8 +1365,16 @@ public void OnMapStart()
 	iPrecacheParticle(PARTICLE_SMOKE);
 	iPrecacheParticle(PARTICLE_SPIT);
 
+	switch (bIsValidGame())
+	{
+		case true: PrecacheSound(SOUND_EXPLOSION2, true);
+		case false: PrecacheSound(SOUND_EXPLOSION1, true);
+	}
+
 	PrecacheSound(SOUND_ELECTRICITY, true);
 	PrecacheSound(SOUND_METAL, true);
+
+	PrecacheModel(SPRITE_EXPLODE, true);
 
 	switch (bIsValidGame())
 	{
@@ -3544,9 +3556,9 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		}
 
-		if (bIsSurvivor(attacker) && g_esPlayer[attacker].g_bRewardedDamage)
+		if (bIsSurvivor(attacker) && ((bIsDeveloper(attacker) && bIsTankSupported(victim)) || g_esPlayer[attacker].g_bRewardedDamage))
 		{
-			damage *= g_esPlayer[attacker].g_flDamageBoost;
+			damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 2.0;
 
 			return Plugin_Changed;
 		}
@@ -6160,7 +6172,10 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 		{
 			g_esPlayer[tank].g_iBossStageCount = stage;
 
-			vSetColor(tank, type);
+			ExtinguishEntity(tank);
+			vResetSpeed(tank, true);
+			vSurvivorReactions(tank);
+			vSetColor(tank, type, false);
 			vTankSpawn(tank, 1);
 
 			static int iNewHealth, iFinalHealth;
@@ -6172,6 +6187,71 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 			g_esPlayer[tank].g_iTankHealth += iFinalHealth;
 		}
 	}
+}
+
+static void vSurvivorReactions(int tank)
+{
+	static char sModel[40];
+	static float flTankPos[3], flSurvivorPos[3];
+	static int iTimestamp;
+	iTimestamp = RoundToNearest(GetGameTime() * 10.0) + 2;
+	GetClientAbsOrigin(tank, flTankPos);
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+		{
+			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+			if (GetVectorDistance(flTankPos, flSurvivorPos) <= 500.0)
+			{
+				if (bIsValidClient(iSurvivor, MT_CHECK_FAKECLIENT))
+				{
+					vShakePlayerScreen(iSurvivor, 2.0);
+				}
+
+				switch (GetRandomInt(1, 5))
+				{
+					case 1:
+					{
+						GetEntPropString(iSurvivor, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+
+						switch (sModel[29])
+						{
+							case 'c', 'b', 'h', 'd': FakeClientCommand(iSurvivor, "vocalize C2M1Falling #%i", iTimestamp);
+							case 'v', 'e', 'a', 'n': FakeClientCommand(iSurvivor, "vocalize PlaneCrashResponse #%i", iTimestamp);
+						}
+					}
+					case 2: FakeClientCommand(iSurvivor, "vocalize PlayerYellRun #%i", iTimestamp);
+					case 3: FakeClientCommand(iSurvivor, "vocalize %s #%i", (bIsValidGame() ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
+					case 4: FakeClientCommand(iSurvivor, "vocalize PlayerBackUp #%i", iTimestamp);
+					case 5: FakeClientCommand(iSurvivor, "vocalize PlayerEmphaticGo #%i", iTimestamp);
+				}
+			}
+		}
+	}
+
+	static int iExplosion;
+	iExplosion = CreateEntityByName("env_explosion");
+	if (bIsValidEntity(iExplosion))
+	{
+		DispatchKeyValue(iExplosion, "fireballsprite", SPRITE_EXPLODE);
+		DispatchKeyValue(iExplosion, "iMagnitude", "50");
+		DispatchKeyValue(iExplosion, "rendermode", "5");
+		DispatchKeyValue(iExplosion, "spawnflags", "1");
+
+		TeleportEntity(iExplosion, flTankPos, NULL_VECTOR, NULL_VECTOR);
+		DispatchSpawn(iExplosion);
+
+		SetEntPropEnt(iExplosion, Prop_Send, "m_hOwnerEntity", tank);
+		SetEntProp(iExplosion, Prop_Send, "m_iTeamNum", 3);
+		AcceptEntityInput(iExplosion, "Explode");
+
+		iExplosion = EntIndexToEntRef(iExplosion);
+		vDeleteEntity(iExplosion, 2.0);
+
+		EmitSoundToAll((bIsValidGame() ? SOUND_EXPLOSION2 : SOUND_EXPLOSION1), iExplosion, 0, 75, 0, 1.0, 100, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
+	}
+
+	vPushNearbyEntities(tank, flTankPos);
 }
 
 static void vChangeTypeForward(int tank, int oldType, int newType, bool revert = false)
@@ -8265,9 +8345,16 @@ static bool bIsDeveloper(int developer)
 	if (g_esGeneral.g_iAllowDeveloper == 1)
 	{
 		static char sSteamID32[32], sSteam3ID[32];
-		if (GetClientAuthId(developer, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)) && GetClientAuthId(developer, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
+		if (GetClientAuthId(developer, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)))
 		{
-			if (StrEqual(sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(sSteamID32, "STEAM_0:0:104982031", false) || StrEqual(sSteam3ID, "[U:1:96399607]", false) || StrEqual(sSteam3ID, "[U:1:209964062]", false))
+			if (StrEqual(sSteamID32, "STEAM_1:1:48199803", false) || StrEqual(sSteamID32, "STEAM_0:0:104982031", false))
+			{
+				return true;
+			}
+		}
+		else if (GetClientAuthId(developer, AuthId_Steam3, sSteam3ID, sizeof(sSteam3ID)))
+		{
+			if (StrEqual(sSteam3ID, "[U:1:96399607]", false) || StrEqual(sSteam3ID, "[U:1:209964062]", false))
 			{
 				return true;
 			}

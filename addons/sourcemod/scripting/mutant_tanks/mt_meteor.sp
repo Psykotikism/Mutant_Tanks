@@ -803,22 +803,7 @@ static void vMeteor3(int tank, int rock, int pos = -1)
 				}
 			}
 
-			static int iPointPush;
-			iPointPush = CreateEntityByName("point_push");
-			if (bIsValidEntity(iPointPush))
-			{
-				SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", tank);
-				DispatchKeyValueFloat(iPointPush, "magnitude", 600.0);
-				DispatchKeyValueFloat(iPointPush, "radius", 200.0);
-				DispatchKeyValue(iPointPush, "spawnflags", "8");
-
-				TeleportEntity(iPointPush, flRockPos, NULL_VECTOR, NULL_VECTOR);
-				DispatchSpawn(iPointPush);
-				AcceptEntityInput(iPointPush, "Enable");
-
-				iPointPush = EntIndexToEntRef(iPointPush);
-				vDeleteEntity(iPointPush, 0.5);
-			}
+			vPushNearbyEntities(tank, flRockPos);
 		}
 	}
 }

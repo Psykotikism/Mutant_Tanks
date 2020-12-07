@@ -749,21 +749,6 @@ static void vReset3(int tank)
 	g_esPlayer[tank].g_iCooldown = -1;
 }
 
-static void vShake(int survivor, float duration = 1.0)
-{
-	static Handle hTarget;
-	hTarget = StartMessageOne("Shake", survivor);
-
-	static BfWrite bfWrite;
-	bfWrite = UserMessageToBfWrite(hTarget);
-	bfWrite.WriteByte(0);
-	bfWrite.WriteFloat(16.0);
-	bfWrite.WriteFloat(0.5);
-	bfWrite.WriteFloat(duration);
-
-	EndMessage();
-}
-
 static void vShakeAbility(int tank, float random, int pos = -1)
 {
 	if (bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
@@ -904,7 +889,7 @@ static void vShakeRange(int tank, bool idle, int value, float random, int pos = 
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
-					vShake(tank, 2.0);
+					vShakePlayerScreen(tank, 2.0);
 				}
 			}
 		}
@@ -997,7 +982,7 @@ public Action tTimerShake(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	vShake(iSurvivor);
+	vShakePlayerScreen(iSurvivor);
 
 	return Plugin_Continue;
 }

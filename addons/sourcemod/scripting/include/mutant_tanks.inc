@@ -1236,6 +1236,26 @@ stock void vMultiTargetFilters(int toggle)
 	}
 }
 
+stock void vPushNearbyEntities(int tank, float pos[3], float magnitude = 600.0, float radius = 200.0)
+{
+	static int iPointPush;
+	iPointPush = CreateEntityByName("point_push");
+	if (bIsValidEntity(iPointPush))
+	{
+		SetEntPropEnt(iPointPush, Prop_Send, "m_hOwnerEntity", tank);
+		DispatchKeyValueFloat(iPointPush, "magnitude", magnitude);
+		DispatchKeyValueFloat(iPointPush, "radius", radius);
+		DispatchKeyValue(iPointPush, "spawnflags", "8");
+
+		TeleportEntity(iPointPush, pos, NULL_VECTOR, NULL_VECTOR);
+		DispatchSpawn(iPointPush);
+		AcceptEntityInput(iPointPush, "Enable");
+
+		iPointPush = EntIndexToEntRef(iPointPush);
+		vDeleteEntity(iPointPush, 0.5);
+	}
+}
+
 stock void vRemoveWeapons(int survivor)
 {
 	int iWeapon = 0;
@@ -1292,11 +1312,19 @@ stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] mo
 	}
 }
 
-stock void vSpawnInfected(int tank, const char[] infected)
+stock void vShakePlayerScreen(int player, float duration = 1.0)
 {
-	ChangeClientTeam(tank, 3);
-	vCheatCommand(tank, bIsValidGame() ? "z_spawn_old" : "z_spawn", infected);
-	KickClient(tank);
+	static Handle hTarget;
+	hTarget = StartMessageOne("Shake", player);
+
+	static BfWrite bfWrite;
+	bfWrite = UserMessageToBfWrite(hTarget);
+	bfWrite.WriteByte(0);
+	bfWrite.WriteFloat(16.0);
+	bfWrite.WriteFloat(0.5);
+	bfWrite.WriteFloat(duration);
+
+	EndMessage();
 }
 
 stock void vStopSound(int client, const char[] sound)

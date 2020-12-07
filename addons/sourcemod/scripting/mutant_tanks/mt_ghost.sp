@@ -1203,7 +1203,11 @@ static void vRenderProps(int tank, RenderMode mode, int alpha = 255)
 static void vRenderSpecials(int tank, bool mode, int red = 255, int green = 255, int blue = 255)
 {
 	static float flTankPos[3], flInfectedPos[3];
-	GetClientAbsOrigin(tank, flTankPos);
+	if (mode)
+	{
+		GetClientAbsOrigin(tank, flTankPos);
+	}
+
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
 		if (bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE))

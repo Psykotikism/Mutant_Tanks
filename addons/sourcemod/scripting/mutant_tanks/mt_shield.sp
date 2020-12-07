@@ -1067,6 +1067,7 @@ static void vShieldAbility(int tank, bool shield)
 							g_esPlayer[tank].g_iAmmoCount++;
 							g_esPlayer[tank].g_iDuration = iTime + g_esPlayer[tank].g_iHumanDuration;
 
+							vExternalView(tank, 1.5);
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_esPlayer[tank].g_iAmmoCount, g_esCache[tank].g_iHumanAmmo);
 						}
 
@@ -1099,7 +1100,11 @@ static void vShieldAbility(int tank, bool shield)
 
 			switch (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 			{
-				case true: vReset3(tank);
+				case true:
+				{
+					vExternalView(tank, 1.5);
+					vReset3(tank);
+				}
 				case false: g_esPlayer[tank].g_iCooldown2 = iTime + g_esCache[tank].g_iShieldDelay;
 			}
 
