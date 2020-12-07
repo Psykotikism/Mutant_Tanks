@@ -475,8 +475,8 @@ public void MT_OnCombineAbilities(int tank, int type, float random, const char[]
 							}
 						}
 					}
-					case MT_COMBO_POSTSPAWN: vFlingRange(tank, true, 0, random, iPos);
-					case MT_COMBO_UPONDEATH: vFlingRange(tank, false, 0, random, iPos);
+					case MT_COMBO_POSTSPAWN: vFlingRange(tank, 0, random, iPos);
+					case MT_COMBO_UPONDEATH: vFlingRange(tank, 0, random, iPos);
 				}
 
 				break;
@@ -679,7 +679,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vFlingRange(iTank, false, 1, GetRandomFloat(0.1, 100.0));
+			vFlingRange(iTank, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveFling(iTank);
 		}
 	}
@@ -735,7 +735,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 public void MT_OnPostTankSpawn(int tank)
 {
-	vFlingRange(tank, true, 1, GetRandomFloat(0.1, 100.0));
+	vFlingRange(tank, 1, GetRandomFloat(0.1, 100.0));
 }
 
 static void vCopyStats(int oldTank, int newTank)
@@ -785,7 +785,7 @@ static void vFlingAbility(int tank, float random, int pos = -1)
 		iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerIncapacitated(iSurvivor) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
@@ -887,13 +887,13 @@ static void vFlingHit(int survivor, int tank, float random, float chance, int en
 	}
 }
 
-static void vFlingRange(int tank, bool idle, int value, float random, int pos = -1)
+static void vFlingRange(int tank, int value, float random, int pos = -1)
 {
 	static float flChance;
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esCache[tank].g_flFlingDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlingDeath == 1 && random <= flChance)
 	{
-		if (g_esCache[tank].g_iComboAbility == value || (idle && MT_IsTankIdle(tank)) || bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+		if (g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_iOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -910,7 +910,7 @@ static void vFlingRange(int tank, bool idle, int value, float random, int pos = 
 		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esCache[tank].g_flFlingDeathRange;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerIncapacitated(iSurvivor) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 
