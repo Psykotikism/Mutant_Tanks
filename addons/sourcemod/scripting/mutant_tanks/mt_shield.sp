@@ -900,7 +900,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 		vRemoveShield(tank);
 	}
 
-	vReset2(tank, revert);
+	vReset2(tank);
 }
 
 public void MT_OnRockThrow(int tank, int rock)
@@ -962,13 +962,8 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank, bool revert = false)
+static void vReset2(int tank)
 {
-	if (!revert)
-	{
-		g_esPlayer[tank].g_bActivated = false;
-	}
-
 	g_esPlayer[tank].g_flHealth = 0.0;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;

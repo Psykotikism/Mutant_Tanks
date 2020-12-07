@@ -613,11 +613,6 @@ public void MT_OnButtonPressed(int tank, int button)
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
 	vDropWeapon(tank, 1, GetRandomFloat(0.1, 100.0));
-
-	if (!revert)
-	{
-		g_esPlayer[tank].g_bActivated = false;
-	}
 }
 
 static void vCopyStats(int oldTank, int newTank)

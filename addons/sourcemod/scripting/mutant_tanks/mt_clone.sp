@@ -556,7 +556,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveClone(iTank, true);
+			vRemoveClone(iTank);
 
 			switch (g_esPlayer[iTank].g_bCloned)
 			{
@@ -680,7 +680,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
-	vRemoveClone(tank, revert);
+	vRemoveClone(tank);
 }
 
 static void vClone(int tank)
@@ -844,14 +844,8 @@ static void vCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
-static void vRemoveClone(int tank, bool revert = false)
+static void vRemoveClone(int tank)
 {
-	if (!revert)
-	{
-		g_esPlayer[tank].g_bCloned = false;
-	}
-
-	g_esPlayer[tank].g_bFiltered = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;

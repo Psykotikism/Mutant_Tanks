@@ -854,6 +854,9 @@ static void vWarp2(int tank, int other)
 	static float flOtherOrigin[3], flOtherAngles[3];
 	GetClientAbsOrigin(other, flOtherOrigin);
 	GetClientAbsAngles(other, flOtherAngles);
+	flOtherOrigin[0] += 50.0 * (Cosine(DegToRad(flOtherAngles[1])));
+	flOtherOrigin[1] += 50.0 * (Sine(DegToRad(flOtherAngles[1])));
+	flOtherOrigin[2] += 5.0;
 
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0, 0.0);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);

@@ -5728,12 +5728,14 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 									FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
 									MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, iAttacker, sTankName, iAssistant, flPercentage);
 									vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, iAttacker, sTankName, iAssistant, flPercentage);
+									vVocalizeDeath(iAttacker, iAssistant, iVictim);
 								}
 								else if (flPercentage >= 1.0)
 								{
 									FormatEx(sPhrase, sizeof(sPhrase), "Assist%i", iOption);
 									MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, iAssistant, flPercentage);
 									vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iAssistant, flPercentage);
+									vVocalizeDeath(0, iAssistant, iVictim);
 								}
 								else
 								{
@@ -5899,6 +5901,28 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		Call_PushString(name);
 		Call_PushCell(dontBroadcast);
 		Call_Finish();
+	}
+}
+
+static void vVocalizeDeath(int killer, int assistant, int tank)
+{
+	int iTimestamp = RoundToNearest(GetGameTime() * 10.0) + 2;
+	if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+	{
+		FakeClientCommand(killer, "vocalize PlayerHurrah #%i", iTimestamp);
+	}
+
+	if (bIsSurvivor(assistant, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && assistant != killer)
+	{
+		FakeClientCommand(assistant, "vocalize PlayerTaunt #%i", iTimestamp);
+	}
+
+	for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
+	{
+		if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTeammate].g_iTankDamage[tank] > 0.0 && iTeammate != killer && iTeammate != assistant)
+		{
+			FakeClientCommand(iTeammate, "vocalize PlayerNiceJob #%i", iTimestamp);
+		}
 	}
 }
 
@@ -6597,11 +6621,11 @@ static void vChooseReward(int survivor, int tank, int priority)
 				iAmmo = GetEntProp(survivor, Prop_Send, "m_iAmmo", _, iGetWeaponOffset(sWeapon));
 			}
 
-			if (g_esPlayer[survivor].g_bLastLife && -1 < iAmmo <= 10)
+			if ((g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor)) && -1 < iAmmo <= 10)
 			{
 				iType = MT_REWARD_REFILL;
 			}
-			else if (g_esPlayer[survivor].g_bLastLife)
+			else if (g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor))
 			{
 				iType = MT_REWARD_HEALTH;
 			}
@@ -7691,13 +7715,26 @@ static void vAnnounceArrival(int tank, const char[] name)
 {
 	if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_SPAWN)
 	{
-		int iOption = iGetMessage(g_esCache[tank].g_iArrivalMessage);
+		int iOption = iGetMessage(g_esCache[tank].g_iArrivalMessage), iTimestamp = RoundToNearest(GetGameTime() * 10.0) + 2;
 		if (iOption > 0)
 		{
 			char sPhrase[32];
 			FormatEx(sPhrase, sizeof(sPhrase), "Arrival%i", iOption);
 			MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, name);
 			vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, name);
+		}
+
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+			{
+				switch (GetRandomInt(1, 3))
+				{
+					case 1: FakeClientCommand(iSurvivor, "vocalize PlayerYellRun #%i", iTimestamp);
+					case 2: FakeClientCommand(iSurvivor, "vocalize %s #%i", (bIsValidGame() ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
+					case 3: FakeClientCommand(iSurvivor, "vocalize PlayerBackUp #%i", iTimestamp);
+				}
+			}
 		}
 	}
 }

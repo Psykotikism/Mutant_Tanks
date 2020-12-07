@@ -678,8 +678,8 @@ static void vSpawnUncommon(int tank, const char[] model)
 		GetClientAbsOrigin(tank, flOrigin);
 		GetClientEyeAngles(tank, flAngles);
 
-		flOrigin[0] += 50 * (Cosine(DegToRad(flAngles[1])));
-		flOrigin[1] += 50 * (Sine(DegToRad(flAngles[1])));
+		flOrigin[0] += 50.0 * (Cosine(DegToRad(flAngles[1])));
+		flOrigin[1] += 50.0 * (Sine(DegToRad(flAngles[1])));
 		flOrigin[2] += 5.0;
 
 		TeleportEntity(iInfected, flOrigin, NULL_VECTOR, NULL_VECTOR);

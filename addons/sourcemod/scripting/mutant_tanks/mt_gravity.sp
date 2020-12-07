@@ -818,7 +818,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 		vRemoveGravity(tank);
 	}
 
-	vReset2(tank, revert);
+	vReset2(tank);
 }
 
 static void vCopyStats(int oldTank, int newTank)
@@ -1059,13 +1059,8 @@ static void vReset()
 	}
 }
 
-static void vReset2(int tank, bool revert = false)
+static void vReset2(int tank)
 {
-	if (!revert)
-	{
-		g_esPlayer[tank].g_bActivated = false;
-	}
-
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
