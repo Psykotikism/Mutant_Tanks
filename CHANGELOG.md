@@ -25,6 +25,7 @@
 - Fixed the `Transformation` feature only firing once. (Thanks to Mi.Cura for testing and reporting!)
 - Fixed the blur effect prop not deleting itself. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed the blur effect prop not using the Tank's model.
+- Fixed the `Boss` feature not carrying over bosses' stats to their evolution stages.
 
 #### Settings
 - Fixed the `Requires Humans` setting not working in some config formats.
@@ -95,6 +96,7 @@
 - Ghost
 	- Fixed the range ability checking for the wrong ammo count.
 	- Fixed special infected remaining transparent after the Tank dies.
+	- Fixed client index errors. (Thanks to Mi.Cura for reporting!)
 
 - Gravity
 	- Fixed the range ability checking for the wrong ammo count.
@@ -190,6 +192,7 @@
 - Idle Tanks will no longer glow through walls even when the `Glow Type` setting is set to `1`.
 - Idle Tanks will no longer turn into different types when the `Spawn Type` setting is set to `1`, `2`, or `3`.
 - Changed the method for checking whether or not abilities are installed.
+- The `Boss` feature now has new effects when evolving. (Thanks to 3aljiyavslgazana for suggesting!)
 
 #### Config Files
 - Enabled the `Requires Humans` setting for some of the default Mutant Tank types.
@@ -402,6 +405,7 @@
 	- Added the `Shield Glow` setting.
 	- The `Shield Type` setting now allows combinations of options.
 	- Added the `Shield Throw Chance` setting.
+	- Human-controlled Tanks are now put into thirdperson for `1.5` seconds after toggling the shield.
 
 - Smash
 	- Added the `Smash Body` setting.
@@ -2030,7 +2034,7 @@ Changes:
 4. Added the `Car Throw Ability` KeyValue which lets the Super Tank throw cars. Format: `Car Throw Ability` `1`
 5. Added the `Vampire Claw-Rock` KeyValue which lets the Super Tank steal health from survivors. Format: `Vampire Claw-Rock` `1`
 6. Added the `Vampire Health` KeyValue to determine how much health the Super Tank receives from hitting survivors. Format: `Vampire Health` `100`
-7. Added the `Vampire Chance` KeyValue to determine the chances of the Super Tank stealing health from survivors. Format: `Bomb Rock Break` `4`
+7. Added the `Vampire Chance` KeyValue to determine the chances of the Super Tank stealing health from survivors. Format: `Vampire Chance` `33.3`
 8. The config file is now automatically created if it does not exist already.
 9. Optimized code even more.
 
