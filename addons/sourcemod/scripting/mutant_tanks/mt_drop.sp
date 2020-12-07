@@ -741,7 +741,7 @@ static void vRemoveDrop(int tank)
 		}
 	}
 
-	g_esPlayer[tank].g_iWeapon = INVALID_ENT_REFERENCE;
+	vReset2(tank);
 }
 
 static void vReset()

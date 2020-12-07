@@ -947,6 +947,7 @@ static void vRemoveShield(int tank)
 		}
 	}
 
+	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
 }
 

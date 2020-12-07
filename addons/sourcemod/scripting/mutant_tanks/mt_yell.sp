@@ -708,7 +708,7 @@ static void vRemoveYell(int tank)
 {
 	vReset4(tank);
 
-	g_esPlayer[tank].g_bActivated= false;
+	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;

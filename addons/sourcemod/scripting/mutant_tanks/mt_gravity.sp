@@ -1042,6 +1042,7 @@ static void vRemoveGravity2(int tank)
 		}
 	}
 
+	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_iGravity = INVALID_ENT_REFERENCE;
 }
 
