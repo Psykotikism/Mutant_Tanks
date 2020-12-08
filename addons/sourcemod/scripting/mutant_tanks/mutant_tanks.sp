@@ -8196,7 +8196,7 @@ public void vTankSpawnFrame(DataPack pack)
 					static int iHumanCount, iSpawnHealth, iExtraHealthNormal, iExtraHealthBoost, iExtraHealthBoost2, iExtraHealthBoost3, iNoBoost, iBoost,
 						iBoost2, iBoost3, iNegaNoBoost, iNegaBoost, iNegaBoost2, iNegaBoost3, iFinalNoHealth, iFinalHealth, iFinalHealth2, iFinalHealth3;
 					iHumanCount = iGetHumanCount();
-					iSpawnHealth = (g_esGeneral.g_iBaseHealth > 0) ? g_esGeneral.g_iBaseHealth : GetEntProp(iTank, Prop_Data, "m_iHealth");
+					iSpawnHealth = (g_esCache[iTank].g_iBaseHealth > 0) ? g_esCache[iTank].g_iBaseHealth : GetEntProp(iTank, Prop_Data, "m_iHealth");
 					iExtraHealthNormal = iSpawnHealth + g_esCache[iTank].g_iExtraHealth;
 					iExtraHealthBoost = (iHumanCount >= g_esCache[iTank].g_iMinimumHumans) ? ((iSpawnHealth * iHumanCount) + g_esCache[iTank].g_iExtraHealth) : iExtraHealthNormal;
 					iExtraHealthBoost2 = (iHumanCount >= g_esCache[iTank].g_iMinimumHumans) ? (iSpawnHealth + (iHumanCount * g_esCache[iTank].g_iExtraHealth)) : iExtraHealthNormal;
