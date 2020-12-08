@@ -8932,7 +8932,7 @@ public MRESReturn mreTankRockPost(DHookReturn hReturn)
 		if (bIsValidEntity(g_esGeneral.g_iLauncher))
 		{
 			static int iTank;
-			iTank = GetEntPropEnt(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity");
+			iTank = HasEntProp(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(g_esGeneral.g_iLauncher, Prop_Send, "m_hOwnerEntity") : 0;
 			if (bIsTankSupported(iTank))
 			{
 				SetEntPropEnt(iRock, Prop_Data, "m_hThrower", iTank);
