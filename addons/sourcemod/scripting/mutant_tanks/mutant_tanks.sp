@@ -1174,7 +1174,6 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTEnabledGameModes.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTGameModeTypes.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTPluginEnabled.AddChangeHook(vMTPluginStatusCvar);
-
 	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
 
 	char sSMPath[PLATFORM_MAX_PATH];
@@ -1431,16 +1430,9 @@ public void OnConfigsExecuted()
 	g_esGeneral.g_iTankCount = 0;
 
 	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
-
-	char sMapName[128];
-	GetCurrentMap(sMapName, sizeof(sMapName));
-	if (IsMapValid(sMapName))
-	{
-		vPluginStatus();
-		vResetTimers();
-
-		CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	}
+	vPluginStatus();
+	vResetTimers();
+	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 	if (g_esGeneral.g_iConfigEnable == 1)
 	{
@@ -1621,7 +1613,9 @@ public void OnConfigsExecuted()
 			}
 		}
 
-		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && IsMapValid(sMapName))
+		char sMapName[128], sMapPath[PLATFORM_MAX_PATH];
+		GetCurrentMap(sMapName, sizeof(sMapName));
+		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && FindMap(sMapName, sMapPath, sizeof(sMapPath)) == FindMap_Found)
 		{
 			char sMapConfig[PLATFORM_MAX_PATH];
 			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMapName);
