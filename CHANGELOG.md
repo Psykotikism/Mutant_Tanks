@@ -62,7 +62,7 @@
 	- Fixed the sound effect not playing in L4D1 due to the file not existing.
 
 - Bury
-	- Fixed the ability sometimes leaving players under the map. (Thanks to Mi.Cura for testing and reporting!)
+	- Fixed players being left under the map. (Thanks to Mi.Cura for testing and reporting!)
 	- Fixed players keeping their original velocity after being teleported.
 
 - Car
@@ -88,7 +88,7 @@
 	- Fixed the ability not working sometimes. (Thanks to Tank Rush and Mi.Cura for testing and reporting!)
 
 - Enforce
-	- Fixed the ability causing errors when the enforced weapon slot doesn't contain a valid weapon.
+	- Fixed errors related to enforced weapon slots having invalid weapons.
 
 - Fire
 	- Fixed the sound effect not playing in L4D1 due to the file not existing.
@@ -103,7 +103,7 @@
 
 - Heal
 	- Fixed the glow outline not going away when Tanks die.
-	- Fixed the ability not applying/resetting glow outlines properly.
+	- Fixed glow outlines not applying/resetting properly.
 	- Fixed the range ability checking for the wrong ammo count.
 
 - Hit
@@ -119,13 +119,13 @@
 	- Fixed minions being replaced even when the `Minion Replace` setting is set to `0`.
 
 - Omni
-	- Fixed the ability not tracking type changes properly. (Thanks to Mi.Cura for testing and reporting!)
+	- Fixed type changes not being tracked properly. (Thanks to Mi.Cura for testing and reporting!)
 
 - Panic
 	- Fixed panic events not being called on L4D1.
 
 - Respawn
-	- Fixed the ability not respawning the Tank consistently. (Thanks to epz for the method!)
+	- Fixed the Tank not respawning consistently. (Thanks to epz for the method!)
 
 - Rock
 	- Fixed the rocks colliding with each other and producing lag.
@@ -151,24 +151,24 @@
 
 - Track
 	- Fixed the glow outline not going away when rocks break.
-	- Fixed the ability not applying/resetting glow outlines properly.
+	- Fixed glow outlines not applying/resetting properly.
 
 - Warp
 	- Fixed the range ability checking for the wrong ammo count.
 	- Fixed players keeping their original velocity after being teleported.
 
 - Witch
-	- Fixed the ability spamming messages.
+	- Fixed messages being spammed.
 	- Fixed witches not dealing any damage to survivors. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Vampire
-	- Fixed the ability not checking admin immunity properly.
+	- Fixed admin immunity not being checked properly.
 
 - Xiphos
-	- Fixed the ability setting survivors to full health per hit.
+	- Fixed survivors receiving full health per hit.
 
 - Yell
-	- Fixed the ability's phrases providing the wrong information. (Thanks to Mi.Cura for reporting!)
+	- Fixed messages providing the wrong information. (Thanks to Mi.Cura for reporting!)
 
 ### Changes
 

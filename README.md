@@ -601,8 +601,8 @@ These are basically temporary Tanks that you can create for certain situations, 
 
 14. How can I move the Mutant Tanks category around on the admin menu?
 
-- You have to open up `addons/sourcemod/configs/adminmenu_sorting.txt`.
-- Add the `MutantTanks` category.
+- You have to open up `addons/sourcemod/configs/adminmenu_sorting.txt` and add the `MutantTanks` category.
+- This also allows you to sort each item in the category.
 
 Example:
 

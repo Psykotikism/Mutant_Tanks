@@ -478,8 +478,9 @@
 			// 3rd number = Boost for teammates.
 			"Speed Boost Reward"			"1.25,1.25,1.25"
 
-			// Override chosen reward types depending on the status of the recipient.
+			// Include useful reward types depending on the status of the recipient.
 			// Note: If the recipient is black and white, the recipient will receive Health as a reward.
+			// Note: If the recipient is low on ammunition, the recipient will receive Ammo as a reward.
 			// Note: If the recipient is dead, the recipient will receive Respawn as a reward.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
@@ -1272,8 +1273,9 @@
 			// 3rd number = Boost for teammates.
 			"Speed Boost Reward"			"0.0,0.0,0.0"
 
-			// Override chosen reward types depending on the status of the recipient.
+			// Include useful reward types depending on the status of the recipient.
 			// Note: If the recipient is black and white, the recipient will receive Health as a reward.
+			// Note: If the recipient is low on ammunition, the recipient will receive Ammo as a reward.
 			// Note: If the recipient is dead, the recipient will receive Respawn as a reward.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
