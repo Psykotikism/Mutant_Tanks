@@ -581,7 +581,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
-	vRemoveMinion(tank);
+	vRemoveMinion(tank, revert);
 }
 
 static void vCopyStats(int oldTank, int newTank)
@@ -744,8 +744,13 @@ static void vMinionAbility(int tank)
 	}
 }
 
-static void vRemoveMinion(int tank)
+static void vRemoveMinion(int tank, bool revert = false)
 {
+	if (revert)
+	{
+		g_esPlayer[tank].g_bMinion = false;
+	}
+
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCount = 0;

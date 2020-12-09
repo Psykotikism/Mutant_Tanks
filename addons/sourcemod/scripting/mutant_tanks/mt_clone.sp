@@ -680,7 +680,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
-	vRemoveClone(tank);
+	vRemoveClone(tank, revert);
 }
 
 static void vClone(int tank)
@@ -844,8 +844,14 @@ static void vCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
-static void vRemoveClone(int tank)
+static void vRemoveClone(int tank, bool revert = false)
 {
+	if (revert)
+	{
+		g_esPlayer[tank].g_bCloned = false;
+		g_esPlayer[tank].g_bFiltered = false;
+	}
+
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;

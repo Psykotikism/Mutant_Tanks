@@ -556,7 +556,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
-	vRemoveRespawn(tank);
+	vRemoveRespawn(tank, revert);
 }
 
 static void vCopyStats(int oldTank, int newTank)
@@ -566,11 +566,15 @@ static void vCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
-static void vRemoveRespawn(int tank)
+static void vRemoveRespawn(int tank, bool revert = false)
 {
 	g_esPlayer[tank].g_bActivated = false;
-	g_esPlayer[tank].g_iAmmoCount = 0;
-	g_esPlayer[tank].g_iCount = 0;
+
+	if (revert)
+	{
+		g_esPlayer[tank].g_iAmmoCount = 0;
+		g_esPlayer[tank].g_iCount = 0;
+	}
 }
 
 static void vReset()

@@ -1495,7 +1495,6 @@ public void OnConfigsExecuted()
 			g_esGeneral.g_cvMTGameTypes.GetString(sGameType, sizeof(sGameType));
 			ReplaceString(sGameType, sizeof(sGameType), " ", "");
 			ExplodeString(sGameType, ",", sTypes, sizeof(sTypes), sizeof(sTypes[]));
-
 			for (int iMode = 0; iMode < sizeof(sTypes); iMode++)
 			{
 				if (StrContains(sGameType, sTypes[iMode]) != -1 && sTypes[iMode][0] != '\0')
@@ -1604,7 +1603,6 @@ public void OnConfigsExecuted()
 		{
 			char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
-
 			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
 			if (FileExists(sDifficultyConfig, true))
 			{
@@ -1630,7 +1628,6 @@ public void OnConfigsExecuted()
 		{
 			char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-
 			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
 			if (FileExists(sModeConfig, true))
 			{
@@ -1643,7 +1640,6 @@ public void OnConfigsExecuted()
 		{
 			char sDay[9], sDayNumber[2], sDayConfig[PLATFORM_MAX_PATH];
 			FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
-
 			int iDayNumber = StringToInt(sDayNumber);
 
 			switch (iDayNumber)
@@ -3556,7 +3552,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 		if (bIsSurvivor(attacker) && ((bIsDeveloper(attacker) && bIsTankSupported(victim)) || g_esPlayer[attacker].g_bRewardedDamage))
 		{
-			damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 2.0;
+			damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 2.5;
 
 			return Plugin_Changed;
 		}
@@ -6551,8 +6547,12 @@ static void vSaveSurvivorStats(int survivor, bool override = false)
 		GetClientEyeAngles(survivor, g_esPlayer[survivor].g_flLastAngles);
 	}
 
+	if (!override)
+	{
+		vResetSurvivorStats(survivor);
+	}
+
 	vSaveWeapons(survivor);
-	vResetSurvivorStats(survivor);
 }
 
 static void vResetTank(int tank)
