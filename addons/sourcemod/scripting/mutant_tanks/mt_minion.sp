@@ -744,7 +744,7 @@ static void vMinionAbility(int tank)
 	}
 }
 
-static void vRemoveMinion(int tank, bool revert = false)
+static void vRemoveMinion(int tank, bool revert = true)
 {
 	if (revert)
 	{

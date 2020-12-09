@@ -1048,13 +1048,13 @@ public any aNative_SetTankType(Handle plugin, int numParams)
 		{
 			case true:
 			{
-				vSetColor(iTank, iType);
+				vSetColor(iTank, iType, _, (g_esPlayer[iTank].g_iTankType == iType ? true : false));
 				vTankSpawn(iTank, 5);
 			}
 			case false:
 			{
 				vResetTank(iTank);
-				vChangeTypeForward(iTank, g_esPlayer[iTank].g_iTankType, iType);
+				vChangeTypeForward(iTank, g_esPlayer[iTank].g_iTankType, iType, (g_esPlayer[iTank].g_iTankType == iType ? true : false));
 				g_esPlayer[iTank].g_iOldTankType = g_esPlayer[iTank].g_iTankType;
 				g_esPlayer[iTank].g_iTankType = iType;
 				vCacheSettings(iTank);
@@ -6274,7 +6274,7 @@ static void vSurvivorReactions(int tank)
 	TE_SendToAll();
 }
 
-static void vChangeTypeForward(int tank, int oldType, int newType, bool revert = false)
+static void vChangeTypeForward(int tank, int oldType, int newType, bool revert)
 {
 	Call_StartForward(g_esGeneral.g_gfChangeTypeForward);
 	Call_PushCell(tank);

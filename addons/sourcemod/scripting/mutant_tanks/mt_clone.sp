@@ -844,7 +844,7 @@ static void vCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
-static void vRemoveClone(int tank, bool revert = false)
+static void vRemoveClone(int tank, bool revert = true)
 {
 	if (revert)
 	{

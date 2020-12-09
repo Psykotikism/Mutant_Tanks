@@ -566,7 +566,7 @@ static void vCopyStats(int oldTank, int newTank)
 	g_esPlayer[newTank].g_iCount = g_esPlayer[oldTank].g_iCount;
 }
 
-static void vRemoveRespawn(int tank, bool revert = false)
+static void vRemoveRespawn(int tank, bool revert = true)
 {
 	g_esPlayer[tank].g_bActivated = false;
 
