@@ -6608,10 +6608,10 @@ static void vResetTimersForward(int mode = 0, int tank = 0)
 
 static void vChooseReward(int survivor, int tank, int priority)
 {
-	int iType = -1;
-	if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
+	int iType = (g_esCache[tank].g_iRewardEnabled[priority] > 0) ? g_esCache[tank].g_iRewardEnabled[priority] : (1 << GetRandomInt(0, 7));
+	if (g_esCache[tank].g_iUsefulRewards[priority] == 1)
 	{
-		if (g_esCache[tank].g_iUsefulRewards[priority] == 1)
+		if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
 		{
 			int iAmmo = -1, iWeapon = GetPlayerWeaponSlot(survivor, 0);
 			if (iWeapon > MaxClients)
@@ -6621,31 +6621,23 @@ static void vChooseReward(int survivor, int tank, int priority)
 				iAmmo = GetEntProp(survivor, Prop_Send, "m_iAmmo", _, iGetWeaponOffset(sWeapon));
 			}
 
-			if ((g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor)) && -1 < iAmmo <= 10)
+			if (!(iType & MT_REWARD_REFILL) && (g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor)) && -1 < iAmmo <= 10)
 			{
-				iType = MT_REWARD_REFILL;
+				iType |= MT_REWARD_REFILL;
 			}
-			else if (g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor))
+			else if (!(iType & MT_REWARD_HEALTH) && (g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor)))
 			{
-				iType = MT_REWARD_HEALTH;
+				iType |= MT_REWARD_HEALTH;
 			}
-			else if (-1 < iAmmo <= 10)
+			else if (!(iType & MT_REWARD_AMMO) && -1 < iAmmo <= 10)
 			{
-				iType = MT_REWARD_AMMO;
-			}
-			else
-			{
-				iType = (g_esCache[tank].g_iRewardEnabled[priority] > 0) ? g_esCache[tank].g_iRewardEnabled[priority] : (1 << GetRandomInt(0, 7));
+				iType |= MT_REWARD_AMMO;
 			}
 		}
-		else
+		else if (!(iType & MT_REWARD_RESPAWN))
 		{
-			iType = (g_esCache[tank].g_iRewardEnabled[priority] > 0) ? g_esCache[tank].g_iRewardEnabled[priority] : (1 << GetRandomInt(0, 7));
+			iType |= MT_REWARD_RESPAWN;
 		}
-	}
-	else if (g_esCache[tank].g_iUsefulRewards[priority] == 1)
-	{
-		iType = MT_REWARD_RESPAWN;
 	}
 
 	vRewardSurvivor(survivor, tank, iType, priority, true);
@@ -6661,128 +6653,131 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 			char sTankName[33];
 			vGetTranslatedName(sTankName, sizeof(sTankName), tank);
 
-			if ((type & MT_REWARD_HEALTH) && GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerIncapacitated(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")) && !g_esPlayer[survivor].g_bRewardedHealth)
+			if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
 			{
-				vSaveCaughtSurvivor(survivor);
-				vCheatCommand(survivor, "give", "health");
-
-				switch (priority)
-				{
-					case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardHealth", sTankName);
-					case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardHealth2", sTankName);
-					case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardHealth3", sTankName);
-				}
-
-				g_esPlayer[survivor].g_bLastLife = false;
-				g_esPlayer[survivor].g_bRewardedHealth = true;
-			}
-
-			if ((type & MT_REWARD_AMMO) && GetPlayerWeaponSlot(survivor, 0) > MaxClients && !g_esPlayer[survivor].g_bRewardedAmmo)
-			{
-				vCheatCommand(survivor, "give", "ammo");
-
-				switch (priority)
-				{
-					case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardAmmo", sTankName);
-					case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardAmmo2", sTankName);
-					case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardAmmo3", sTankName);
-				}
-
-				g_esPlayer[survivor].g_bRewardedAmmo = true;
-			}
-
-			if ((type & MT_REWARD_REFILL) && !g_esPlayer[survivor].g_bRewardedRefill)
-			{
-				if (GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerIncapacitated(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")))
+				if ((type & MT_REWARD_HEALTH) && GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerIncapacitated(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")) && !g_esPlayer[survivor].g_bRewardedHealth)
 				{
 					vSaveCaughtSurvivor(survivor);
 					vCheatCommand(survivor, "give", "health");
-				}
 
-				vCheatCommand(survivor, "give", "ammo");
-
-				switch (priority)
-				{
-					case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRefill", sTankName);
-					case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRefill2", sTankName);
-					case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRefill3", sTankName);
-				}
-
-				g_esPlayer[survivor].g_bLastLife = false;
-				g_esPlayer[survivor].g_bRewardedRefill = true;
-			}
-
-			if ((type & MT_REWARD_ITEM) && !g_esPlayer[survivor].g_bRewardedItem)
-			{
-				char sItems[320], sItem[5][64];
-
-				switch (priority)
-				{
-					case 0: strcopy(sItems, sizeof(sItems), g_esCache[tank].g_sItemReward);
-					case 1: strcopy(sItems, sizeof(sItems), g_esCache[tank].g_sItemReward2);
-					case 2: strcopy(sItems, sizeof(sItems), g_esCache[tank].g_sItemReward3);
-				}
-
-				ExplodeString(sItems, ",", sItem, sizeof(sItem), sizeof(sItem[]));
-				for (int iPos = 0; iPos < sizeof(sItem); iPos++)
-				{
-					if (sItem[iPos][0] != '\0')
+					switch (priority)
 					{
-						vCheatCommand(survivor, "give", sItem[iPos]);
-						ReplaceString(sItem[iPos], sizeof(sItem[]), "_", " ");
+						case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardHealth", sTankName);
+						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardHealth2", sTankName);
+						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardHealth3", sTankName);
+					}
 
-						switch (priority)
+					g_esPlayer[survivor].g_bLastLife = false;
+					g_esPlayer[survivor].g_bRewardedHealth = true;
+				}
+
+				if ((type & MT_REWARD_AMMO) && GetPlayerWeaponSlot(survivor, 0) > MaxClients && !g_esPlayer[survivor].g_bRewardedAmmo)
+				{
+					vCheatCommand(survivor, "give", "ammo");
+
+					switch (priority)
+					{
+						case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardAmmo", sTankName);
+						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardAmmo2", sTankName);
+						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardAmmo3", sTankName);
+					}
+
+					g_esPlayer[survivor].g_bRewardedAmmo = true;
+				}
+
+				if ((type & MT_REWARD_REFILL) && !g_esPlayer[survivor].g_bRewardedRefill)
+				{
+					if (GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerIncapacitated(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")))
+					{
+						vSaveCaughtSurvivor(survivor);
+						vCheatCommand(survivor, "give", "health");
+					}
+
+					vCheatCommand(survivor, "give", "ammo");
+
+					switch (priority)
+					{
+						case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRefill", sTankName);
+						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRefill2", sTankName);
+						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRefill3", sTankName);
+					}
+
+					g_esPlayer[survivor].g_bLastLife = false;
+					g_esPlayer[survivor].g_bRewardedRefill = true;
+				}
+
+				if ((type & MT_REWARD_ITEM) && !g_esPlayer[survivor].g_bRewardedItem)
+				{
+					char sItems[320], sItem[5][64];
+
+					switch (priority)
+					{
+						case 0: strcopy(sItems, sizeof(sItems), g_esCache[tank].g_sItemReward);
+						case 1: strcopy(sItems, sizeof(sItems), g_esCache[tank].g_sItemReward2);
+						case 2: strcopy(sItems, sizeof(sItems), g_esCache[tank].g_sItemReward3);
+					}
+
+					ExplodeString(sItems, ",", sItem, sizeof(sItem), sizeof(sItem[]));
+					for (int iPos = 0; iPos < sizeof(sItem); iPos++)
+					{
+						if (sItem[iPos][0] != '\0')
 						{
-							case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardItem", sItem[iPos], sTankName);
-							case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardItem2", sItem[iPos], sTankName);
-							case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardItem3", sItem[iPos], sTankName);
+							vCheatCommand(survivor, "give", sItem[iPos]);
+							ReplaceString(sItem[iPos], sizeof(sItem[]), "_", " ");
+
+							switch (priority)
+							{
+								case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardItem", sItem[iPos], sTankName);
+								case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardItem2", sItem[iPos], sTankName);
+								case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardItem3", sItem[iPos], sTankName);
+							}
 						}
 					}
+
+					g_esPlayer[survivor].g_bRewardedItem = true;
 				}
 
-				g_esPlayer[survivor].g_bRewardedItem = true;
-			}
-
-			if ((type & MT_REWARD_SPEEDBOOST) && !g_esPlayer[survivor].g_bRewardedSpeed)
-			{
-				SDKHook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
-
-				switch (priority)
+				if ((type & MT_REWARD_SPEEDBOOST) && !g_esPlayer[survivor].g_bRewardedSpeed)
 				{
-					case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardSpeedBoost", sTankName);
-					case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardSpeedBoost2", sTankName);
-					case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardSpeedBoost3", sTankName);
+					SDKHook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+
+					switch (priority)
+					{
+						case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardSpeedBoost", sTankName);
+						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardSpeedBoost2", sTankName);
+						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardSpeedBoost3", sTankName);
+					}
+
+					g_esPlayer[survivor].g_bRewardedSpeed = true;
+					g_esPlayer[survivor].g_flSpeedBoost = g_esCache[tank].g_flSpeedBoostReward[priority];
 				}
 
-				g_esPlayer[survivor].g_bRewardedSpeed = true;
-				g_esPlayer[survivor].g_flSpeedBoost = g_esCache[tank].g_flSpeedBoostReward[priority];
-			}
-
-			if ((type & MT_REWARD_DAMAGEBOOST) && !g_esPlayer[survivor].g_bRewardedDamage)
-			{
-				switch (priority)
+				if ((type & MT_REWARD_DAMAGEBOOST) && !g_esPlayer[survivor].g_bRewardedDamage)
 				{
-					case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardDamageBoost", sTankName);
-					case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardDamageBoost2", sTankName);
-					case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardDamageBoost3", sTankName);
+					switch (priority)
+					{
+						case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardDamageBoost", sTankName);
+						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardDamageBoost2", sTankName);
+						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardDamageBoost3", sTankName);
+					}
+
+					g_esPlayer[survivor].g_bRewardedDamage = true;
+					g_esPlayer[survivor].g_flDamageBoost = g_esCache[tank].g_flDamageBoostReward[priority];
 				}
 
-				g_esPlayer[survivor].g_bRewardedDamage = true;
-				g_esPlayer[survivor].g_flDamageBoost = g_esCache[tank].g_flDamageBoostReward[priority];
-			}
-
-			if ((type & MT_REWARD_GODMODE) && !g_esPlayer[survivor].g_bRewardedGod)
-			{
-				SetEntProp(survivor, Prop_Data, "m_takedamage", 0, 1);
-
-				switch (priority)
+				if ((type & MT_REWARD_GODMODE) && !g_esPlayer[survivor].g_bRewardedGod)
 				{
-					case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardGod", sTankName);
-					case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardGod2", sTankName);
-					case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardGod3", sTankName);
-				}
+					SetEntProp(survivor, Prop_Data, "m_takedamage", 0, 1);
 
-				g_esPlayer[survivor].g_bRewardedGod = true;
+					switch (priority)
+					{
+						case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardGod", sTankName);
+						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardGod2", sTankName);
+						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardGod3", sTankName);
+					}
+
+					g_esPlayer[survivor].g_bRewardedGod = true;
+				}
 			}
 
 			if ((type & MT_REWARD_RESPAWN) && !g_esPlayer[survivor].g_bRewardedRespawn)
@@ -6857,7 +6852,10 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 
 			if ((type & MT_REWARD_GODMODE) && g_esPlayer[survivor].g_bRewardedGod)
 			{
-				SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
+				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
+				{
+					SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
+				}
 
 				if (bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
 				{
