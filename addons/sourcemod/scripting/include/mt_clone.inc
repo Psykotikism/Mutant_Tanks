@@ -14,6 +14,25 @@
 #endif
 #define _mutanttankscloneability_included
 
+public SharedPlugin __pl_mutanttankscloneability = 
+{
+	name = "mt_clone",
+	file = "mt_clone.smx",
+#if defined REQUIRE_PLUGIN
+	required = 1,
+#else
+	required = 0,
+#endif
+};
+
+#if !defined REQUIRE_PLUGIN
+public void __pl_mutanttankscloneability_SetNTVOptional()
+{
+	MarkNativeAsOptional("MT_IsCloneSupported");
+	MarkNativeAsOptional("MT_IsTankClone");
+}
+#endif
+
 /**
  * Returns if the clone can use abilities.
  *
@@ -36,22 +55,3 @@ stock bool MT_CloneAllowed(int client, bool clone)
 {
 	return MT_IsCloneSupported(tank) && clone;
 }
-
-public SharedPlugin __pl_mutanttankscloneability = 
-{
-	name = "mt_clone",
-	file = "mt_clone.smx",
-#if defined REQUIRE_PLUGIN
-	required = 1,
-#else
-	required = 0,
-#endif
-};
-
-#if !defined REQUIRE_PLUGIN
-public void __pl_mutanttankscloneability_SetNTVOptional()
-{
-	MarkNativeAsOptional("MT_IsCloneSupported");
-	MarkNativeAsOptional("MT_IsTankClone");
-}
-#endif

@@ -135,7 +135,7 @@ esCache g_esCache[MAXPLAYERS + 1];
 public any aNative_IsCloneSupported(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1);
-	if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esPlayer[iTank].g_bFiltered)
+	if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esPlayer[iTank].g_bCloned && g_esPlayer[iTank].g_bFiltered)
 	{
 		return false;
 	}
