@@ -6653,6 +6653,54 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 			char sTankName[33];
 			vGetTranslatedName(sTankName, sizeof(sTankName), tank);
 
+			if ((type & MT_REWARD_RESPAWN) && !g_esPlayer[survivor].g_bRewardedRespawn)
+			{
+				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
+				{
+					g_esPlayer[survivor].g_bLastLife = false;
+
+					vSaveSurvivorStats(survivor);
+				}
+
+				SDKCall(g_esGeneral.g_hSDKRespawnPlayer, survivor);
+
+				bool bTeleport = true;
+				float flOrigin[3], flAngles[3];
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				{
+					if (bIsSurvivor(iSurvivor) && !bIsPlayerHanging(iSurvivor) && iSurvivor != survivor)
+					{
+						bTeleport = false;
+
+						GetClientAbsOrigin(iSurvivor, flOrigin);
+						GetClientEyeAngles(iSurvivor, flAngles);
+						TeleportEntity(survivor, flOrigin, flAngles, NULL_VECTOR);
+
+						break;
+					}
+				}
+
+				if (bTeleport)
+				{
+					TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, g_esPlayer[survivor].g_flLastAngles, NULL_VECTOR);
+				}
+
+				if (g_esCache[tank].g_iRespawnLoadoutReward[priority] == 1)
+				{
+					vRemoveWeapons(survivor);
+					vGiveWeapons(survivor);
+				}
+
+				switch (priority)
+				{
+					case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRespawn", sTankName);
+					case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRespawn2", sTankName);
+					case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRespawn3", sTankName);
+				}
+
+				g_esPlayer[survivor].g_bRewardedRespawn = true;
+			}
+
 			if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
 			{
 				if ((type & MT_REWARD_HEALTH) && GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerIncapacitated(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")) && !g_esPlayer[survivor].g_bRewardedHealth)
@@ -6778,54 +6826,6 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 
 					g_esPlayer[survivor].g_bRewardedGod = true;
 				}
-			}
-
-			if ((type & MT_REWARD_RESPAWN) && !g_esPlayer[survivor].g_bRewardedRespawn)
-			{
-				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
-				{
-					g_esPlayer[survivor].g_bLastLife = false;
-
-					vSaveSurvivorStats(survivor);
-				}
-
-				SDKCall(g_esGeneral.g_hSDKRespawnPlayer, survivor);
-
-				bool bTeleport = true;
-				float flOrigin[3], flAngles[3];
-				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-				{
-					if (bIsSurvivor(iSurvivor) && !bIsPlayerHanging(iSurvivor) && iSurvivor != survivor)
-					{
-						bTeleport = false;
-
-						GetClientAbsOrigin(iSurvivor, flOrigin);
-						GetClientEyeAngles(iSurvivor, flAngles);
-						TeleportEntity(survivor, flOrigin, flAngles, NULL_VECTOR);
-
-						break;
-					}
-				}
-
-				if (bTeleport)
-				{
-					TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, g_esPlayer[survivor].g_flLastAngles, NULL_VECTOR);
-				}
-
-				if (g_esCache[tank].g_iRespawnLoadoutReward[priority] == 1)
-				{
-					vRemoveWeapons(survivor);
-					vGiveWeapons(survivor);
-				}
-
-				switch (priority)
-				{
-					case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRespawn", sTankName);
-					case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRespawn2", sTankName);
-					case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRespawn3", sTankName);
-				}
-
-				g_esPlayer[survivor].g_bRewardedRespawn = true;
 			}
 		}
 		case false:
@@ -9522,7 +9522,7 @@ public Action tTimerTankUpdate(Handle timer, int userid)
 				vSpawnModes(iTank, true);
 
 				DataPack dpBoss;
-				CreateDataTimer(1.0, tTimerBoss, dpBoss, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				CreateDataTimer(0.1, tTimerBoss, dpBoss, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				dpBoss.WriteCell(GetClientUserId(iTank));
 				dpBoss.WriteCell(g_esCache[iTank].g_iBossStages);
 
