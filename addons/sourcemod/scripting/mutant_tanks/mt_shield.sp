@@ -45,16 +45,16 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
 
-#define MT_SHIELD_BULLET (1 << 0) // requires bullet damage
-#define MT_SHIELD_EXPLOSIVE (1 << 1) // requires explosive damage
-#define MT_SHIELD_FIRE (1 << 2) // requires fire damage
-#define MT_SHIELD_MELEE (1 << 3) // requires melee damage
-
 #define MT_CONFIG_SECTION "shieldability"
 #define MT_CONFIG_SECTION2 "shield ability"
 #define MT_CONFIG_SECTION3 "shield_ability"
 #define MT_CONFIG_SECTION4 "shield"
 #define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
+#define MT_SHIELD_BULLET (1 << 0) // requires bullet damage
+#define MT_SHIELD_EXPLOSIVE (1 << 1) // requires explosive damage
+#define MT_SHIELD_FIRE (1 << 2) // requires fire damage
+#define MT_SHIELD_MELEE (1 << 3) // requires melee damage
 
 #define MT_MENU_SHIELD "Shield Ability"
 

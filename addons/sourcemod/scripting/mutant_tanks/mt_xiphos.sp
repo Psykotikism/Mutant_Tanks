@@ -47,6 +47,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTION4 "xiphos"
 #define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
 
+#define MT_XIPHOS_TANK (1 << 0) // tank xiphos
+#define MT_XIPHOS_SURVIVOR (1 << 1) // survivor xiphos
+
 #define MT_MENU_XIPHOS "Xiphos Ability"
 
 enum struct esPlayer
@@ -423,7 +426,7 @@ static void vXiphos(int attacker, int victim, float damage, bool tank)
 	}
 
 	static int iFlag;
-	iFlag = tank ? (1 << 0) : (1 << 1);
+	iFlag = tank ? MT_XIPHOS_TANK : MT_XIPHOS_SURVIVOR;
 	if (g_esCache[iTank].g_iXiphosMessage & iFlag)
 	{
 		static char sTankName[33];

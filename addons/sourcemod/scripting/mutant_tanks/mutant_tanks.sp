@@ -215,6 +215,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_ROCK_FIRE (1 << 2) // fire particle
 #define MT_ROCK_SPIT (1 << 3) // spit particle
 
+#define MT_USEFUL_REFILL (1 << 0) // useful refill reward
+#define MT_USEFUL_HEALTH (1 << 1) // useful health reward
+#define MT_USEFUL_AMMO (1 << 2) // useful ammo reward
+#define MT_USEFUL_RESPAWN (1 << 3) // useful respawn reward
+
 enum ConfigState
 {
 	ConfigState_None, // no section yet
@@ -1142,7 +1147,7 @@ public void OnPluginStart()
 	g_esGeneral.g_gfSettingsCachedForward = new GlobalForward("MT_OnSettingsCached", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfTypeChosenForward = new GlobalForward("MT_OnTypeChosen", ET_Event, Param_CellByRef, Param_Cell);
 
-	vMultiTargetFilters(1);
+	vMultiTargetFilters(true);
 
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
@@ -1428,7 +1433,6 @@ public void OnConfigsExecuted()
 	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 	vPluginStatus();
 	vResetTimers();
-
 	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 	if (g_esGeneral.g_iConfigEnable == 1)
@@ -1703,7 +1707,7 @@ public void OnMapEnd()
 
 public void OnPluginEnd()
 {
-	vMultiTargetFilters(0);
+	vMultiTargetFilters(false);
 	vClearSectionList();
 
 	if (g_esGeneral.g_alFilePaths != null)
@@ -4111,7 +4115,7 @@ public void SMCParseStart(SMCParser smc)
 				g_esGeneral.g_flDamageBoostReward[iPos] = 1.25;
 				g_esGeneral.g_iRespawnLoadoutReward[iPos] = 1;
 				g_esGeneral.g_flSpeedBoostReward[iPos] = 1.25;
-				g_esGeneral.g_iUsefulRewards[iPos] = 1;
+				g_esGeneral.g_iUsefulRewards[iPos] = 15;
 			}
 
 			if (iPos < sizeof(esGeneral::g_flDifficultyDamage))
@@ -4582,7 +4586,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					}
 					else if (StrEqual(key, "UsefulRewards", false) || StrEqual(key, "Useful Rewards", false) || StrEqual(key, "Useful_Rewards", false) || StrEqual(key, "useful", false))
 					{
-						g_esGeneral.g_iUsefulRewards[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 1) : g_esGeneral.g_iUsefulRewards[iPos];
+						g_esGeneral.g_iUsefulRewards[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 15) : g_esGeneral.g_iUsefulRewards[iPos];
 					}
 				}
 			}
@@ -4845,7 +4849,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else if (StrEqual(key, "UsefulRewards", false) || StrEqual(key, "Useful Rewards", false) || StrEqual(key, "Useful_Rewards", false) || StrEqual(key, "useful", false))
 								{
-									g_esTank[iIndex].g_iUsefulRewards[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 1) : g_esTank[iIndex].g_iUsefulRewards[iPos];
+									g_esTank[iIndex].g_iUsefulRewards[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 15) : g_esTank[iIndex].g_iUsefulRewards[iPos];
 								}
 							}
 						}
@@ -5232,7 +5236,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									}
 									else if (StrEqual(key, "UsefulRewards", false) || StrEqual(key, "Useful Rewards", false) || StrEqual(key, "Useful_Rewards", false) || StrEqual(key, "useful", false))
 									{
-										g_esPlayer[iPlayer].g_iUsefulRewards[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 1) : g_esPlayer[iPlayer].g_iUsefulRewards[iPos];
+										g_esPlayer[iPlayer].g_iUsefulRewards[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 15) : g_esPlayer[iPlayer].g_iUsefulRewards[iPos];
 									}
 								}
 							}
@@ -6605,7 +6609,7 @@ static void vResetTimersForward(int mode = 0, int tank = 0)
 static void vChooseReward(int survivor, int tank, int priority)
 {
 	int iType = (g_esCache[tank].g_iRewardEnabled[priority] > 0) ? g_esCache[tank].g_iRewardEnabled[priority] : (1 << GetRandomInt(0, 7));
-	if (g_esCache[tank].g_iUsefulRewards[priority] == 1)
+	if (g_esCache[tank].g_iUsefulRewards[priority] > 0)
 	{
 		if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
 		{
@@ -6617,20 +6621,20 @@ static void vChooseReward(int survivor, int tank, int priority)
 				iAmmo = GetEntProp(survivor, Prop_Send, "m_iAmmo", _, iGetWeaponOffset(sWeapon));
 			}
 
-			if (!(iType & MT_REWARD_REFILL) && (g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor)) && -1 < iAmmo <= 10)
+			if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_REFILL) && !(iType & MT_REWARD_REFILL) && (g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor)) && -1 < iAmmo <= 10)
 			{
 				iType |= MT_REWARD_REFILL;
 			}
-			else if (!(iType & MT_REWARD_HEALTH) && (g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor)))
+			else if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_HEALTH) && !(iType & MT_REWARD_HEALTH) && (g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor)))
 			{
 				iType |= MT_REWARD_HEALTH;
 			}
-			else if (!(iType & MT_REWARD_AMMO) && -1 < iAmmo <= 10)
+			else if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_AMMO) && !(iType & MT_REWARD_AMMO) && -1 < iAmmo <= 10)
 			{
 				iType |= MT_REWARD_AMMO;
 			}
 		}
-		else if (!(iType & MT_REWARD_RESPAWN))
+		else if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_RESPAWN) && !(iType & MT_REWARD_RESPAWN))
 		{
 			iType |= MT_REWARD_RESPAWN;
 		}

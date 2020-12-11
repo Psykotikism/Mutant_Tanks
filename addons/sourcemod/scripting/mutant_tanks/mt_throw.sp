@@ -51,6 +51,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTION4 "throw"
 #define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
 
+#define MT_THROW_CAR (1 << 0) // car throw
+#define MT_THROW_SPECIAL (1 << 1) // special infected throw
+#define MT_THROW_SELF (1 << 2) // self throw
+#define MT_THROW_WITCH (1 << 3) // witch throw
+
 #define MT_MENU_THROW "Throw Ability"
 
 enum struct esPlayer
@@ -317,7 +322,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			static int iTank;
 			iTank = g_esPlayer[attacker].g_iOwner;
-			if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && (g_esCache[iTank].g_iThrowAbility & (1 << 1)))
+			if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && (g_esCache[iTank].g_iThrowAbility & MT_THROW_SPECIAL))
 			{
 				if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 				{
@@ -329,7 +334,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			static int iTank;
 			iTank = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;
-			if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && (g_esCache[iTank].g_iThrowAbility & (1 << 3)))
+			if (MT_IsTankSupported(iTank) && MT_IsCustomTankSupported(iTank) && (g_esCache[iTank].g_iThrowAbility & MT_THROW_WITCH))
 			{
 				if ((!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || MT_IsAdminImmune(victim, iTank) || bIsAdminImmune(victim, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 				{

@@ -1203,24 +1203,11 @@ stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size = 0,
 	}
 }
 
-stock void vMultiTargetFilters(int toggle)
+stock void vMultiTargetFilters(bool toggle)
 {
 	switch (toggle)
 	{
-		case 0:
-		{
-			RemoveMultiTargetFilter("@smokers", bSmokerFilter);
-			RemoveMultiTargetFilter("@boomers", bBoomerFilter);
-			RemoveMultiTargetFilter("@hunters", bHunterFilter);
-			RemoveMultiTargetFilter("@spitters", bSpitterFilter);
-			RemoveMultiTargetFilter("@jockeys", bJockeyFilter);
-			RemoveMultiTargetFilter("@chargers", bChargerFilter);
-			RemoveMultiTargetFilter("@tanks", bTankFilter);
-			RemoveMultiTargetFilter("@special", bSpecialFilter);
-			RemoveMultiTargetFilter("@infected", bInfectedFilter);
-			RemoveMultiTargetFilter("@mutants", bMutantFilter);
-		}
-		case 1:
+		case true:
 		{
 			AddMultiTargetFilter("@smokers", bSmokerFilter, "all Smokers", false);
 			AddMultiTargetFilter("@boomers", bBoomerFilter, "all Boomers", false);
@@ -1232,6 +1219,23 @@ stock void vMultiTargetFilters(int toggle)
 			AddMultiTargetFilter("@special", bSpecialFilter, "all Special Infected", false);
 			AddMultiTargetFilter("@infected", bInfectedFilter, "all Infected", false);
 			AddMultiTargetFilter("@mutants", bMutantFilter, "all Mutant Tanks", false);
+			AddMultiTargetFilter("@mtanks", bMutantFilter, "all Mutant Tanks", false);
+			AddMultiTargetFilter("@psytanks", bMutantFilter, "all Mutant Tanks", false);
+		}
+		case false:
+		{
+			RemoveMultiTargetFilter("@smokers", bSmokerFilter);
+			RemoveMultiTargetFilter("@boomers", bBoomerFilter);
+			RemoveMultiTargetFilter("@hunters", bHunterFilter);
+			RemoveMultiTargetFilter("@spitters", bSpitterFilter);
+			RemoveMultiTargetFilter("@jockeys", bJockeyFilter);
+			RemoveMultiTargetFilter("@chargers", bChargerFilter);
+			RemoveMultiTargetFilter("@tanks", bTankFilter);
+			RemoveMultiTargetFilter("@special", bSpecialFilter);
+			RemoveMultiTargetFilter("@infected", bInfectedFilter);
+			RemoveMultiTargetFilter("@mutants", bMutantFilter);
+			RemoveMultiTargetFilter("@mtanks", bMutantFilter);
+			RemoveMultiTargetFilter("@psytanks", bMutantFilter);
 		}
 	}
 }
