@@ -1331,6 +1331,8 @@ Target filters:
 @special
 @infected
 @mutants
+@mtanks
+@psytanks
 ```
 
 Commands:
@@ -1923,7 +1925,7 @@ Examples:
 
 **Dragokas** - For reporting issues, suggesting ideas, and providing fixes.
 
-**login101** - For providing some source code.
+**login101** - For providing some source code for the `Lightning` ability.
 
 **peachie** - For the love and support behind the scenes.
 

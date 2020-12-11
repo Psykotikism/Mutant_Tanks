@@ -27,6 +27,10 @@
 - Fixed the blur effect prop not using the Tank's model.
 - Fixed the `Boss` feature not carrying over bosses' stats to their evolution stages.
 
+#### Config Files
+- Fixed the config parser storing previous values.
+- Fixed the config parser not reading config files properly.
+
 #### Settings
 - Fixed the `Requires Humans` setting not working in some config formats.
 - Fixed the `Requires Humans` setting not working when deciding which Mutant Tank type to spawn.

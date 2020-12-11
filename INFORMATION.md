@@ -479,23 +479,25 @@
 			"Speed Boost Reward"			"1.25,1.25,1.25"
 
 			// Include useful reward types depending on the status of the recipient.
-			// Note: If the recipient is black and white, the recipient will receive Health as a reward.
-			// Note: If the recipient is low on ammunition, the recipient will receive Ammo as a reward.
-			// Note: If the recipient is dead, the recipient will receive Respawn as a reward.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
-			// Character limit for each value: 1
+			// Add up numbers together for different results.
 			// --
-			// Minimum value for each: 0 (OFF)
-			// Maximum value for each: 1 (ON)
+			// Minimum value for each: 0
+			// Maximum value for each: 15
+			// --
+			// 0: OFF
+			// 1: If the recipient is black and white and low on ammunition, they will receive Health and ammo refill as a reward.
+			// 2: If the recipient is black and white, they will receive Health as a reward.
+			// 4: If the recipient is low on ammunition, they will receive Ammo as a reward.
+			// 8: If the recipient is dead, they will receive Respawn as a reward.
 			// --
 			// 1st number = Enable useful rewards for killers.
 			// 2nd number = Enable useful rewards for assistants.
 			// 3rd number = Enable useful rewards for teammates.
-			"Useful Rewards"			"1,1,1"
+			"Useful Rewards"			"15,15,15"
 		}
 		"Competitive"
 		{
@@ -1274,19 +1276,21 @@
 			"Speed Boost Reward"			"0.0,0.0,0.0"
 
 			// Include useful reward types depending on the status of the recipient.
-			// Note: If the recipient is black and white, the recipient will receive Health as a reward.
-			// Note: If the recipient is low on ammunition, the recipient will receive Ammo as a reward.
-			// Note: If the recipient is dead, the recipient will receive Respawn as a reward.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate values with commas (",").
 			// --
-			// Values limit: 3
-			// Character limit for each value: 1
+			// Add up numbers together for different results.
 			// --
-			// Minimum value for each: 0 (OFF)
-			// Maximum value for each: 1 (ON)
+			// Minimum value for each: 0
+			// Maximum value for each: 15
+			// --
+			// 0: OFF
+			// 1: If the recipient is black and white and low on ammunition, they will receive Health and ammo refill as a reward.
+			// 2: If the recipient is black and white, they will receive Health as a reward.
+			// 4: If the recipient is low on ammunition, they will receive Ammo as a reward.
+			// 8: If the recipient is dead, they will receive Respawn as a reward.
 			// --
 			// 1st number = Enable useful rewards for killers.
 			// 2nd number = Enable useful rewards for assistants.
