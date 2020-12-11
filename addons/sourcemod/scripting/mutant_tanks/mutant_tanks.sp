@@ -359,7 +359,7 @@ enum struct esGeneral
 	int g_iMinimumHumans;
 	int g_iMultiHealth;
 	int g_iParserViewer;
-	int g_iPlayerCount[6];
+	int g_iPlayerCount[3];
 	int g_iPluginEnabled;
 	int g_iRegularAmount;
 	int g_iRegularCount;
@@ -1409,8 +1409,6 @@ public void OnClientPostAdminCheck(int client)
 	}
 
 	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
-	g_esGeneral.g_iPlayerCount[2] = iGetHumanCount();
-	g_esGeneral.g_iPlayerCount[4] = iGetHumanCount(true);
 }
 
 public void OnClientDisconnect_Post(int client)
@@ -1419,8 +1417,6 @@ public void OnClientDisconnect_Post(int client)
 	vResetCore(client);
 
 	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
-	g_esGeneral.g_iPlayerCount[2] = iGetHumanCount();
-	g_esGeneral.g_iPlayerCount[4] = iGetHumanCount(true);
 }
 
 public void OnConfigsExecuted()
@@ -1432,6 +1428,7 @@ public void OnConfigsExecuted()
 	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 	vPluginStatus();
 	vResetTimers();
+
 	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 	if (g_esGeneral.g_iConfigEnable == 1)
@@ -1980,13 +1977,11 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 				FormatEx(sTankName[5], sizeof(sTankName[]), "Tank_%i", g_esGeneral.g_iSection);
 				FormatEx(sTankName[6], sizeof(sTankName[]), "#%i", g_esGeneral.g_iSection);
 
+				static char sIndex[5], sType[5];
 				static int iIndex;
 				iIndex = iFindSectionType(name, g_esGeneral.g_iSection);
-
-				static char sIndex[5], sType[5];
 				IntToString(iIndex, sIndex, sizeof(sIndex));
 				IntToString(g_esGeneral.g_iSection, sType, sizeof(sType));
-
 				if (StrContains(name, sType) != -1)
 				{
 					for (int iType = 0; iType < sizeof(sTankName); iType++)
@@ -1996,6 +1991,8 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 							g_esGeneral.g_csState2 = ConfigState_Type;
 
 							MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+
+							break;
 						}
 					}
 				}
@@ -2705,14 +2702,12 @@ static void vConfig(bool manual)
 					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
 					vCustomConfig(sCountConfig);
 					g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
-					g_esGeneral.g_iPlayerCount[1] = iCount;
-					g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+					g_esGeneral.g_iPlayerCount[0] = iCount;
 				}
-				else if (g_esGeneral.g_iPlayerCount[0] != g_esGeneral.g_iPlayerCount[1] || manual)
+				else if (g_esGeneral.g_iPlayerCount[0] != iCount || manual)
 				{
 					vCustomConfig(sCountConfig);
-					g_esGeneral.g_iPlayerCount[1] = iCount;
-					g_esGeneral.g_iPlayerCount[0] = g_esGeneral.g_iPlayerCount[1];
+					g_esGeneral.g_iPlayerCount[0] = iCount;
 				}
 			}
 		}
@@ -2731,14 +2726,12 @@ static void vConfig(bool manual)
 					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
 					vCustomConfig(sCountConfig);
 					g_esGeneral.g_iFileTimeOld[6] = g_esGeneral.g_iFileTimeNew[6];
-					g_esGeneral.g_iPlayerCount[3] = iCount;
-					g_esGeneral.g_iPlayerCount[2] = g_esGeneral.g_iPlayerCount[3];
+					g_esGeneral.g_iPlayerCount[1] = iCount;
 				}
-				else if (g_esGeneral.g_iPlayerCount[2] != g_esGeneral.g_iPlayerCount[3] || manual)
+				else if (g_esGeneral.g_iPlayerCount[1] != iCount || manual)
 				{
 					vCustomConfig(sCountConfig);
-					g_esGeneral.g_iPlayerCount[3] = iCount;
-					g_esGeneral.g_iPlayerCount[2] = g_esGeneral.g_iPlayerCount[3];
+					g_esGeneral.g_iPlayerCount[1] = iCount;
 				}
 			}
 		}
@@ -2757,14 +2750,12 @@ static void vConfig(bool manual)
 					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
 					vCustomConfig(sCountConfig);
 					g_esGeneral.g_iFileTimeOld[7] = g_esGeneral.g_iFileTimeNew[7];
-					g_esGeneral.g_iPlayerCount[5] = iCount;
-					g_esGeneral.g_iPlayerCount[4] = g_esGeneral.g_iPlayerCount[5];
+					g_esGeneral.g_iPlayerCount[2] = iCount;
 				}
-				else if (g_esGeneral.g_iPlayerCount[4] != g_esGeneral.g_iPlayerCount[5] || manual)
+				else if (g_esGeneral.g_iPlayerCount[2] != iCount || manual)
 				{
 					vCustomConfig(sCountConfig);
-					g_esGeneral.g_iPlayerCount[5] = iCount;
-					g_esGeneral.g_iPlayerCount[4] = g_esGeneral.g_iPlayerCount[5];
+					g_esGeneral.g_iPlayerCount[2] = iCount;
 				}
 			}
 		}
@@ -4434,13 +4425,11 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 				FormatEx(sTankName[5], sizeof(sTankName[]), "Tank_%i", iIndex);
 				FormatEx(sTankName[6], sizeof(sTankName[]), "#%i", iIndex);
 
+				static char sIndex[5], sRealType[5];
 				static int iRealType;
 				iRealType = iFindSectionType(name, iIndex);
-
-				static char sIndex[5], sRealType[5];
 				IntToString(iIndex, sIndex, sizeof(sIndex));
 				IntToString(iRealType, sRealType, sizeof(sRealType));
-
 				for (int iType = 0; iType < sizeof(sTankName); iType++)
 				{
 					if (StrEqual(name, sTankName[iType], false) || StrEqual(name, sIndex) || StrEqual(sRealType, sIndex) || StrContains(name, "all", false) != -1)
@@ -4448,6 +4437,8 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 						g_esGeneral.g_csState = ConfigState_Type;
 
 						strcopy(g_esGeneral.g_sCurrentSection, sizeof(esGeneral::g_sCurrentSection), name);
+
+						break;
 					}
 				}
 			}
@@ -4725,13 +4716,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				FormatEx(sTankName[5], sizeof(sTankName[]), "Tank_%i", iIndex);
 				FormatEx(sTankName[6], sizeof(sTankName[]), "#%i", iIndex);
 
+				static char sIndex[5], sRealType[5];
 				static int iRealType;
 				iRealType = iFindSectionType(g_esGeneral.g_sCurrentSection, iIndex);
-
-				static char sIndex[5], sRealType[5];
 				IntToString(iIndex, sIndex, sizeof(sIndex));
 				IntToString(iRealType, sRealType, sizeof(sRealType));
-
 				for (int iType = 0; iType < sizeof(sTankName); iType++)
 				{
 					if (StrEqual(g_esGeneral.g_sCurrentSection, sTankName[iType], false) || StrEqual(g_esGeneral.g_sCurrentSection, sIndex) || StrEqual(sRealType, sIndex) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1)
@@ -5114,6 +5103,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						Call_PushCell(-1);
 						Call_PushCell(g_esGeneral.g_iConfigMode);
 						Call_Finish();
+
+						break;
 					}
 				}
 			}
@@ -5494,13 +5485,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									FormatEx(sTankName[5], sizeof(sTankName[]), "Tank_%i", iIndex);
 									FormatEx(sTankName[6], sizeof(sTankName[]), "#%i", iIndex);
 
+									static char sIndex[5], sRealType[5];
 									static int iRealType;
 									iRealType = iFindSectionType(g_esGeneral.g_sCurrentSubSection, iIndex);
-
-									static char sIndex[5], sRealType[5];
 									IntToString(iIndex, sIndex, sizeof(sIndex));
 									IntToString(iRealType, sRealType, sizeof(sRealType));
-
 									for (int iType = 0; iType < sizeof(sTankName); iType++)
 									{
 										if (StrEqual(g_esGeneral.g_sCurrentSubSection, sTankName[iType], false) || StrEqual(g_esGeneral.g_sCurrentSubSection, sIndex) || StrEqual(sRealType, sIndex) || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1)
@@ -5513,6 +5502,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 											{
 												g_esAdmin[iIndex].g_iImmunityFlags[iPlayer] = ReadFlagString(value);
 											}
+
+											break;
 										}
 									}
 								}
@@ -6028,6 +6019,7 @@ static void vHookEvents(bool hook)
 		HookEvent("player_spawn", vEventHandler);
 		HookEvent("player_now_it", vEventHandler);
 		HookEvent("player_no_longer_it", vEventHandler);
+		HookEvent("player_team", vEventHandler, EventHookMode_Post);
 		HookEvent("revive_success", vEventHandler);
 		HookEvent("weapon_fire", vEventHandler);
 
@@ -6064,6 +6056,7 @@ static void vHookEvents(bool hook)
 		UnhookEvent("player_spawn", vEventHandler);
 		UnhookEvent("player_now_it", vEventHandler);
 		UnhookEvent("player_no_longer_it", vEventHandler);
+		UnhookEvent("player_team", vEventHandler, EventHookMode_Post);
 		UnhookEvent("revive_success", vEventHandler);
 		UnhookEvent("weapon_fire", vEventHandler);
 
@@ -6416,6 +6409,9 @@ static void vRemoveProps(int tank, int mode = 1)
 
 static void vReset()
 {
+	g_esGeneral.g_iPlayerCount[1] = iGetHumanCount();
+	g_esGeneral.g_iPlayerCount[2] = iGetHumanCount(true);
+
 	vResetRound();
 	vClearAbilityList();
 	vClearPluginList();
