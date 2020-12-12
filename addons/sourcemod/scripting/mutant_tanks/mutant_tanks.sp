@@ -1433,6 +1433,7 @@ public void OnConfigsExecuted()
 	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 	vPluginStatus();
 	vResetTimers();
+
 	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 	if (g_esGeneral.g_iConfigEnable == 1)
@@ -6561,6 +6562,11 @@ static void vResetTank(int tank)
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	vResetSpeed(tank, true);
+
+	if (bIsValidGame())
+	{
+		vRemoveGlow(tank);
+	}
 }
 
 static void vKillRegularWavesTimer()
@@ -7109,6 +7115,11 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 	vChangeTypeForward(tank, g_esPlayer[tank].g_iOldTankType, g_esPlayer[tank].g_iTankType, revert);
 	vCacheSettings(tank);
 	vSetTankModel(tank);
+
+	if (bIsValidGame())
+	{
+		vRemoveGlow(tank);
+	}
 
 	SetEntityRenderMode(tank, RENDER_NORMAL);
 	SetEntityRenderColor(tank, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
@@ -9514,7 +9525,6 @@ public Action tTimerTankUpdate(Handle timer, int userid)
 
 	switch (g_esCache[iTank].g_iSpawnType)
 	{
-		case 0: vSpawnModes(iTank, false);
 		case 1:
 		{
 			if (!g_esPlayer[iTank].g_bBoss)
