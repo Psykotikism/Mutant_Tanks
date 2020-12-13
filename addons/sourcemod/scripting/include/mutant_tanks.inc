@@ -1474,9 +1474,9 @@ stock bool bIsAdminImmune(int admin, int type, int flags, int flags2)
 		|| (iTypeFlags != 0 && ((iTypeFlags & flags2) || (flags2 & iTypeFlags))) || (iGlobalFlags != 0 && ((iGlobalFlags & flags2) || (flags2 & iGlobalFlags)));
 }
 
-stock bool bIsAreaNarrow(int tank, int setting = -1)
+stock bool bIsAreaNarrow(int tank, float range = 150.0)
 {
-	if (setting != 0)
+	if (range > 0.0)
 	{
 		static float flOrigin[3], flPos[3], flAngles[3];
 		flAngles[0] = -89.0;
@@ -1490,7 +1490,7 @@ stock bool bIsAreaNarrow(int tank, int setting = -1)
 			{
 				TR_GetEndPosition(flPos, hTrace); 
 
-				if (GetVectorDistance(flPos, flOrigin) <= 100.0)
+				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
 					return true;
