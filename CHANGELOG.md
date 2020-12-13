@@ -21,11 +21,11 @@
 - Fixed the Tank's primary attack being blocked by the friendly-fire check.
 - Fixed some cases where Tanks don't have props in thirdperson.
 - Fixed some cases where props appear even when Tanks are in firstperson.
-- Fixed the `Transformation` feature disabling itself after the first transformation ends.
-- Fixed the `Transformation` feature only firing once. (Thanks to Mi.Cura for testing and reporting!)
 - Fixed the blur effect prop not deleting itself. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed the blur effect prop not using the Tank's model.
 - Fixed the `Boss` feature not carrying over bosses' stats to their evolution stages.
+- Fixed the `Randomization` feature only changing the Tank once.
+- Fixed the `Transformation` feature disabling itself after the first transformation ends. (Thanks to Mi.Cura for testing and reporting!)
 
 #### Config Files
 - Fixed the config parser storing previous values.
@@ -321,6 +321,7 @@
 
 - Bury
 	- Added the `Bury Buffer` setting. (Requested by Mi.Cura.)
+	- Incapacitated or ledge-hanging survivors are no longer affected.
 	- The ability no longer requires `Left 4 DHooks`.
 
 - Car
@@ -343,6 +344,9 @@
 
 - Fire
 	- Added a sound effect for L4D1.
+
+- Fling
+	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Fly
 	- Added the `Immunity Flags` setting.

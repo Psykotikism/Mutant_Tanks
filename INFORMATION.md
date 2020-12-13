@@ -1397,12 +1397,12 @@
 			// 4: ON, the Mutant Tank can only appear on finale maps after the rescue vehicle is called.
 			"Finale Tank"				"0"
 
-			// The Mutant Tank will only spawn in open areas.
+			// The Mutant Tank can only spawn in open areas.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
-			// 0: OFF, the Mutant Tank can appear anywhere.
-			// 1: ON, the Mutant Tank can only appear in open areas.
-			"Open Areas Only"			"0"
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
+			"Open Areas Only"			"0.0"
 
 			// The mode of the Mutant Tank's spawn status.
 			// Note: This setting can be overridden for specific players.
@@ -2275,8 +2275,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -2435,8 +2435,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -2637,8 +2637,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -2804,8 +2804,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -2971,8 +2971,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -3148,8 +3148,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -3325,8 +3325,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -3500,9 +3500,9 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Open Areas Only"			"1"
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
+			"Open Areas Only"			"500.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -3657,8 +3657,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -3832,9 +3832,9 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Open Areas Only"			"1"
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
+			"Open Areas Only"			"150.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -4009,8 +4009,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -4095,8 +4095,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -4245,8 +4245,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -4421,8 +4421,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -4602,8 +4602,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -4786,8 +4786,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -4963,8 +4963,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -5088,8 +5088,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -5268,8 +5268,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -5462,9 +5462,9 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Open Areas Only"			"1"
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
+			"Open Areas Only"			"150.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -5602,8 +5602,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -5806,8 +5806,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -6038,8 +6038,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -6163,8 +6163,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -6371,8 +6371,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -6556,8 +6556,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -6674,8 +6674,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -6858,8 +6858,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -7073,8 +7073,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -7242,8 +7242,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -7402,8 +7402,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -7549,8 +7549,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -7686,8 +7686,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -7882,8 +7882,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -8049,8 +8049,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -8217,8 +8217,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -8355,8 +8355,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -8533,8 +8533,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -8664,8 +8664,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -8837,9 +8837,9 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Open Areas Only"			"1"
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
+			"Open Areas Only"			"500.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -8983,9 +8983,9 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Open Areas Only"			"1"
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
+			"Open Areas Only"			"150.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -9135,8 +9135,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -9249,8 +9249,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -9409,8 +9409,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -9539,8 +9539,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -9653,8 +9653,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -9840,8 +9840,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10017,8 +10017,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10157,8 +10157,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10325,8 +10325,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10493,8 +10493,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10604,8 +10604,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10736,8 +10736,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10914,9 +10914,9 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Open Areas Only"			"1"
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
+			"Open Areas Only"			"500.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -11058,8 +11058,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -11234,8 +11234,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -11443,8 +11443,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -11648,8 +11648,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -11848,8 +11848,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -12024,8 +12024,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -12191,8 +12191,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -12359,9 +12359,9 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Open Areas Only"			"1"
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
+			"Open Areas Only"			"150.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -12499,8 +12499,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -12631,8 +12631,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -12764,9 +12764,9 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
-			"Open Areas Only"			"1"
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
+			"Open Areas Only"			"500.0"
 
 			// The ability is only effective toward human survivors.
 			// Note: This setting can be overridden for specific players.
@@ -12970,8 +12970,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -13095,8 +13095,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -13229,8 +13229,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -13312,8 +13312,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -13425,8 +13425,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -13619,8 +13619,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -13799,8 +13799,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -13983,8 +13983,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -14098,8 +14098,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -14222,8 +14222,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -14345,8 +14345,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0 (Farthest)
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
