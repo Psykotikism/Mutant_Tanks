@@ -8635,7 +8635,7 @@ static int iChooseType(int exclude, int tank = 0, int min = 0, int max = 0)
 		switch (exclude)
 		{
 			case 1: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank, iIndex) || g_esTank[iIndex].g_iSpawnEnabled == 0 || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_iOpenAreasOnly) || !bTankChance(iIndex) || (g_esTank[iIndex].g_iChosenTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iChosenTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
-			case 2: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_iOpenAreasOnly);
+			case 2: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || g_esTank[iIndex].g_iSpawnEnabled == 0 || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_iOpenAreasOnly);
 		}
 
 		if (bCondition)

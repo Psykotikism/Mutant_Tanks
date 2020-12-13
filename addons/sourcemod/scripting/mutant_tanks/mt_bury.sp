@@ -767,7 +767,7 @@ static void vBuryHit(int survivor, int tank, float random, float chance, int ena
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && bIsEntityGrounded(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && bIsEntityGrounded(survivor))
 	{
 		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -798,10 +798,7 @@ static void vBuryHit(int survivor, int tank, float random, float chance, int ena
 				flOrigin[2] -= g_esCache[tank].g_flBuryHeight;
 				SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 
-				if (!bIsPlayerIncapacitated(survivor))
-				{
-					SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
-				}
+				SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
 
 				if (!g_esPlayer[survivor].g_bRewarded)
 				{

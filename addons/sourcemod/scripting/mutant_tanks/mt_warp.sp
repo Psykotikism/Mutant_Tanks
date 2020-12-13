@@ -983,7 +983,7 @@ static void vWarpHit(int survivor, int tank, float random, float chance, int ena
 				static float flCurrentOrigin[3], flCurrentAngles[3];
 				for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 				{
-					if (bIsSurvivor(iPlayer) && !bIsPlayerIncapacitated(iPlayer) && iPlayer != survivor)
+					if (bIsSurvivor(iPlayer) && !bIsPlayerDisabled(iPlayer) && iPlayer != survivor)
 					{
 						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))
 						{

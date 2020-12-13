@@ -971,53 +971,48 @@ static void vHealHit(int survivor, int tank, float random, float chance, int ena
 		return;
 	}
 
-	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor))
+	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor))
 	{
 		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
 			static int iTime;
 			iTime = GetTime();
-			if (random <= chance && !g_esPlayer[survivor].g_bAffected)
+			if (random <= chance && GetEntProp(survivor, Prop_Data, "m_iHealth") > 0 && !g_esPlayer[survivor].g_bAffected)
 			{
-				static int iHealth;
-				iHealth = GetEntProp(survivor, Prop_Data, "m_iHealth");
-				if (iHealth > 0 && !bIsPlayerIncapacitated(survivor))
+				g_esPlayer[survivor].g_bAffected = true;
+
+				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))
 				{
-					g_esPlayer[survivor].g_bAffected = true;
+					g_esPlayer[tank].g_iAmmoCount2++;
 
-					if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman2", g_esPlayer[tank].g_iAmmoCount2, g_esCache[tank].g_iHumanAmmo);
+
+					g_esPlayer[tank].g_iCooldown2 = (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
+					if (g_esPlayer[tank].g_iCooldown2 != -1 && g_esPlayer[tank].g_iCooldown2 > iTime)
 					{
-						g_esPlayer[tank].g_iAmmoCount2++;
-
-						MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman2", g_esPlayer[tank].g_iAmmoCount2, g_esCache[tank].g_iHumanAmmo);
-
-						g_esPlayer[tank].g_iCooldown2 = (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esCache[tank].g_iHumanCooldown) : -1;
-						if (g_esPlayer[tank].g_iCooldown2 != -1 && g_esPlayer[tank].g_iCooldown2 > iTime)
-						{
-							MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman9", g_esPlayer[tank].g_iCooldown2 - iTime);
-						}
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman9", g_esPlayer[tank].g_iCooldown2 - iTime);
 					}
+				}
 
-					SetEntProp(survivor, Prop_Data, "m_iHealth", 1);
-					SetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime", GetGameTime());
-					SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", g_esCache[tank].g_flHealBuffer);
-					SetEntProp(survivor, Prop_Send, "m_currentReviveCount", g_cvMTMaxIncapCount.IntValue);
-					SetEntProp(survivor, Prop_Send, "m_isGoingToDie", 1);
+				SetEntProp(survivor, Prop_Data, "m_iHealth", 1);
+				SetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime", GetGameTime());
+				SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", g_esCache[tank].g_flHealBuffer);
+				SetEntProp(survivor, Prop_Send, "m_currentReviveCount", g_cvMTMaxIncapCount.IntValue);
+				SetEntProp(survivor, Prop_Send, "m_isGoingToDie", 1);
 
-					if (bIsValidGame())
-					{
-						SetEntProp(survivor, Prop_Send, "m_bIsOnThirdStrike", 1);
-					}
+				if (bIsValidGame())
+				{
+					SetEntProp(survivor, Prop_Send, "m_bIsOnThirdStrike", 1);
+				}
 
-					vEffect(survivor, tank, g_esCache[tank].g_iHealEffect, flags);
+				vEffect(survivor, tank, g_esCache[tank].g_iHealEffect, flags);
 
-					if (g_esCache[tank].g_iHealMessage & messages)
-					{
-						static char sTankName[33];
-						MT_GetTankName(tank, sTankName);
-						MT_PrintToChatAll("%s %t", MT_TAG2, "Heal", sTankName, survivor);
-						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Heal", LANG_SERVER, sTankName, survivor);
-					}
+				if (g_esCache[tank].g_iHealMessage & messages)
+				{
+					static char sTankName[33];
+					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Heal", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Heal", LANG_SERVER, sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))

@@ -848,7 +848,6 @@ static void vRemoveClone(int tank, bool revert = true)
 {
 	if (revert)
 	{
-		g_esPlayer[tank].g_bCloned = false;
 		g_esPlayer[tank].g_bFiltered = false;
 	}
 
