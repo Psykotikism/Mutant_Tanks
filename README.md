@@ -129,7 +129,7 @@ By default, Mutant Tanks can create and execute the following types of configura
 3. Automatically generate config files for up to 66 players, all difficulties specified by `z_difficulty`, maps installed on the server, game modes specified by `sv_gametypes` and `mp_gamemode`, days of the `week`, and all possible `finale stages`.
 
 ## Questions You May Have
-> If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140). Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
+> If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140). Read the INFORMATION.md file to learn about every setting/feature available. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 
 ### Main Features
 1. How do I make my own Mutant Tank?
@@ -1813,7 +1813,7 @@ Example:
 ```
 Overrides
 {
-	"mt_admin"		"z" // All admins with the Root (z) flag are exempted from cooldowns.
+	"mt_admin"		"z" // All admins with the "z" (Root) flag are exempted from cooldowns.
 }
 ```
 

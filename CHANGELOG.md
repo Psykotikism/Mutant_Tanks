@@ -113,6 +113,9 @@
 - Hit
 	- Fixed some of the settings not working in some config formats.
 
+- Hypno
+	- Fixed survivors taking too much damage when the Tank is incapacitated while survivors are still hypnotized.
+
 - Jump
 	- Fixed the range ability checking for the wrong ammo count.
 
@@ -197,6 +200,8 @@
 - Idle Tanks will no longer turn into different types when the `Spawn Type` setting is set to `1`, `2`, or `3`.
 - Changed the method for checking whether or not abilities are installed.
 - The `Boss` feature now has new effects when evolving. (Thanks to 3aljiyavslgazana for suggesting!)
+- Tanks that use the `Randomization` feature no longer turn into Mutant Tank types that cannot spawn.
+- AI Tanks that are kicked are now flagged as "dead" Tanks.
 
 #### Config Files
 - Enabled the `Requires Humans` setting for some of the default Mutant Tank types.
@@ -363,6 +368,9 @@
 - Heal
 	- Changed the default value of the `Heal Buffer` setting from `25.0` to `100.0`.
 	- The ability now contributes to the Tank's overall health.
+
+- Hypno
+	- Updated method for hurting teammates to bypass plugins that block friendly-fire.
 
 - Idle
 	- Applied a new idle fix method. (Thanks to Lux for the code!)
