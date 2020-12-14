@@ -330,7 +330,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 			}
 
-			if (g_esPlayer[attacker].g_bAffected)
+			if (!bIsPlayerIncapacitated(victim) && g_esPlayer[attacker].g_bAffected)
 			{
 				if (damagetype & DMG_BULLET)
 				{
@@ -350,12 +350,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 
 				static int iTarget;
-				iTarget = (g_esCache[victim].g_iHypnoMode == 1) ? iGetRandomSurvivor(attacker) : attacker;
+				iTarget = (g_esCache[victim].g_iHypnoMode == 1) ? iGetRandomSurvivor(victim) : attacker;
 				if (iTarget > 0)
 				{
 					static char sDamageType[32];
 					IntToString(damagetype, sDamageType, sizeof(sDamageType));
-					vDamagePlayer(iTarget, attacker, damage, sDamageType);
+					vDamagePlayer(iTarget, victim, damage, sDamageType);
 					EmitSoundToAll(SOUND_METAL, victim);
 				}
 
