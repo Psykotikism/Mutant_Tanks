@@ -1416,6 +1416,16 @@ public void OnClientPostAdminCheck(int client)
 	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 }
 
+public void OnClientDisconnect(int client)
+{
+	if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsValidClient(client, MT_CHECK_FAKECLIENT))
+	{
+		g_esGeneral.g_iTankCount--;
+
+		vCalculateDeath(client);
+	}
+}
+
 public void OnClientDisconnect_Post(int client)
 {
 	vReset3(client);
@@ -5685,92 +5695,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				g_esPlayer[iVictim].g_bDying = false;
 				g_esPlayer[iVictim].g_bTriggered = false;
 
-				if (bIsCustomTankSupported(iVictim))
-				{
-					int iAssistant = bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME) ? iAttacker : 0;
-					for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-					{
-						if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-						{
-							if (g_esPlayer[iPlayer].g_iTankDamage[iVictim] > g_esPlayer[iAssistant].g_iTankDamage[iVictim])
-							{
-								iAssistant = iPlayer;
-							}
-						}
-					}
-
-					char sTankName[33];
-					vGetTranslatedName(sTankName, sizeof(sTankName), iVictim);
-
-					float flPercentage = (float(g_esPlayer[iAssistant].g_iTankDamage[iVictim]) / float(g_esPlayer[iVictim].g_iTankHealth)) * 100;
-
-					switch (g_esCache[iVictim].g_iAnnounceDeath)
-					{
-						case 1: vAnnounceDeath(iVictim);
-						case 2:
-						{
-							int iOption = iGetMessage(g_esCache[iVictim].g_iDeathMessage);
-							if (iOption > 0)
-							{
-								char sPhrase[32];
-								if (bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME))
-								{
-									FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
-									MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, iAttacker, sTankName, iAssistant, flPercentage);
-									vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, iAttacker, sTankName, iAssistant, flPercentage);
-									vVocalizeDeath(iAttacker, iAssistant, iVictim);
-								}
-								else if (flPercentage >= 1.0)
-								{
-									FormatEx(sPhrase, sizeof(sPhrase), "Assist%i", iOption);
-									MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, iAssistant, flPercentage);
-									vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iAssistant, flPercentage);
-									vVocalizeDeath(0, iAssistant, iVictim);
-								}
-								else
-								{
-									vAnnounceDeath(iVictim);
-								}
-							}
-						}
-					}
-
-					float flRandom = GetRandomFloat(0.1, 100.0);
-					if (g_esCache[iVictim].g_iRewardEnabled[1] != -1 && flRandom <= g_esCache[iVictim].g_flRewardChance[1] && flPercentage >= g_esCache[iVictim].g_flRewardPercentage[1])
-					{
-						vChooseReward(iAssistant, iVictim, 1);
-					}
-
-					flPercentage = (float(g_esPlayer[iAttacker].g_iTankDamage[iVictim]) / float(g_esPlayer[iVictim].g_iTankHealth)) * 100;
-					if (bIsSurvivor(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iVictim].g_iRewardEnabled[0] != -1 && flRandom <= g_esCache[iVictim].g_flRewardChance[0] && flPercentage >= g_esCache[iVictim].g_flRewardPercentage[0])
-					{
-						vChooseReward(iAttacker, iVictim, 0);
-					}
-
-					if (g_esCache[iVictim].g_iRewardEnabled[2] != -1 && flRandom <= g_esCache[iVictim].g_flRewardChance[2])
-					{
-						for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
-						{
-							if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME) && iTeammate != iAttacker && iTeammate != iAssistant)
-							{
-								flPercentage = (float(g_esPlayer[iTeammate].g_iTankDamage[iVictim]) / float(g_esPlayer[iVictim].g_iTankHealth)) * 100;
-								if (flPercentage >= g_esCache[iVictim].g_flRewardPercentage[2])
-								{
-									vChooseReward(iTeammate, iVictim, 2);
-									vResetSurvivorStats2(iTeammate);
-								}
-								else
-								{
-									MT_PrintToChat(iTeammate, "%s %t", MT_TAG3, "RewardNone", sTankName);
-								}
-							}
-						}
-					}
-
-					vResetDamage(iVictim);
-					vResetSurvivorStats2(iAttacker);
-					vResetSurvivorStats2(iAssistant);
-				}
+				vCalculateDeath(iVictim, iAttacker);
 
 				if (g_esCache[iVictim].g_iDeathRevert == 1)
 				{
@@ -6610,6 +6535,97 @@ static void vResetTimersForward(int mode = 0, int tank = 0)
 	Call_PushCell(mode);
 	Call_PushCell(tank);
 	Call_Finish();
+}
+
+static void vCalculateDeath(int tank, int survivor = 0)
+{
+	if (bIsCustomTankSupported(tank))
+	{
+		int iAssistant = bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME) ? survivor : 0;
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME) && GetClientTeam(iPlayer) != 3 && g_esPlayer[iPlayer].g_iTankDamage[tank] > g_esPlayer[iAssistant].g_iTankDamage[tank])
+			{
+				iAssistant = iPlayer;
+			}
+		}
+
+		char sTankName[33];
+		vGetTranslatedName(sTankName, sizeof(sTankName), tank);
+
+		float flPercentage = (float(g_esPlayer[iAssistant].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
+
+		switch (g_esCache[tank].g_iAnnounceDeath)
+		{
+			case 1: vAnnounceDeath(tank);
+			case 2:
+			{
+				int iOption = iGetMessage(g_esCache[tank].g_iDeathMessage);
+				if (iOption > 0)
+				{
+					char sPhrase[32];
+					if (bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
+					{
+						FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
+						MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, survivor, sTankName, iAssistant, flPercentage);
+						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, survivor, sTankName, iAssistant, flPercentage);
+						vVocalizeDeath(survivor, iAssistant, tank);
+					}
+					else if (flPercentage >= 1.0)
+					{
+						FormatEx(sPhrase, sizeof(sPhrase), "Assist%i", iOption);
+						MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, iAssistant, flPercentage);
+						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iAssistant, flPercentage);
+						vVocalizeDeath(0, iAssistant, tank);
+					}
+					else
+					{
+						vAnnounceDeath(tank);
+					}
+				}
+			}
+		}
+
+		float flRandom = GetRandomFloat(0.1, 100.0);
+		if (g_esCache[tank].g_iRewardEnabled[1] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[1] && flPercentage >= g_esCache[tank].g_flRewardPercentage[1])
+		{
+			vChooseReward(iAssistant, tank, 1);
+		}
+
+		flPercentage = (float(g_esPlayer[survivor].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
+		if (bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[tank].g_iRewardEnabled[0] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[0] && flPercentage >= g_esCache[tank].g_flRewardPercentage[0])
+		{
+			vChooseReward(survivor, tank, 0);
+		}
+
+		if (g_esCache[tank].g_iRewardEnabled[2] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[2])
+		{
+			for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
+			{
+				if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME) && iTeammate != survivor && iTeammate != iAssistant)
+				{
+					flPercentage = (float(g_esPlayer[iTeammate].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
+					if (flPercentage >= g_esCache[tank].g_flRewardPercentage[2])
+					{
+						vChooseReward(iTeammate, tank, 2);
+						vResetSurvivorStats2(iTeammate);
+					}
+					else
+					{
+						MT_PrintToChat(iTeammate, "%s %t", MT_TAG3, "RewardNone", sTankName);
+					}
+				}
+			}
+		}
+
+		vResetDamage(tank);
+		vResetSurvivorStats2(survivor);
+		vResetSurvivorStats2(iAssistant);
+	}
+	else if (g_esCache[tank].g_iAnnounceDeath > 0)
+	{
+		vAnnounceDeath(tank);
+	}
 }
 
 static void vChooseReward(int survivor, int tank, int priority)
@@ -8004,6 +8020,7 @@ static void vMutateTank(int tank)
 		}
 
 		g_esGeneral.g_iChosenType = 0;
+		g_esGeneral.g_iTankCount++;
 
 		vTankSpawn(tank);
 
@@ -8834,7 +8851,6 @@ public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 	if (g_esGeneral.g_iLimitExtras == 0 || g_esGeneral.g_bForceSpawned)
 	{
 		g_esGeneral.g_bForceSpawned = false;
-		g_esGeneral.g_iTankCount++;
 
 		return Plugin_Continue;
 	}
@@ -8861,8 +8877,6 @@ public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 		}
 		case false: bBlock = (0 < g_esGeneral.g_iRegularAmount <= iCount) || (0 < g_esGeneral.g_iRegularAmount <= iCount2);
 	}
-
-	g_esGeneral.g_iTankCount += bBlock ? 0 : 1;
 
 	return bBlock ? Plugin_Handled : Plugin_Continue;
 }
