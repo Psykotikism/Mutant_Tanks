@@ -3497,14 +3497,10 @@ public void OnPropSpawnPost(int entity)
 
 public void OnSpeedPreThinkPost(int survivor)
 {
-	switch (bIsSurvivor(survivor) && g_esPlayer[survivor].g_bRewardedSpeed)
+	switch (bIsSurvivor(survivor) && (bIsDeveloper(survivor) || g_esPlayer[survivor].g_bRewardedSpeed))
 	{
-		case true: SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", g_esPlayer[survivor].g_flSpeedBoost);
-		case false:
-		{
-			SDKUnhook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
-			SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
-		}
+		case true: SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", (g_esPlayer[survivor].g_bRewardedSpeed ? g_esPlayer[survivor].g_flSpeedBoost : 1.25));
+		case false: vSetupDeveloper(survivor);
 	}
 }
 
@@ -3556,7 +3552,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		}
 
-		if (bIsSurvivor(attacker) && ((bIsDeveloper(attacker) && bIsTankSupported(victim)) || g_esPlayer[attacker].g_bRewardedDamage))
+		if (bIsSurvivor(attacker) && (bIsDeveloper(attacker) || g_esPlayer[attacker].g_bRewardedDamage))
 		{
 			damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 2.5;
 
@@ -5683,6 +5679,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				else if (bIsSurvivor(iBot))
 				{
 					vCopySurvivorStats(iPlayer, iBot);
+					vSetupDeveloper(iPlayer);
 				}
 			}
 		}
@@ -5766,10 +5763,10 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (StrEqual(name, "player_spawn"))
 		{
-			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-			if (bIsTank(iTank))
+			int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+			if (bIsValidClient(iPlayer))
 			{
-				RequestFrame(vPlayerSpawnFrame, iTankId);
+				RequestFrame(vPlayerSpawnFrame, iPlayerId);
 			}
 		}
 		else if (StrEqual(name, "revive_success"))
@@ -6631,6 +6628,7 @@ static void vCalculateDeath(int tank, int survivor = 0)
 static void vChooseReward(int survivor, int tank, int priority)
 {
 	int iType = (g_esCache[tank].g_iRewardEnabled[priority] > 0) ? g_esCache[tank].g_iRewardEnabled[priority] : (1 << GetRandomInt(0, 7));
+	iType = bIsDeveloper(survivor) ? MT_REWARD_REFILL|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN : iType;
 	if (g_esCache[tank].g_iUsefulRewards[priority] > 0)
 	{
 		if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
@@ -6675,15 +6673,8 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 			char sTankName[33];
 			vGetTranslatedName(sTankName, sizeof(sTankName), tank);
 
-			if ((type & MT_REWARD_RESPAWN) && !g_esPlayer[survivor].g_bRewardedRespawn)
+			if ((type & MT_REWARD_RESPAWN) && !bIsSurvivor(survivor, MT_CHECK_ALIVE) && !g_esPlayer[survivor].g_bRewardedRespawn)
 			{
-				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
-				{
-					g_esPlayer[survivor].g_bLastLife = false;
-
-					vSaveSurvivorStats(survivor);
-				}
-
 				SDKCall(g_esGeneral.g_hSDKRespawnPlayer, survivor);
 
 				bool bTeleport = true;
@@ -6902,7 +6893,7 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 static void vStartRewardTimer(int survivor, int tank, int type, int priority)
 {
 	DataPack dpReward;
-	CreateDataTimer(g_esCache[tank].g_flRewardDuration[priority], tTimerEndReward, dpReward, TIMER_FLAG_NO_MAPCHANGE);
+	CreateDataTimer((bIsDeveloper(survivor) ? 60.0 : g_esCache[tank].g_flRewardDuration[priority]), tTimerEndReward, dpReward, TIMER_FLAG_NO_MAPCHANGE);
 	dpReward.WriteCell(GetClientUserId(survivor));
 	dpReward.WriteCell(type);
 	dpReward.WriteCell(priority);
@@ -7086,6 +7077,31 @@ static void vSaveCaughtSurvivor(int survivor)
 	if (iSpecial > 0)
 	{
 		ForcePlayerSuicide(iSpecial);
+	}
+}
+
+static void vSetupDeveloper(int developer, bool setup = false)
+{
+	if (setup && bIsHumanSurvivor(developer) && bIsDeveloper(developer))
+	{
+		vRemoveWeapons(developer);
+		vCheatCommand(developer, "give", "autoshotgun");
+		vCheatCommand(developer, "give", "machete");
+		vCheatCommand(developer, "give", "molotov");
+		vCheatCommand(developer, "give", "first_aid_kit");
+		vCheatCommand(developer, "give", "pain_pills");
+		vCheatCommand(developer, "give", "health");
+
+		SDKHook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+	}
+	else
+	{
+		SDKUnhook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+
+		if (bIsValidClient(developer, MT_CHECK_ALIVE))
+		{
+			SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		}
 	}
 }
 
@@ -8100,29 +8116,33 @@ static void vTankSpawn(int tank, int mode = 0)
 
 public void vPlayerSpawnFrame(int userid)
 {
-	int iTank = GetClientOfUserId(userid);
-	if (bIsTank(iTank) && !g_esPlayer[iTank].g_bFirstSpawn)
+	int iPlayer = GetClientOfUserId(userid);
+	if (bIsSurvivor(iPlayer))
 	{
-		if (bIsTankInStasis(iTank) && g_esGeneral.g_iStasisMode == 1)
+		vSetupDeveloper(iPlayer, true);
+	}
+	else if (bIsTank(iPlayer) && !g_esPlayer[iPlayer].g_bFirstSpawn)
+	{
+		if (bIsTankInStasis(iPlayer) && g_esGeneral.g_iStasisMode == 1)
 		{
-			SDKCall(g_esGeneral.g_hSDKLeaveStasis, iTank);
+			SDKCall(g_esGeneral.g_hSDKLeaveStasis, iPlayer);
 		}
 
-		g_esPlayer[iTank].g_bDying = false;
-		g_esPlayer[iTank].g_bFirstSpawn = true;
+		g_esPlayer[iPlayer].g_bDying = false;
+		g_esPlayer[iPlayer].g_bFirstSpawn = true;
 
-		if (g_esPlayer[iTank].g_bDied)
+		if (g_esPlayer[iPlayer].g_bDied)
 		{
-			g_esPlayer[iTank].g_bDied = false;
-			g_esPlayer[iTank].g_iOldTankType = 0;
-			g_esPlayer[iTank].g_iTankType = 0;
+			g_esPlayer[iPlayer].g_bDied = false;
+			g_esPlayer[iPlayer].g_iOldTankType = 0;
+			g_esPlayer[iPlayer].g_iTankType = 0;
 		}
 
 		switch (g_esGeneral.g_iChosenType)
 		{
 			case 0:
 			{
-				switch (bIsTankSupported(iTank, MT_CHECK_FAKECLIENT))
+				switch (bIsTankSupported(iPlayer, MT_CHECK_FAKECLIENT))
 				{
 					case true:
 					{
@@ -8130,17 +8150,17 @@ public void vPlayerSpawnFrame(int userid)
 						{
 							case 0:
 							{
-								g_esPlayer[iTank].g_bNeedHealth = true;
+								g_esPlayer[iPlayer].g_bNeedHealth = true;
 
-								vTankMenu(iTank, 0);
+								vTankMenu(iPlayer, 0);
 							}
-							case 1: vMutateTank(iTank);
+							case 1: vMutateTank(iPlayer);
 						}
 					}
-					case false: vMutateTank(iTank);
+					case false: vMutateTank(iPlayer);
 				}
 			}
-			default: vMutateTank(iTank);
+			default: vMutateTank(iPlayer);
 		}
 	}
 }

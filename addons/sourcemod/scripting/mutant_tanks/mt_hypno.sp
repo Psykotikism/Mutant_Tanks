@@ -41,6 +41,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
+
 #define MT_CONFIG_SECTION "hypnoability"
 #define MT_CONFIG_SECTION2 "hypno ability"
 #define MT_CONFIG_SECTION3 "hypno_ability"
@@ -348,15 +350,16 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 
 				static int iTarget;
-				iTarget = iGetRandomSurvivor(attacker);
-				iTarget = (g_esCache[victim].g_iHypnoMode == 1 && iTarget > 0) ? iTarget : attacker;
+				iTarget = (g_esCache[victim].g_iHypnoMode == 1) ? iGetRandomSurvivor(attacker) : attacker;
+				if (iTarget > 0)
+				{
+					static char sDamageType[32];
+					IntToString(damagetype, sDamageType, sizeof(sDamageType));
+					vDamagePlayer(iTarget, attacker, damage, sDamageType);
+					EmitSoundToAll(SOUND_METAL, victim);
+				}
 
-				static char sDamageType[32];
-				IntToString(damagetype, sDamageType, sizeof(sDamageType));
-
-				vDamagePlayer(iTarget, attacker, damage, sDamageType);
-
-				return Plugin_Changed;
+				return Plugin_Handled;
 			}
 		}
 	}
