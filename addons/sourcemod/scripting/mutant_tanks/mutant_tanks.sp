@@ -3558,6 +3558,12 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 			return Plugin_Changed;
 		}
+		else if (bIsHumanSurvivor(victim) && bIsDeveloper(attacker))
+		{
+			damage *= 0.5;
+
+			return Plugin_Changed;
+		}
 		else if (bIsTankSupported(attacker) && bIsSurvivor(victim))
 		{
 			vSaveSurvivorStats(victim, true);
