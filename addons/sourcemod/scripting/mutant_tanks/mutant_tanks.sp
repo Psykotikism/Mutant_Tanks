@@ -336,6 +336,7 @@ enum struct esGeneral
 	int g_iDeathMessage;
 	int g_iDeathRevert;
 	int g_iDetectPlugins;
+	int g_iDeveloperAccess;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
 	int g_iExtraHealth;
@@ -1799,7 +1800,7 @@ public void vMutantTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObjec
 		{
 			g_esPlayer[param].g_bAdminMenu = true;
 
-			vTankMenu(param, 0);
+			vTankMenu(param);
 		}
 	}
 }
@@ -1813,7 +1814,7 @@ public void vMTConfigMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject o
 		{
 			g_esPlayer[param].g_bAdminMenu = true;
 
-			vPathMenu(param, 0);
+			vPathMenu(param);
 		}
 	}
 }
@@ -1827,7 +1828,7 @@ public void vMTInfoMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject obj
 		{
 			g_esPlayer[param].g_bAdminMenu = true;
 
-			vInfoMenu(param, 0);
+			vInfoMenu(param);
 		}
 	}
 }
@@ -1889,7 +1890,7 @@ public Action cmdMTConfig(int client, int args)
 		switch (IsVoteInProgress())
 		{
 			case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-			case false: vPathMenu(client, 0);
+			case false: vPathMenu(client);
 		}
 
 		return Plugin_Handled;
@@ -2139,7 +2140,7 @@ public void SMCParseEnd2(SMCParser smc, bool halted, bool failed)
 	g_esGeneral.g_sSection[0] = '\0';
 }
 
-static void vPathMenu(int admin, int item)
+static void vPathMenu(int admin, int item = 0)
 {
 	g_esGeneral.g_bUsedParser = true;
 	g_esGeneral.g_iParserViewer = admin;
@@ -2194,7 +2195,7 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			{
 				g_esPlayer[param1].g_bAdminMenu = false;
 
-				if (param2 == MenuCancel_ExitBack && g_esGeneral.g_tmMTMenu != null)
+				if (bIsValidClient(param1, MT_CHECK_INGAME) && param2 == MenuCancel_ExitBack && g_esGeneral.g_tmMTMenu != null)
 				{
 					g_esGeneral.g_tmMTMenu.Display(param1, TopMenuPosition_LastCategory);
 				}
@@ -2208,7 +2209,7 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
-				vConfigMenu(param1, 0);
+				vConfigMenu(param1);
 			}
 		}
 		case MenuAction_Display:
@@ -2223,7 +2224,7 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	return 0;
 }
 
-static void vConfigMenu(int admin, int item)
+static void vConfigMenu(int admin, int item = 0)
 {
 	g_esGeneral.g_bUsedParser = true;
 	g_esGeneral.g_iParserViewer = admin;
@@ -2311,9 +2312,9 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 		case MenuAction_End: delete menu;
 		case MenuAction_Cancel:
 		{
-			if (param2 == MenuCancel_ExitBack)
+			if (bIsValidClient(param1, MT_CHECK_INGAME) && param2 == MenuCancel_ExitBack)
 			{
-				vPathMenu(param1, 0);
+				vPathMenu(param1);
 			}
 		}
 		case MenuAction_Select:
@@ -2430,13 +2431,13 @@ public Action cmdMTInfo(int client, int args)
 	switch (IsVoteInProgress())
 	{
 		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-		case false: vInfoMenu(client, 0);
+		case false: vInfoMenu(client);
 	}
 
 	return Plugin_Handled;
 }
 
-static void vInfoMenu(int client, int item)
+static void vInfoMenu(int client, int item = 0)
 {
 	Menu mInfoMenu = new Menu(iInfoMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
 	mInfoMenu.SetTitle("%s Information", MT_NAME);
@@ -2463,7 +2464,7 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			{
 				g_esPlayer[param1].g_bAdminMenu = false;
 
-				if (param2 == MenuCancel_ExitBack && g_esGeneral.g_tmMTMenu != null)
+				if (bIsValidClient(param1, MT_CHECK_INGAME) && param2 == MenuCancel_ExitBack && g_esGeneral.g_tmMTMenu != null)
 				{
 					g_esGeneral.g_tmMTMenu.Display(param1, TopMenuPosition_LastCategory);
 				}
@@ -2815,21 +2816,21 @@ public Action cmdTank(int client, int args)
 		switch (IsVoteInProgress())
 		{
 			case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-			case false: vTankMenu(client, 0);
+			case false: vTankMenu(client);
 		}
 
 		return Plugin_Handled;
 	}
 
-	static char sCmd[12], sType[5];
+	static char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-	iAmount = iClamp(GetCmdArgInt(2), 1, 32);
+	iAmount = iClamp(GetCmdArgInt(2), 1, 127);
 	iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
-	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
+	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 127 || iMode < 0 || iMode > 1 || args > 3)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 
@@ -2880,21 +2881,21 @@ public Action cmdTank2(int client, int args)
 		switch (IsVoteInProgress())
 		{
 			case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-			case false: vTankMenu(client, 0);
+			case false: vTankMenu(client);
 		}
 
 		return Plugin_Handled;
 	}
 
-	static char sCmd[12], sType[5];
+	static char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-	iAmount = iClamp(GetCmdArgInt(2), 1, 32);
+	iAmount = iClamp(GetCmdArgInt(2), 1, 127);
 	iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
-	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
+	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 127 || iMode < 0 || iMode > 1 || args > 3)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 
@@ -2943,21 +2944,21 @@ public Action cmdMutantTank(int client, int args)
 		switch (IsVoteInProgress())
 		{
 			case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-			case false: vTankMenu(client, 0);
+			case false: vTankMenu(client);
 		}
 
 		return Plugin_Handled;
 	}
 
-	static char sCmd[12], sType[5];
+	static char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
 	static int iType, iAmount, iMode;
 	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-	iAmount = iClamp(GetCmdArgInt(2), 1, 32);
+	iAmount = iClamp(GetCmdArgInt(2), 1, 127);
 	iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
-	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 32 || iMode < 0 || iMode > 1 || args > 3)
+	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 127 || iMode < 0 || iMode > 1 || args > 3)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 
@@ -2986,37 +2987,48 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 	{
 		case 0:
 		{
-			char sPhrase[32], sTankName[33];
-			int iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
-			for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
+			if (bIsValidClient(admin) && bIsDeveloper(admin, -1) && StrEqual(type, "psy_dev_access", false))
 			{
-				vGetTranslatedName(sPhrase, sizeof(sPhrase), _, iIndex);
-				SetGlobalTransTarget(admin);
-				FormatEx(sTankName, sizeof(sTankName), "%T", sPhrase, admin);
-				if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly) || StrContains(sTankName, type) == -1)
-				{
-					continue;
-				}
+				g_esGeneral.g_iDeveloperAccess = amount;
 
-				g_esGeneral.g_iChosenType = iIndex;
-				iTankTypes[iTypeCount + 1] = iIndex;
-				iTypeCount++;
+				MT_PrintToChat(admin, "%s %s\x03, your current access level for testing has been set to\x04 %i\x03.", MT_TAG4, MT_AUTHOR, amount);
+
+				return;
 			}
-
-			switch (iTypeCount)
+			else
 			{
-				case 0:
+				char sPhrase[32], sTankName[33];
+				int iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
+				for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 				{
-					MT_PrintToChat(admin, "%s %t", MT_TAG3, "RequestFailed");
+					vGetTranslatedName(sPhrase, sizeof(sPhrase), _, iIndex);
+					SetGlobalTransTarget(admin);
+					FormatEx(sTankName, sizeof(sTankName), "%T", sPhrase, admin);
+					if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly) || StrContains(sTankName, type) == -1)
+					{
+						continue;
+					}
 
-					return;
+					g_esGeneral.g_iChosenType = iIndex;
+					iTankTypes[iTypeCount + 1] = iIndex;
+					iTypeCount++;
 				}
-				case 1: MT_PrintToChat(admin, "%s %t", MT_TAG3, "RequestSucceeded");
-				default:
-				{
-					MT_PrintToChat(admin, "%s %t", MT_TAG3, "MultipleMatches");
 
-					g_esGeneral.g_iChosenType = iTankTypes[GetRandomInt(1, iTypeCount)];
+				switch (iTypeCount)
+				{
+					case 0:
+					{
+						MT_PrintToChat(admin, "%s %t", MT_TAG3, "RequestFailed");
+
+						return;
+					}
+					case 1: MT_PrintToChat(admin, "%s %t", MT_TAG3, "RequestSucceeded");
+					default:
+					{
+						MT_PrintToChat(admin, "%s %t", MT_TAG3, "MultipleMatches");
+
+						g_esGeneral.g_iChosenType = iTankTypes[GetRandomInt(1, iTypeCount)];
+					}
 				}
 			}
 		}
@@ -3165,13 +3177,19 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 	}
 }
 
-static void vTankMenu(int admin, int item)
+static void vTankMenu(int admin, int item = 0)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
 	mTankMenu.SetTitle("%s List", MT_NAME);
 
 	static int iCount;
 	iCount = 0;
+
+	if (bIsDeveloper(admin, -1))
+	{
+		mTankMenu.AddItem("Developer Mode", "Developer Mode");
+		iCount++;
+	}
 
 	if (bIsTank(admin))
 	{
@@ -3219,7 +3237,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			{
 				g_esPlayer[param1].g_bAdminMenu = false;
 
-				if (param2 == MenuCancel_ExitBack && g_esGeneral.g_tmMTMenu != null)
+				if (bIsValidClient(param1, MT_CHECK_INGAME) && param2 == MenuCancel_ExitBack && g_esGeneral.g_tmMTMenu != null)
 				{
 					g_esGeneral.g_tmMTMenu.Display(param1, TopMenuPosition_LastCategory);
 				}
@@ -3229,30 +3247,33 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-
-			switch (StrEqual(sInfo, "Default Tank", false))
+			if (StrEqual(sInfo, "Developer Mode", false))
 			{
-				case true: vQueueTank(param1, g_esPlayer[param1].g_iTankType, false);
-				case false:
+				vDeveloperMenu(param1);
+			}
+			else if (StrEqual(sInfo, "Default Tank", false))
+			{
+				vQueueTank(param1, g_esPlayer[param1].g_iTankType, false);
+			}
+			else
+			{
+				for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 				{
-					for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
+					if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(param1, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, param1) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(param1, g_esTank[iIndex].g_flOpenAreasOnly))
 					{
-						if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(param1, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, param1) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(param1, g_esTank[iIndex].g_flOpenAreasOnly))
-						{
-							continue;
-						}
+						continue;
+					}
 
-						if (StrEqual(sInfo, g_esTank[iIndex].g_sTankName, false))
-						{
-							vQueueTank(param1, iIndex, false);
+					if (StrEqual(sInfo, g_esTank[iIndex].g_sTankName, false))
+					{
+						vQueueTank(param1, iIndex, false);
 
-							break;
-						}
+						break;
 					}
 				}
 			}
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME))
+			if (!StrEqual(sInfo, "Developer Mode", false) && bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vTankMenu(param1, menu.Selection);
 			}
@@ -3273,6 +3294,49 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "MTDefaultItem", param1);
 
 				return RedrawMenuItem(sMenuOption);
+			}
+		}
+	}
+
+	return 0;
+}
+
+static void vDeveloperMenu(int developer, int item = 0)
+{
+	Menu mDevMenu = new Menu(iDevMenuHandler, MENU_ACTIONS_DEFAULT);
+	mDevMenu.SetTitle("Developer Menu");
+
+	static char sIndex[4];
+	for (int iIndex = 0; iIndex <= 127; iIndex++)
+	{
+		IntToString(iIndex, sIndex, sizeof(sIndex));
+		mDevMenu.AddItem(sIndex, sIndex);
+	}
+
+	mDevMenu.ExitBackButton = bIsDeveloper(developer, -1);
+	mDevMenu.DisplayAt(developer, item, MENU_TIME_FOREVER);
+}
+
+public int iDevMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Cancel:
+		{
+			if (param2 == MenuCancel_ExitBack && bIsValidClient(param1, MT_CHECK_INGAME) && bIsDeveloper(param1, -1))
+			{
+				vTankMenu(param1);
+			}
+		}
+		case MenuAction_Select:
+		{
+			if (bIsValidClient(param1, MT_CHECK_INGAME) && bIsDeveloper(param1, -1))
+			{
+				g_esGeneral.g_iDeveloperAccess = param2;
+
+				MT_PrintToChat(param1, "%s %s\x03, your current access level for testing has been set to\x04 %i\x03.", MT_TAG4, MT_AUTHOR, param2);
+				vDeveloperMenu(param1, menu.Selection);
 			}
 		}
 	}
@@ -3497,7 +3561,7 @@ public void OnPropSpawnPost(int entity)
 
 public void OnSpeedPreThinkPost(int survivor)
 {
-	switch (bIsSurvivor(survivor) && (bIsDeveloper(survivor) || g_esPlayer[survivor].g_bRewardedSpeed))
+	switch (bIsSurvivor(survivor) && (bIsDeveloper(survivor, 6) || g_esPlayer[survivor].g_bRewardedSpeed))
 	{
 		case true: SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", (g_esPlayer[survivor].g_bRewardedSpeed ? g_esPlayer[survivor].g_flSpeedBoost : 1.25));
 		case false: vSetupDeveloper(survivor);
@@ -3552,13 +3616,13 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		}
 
-		if (bIsSurvivor(attacker) && (bIsDeveloper(attacker) || g_esPlayer[attacker].g_bRewardedDamage))
+		if (bIsSurvivor(attacker) && (bIsDeveloper(attacker, 4) || g_esPlayer[attacker].g_bRewardedDamage))
 		{
 			damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 2.5;
 
 			return Plugin_Changed;
 		}
-		else if (bIsHumanSurvivor(victim) && bIsDeveloper(victim))
+		else if (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5))
 		{
 			damage *= 0.5;
 
@@ -4089,7 +4153,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_sHealthCharacters = "|,-";
 		g_esGeneral.g_iMinimumHumans = 2;
 		g_esGeneral.g_iMultiHealth = 0;
-		g_esGeneral.g_iAllowDeveloper = 1;
+		g_esGeneral.g_iAllowDeveloper = 0;
 		g_esGeneral.g_iAccessFlags = 0;
 		g_esGeneral.g_iImmunityFlags = 0;
 		g_esGeneral.g_iHumanCooldown = 600;
@@ -6634,7 +6698,7 @@ static void vCalculateDeath(int tank, int survivor = 0)
 static void vChooseReward(int survivor, int tank, int priority)
 {
 	int iType = (g_esCache[tank].g_iRewardEnabled[priority] > 0) ? g_esCache[tank].g_iRewardEnabled[priority] : (1 << GetRandomInt(0, 7));
-	iType = bIsDeveloper(survivor) ? MT_REWARD_REFILL|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN : iType;
+	iType = bIsDeveloper(survivor, 3) ? MT_REWARD_REFILL|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN : iType;
 	if (g_esCache[tank].g_iUsefulRewards[priority] > 0)
 	{
 		if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
@@ -6899,7 +6963,7 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 static void vStartRewardTimer(int survivor, int tank, int type, int priority)
 {
 	DataPack dpReward;
-	CreateDataTimer((bIsDeveloper(survivor) ? 60.0 : g_esCache[tank].g_flRewardDuration[priority]), tTimerEndReward, dpReward, TIMER_FLAG_NO_MAPCHANGE);
+	CreateDataTimer((bIsDeveloper(survivor, 3) ? 60.0 : g_esCache[tank].g_flRewardDuration[priority]), tTimerEndReward, dpReward, TIMER_FLAG_NO_MAPCHANGE);
 	dpReward.WriteCell(GetClientUserId(survivor));
 	dpReward.WriteCell(type);
 	dpReward.WriteCell(priority);
@@ -7088,7 +7152,7 @@ static void vSaveCaughtSurvivor(int survivor)
 
 static void vSetupDeveloper(int developer, bool setup = false)
 {
-	if (setup && bIsHumanSurvivor(developer) && bIsDeveloper(developer))
+	if (setup && bIsHumanSurvivor(developer) && bIsDeveloper(developer, 2))
 	{
 		vRemoveWeapons(developer);
 		vCheatCommand(developer, "give", "autoshotgun");
@@ -8158,7 +8222,7 @@ public void vPlayerSpawnFrame(int userid)
 							{
 								g_esPlayer[iPlayer].g_bNeedHealth = true;
 
-								vTankMenu(iPlayer, 0);
+								vTankMenu(iPlayer);
 							}
 							case 1: vMutateTank(iPlayer);
 						}
@@ -8375,7 +8439,7 @@ static bool bFoundSection(const char[] subsection, int index)
 
 static bool bHasCoreAdminAccess(int admin, int type = 0)
 {
-	if (!bIsValidClient(admin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || bIsDeveloper(admin))
+	if (!bIsValidClient(admin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || bIsDeveloper(admin, 1))
 	{
 		return true;
 	}
@@ -8403,7 +8467,7 @@ static bool bIsCoreAdminImmune(int survivor, int tank)
 		return false;
 	}
 
-	if (bIsDeveloper(survivor))
+	if (bIsDeveloper(survivor, 1))
 	{
 		return true;
 	}
@@ -8429,9 +8493,9 @@ static bool bIsCustomTankSupported(int tank)
 	return true;
 }
 
-static bool bIsDeveloper(int developer)
+static bool bIsDeveloper(int developer, int bit = 0)
 {
-	if (g_esGeneral.g_iAllowDeveloper == 1)
+	if (g_esGeneral.g_iAllowDeveloper == 1 || bit == -1 || (bit >= 0 && (g_esGeneral.g_iDeveloperAccess & (1 << bit))))
 	{
 		static char sSteamID32[32], sSteam3ID[32];
 		if (GetClientAuthId(developer, AuthId_Steam2, sSteamID32, sizeof(sSteamID32)))
