@@ -3558,7 +3558,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 			return Plugin_Changed;
 		}
-		else if (bIsHumanSurvivor(victim) && bIsDeveloper(attacker))
+		else if (bIsHumanSurvivor(victim) && bIsDeveloper(victim))
 		{
 			damage *= 0.5;
 
