@@ -289,6 +289,8 @@
 - Added `Infected count (Humans only)` as an option for the `Create Config Types` and `Execute Config Types` settings.
 - Added the `Tank Model` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Thanks to Marttt for the code!)
 - Several color settings' default values have been changed from `-1` to `255`.
+- Added different developer tools for testing.
+- Changed the default value of the `Allow Developer` setting from `1` to `0`.
 
 #### Translations
 - The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
@@ -361,6 +363,7 @@
 
 - Ghost
 	- Rocks thrown by Tanks are now affected by the fade feature. (Requested by 3aljiyavslgazana.)
+	- Incapacitated or ledge-hanging survivors are no longer affected.
 
 - God
 	- Added the `Immunity Flags` setting.
@@ -371,6 +374,7 @@
 
 - Hypno
 	- Updated method for hurting teammates to bypass plugins that block friendly-fire.
+	- Incapacitated or ledge-hanging survivors are no longer affected.
 
 - Idle
 	- Applied a new idle fix method. (Thanks to Lux for the code!)
@@ -423,6 +427,9 @@
 	- Added the `Shield Throw Chance` setting.
 	- Human-controlled Tanks are now put into thirdperson for `1.5` seconds after toggling the shield.
 
+- Shove
+	- Incapacitated or ledge-hanging survivors are no longer affected.
+
 - Smash
 	- Added the `Smash Body` setting.
 
@@ -466,6 +473,7 @@
 	- The ability now contributes to the Tank's overall health.
 	- The `Ability Message` setting now has an extra option.
 	- Survivors now only get a portion of their damage against the Tank as health.
+	- Incapacitated or ledge-hanging survivors are no longer affected.
 
 - Yell
 	- The ability now runs repeatedly while activated when `Human Mode` is set to `1`.

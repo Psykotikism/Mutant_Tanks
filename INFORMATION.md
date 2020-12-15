@@ -5,7 +5,7 @@
 
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 65,535 (Increase the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
-- Maximum types: 500 (Increase the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins, but expect potential server lag.)
+- Maximum types: 500 (Increase/decrease the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins, but expect potential server lag.)
 - Most of the settings below can be overridden for each player.
 
 ## Sections
@@ -637,7 +637,7 @@
 			// --
 			// 0: OFF
 			// 1: ON
-			"Allow Developer"			"1"
+			"Allow Developer"			"0"
 
 			// Admins with one or more of these immunity flags are immune to all Mutant Tanks' attacks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Administration" section of their settings.

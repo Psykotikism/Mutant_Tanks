@@ -432,6 +432,8 @@ The following abilities require different strategies:
 - Nullify Hit: The Mutant Tank can mark players as useless, which means as long as that player is nullified, they will not do any damage.
 - Shield Ability: If set to be weak to explosives, wait for the Tank to throw propane tanks at you and then throw it back at the Tank. Then shoot the propane tank to deactivate the Tank's shield. If set to be weak to fire, wait for the Tank to throw gascans at you and then throw it back at the Tank. Then shoot the gascan to deactivate the Tank's shield. If set to be weak to bullets, just keep shooting the Tank. If set to be weak to melee hits, just keep slashing at the Tank.
 
+Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information on each ability's strengths and weaknesses.
+
 6. How can I change the amount of Tanks that spawn on each finale wave?
 
 Here's an example:
