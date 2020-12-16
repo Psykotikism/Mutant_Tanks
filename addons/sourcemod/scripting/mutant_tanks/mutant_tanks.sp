@@ -262,9 +262,9 @@ enum struct esGeneral
 	ConfigState g_csState;
 	ConfigState g_csState2;
 
-	ConVar g_cvMTEnabledGameModes;
 	ConVar g_cvMTDifficulty;
 	ConVar g_cvMTDisabledGameModes;
+	ConVar g_cvMTEnabledGameModes;
 	ConVar g_cvMTGameMode;
 	ConVar g_cvMTGameModeTypes;
 	ConVar g_cvMTGameTypes;
@@ -1204,12 +1204,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 
-	TopMenu tmAdminMenu;
-	if (LibraryExists("adminmenu") && ((tmAdminMenu = GetAdminTopMenu()) != null))
-	{
-		OnAdminMenuReady(tmAdminMenu);
-	}
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	char sDate[32];
@@ -1334,6 +1328,12 @@ public void OnPluginStart()
 
 	if (g_bLateLoad)
 	{
+		TopMenu tmAdminMenu;
+		if (LibraryExists("adminmenu") && ((tmAdminMenu = GetAdminTopMenu()) != null))
+		{
+			OnAdminMenuReady(tmAdminMenu);
+		}
+
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
@@ -1771,7 +1771,7 @@ public void OnAdminMenuReady(Handle topmenu)
 	}
 
 	g_esGeneral.g_tmMTMenu = tmMTMenu;
-	TopMenuObject tmoCommands = g_esGeneral.g_tmMTMenu.AddCategory(MT_CONFIG_SECTION_MAIN, vMTAdminMenuHandler);
+	TopMenuObject tmoCommands = g_esGeneral.g_tmMTMenu.AddCategory(MT_CONFIG_SECTION_MAIN, vMTAdminMenuHandler, "mt_adminmenu", ADMFLAG_GENERIC);
 	if (tmoCommands != INVALID_TOPMENUOBJECT)
 	{
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_tank", vMutantTanksMenu, tmoCommands, "sm_mt_tank", ADMFLAG_ROOT);
