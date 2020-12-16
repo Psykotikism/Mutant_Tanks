@@ -76,6 +76,7 @@
 	- Fixed clones spawning uncontrollably. (Thanks to 3aljiyavslgazana for testing and reporting!)
 	- Fixed clones being detected by the `Finale Amount` and `Finale Waves` settings.
 	- Fixed clones not being replaced when they have a different Mutant Tank type from the Tank. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	- Fixed rare cases where Mutant Tanks are counted as clones. (Thanks to Mi.Cura for testing and reporting!)
 	- Fixed the ability not being optional.
 
 - Drug
@@ -202,6 +203,7 @@
 - The `Boss` feature now has new effects when evolving. (Thanks to 3aljiyavslgazana for suggesting!)
 - Tanks that use the `Randomization` feature no longer turn into Mutant Tank types that cannot spawn.
 - AI Tanks that are kicked are now flagged as "dead" Tanks.
+- Added the `mt_adminmenu` override to let users restrict the `MutantTanks` category in the admin menu to certain admin flags/groups.
 
 #### Config Files
 - Enabled the `Requires Humans` setting for some of the default Mutant Tank types.

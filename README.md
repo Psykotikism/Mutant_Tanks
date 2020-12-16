@@ -39,7 +39,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 1. `SourceMod 1.11.0.6511` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
-4. Patience
+4. Patience & competence
 
 ### Notes
 1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
@@ -653,7 +653,11 @@ Example:
 }
 ```
 
-15. Are there any developer/tester features available in the plugin?
+15. How can I disable the `MutantTanks` category for some admins?
+
+You can use the `mt_adminmenu` override to restrict the category to certain admin flags/groups.
+
+16. Are there any developer/tester features available in the plugin?
 
 Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Mutant Tank.
 
