@@ -2514,6 +2514,7 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 					{
 						char sInfo[33];
 						menu.GetItem(param2, sInfo, sizeof(sInfo));
+
 						Call_StartForward(g_esGeneral.g_gfMenuItemDisplayedForward);
 						Call_PushCell(param1);
 						Call_PushString(sInfo);
@@ -3185,12 +3186,6 @@ static void vTankMenu(int admin, int item = 0)
 	static int iCount;
 	iCount = 0;
 
-	if (bIsDeveloper(admin, -1))
-	{
-		mTankMenu.AddItem("Developer Mode", "Developer Mode");
-		iCount++;
-	}
-
 	if (bIsTank(admin))
 	{
 		mTankMenu.AddItem("Default Tank", "Default Tank", ((g_esPlayer[admin].g_iTankType > 0) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED));
@@ -3247,11 +3242,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			if (StrEqual(sInfo, "Developer Mode", false))
-			{
-				vDeveloperMenu(param1);
-			}
-			else if (StrEqual(sInfo, "Default Tank", false))
+			if (StrEqual(sInfo, "Default Tank", false))
 			{
 				vQueueTank(param1, g_esPlayer[param1].g_iTankType, false);
 			}
@@ -3273,7 +3264,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				}
 			}
 
-			if (!StrEqual(sInfo, "Developer Mode", false) && bIsValidClient(param1, MT_CHECK_INGAME))
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vTankMenu(param1, menu.Selection);
 			}
@@ -3294,49 +3285,6 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 				FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "MTDefaultItem", param1);
 
 				return RedrawMenuItem(sMenuOption);
-			}
-		}
-	}
-
-	return 0;
-}
-
-static void vDeveloperMenu(int developer, int item = 0)
-{
-	Menu mDevMenu = new Menu(iDevMenuHandler, MENU_ACTIONS_DEFAULT);
-	mDevMenu.SetTitle("Developer Menu");
-
-	static char sIndex[4];
-	for (int iIndex = 0; iIndex <= 127; iIndex++)
-	{
-		IntToString(iIndex, sIndex, sizeof(sIndex));
-		mDevMenu.AddItem(sIndex, sIndex);
-	}
-
-	mDevMenu.ExitBackButton = bIsDeveloper(developer, -1);
-	mDevMenu.DisplayAt(developer, item, MENU_TIME_FOREVER);
-}
-
-public int iDevMenuHandler(Menu menu, MenuAction action, int param1, int param2)
-{
-	switch (action)
-	{
-		case MenuAction_End: delete menu;
-		case MenuAction_Cancel:
-		{
-			if (param2 == MenuCancel_ExitBack && bIsValidClient(param1, MT_CHECK_INGAME) && bIsDeveloper(param1, -1))
-			{
-				vTankMenu(param1);
-			}
-		}
-		case MenuAction_Select:
-		{
-			if (bIsValidClient(param1, MT_CHECK_INGAME) && bIsDeveloper(param1, -1))
-			{
-				g_esGeneral.g_iDeveloperAccess = param2;
-
-				MT_PrintToChat(param1, "%s %s\x03, your current access level for testing has been set to\x04 %i\x03.", MT_TAG4, MT_AUTHOR, param2);
-				vDeveloperMenu(param1, menu.Selection);
 			}
 		}
 	}
