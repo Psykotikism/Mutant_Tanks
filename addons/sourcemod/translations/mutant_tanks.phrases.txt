@@ -1108,7 +1108,7 @@
 	{
 		"en"			"You've used up all your acid range ability's ammo."
 		"hu"			"Elhasználtad a távolsági savas képességed összes lőszerét."
-		"chi"			"你已经用光了所有 酸液  能力次数."
+		"chi"			"你已经用光了所有 酸液 能力次数."
 	}
 	"AcidDetails"
 	{
@@ -1121,33 +1121,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your acid range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági sav képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 酸液  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 酸液 能力!"
 	}
 	"AcidHuman2"
 	{
 		"en"			"Your acid range ability failed to activate. Try again."
 		"hu"			"A távolsági sav képességed aktiválása nem sikerült. Próbáld újra"
-		"chi"			"你的 酸液  能力未能激活.请重试."
+		"chi"			"你的 酸液 能力未能激活.请重试."
 	}
 	"AcidHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your acid range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági sav képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 酸液  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 酸液 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"AcidHuman4"
 	{
 		"en"			"There are no survivors nearby to use your acid range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági sav képességedet."
-		"chi"			"附近没有幸存者可以让你使用 酸液  能力."
+		"chi"			"附近没有幸存者可以让你使用 酸液 能力."
 	}
 	"AcidHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your acid range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági sav képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 酸液  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 酸液 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"AcidMenu"
 	{
@@ -1179,7 +1179,7 @@
 	{
 		"en"			"You've used up all your aimless range ability's ammo."
 		"hu"			"Elhasználtad a céltalan képességed összes lőszerét."
-		"chi"			"你已经用光了所有 禁瞄  能力次数."
+		"chi"			"你已经用光了所有 禁瞄 能力次数."
 	}
 	"AimlessDetails"
 	{
@@ -1192,33 +1192,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your aimless range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági céltalan képességed!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 禁瞄  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 禁瞄 能力!"
 	}
 	"AimlessHuman2"
 	{
 		"en"			"Your aimless range ability failed to activate. Try again."
 		"hu"			"A távolsági céltalan képességed aktiválása nem sikerült. Próbáld újra."
-		"chi"			"你的 禁瞄  能力未能激活.请重试."
+		"chi"			"你的 禁瞄 能力未能激活.请重试."
 	}
 	"AimlessHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your aimless range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági céltalan képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 禁瞄  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 禁瞄 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"AimlessHuman4"
 	{
 		"en"			"There are no survivors nearby to use your aimless range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a céltalan távolsági képességedet."
-		"chi"			"附近没有幸存者可以让你使用 禁瞄  能力."
+		"chi"			"附近没有幸存者可以让你使用 禁瞄 能力."
 	}
 	"AimlessHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your aimless range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági céltalan képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 禁瞄  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 禁瞄 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"AimlessMenu"
 	{
@@ -1243,7 +1243,7 @@
 	{
 		"en"			"You've used up all your ammo range ability's ammo."
 		"hu"			"Elhasználtad az összes távolsági lőszer képességed lőszerét."
-		"chi"			"你已经用光了所有 掠弹  能力次数."
+		"chi"			"你已经用光了所有 掠弹 能力次数."
 	}
 	"AmmoDetails"
 	{
@@ -1256,33 +1256,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ammo range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lőszer képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 掠弹  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 掠弹 能力!"
 	}
 	"AmmoHuman2"
 	{
 		"en"			"Your ammo range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lőszer képességedet. Próbáld újra."
-		"chi"			"你的 掠弹  能力未能激活,请重试."
+		"chi"			"你的 掠弹 能力未能激活,请重试."
 	}
 	"AmmoHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your ammo range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lőszer képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 掠弹  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 掠弹 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"AmmoHuman4"
 	{
 		"en"			"There are no survivors nearby to use your ammo range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági lőszer képességedet."
-		"chi"			"附近没有幸存者可以让你使用 掠弹  能力."
+		"chi"			"附近没有幸存者可以让你使用 掠弹 能力."
 	}
 	"AmmoHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your ammo range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lőszer képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 掠弹  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 掠弹 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"AmmoMenu"
 	{
@@ -1314,7 +1314,7 @@
 	{
 		"en"			"You've used up all your blind range ability's ammo."
 		"hu"			"Elhasználtad az összes távolsági vakító képességed lőszerét."
-		"chi"			"你已经用光了所有 致盲  能力次数."
+		"chi"			"你已经用光了所有 致盲 能力次数."
 	}
 	"BlindDetails"
 	{
@@ -1327,33 +1327,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your blind range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági vakító képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 致盲  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 致盲 能力!"
 	}
 	"BlindHuman2"
 	{
 		"en"			"Your blind range ability failed to activate. Try again."
 		"hu"			"A távolsági vakító képességed aktiválása nem sikerült. Próbáld újra."
-		"chi"			"你的 致盲  能力未能激活,请重试."
+		"chi"			"你的 致盲 能力未能激活,请重试."
 	}
 	"BlindHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your blind range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági vakító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 致盲  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 致盲 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"BlindHuman4"
 	{
 		"en"			"There are no survivors nearby to use your blind range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági vakító képességedet."
-		"chi"			"附近没有幸存者可以让你使用 致盲  能力."
+		"chi"			"附近没有幸存者可以让你使用 致盲 能力."
 	}
 	"BlindHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your blind range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági vakító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 致盲  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 致盲 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"BlindMenu"
 	{
@@ -1385,7 +1385,7 @@
 	{
 		"en"			"You've used up all your bomb range ability's ammo."
 		"hu"			"Elhasználtad a távolsági robbantás képességed összes lőszerét."
-		"chi"			"你已经用光了所有 爆炸  能力次数."
+		"chi"			"你已经用光了所有 爆炸 能力次数."
 	}
 	"BombDetails"
 	{
@@ -1398,33 +1398,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bomb range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági robbantás képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 爆炸  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 爆炸 能力!"
 	}
 	"BombHuman2"
 	{
 		"en"			"Your bomb range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bomba képességedet. Próbáld újra."
-		"chi"			"你的 爆炸  能力未能激活,请重试."
+		"chi"			"你的 爆炸 能力未能激活,请重试."
 	}
 	"BombHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your bomb range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági bomba képességedet még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 爆炸  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 爆炸 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"BombHuman4"
 	{
 		"en"			"There are no survivors nearby to use your bomb range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági bomba képességedet."
-		"chi"			"附近没有幸存者可以让你使用 爆炸  能力."
+		"chi"			"附近没有幸存者可以让你使用 爆炸 能力."
 	}
 	"BombHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your bomb range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bomba képességed véget ért az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 爆炸  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 爆炸 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"BombMenu"
 	{
@@ -1456,7 +1456,7 @@
 	{
 		"en"			"You've used up all your bury range ability's ammo."
 		"hu"			"Elhasználtad a távolsági eltemetés képességed összes lőszerét."
-		"chi"			"你已经用光了所有 埋葬  能力次数."
+		"chi"			"你已经用光了所有 埋葬 能力次数."
 	}
 	"BuryDetails"
 	{
@@ -1469,33 +1469,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bury range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági eltemetés képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 埋葬  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 埋葬 能力!"
 	}
 	"BuryHuman2"
 	{
 		"en"			"Your bury range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági eltemetés képességedet. Próbáld újra."
-		"chi"			"你的 埋葬  能力未能激活,请重试."
+		"chi"			"你的 埋葬 能力未能激活,请重试."
 	}
 	"BuryHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your bury range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági eltemetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 埋葬  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 埋葬 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"BuryHuman4"
 	{
 		"en"			"There are no survivors nearby to use your bury range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági eltemetés képességedet."
-		"chi"			"附近没有幸存者可以让你使用 埋葬  能力."
+		"chi"			"附近没有幸存者可以让你使用 埋葬 能力."
 	}
 	"BuryHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your bury range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági eltemető képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 埋葬  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 埋葬 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"BuryMenu"
 	{
@@ -1598,7 +1598,7 @@
 	{
 		"en"			"You've used up all your choke range ability's ammo."
 		"hu"			"Elhasználtad a távolsági fojtogatás képességed összes lőszerét."
-		"chi"			"你已经用光了所有 窒息  能力次数."
+		"chi"			"你已经用光了所有 窒息 能力次数."
 	}
 	"ChokeDetails"
 	{
@@ -1611,33 +1611,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your choke range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági fojtogatás képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 窒息  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 窒息 能力!"
 	}
 	"ChokeHuman2"
 	{
 		"en"			"Your choke range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági fojtogatás képességedet. Próbáld újra."
-		"chi"			"你的 窒息  能力未能激活,请重试."
+		"chi"			"你的 窒息 能力未能激活,请重试."
 	}
 	"ChokeHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your choke range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági fojtogatás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 窒息  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 窒息 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"ChokeHuman4"
 	{
 		"en"			"There are no survivors nearby to use your choke range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági fojtogatás képességedet."
-		"chi"			"附近没有幸存者可以让你使用 窒息  能力."
+		"chi"			"附近没有幸存者可以让你使用 窒息 能力."
 	}
 	"ChokeHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your choke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági fojtogató képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 窒息  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 窒息 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"ChokeMenu"
 	{
@@ -1854,7 +1854,7 @@
 	{
 		"en"			"You've used up all your drug range ability's ammo."
 		"hu"			"Elhasználtad a távolsági bedrogozás képességed összes lőszerét."
-		"chi"			"你已经用光了所有 中毒  能力次数."
+		"chi"			"你已经用光了所有 中毒 能力次数."
 	}
 	"DrugDetails"
 	{
@@ -1867,33 +1867,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drug range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági bedrogozás képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 中毒  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 中毒 能力!"
 	}
 	"DrugHuman2"
 	{
 		"en"			"Your drug range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bedrogozás képességedet. Próbáld újra."
-		"chi"			"你的 中毒  能力未能激活,请重试."
+		"chi"			"你的 中毒 能力未能激活,请重试."
 	}
 	"DrugHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your drug range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági bedrogozás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 中毒  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 中毒 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"DrugHuman4"
 	{
 		"en"			"There are no survivors nearby to use your drug range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági bedrogozás képességedet."
-		"chi"			"附近没有幸存者可以让你使用 中毒  能力."
+		"chi"			"附近没有幸存者可以让你使用 中毒 能力."
 	}
 	"DrugHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your drug range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bedrogozás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 中毒  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 中毒 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"DrugMenu"
 	{
@@ -1925,7 +1925,7 @@
 	{
 		"en"			"You've used up all your drunk range ability's ammo."
 		"hu"			"Elhasználtad a távolsági részegítő képességed összes lőszerét."
-		"chi"			"你已经用光了所有 醉酒  能力次数."
+		"chi"			"你已经用光了所有 醉酒 能力次数."
 	}
 	"DrunkDetails"
 	{
@@ -1938,33 +1938,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drunk range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági részegítő képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 醉酒  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 醉酒 能力!"
 	}
 	"DrunkHuman2"
 	{
 		"en"			"Your drunk range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági részegítő képességedet. Próbáld újra."
-		"chi"			"你的 醉酒  能力未能激活,请重试."
+		"chi"			"你的 醉酒 能力未能激活,请重试."
 	}
 	"DrunkHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your drunk range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági részegítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 醉酒  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 醉酒 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"DrunkHuman4"
 	{
 		"en"			"There are no survivors nearby to use your drunk range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági részegítő képességedet."
-		"chi"			"附近没有幸存者可以让你使用 醉酒  能力."
+		"chi"			"附近没有幸存者可以让你使用 醉酒 能力."
 	}
 	"DrunkHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your drunk range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági részegítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 醉酒  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 醉酒 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"DrunkMenu"
 	{
@@ -1996,7 +1996,7 @@
 	{
 		"en"			"You've used up all your electric range ability's ammo."
 		"hu"			"Elhasználtad a távolsági elektromos képességed összes lőszerét."
-		"chi"			"你已经用光了所有 电击  能力次数."
+		"chi"			"你已经用光了所有 电击 能力次数."
 	}
 	"ElectricDetails"
 	{
@@ -2009,33 +2009,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your electric range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági elektromos képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 电击  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 电击 能力!"
 	}
 	"ElectricHuman2"
 	{
 		"en"			"Your electric range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági elektromos képességedet. Próbáld újra."
-		"chi"			"你的 电击  能力未能激活,请重试."
+		"chi"			"你的 电击 能力未能激活,请重试."
 	}
 	"ElectricHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your electric range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági elektromos képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 电击  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 电击 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"ElectricHuman4"
 	{
 		"en"			"There are no survivors nearby to use your electric range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági elektromos képességedet."
-		"chi"			"附近没有幸存者可以让你使用 电击  能力."
+		"chi"			"附近没有幸存者可以让你使用 电击 能力."
 	}
 	"ElectricHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your electric range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági elektromos képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 电击  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 电击 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"ElectricMenu"
 	{
@@ -2067,7 +2067,7 @@
 	{
 		"en"			"You've used up all your enforce range ability's ammo."
 		"hu"			"Elhasználtad a távolsági kényszerítő képességed összes lőszerét."
-		"chi"			"你已经用光了所有 迫用  能力次数."
+		"chi"			"你已经用光了所有 迫用 能力次数."
 	}
 	"EnforceDetails"
 	{
@@ -2080,33 +2080,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your enforce range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági kényszerítő képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 迫用  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 迫用 能力!"
 	}
 	"EnforceHuman2"
 	{
 		"en"			"Your enforce range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági kényszerítő képességedet. Próbáld újra."
-		"chi"			"你的 迫用  能力未能激活,请重试."
+		"chi"			"你的 迫用 能力未能激活,请重试."
 	}
 	"EnforceHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your enforce range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági kényszerítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 迫用  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 迫用 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"EnforceHuman4"
 	{
 		"en"			"There are no survivors nearby to use your enforce range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági kényszerítő képességedet."
-		"chi"			"附近没有幸存者可以让你使用 迫用  能力."
+		"chi"			"附近没有幸存者可以让你使用 迫用 能力."
 	}
 	"EnforceHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your enforce range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági kényszerítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 迫用  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 迫用 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"EnforceMenu"
 	{
@@ -2222,33 +2222,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fire range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági tűz képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 火焰  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 火焰 能力!"
 	}
 	"FireHuman2"
 	{
 		"en"			"Your fire range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági tűz képességedet. Próbáld újra."
-		"chi"			"你的 火焰  能力未能激活,请重试."
+		"chi"			"你的 火焰 能力未能激活,请重试."
 	}
 	"FireHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fire range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági tűz képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 火焰  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 火焰 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"FireHuman4"
 	{
 		"en"			"There are no survivors nearby to use your fire range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági tűz képességedet."
-		"chi"			"附近没有幸存者可以让你使用 火焰  能力."
+		"chi"			"附近没有幸存者可以让你使用 火焰 能力."
 	}
 	"FireHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fire range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági tűz képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 火焰  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 火焰 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"FireMenu"
 	{
@@ -2273,7 +2273,7 @@
 	{
 		"en"			"You've used up all your fling range ability's ammo."
 		"hu"			"Elhasználtad a távolsági dobás képességed összes lőszerét."
-		"chi"			"你已经用光了所有 抛空  能力次数."
+		"chi"			"你已经用光了所有 抛空 能力次数."
 	}
 	"FlingDetails"
 	{
@@ -2286,33 +2286,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fling range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági dobás képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 抛空  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 抛空 能力!"
 	}
 	"FlingHuman2"
 	{
 		"en"			"Your fling range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági dobás képességedet. Próbáld újra."
-		"chi"			"你的 抛空  能力未能激活,请重试."
+		"chi"			"你的 抛空 能力未能激活,请重试."
 	}
 	"FlingHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fling range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági dobás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 抛空  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 抛空 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"FlingHuman4"
 	{
 		"en"			"There are no survivors nearby to use your fling range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági dobás képességedet."
-		"chi"			"附近没有幸存者可以让你使用 抛空  能力."
+		"chi"			"附近没有幸存者可以让你使用 抛空 能力."
 	}
 	"FlingHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your fling range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági dobás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 抛空  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 抛空 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"FlingMenu"
 	{
@@ -2498,14 +2498,14 @@
 	"GhostAmmo"
 	{
 		"en"			"You've used up all your cloaking ability's ammo."
-		"hu"		    "Elhasználtad az álcázó képességed összes lőszerét."
+		"hu"			"Elhasználtad az álcázó képességed összes lőszerét."
 		"chi"			"你已经用光了所有 伪装 能力次数."
 	}
 	"GhostAmmo2"
 	{
 		"en"			"You've used up all your disarming range ability's ammo."
 		"hu"			"Elhasználtad a távolsági lefegyverző képességed összes lőszerét."
-		"chi"			"你已经用光了所有 缴械  能力次数."
+		"chi"			"你已经用光了所有 缴械 能力次数."
 	}
 	"GhostDetails"
 	{
@@ -2525,13 +2525,13 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your disarming range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lefegyverző képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 缴械  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 缴械 能力!"
 	}
 	"GhostHuman3"
 	{
 		"en"			"Your disarming range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lefegyverző képességedet. Próbáld újra."
-		"chi"			"你的 缴械  能力未能激活,请重试."
+		"chi"			"你的 缴械 能力未能激活,请重试."
 	}
 	"GhostHuman4"
 	{
@@ -2551,13 +2551,13 @@
 		"#format"		"{1:i}"
 		"en"			"Your disarming range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lefegyverző képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 缴械  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 缴械 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"GhostHuman7"
 	{
 		"en"			"There are no survivors nearby to use your disarming range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági lefegyverző képességedet."
-		"chi"			"附近没有幸存者可以让你使用 缴械  能力."
+		"chi"			"附近没有幸存者可以让你使用 缴械 能力."
 	}
 	"GhostHuman8"
 	{
@@ -2571,7 +2571,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your disarming range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lefegyverző képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 缴械  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 缴械 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"GhostMenu"
 	{
@@ -2694,7 +2694,7 @@
 	{
 		"en"			"You've used up all your low gravity range ability's ammo."
 		"hu"			"Elhasználtad a távolsági alacsony gravitáció képességed összes lőszerét."
-		"chi"			"你已经用光了所有 重力  能力次数."
+		"chi"			"你已经用光了所有 重力 能力次数."
 	}
 	"GravityDetails"
 	{
@@ -2714,13 +2714,13 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your low gravity range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági alacsony gravitáció képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重力  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重力 能力!"
 	}
 	"GravityHuman3"
 	{
 		"en"			"Your low gravity range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági alacsony gravitáció képességedet. Próbáld újra."
-		"chi"			"你的 重力  能力未能激活,请重试."
+		"chi"			"你的 重力 能力未能激活,请重试."
 	}
 	"GravityHuman4"
 	{
@@ -2740,7 +2740,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your low gravity range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági alacsony gravitációs képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 重力  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 重力 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"GravityHuman7"
 	{
@@ -2760,7 +2760,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your low gravity range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az alacsony gravitációs képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 重力  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 重力 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"GravityMenu"
 	{
@@ -2805,7 +2805,7 @@
 	{
 		"en"			"You've used up all your bad-health range ability's ammo."
 		"hu"			"Elhasználtad a távolsági rossz-életerő képességed összes lőszerét."
-		"chi"			"你已经用光了所有 败血  能力次数."
+		"chi"			"你已经用光了所有 败血 能力次数."
 	}
 	"HealDetails"
 	{
@@ -2825,13 +2825,13 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bad-health range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rossz-életerő képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 败血  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 败血 能力!"
 	}
 	"HealHuman3"
 	{
 		"en"			"Your bad-health range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rossz-életerő képességedet. Próbáld újra."
-		"chi"			"你的 败血  能力未能激活,请重试."
+		"chi"			"你的 败血 能力未能激活,请重试."
 	}
 	"HealHuman4"
 	{
@@ -2851,13 +2851,13 @@
 		"#format"		"{1:i}"
 		"en"			"Your bad-health range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági rossz-életerő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 败血  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 败血 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"HealHuman7"
 	{
 		"en"			"There are no survivors nearby to use your bad-health range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági rossz-életerő képességedet."
-		"chi"			"附近没有幸存者可以让你使用 败血  能力."
+		"chi"			"附近没有幸存者可以让你使用 败血 能力."
 	}
 	"HealHuman8"
 	{
@@ -2871,7 +2871,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your bad-health range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági rossz-életerő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 败血  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 败血 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"HealMenu"
 	{
@@ -2921,7 +2921,7 @@
 	{
 		"en"			"You've used up all your hurt range ability's ammo."
 		"hu"			"Elhasználtad a távolsági bántalmazás képességed összes lőszerét."
-		"chi"			"你已经用光了所有 创伤  能力次数."
+		"chi"			"你已经用光了所有 创伤 能力次数."
 	}
 	"HurtDetails"
 	{
@@ -2934,33 +2934,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hurt range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági bántalmazó képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 创伤  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 创伤 能力!"
 	}
 	"HurtHuman2"
 	{
 		"en"			"Your hurt range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bántalmazó képességedet. Próbáld újra."
-		"chi"			"你的 创伤  能力未能激活,请重试."
+		"chi"			"你的 创伤 能力未能激活,请重试."
 	}
 	"HurtHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your hurt range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági bántalmazó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 创伤  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 创伤 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"HurtHuman4"
 	{
 		"en"			"There are no survivors nearby to use your hurt range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági bántalmazó képességedet."
-		"chi"			"附近没有幸存者可以让你使用 创伤  能力."
+		"chi"			"附近没有幸存者可以让你使用 创伤 能力."
 	}
 	"HurtHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your hurt range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bántalmazó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 创伤  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 创伤 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"HurtMenu"
 	{
@@ -2992,7 +2992,7 @@
 	{
 		"en"			"You've used up all your hypno range ability's ammo."
 		"hu"			"Elhasználtad a távolsági hipnotizáló képességed összes lőszerét."
-		"chi"			"你已经用光了所有 催眠  能力次数."
+		"chi"			"你已经用光了所有 催眠 能力次数."
 	}
 	"HypnoDetails"
 	{
@@ -3005,33 +3005,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hypno range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hipnotizáló képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 催眠  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 催眠 能力!"
 	}
 	"HypnoHuman2"
 	{
 		"en"			"Your hypno range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági hipnotizálás képességedet. Próbáld újra."
-		"chi"			"你的 催眠  能力未能激活,请重试."
+		"chi"			"你的 催眠 能力未能激活,请重试."
 	}
 	"HypnoHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your hypno range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági hipnotizálás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 催眠  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 催眠 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"HypnoHuman4"
 	{
 		"en"			"There are no survivors nearby to use your hypno range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági hipnotizálás képességedet."
-		"chi"			"附近没有幸存者可以让你使用 催眠  能力."
+		"chi"			"附近没有幸存者可以让你使用 催眠 能力."
 	}
 	"HypnoHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your hypno range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági hipnotizálás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 催眠  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 催眠 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"HypnoMenu"
 	{
@@ -3063,7 +3063,7 @@
 	{
 		"en"			"You've used up all your ice range ability's ammo."
 		"hu"			"Elhasználtad a távolsági fagyasztás képességed összes lőszerét."
-		"chi"			"你已经用光了所有 冻结  能力次数."
+		"chi"			"你已经用光了所有 冻结 能力次数."
 	}
 	"IceDetails"
 	{
@@ -3076,33 +3076,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ice range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági fagyasztás képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 冻结  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 冻结 能力!"
 	}
 	"IceHuman2"
 	{
 		"en"			"Your ice range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági fagyasztás képességedet. Próbáld újra."
-		"chi"			"你的 冻结  能力未能激活,请重试."
+		"chi"			"你的 冻结 能力未能激活,请重试."
 	}
 	"IceHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your ice range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági fagyasztás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 冻结  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 冻结 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"IceHuman4"
 	{
 		"en"			"There are no survivors nearby to use your ice range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági fagyasztás képességedet."
-		"chi"			"附近没有幸存者可以让你使用 冻结  能力."
+		"chi"			"附近没有幸存者可以让你使用 冻结 能力."
 	}
 	"IceHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your ice range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági fagyasztás képességed vége ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 冻结  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 冻结 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"IceMenu"
 	{
@@ -3127,7 +3127,7 @@
 	{
 		"en"			"You've used up all your idle range ability's ammo."
 		"hu"			"Elhasználtad a távolsági szüneteltetés képességed összes lőszerét."
-		"chi"			"你已经用光了所有 闲置  能力次数."
+		"chi"			"你已经用光了所有 闲置 能力次数."
 	}
 	"IdleDetails"
 	{
@@ -3140,33 +3140,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your idle range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági szüneteltetés képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 闲置  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 闲置 能力!"
 	}
 	"IdleHuman2"
 	{
 		"en"			"Your idle range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági szüneteltetés képességedet. Próbáld újra."
-		"chi"			"你的 闲置  能力未能激活,请重试."
+		"chi"			"你的 闲置 能力未能激活,请重试."
 	}
 	"IdleHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your idle range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági szüneteltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 闲置  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 闲置 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"IdleHuman4"
 	{
 		"en"			"There are no survivors nearby to use your idle range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági szüneteltetés képességedet."
-		"chi"			"附近没有幸存者可以让你使用 闲置  能力."
+		"chi"			"附近没有幸存者可以让你使用 闲置 能力."
 	}
 	"IdleHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your idle range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági szüneteltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 闲置  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 闲置 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"IdleMenu"
 	{
@@ -3198,7 +3198,7 @@
 	{
 		"en"			"You've used up all your invert range ability's ammo."
 		"hu"			"Elhasználtad a távolsági megfordítás képességed összes lőszerét."
-		"chi"			"你已经用光了所有 反向  能力次数."
+		"chi"			"你已经用光了所有 反向 能力次数."
 	}
 	"InvertDetails"
 	{
@@ -3211,33 +3211,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your invert range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági megfordítás képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 反向  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 反向 能力!"
 	}
 	"InvertHuman2"
 	{
 		"en"			"Your invert range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági megfordítás képességedet. Próbáld újra."
-		"chi"			"你的 反向  能力未能激活,请重试."
+		"chi"			"你的 反向 能力未能激活,请重试."
 	}
 	"InvertHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your invert range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági megfordítás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 反向  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 反向 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"InvertHuman4"
 	{
 		"en"			"There are no survivors nearby to use your invert range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági megfordítás képességedet."
-		"chi"			"附近没有幸存者可以让你使用 反向  能力."
+		"chi"			"附近没有幸存者可以让你使用 反向 能力."
 	}
 	"InvertHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your invert range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági megfordítás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 反向  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 反向 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"InvertMenu"
 	{
@@ -3319,7 +3319,7 @@
 	{
 		"en"			"You've used up all your jump range ability's ammo."
 		"hu"			"Elhasználtad a távolsági ugrás képességed összes lőszerét."
-		"chi"			"你已经用光了所有 跳跃  能力次数."
+		"chi"			"你已经用光了所有 跳跃 能力次数."
 	}
 	"JumpDetails"
 	{
@@ -3339,13 +3339,13 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your jump range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági ugrás képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 跳跃  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 跳跃 能力!"
 	}
 	"JumpHuman3"
 	{
 		"en"			"Your jump range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági ugrás képességedet. Próbáld újra."
-		"chi"			"你的 跳跃  能力未能激活,请重试."
+		"chi"			"你的 跳跃 能力未能激活,请重试."
 	}
 	"JumpHuman4"
 	{
@@ -3365,13 +3365,13 @@
 		"#format"		"{1:i}"
 		"en"			"Your jump range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági ugrás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 跳跃  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 跳跃 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"JumpHuman7"
 	{
 		"en"			"There are no survivors nearby to use your jump range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági ugrás képességedet."
-		"chi"			"附近没有幸存者可以让你使用 跳跃  能力."
+		"chi"			"附近没有幸存者可以让你使用 跳跃 能力."
 	}
 	"JumpHuman8"
 	{
@@ -3385,7 +3385,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your jump range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági ugrás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 跳跃  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 跳跃 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"JumpMenu"
 	{
@@ -3416,19 +3416,19 @@
 	{
 		"en"			"You activated your kamikaze range ability!"
 		"hu"			"Aktiváltad a távolsági kamikaze képességedet!"
-		"chi"			"你激活了你的 神风  能力!"
+		"chi"			"你激活了你的 神风 能力!"
 	}
 	"KamikazeHuman2"
 	{
 		"en"			"Your kamikaze range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági kamikaze képességedet. Próbáld újra."
-		"chi"			"你的 神风  能力未能激活,请重试."
+		"chi"			"你的 神风 能力未能激活,请重试."
 	}
 	"KamikazeHuman3"
 	{
 		"en"			"There are no survivors nearby to use your kamikaze range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági kamikaze képességedet."
-		"chi"			"附近没有幸存者可以让你使用 神风  能力."
+		"chi"			"附近没有幸存者可以让你使用 神风 能力."
 	}
 	"KamikazeMenu"
 	{
@@ -3460,7 +3460,7 @@
 	{
 		"en"			"You've used up all your lag range ability's ammo."
 		"hu"			"Elhasználtad a távolsági késleltetés képességed összes lőszerét."
-		"chi"			"你已经用光了所有 滞后  能力次数."
+		"chi"			"你已经用光了所有 滞后 能力次数."
 	}
 	"LagDetails"
 	{
@@ -3473,33 +3473,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lag range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági késleltetés képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 滞后  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 滞后 能力!"
 	}
 	"LagHuman2"
 	{
 		"en"			"Your lag range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági késleltetés képességedet. Próbáld újra."
-		"chi"			"你的 滞后  能力未能激活,请重试."
+		"chi"			"你的 滞后 能力未能激活,请重试."
 	}
 	"LagHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your lag range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági késleltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 滞后  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 滞后 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"LagHuman4"
 	{
 		"en"			"There are no survivors nearby to use your lag range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági késleltetés képességedet."
-		"chi"			"附近没有幸存者可以让你使用 滞后  能力."
+		"chi"			"附近没有幸存者可以让你使用 滞后 能力."
 	}
 	"LagHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your lag range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági késleltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 滞后  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 滞后 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"LagMenu"
 	{
@@ -3602,7 +3602,7 @@
 	{
 		"en"			"You've used up all your leech range ability's ammo."
 		"hu"			"Elhasználtad a távolsági pióca képességed összes lőszerét."
-		"chi"			"你已经用光了所有 水蛭  能力次数."
+		"chi"			"你已经用光了所有 水蛭 能力次数."
 	}
 	"LeechDetails"
 	{
@@ -3615,33 +3615,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your leech range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági pióca képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 水蛭  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 水蛭 能力!"
 	}
 	"LeechHuman2"
 	{
 		"en"			"Your leech range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági pióca képességedet. Próbáld újra."
-		"chi"			"你的 水蛭  能力未能激活,请重试."
+		"chi"			"你的 水蛭 能力未能激活,请重试."
 	}
 	"LeechHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your leech range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági pióca képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 水蛭  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 水蛭 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"LeechHuman4"
 	{
 		"en"			"There are no survivors nearby to use your leech range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági pióca képességedet."
-		"chi"			"附近没有幸存者可以让你使用 水蛭  能力."
+		"chi"			"附近没有幸存者可以让你使用 水蛭 能力."
 	}
 	"LeechHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your leech range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági pióca képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 水蛭  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 水蛭 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"LeechMenu"
 	{
@@ -4021,7 +4021,7 @@
 	{
 		"en"			"You've used up all your damage nullifier range ability's ammo."
 		"hu"			"Elhasználtad a távolsági sebzés hatástalanító képességed összes lőszerét."
-		"chi"			"你已经用光了所有 无效化  能力次数."
+		"chi"			"你已经用光了所有 无效化 能力次数."
 	}
 	"NullifyDetails"
 	{
@@ -4034,33 +4034,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your damage nullifier range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági sebzés hatástalanító képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 伤害无效化  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 伤害无效化 能力!"
 	}
 	"NullifyHuman2"
 	{
 		"en"			"Your damage nullifier range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági sebzés hatástalanító képességedet. Próbáld újra."
-		"chi"			"你的 伤害无效化  能力未能激活,请重试."
+		"chi"			"你的 伤害无效化 能力未能激活,请重试."
 	}
 	"NullifyHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your damage nullifier range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági hatástalanító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 伤害无效化  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 伤害无效化 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"NullifyHuman4"
 	{
 		"en"			"There are no survivors nearby to use your damage nullifier range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági hatástalanító képességedet."
-		"chi"			"附近没有幸存者可以让你使用 伤害无效化  能力."
+		"chi"			"附近没有幸存者可以让你使用 伤害无效化 能力."
 	}
 	"NullifyHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your damage nullifier range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági hatástalanító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 伤害无效化  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 伤害无效化 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"NullifyMenu"
 	{
@@ -4234,7 +4234,7 @@
 	{
 		"en"			"You've used up all your pimp slap range ability's ammo."
 		"hu"			"Elhasználtad a távolsági csapdosó képességed összes lőszerét."
-		"chi"			"你已经用光了所有 鞭挞  能力次数."
+		"chi"			"你已经用光了所有 鞭挞 能力次数."
 	}
 	"PimpDetails"
 	{
@@ -4247,33 +4247,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your pimp slap range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági csapdosó képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 鞭挞  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 鞭挞 能力!"
 	}
 	"PimpHuman2"
 	{
 		"en"			"Your pimp slap range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági csapdosó képességedet. Próbáld újra."
-		"chi"			"你的 鞭挞  能力未能激活,请重试."
+		"chi"			"你的 鞭挞 能力未能激活,请重试."
 	}
 	"PimpHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your pimp slap range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági csapdosó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 鞭挞  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 鞭挞 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"PimpHuman4"
 	{
 		"en"			"There are no survivors nearby to use your pimp slap range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági csapdosó képességedet."
-		"chi"			"附近没有幸存者可以让你使用 鞭挞  能力."
+		"chi"			"附近没有幸存者可以让你使用 鞭挞 能力."
 	}
 	"PimpHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your pimp slap range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági csapdosó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 鞭挞  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 鞭挞 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"PimpMenu"
 	{
@@ -4298,7 +4298,7 @@
 	{
 		"en"			"You've used up all your puke range ability's ammo."
 		"hu"			"Elhasználtad a távolsági hányás képességed összes lőszerét."
-		"chi"			"你已经用光了所有 呕吐  能力次数."
+		"chi"			"你已经用光了所有 呕吐 能力次数."
 	}
 	"PukeDetails"
 	{
@@ -4311,33 +4311,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your puke range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hányás képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 呕吐  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 呕吐 能力!"
 	}
 	"PukeHuman2"
 	{
 		"en"			"Your puke range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági hányás képességedet. Próbáld újra."
-		"chi"			"你的 呕吐  能力未能激活,请重试."
+		"chi"			"你的 呕吐 能力未能激活,请重试."
 	}
 	"PukeHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your puke range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági hányás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 呕吐  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 呕吐 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"PukeHuman4"
 	{
 		"en"			"There are no survivors nearby to use your puke range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági hányás képességedet."
-		"chi"			"附近没有幸存者可以让你使用 呕吐  能力."
+		"chi"			"附近没有幸存者可以让你使用 呕吐 能力."
 	}
 	"PukeHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your puke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági hányás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 呕吐  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 呕吐 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"PukeMenu"
 	{
@@ -4447,7 +4447,7 @@
 	{
 		"en"			"You've used up all your quiet range ability's ammo."
 		"hu"			"Elhasználtad a távolsági csend képességed összes lőszerét."
-		"chi"			"你已经用光了所有 沉默  能力次数."
+		"chi"			"你已经用光了所有 沉默 能力次数."
 	}
 	"QuietDetails"
 	{
@@ -4460,33 +4460,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your quiet range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági csend képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 沉默  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 沉默 能力!"
 	}
 	"QuietHuman2"
 	{
 		"en"			"Your quiet range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági csend képességedet. Próbáld újra."
-		"chi"			"你的 沉默  能力未能激活,请重试."
+		"chi"			"你的 沉默 能力未能激活,请重试."
 	}
 	"QuietHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your quiet range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági csend képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 沉默  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 沉默 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"QuietHuman4"
 	{
 		"en"			"There are no survivors nearby to use your quiet range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági csend képességedet."
-		"chi"			"附近没有幸存者可以让你使用 沉默  能力."
+		"chi"			"附近没有幸存者可以让你使用 沉默 能力."
 	}
 	"QuietHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your quiet range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági csend képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 沉默  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 沉默 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"QuietMenu"
 	{
@@ -4518,7 +4518,7 @@
 	{
 		"en"			"You've used up all your recoil range ability's ammo."
 		"hu"			"Elhasználtad a távolsági visszarúgás képességed összes lőszerét."
-		"chi"			"你已经用光了所有 后坐力  能力次数."
+		"chi"			"你已经用光了所有 后坐力 能力次数."
 	}
 	"RecoilDetails"
 	{
@@ -4531,33 +4531,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your recoil range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági visszarúgás képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 后坐力  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 后坐力 能力!"
 	}
 	"RecoilHuman2"
 	{
 		"en"			"Your recoil range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági visszarúgás képességedet. Próbáld újra."
-		"chi"			"你的 后坐力  能力未能激活,请重试."
+		"chi"			"你的 后坐力 能力未能激活,请重试."
 	}
 	"RecoilHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your recoil range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági visszarúgás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 后坐力  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 后坐力 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"RecoilHuman4"
 	{
 		"en"			"There are no survivors nearby to use your recoil range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági visszarúgás képességedet."
-		"chi"			"附近没有幸存者可以让你使用 后坐力  能力."
+		"chi"			"附近没有幸存者可以让你使用 后坐力 能力."
 	}
 	"RecoilHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your recoil range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági visszarúgás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 后坐力  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 后坐力 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"RecoilMenu"
 	{
@@ -4703,7 +4703,7 @@
 	{
 		"en"			"You've used up all your restart range ability's ammo."
 		"hu"			"Elhasználtad a távolsági újrakezdő képességed összes lőszerét."
-		"chi"			"你已经用光了所有 重来  能力次数."
+		"chi"			"你已经用光了所有 重来 能力次数."
 	}
 	"RestartDetails"
 	{
@@ -4716,33 +4716,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your restart range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági újrakezdő képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重来  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重来 能力!"
 	}
 	"RestartHuman2"
 	{
 		"en"			"Your restart range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági újrakezdő képességedet. Próbáld újra."
-		"chi"			"你的 重来  能力未能激活,请重试."
+		"chi"			"你的 重来 能力未能激活,请重试."
 	}
 	"RestartHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your restart range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági újrakezdő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 重来  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 重来 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"RestartHuman4"
 	{
 		"en"			"There are no survivors nearby to use your restart range ability on."
 		"hu"			"Nincsenek túlélők az közelben ahhoz, hogy használni tudd a távolsági újrakezdő képességedet."
-		"chi"			"附近没有幸存者可以让你使用 重来  能力."
+		"chi"			"附近没有幸存者可以让你使用 重来 能力."
 	}
 	"RestartHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your restart range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági újrakezdő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 重来  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 重来 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"RestartMenu"
 	{
@@ -4838,7 +4838,7 @@
 	{
 		"en"			"You've used up all your rocket range ability's ammo."
 		"hu"			"Elhasználtad a távolsági rakéta képességed összes lőszerét."
-		"chi"			"你已经用光了所有 火箭  能力次数."
+		"chi"			"你已经用光了所有 火箭 能力次数."
 	}
 	"RocketDetails"
 	{
@@ -4851,33 +4851,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rocket range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rakéta képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 火箭  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 火箭 能力!"
 	}
 	"RocketHuman2"
 	{
 		"en"			"Your rocket range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rakéta képességedet. Próbáld újra."
-		"chi"			"你的 火箭  能力未能激活,请重试."
+		"chi"			"你的 火箭 能力未能激活,请重试."
 	}
 	"RocketHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your rocket range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági rakéta képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 火箭  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 火箭 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"RocketHuman4"
 	{
 		"en"			"There are no survivors nearby to use your rocket range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági rakéta képességedet."
-		"chi"			"附近没有幸存者可以让你使用 火箭  能力."
+		"chi"			"附近没有幸存者可以让你使用 火箭 能力."
 	}
 	"RocketHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your rocket range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági rakéta képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 火箭  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 火箭 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"RocketMenu"
 	{
@@ -4909,7 +4909,7 @@
 	{
 		"en"			"You've used up all your shake range ability's ammo."
 		"hu"			"Elhasználtad a távolsági rázó képességed összes lőszerét."
-		"chi"			"你已经用光了所有 震动  能力次数."
+		"chi"			"你已经用光了所有 震动 能力次数."
 	}
 	"ShakeDetails"
 	{
@@ -4922,33 +4922,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shake range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rázó képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 震动  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 震动 能力!"
 	}
 	"ShakeHuman2"
 	{
 		"en"			"Your shake range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rázó képességedet. Próbáld újra."
-		"chi"			"你的 震动  能力未能激活,请重试."
+		"chi"			"你的 震动 能力未能激活,请重试."
 	}
 	"ShakeHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your shake range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági rázó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 震动  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 震动 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"ShakeHuman4"
 	{
 		"en"			"There are no survivors nearby to use your shake range ability on."
 		"hu"			"nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági rázó képességedet."
-		"chi"			"附近没有幸存者可以让你使用 震动  能力."
+		"chi"			"附近没有幸存者可以让你使用 震动 能力."
 	}
 	"ShakeHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your shake range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági rázó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 震动  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 震动 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"ShakeMenu"
 	{
@@ -5058,7 +5058,7 @@
 	{
 		"en"			"You've used up all your shove range ability's ammo."
 		"hu"			"Elhasználtad a távolsági lökés képességed összes lőszerét."
-		"chi"			"你已经用光了所有 推挤  能力次数."
+		"chi"			"你已经用光了所有 推挤 能力次数."
 	}
 	"ShoveDetails"
 	{
@@ -5071,33 +5071,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shove range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lökés képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 推挤  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 推挤 能力!"
 	}
 	"ShoveHuman2"
 	{
 		"en"			"Your shove range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lökés képességedet. Próbáld újra."
-		"chi"			"你的 推挤  能力未能激活,请重试."
+		"chi"			"你的 推挤 能力未能激活,请重试."
 	}
 	"ShoveHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your shove range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lökés képességednek még kell{yellow} {1} másodperc{mint} sz újratöltéshez."
-		"chi"			"你的 推挤  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 推挤 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"ShoveHuman4"
 	{
 		"en"			"There are no survivors nearby to use your shove range ability on."
 		"hu"			"Nincsenek a közelben túlélők ahhoz, hogy használni tudd a távolsági lökés képességedet."
-		"chi"			"附近没有幸存者可以让你使用 推挤  能力."
+		"chi"			"附近没有幸存者可以让你使用 推挤 能力."
 	}
 	"ShoveHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your shove range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lökés képességed véget ért, Az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 推挤  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 推挤 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"ShoveMenu"
 	{
@@ -5129,7 +5129,7 @@
 	{
 		"en"			"You've used up all your slow range ability's ammo."
 		"hu"			"Elhasználtad a távolsági lassító képességed összes lőszerét."
-		"chi"			"你已经用光了所有 减速  能力次数."
+		"chi"			"你已经用光了所有 减速 能力次数."
 	}
 	"SlowDetails"
 	{
@@ -5142,33 +5142,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your slow range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lassító képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 减速  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 减速 能力!"
 	}
 	"SlowHuman2"
 	{
 		"en"			"Your slow range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lassító képességedet. Próbáld újra."
-		"chi"			"你的 减速  能力未能激活,请重试."
+		"chi"			"你的 减速 能力未能激活,请重试."
 	}
 	"SlowHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your slow range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lassító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 减速  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 减速 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"SlowHuman4"
 	{
 		"en"			"There are no survivors nearby to use your slow range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági lassító képességedet."
-		"chi"			"附近没有幸存者可以让你使用 减速  能力."
+		"chi"			"附近没有幸存者可以让你使用 减速 能力."
 	}
 	"SlowHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your slow range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lassító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 减速  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 减速 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"SlowMenu"
 	{
@@ -5193,7 +5193,7 @@
 	{
 		"en"			"You've used up all your smash range ability's ammo."
 		"hu"			"Elhasználtad a távolsági zúzó képességed összes lőszerét."
-		"chi"			"你已经用光了所有 粉碎  能力次数."
+		"chi"			"你已经用光了所有 粉碎 能力次数."
 	}
 	"SmashDetails"
 	{
@@ -5206,33 +5206,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smash range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik zúzó képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 粉碎  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 粉碎 能力!"
 	}
 	"SmashHuman2"
 	{
 		"en"			"Your smash range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági zúzó képességedet. Próbáld újra."
-		"chi"			"你的 粉碎  能力未能激活,请重试."
+		"chi"			"你的 粉碎 能力未能激活,请重试."
 	}
 	"SmashHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your smash range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági zúzó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 粉碎  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 粉碎 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"SmashHuman4"
 	{
 		"en"			"There are no survivors nearby to use your smash range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági zúzó képességedet."
-		"chi"			"附近没有幸存者可以让你使用 粉碎  能力."
+		"chi"			"附近没有幸存者可以让你使用 粉碎 能力."
 	}
 	"SmashHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your smash range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 粉碎  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 粉碎 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"SmashMenu"
 	{
@@ -5257,7 +5257,7 @@
 	{
 		"en"			"You've used up all your smite range ability's ammo."
 		"hu"			"Elhasználtad a távolsági lesújtó képességed összes lőszerét."
-		"chi"			"你已经用光了所有 重击  能力次数."
+		"chi"			"你已经用光了所有 重击 能力次数."
 	}
 	"SmiteDetails"
 	{
@@ -5270,33 +5270,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smite range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lesújtó képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重击  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重击 能力!"
 	}
 	"SmiteHuman2"
 	{
 		"en"			"Your smite range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lesújtó képességedet. Próbáld újra."
-		"chi"			"你的 重击  能力未能激活,请重试."
+		"chi"			"你的 重击 能力未能激活,请重试."
 	}
 	"SmiteHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your smite range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lesújtó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 重击  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 重击 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"SmiteHuman4"
 	{
 		"en"			"There are no survivors nearby to use your smite range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági lesújtó képességedet."
-		"chi"			"附近没有幸存者可以让你使用 重击  能力."
+		"chi"			"附近没有幸存者可以让你使用 重击 能力."
 	}
 	"SmiteHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your smite range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 重击  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 重击 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"SmiteMenu"
 	{
@@ -5858,7 +5858,7 @@
 	{
 		"en"			"You've used up all your visual range ability's ammo."
 		"hu"			"Elhasználtad a távolsági vizuális képességed összes lőszerét."
-		"chi"			"你已经用光了所有 视觉  能力次数."
+		"chi"			"你已经用光了所有 视觉 能力次数."
 	}
 	"VisionDetails"
 	{
@@ -5871,33 +5871,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your visual range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági vizuális képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 视觉  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 视觉 能力!"
 	}
 	"VisionHuman2"
 	{
 		"en"			"Your visual range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági vizuális képességedet. Próbáld újra."
-		"chi"			"你的 视觉  能力未能激活,请重试."
+		"chi"			"你的 视觉 能力未能激活,请重试."
 	}
 	"VisionHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your visual range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági látómező képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 视觉  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 视觉 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"VisionHuman4"
 	{
 		"en"			"There are no survivors nearby to use your visual range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági vizuális képességedet."
-		"chi"			"附近没有幸存者可以让你使用 视觉  能力."
+		"chi"			"附近没有幸存者可以让你使用 视觉 能力."
 	}
 	"VisionHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your visual range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági látómező képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
-		"chi"			"你的 视觉  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 视觉 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"VisionMenu"
 	{
@@ -5942,7 +5942,7 @@
 	{
 		"en"			"You've used up all your warp range ability's ammo."
 		"hu"			"Elhasználtad a távolsági teleportálás képességed összes lőszerét."
-		"chi"			"你已经用光了所有 传送  能力次数."
+		"chi"			"你已经用光了所有 传送 能力次数."
 	}
 	"WarpDetails"
 	{
@@ -5955,20 +5955,20 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your periodical warping ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik időszakos teleportáló képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 定期传送  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 定期传送 能力!"
 	}
 	"WarpHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your warp range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági teleportáló képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 传送  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 传送 能力!"
 	}
 	"WarpHuman3"
 	{
 		"en"			"Your warp range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági teleportáló képességedet. Próbáld újra."
-		"chi"			"你的 传送  能力未能激活,请重试."
+		"chi"			"你的 传送 能力未能激活,请重试."
 	}
 	"WarpHuman4"
 	{
@@ -5981,34 +5981,34 @@
 		"#format"		"{1:i}"
 		"en"			"Your periodical warping ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az időszakos teleportálási képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 定期传送  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 定期传送 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"WarpHuman6"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your warp range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági teleportáló képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 传送  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 传送 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"WarpHuman7"
 	{
 		"en"			"There are no survivors nearby to use your warp range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági teleportáló képességedet."
-		"chi"			"附近没有幸存者可以让你使用 传送  能力."
+		"chi"			"附近没有幸存者可以让你使用 传送 能力."
 	}
 	"WarpHuman8"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your periodical warping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az időszakos teleportáló képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 定期传送  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 定期传送 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"WarpHuman9"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your warp range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági teleportáló képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 传送  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 传送 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"WarpMenu"
 	{
@@ -6040,7 +6040,7 @@
 	{
 		"en"			"You've used up all your whirl range ability's ammo."
 		"hu"			"Elhasználtad a távolsági megpörgető képességed összes lőszerét."
-		"chi"			"你已经用光了所有 翻转  能力次数."
+		"chi"			"你已经用光了所有 翻转 能力次数."
 	}
 	"WhirlDetails"
 	{
@@ -6053,33 +6053,33 @@
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your whirl range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik megpörgető képességedet!"
-		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 翻转  能力!"
+		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 翻转 能力!"
 	}
 	"WhirlHuman2"
 	{
 		"en"			"Your whirl range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági megpörgető képességedet. Próbáld újra."
-		"chi"			"你的 翻转  能力未能激活,请重试."
+		"chi"			"你的 翻转 能力未能激活,请重试."
 	}
 	"WhirlHuman3"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your whirl range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági megpörgető képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
-		"chi"			"你的 翻转  能力还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 翻转 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"WhirlHuman4"
 	{
 		"en"			"There are no survivors nearby to use your whirl range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tud a távolsági megpörgető képességedet."
-		"chi"			"附近没有幸存者可以让你使用 翻转  能力."
+		"chi"			"附近没有幸存者可以让你使用 翻转 能力."
 	}
 	"WhirlHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your whirl range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági megpörgető képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
-		"chi"			"你的 翻转  能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 翻转 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"WhirlMenu"
 	{
