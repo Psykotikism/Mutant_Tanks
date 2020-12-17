@@ -75,7 +75,7 @@
 	"MTReloadMenu"
 	{
 		"en"			"Reload Config Menu"
-		"hu"			""
+		"hu"			"Konfig menü újratöltése"
 		"chi"			"重新加载配置菜单"
 	}
 	"MTSettingsItem"
@@ -679,14 +679,14 @@
 	{
 		"#format"		"{1:s},{2:s}"
 		"en"			"[{1}] --- LOG ENDED ON MAP: {2} ---"
-		"hu"			""
+		"hu"			"[{1}] --- NAPLÓZÁS VÉGE EZEN A PÁLYÁN: {2} ---"
 		"chi"			"[{1}] --- 在地图上结束的日志: {2} ---"
 	}
 	"LogStarted"
 	{
 		"#format"		"{1:s},{2:s}"
 		"en"			"[{1}] --- LOG STARTED ON MAP: {2} ---"
-		"hu"			""
+		"hu"			"[{1}] --- NAPLÓZÁS ELINDULT EZEN A PÁLYÁN: {2} ---"
 		"chi"			"[{1}] --- 在地图上开始记录日志: {2} ---"
 	}
 	"MultipleMatches"
@@ -759,7 +759,7 @@
 	"ReloadedConfig"
 	{
 		"en"			"All config files have been reloaded."
-		"hu"			""
+		"hu"			"Az összes konfig fájl újra lett töltve."
 		"chi"			"所有配置文件均已重新加载."
 	}
 	"ReloadingConfig"
@@ -785,75 +785,75 @@
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} ammunition{default} for killing{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert megölted{olive} {1}{default}!"
 		"chi"			"您{default} 收到{yellow} 弹药{default}, 以杀死{olive} {1}{default}!"
 	}
 	"RewardAmmo2"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} ammunition{default} for assisting the most against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 弹药{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 	"RewardAmmo3"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} ammunition{default} for assisting against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 弹药{default}, 以协助{olive} {1}{default}!"
 	}
 	"RewardDamageBoost"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} damage boost{default} for killing{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert megölted{olive} {1}{default}!"
 		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以杀死{olive} {1}{default}!"
 	}
 	"RewardDamageBoost2"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} damage boost{default} for assisting the most against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 	"RewardDamageBoost3"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} damage boost{default} for assisting against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以协助{olive} {1}{default}!"
 	}
 	"RewardDamageBoostEnd"
 	{
 		"en"			"Your{yellow} damage boost{default} ended!"
-		"hu"			""
+		"hu"			"A{yellow} sebzés növelésed{default} véget ért!"
 		"chi"			"您的{yellow} 伤害加成{default} 结束了!"
 	}
 	"RewardGod"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} god mode{default} for killing{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert megölted{olive} {1}{default}!"
 		"chi"			"您{default} 收到{yellow} 神模式{default}, 以杀死{olive} {1}{default}!"
 	}
 	"RewardGod2"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} god mode{default} for assisting the most against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 神模式{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 	"RewardGod3"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} god mode{default} for assisting against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 神模式{default}, 以协助{olive} {1}{default}!"
 	}
 	"RewardGodEnd"
 	{
 		"en"			"Your{yellow} god mode{default} ended!"
-		"hu"			""
+		"hu"			"A{yellow} halhatatlanságod{default} véget ért!"
 		"chi"			"您的{yellow} 上帝模式{default} 已结束!"
 	}
 	"RewardHealth"
