@@ -313,16 +313,16 @@
 	"Arrival9"
 	{
 		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} joined the game..."
-		"hu"			"{olive}{1}{default} csatlakozott a játékba..."
-		"chi"			"{olive}{1}{default} 加入游戏..."
+		"en"			"{olive}{1}{default} joined the game"
+		"hu"			"{olive}{1}{default} csatlakozott a játékba"
+		"chi"			"{olive}{1}{default} 加入游戏"
 	}
 	"Arrival10"
 	{
 		"#format"		"{1:t}"
-		"en"			"It seems{olive} {1}{default} is joining your company..."
-		"hu"			"Úgy látszik{olive} {1}{default} csatlakozik a társasághoz..."
-		"chi"			"看来 {olive}{1}{default} 正往你们那边去..."
+		"en"			"It seems{olive} {1}{default} is joining your company!"
+		"hu"			"Úgy látszik{olive} {1}{default} csatlakozik a társasághoz!"
+		"chi"			"看来 {olive}{1}{default} 正往你们那边去!"
 	}
 	"Assist1"
 	{
@@ -383,16 +383,16 @@
 	"Assist9"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"{olive}{1}{default} left the game...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"hu"			"{olive}{1}{default} elhagyta a játékot...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"chi"			"{olive}{1}{default} 被打出游戏...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"en"			"{olive}{1}{default} left the game{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} elhagyta a játékot{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 被打出游戏{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"Assist10"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"It seems{olive} {1}{default} could not beat the survivors after all...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"chi"			"看来 {olive}{1}{default} 根本无法团灭幸存者嘛...{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"en"			"It seems{olive} {1}{default} could not beat the survivors after all.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"看来 {olive}{1}{default} 根本无法团灭幸存者嘛.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"ChangeType"
 	{
@@ -415,9 +415,9 @@
 	}
 	"CompletedParsing"
 	{
-		"en"			"Parsing complete..."
-		"hu"			"Elemzés befejezve..."
-		"chi"			"解析完成..."
+		"en"			"Parsing complete!"
+		"hu"			"Elemzés befejezve!"
+		"chi"			"解析完成!"
 	}
 	"Death1"
 	{
@@ -478,16 +478,16 @@
 	"Death9"
 	{
 		"#format"		"{1:t}"
-		"en"			"{olive}{1}{default} left the game..."
-		"hu"			"{olive}{1}{default} elhagyta a játékot..."
-		"chi"			"{olive}{1}{default} 被打出游戏..."
+		"en"			"{olive}{1}{default} left the game"
+		"hu"			"{olive}{1}{default} elhagyta a játékot"
+		"chi"			"{olive}{1}{default} 被打出游戏"
 	}
 	"Death10"
 	{
 		"#format"		"{1:t}"
-		"en"			"It seems{olive} {1}{default} could not beat the survivors after all..."
-		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket..."
-		"chi"			"看来 {olive}{1}{default} 根本无法团灭幸存者嘛..."
+		"en"			"It seems{olive} {1}{default} could not beat the survivors after all!"
+		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket!"
+		"chi"			"看来 {olive}{1}{default} 根本无法团灭幸存者嘛!"
 	}
 	"ErrorParsing"
 	{
@@ -594,16 +594,16 @@
 	"Kill9"
 	{
 		"#format"		"{1:t},{2:N}"
-		"en"			"{olive}{1}{default} made{mint} {2}{default} ragequit..."
-		"hu"			"{olive}{1}{default} rávette{mint} {2}{default} hogy mérgében kilépjen..."
-		"chi"			"{olive}{1}{default} 变成了{mint} {2}{default} 流行语..."
+		"en"			"{olive}{1}{default} made{mint} {2}{default} ragequit!"
+		"hu"			"{olive}{1}{default} rávette{mint} {2}{default} hogy mérgében kilépjen!"
+		"chi"			"{olive}{1}{default} 变成了{mint} {2}{default} 流行语!"
 	}
 	"Kill10"
 	{
 		"#format"		"{1:t},{2:N}"
-		"en"			"It seems{mint} {2}{default} could not beat{olive} {1}{default} after all..."
-		"hu"			"Úgy látszik{mint} {2}{default} nem tudta legyőzni{olive} {1}{default} végül is..."
-		"chi"			"看来{mint} {2}{default} 毕竟无法击败{olive} {1}{default}..."
+		"en"			"It seems{mint} {2}{default} could not beat{olive} {1}{default} after all!"
+		"hu"			"Úgy látszik{mint} {2}{default} nem tudta legyőzni{olive} {1}{default} végül is!"
+		"chi"			"看来{mint} {2}{default} 毕竟无法击败{olive} {1}{default}!"
 	}
 	"Killer1"
 	{
@@ -664,16 +664,16 @@
 	"Killer9"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit...{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
-		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen...{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
-		"chi"			"{mint}{1}{default} 变成了{olive} {2}{default} 流行语...{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 变成了{olive} {2}{default} 流行语!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 	"Killer10"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all...{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
-		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is...{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
-		"chi"			"看来{olive} {2}{default} 毕竟无法击败{mint} {1}{default}...{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"看来{olive} {2}{default} 毕竟无法击败{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 	"LogEnded"
 	{
@@ -777,9 +777,9 @@
 	}
 	"RequestSucceeded"
 	{
-		"en"			"{mint}One Tank type matched that name. Request succeeded..."
-		"hu"			"{mint}Találtunk ilyen nevű Tank típust. Kérés sikeres..."
-		"chi"			"{mint}有一个坦克类型匹配该名称. 请求成功..."
+		"en"			"{mint}One Tank type matched that name. Request succeeded!"
+		"hu"			"{mint}Találtunk ilyen nevű Tank típust. Kérés sikeres!"
+		"chi"			"{mint}有一个坦克类型匹配该名称. 请求成功!"
 	}
 	"RewardAmmo"
 	{
@@ -6837,9 +6837,9 @@
 	}
 	"Tank #43"
 	{
-		"en"			"{mint}This Tank creates lightning storms..."
+		"en"			"{mint}This Tank creates lightning storms."
 		"hu"			""
-		"chi"			"{mint}这辆战车制造了闪电风暴..."
+		"chi"			"{mint}这辆战车制造了闪电风暴."
 	}
 	"Tank #44 Name"
 	{
@@ -7425,9 +7425,9 @@
 	}
 	"Tank #92"
 	{
-		"en"			"{mint}This Tank can run really fast like the Flash and create speed mirages (clones) of itself."
-		"hu"			"{mint}Ez a Tank olyan gyorsan fut mint Flash és gyors délibábokat (klónokat) készít önmagáról."
-		"chi"			"{mint}这个坦克可以跑的跟闪电一样快,并且可以召唤出自己的速度幻影(克隆体)."
+		"en"			"{mint}This Tank can run really fast, throw electricity at survivors, and slow down time around itself, all while having temporary invincibility."
+		"hu"			""
+		"chi"			"{mint}这辆战车的运行速度非常快，可以向生还者投掷电力，并可以减慢其周围的时间，而这一切都是暂时的."
 	}
 	"Tank #93 Name"
 	{
@@ -7487,7 +7487,7 @@
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
-		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,伪装自己并可以传送到幸存者身边"
+		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,伪装自己并可以传送到幸存者身边."
 	}
 	"Tank #98 Name"
 	{
@@ -7497,9 +7497,9 @@
 	}
 	"Tank #98"
 	{
-		"en"			"{mint}This Tank can give survivors temporary health, absorb health from nearby infected, jump really high, start meteor showers, spawn with a shield, and warp to survivors."
-		"hu"			"{mint}Ez a Tank ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, nagyon magasra ugrik, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
-		"chi"			"{mint}这个坦克会给予幸存者临时生命值,吸收附近特殊感染者的生命值,跳得高,召唤流星雨,出生自带护盾,并会传送到幸存者身边"
+		"en"			"{mint}This Tank can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
+		"hu"			"{mint}Ez a Tank ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, meteor záport indít, pajzzsal születik, és a túlélőkhöz teleportál."
+		"chi"			"{mint}该坦克可以为幸存者提供暂时的健康状况，吸收附近感染者的生命，开始流星雨，产下盾牌，并向幸存者弯曲."
 	}
 	"Tank #99 Name"
 	{
@@ -7545,9 +7545,9 @@
 	}
 	"Tank #102"
 	{
-		"en"			"{mint}This Tank is not what it seems..."
+		"en"			"{mint}This Tank is not what it seems."
 		"hu"			""
-		"chi"			"{mint}这辆战车看起来并不像..."
+		"chi"			"{mint}这辆战车看起来并不像."
 	}
 	"Tank #103 Name"
 	{
@@ -7557,9 +7557,9 @@
 	}
 	"Tank #103"
 	{
-		"en"			"{mint}This Tank can partially blind and drug survivors."
-		"hu"			"{mint}Ez a Tank részben megvakítja és bedrogozza a túlélőket."
-		"chi"			"{mint}这个坦克可以让幸存者失明和中毒."
+		"en"			"{mint}This Tank can partially blind survivors."
+		"hu"			""
+		"chi"			"{mint}该坦克可以使幸存者部分失明."
 	}
 	"Tank #104 Name"
 	{
@@ -7581,9 +7581,9 @@
 	}
 	"Tank #105"
 	{
-		"en"			"{mint}This Tank can start rock showers and spam rocks at survivors."
-		"hu"			"{mint}Ez a Tank szikla záporokat hoz létre, és folyamatosan sziklákat dobál a túlélőkre."
-		"chi"			"{mint}这个坦克会召唤岩石雨和向幸存者投掷一堆岩石."
+		"en"			"{mint}This Tank can hurl rocks at survivors."
+		"hu"			""
+		"chi"			"{mint}该坦克可以向生还者投掷石块."
 	}
 	"Tank #106 Name"
 	{
@@ -7593,9 +7593,9 @@
 	}
 	"Tank #106"
 	{
-		"en"			"{mint}This Tank does extra damage, runs really fast, clones itself, creates acid puddles, explosions, and fires, cloaks itself, starts rock showers, spams rocks at survivors, and throws rocks that track nearby survivors."
-		"hu"			"{mint}Ez a Tank többet sebez, nagyon gyorsan fut, klónozza magát, savas pocsolyákat, robbanásokat, és tüzet hoz létre, álcázza magát, szikla záport indít, folyamatosan sziklákat dobál a túlélőkre, sziklákat dob amik követik a közeli túlélőket."
-		"chi"			"{mint}这个坦克能对幸存者造成更多伤害,跑得快,还会自我复制,制造酸液地带/爆炸和火焰,会伪装自己,召唤岩石雨和向幸存者投掷岩石或一堆岩石."
+		"en"			"{mint}This Tank does extra damage and runs really fast while cloaking itself and slowing survivors down."
+		"hu"			""
+		"chi"			"{mint}这辆坦克会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行."
 	}
 	"Tank #107 Name"
 	{
@@ -7619,7 +7619,7 @@
 	{
 		"en"			"{mint}It's Darth Vader... And he is... A Mutant Tank with the Force!"
 		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Tank az erővel!"
-		"chi"			"{mint}是..是达斯·维达..它..它是帝国的突变坦克!"
+		"chi"			"{mint}是...是达斯·维达...它...它是帝国的突变坦克!"
 	}
 	"Tank #109 Name"
 	{
@@ -7629,9 +7629,9 @@
 	}
 	"Tank #109"
 	{
-		"en"			"{mint}This Tank has a contagious addiction..."
+		"en"			"{mint}This Tank has a contagious addiction."
 		"hu"			""
-		"chi"			"{mint}这辆战车具有传染性上瘾..."
+		"chi"			"{mint}这辆战车具有传染性上瘾."
 	}
 	"Tank #110 Name"
 	{
@@ -7653,9 +7653,9 @@
 	}
 	"Tank #111"
 	{
-		"en"			"{mint}This Tank can start panic events and spawn Boomers to help prolong them."
-		"hu"			"{mint}Ez a Tank pánik eseményt indíthat, és segítségül Pukkancsokat hozhat létre."
-		"chi"			"{mint}这个坦克可以召唤尸潮,并生成Boomer来帮助自己延长尸潮持续时间."
+		"en"			"{mint}This Tank can start panic events and puke on survivors to help prolong them."
+		"hu"			""
+		"chi"			"{mint}这辆战车可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间."
 	}
 	"Tank #112 Name"
 	{
@@ -7809,9 +7809,9 @@
 	}
 	"Tank #124"
 	{
-		"en"			"{mint}This Tank just won't go away..."
-		"hu"			"{mint}Ez a Tank egyszerűen csak nem megy el..."
-		"chi"			"{mint}这辆坦克不会消失..."
+		"en"			"{mint}This Tank just won't go away."
+		"hu"			"{mint}Ez a Tank egyszerűen csak nem megy el."
+		"chi"			"{mint}这辆坦克不会消失."
 	}
 
 	// This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
