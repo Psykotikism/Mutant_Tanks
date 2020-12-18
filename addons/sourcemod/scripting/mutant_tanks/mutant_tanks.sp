@@ -1442,9 +1442,16 @@ public void OnConfigsExecuted()
 	g_esGeneral.g_iTankCount = 0;
 
 	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
-	vPluginStatus();
-	vResetTimers();
-	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+
+	char sMap[128];
+	GetCurrentMap(sMap, sizeof(sMap));
+	if (IsMapValid(sMap))
+	{
+		vPluginStatus();
+		vResetTimers();
+
+		CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	}
 
 	if (g_esGeneral.g_iConfigEnable == 1)
 	{
@@ -1475,7 +1482,7 @@ public void OnConfigsExecuted()
 			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"));
 			CreateDirectory(sSMPath, 511);
 
-			char sMap[128];
+			char sMapName[128];
 			ArrayList alMaps = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 			if (alMaps != null)
 			{
@@ -1488,8 +1495,8 @@ public void OnConfigsExecuted()
 				{
 					for (int iPos = 0; iPos < iMapCount; iPos++)
 					{
-						alMaps.GetString(iPos, sMap, sizeof(sMap));
-						vCreateConfigFile((bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMap);
+						alMaps.GetString(iPos, sMapName, sizeof(sMapName));
+						vCreateConfigFile((bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapName);
 					}
 				}
 
@@ -1623,12 +1630,10 @@ public void OnConfigsExecuted()
 			}
 		}
 
-		char sMapName[128], sMapPath[PLATFORM_MAX_PATH];
-		GetCurrentMap(sMapName, sizeof(sMapName));
-		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && FindMap(sMapName, sMapPath, sizeof(sMapPath)) == FindMap_Found)
+		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && IsMapValid(sMap))
 		{
 			char sMapConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMapName);
+			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
 			if (FileExists(sMapConfig, true))
 			{
 				vCustomConfig(sMapConfig);
@@ -2641,17 +2646,21 @@ static void vConfig(bool manual)
 
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP)
 		{
-			static char sMap[64], sMapConfig[PLATFORM_MAX_PATH];
+			static char sMap[128];
 			GetCurrentMap(sMap, sizeof(sMap));
-			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
-			if (FileExists(sMapConfig, true))
+			if (IsMapValid(sMap))
 			{
-				g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
-				if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2] || manual)
+				static char sMapConfig[PLATFORM_MAX_PATH];
+				BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
+				if (FileExists(sMapConfig, true))
 				{
-					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sMapConfig);
-					vCustomConfig(sMapConfig);
-					g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
+					g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
+					if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2] || manual)
+					{
+						vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sMapConfig);
+						vCustomConfig(sMapConfig);
+						g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
+					}
 				}
 			}
 		}
@@ -6067,46 +6076,57 @@ static void vLogMessage(int type, const char[] message, any ...)
 static void vToggleLogging(int type = -1)
 {
 	static char sMessage[255], sMap[128], sTime[32], sDate[32];
-
 	GetCurrentMap(sMap, sizeof(sMap));
-	FormatTime(sTime, sizeof(sTime), "%m/%d/%Y %H:%M:%S", GetTime());
-
-	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
-	BuildPath(Path_SM, g_esGeneral.g_sChatFile, sizeof(esGeneral::g_sChatFile), "logs/mutant_tanks_%s.log", sDate);
-
-	static bool bLog;
-	bLog = false;
-	static int iType;
-
-	switch (type)
+	if (IsMapValid(sMap))
 	{
-		case -1:
-		{
-			if (g_esGeneral.g_iLogMessages != iType)
-			{
-				bLog = true;
-				iType = g_esGeneral.g_iLogMessages;
+		FormatTime(sTime, sizeof(sTime), "%m/%d/%Y %H:%M:%S", GetTime());
+		FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
+		BuildPath(Path_SM, g_esGeneral.g_sChatFile, sizeof(esGeneral::g_sChatFile), "logs/mutant_tanks_%s.log", sDate);
 
-				FormatEx(sMessage, sizeof(sMessage), "%T", ((iType != 0) ? "LogStarted" : "LogEnded"), LANG_SERVER, sTime, sMap);
+		static bool bLog;
+		bLog = false;
+		static int iType;
+
+		switch (type)
+		{
+			case -1:
+			{
+				if (g_esGeneral.g_iLogMessages != iType)
+				{
+					bLog = true;
+					iType = g_esGeneral.g_iLogMessages;
+
+					FormatEx(sMessage, sizeof(sMessage), "%T", ((iType != 0) ? "LogStarted" : "LogEnded"), LANG_SERVER, sTime, sMap);
+				}
+			}
+			case 0, 1:
+			{
+				if (g_esGeneral.g_iLogMessages != 0)
+				{
+					bLog = true;
+					iType = g_esGeneral.g_iLogMessages;
+
+					FormatEx(sMessage, sizeof(sMessage), "%T", ((type == 1) ? "LogStarted" : "LogEnded"), LANG_SERVER, sTime, sMap);
+				}
 			}
 		}
-		case 0, 1:
+
+		if (bLog)
 		{
-			if (g_esGeneral.g_iLogMessages != 0)
+			int iLength = strlen(sMessage);
+			char[] sBorder = new char[iLength + 1];
+			StrCat(sBorder, iLength, "--");
+
+			for (int iPos = 0; iPos < iLength - 4; iPos++)
 			{
-				bLog = true;
-				iType = g_esGeneral.g_iLogMessages;
-
-				FormatEx(sMessage, sizeof(sMessage), "%T", ((type == 1) ? "LogStarted" : "LogEnded"), LANG_SERVER, sTime, sMap);
+				StrCat(sBorder, iLength + 1, "=");
 			}
-		}
-	}
 
-	if (bLog)
-	{
-		vSaveMessage("--=================================================================--");
-		vSaveMessage(sMessage);
-		vSaveMessage("--=================================================================--");
+			StrCat(sBorder, iLength + 1, "--");
+			vSaveMessage(sBorder);
+			vSaveMessage(sMessage);
+			vSaveMessage(sBorder);
+		}
 	}
 }
 
