@@ -338,7 +338,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage >= 0.5)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -620,7 +620,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flGravityChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flGravityChance, g_esAbility[type].g_flGravityChance);
-	g_esCache[tank].g_flGravityForce = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flGravityForce, g_esAbility[type].g_flGravityForce);
+	g_esCache[tank].g_flGravityForce = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flGravityForce, g_esAbility[type].g_flGravityForce, 2);
 	g_esCache[tank].g_flGravityRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flGravityRange, g_esAbility[type].g_flGravityRange);
 	g_esCache[tank].g_flGravityRangeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flGravityRangeChance, g_esAbility[type].g_flGravityRangeChance);
 	g_esCache[tank].g_flGravityValue = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flGravityValue, g_esAbility[type].g_flGravityValue);

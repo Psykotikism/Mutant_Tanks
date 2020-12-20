@@ -442,7 +442,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanDuration, g_esAbility[type].g_iHumanDuration);
 	g_esCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanMode, g_esAbility[type].g_iHumanMode);
 	g_esCache[tank].g_iRegenAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRegenAbility, g_esAbility[type].g_iRegenAbility);
-	g_esCache[tank].g_iRegenHealth = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRegenHealth, g_esAbility[type].g_iRegenHealth);
+	g_esCache[tank].g_iRegenHealth = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRegenHealth, g_esAbility[type].g_iRegenHealth, 2);
 	g_esCache[tank].g_iRegenLimit = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRegenLimit, g_esAbility[type].g_iRegenLimit);
 	g_esCache[tank].g_iRegenMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRegenMessage, g_esAbility[type].g_iRegenMessage);
 	g_esCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flOpenAreasOnly, g_esAbility[type].g_flOpenAreasOnly);

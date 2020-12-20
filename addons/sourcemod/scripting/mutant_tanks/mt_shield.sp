@@ -729,7 +729,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 	for (int iPos = 0; iPos < sizeof(esCache::g_iShieldColor); iPos++)
 	{
-		g_esCache[tank].g_iShieldColor[iPos] = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldColor[iPos], g_esAbility[type].g_iShieldColor[iPos], true);
+		g_esCache[tank].g_iShieldColor[iPos] = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iShieldColor[iPos], g_esAbility[type].g_iShieldColor[iPos], 1);
 	}
 }
 

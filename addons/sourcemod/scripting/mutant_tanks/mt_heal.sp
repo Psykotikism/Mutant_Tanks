@@ -340,7 +340,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage >= 0.5)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -643,13 +643,13 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_flHealRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flHealRange, g_esAbility[type].g_flHealRange);
 	g_esCache[tank].g_flHealRangeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flHealRangeChance, g_esAbility[type].g_flHealRangeChance);
 	g_esCache[tank].g_iHealAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHealAbility, g_esAbility[type].g_iHealAbility);
-	g_esCache[tank].g_iHealCommon = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHealCommon, g_esAbility[type].g_iHealCommon);
+	g_esCache[tank].g_iHealCommon = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHealCommon, g_esAbility[type].g_iHealCommon, 2);
 	g_esCache[tank].g_iHealEffect = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHealEffect, g_esAbility[type].g_iHealEffect);
 	g_esCache[tank].g_iHealHit = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHealHit, g_esAbility[type].g_iHealHit);
 	g_esCache[tank].g_iHealHitMode = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHealHitMode, g_esAbility[type].g_iHealHitMode);
 	g_esCache[tank].g_iHealMessage = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHealMessage, g_esAbility[type].g_iHealMessage);
-	g_esCache[tank].g_iHealSpecial = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHealSpecial, g_esAbility[type].g_iHealSpecial);
-	g_esCache[tank].g_iHealTank = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHealTank, g_esAbility[type].g_iHealTank);
+	g_esCache[tank].g_iHealSpecial = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHealSpecial, g_esAbility[type].g_iHealSpecial, 2);
+	g_esCache[tank].g_iHealTank = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHealTank, g_esAbility[type].g_iHealTank, 2);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAmmo, g_esAbility[type].g_iHumanAmmo);

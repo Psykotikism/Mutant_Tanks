@@ -1999,18 +1999,19 @@ stock float flGetRayDistance(float pos[3], float angle[3], int entity, int type)
 	return GetVectorDistance(pos, flHitPos);
 }
 
-stock float flGetSettingValue(bool apply, bool human, float playerVal, float typeVal, bool override = false, float overrideVal = 0.0)
+stock float flGetSettingValue(bool apply, bool human, float playerVal, float typeVal, int overrideLevel = 0, float overrideVal = 0.0)
 {
 	if (apply)
 	{
-		switch (override)
+		switch (overrideLevel)
 		{
-			case true: return (human && playerVal >= overrideVal) ? playerVal : typeVal;
-			case false: return (human && playerVal > overrideVal) ? playerVal : typeVal;
+			case 0: return (human && playerVal > overrideVal) ? playerVal : typeVal;
+			case 1: return (human && playerVal >= overrideVal) ? playerVal : typeVal;
+			case 2: return (human && playerVal != overrideVal) ? playerVal : typeVal;
 		}
 	}
 
-	return override ? -1.0 : 0.0;
+	return (overrideLevel == 1) ? -1.0 : 0.0;
 }
 
 stock float flGetTemporaryHealth(int player, float decay)
@@ -2220,18 +2221,19 @@ stock int iGetRGBColor(int red, int green, int blue)
 	return (blue * 65536) + (green * 256) + red;
 }
 
-stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, bool override = false, int overrideVal = 0)
+stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, int overrideLevel = 0, int overrideVal = 0)
 {
 	if (apply)
 	{
-		switch (override)
+		switch (overrideLevel)
 		{
-			case true: return (human && playerVal >= overrideVal) ? playerVal : typeVal;
-			case false: return (human && playerVal > overrideVal) ? playerVal : typeVal;
+			case 0: return (human && playerVal > overrideVal) ? playerVal : typeVal;
+			case 1: return (human && playerVal >= overrideVal) ? playerVal : typeVal;
+			case 2: return (human && playerVal != overrideVal) ? playerVal : typeVal;
 		}
 	}
 
-	return override ? -1 : 0;
+	return (overrideLevel == 1) ? -1 : 0;
 }
 
 stock int iGetWeaponOffset(const char[] weapon)
