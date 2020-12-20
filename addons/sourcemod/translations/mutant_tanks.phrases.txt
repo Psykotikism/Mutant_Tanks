@@ -3685,7 +3685,7 @@
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lightning storms!"
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik villám vihar képességedet!""
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik villám vihar képességedet!"
 		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 的闪电风暴!"
 	}
 	"LightningHuman2"
