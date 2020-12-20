@@ -860,118 +860,118 @@
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health{default} for killing{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} életet{default} mert megölted{olive} {1}{default}!"
 		"chi"			"您{default} 收到{yellow} 健康{default}, 以杀死{olive} {1}{default}!"
 	}
 	"RewardHealth2"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health{default} for assisting the most against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} életet{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 健康{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 	"RewardHealth3"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health{default} for assisting against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} életet{default} mert segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 健康{default}, 以协助{olive} {1}{default}!"
 	}
 	"RewardItem"
 	{
 		"#format"		"{1:s},{2:t}"
 		"en"			"You{default} received a(n){yellow} {1}{default} for killing{olive} {2}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert megölted{olive} {2}{default}!"
 		"chi"			"您{default} 收到{yellow} {1}{default}, 以杀死{olive} {1}{default}!"
 	}
 	"RewardItem2"
 	{
 		"#format"		"{1:s},{2:t}"
 		"en"			"You{default} received a(n){yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert nagyrészt segítettél{olive} {2}{default}ellen!"
 		"chi"			"您{default} 收到了{yellow} {1}{default}, 以协助{olive} {2}{default} 的最大支援!"
 	}
 	"RewardItem3"
 	{
 		"#format"		"{1:s},{2:t}"
 		"en"			"You{default} received a(n){yellow} {1}{default} for assisting against{olive} {2}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert segítettél{olive} {2}{default}ellen!"
 		"chi"			"您{default} 收到了{yellow} {1}{default}, 以协助{olive} {2}{default}!"
 	}
 	"RewardNone"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} did not do enough damage to{olive} {1}{default} to receive any rewards."
-		"hu"			""
+		"hu"			"Nem{default} okoztál elég sebzést{olive} {1}{default} nak, hogy jutalmat kapj."
 		"chi"			"您{default} 对{olive} {1}{default} 的伤害不足，无法获得任何奖励."
 	}
 	"RewardRefill"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health and ammunition{default} for killing{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert megölted{olive} {1}{default}!"
 		"chi"			"您{default} 收到{yellow} 健康和弹药{default}, 以杀死{olive} {1}{default}!"
 	}
 	"RewardRefill2"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health and ammunition{default} for assisting the most against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 的健康和弹药{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 	"RewardRefill3"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health and ammunition{default} for assisting against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 的健康和弹药{default}, 以协助{olive} {1}{default}!"
 	}
 	"RewardRespawn"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received a(n){yellow} respawn{default} for killing{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert megölted{olive} {1}{default}!"
 		"chi"			"您{default} 收到{yellow} 重生{default}, 以杀死{olive} {1}{default}!"
 	}
 	"RewardRespawn2"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received a(n){yellow} respawn{default} for assisting the most against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到了{yellow} 重生{default}, 以协助{olive} {2}{default} 的最大支援!"
 	}
 	"RewardRespawn3"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received a(n){yellow} respawn{default} for assisting against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到了{yellow} 重生{default}, 以协助{olive} {2}{default}!"
 	}
 	"RewardSpeedBoost"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} speed boost{default} for killing{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert megölted{olive} {1}{default}!"
 		"chi"			"您{default} 收到{yellow} 提速{default}, 以杀死{olive} {1}{default}!"
 	}
 	"RewardSpeedBoost2"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} speed boost{default} for assisting the most against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 提速{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 	"RewardSpeedBoost3"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} speed boost{default} for assisting against{olive} {1}{default}!"
-		"hu"			""
+		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 提速{default}, 以协助{olive} {1}{default}!"
 	}
 	"RewardSpeedBoostEnd"
 	{
 		"en"			"Your{yellow} speed boost{default} ended!"
-		"hu"			""
+		"hu"			"A{yellow} sebesség növelésed{default} véget ért!"
 		"chi"			"您的{yellow} 速度提升{default} 已结束!"
 	}
 	"SpawnMessage"
@@ -2330,77 +2330,77 @@
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is flying!"
-		"hu"			""
+		"hu"			"{olive}{1}{mint} repül!"
 		"chi"			"{olive}{1}{mint} 正在飞翔!"
 	}
 	"Fly2"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} stopped flying!"
-		"hu"			""
+		"hu"			"{olive}{1}{mint} abbahagyta a repülést!"
 		"chi"			"{olive}{1}{mint} 停止飞行!"
 	}
 	"FlyAmmo"
 	{
 		"en"			"You've used up all your flight ability's ammo."
-		"hu"			""
+		"hu"			"Elhasználtad a repülő képességed összes lőszerét."
 		"chi"			"您已经用完了所有飞行技能的弹药."
 	}
 	"FlyDetails"
 	{
 		"en"			"You can fly around."
-		"hu"			""
+		"hu"			"Tudsz repülni."
 		"chi"			"你可以飞来飞去."
 	}
 	"FlyHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your flight ability!"
-		"hu"			""
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik repülő képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 飞行能力!"
 	}
 	"FlyHuman2"
 	{
 		"en"			"Your flight ability failed to activate. Try again."
-		"hu"			""
+		"hu"			"A repülő képességed aktiválása nem sikerült. Próbáld újra."
 		"chi"			"您的飞行能力无法激活. 再试一次."
 	}
 	"FlyHuman3"
 	{
 		"en"			"You already activated your flight ability."
-		"hu"			""
+		"hu"			"Már aktiváltad a repülő képességedet."
 		"chi"			"您已经激活了飞行能力."
 	}
 	"FlyHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your flight ability still needs another{yellow} {1} second(s){mint} to recharge."
-		"hu"			""
+		"hu"			"A repülő képességednek kell még{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"您的飞行能力还需要另外{yellow} {1} 秒{mint} 进行充能."
 	}
 	"FlyHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your flight ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-		"hu"			""
+		"hu"			"A repülő képességed véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
 		"chi"			"您的飞行能力已结束, 需要充电{yellow} {1} 秒{mint} 进行充能."
 	}
 	"FlyHuman6"
 	{
 		"en"			"The place you are in is too narrow for you to fly around."
-		"hu"			""
+		"hu"			"A hely ahol éppen vagy, túl keskeny ahhoz hogy repülhess."
 		"chi"			"您所处的地方太狭窄, 无法四处飞翔."
 	}
 	"FlyMenu"
 	{
 		"en"			"Fly Ability Information"
-		"hu"			""
+		"hu"			"Repülő Képesség Információ"
 		"chi"			"飞行能力信息"
 	}
 	"FlyMenu2"
 	{
 		"en"			"Fly Ability"
-		"hu"			""
+		"hu"			"Repülő Képesség"
 		"chi"			"飞行能力"
 	}
 	"Fragile"
@@ -3659,149 +3659,149 @@
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} started a{yellow} lightning storm{mint}!"
-		"hu"			""
+		"hu"			"{olive}{1}{mint} elindított egy{yellow} villám vihart{mint}!"
 		"chi"			"{olive}{1}{mint} 开始了{yellow} 雷电风暴{mint}!"
 	}
 	"Lightning2"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} lightning storm ended!"
-		"hu"			""
+		"hu"			"{olive}{1}{mint} villám vihara véget ért!"
 		"chi"			"{olive}{1}{mint} 雷雨结束了!"
 	}
 	"LightningAmmo"
 	{
 		"en"			"You've used up all your lightning storms."
-		"hu"			""
+		"hu"			"Elhasználtad az összes villám viharodat."
 		"chi"			"您已经用尽了所有的雷电风暴."
 	}
 	"LightningDetails"
 	{
 		"en"			"You create lightning storms."
-		"hu"			""
+		"hu"			"Villám viharokat indítasz."
 		"chi"			"您会产生闪电风暴."
 	}
 	"LightningHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lightning storms!"
-		"hu"			""
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik villám vihar képességedet!""
 		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 的闪电风暴!"
 	}
 	"LightningHuman2"
 	{
 		"en"			"Your lightning storm failed to activate. Try again."
-		"hu"			""
+		"hu"			"A villám vihar aktiválása nem sikerült. Próbáld újra."
 		"chi"			"您的闪电风暴未能激活. 再试一次."
 	}
 	"LightningHuman3"
 	{
 		"en"			"You already activated your lightning storm."
-		"hu"			""
+		"hu"			"Már aktiváltad a villám viharodat."
 		"chi"			"您已经激活了闪电风暴."
 	}
 	"LightningHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your lightning storm still needs another{yellow} {1} second(s){mint} to recharge."
-		"hu"			""
+		"hu"			"A villám viharodnak kell még{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"您的雷雨仍然需要另外{yellow} {1} 秒{mint} 进行充能."
 	}
 	"LightningHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your lightning storm ended and needs to recharge for{yellow} {1} second(s){mint}."
-		"hu"			""
+		"hu"			"A villám viharod véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
 		"chi"			"您的闪电风暴结束了, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"LightningMenu"
 	{
 		"en"			"Lightning Ability Information"
-		"hu"			""
+		"hu"			"Villám Képesség Információ"
 		"chi"			"闪电能力信息"
 	}
 	"LightningMenu2"
 	{
 		"en"			"Lightning Ability"
-		"hu"			""
+		"hu"			"Villám Képesség"
 		"chi"			"闪电能力"
 	}
 	"Medic"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is healing nearby special infected!"
-		"hu"			""
+		"hu"			"{olive}{1}{mint} gyógyítja a közelben lévő speciális fertőzötteket!"
 		"chi"			"{olive}{1}{mint} 正在治愈附近的特殊感染者!"
 	}
 	"Medic2"
 	{
 		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} just healed{yellow} {2}{mint}!"
-		"hu"			""
+		"hu"			"{olive}{1}{mint} épp meggyógyította{yellow} {2}{mint}"
 		"chi"			"{olive}{1}{mint} 刚刚恢复{yellow} {2}{mint}!"
 	}
 	"Medic3"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} stopped healing nearby special infected!"
-		"hu"			""
+		"hu"			"{olive}{1}{mint} abbahagyta a közelben lévő spec. fertőzöttek gyógyítását!"
 		"chi"			"{olive}{1}{mint} 停止治愈附近的特殊感染者!"
 	}
 	"MedicAmmo"
 	{
 		"en"			"You've used up all your medic ability's ammo."
-		"hu"			""
+		"hu"			"Elhasználtad az orvos képességed összes lőszerét."
 		"chi"			"您已经用完了所有医务能力的弹药."
 	}
 	"MedicDetails"
 	{
 		"en"			"You heal nearby special infected."
-		"hu"			""
+		"hu"			"Gyógyítod a közelben lévő spec. fertőzötteket."
 		"chi"			"您可以治愈附近的特殊感染者."
 	}
 	"MedicHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your medic ability!"
-		"hu"			""
+		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik orvos képességedet!"
 		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 您的医疗能力！"
 	}
 	"MedicHuman2"
 	{
 		"en"			"Your medic ability failed to activate. Try again."
-		"hu"			""
+		"hu"			"Az orvos képességed aktiválása nem sikerült. Próbáld újra."
 		"chi"			"您的医护技能无法激活. 再试一次."
 	}
 	"MedicHuman3"
 	{
 		"en"			"You already activated your medic ability."
-		"hu"			""
+		"hu"			"Már aktiváltad az orvos képességedet."
 		"chi"			"您已经激活了医务能力."
 	}
 	"MedicHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your medic ability still needs another{yellow} {1} second(s){mint} to recharge."
-		"hu"			""
+		"hu"			"Az orvos képességednek kell még{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"您的军医技能仍需要另外{yellow} {1} 秒{mint} 进行充能."
 	}
 	"MedicHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your medic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-		"hu"			""
+		"hu"			"Az orvos képességed véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
 		"chi"			"您的医务能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"MedicMenu"
 	{
 		"en"			"Medic Ability Information"
-		"hu"			"Medikus Képesség Információ"
+		"hu"			"Orvos Képesség Információ"
 		"chi"			"医生 能力信息"
 	}
 	"MedicMenu2"
 	{
 		"en"			"Medic Ability"
-		"hu"			"Medikus Képesség"
+		"hu"			"Orvos Képesség"
 		"chi"			"医生 能力"
 	}
 	"Meteor"
@@ -6592,13 +6592,13 @@
 	"Tank #23 Name"
 	{
 		"en"			"Flying Tank"
-		"hu"			""
+		"hu"			"Repülő Tank"
 		"chi"			"飞行坦克"
 	}
 	"Tank #23"
 	{
 		"en"			"{mint}This Tank flies around looking for victims."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank körbe-körbe repül, áldozatokat keresve."
 		"chi"			"{mint}这辆战车四处寻找受害者."
 	}
 	"Tank #24 Name"
@@ -6832,13 +6832,13 @@
 	"Tank #43 Name"
 	{
 		"en"			"Lightning Tank"
-		"hu"			""
+		"hu"			"Villám Tank"
 		"chi"			"闪电坦克"
 	}
 	"Tank #43"
 	{
 		"en"			"{mint}This Tank creates lightning storms."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank villám viharokat indít."
 		"chi"			"{mint}这辆战车制造了闪电风暴."
 	}
 	"Tank #44 Name"
@@ -7426,7 +7426,7 @@
 	"Tank #92"
 	{
 		"en"			"{mint}This Tank can run really fast, throw electricity at survivors, and slow down time around itself, all while having temporary invincibility."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank nagyon gyorsan tud futni, elektromosságot dob a túlélőkre, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
 		"chi"			"{mint}这辆战车的运行速度非常快，可以向生还者投掷电力，并可以减慢其周围的时间，而这一切都是暂时的."
 	}
 	"Tank #93 Name"
@@ -7540,13 +7540,13 @@
 	"Tank #102 Name"
 	{
 		"en"			"Trap Tank"
-		"hu"			""
+		"hu"			"Csapda Tank"
 		"chi"			"陷阱坦克"
 	}
 	"Tank #102"
 	{
 		"en"			"{mint}This Tank is not what it seems."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank nem az aminek látszik."
 		"chi"			"{mint}这辆战车看起来并不像."
 	}
 	"Tank #103 Name"
@@ -7558,7 +7558,7 @@
 	"Tank #103"
 	{
 		"en"			"{mint}This Tank can partially blind survivors."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank megtudja részben vakítani a túlélőket."
 		"chi"			"{mint}该坦克可以使幸存者部分失明."
 	}
 	"Tank #104 Name"
@@ -7582,7 +7582,7 @@
 	"Tank #105"
 	{
 		"en"			"{mint}This Tank can hurl rocks at survivors."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank odadobja a sziklákat a túlélőkre."
 		"chi"			"{mint}该坦克可以向生还者投掷石块."
 	}
 	"Tank #106 Name"
@@ -7594,7 +7594,7 @@
 	"Tank #106"
 	{
 		"en"			"{mint}This Tank does extra damage and runs really fast while cloaking itself and slowing survivors down."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
 		"chi"			"{mint}这辆坦克会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行."
 	}
 	"Tank #107 Name"
@@ -7624,13 +7624,13 @@
 	"Tank #109 Name"
 	{
 		"en"			"Drug Addict Tank"
-		"hu"			""
+		"hu"			"Drog Szenvedélye Tank"
 		"chi"			"吸毒者坦克"
 	}
 	"Tank #109"
 	{
 		"en"			"{mint}This Tank has a contagious addiction."
-		"hu"			""
+		"hu"			"{mint}Ennek a Tanknak fertőző a szenvedélye."
 		"chi"			"{mint}这辆战车具有传染性上瘾."
 	}
 	"Tank #110 Name"
@@ -7654,7 +7654,7 @@
 	"Tank #111"
 	{
 		"en"			"{mint}This Tank can start panic events and puke on survivors to help prolong them."
-		"hu"			""
+		"hu"			"{mint}Ez a Tank pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
 		"chi"			"{mint}这辆战车可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间."
 	}
 	"Tank #112 Name"
