@@ -287,7 +287,7 @@
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} came for a challenge!"
 		"hu"			"{olive}{1}{default} kihívásra érkezett!"
-		"chi"			"{olive}{1}{default} 来了,迎接挑战吧!"
+		"chi"			"{olive}{1}{default} 来了, 迎接挑战吧!"
 	}
 	"Arrival6"
 	{
@@ -493,8 +493,8 @@
 	{
 		"#format"		"{1:s},{2:s}"
 		"en"			"Error while parsing the \"{1}\" file. Error Message: {2}."
-		"hu"			"Hiba a fájl elemzésekor \"{1}\" Hiba üzenet: {2}."
-		"chi"			"解析文件 \"{1}\" 时出错.错误信息: {2}."
+		"hu"			"Hiba a fájl elemzésekor \"{1}\". Hiba üzenet: {2}."
+		"chi"			"解析文件 \"{1}\" 时出错. 错误信息: {2}."
 	}
 	"Evolved"
 	{
@@ -508,7 +508,7 @@
 		"#format"		"{1:s}"
 		"en"			"Failed to parse the \"{1}\" file."
 		"hu"			"Nem sikerült elemezni a \"{1}\" fájlt."
-		"chi"			"无法解析文件 \"{1}\" ."
+		"chi"			"无法解析文件 \"{1}\"."
 	}
 	"FavoriteUnused"
 	{
@@ -561,7 +561,7 @@
 		"#format"		"{1:t},{2:N}"
 		"en"			"Did{olive} {1}{default} actually kill{mint} {2}{default}...?"
 		"hu"			"Biztos hogy{olive} {1}{default} tényleg megölte{mint} {2}{default}...?"
-		"chi"			"{olive}{1}{default} 实际上杀死了{mint} {2}{default}...吗?"
+		"chi"			"{olive}{1}{default} 实际上杀死了{mint} {2}{default}... 吗?"
 	}
 	"Kill5"
 	{
@@ -631,7 +631,7 @@
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
-		"chi"			"{mint}{1}{default} 实际上杀死了{olive} {2}{default}...吗?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 实际上杀死了{olive} {2}{default}... 吗?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 	"Killer5"
 	{
@@ -772,7 +772,7 @@
 	"RequestFailed"
 	{
 		"en"			"No{olive} Tank types{mint} matched that name. Request failed..."
-		"hu"			"Nem találtunk{olive} ilyen nevű Tank típust.{mint} Kérés sikertelen..."
+		"hu"			"Nem találtunk{olive} ilyen nevű Tank típust{mint}. Kérés sikertelen..."
 		"chi"			"没有{olive} 坦克类型{mint} 匹配该名称. 请求失败..."
 	}
 	"RequestSucceeded"
@@ -1056,7 +1056,7 @@
 	{
 		"en"			"Your absorption ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az elnyelő képességedet. Próbáld újra."
-		"chi"			"你的 吸收 能力未能激活.请重试."
+		"chi"			"你的 吸收 能力未能激活. 请重试."
 	}
 	"AbsorbHuman3"
 	{
@@ -1127,7 +1127,7 @@
 	{
 		"en"			"Your acid range ability failed to activate. Try again."
 		"hu"			"A távolsági sav képességed aktiválása nem sikerült. Próbáld újra"
-		"chi"			"你的 酸液 能力未能激活.请重试."
+		"chi"			"你的 酸液 能力未能激活. 请重试."
 	}
 	"AcidHuman3"
 	{
@@ -1198,7 +1198,7 @@
 	{
 		"en"			"Your aimless range ability failed to activate. Try again."
 		"hu"			"A távolsági céltalan képességed aktiválása nem sikerült. Próbáld újra."
-		"chi"			"你的 禁瞄 能力未能激活.请重试."
+		"chi"			"你的 禁瞄 能力未能激活. 请重试."
 	}
 	"AimlessHuman3"
 	{
@@ -1262,7 +1262,7 @@
 	{
 		"en"			"Your ammo range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lőszer képességedet. Próbáld újra."
-		"chi"			"你的 掠弹 能力未能激活,请重试."
+		"chi"			"你的 掠弹 能力未能激活. 请重试."
 	}
 	"AmmoHuman3"
 	{
@@ -1333,7 +1333,7 @@
 	{
 		"en"			"Your blind range ability failed to activate. Try again."
 		"hu"			"A távolsági vakító képességed aktiválása nem sikerült. Próbáld újra."
-		"chi"			"你的 致盲 能力未能激活,请重试."
+		"chi"			"你的 致盲 能力未能激活. 请重试."
 	}
 	"BlindHuman3"
 	{
@@ -1404,7 +1404,7 @@
 	{
 		"en"			"Your bomb range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bomba képességedet. Próbáld újra."
-		"chi"			"你的 爆炸 能力未能激活,请重试."
+		"chi"			"你的 爆炸 能力未能激活. 请重试."
 	}
 	"BombHuman3"
 	{
@@ -1475,7 +1475,7 @@
 	{
 		"en"			"Your bury range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági eltemetés képességedet. Próbáld újra."
-		"chi"			"你的 埋葬 能力未能激活,请重试."
+		"chi"			"你的 埋葬 能力未能激活. 请重试."
 	}
 	"BuryHuman3"
 	{
@@ -1546,7 +1546,7 @@
 	{
 		"en"			"Your car shower failed to activate. Try again."
 		"hu"			"Nem sikerült autó záport létrehoznod. Próbáld újra."
-		"chi"			"你的 汽车雨 未能激活,请重试."
+		"chi"			"你的 汽车雨 未能激活. 请重试."
 	}
 	"CarHuman3"
 	{
@@ -1617,7 +1617,7 @@
 	{
 		"en"			"Your choke range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági fojtogatás képességedet. Próbáld újra."
-		"chi"			"你的 窒息 能力未能激活,请重试."
+		"chi"			"你的 窒息 能力未能激活. 请重试."
 	}
 	"ChokeHuman3"
 	{
@@ -1681,7 +1681,7 @@
 	{
 		"en"			"You failed to create a clone. Try again."
 		"hu"			"Nem sikerült klónt létrehozni. Próbáld újra."
-		"chi"			"你制造 克隆体 失败,请重试."
+		"chi"			"你制造 克隆体 失败. 请重试."
 	}
 	"CloneHuman3"
 	{
@@ -1758,7 +1758,7 @@
 	{
 		"en"			"Your cloud ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a felhő képességedet. Próbáld újra."
-		"chi"			"你的 毒云 能力未能激活,请重试."
+		"chi"			"你的 毒云 能力未能激活. 请重试."
 	}
 	"CloudHuman3"
 	{
@@ -1873,7 +1873,7 @@
 	{
 		"en"			"Your drug range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bedrogozás képességedet. Próbáld újra."
-		"chi"			"你的 中毒 能力未能激活,请重试."
+		"chi"			"你的 中毒 能力未能激活. 请重试."
 	}
 	"DrugHuman3"
 	{
@@ -1944,7 +1944,7 @@
 	{
 		"en"			"Your drunk range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági részegítő képességedet. Próbáld újra."
-		"chi"			"你的 醉酒 能力未能激活,请重试."
+		"chi"			"你的 醉酒 能力未能激活. 请重试."
 	}
 	"DrunkHuman3"
 	{
@@ -2015,7 +2015,7 @@
 	{
 		"en"			"Your electric range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági elektromos képességedet. Próbáld újra."
-		"chi"			"你的 电击 能力未能激活,请重试."
+		"chi"			"你的 电击 能力未能激活. 请重试."
 	}
 	"ElectricHuman3"
 	{
@@ -2086,7 +2086,7 @@
 	{
 		"en"			"Your enforce range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági kényszerítő képességedet. Próbáld újra."
-		"chi"			"你的 迫用 能力未能激活,请重试."
+		"chi"			"你的 迫用 能力未能激活. 请重试."
 	}
 	"EnforceHuman3"
 	{
@@ -2157,7 +2157,7 @@
 	{
 		"en"			"Your fast ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a gyorsaság képességedet. Próbáld újra!"
-		"chi"			"你的 迅速 能力未能激活,请重试."
+		"chi"			"你的 迅速 能力未能激活. 请重试."
 	}
 	"FastHuman3"
 	{
@@ -2228,7 +2228,7 @@
 	{
 		"en"			"Your fire range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági tűz képességedet. Próbáld újra."
-		"chi"			"你的 火焰 能力未能激活,请重试."
+		"chi"			"你的 火焰 能力未能激活. 请重试."
 	}
 	"FireHuman3"
 	{
@@ -2292,7 +2292,7 @@
 	{
 		"en"			"Your fling range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági dobás képességedet. Próbáld újra."
-		"chi"			"你的 抛空 能力未能激活,请重试."
+		"chi"			"你的 抛空 能力未能激活. 请重试."
 	}
 	"FlingHuman3"
 	{
@@ -2363,7 +2363,7 @@
 	{
 		"en"			"Your flight ability failed to activate. Try again."
 		"hu"			"A repülő képességed aktiválása nem sikerült. Próbáld újra."
-		"chi"			"您的飞行能力无法激活. 再试一次."
+		"chi"			"您的飞行能力无法激活. 请重试."
 	}
 	"FlyHuman3"
 	{
@@ -2408,7 +2408,7 @@
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is temporarily fragile to damage but can deal more damage and run faster!"
 		"hu"			"{olive}{1}{mint} ideiglenesen érzékeny a sebzésre, de többet sebez és gyorsabban fut!"
-		"chi"			"{olive}{1}{mint} 的伤害抗性降低了,同时移动速度和对你的伤害更高了!"
+		"chi"			"{olive}{1}{mint} 的伤害抗性降低了, 同时移动速度和对你的伤害更高了!"
 	}
 	"Fragile2"
 	{
@@ -2427,7 +2427,7 @@
 	{
 		"en"			"You take more damage while dealing more damage and running faster."
 		"hu"			"Több sebzést szenvedsz el de közben többet sebzel és gyorsabban futsz."
-		"chi"			"你会受到更多伤害,但对幸存者造成的伤害也更多,移动速度也更快."
+		"chi"			"你会受到更多伤害, 但对幸存者造成的伤害也更多, 移动速度也更快."
 	}
 	"FragileHuman"
 	{
@@ -2440,7 +2440,7 @@
 	{
 		"en"			"Your fragility ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a sebzés érzékeny képességedet. Próbáld újra."
-		"chi"			"你的 脆弱 能力未能激活,请重试."
+		"chi"			"你的 脆弱 能力未能激活. 请重试."
 	}
 	"FragileHuman3"
 	{
@@ -2531,7 +2531,7 @@
 	{
 		"en"			"Your disarming range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lefegyverző képességedet. Próbáld újra."
-		"chi"			"你的 缴械 能力未能激活,请重试."
+		"chi"			"你的 缴械 能力未能激活. 请重试."
 	}
 	"GhostHuman4"
 	{
@@ -2622,7 +2622,7 @@
 	{
 		"en"			"Your godlike ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az isteni képességedet. Próbáld újra."
-		"chi"			"你的 上帝 能力未能激活,请重试."
+		"chi"			"你的 上帝 能力未能激活. 请重试."
 	}
 	"GodHuman3"
 	{
@@ -2700,7 +2700,7 @@
 	{
 		"en"			"You pull in or push away survivors and any other nearby infected, and change the survivors' gravity."
 		"hu"			"Eltolsz vagy magadhoz húzol mindenkit, és megváltoztatod a túlélők gravitációját."
-		"chi"			"您可以吸引或推开幸存者和附近的特殊感染者,并改变幸存者的重力值."
+		"chi"			"您可以吸引或推开幸存者和附近的特殊感染者, 并改变幸存者的重力值."
 	}
 	"GravityHuman"
 	{
@@ -2720,7 +2720,7 @@
 	{
 		"en"			"Your low gravity range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági alacsony gravitáció képességedet. Próbáld újra."
-		"chi"			"你的 重力 能力未能激活,请重试."
+		"chi"			"你的 重力 能力未能激活. 请重试."
 	}
 	"GravityHuman4"
 	{
@@ -2779,7 +2779,7 @@
 		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} set{olive} {2}{mint} to temporary health who will die when their HP reaches 0!"
 		"hu"			"{olive}{1}{mint} átállította{olive} {2}{mint} életerejét ideiglenesre, aki meghal amint eléri a 0-át!"
-		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的生命值改为临时生命值,同时生命值归0时将会死亡!"
+		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的生命值改为临时生命值, 同时生命值归0时将会死亡!"
 	}
 	"Heal2"
 	{
@@ -2811,7 +2811,7 @@
 	{
 		"en"			"You gain health from other nearby infected and set survivors to temporary health who will die when they reach 0 HP."
 		"hu"			"Életerőt nyelsz el a közelben lévő fertőzöttektől és ideiglenes életerőre állítod a túlélőket, akik meghalnak ha elérik a 0-át."
-		"chi"			"您可以从附近的特殊感染者身上获得生命值,并把幸存者生命值改为临时生命值,当幸存者到达0HP时将立即死亡."
+		"chi"			"您可以从附近的特殊感染者身上获得生命值, 并把幸存者生命值改为临时生命值, 当幸存者到达0HP时将立即死亡."
 	}
 	"HealHuman"
 	{
@@ -2831,7 +2831,7 @@
 	{
 		"en"			"Your bad-health range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rossz-életerő képességedet. Próbáld újra."
-		"chi"			"你的 败血 能力未能激活,请重试."
+		"chi"			"你的 败血 能力未能激活. 请重试."
 	}
 	"HealHuman4"
 	{
@@ -2940,7 +2940,7 @@
 	{
 		"en"			"Your hurt range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bántalmazó képességedet. Próbáld újra."
-		"chi"			"你的 创伤 能力未能激活,请重试."
+		"chi"			"你的 创伤 能力未能激活. 请重试."
 	}
 	"HurtHuman3"
 	{
@@ -3011,7 +3011,7 @@
 	{
 		"en"			"Your hypno range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági hipnotizálás képességedet. Próbáld újra."
-		"chi"			"你的 催眠 能力未能激活,请重试."
+		"chi"			"你的 催眠 能力未能激活. 请重试."
 	}
 	"HypnoHuman3"
 	{
@@ -3082,7 +3082,7 @@
 	{
 		"en"			"Your ice range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági fagyasztás képességedet. Próbáld újra."
-		"chi"			"你的 冻结 能力未能激活,请重试."
+		"chi"			"你的 冻结 能力未能激活. 请重试."
 	}
 	"IceHuman3"
 	{
@@ -3146,7 +3146,7 @@
 	{
 		"en"			"Your idle range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági szüneteltetés képességedet. Próbáld újra."
-		"chi"			"你的 闲置 能力未能激活,请重试."
+		"chi"			"你的 闲置 能力未能激活. 请重试."
 	}
 	"IdleHuman3"
 	{
@@ -3217,7 +3217,7 @@
 	{
 		"en"			"Your invert range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági megfordítás képességedet. Próbáld újra."
-		"chi"			"你的 反向 能力未能激活,请重试."
+		"chi"			"你的 反向 能力未能激活. 请重试."
 	}
 	"InvertHuman3"
 	{
@@ -3345,7 +3345,7 @@
 	{
 		"en"			"Your jump range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági ugrás képességedet. Próbáld újra."
-		"chi"			"你的 跳跃 能力未能激活,请重试."
+		"chi"			"你的 跳跃 能力未能激活. 请重试."
 	}
 	"JumpHuman4"
 	{
@@ -3422,7 +3422,7 @@
 	{
 		"en"			"Your kamikaze range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági kamikaze képességedet. Próbáld újra."
-		"chi"			"你的 神风 能力未能激活,请重试."
+		"chi"			"你的 神风 能力未能激活. 请重试."
 	}
 	"KamikazeHuman3"
 	{
@@ -3479,7 +3479,7 @@
 	{
 		"en"			"Your lag range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági késleltetés képességedet. Próbáld újra."
-		"chi"			"你的 滞后 能力未能激活,请重试."
+		"chi"			"你的 滞后 能力未能激活. 请重试."
 	}
 	"LagHuman3"
 	{
@@ -3550,7 +3550,7 @@
 	{
 		"en"			"Your laser ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a lézer képességedet. Próbáld újra."
-		"chi"			"你的 激光 能力未能激活,请重试."
+		"chi"			"你的 激光 能力未能激活. 请重试."
 	}
 	"LaserHuman3"
 	{
@@ -3621,7 +3621,7 @@
 	{
 		"en"			"Your leech range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági pióca képességedet. Próbáld újra."
-		"chi"			"你的 水蛭 能力未能激活,请重试."
+		"chi"			"你的 水蛭 能力未能激活. 请重试."
 	}
 	"LeechHuman3"
 	{
@@ -3692,7 +3692,7 @@
 	{
 		"en"			"Your lightning storm failed to activate. Try again."
 		"hu"			"A villám vihar aktiválása nem sikerült. Próbáld újra."
-		"chi"			"您的闪电风暴未能激活. 再试一次."
+		"chi"			"您的闪电风暴未能激活. 请重试."
 	}
 	"LightningHuman3"
 	{
@@ -3770,7 +3770,7 @@
 	{
 		"en"			"Your medic ability failed to activate. Try again."
 		"hu"			"Az orvos képességed aktiválása nem sikerült. Próbáld újra."
-		"chi"			"您的医护技能无法激活. 再试一次."
+		"chi"			"您的医护技能无法激活. 请重试."
 	}
 	"MedicHuman3"
 	{
@@ -3841,7 +3841,7 @@
 	{
 		"en"			"Your meteor shower failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a meteor záporodat. Próbáld újra."
-		"chi"			"你的 流星雨 未能激活,请重试."
+		"chi"			"你的 流星雨 未能激活. 请重试."
 	}
 	"MeteorHuman3"
 	{
@@ -3905,7 +3905,7 @@
 	{
 		"en"			"You failed to create a minion. Try again."
 		"hu"			"Nem sikerült minyonokat létrehozni. Próbáld újra."
-		"chi"			"你制造 仆从 失败,请重试."
+		"chi"			"你制造 仆从 失败. 请重试."
 	}
 	"MinionHuman3"
 	{
@@ -3969,7 +3969,7 @@
 	{
 		"en"			"Your necro ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a haláli képességedet. Próbáld újra."
-		"chi"			"你的 死灵 能力未能激活,请重试."
+		"chi"			"你的 死灵 能力未能激活. 请重试."
 	}
 	"NecroHuman3"
 	{
@@ -4040,7 +4040,7 @@
 	{
 		"en"			"Your damage nullifier range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági sebzés hatástalanító képességedet. Próbáld újra."
-		"chi"			"你的 伤害无效化 能力未能激活,请重试."
+		"chi"			"你的 伤害无效化 能力未能激活. 请重试."
 	}
 	"NullifyHuman3"
 	{
@@ -4111,7 +4111,7 @@
 	{
 		"en"			"Your omni ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a mindenség képességedet. Próbáld újra."
-		"chi"			"你的 全能 能力未能激活,请重试."
+		"chi"			"你的 全能 能力未能激活. 请重试."
 	}
 	"OmniHuman3"
 	{
@@ -4182,7 +4182,7 @@
 	{
 		"en"			"Your panic ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a pánik képességedet. Próbáld újra."
-		"chi"			"你的 唤潮 能力未能激活,请重试."
+		"chi"			"你的 唤潮 能力未能激活. 请重试."
 	}
 	"PanicHuman3"
 	{
@@ -4253,7 +4253,7 @@
 	{
 		"en"			"Your pimp slap range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági csapdosó képességedet. Próbáld újra."
-		"chi"			"你的 鞭挞 能力未能激活,请重试."
+		"chi"			"你的 鞭挞 能力未能激活. 请重试."
 	}
 	"PimpHuman3"
 	{
@@ -4317,7 +4317,7 @@
 	{
 		"en"			"Your puke range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági hányás képességedet. Próbáld újra."
-		"chi"			"你的 呕吐 能力未能激活,请重试."
+		"chi"			"你的 呕吐 能力未能激活. 请重试."
 	}
 	"PukeHuman3"
 	{
@@ -4382,7 +4382,7 @@
 	{
 		"en"			"You ignite yourself and gain a speed boost when on fire."
 		"hu"			"Meggyújtod önmagad, a sebességed gyorsabb lesz miközben égsz."
-		"chi"			"着火时,在燃烧自己的同时也获得移动速度的提升."
+		"chi"			"着火时, 在燃烧自己的同时也获得移动速度的提升."
 	}
 	"PyroHuman"
 	{
@@ -4395,7 +4395,7 @@
 	{
 		"en"			"Your pyro ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a piro képességedet. Próbáld újra."
-		"chi"			"你的 火速 能力未能激活,请重试."
+		"chi"			"你的 火速 能力未能激活. 请重试."
 	}
 	"PyroHuman3"
 	{
@@ -4466,7 +4466,7 @@
 	{
 		"en"			"Your quiet range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági csend képességedet. Próbáld újra."
-		"chi"			"你的 沉默 能力未能激活,请重试."
+		"chi"			"你的 沉默 能力未能激活. 请重试."
 	}
 	"QuietHuman3"
 	{
@@ -4537,7 +4537,7 @@
 	{
 		"en"			"Your recoil range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági visszarúgás képességedet. Próbáld újra."
-		"chi"			"你的 后坐力 能力未能激活,请重试."
+		"chi"			"你的 后坐力 能力未能激活. 请重试."
 	}
 	"RecoilHuman3"
 	{
@@ -4608,7 +4608,7 @@
 	{
 		"en"			"Your regen ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a regeneráló képességedet. Próbáld újra."
-		"chi"			"你的 自愈 能力未能激活,请重试."
+		"chi"			"你的 自愈 能力未能激活. 请重试."
 	}
 	"RegenHuman3"
 	{
@@ -4722,7 +4722,7 @@
 	{
 		"en"			"Your restart range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági újrakezdő képességedet. Próbáld újra."
-		"chi"			"你的 重来 能力未能激活,请重试."
+		"chi"			"你的 重来 能力未能激活. 请重试."
 	}
 	"RestartHuman3"
 	{
@@ -4793,7 +4793,7 @@
 	{
 		"en"			"Your rock shower failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a szikla záporodat. Próbáld újra."
-		"chi"			"你的 岩石雨 未能激活,请重试."
+		"chi"			"你的 岩石雨 未能激活. 请重试."
 	}
 	"RockHuman3"
 	{
@@ -4813,7 +4813,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your rock shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A szikla zápor képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 岩石雨 能力已结束,还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 岩石雨 能力已结束, 还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"RockMenu"
 	{
@@ -4857,7 +4857,7 @@
 	{
 		"en"			"Your rocket range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rakéta képességedet. Próbáld újra."
-		"chi"			"你的 火箭 能力未能激活,请重试."
+		"chi"			"你的 火箭 能力未能激活. 请重试."
 	}
 	"RocketHuman3"
 	{
@@ -4928,7 +4928,7 @@
 	{
 		"en"			"Your shake range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rázó képességedet. Próbáld újra."
-		"chi"			"你的 震动 能力未能激活,请重试."
+		"chi"			"你的 震动 能力未能激活. 请重试."
 	}
 	"ShakeHuman3"
 	{
@@ -4986,7 +4986,7 @@
 	{
 		"en"			"You protect yourself with a shield and throw propane tanks or gas cans."
 		"hu"			"Megvéded magad egy pajzzsal, propán tartályt vagy benzines kannát dobsz."
-		"chi"			"你可以用护盾保护自己,并且会扔出煤气瓶或汽油罐."
+		"chi"			"你可以用护盾保护自己, 并且会扔出煤气瓶或汽油罐."
 	}
 	"ShieldHuman"
 	{
@@ -4999,7 +4999,7 @@
 	{
 		"en"			"Your shield failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a pajzsodat. Próbáld újra."
-		"chi"			"你的 护盾 未能激活,请重试."
+		"chi"			"你的 护盾 未能激活. 请重试."
 	}
 	"ShieldHuman3"
 	{
@@ -5077,7 +5077,7 @@
 	{
 		"en"			"Your shove range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lökés képességedet. Próbáld újra."
-		"chi"			"你的 推挤 能力未能激活,请重试."
+		"chi"			"你的 推挤 能力未能激活. 请重试."
 	}
 	"ShoveHuman3"
 	{
@@ -5148,7 +5148,7 @@
 	{
 		"en"			"Your slow range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lassító képességedet. Próbáld újra."
-		"chi"			"你的 减速 能力未能激活,请重试."
+		"chi"			"你的 减速 能力未能激活. 请重试."
 	}
 	"SlowHuman3"
 	{
@@ -5212,7 +5212,7 @@
 	{
 		"en"			"Your smash range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági zúzó képességedet. Próbáld újra."
-		"chi"			"你的 粉碎 能力未能激活,请重试."
+		"chi"			"你的 粉碎 能力未能激活. 请重试."
 	}
 	"SmashHuman3"
 	{
@@ -5276,7 +5276,7 @@
 	{
 		"en"			"Your smite range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lesújtó képességedet. Próbáld újra."
-		"chi"			"你的 重击 能力未能激活,请重试."
+		"chi"			"你的 重击 能力未能激活. 请重试."
 	}
 	"SmiteHuman3"
 	{
@@ -5347,7 +5347,7 @@
 	{
 		"en"			"Your rock spammer ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a folyamatos szikla képességedet. Próbáld újra."
-		"chi"			"你的 岩石连投 能力未能激活,请重试."
+		"chi"			"你的 岩石连投 能力未能激活. 请重试."
 	}
 	"SpamHuman3"
 	{
@@ -5418,7 +5418,7 @@
 	{
 		"en"			"Your splash ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a területi képességedet. Próbáld újra."
-		"chi"			"你的 溅射 能力未能激活,请重试."
+		"chi"			"你的 溅射 能力未能激活. 请重试."
 	}
 	"SplashHuman3"
 	{
@@ -5489,7 +5489,7 @@
 	{
 		"en"			"Your splatter ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a fröcskölő képességedet. Próbáld újra."
-		"chi"			"您的飞溅技能无法激活. 再试一次."
+		"chi"			"您的飞溅技能无法激活. 请重试."
 	}
 	"SplatterHuman3"
 	{
@@ -5697,7 +5697,7 @@
 	{
 		"en"			"You activate ultimate mode when low on health to gain temporary godmode and damage boost"
 		"hu"			"Aktiválod a végső módot, amikor már kevés az életerőd, hogy ideiglenesen sebezhetetlen legyél és sebzés növelést kapj."
-		"chi"			"生命值较低时激活终极模式,以获得暂时的无敌和伤害加成."
+		"chi"			"生命值较低时激活终极模式, 以获得暂时的无敌和伤害加成."
 	}
 	"UltimateHuman"
 	{
@@ -5781,7 +5781,7 @@
 	{
 		"en"			"Your undead ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az élőholt képességedet. Próbáld újra."
-		"chi"			"你的 不死 能力未能激活,请重试."
+		"chi"			"你的 不死 能力未能激活. 请重试."
 	}
 	"UndeadHuman3"
 	{
@@ -5877,7 +5877,7 @@
 	{
 		"en"			"Your visual range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági vizuális képességedet. Próbáld újra."
-		"chi"			"你的 视觉 能力未能激活,请重试."
+		"chi"			"你的 视觉 能力未能激活. 请重试."
 	}
 	"VisionHuman3"
 	{
@@ -5968,7 +5968,7 @@
 	{
 		"en"			"Your warp range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági teleportáló képességedet. Próbáld újra."
-		"chi"			"你的 传送 能力未能激活,请重试."
+		"chi"			"你的 传送 能力未能激活. 请重试."
 	}
 	"WarpHuman4"
 	{
@@ -6059,7 +6059,7 @@
 	{
 		"en"			"Your whirl range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági megpörgető képességedet. Próbáld újra."
-		"chi"			"你的 翻转 能力未能激活,请重试."
+		"chi"			"你的 翻转 能力未能激活. 请重试."
 	}
 	"WhirlHuman3"
 	{
@@ -6123,7 +6123,7 @@
 	{
 		"en"			"Your witch spawner ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a boszorka létrehozó képességedet. Próbáld újra."
-		"chi"			"你的 召唤女巫 能力未能激活,请重试."
+		"chi"			"你的 召唤女巫 能力未能激活. 请重试."
 	}
 	"WitchHuman3"
 	{
@@ -6169,7 +6169,7 @@
 	{
 		"en"			"You can steal health from survivors and vice-versa."
 		"hu"			"Életerőt tudsz lopni a túlélőktől, és fordítva."
-		"chi"			"你可以从幸存者身上窃取生命值,反之亦然."
+		"chi"			"你可以从幸存者身上窃取生命值, 反之亦然."
 	}
 	"XiphosMenu"
 	{
@@ -6220,7 +6220,7 @@
 	{
 		"en"			"Your yell ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az üvöltő képességedet. Próbáld újra."
-		"chi"			"你的 战吼 能力未能激活,请重试."
+		"chi"			"你的 战吼 能力未能激活. 请重试."
 	}
 	"YellHuman3"
 	{
@@ -6291,7 +6291,7 @@
 	{
 		"en"			"Your zombie spawner ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a zombi létrehozó képességedet. Próbáld újra."
-		"chi"			"你的 召唤僵尸 能力未能激活,请重试."
+		"chi"			"你的 召唤僵尸 能力未能激活. 请重试."
 	}
 	"ZombieHuman3"
 	{
@@ -6395,7 +6395,7 @@
 	{
 		"en"			"{mint}This Tank can cause explosions and is immune to explosive damage."
 		"hu"			"{mint}Ez a Tank robbanásokat okozhat és immunis a robbanásokra."
-		"chi"			"{mint}这个坦克可以引发爆炸,同时免疫爆炸伤害."
+		"chi"			"{mint}这个坦克可以引发爆炸, 同时免疫爆炸伤害."
 	}
 	"Tank #7 Name"
 	{
@@ -6443,7 +6443,7 @@
 	{
 		"en"			"{mint}This Tank can throw cars at survivors. The cars disappear after 30 seconds."
 		"hu"			"{mint}Ez a Tank autókat dobhat a túlélők felé. Az autók eltűnnek 30mp után"
-		"chi"			"{mint}这个坦克可以向幸存者投掷汽车.投掷出来的汽车在30秒后消失."
+		"chi"			"{mint}这个坦克可以向幸存者投掷汽车. 投掷出来的汽车在30秒后消失."
 	}
 	"Tank #11 Name"
 	{
@@ -6611,7 +6611,7 @@
 	{
 		"en"			"{mint}This Tank takes extra damage while dealing more damage and running faster."
 		"hu"			"{mint}Ez a Tank érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
-		"chi"			"{mint}这个坦克在受到更多伤害的同时,移动速度变快且对幸存者造成的伤害也更高."
+		"chi"			"{mint}这个坦克在受到更多伤害的同时, 移动速度变快且对幸存者造成的伤害也更高."
 	}
 	"Tank #25 Name"
 	{
@@ -6647,7 +6647,7 @@
 	{
 		"en"			"{mint}This Tank can pull survivors and infected towards it and lower survivors' gravity."
 		"hu"			"{mint}Ez a Tank magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
-		"chi"			"{mint}这个坦克可以把附近的幸存者和感染者拉向他的脚下,同时降低幸存者的重力值."
+		"chi"			"{mint}这个坦克可以把附近的幸存者和感染者拉向他的脚下, 同时降低幸存者的重力值."
 	}
 	"Tank #28 Name"
 	{
@@ -6659,7 +6659,7 @@
 	{
 		"en"			"{mint}This Tank can give survivors temporary health, and it can absorb health from nearby infected."
 		"hu"			"{mint}Ez a Tank ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
-		"chi"			"{mint}这个坦克可以让幸存者的生命变成临时生命值,并且可以吸收附近特殊感染者的生命值."
+		"chi"			"{mint}这个坦克可以让幸存者的生命变成临时生命值, 并且可以吸收附近特殊感染者的生命值."
 	}
 	"Tank #29 Name"
 	{
@@ -6731,7 +6731,7 @@
 	{
 		"en"			"{mint}This Tank can make survivors go idle. (This doesn't affect bots.)"
 		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
-		"chi"			"{mint}这个坦克可以让幸存者进入闲置模式.(这对Bot无效.)"
+		"chi"			"{mint}这个坦克可以让幸存者进入闲置模式. (这对Bot无效.)"
 	}
 	"Tank #35 Name"
 	{
@@ -6863,7 +6863,7 @@
 	{
 		"en"			"{mint}This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
 		"hu"			"{mint}Ez a Tank meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
-		"chi"			"{mint}这个坦克可以召唤带火焰和爆炸效果的流星雨,会持续好几秒."
+		"chi"			"{mint}这个坦克可以召唤带火焰和爆炸效果的流星雨, 会持续好几秒."
 	}
 	"Tank #46 Name"
 	{
@@ -6935,7 +6935,7 @@
 	{
 		"en"			"{mint}This Tank can pimp slap survivors repeatedly to show them who's boss."
 		"hu"			"{mint}Ez a Tank folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
-		"chi"			"{mint}这个坦克可以鞭挞幸存者,让幸存者知道谁才是老大."
+		"chi"			"{mint}这个坦克可以鞭挞幸存者, 让幸存者知道谁才是老大."
 	}
 	"Tank #52 Name"
 	{
@@ -7091,7 +7091,7 @@
 	{
 		"en"			"{mint}This Tank spawns with a shield and throws propane tanks or gas cans which survivors can use to break the shield."
 		"hu"			"{mint}Ez a Tank egy pajzzsal születik, propán tartályokat vagy benzines kannákat dobál. Ezek segítségével a túlélők áttörhetnek a pajzson."
-		"chi"			"{mint}这个坦克出生时会被护盾保护,投掷的石头会变成煤气瓶或汽油桶,幸存者可以用他们打破盾牌."
+		"chi"			"{mint}这个坦克出生时会被护盾保护, 投掷的石头会变成煤气瓶或汽油桶, 幸存者可以用他们打破盾牌."
 	}
 	"Tank #65 Name"
 	{
@@ -7223,7 +7223,7 @@
 	{
 		"en"			"{mint}This Tank can throw cars, special infected, Tanks, Witches, and itself!"
 		"hu"			"{mint}Ez a Tank tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
-		"chi"			"{mint}这个坦克可以投掷汽车/特殊感染者/坦克/女巫,甚至它自己!"
+		"chi"			"{mint}这个坦克可以投掷汽车/特殊感染者/坦克/女巫, 甚至它自己!"
 	}
 	"Tank #76 Name"
 	{
@@ -7331,7 +7331,7 @@
 	{
 		"en"			"{mint}This Tank can steal health from survivors and vice-versa."
 		"hu"			"{mint}Ez a Tank tud életerőt lopni a túlélőktől és fordítva."
-		"chi"			"{mint}这个坦克可以窃取幸存者生命值,反之亦然."
+		"chi"			"{mint}这个坦克可以窃取幸存者生命值, 反之亦然."
 	}
 	"Tank #85 Name"
 	{
@@ -7367,7 +7367,7 @@
 	{
 		"en"			"{mint}This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
 		"hu"			"{mint}Ez a Tank immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
-		"chi"			"{mint}这个坦克免疫爆炸伤害,可以把幸存者和特殊感染者拉向它身边.并且可以召唤流星雨."
+		"chi"			"{mint}这个坦克免疫爆炸伤害, 可以把幸存者和特殊感染者拉向它身边. 并且可以召唤流星雨."
 	}
 	"Tank #88 Name"
 	{
@@ -7379,7 +7379,7 @@
 	{
 		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
 		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
-		"chi"			"{mint}对火免疫,跑得快,伪装自己,让幸存者缴械,把幸存者拉向它身边同时改变他们的重力,周期性跳跃和召唤流星雨,出生自带护盾,会重击幸存者,会传送到幸存者身边并生成女巫/僵尸."
+		"chi"			"{mint}对火免疫, 跑得快, 伪装自己, 让幸存者缴械, 把幸存者拉向它身边同时改变他们的重力, 周期性跳跃和召唤流星雨, 出生自带护盾, 会重击幸存者, 会传送到幸存者身边并生成女巫/僵尸."
 	}
 	"Tank #89 Name"
 	{
@@ -7403,7 +7403,7 @@
 	{
 		"en"			"{mint}This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
 		"hu"			"{mint}Ez a Tank időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
-		"chi"			"{mint}这个坦克会周期性的跳跃,让幸存者不受控制的跳跃并且会传送到幸存者身边."
+		"chi"			"{mint}这个坦克会周期性的跳跃, 让幸存者不受控制的跳跃并且会传送到幸存者身边."
 	}
 	"Tank #91 Name"
 	{
@@ -7439,7 +7439,7 @@
 	{
 		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
 		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
-		"chi"			"{mint}免疫火焰伤害,移动速度慢,会给予幸存者临时生命值,吸收附近特殊感染者的生命值,出生自带护盾和重击幸存者."
+		"chi"			"{mint}免疫火焰伤害, 移动速度慢, 会给予幸存者临时生命值, 吸收附近特殊感染者的生命值, 出生自带护盾和重击幸存者."
 	}
 	"Tank #94 Name"
 	{
@@ -7451,7 +7451,7 @@
 	{
 		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
-		"chi"			"{mint}免疫火焰伤害,伪装自己且会传送到幸存者身边."
+		"chi"			"{mint}免疫火焰伤害, 伪装自己且会传送到幸存者身边."
 	}
 	"Tank #95 Name"
 	{
@@ -7463,7 +7463,7 @@
 	{
 		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
 		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
-		"chi"			"{mint}免疫火焰伤害,吸收伤害,跑得快,伪装自己,将幸存者拉向自己并改变他们重力值,跳得高,召唤流星雨,重击幸存者,投掷一堆岩石,会传送到幸存者身边和召唤女巫/僵尸."
+		"chi"			"{mint}免疫火焰伤害, 吸收伤害, 跑得快, 伪装自己, 将幸存者拉向自己并改变他们重力值, 跳得高, 召唤流星雨, 重击幸存者, 投掷一堆岩石, 会传送到幸存者身边和召唤女巫/僵尸."
 	}
 	"Tank #96 Name"
 	{
@@ -7475,7 +7475,7 @@
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
-		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快并可以传送到幸存者身边."
+		"chi"			"{mint}这个坦克免疫火焰伤害, 跑得快并可以传送到幸存者身边."
 	}
 	"Tank #97 Name"
 	{
@@ -7487,7 +7487,7 @@
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
-		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,伪装自己并可以传送到幸存者身边."
+		"chi"			"{mint}这个坦克免疫火焰伤害, 跑得快, 伪装自己并可以传送到幸存者身边."
 	}
 	"Tank #98 Name"
 	{
@@ -7511,7 +7511,7 @@
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
-		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,并且可以传送到幸存者身边."
+		"chi"			"{mint}这个坦克免疫火焰伤害, 跑得快, 并且可以传送到幸存者身边."
 	}
 	"Tank #100 Name"
 	{
@@ -7535,7 +7535,7 @@
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
-		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,并且会传送到幸存者身边."
+		"chi"			"{mint}这个坦克免疫火焰伤害, 跑得快, 并且会传送到幸存者身边."
 	}
 	"Tank #102 Name"
 	{
@@ -7607,7 +7607,7 @@
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
-		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,会召唤流星雨/尸潮和岩石雨"
+		"chi"			"{mint}这个坦克免疫火焰伤害, 跑得快, 会召唤流星雨/尸潮和岩石雨"
 	}
 	"Tank #108 Name"
 	{
@@ -7619,7 +7619,7 @@
 	{
 		"en"			"{mint}It's Darth Vader... And he is... A Mutant Tank with the Force!"
 		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Tank az erővel!"
-		"chi"			"{mint}是...是达斯·维达...它...它是帝国的突变坦克!"
+		"chi"			"{mint}是... 是达斯·维达... 它... 它是帝国的突变坦克!"
 	}
 	"Tank #109 Name"
 	{
@@ -7643,7 +7643,7 @@
 	{
 		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
-		"chi"			"{mint}这个坦克跑的比一般的快,会伪装自己,可以埋葬幸存者和传送到幸存者身边."
+		"chi"			"{mint}这个坦克跑的比一般的快, 会伪装自己, 可以埋葬幸存者和传送到幸存者身边."
 	}
 	"Tank #111 Name"
 	{
@@ -7679,7 +7679,7 @@
 	{
 		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
 		"hu"			"{mint}Ez a Tank tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
-		"chi"			"{mint}这个坦克可以瞬移,消无声息的移动和伪装自己.需要特别小心!"
+		"chi"			"{mint}这个坦克可以瞬移, 消无声息的移动和伪装自己. 需要特别小心!"
 	}
 	"Tank #114 Name"
 	{
@@ -7691,12 +7691,12 @@
 	{
 		"en"			"{mint}This Tank is too busy meditating to care about you."
 		"hu"			"{mint}Ez a Tank éppen meditál, túl elfoglalt hogy foglalkozzon veled."
-		"chi"			"{mint}这个坦克沉迷冥思,根本对你毫无兴趣."
+		"chi"			"{mint}这个坦克沉迷冥思, 根本对你毫无兴趣."
 	}
 	"Tank #115 Name"
 	{
 		"en"			"The Boss (1st Form)"
-		"hu"			"A Főnök (1. alak)"
+		"hu"			"A Főnök (1. Alak)"
 		"chi"			"老板（第一形式）"
 	}
 	"Tank #115"
@@ -7715,7 +7715,7 @@
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, robbanó sziklákat dob, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
-		"chi"			"{mint}这个坦克跑得比一般的快,免疫近战伤害,比一般的坦克强一点,会投掷爆炸的岩石,可以改变幸存者的重力值和传送到幸存者身边."
+		"chi"			"{mint}这个坦克跑得比一般的快, 免疫近战伤害, 比一般的坦克强一点, 会投掷爆炸的岩石, 可以改变幸存者的重力值和传送到幸存者身边."
 	}
 	"Tank #117 Name"
 	{
@@ -7727,7 +7727,7 @@
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, robbanó sziklákat dob, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
-		"chi"			"{mint}这个坦克跑得比一般的快,免疫火焰伤害,比一般的坦克弱一点,会投掷爆炸的岩石,可以让幸存者失明和伪装自己,并会定期传送到幸存者身边."
+		"chi"			"{mint}这个坦克跑得比一般的快, 免疫火焰伤害, 比一般的坦克弱一点, 会投掷爆炸的岩石, 可以让幸存者失明和伪装自己, 并会定期传送到幸存者身边."
 	}
 	"Tank #118 Name"
 	{
@@ -7739,7 +7739,7 @@
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, robbanó sziklákat dob, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
-		"chi"			"{mint}这个坦克跑的比一般的快,免疫火焰伤害,比一般的坦克强一点,会投掷爆炸的岩石和引发火灾,给予幸存者临时生命值,会定期进行跳跃和传送到幸存者身边."
+		"chi"			"{mint}这个坦克跑的比一般的快, 免疫火焰伤害, 比一般的坦克强一点, 会投掷爆炸的岩石和引发火灾, 给予幸存者临时生命值, 会定期进行跳跃和传送到幸存者身边."
 	}
 	"Tank #119 Name"
 	{
@@ -7751,7 +7751,7 @@
 	{
 		"en"			"{mint}This Tank randomly switches into different Mutant Tank types and deals increased damage. Be careful..."
 		"hu"			"{mint}Ez a tank véletlenszerűen átalakul egy másik típusú Mutáns Tankká, a sebzése megnő. Légy óvatos..."
-		"chi"			"{mint}这个坦克会随机转化成其他突变坦克类型,会造成巨大威胁.请小心..."
+		"chi"			"{mint}这个坦克会随机转化成其他突变坦克类型, 会造成巨大威胁. 请小心..."
 	}
 	"Tank #120 Name"
 	{
@@ -7763,7 +7763,7 @@
 	{
 		"en"			"{mint}This Tank can shapeshift into different Mutant Tank types. Don't underestimate it..."
 		"hu"			"{mint}Ez a tank át tud alakulni egy másik típusú Mutáns Tankká. Ne becsüld le..."
-		"chi"			"{mint}这个坦克可以变成其他突变坦克类型,要特别小心..."
+		"chi"			"{mint}这个坦克可以变成其他突变坦克类型. 要特别小心..."
 	}
 	"Tank #121 Name"
 	{
