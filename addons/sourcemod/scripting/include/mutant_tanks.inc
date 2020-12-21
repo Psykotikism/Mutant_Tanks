@@ -1995,7 +1995,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 {
 	if (min == 0.0 && max == 1.0)
 	{
-		return (StringToFloat(value) == 1.0 || StrEqual(value, "true", false) || StrEqual(value, "on", false) || StrEqual(value, "yes", false)) ? max : min;
+		return (StringToFloat(value) == max || StrEqual(value, "true", false) || StrEqual(value, "on", false) || StrEqual(value, "yes", false)) ? max : min;
 	}
 	else if (StrContains(key, "chance", false) != -1 && min == 0.0 && max == 100.0)
 	{
