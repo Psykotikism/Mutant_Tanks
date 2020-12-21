@@ -2174,11 +2174,11 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 	}
 	else if (min == 0 && max == 1)
 	{
-		if (StringToInt(value) == min || StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
+		if (StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
 		{
 			return min;
 		}
-		else if (StringToInt(value) == max || StrEqual(value, "enabled", false) || StrEqual(value, "true", false) || StrEqual(value, "on", false) || StrEqual(value, "yes", false))
+		else if (StrEqual(value, "enabled", false) || StrEqual(value, "true", false) || StrEqual(value, "on", false) || StrEqual(value, "yes", false))
 		{
 			return max;
 		}
