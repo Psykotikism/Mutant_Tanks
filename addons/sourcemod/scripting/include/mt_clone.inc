@@ -14,20 +14,6 @@
 #endif
 #define _mutanttankscloneability_included
 
-/**
- * Returns if the clone can use abilities.
- *
- * @param tank				Client index of the Tank.
- * @return				True if clone can use abilities, false otherwise.
- **/
-native bool MT_IsCloneSupported(int tank);
-
-#pragma deprecated Use MT_IsCloneSupported() instead.
-stock bool MT_CloneAllowed(int client, bool clone)
-{
-	return MT_IsCloneSupported(tank) && clone;
-}
-
 public SharedPlugin __pl_mutanttankscloneability = 
 {
 	name = "mt_clone",
@@ -43,5 +29,29 @@ public SharedPlugin __pl_mutanttankscloneability =
 public void __pl_mutanttankscloneability_SetNTVOptional()
 {
 	MarkNativeAsOptional("MT_IsCloneSupported");
+	MarkNativeAsOptional("MT_IsTankClone");
 }
 #endif
+
+/**
+ * Returns if the clone can use abilities.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if clone can use abilities, false otherwise.
+ **/
+native bool MT_IsCloneSupported(int tank);
+
+/**
+ * Returns if a Tank is a clone.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the Tank is a clone, false otherwise.
+ * @error			Invalid client index.
+ **/
+native bool MT_IsTankClone(int tank);
+
+#pragma deprecated Use MT_IsCloneSupported() instead.
+stock bool MT_CloneAllowed(int client, bool clone)
+{
+	return MT_IsCloneSupported(tank) && clone;
+}

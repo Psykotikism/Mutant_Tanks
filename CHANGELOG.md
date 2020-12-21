@@ -1,10 +1,506 @@
 # Changelog
 
+## Version 8.80 (December 25, 2020)
+
+### Bug fixes
+
+#### General
+- Fixed some potential errors caused by invalid weapon slots.
+- Fixed the SourceMod admin menu plugin not being optional.
+- Fixed rare cases where non-Mutant Tanks are counted as Mutant Tanks.
+
+#### Core Plugin
+- Fixed log files being created even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
+- Fixed some waves being skipped. (Thanks to Tank Rush for testing and reporting!)
+- Fixed the glow outline not going away when Tanks are kicked.
+- Fixed the Tank wave spawner not respecting the limits set by the `Regular Amount`, `Finale Amount`, and `Finale Waves` settings.
+- Fixed some admin commands using the wrong access flags.
+- Fixed parenting problems with some entities.
+- Fixed Tanks in ghost or stasis mode having props and particle effects.
+- Fixed the log messages causing errors for some server messages.
+- Fixed the Tank's primary attack being blocked by the friendly-fire check.
+- Fixed some cases where Tanks don't have props in thirdperson.
+- Fixed some cases where props appear even when Tanks are in firstperson.
+- Fixed the blur effect prop not deleting itself. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed the blur effect prop not using the Tank's model.
+- Fixed the `Boss` feature not carrying over bosses' stats to their evolution stages.
+- Fixed the `Randomization` feature only changing the Tank once.
+- Fixed the `Transformation` feature disabling itself after the first transformation ends. (Thanks to Mi.Cura for testing and reporting!)
+
+#### Config Files
+- Fixed the config parser storing previous values.
+- Fixed the config parser not reading config files properly.
+
+#### Settings
+- Fixed the `Requires Humans` setting not working in some config formats.
+- Fixed the `Requires Humans` setting not working when deciding which Mutant Tank type to spawn.
+- Fixed settings not having their values stored properly.
+- Fixed color-related settings from not picking random colors when set to `-1`.
+- Fixed the `Light Color` setting not working.
+- Fixed the `Regular Amount` setting being used on finale maps when the finale has not started.
+- Fixed the `Detect Plugins` setting not working when zero abilities are installed.
+- Fixed the `Rock Damage` setting under the `Enhancements` section affecting rocks thrown by the `Rock` and `Spam` abilities. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+#### Translations
+- Fixed global chat messages not being translated. (Thanks to Mi.Cura for testing and reporting!)
+- Fixed some phrases not being translated for other languages.
+
+#### Natives & Forwards
+- Fixed the `MT_GetPropColors` native not returning the right color for the light prop.
+- Fixed the `MT_SetTankType` native not reverting changes properly in some scenarios. (Thanks to Mi.Cura for testing and reporting!)
+
+#### Abilities
+- Fixed some abilities calling `DispatchSpawn` on entities before teleporting them.
+- Fixed Tanks not activating their passive abilities after exiting idle mode.
+- Fixed some abilities' damage settings not working properly.
+- Fixed some messages for all abilities appearing when their `Human Mode` settings are set to `1`.
+- Fixed all abilities not resetting when the Tank is passed between two players.
+- Fixed some settings of multiple abilities having the wrong limits.
+- Fixed abilities activating when the Tank is dying, which caused the Tank being stuck in a looped dying animation.
+
+- Blind
+	- Fixed the ability being enabled by default. (Thanks to Mi.Cura and Tank Rush for reporting!)
+	- Fixed the sound effect not playing in L4D1 due to the file not existing.
+
+- Bomb
+	- Fixed the sound effect not playing in L4D1 due to the file not existing.
+
+- Bury
+	- Fixed players being left under the map. (Thanks to Mi.Cura for testing and reporting!)
+	- Fixed players keeping their original velocity after being teleported.
+
+- Car
+	- Fixed cars giving players accelerated velocity when standing on them.
+
+- Clone
+	- Fixed clones spawning uncontrollably. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	- Fixed clones being detected by the `Finale Amount` and `Finale Waves` settings.
+	- Fixed clones not being replaced when they have a different Mutant Tank type from the Tank. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	- Fixed rare cases where Mutant Tanks are counted as clones. (Thanks to Mi.Cura for testing and reporting!)
+	- Fixed the ability not being optional.
+
+- Drug
+	- Fixed the ability not requiring human survivors to be present by default.
+
+- Drunk
+	- Fixed the ability requiring human survivors to be present by default.
+
+- Drop
+	- Fixed the `Drop Weapon Name` setting not reading weapon names properly. (Thanks to Tank Rush and moekai for testing and reporting!)
+	- Fixed weapons attached to Tanks not disappearing on mission loss or round restart.
+
+- Electric
+	- Fixed the ability not working sometimes. (Thanks to Tank Rush and Mi.Cura for testing and reporting!)
+
+- Enforce
+	- Fixed errors related to enforced weapon slots having invalid weapons.
+
+- Fire
+	- Fixed the sound effect not playing in L4D1 due to the file not existing.
+
+- Ghost
+	- Fixed the range ability checking for the wrong ammo count.
+	- Fixed special infected remaining transparent after the Tank dies.
+	- Fixed client index errors. (Thanks to Mi.Cura for reporting!)
+
+- Gravity
+	- Fixed the range ability checking for the wrong ammo count.
+
+- Heal
+	- Fixed the glow outline not going away when Tanks die.
+	- Fixed glow outlines not applying/resetting properly.
+	- Fixed the range ability checking for the wrong ammo count.
+
+- Hit
+	- Fixed some of the settings not working in some config formats.
+
+- Hypno
+	- Fixed survivors taking too much damage when the Tank is incapacitated while survivors are still hypnotized.
+
+- Jump
+	- Fixed the range ability checking for the wrong ammo count.
+
+- Meteor
+	- Fixed the `Meteor Damage` setting not working properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Minion
+	- Fixed minions being replaced even when the `Minion Replace` setting is set to `0`.
+
+- Omni
+	- Fixed type changes not being tracked properly. (Thanks to Mi.Cura for testing and reporting!)
+
+- Panic
+	- Fixed panic events not being called on L4D1.
+
+- Respawn
+	- Fixed the Tank not respawning consistently. (Thanks to epz for the method!)
+
+- Rock
+	- Fixed the rocks colliding with each other and producing lag.
+	- Fixed the `Rock Damage` setting not working properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Shake
+	- Fixed one of the messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
+
+- Shield
+	- Fixed shields not disappearing on mission loss or round restart.
+	- Fixed propane tanks and gas cans not having velocity when thrown.
+
+- Spam
+	- Fixed the rocks colliding with each other and producing lag.
+	- Fixed the `Spam Damage` setting not working properly.
+
+- Splatter
+	- Fixed the `Splatter Type` setting using the wrong value limit. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Throw
+	- Fixed cars giving players accelerated velocity when standing on them.
+	- Fixed cars not having velocity when thrown. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Track
+	- Fixed the glow outline not going away when rocks break.
+	- Fixed glow outlines not applying/resetting properly.
+
+- Warp
+	- Fixed the range ability checking for the wrong ammo count.
+	- Fixed players keeping their original velocity after being teleported.
+
+- Witch
+	- Fixed messages being spammed.
+	- Fixed witches not dealing any damage to survivors. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Vampire
+	- Fixed admin immunity not being checked properly.
+
+- Xiphos
+	- Fixed survivors receiving full health per hit.
+
+- Yell
+	- Fixed messages providing the wrong information. (Thanks to Mi.Cura for reporting!)
+
+### Changes
+
+#### General
+- Provided full support for competitive game modes. (Thanks to What for bringing up the subject!)
+- Decreased Mutant Tank type limit back to 500.
+
+#### Core Plugin
+- Added command aliases for `sm_tank` and `sm_tank2`.
+- Increased the delay between each Tank wave in finales from `3` to `5` seconds.
+- The regular waves spawner now has a delay and starts after a survivor has left the saferoom. (Requested by Tank Rush.)
+- The core plugin now requires `DHooks 2.2.0-detours15` or higher.
+- The arrival of Mutant Tanks is no longer announced when they are idle. Instead, the arrival is announced once the survivors trigger the Mutant Tank.
+- Added better friendly-fire check for all abilities. (Thanks to Silvers for the code!)
+- Human-controlled Tanks now keep the same Mutant Tank type between passes.
+- Mutant Tank stats are now properly copied when passing Tanks between players.
+- Added sound effects for bullet and melee immunities.
+- Added the `sm_mt_reload` command to let admins reload all config files.
+- Added the `@mutants` target filter to let admins target Mutant Tanks.
+- Tanks will no longer activate their passive abilities on finale maps once the rescue vehicle leaves.
+- Idle Tanks will no longer glow through walls even when the `Glow Type` setting is set to `1`.
+- Idle Tanks will no longer turn into different types when the `Spawn Type` setting is set to `1`, `2`, or `3`.
+- Changed the method for checking whether or not abilities are installed.
+- The `Boss` feature now has new effects when evolving. (Thanks to 3aljiyavslgazana for suggesting!)
+- Tanks that use the `Randomization` feature no longer turn into Mutant Tank types that cannot spawn.
+- AI Tanks that are kicked are now flagged as "dead" Tanks.
+- Added the `mt_adminmenu` override to let users restrict the `MutantTanks` category in the admin menu to certain admin flags/groups.
+
+#### Config Files
+- Enabled the `Requires Humans` setting for some of the default Mutant Tank types.
+- Config files now support multiple abilities using comma separation.
+- The `all` section can now be grouped with multiple types and abilities in config files.
+- Updated some of the default Mutant Tank types.
+- Added two more default Mutant Tank types: `Trap Tank` and `Drug Addict Tank`
+
+#### Settings
+- The `Finale Waves` and `Finale Types` settings now support up to `10` waves. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Added a new option for the `Announce Death` setting.
+- Changed the default value of the `Regular Limit` setting from `2` to `999999`.
+- Changed the default value of the `Death Revert` setting under `Plugin Settings/General` from `0` to `1`.
+- Added the `Attack Interval` setting under `Tank #/Enhancements` section. (Thanks to epz for the code!)
+- Added the `Regular Delay` setting under `Plugin Settings/Waves` section. (Requested by Tank Rush.)
+- Removed the `Rename Players` setting. (Too many bugs with special characters in people's names.)
+- Added the `Extras Delay` settings under `Plugin Settings/Waves` section.
+- Added the `Open Areas Only` setting to determine which types or abilities are only for open areas.
+- Added the `Flashlight` and `Crown` options for the `Props Attached` setting.
+- Added the `Flashlight Color` setting to determine the color of the Tank's dynamic flashlight prop. (Thanks to Ernecio for the code!)
+- Added the `Crown Color` setting to determine the color of the Tank's crown prop. (Thanks to Ernecio for the code!)
+- The `Props Chance` setting now accepts two extra values to support the `Flashlight` and `Crown` props.
+- Added the `Aggressive Tanks` and `Stasis Mode` settings under the `Plugin Settings/Competitive` section.
+- Added the `Scale Damage` and `Difficulty Damage` settings under the `Plugin Settings/Difficulty` section.
+- Moved the following settings to the `Tank #/Glow` and `STEAM_ID/Glow` sections:
+	- `Glow Enabled`
+	- `Glow Color`
+	- `Glow Flashing`
+	- `Glow Range`
+	- `Glow Type`
+- Added a new option for the `Spawn Mode` setting under the `Tank #/Spawn` section.
+- Added the following settings under the new `Tank #/Combo` and `STEAM_ID/Combo` sections. (Thanks to 3aljiyavslgazana for suggesting!)
+	- `Combo Chance`
+	- `Combo Damage`
+	- `Combo Death Chance`
+	- `Combo Death Range`
+	- `Combo Delay`
+	- `Combo Duration`
+	- `Combo Interval`
+	- `Combo Radius`
+	- `Combo Range`
+	- `Combo Range Chance`
+	- `Combo Rock Chance`
+	- `Combo Set`
+	- `Combo Speed`
+	- `Combo Type Chance`
+- Moved the following settings to the `Tank #/Boss` and `STEAM_ID/Boss` sections:
+	- `Boss Health Stages`
+	- `Boss Stages`
+	- `Boss Types`
+- Moved the following settings to the `Tank #/Random` and `STEAM_ID/Random` sections:
+	- `Random Tank`
+	- `Random Interval`
+- Moved the following settings to the `Tank #/Transform` and `STEAM_ID/Transform` sections:
+	- `Transform Delay`
+	- `Transform Duration`
+	- `Transform Types`
+- Added the `Random Duration` setting under the `Tank #/Random` and `STEAM_ID/Random` sections.
+- Renamed the `Spawn Mode` setting under the `Tank #/Spawn` section to `Spawn Type`.
+- The `Spawn Type` setting under the `Tank #/Spawn` section can now be overridden for each player.
+- Added a `Reward` system for fighting Mutant Tanks.
+- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+	- `Reward Enabled`
+	- `Reward Chance`
+	- `Reward Duration`
+	- `Reward Percentage`
+	- `Damage Boost Reward`
+	- `Item Reward`
+	- `Respawn Loadout Reward`
+	- `Speed Boost Reward`
+	- `Useful Rewards`
+- Moved the following settings to the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
+	- `Announce Arrival`
+	- `Announce Death`
+- Added the following settings under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
+	- `Announce Kill`
+	- `Arrival Message`
+	- `Death Message`
+	- `Kill Message`
+- The `Base Health` setting can now be overridden for each type and player.
+- The `Extra Health` setting can now be used globally for all types.
+- The `Requires Humans` setting can no longer be overridden for each player.
+- Added the `Limit Extras` setting under the `Plugin Settings/Waves` section.
+- Added `Survivor count (Humans only)` as an option for the `Create Config Types` and `Execute Config Types` settings.
+- Added `Infected count (Humans only)` as an option for the `Create Config Types` and `Execute Config Types` settings.
+- Added the `Tank Model` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Thanks to Marttt for the code!)
+- Several color settings' default values have been changed from `-1` to `255`.
+- Added different developer tools for testing.
+- Changed the default value of the `Allow Developer` setting from `1` to `0`.
+
+#### Translations
+- The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
+- All logs generated by Mutant Tanks and its modules are now translated to use the server's language.
+
+#### Natives & Forwards
+- Added the `MT_IsTankClone` native to allow developers to check if a Tank is a clone.
+- Added the `MT_IsCustomTankSupported` native to allow developers to check if a Tank clone is able to use abilities like real Mutant Tanks.
+- Added the `MT_GetScaledDamage` native to allow developers to get the proper scaled damage of Mutant Tanks.
+- Added the `MT_GetGlowRange`, `MT_GetGlowType`, and `MT_IsGlowFlashing` natives to allow developers to retrieve the glow outline settings for Mutant Tanks.
+- Added the `MT_OnCopyStats` forward to allow developers to properly copy over active Tank stats when Tanks are passed around in competitive game modes.
+- Added the `MT_OnCombineAbilities` forward to allow developers to combine certain abilities.
+- Added the `MT_GetCombinationSetting` native to allow developers to retrieve values for combined abilities.
+- Added the `MT_GetSpawnType` native to allow developers to check what spawn type a Mutant Tank has.
+- Added the `MT_TankMaxHealth` native to allow developers to get/set the Tank's max health.
+- Added the `MT_OnRewardSurvivor` forward to allow developers to give custom rewards to survivors.
+- The `MT_OnChangeType` forward now has two more parameters.
+- Updated all natives to have self-contained validity checks.
+
+#### Abilities
+- Enabled the `Requires Humans` setting for some more abilities by default.
+- Added the `Fly` ability. (Thanks to Ernecio for the code!)
+- Added the `Lightning` ability which is exclusive to Left 4 Dead 2.
+- None of the abilities' plugins need to check if the `Clone` ability is installed anymore.
+- Added the `Combo Ability` setting for each ability.
+
+- Absorb
+	- Added the `Immunity Flags` setting.
+
+- Blind
+	- Added a sound effect for L4D1.
+
+- Bomb
+	- Added a sound effect for L4D1.
+
+- Bury
+	- Added the `Bury Buffer` setting. (Requested by Mi.Cura.)
+	- Incapacitated or ledge-hanging survivors are no longer affected.
+	- The ability no longer requires `Left 4 DHooks`.
+
+- Car
+	- Added the `Car Interval` setting.
+	- Added the `Car Lifetime` setting.
+
+- Choke
+	- Changed the default value of the `Choke Height` setting from `300.0` to `200.0`.
+
+- Clone
+	- The `Clone Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
+	- Added the `Clone Remove` setting.
+	- Added the `Clone Lifetime` setting. (Requested by 3aljiyavslgazana.)
+	- AI clones are now killed instead of kicked when the plugin is unloaded.
+	- The `Clone Health` setting will now always determine clones' health. (Requested by 3aljiyavslgazana.)
+
+- Drop
+	- Dropped weapons now have normal size. (Requested by 3aljiyavslgazana.)
+	- Weapons attached to Tanks are now affected by the `Ghost` ability's fade feature. (Requested by 3aljiyavslgazana.)
+
+- Fire
+	- Added a sound effect for L4D1.
+
+- Fling
+	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Fly
+	- Added the `Immunity Flags` setting.
+
+- Fragile
+	- Added the `Immunity Flags` setting.
+
+- Ghost
+	- Rocks thrown by Tanks are now affected by the fade feature. (Requested by 3aljiyavslgazana.)
+	- Incapacitated or ledge-hanging survivors are no longer affected.
+
+- God
+	- Added the `Immunity Flags` setting.
+
+- Heal
+	- Changed the default value of the `Heal Buffer` setting from `25.0` to `100.0`.
+	- The ability now contributes to the Tank's overall health.
+
+- Hypno
+	- Updated method for hurting teammates to bypass plugins that block friendly-fire.
+	- Incapacitated or ledge-hanging survivors are no longer affected.
+
+- Idle
+	- Applied a new idle fix method. (Thanks to Lux for the code!)
+	- The ability now requires `DHooks`.
+
+- Kamikaze
+	- Added the `Kamikaze Body` setting.
+
+- Leech
+	- The ability now contributes to the Tank's overall health.
+
+- Medic
+	- Added the `Medic Field` and `Medic Field Color` settings. (Thanks to Marttt and Silvers for the code!)
+	- The `Ability Enabled` setting now only has two options instead of four.
+	- Modified all of the messages.
+	- The ability now contributes to the Tank's overall health.
+
+- Meteor
+	- Added the `Meteor Interval` setting.
+	- Added the `Meteor Lifetime` setting.
+
+- Minion
+	- Added the `Minion Remove` setting.
+	- Added the `Minion Lifetime` setting.
+	- AI minions are now killed instead of kicked when the plugin is unloaded.
+
+- Nullify
+	- Added a sound effect.
+
+- Regen
+	- The ability now contributes to the Tank's overall health.
+
+- Respawn
+	- The `Respawn Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
+	- The ability now requires `DHooks`.
+
+- Restart
+	- The ability no longer requires `Left 4 DHooks`.
+
+- Rock
+	- Added the `Immunity Flags` setting.
+	- Added the `Rock Interval` setting.
+
+- Rocket
+	- Added the `Rocket Body` setting.
+
+- Shield
+	- Added the `Shield Glow` setting.
+	- The `Shield Type` setting now allows combinations of options.
+	- Added the `Shield Throw Chance` setting.
+	- Human-controlled Tanks are now put into thirdperson for `1.5` seconds after toggling the shield.
+
+- Shove
+	- Incapacitated or ledge-hanging survivors are no longer affected.
+
+- Smash
+	- Added the `Smash Body` setting.
+
+- Smite
+	- Added the `Smite Body` setting.
+
+- Spam
+	- Added the `Immunity Flags` setting.
+	- Added the `Spam Interval` setting.
+
+- Throw
+	- Added the `Immunity Flags` setting.
+	- Added the `Throw Car Lifetime` setting.
+	- Added the `Throw Infected Amount` setting.
+	- Added the `Throw Infected Lifetime` setting.
+	- Added the `Throw Infected Remove` setting.
+	- Added the `Throw Witch Amount` setting.
+	- Added the `Throw Witch Damage` setting.
+	- Added the `Throw Witch Lifetime` setting.
+	- Added the `Throw Witch Remove` setting.
+
+- Track
+	- Added the `Track Glow` setting.
+
+- Ultimate
+	- The ability now contributes to the Tank's overall health.
+	- Added a sound effect.
+	- Added the `Ultimate Chance` setting.
+
+- Undead
+	- The ability now contributes to the Tank's overall health.
+
+- Vampire
+	- The ability now contributes to the Tank's overall health.
+
+- Witch
+	- Added the `Witch Remove` setting.
+	- Added the `Witch Lifetime` setting.
+
+- Xiphos
+	- The ability now contributes to the Tank's overall health.
+	- The `Ability Message` setting now has an extra option.
+	- Survivors now only get a portion of their damage against the Tank as health.
+	- Incapacitated or ledge-hanging survivors are no longer affected.
+
+- Yell
+	- The ability now runs repeatedly while activated when `Human Mode` is set to `1`.
+	- The ability no longer requires `Left 4 DHooks`.
+
+- Zombie
+	- Added the `Zombie Mode` setting.
+	- Added the `Zombie Type` setting.
+
+### Files
+
+#### Requirements
+- The `mt_clone` include file is now only used by the core plugin and the `Clone` ability.
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include files.
+- Updated translation file.
+
 ## Version 8.79 (October 10, 2020)
 
 Bug fixes:
 
-1. Fixed the plugin creating the wrong folder for finale stage configs.
+1. Fixed the core plugin creating the wrong folder for finale stage configs.
 2. Fixed the `sm_mt_config` command causing errors when multiple players are using it.
 3. Fixed the `Game Mode Types` setting and `mt_gamemodetypes` convar causing errors when set to anything higher than `0`. (Thanks to KasperH/Ladis for testing and reporting!)
 4. Fixed the idle check for Tanks not detecting every type of idle mode.
@@ -23,15 +519,15 @@ Changes:
 8. Added the `Splatter` ability which is exclusive to Left 4 Dead 2. (Requested by Tank Rush and thanks to Silvers for the code.)
 9. Added two new default Mutant Tanks in the config file to showcase the `Splatter` ability.
 10. All the default Mutant Tanks that come with the main config file are now off by default. Users can enable them as needed.
-11. DHooks and Left 4 DHooks are now mandatory.
+11. `DHooks` and `Left 4 DHooks` are now mandatory.
 12. The core plugin now constantly checks if Tanks are idle or not moving (no action). Use the `Idle Check` setting to determine the interval between each check.
 13. Added the `Idle Check Mode` setting under `Plugin Settings/General` section.
 14. Changed the default value of the `Idle Check` setting from `0.0` to `10.0`.
 15. Changed the default value of the `Props Attached` setting from `126` to `78` for L4D1 to disable huge props.
 16. Changed the default value of the `Detect Plugins` setting from `0` to `1`.
 17. The `Regular Amount` setting now works without the `Regular Mode` setting being set to `1`.
-18. The `Bury` ability's plugin (`mt_bury.smx`) now uses Left 4 DHooks to revive survivors.
-19. The `Yell` ability's plugin (`mt_yell.smx`) now uses Left 4 DHooks to deafen survivors.
+18. The `Bury` ability's plugin (`mt_bury.smx`) now uses `Left 4 DHooks` to revive survivors.
+19. The `Yell` ability's plugin (`mt_yell.smx`) now uses `Left 4 DHooks` to deafen survivors.
 20. Updated the `MT_IsTankIdle` native with an extra parameter to determine what idle mode to check for.
 21. Global chat messages and server messages generated by Mutant Tanks can now be logged.
 22. Added the `Log Messages` setting to allow different types of messages to be logged.
@@ -167,7 +663,7 @@ Bug fixes:
 
 Changes:
 
-1. DHooks is now optional. (Still required when compiling/using the plugin and its modules with Left 4 DHooks.)
+1. `DHooks` is now optional. (Still required when compiling/using the plugin and its modules with `Left 4 DHooks`.)
 2. Rewrote and improved the code for the finale waves and regular wave spawners.
 3. All settings are now automatically re-cached after changing a Tank's type with the `MT_SetTankType` native.
 
@@ -339,7 +835,7 @@ Bug fixes:
 Changes:
 
 1. Added extra checks to prevent disabled Tanks from spawning in certain situations.
-2. Left 4 DHooks is now optional. (Thanks to Silvers!)
+2. `Left 4 DHooks` is now optional. (Thanks to Silvers!)
 3. The `Hit Group` setting now allows for multiple hit groups to be specified using bit flags.
 4. Added back the `sm_mt_config` command.
 5. The core plugin now uses the `GetCmdArgInt()` function added in `SourceMod 1.11.0.6511`.
@@ -412,10 +908,10 @@ Changes:
 25. Added the `Propane Tank Color` setting under the `Props` section.
 26. The `MT_GetPropColors` native's `mode` parameter now accepts values as high as 6 to add support for the new propane tank prop.
 27. The `Regular Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
-28. The core plugin now uses Left 4 DHooks to check when Tanks enter ghost state and materializes them 1 second later.
-29. The `Restart` ability's plugin (`mt_restart.smx`) now uses Left 4 DHooks to check when a survivor is inside the starting safe area in order to get their "spawn coordinates" to be used when `Restart Mode` is set to `0`.
+28. The core plugin now uses `Left 4 DHooks` to check when Tanks enter ghost state and materializes them 1 second later.
+29. The `Restart` ability's plugin (`mt_restart.smx`) now uses `Left 4 DHooks` to check when a survivor is inside the starting safe area in order to get their "spawn coordinates" to be used when `Restart Mode` is set to `0`.
 30. Added the `mt_enabledgamemodes`, `mt_disabledgamemodes`, and `mt_gamemodetypes` cvars as cvar equivalents of the `Enabled Game Modes`, `Disabled Game Modes`, and `Game Mode Types` settings.
-31. The core plugin now requires DHooks and Left 4 DHooks.
+31. The core plugin now requires `DHooks` and `Left 4 DHooks`.
 32. Removed some useless code.
 
 Files:
@@ -523,7 +1019,7 @@ Bug fixes:
 
 Changes:
 
-1. The administration system now detects SM's admin flags if the plugin's config file doesn't define specific flags for a user.
+1. The administration system now detects SM's admin flags if the plugin's config file does not define specific flags for a user.
 2. The `MT_IsTypeEnabled()` native now checks if abilities for Mutant Tanks are available.
 3. Added the `Regular Mode` setting under the `Plugin Settings/Waves` section.
 4. The core plugin now detects custom sourcemod directories when checking for the `plugins` folder.
@@ -652,8 +1148,8 @@ Bug fixes:
 Changes:
 
 1. Added a small option to go back to previous menus when using the admin menu to access the Super Tanks++ menu. (Requested by Marttt.)
-2. Added a different death effect for the L4D1 versions of the Acid and Fling abilities.
-3. The Regen ability's `Regen Limit` no longer accepts negative values.
+2. Added a different death effect for the L4D1 versions of the `Acid` and `Fling` abilities.
+3. The `Regen` ability's `Regen Limit` setting no longer accepts negative values.
 4. The initial damage that removes a Super Tank's shield no longer hurts the Super Tank.
 
 Files:
@@ -666,7 +1162,7 @@ Files:
 Bug fixes:
 
 1. Fixed the `Clone` and `Minion` abilities not working properly.
-2. Fixed the Flash and Pyro abilities glitching out when the `Run Speed` setting is not specified. (It now defaults to `1.0`.)
+2. Fixed the `Flash` and `Pyro` abilities glitching out when the `Run Speed` setting is not specified. (It now defaults to `1.0`.)
 3. Fixed the light prop appearing even when disabled.
 4. Fixed the `Heal` ability breaking the glow outline feature.
 
@@ -716,12 +1212,12 @@ Files:
 
 Bug fixes:
 
-1. Fixed the Clone and Minion abilities' `Replace` settings not working properly. (Thanks to Mi.Cura for reporting!)
+1. Fixed the `Clone` and `Minion` abilities' `Replace` settings not working properly. (Thanks to Mi.Cura for reporting!)
 2. Fixed the `Pyro` ability's `Pyro Damage Boost` setting not working properly.
 3. Fixed the core plugin not detecting all the client buttons.
 4. Fixed the blur effect colliding with the Super Tank it is attached to.
 5. Fixed the plugins not detecting all Tank throw animation sequences.
-6. Fixed the Car and Meteor abilities not resetting properly.
+6. Fixed the `Car` and `Meteor` abilities not resetting properly.
 
 Changes:
 
@@ -739,15 +1235,15 @@ Files:
 Bug fixes:
 
 1. Fixed some chat messages being sent to AI Super Tanks.
-2. Fixed the Car and Meteor abilities not working. (Thanks to Mi.Cura for reporting!)
+2. Fixed the `Car` and `Meteor` abilities not working. (Thanks to Mi.Cura for reporting!)
 3. Fixed the `Item` ability not disabling properly.
 
 Changes:
 
 1. Removed `Human Ammo` and `Human Cooldown` settings for the `Kamikaze` ability.
 2. The `Base Health` setting is now a global setting under `Plugins Settings/General` section. (Requested by KasperH/Ladis.)
-3. New ability added: Hit Ability - The Super Tank only takes damage in certain parts of its body.
-4. New ability added: Undead ability - The Super Tank cannot die.
+3. New ability added: `Hit` Ability - The Super Tank only takes damage in certain parts of its body.
+4. New ability added: `Undead` ability - The Super Tank cannot die.
 5. Renamed the `Human Duration` setting to `Car Duration` for the `Car` ability.
 6. Renamed the `Human Duration` setting to `Meteor Duration` for the `Meteor` ability.
 7. Renamed the `Pyro Boost` setting to `Pyro Speed Boost`.
@@ -762,7 +1258,7 @@ Files:
 
 Bug fixes:
 
-1. Fixed the Clone, Minion, and Respawn abilities not respecting the `Amount` settings.
+1. Fixed the `Clone`, `Minion`, and `Respawn` abilities not respecting the `Amount` settings.
 2. Fixed the `Cloud` ability not respecting the `Human Mode` setting.
 3. Fixed all abilities not resetting properly for human-controlled Super Tanks upon death.
 
@@ -783,11 +1279,11 @@ Changes:
 - `Rock Damage` - If set to anything less than `0.0`, the Super Tank's rock damage will be untouched by the plugin.
 - `Run Speed` - If set to anything less than `0.1`, the Super Tank's run speed will be untouched by the plugin.
 - `Throw Interval` - If set to anything less than `0.1`, the Super Tank's rock throw interval will be untouched by the plugin.
-5. New ability added: Car ability - The Super Tank creates car showers.
+5. New ability added: `Car` ability - The Super Tank creates car showers.
 6. Added back human support, with manually controlled abilities.
 - Added `Cooldown` and `Ammo` settings for most abilities.
 - Added new forwards for many human support features.
-7. Added `Rock Chance` settings for the Acid, Bomb, and Fire abilities.
+7. Added `Rock Chance` settings for the `Acid`, `Bomb`, and `Fire` abilities.
 8. Added various new settings for several abilities.
 9. Removed/replaced several settings.
 10. Reworked several abilities for balance and simplicity.
@@ -818,7 +1314,7 @@ Bug fixes:
 
 Bug fixes:
 
-1. Fixed the Fling and Smite abilities not working. (Thanks to Mi.Cura for reporting!)
+1. Fixed the `Fling` and `Smite` abilities not working. (Thanks to Mi.Cura for reporting!)
 
 Files:
 
@@ -838,9 +1334,9 @@ Changes:
 4. The `Skin-Glow Colors` and `Props Colors` settings have been divided into different settings.
 5. The `Tank Chance`, `Type Limit`, and `Finale Tank` settings no longer affect respawned Tanks and randomized Tanks.
 6. The `Announce Arrival` setting now accepts different values.
-7. The Throw ability's `Ability Enabled` setting now accepts different values.
-8. The Throw ability now allows for all 4 types to be enabled at once. (1 of the 4 will be chosen randomly each time a Super Tank throws a rock.)
-9. Added the `Spawn Enabled` setting to determine if a Super Tank can be spawned through the `sm_tank` command. (Affects Clone and Respawn abilities.)
+7. The `Throw` ability's `Ability Enabled` setting now accepts different values.
+8. The `Throw` ability now allows for all 4 types to be enabled at once. (1 of the 4 will be chosen randomly each time a Super Tank throws a rock.)
+9. Added the `Spawn Enabled` setting to determine if a Super Tank can be spawned through the `sm_tank` command. (Affects `Clone` and `Respawn` abilities.)
 10. Added the `ST_PropsColors()` native to retrieve the RGBA colors of a Super Tank's props.
 11. The `ST_TankColors()` native now retrieves the alpha of a Super Tank's colors.
 12. Added the `ST_SpawnEnabled()` native to check if a Super Tank can be spawned through the `sm_tank` command.
@@ -861,18 +1357,18 @@ Files:
 
 Bug fixes:
 
-1. Fixed the Clone and Minion abilities not resetting properly.
+1. Fixed the `Clone` and `Minion` abilities not resetting properly.
 2. Fixed the `Witch` ability spamming chat.
 3. Fixed the `Ability Message` settings not working properly.
 
 Changes:
 
-1. The sm_tank command now accepts partial name matches as input values. (Example: `sm_tank boss`)
+1. The `sm_tank` command now accepts partial name matches as input values. (Example: `sm_tank boss`)
 2. Moved some stock functions from include file to some of the module plugins.
 3. Lowered the `Tank Name` setting's character limit from 128 to 32.
-4. The Medic ability now lets Super Tanks heal nearby special infected by 1 HP every second.
-5. The `Whirl Axis` setting now accepts different values.
-6. The Throw ability now has a 4th option - Super Tanks can throw Witches.
+4. The `Medic` ability now lets Super Tanks heal nearby special infected by 1 HP every second.
+5. The `Whirl` ability's `Whirl Axis` setting now accepts different values.
+6. The `Throw` ability now has a 4th option - Super Tanks can throw Witches.
 7. Several abilities' `Ability Message` setting now accepts different values.
 8. Added the `Clone Replace` setting.
 9. Added the `Cloud Chance` setting.
@@ -897,24 +1393,24 @@ Files:
 
 Bug fixes:
 
-1. Fixed the Absorb, Fragile, and Hypno abilities not working properly.
+1. Fixed the `Absorb`, `Fragile`, and `Hypno` abilities not working properly.
 2. Fixed the datapack leaks from various modules.
-3. Fixed the Range Chance settings not working at all.
+3. Fixed the `Range Chance` settings not working at all.
 4. Fixed the issue with props and special effects not deleting themselves properly, thus causing crashes.
 5. Fixed the `Throw` ability's cars having a strong velocity, thus pushing other entities away.
 
 Changes:
 
 1. Improved readability of the source code for each plugin.
-2. Added the Aimless, Choke, Cloud, Drunk, and Whirl abilities.
+2. Added the `Aimless`, `Choke`, `Cloud`, `Drunk`, and Whirl abilities.
 3. Added new settings for several abilities to handle timer intervals and damage values.
-4. The Electric, Hurt, and Splash abilities now use `SDKHooks_TakeDamage()` to damage players.
-5. The damage settings of the Electric, Hurt, and Splash abilities now accept float values (decimals) instead of int values (whole numbers).
+4. The `Electric`, `Hurt`, and `Splash` abilities now use `SDKHooks_TakeDamage()` to damage players.
+5. The damage settings of the `Electric`, `Hurt`, and `Splash` abilities now accept float values (decimals) instead of int values (whole numbers).
 6. Renamed a bunch of settings.
 7. Decreased Super Tank type limit back to 500 to avoid server freezes and lag spikes.
 8. Removed the `st_enableplugin` cvar setting.
-9. Chance and Range Chance settings now only accept decimal (float) values.
-10. Chance and Range Chance settings now work differently. (Before: 1/X chances, After: X/100.0 probability)
+9. `Chance` and `Range Chance` settings now only accept decimal (float) values.
+10. `Chance` and `Range Chance` settings now work differently. (Before: 1/X chances, After: X/100.0 probability)
 11. Added the `Base Health` setting to determine the base health of each Super Tank.
 12. Added the `Tank Chance` setting to determine the chances of a Super Tank type spawning.
 13. Added the `ST_TankChance()` native for the new `Tank Chance` setting.
@@ -953,19 +1449,19 @@ Bug fixes:
 Changes:
 
 1. Renamed/removed some stocks.
-2. The plugin and its modules now requires `SM 1.10.0.6317` or higher.
+2. The core plugin and its modules now requires `SM 1.10.0.6317` or higher.
 3. The Tank Notes now display a different message when the phrase for a Super Tank is not found.
 4. Changed the directory of the configs from `cfg/sourcemod` to `addons/sourcemod/data`.
 5. Added a new native: `ST_TankColors` - Retrieves a Super Tank's colors.
-6. The Gravity ability's `Gravity Value` now accepts higher values.
-7. The Health ability no longer allows a Super Tank to set survivors to black and white.
-8. The Jump ability now provides more features.
-9. The Pyro ability now provides more features.
-10. The Restart ability now removes all weapons from survivors before giving them new loadouts.
+6. The `Gravity` ability's `Gravity Value` now accepts higher values.
+7. The `Health` ability no longer allows a Super Tank to set survivors to black and white.
+8. The `Jump` ability now provides more features.
+9. The `Pyro` ability now provides more features.
+10. The `Restart` ability now removes all weapons from survivors before giving them new loadouts.
 11. Lowered the amount of boss stages from 5 to 4. Any boss that spawns automatically starts at stage 1.
 12. Moved various settings under new sections and reorganized/restructured the config file.
 13. Merged the `Cancer` ability with the `Health` ability.
-14. Added 2 new abilities: Lag and Recoil
+14. Added 2 new abilities: `Lag` and `Recoil`
 15. Added the `ST_PluginEnd()` and `ST_Preset()` forwards.
 16. Added several checks for better handling of timers.
 17. Added several new settings.
@@ -1020,16 +1516,16 @@ Bug fixes:
 
 1. Fixed some abilities not working when their `Ability Enabled` setting is disabled. (Thanks huwong!)
 2. Fixed the `Gravity` ability returning a datapack error.
-3. Fixed the Bomb and Fire abilities not working in L4D1.
+3. Fixed the `Bomb` and `Fire` abilities not working in L4D1.
 4. Fixed the `Ice` ability flinging survivors back at a high velocity after being unfrozen.
 5. Fixed the `Zombie` ability not working properly.
 
 Changes:
 
-1. Added a new ability: Kamikaze ability - The Super Tank dies while taking a survivor with it.
-2. Added a new ability: Leech ability - The Super Tank leeches health off of survivors.
-3. Added a new ability: Necro ability - The Super Tank can resurrect nearby special infected that die.
-4. Added a new ability: Quiet ability - The Super Tank can silence itself around survivors. (Useful for ninja-themed Super Tanks.)
+1. Added a new ability: `Kamikaze` ability - The Super Tank dies while taking a survivor with it.
+2. Added a new ability: `Leech` ability - The Super Tank leeches health off of survivors.
+3. Added a new ability: `Necro` ability - The Super Tank can resurrect nearby special infected that die.
+4. Added a new ability: `Quiet` ability - The Super Tank can silence itself around survivors. (Useful for ninja-themed Super Tanks.)
 5. Added a new native: `ST_TankWave()` - Returns the current finale wave.
 6. Added a new native: `ST_CloneAllowed(int client, bool clone)` - Checks if a Super Tank's clone is allowed to use abilities like real Super Tanks.
 7. Added the `Clone Mode` setting to determine if a Super Tank's clone can use abilities like real Super Tanks.
@@ -1039,11 +1535,11 @@ Changes:
 11. Added the `Jump Range` setting to determine how close a Super Tank must be to a survivor before it can jump in the air.
 12. Added the `Pyro Mode` setting to determine what kind of speed boost a Super Tank receives.
 13. Added the `Zombie Interval` setting to determine how often a Super Tank can spawn zombie mobs.
-14. The Ghost ability's `Ability Enabled` setting now has more options.
-15. The Ghost ability no longer allows a Super Tank to cloak nearby special infected.
-16. Removed the `Ghost Cloak Range` setting.
-17. The Panic ability now allows the Tank to have a chance to start a panic event upon death.
-18. The Warp ability's electricity particle effect now requires the `Particle Effect` and `Particle Effects` settings to allow it.
+14. The `Ghost` ability's `Ability Enabled` setting now has more options.
+15. The `Ghost` ability no longer allows a Super Tank to cloak nearby special infected.
+16. Removed the `Ghost` ability's `Ghost Cloak Range` setting.
+17. The `Panic` ability now allows the Tank to have a chance to start a panic event upon death.
+18. The `Warp` ability's electricity particle effect now requires the `Particle Effect` and `Particle Effects` settings to allow it.
 19. The code for various abilities have been slightly modified.
 20. Updated the Super Tanks++ category in the admin menu.
 21. Removed old code that was used for human support.
@@ -1070,7 +1566,7 @@ Changes:
 1. Increased the maximum amount of possible Super Tank types from 2500 to 5000.
 2. Replaced the `Maximum Types` setting with the new `Type Range` setting. (Usage: `Type Range` `1-5000`)
 3. Changed the display info for each Super Tank type on the ST++ menu. (Before: `Tank's Name`, After: `Tank's Name (Tank #)`)
-4. The plugin no longer generates a config file nor a backup copy of it. (This feature was just wasting space and was overall unnecessary.)
+4. The core plugin no longer generates a config file nor a backup copy of it. (This feature was just wasting space and was overall unnecessary.)
 5. Removed the `Create Backup` setting.
 6. Removed support for human-controlled Tanks. (This feature was buggy and made the Infected team overpowered.)
 7. Removed the `Human Super Tanks` setting.
@@ -1102,16 +1598,16 @@ Changes:
 
 Bug fixes:
 
-1. Rock ability - Fixed the `Rock Radius` KeyValue setting not being read properly due to a small buffer size.
-2. Drop ability - Fixed incorrect scaling on some of the melee weapons.
+1. `Rock` ability - Fixed the `Rock Radius` KeyValue setting not being read properly due to a small buffer size.
+2. `Drop` ability - Fixed incorrect scaling on some of the melee weapons.
 
 Changes:
 
-1. Warp ability - The Super Tank will no longer warp to incapacitated survivors.
-2. Restart ability - Survivors will no longer warp to incapacitated teammates.
-3. New ability added: Cancer ability - The Super Tank gives survivors cancer (survivors die when they reach 0 HP instead of getting incapacitated first).
+1. `Warp` ability - The Super Tank will no longer warp to incapacitated survivors.
+2. `Restart` ability - Survivors will no longer warp to incapacitated teammates.
+3. New ability added: `Cancer` ability - The Super Tank gives survivors cancer (survivors die when they reach 0 HP instead of getting incapacitated first).
 4. Added the command `sm_tanklist` which prints a list of Super Tanks and their current statuses on the user's console.
-5. Added the following new settings for the Absorb and Fragile abilities:
+5. Added the following new settings for the `Absorb` and `Fragile` abilities:
 
 - `Absorb Bullet Damage`
 - `Absorb Explosive Damage`
@@ -1122,8 +1618,8 @@ Changes:
 - `Fragile Fire Damage`
 - `Fragile Melee Damage`
 
-6. The plugin and all of its modules no longer work on locally-hosted/listen servers. (I'm tired of people reporting issues from their listen servers...)
-7. The plugin and all of its modules now require `SM 1.9.0.6225` or higher to work.
+6. The core plugin and all of its modules no longer work on locally-hosted/listen servers. (I'm tired of people reporting issues from their listen servers...)
+7. The core plugin and all of its modules now require `SM 1.9.0.6225` or higher to work.
 8. Removed unnecessary code.
 
 Files:
@@ -1139,7 +1635,7 @@ Bug fixes:
 Changes:
 
 1. Moved some lines of code around, optimized some code, etc.
-2. The Puke ability now gives the Super Tank a chance to puke on survivors when being hit with a melee weapon.
+2. The `Puke` ability now gives the Super Tank a chance to puke on survivors when being hit with a melee weapon.
 3. The following settings can now be set for each Tank instead of affecting all Tanks at once:
 
 - `Boss Health Stages`
@@ -1163,13 +1659,13 @@ Changes:
 2. Added a random mode feature, which is a feature that randomizes Super Tanks every X seconds after spawning. View the `INFORMATION.md` file for more details. (1 new setting: `Random Interval`)
 3. Added a new forward to use for the boss and random modes:
 
-forward void ST_BossStage(int client); (This forward is called when the Super Tank is evolving into the next stage.)
+`forward void ST_BossStage(int client);` (This forward is called when the Super Tank is evolving into the next stage.)
 
 4. Added the `Spawn Mode` KeyValue setting to allow users to decide if Super Tanks either spawn normally, spawn as bosses (boss mode), or spawn as randomized Tanks (random mode).
-5. The Splash ability now damages nearby survivors every X seconds while the Super Tank is alive.
+5. The `Splash` ability now damages nearby survivors every X seconds while the Super Tank is alive.
 6. Added the `Splash Interval` KeyValue setting to support the new Splash ability feature.
-7. The Vampire ability's `Vampire Health` KeyValue setting now only applies to the `range` ability. (When the Super Tank hits a survivor, he now gains the amount of damage as health.)
-8. The Witch ability's range used for detecting nearby common infected can now be configurable via the new `Witch Range` KeyValue setting.
+7. The `Vampire` ability's `Vampire Health` KeyValue setting now only applies to the `range` ability. (When the Super Tank hits a survivor, he now gains the amount of damage as health.)
+8. The `Witch` ability's range used for detecting nearby common infected can now be configurable via the new `Witch Range` KeyValue setting.
 9. Changed a few lines of code.
 
 Files:
@@ -1192,8 +1688,8 @@ Changes:
 
 Files:
 
-1. Updated include file (super_tanks++.inc).
-2. Updated core plugin (super_tanks++.sp).
+1. Updated include file (`super_tanks++.inc`).
+2. Updated core plugin (`super_tanks++.sp`).
 3. Updated all plugins to stop creating information files.
 4. Updated config file.
 
@@ -1206,8 +1702,8 @@ Bug fixes:
 
 Changes:
 
-1. Added a 3rd parameter for the sm_tank command. (Usage: sm_tank <1-2500> <0: spawn at crosshair, 1: spawn automatically>)
-2. Added the `Drop Mode` KeyValue setting to determine what kind of weapons the Super Tank can drop. (0: Both|1: Guns only|2: Melee weapons only)
+1. Added a 3rd parameter for the `sm_tank` command. (Usage: `sm_tank <1-2500> <0: spawn at crosshair, 1: spawn automatically>`)
+2. Added the `Drop Mode` KeyValue setting to determine what kind of weapons the Super Tank can drop. `(0: Both|1: Guns only|2: Melee weapons only)`
 3. Changed how the `Pyro` ability detects Tanks that are on fire.
 4. Major code optimization. (Thanks Lux!)
 
@@ -1242,7 +1738,7 @@ Changes:
 2. Added the `Rock Damage` KeyValue setting under the `Enhancements` section which determines how much damage a Tank's rock throw does.
 2. Moved all stock/common functions to the include file.
 3. Replaced multiple forwards with one forward to handle events hooked by the core plugin.
-4. Removed an extra check for spawning Super Tanks from the sm_tank menu.
+4. Removed an extra check for spawning Super Tanks from the `sm_tank` menu.
 5. Removed unused code.
 
 Files:
@@ -1277,8 +1773,8 @@ Changes:
 
 Files:
 
-1. super_tanks++.sp (Where the extra checks were added.)
-2. super_tanks++.inc (Updated version number.)
+1. `super_tanks++.sp` (Where the extra checks were added.)
+2. `super_tanks++.inc` (Updated version number.)
 
 ## Version 8.26 (July 28, 2018)
 
@@ -1298,7 +1794,7 @@ Changes:
 3. Added a new forward for developers to use: forward void `ST_Death2(int enemy, int client)` - Called when a Tank dies and returns the attacker's index.
 4. Added checks to various timers in case abilities are disabled before the timers are triggered.
 5. Added a check to prevent clone Tanks from being counted as actual Tanks.
-6. The Clone ability no longer spawns more clones when all of the current clones die. (This is to prevent glitches with the Tank spawner.)
+6. The `Clone` ability no longer spawns more clones when all of the current clones die. (This is to prevent glitches with the Tank spawner.)
 
 Files:
 
@@ -1312,7 +1808,7 @@ Bug fixes:
 
 Changes:
 
-1. Added Range Chance settings and other settings for various abilities for better control.
+1. Added `Range Chance` settings and other settings for various abilities for better control.
 
 Files:
 
@@ -1369,7 +1865,7 @@ Changes:
 2. Added a ton of new KeyValues for many abilities.
 3. Added new abilities.
 4. Increased the maximum amount of possible Super Tank types from 1000 to 2500.
-5. The plugin now creates a folder inside `cfg/sourcemod/super_tanks++` called `backup_config` which contains a copy of the config file in case users need it.
+5. The core plugin now creates a folder inside `cfg/sourcemod/super_tanks++` called `backup_config` which contains a copy of the config file in case users need it.
 6. Added checks to trim all string-related settings to get rid of any white spaces.
 7. Raised the value limits of various settings.
 
@@ -1481,7 +1977,7 @@ Changes:
 10. Added the `Nullify Duration` KeyValue which decides how long the Super Tank can nullify all of a survivor's damage.
 11. Buried survivors are now frozen in place.
 12. Buried survivors are now teleported to nearby teammates to avoid falling through the map after being unburied.
-13. The Hypno ability no longer sets survivors' HP to 1 when the inflicted damage is higher than their health, but rather incapacitates them.
+13. The `Hypno` ability no longer sets survivors' HP to 1 when the inflicted damage is higher than their health, but rather incapacitates them.
 14. Removed the `Tank Types` KeyValue.
 15. Replaced the `Tank Character` KeyValue with `Tank Enabled`. (Now users can simply enable/disable each Tank without using a letter, number, or symbol.)
 16. Added Tank death announcement messages.
@@ -1497,9 +1993,9 @@ Files:
 Changes:
 
 1. Added the `Hypno Mode` KeyValue to decide whether hypnotized survivors can only hurt themselves or other teammates.
-2. The Hypno ability now uses OnTakeDamage instead of TraceAttack and supports multiple damage types.
-3. The Hypno ability's effect only activates when hypnotized survivors hurts/kills the Super Tank that hypnotized them.
-4. The Hypno ability no longer kills hypnotized survivors when they kill the Super Tank that hypnotized them.
+2. The `Hypno` ability now uses OnTakeDamage instead of TraceAttack and supports multiple damage types.
+3. The `Hypno` ability's effect only activates when hypnotized survivors hurts/kills the Super Tank that hypnotized them.
+4. The `Hypno` ability no longer kills hypnotized survivors when they kill the Super Tank that hypnotized them.
 5. The bullet (gunshot) damage done onto a Super Tank by its hypnotized victim will now have 1/10 of it inflicted upon the hypnotized victim.
 6. The slash (melee) damage done onto a Super Tank by its hypnotized victim will now have 1/1000 of it inflicted upon the hypnotized victim. 
 7. Added the `Bury Height` KeyValue to decide how deep survivors are buried.
@@ -1517,7 +2013,7 @@ Bug fixes:
 2. Fixed the `Enabled Game Modes` and `Disabled Game Modes` KeyValues not having enough space for more than 2-4 game modes.
 3. Fixed the issue with default `unnamed` Tanks appearing when certain Super Tanks are disabled.
 4. Fixed the `Warp` ability's interval glitching out.
-5. Fixed the `Gravity` ability creating more than 1 point_push entity per Tank.
+5. Fixed the `Gravity` ability creating more than 1 `point_push` entity per Tank.
 
 Changes:
 
@@ -1553,8 +2049,8 @@ Files:
 Bug fixes:
 
 1. Fixed the shield color being overridden when the Super Tank has the Ghost Ability enabled.
-2. Fixed custom configs not respecting the settings from the main config when KeyValues aren't found inside the custom configs.
-3. Fixed the player_death event callback returning the victim's user ID for the attacker.
+2. Fixed custom configs not respecting the settings from the main config when KeyValues are not found inside the custom configs.
+3. Fixed the `player_death` event callback returning the victim's user ID for the attacker.
 
 Changes:
 
@@ -1564,8 +2060,8 @@ Changes:
 4. Added the `Car Throw Ability` KeyValue which lets the Super Tank throw cars. Format: `Car Throw Ability` `1`
 5. Added the `Vampire Claw-Rock` KeyValue which lets the Super Tank steal health from survivors. Format: `Vampire Claw-Rock` `1`
 6. Added the `Vampire Health` KeyValue to determine how much health the Super Tank receives from hitting survivors. Format: `Vampire Health` `100`
-7. Added the `Vampire Chance` KeyValue to determine the chances of the Super Tank stealing health from survivors. Format: `Bomb Rock Break` `4`
-8. The config file is now automatically created if it doesn't exist already.
+7. Added the `Vampire Chance` KeyValue to determine the chances of the Super Tank stealing health from survivors. Format: `Vampire Chance` `33.3`
+8. The config file is now automatically created if it does not exist already.
 9. Optimized code even more.
 
 Files:
@@ -1576,7 +2072,7 @@ Files:
 
 Changes:
 
-1. The Flash ability now fades properly when the Super Tank has the Ghost Ability enabled.
+1. The `Flash` ability now fades properly when the Super Tank has the Ghost Ability enabled.
 2. Raised the spawn point of the rocks for the `Spam` ability again to avoid collision with the Super Tank.
 
 ## Version 8.13 (June 28, 2018)
@@ -1588,13 +2084,13 @@ Bug fixes:
 Changes:
 
 1. Lowered the spawn point of the rocks for the `Spam` ability.
-2. Added the `Ghost Fade Limit` KeyValue setting to adjust the intensity of the Ghost Fade ability (255: No effect, 0: Fully faded).
+2. Added the `Ghost Fade Limit` KeyValue setting to adjust the intensity of the `Ghost` ability's fade feature (255: No effect, 0: Fully faded).
 3. Added the `Glow Effect` KeyValue setting to determine whether or not Super Tanks will have a glow outline (0: OFF, 1: ON).
 
 Files:
 
 1. Updated include file.
-2. Updated Boss and Meme Tank's settings in the config file.
+2. Updated `Boss` and `Meme` Tank's settings in the config file.
 
 ## Version 8.12 (June 28, 2018)
 
@@ -1766,7 +2262,7 @@ Bug fixes:
 2. L4D1 version only includes 29/40 Super Tank types.
 3. L4D1 version excludes prop attachments (concrete chunk and beam spotlight).
 4. L4D1 version excludes glow outlines.
-5. Changed the l4d2_ prefix to l4d_ for the plugin and config files.
+5. Changed the `l4d2_` prefix to `l4d_` for the plugin and config files.
 
 ## Version 5.5 (October 23, 2017)
 

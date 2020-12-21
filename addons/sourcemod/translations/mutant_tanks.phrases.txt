@@ -3,101 +3,86 @@
 	// MT Chat Color Placeholders
 	// MT Chat Színek helyőrzői
 	// MT 的 聊天框文本颜色占位符
-	// MT Заполнители цвета чата
 	// --
 	// Note: Not all phrases support these placeholders.
 	// Megjegyzés: Nem mindegyik kifejezés támogatja ezeket a helyőrzőket.
 	// 注意: 并不是所有的短语文本都支持这些占位符.
-	// Примечание: Не все фразы поддерживают эти заполнители.
 	// --
 	// "{default}" Normal - \x01
 	// "{default}" Normál - \x01
 	// "{default}" 普通颜色 - \x01
-	// "{default}" Обычный - \x01
 	// --
 	// "{mint}" Sky-green - \x03
 	// "{mint}" Ég zöld - \x03
 	// "{mint}" 天青色 - \x03
-	// "{mint}" Небесно-зелёный - \x03
 	// --
 	// "{yellow}" Yellow-orange - \x04
 	// "{yellow}" Sárgás narancs - \x04
 	// "{yellow}" 橘黄色 - \x04
-	// "{yellow}" Жёлто-оранжевый - \x04
 	// --
 	// "{olive}" Yellow-green - \x05
 	// "{olive}" Sárgászöld - \x05
 	// "{olive}" 黄绿色 - \x05
-	// "{olive}" Жёлто-зелёный - \x05
+
 	"MutantTanks"
 	{
-		"en"			"Mutant Tanks Menu"
-		"hu"			"Mutáns Tankok Menü"
-		"chi"			"突变坦克列表"
-		"ru"			"Танки-мутанты"
+		"en"			"Mutant Tanks"
+		"hu"			"Mutáns Tankok"
+		"chi"			"突变坦克"
 	}
 	"MTAbilitiesMenu"
 	{
 		"en"			"Mutant Tanks Abilities"
 		"hu"			"Mutáns Tank Képességek"
 		"chi"			"突变坦克能力"
-		"ru"			"Способности танков-мутантов"
 	}
 	"MTConfigMenu"
 	{
 		"en"			"Config Parser Menu"
 		"hu"			"Konfiguráció Elemző Menü"
 		"chi"			"配置信息解析"
-		"ru"			"Меню разбора конфигурации"
 	}
 	"MTDefaultItem"
 	{
 		"en"			"Default Tank"
 		"hu"			"Alapértelmezett Tank"
 		"chi"			"默认坦克"
-		"ru"			"Танк по умолчанию"
 	}
 	"MTFavoriteMenu"
 	{
 		"en"			"Use your favorite Mutant Tank type?"
 		"hu"			"Használjuk a kedvenc Mutáns Tank típusodat?"
 		"chi"			"使用你喜爱的突变坦克类型?"
-		"ru"			"Использовать ваш любимый тип танка-мутанта?"
 	}
 	"MTInfoMenu"
 	{
 		"en"			"Mutant Tanks Information"
 		"hu"			"Mutáns Tankok Információ"
 		"chi"			"突变坦克信息"
-		"ru"			"Информация о танках-мутантах"
 	}
 	"MTListMenu"
 	{
-		"en"			"Mutant Tanks Abilities"
-		"hu"			"Mutáns Tank Képességek"
-		"chi"			"突变坦克能力"
-		"ru"			"Способности танков-мутантов"
+		"en"			"Mutant Tanks List"
+		"hu"			"Mutáns Tankok Listája"
+		"chi"			"突变坦克清单"
 	}
 	"MTPathMenu"
 	{
 		"en"			"File Path Menu"
 		"hu"			"Fájl elérési Menü"
 		"chi"			"文件路径菜单"
-		"ru"			"Меню пути к файлу"
 	}
 	"MTReloadMenu"
 	{
 		"en"			"Reload Config Menu"
 		"hu"			"Konfig menü újratöltése"
 		"chi"			"重新加载配置菜单"
-		"ru"			"Обновить меню конфигурации"
 	}
 	"MTSettingsItem"
 	{
 		"en"			"Plugin Settings"
 		"hu"			"Plugin Beállítások"
 		"chi"			"插件设置"
-		"ru"			"Настройки плагина"
 	}
 	"MTTankItem"
 	{
@@ -105,21 +90,18 @@
 		"en"			"{1} (Tank #{2})"
 		"hu"			"{1} (Tank #{2})"
 		"chi"			"{1} (坦克 #{2})"
-		"ru"			"{1} (Танк #{2})"
 	}
 	"MTVersionMenu"
 	{
 		"en"			"Mutant Tanks Version"
 		"hu"			"Mutáns Tank Verzió"
 		"chi"			"突变坦克版本"
-		"ru"			"Танки-мутанты версии"
 	}
 	"Ammunition"
 	{
 		"en"			"Ammunition"
 		"hu"			"Lőszer"
 		"chi"			"次数"
-		"ru"			"Боеприпасы"
 	}
 	"AbilityAmmo"
 	{
@@ -127,7 +109,6 @@
 		"en"			"Your main/special/upon-death ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
 		"hu"			"A képességednek{olive} {1}{mint}/{olive}{2}{mint} lőszere maradt."
 		"chi"			"你的主要/特殊/临终能力还剩余{olive} {1}{mint}/{olive}{2}{mint} 次."
-		"ru"			"Ваша основная/особая/после смерти способность имеет{olive} {1}{mint}/{olive}{2}{mint} оставшихся боеприпасов."
 	}
 	"AbilityAmmo2"
 	{
@@ -135,70 +116,60 @@
 		"en"			"Your range ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
 		"hu"			"A távolsági képességednek{olive} {1}{mint}/{olive}{2}{mint} lőszere maradt."
 		"chi"			"你的 能力还剩余{olive} {1}{mint}/{olive}{2}{mint} 次."
-		"ru"			"Ваша дальняя способность имеет{olive} {1}{mint}/{olive}{2}{mint} оставшихся боеприпасов."
 	}
 	"ButtonMode"
 	{
 		"en"			"Button Mode"
 		"hu"			"Gomb Mód"
 		"chi"			"按键模式"
-		"ru"			"Кнопочный режим"
 	}
 	"AbilityButtonMode1"
 	{
 		"en"			"Press button(s) to activate your abilit(y/ies)."
 		"hu"			"Nyomj gombo(kat)t hogy aktiváld a képesége(idet)det."
 		"chi"			"按下按钮触发你的能力."
-		"ru"			"Нажмите кнопку(-и), чтобы активировать свои(-ю) способности(-ть)."
 	}
 	"AbilityButtonMode2"
 	{
 		"en"			"Hold button(s) down to use your abilit(y/ies)."
 		"hu"			"Tarts lenyomva gombo(kat) a képessége(ek)id használatához."
 		"chi"			"按住按钮触发你的能力."
-		"ru"			"Удерживайте кнопку(-и), чтобы использовать свои(-ю) способности(-ть)."
 	}
 	"Buttons"
 	{
 		"en"			"Button(s)"
 		"hu"			"Gomb(ok)"
 		"chi"			"触发按键"
-		"ru"			"Кнопка(-и)"
 	}
 	"AbilityButtons"
 	{
 		"en"			"{yellow}+use (default: E}:{olive} Activate your main ability."
 		"hu"			"{yellow}+használat (alapért.: E}:{olive} Aktiválja a fő képességedet."
 		"chi"			"{yellow}+使用键 (默认: E}:{olive} 触发你的主要能力."
-		"ru"			"{yellow}+use (по умолчанию: E}:{olive} Активировать свою основную способность."
 	}
 	"AbilityButtons2"
 	{
 		"en"			"{yellow}+reload (default: R}:{olive} Activate your range ability."
 		"hu"			"{yellow}+újratöltés (alapért.: R}:{olive} Aktiválja a távolsági képességedet."
 		"chi"			"{yellow}+换弹键 (默认: R}:{olive} 触发你的 能力."
-		"ru"			"{yellow}+reload (по умолчанию: R}:{olive} Активировать свою дальнобойную способность."
 	}
 	"AbilityButtons3"
 	{
 		"en"			"{yellow}+zoom (default: Mouse3/Scroll wheel}:{olive} Activate your special ability."
 		"hu"			"{yellow}+közelítés (alapért.: Egér3/Görgő}:{olive} Aktiválja a speciális képességedet."
 		"chi"			"{yellow}+瞄镜键 (默认: 中键/滚轮}:{olive} 触发你的特殊能力."
-		"ru"			"{yellow}+zoom (по умолчанию: Mouse3/Колесо мыши}:{olive} Активировать свою особую способность."
 	}
 	"AbilityButtons4"
 	{
 		"en"			"{yellow}+duck (default: CTRL}:{olive} Activate your upon-death ability."
 		"hu"			"{yellow}+guggolás (alapért.: CTRL}:{olive} Aktiválja a halál utáni képességedet."
 		"chi"			"{yellow}+蹲伏键 (默认: CTRL}:{olive} 触发你的临终能力."
-		"ru"			"{yellow}+duck (по умолчанию: CTRL}:{olive} Активировать свою способность после смерти."
 	}
 	"Cooldown"
 	{
 		"en"			"Cooldown"
 		"hu"			"Újratöltés"
 		"chi"			"冷却时间"
-		"ru"			"Перезарядка"
 	}
 	"AbilityCooldown"
 	{
@@ -206,21 +177,18 @@
 		"en"			"Cooldown:{olive} {1} second(s)"
 		"hu"			"Újratöltés:{olive} {1} másodperc"
 		"chi"			"冷却时间:{olive} {1} 秒"
-		"ru"			"Перезарядка:{olive} {1} сек."
 	}
 	"Details"
 	{
 		"en"			"Details"
 		"hu"			"Részletek"
 		"chi"			"详细信息"
-		"ru"			"Подробности"
 	}
 	"Duration"
 	{
 		"en"			"Duration"
 		"hu"			"Élettartam"
 		"chi"			"持续时间"
-		"ru"			"Длительность"
 	}
 	"AbilityDuration"
 	{
@@ -228,7 +196,6 @@
 		"en"			"Duration:{olive} {1} second(s)"
 		"hu"			"Élettartam:{olive} {1} másodperc"
 		"chi"			"持续时间:{olive} {1} 秒"
-		"ru"			"Длительность:{olive} {1} сек."
 	}
 	"AbilityDuration2"
 	{
@@ -236,35 +203,30 @@
 		"en"			"Duration:{olive} {1} second(s)"
 		"hu"			"Élettartam:{olive} {1} másodperc"
 		"chi"			"持续时间:{olive} {1} 秒"
-		"ru"			"Длительность:{olive} {1} сек."
 	}
 	"HumanSupport"
 	{
 		"en"			"Human Support"
 		"hu"			"Emberi Támogatás"
 		"chi"			"玩家支持"
-		"ru"			"Человеческая поддержка"
 	}
 	"AbilityHumanSupport1"
 	{
 		"en"			"Enabled:{olive} No"
 		"hu"			"Engedélyezve:{olive} Nem"
 		"chi"			"启用:{olive} 否"
-		"ru"			"Включено:{olive} Нет"
 	}
 	"AbilityHumanSupport2"
 	{
 		"en"			"Enabled:{olive} Yes"
 		"hu"			"Engedélyezve:{olive} Igen"
 		"chi"			"启用:{olive} 是"
-		"ru"			"Включено:{olive} Да"
 	}
 	"Status"
 	{
 		"en"			"Status"
 		"hu"			"Állapot"
 		"chi"			"状态"
-		"ru"			"Статус"
 	}
 	"AbilityInstalled"
 	{
@@ -272,7 +234,6 @@
 		"en"			"{1}{olive} is installed."
 		"hu"			"{1}{olive} telepítve."
 		"chi"			"{1}{olive} 已安装."
-		"ru"			"{1}{olive} установлен."
 	}
 	"AbilityInstalled2"
 	{
@@ -280,21 +241,18 @@
 		"en"			"{1} is installed."
 		"hu"			"{1} telepítve."
 		"chi"			"{1} 已安装."
-		"ru"			"{1} установлен."
 	}
 	"AbilityStatus1"
 	{
 		"en"			"Status:{olive} Disabled"
 		"hu"			"Állapot:{olive} Tiltva"
 		"chi"			"状态:{olive} 已禁用"
-		"ru"			"Статус:{olive} Отключено"
 	}
 	"AbilityStatus2"
 	{
 		"en"			"Status:{olive} Enabled"
 		"hu"			"Állapot:{olive} Engedélyezve"
 		"chi"			"状态:{olive} 已启用"
-		"ru"			"Статус:{olive} Включено"
 	}
 	"Arrival1"
 	{
@@ -302,7 +260,6 @@
 		"en"			"{olive}{1}{default} has appeared!"
 		"hu"			"{olive}{1}{default} megérkezett!"
 		"chi"			"{olive}{1}{default} 已经出现了!"
-		"ru"			"{olive}{1}{default} явился!"
 	}
 	"Arrival2"
 	{
@@ -310,7 +267,6 @@
 		"en"			"Here comes{olive} {1}{default}!"
 		"hu"			"Itt jön a(z){olive} {1}{default}!"
 		"chi"			"{olive}{1}{default} 来了!"
-		"ru"			"Сюда идёт{olive} {1}{default}!"
 	}
 	"Arrival3"
 	{
@@ -318,7 +274,6 @@
 		"en"			"{olive}{1}{default} is ready to kill!"
 		"hu"			"{olive}{1}{default} készen áll gyilkolni!"
 		"chi"			"{olive}{1}{default} 已准备好杀戮了!"
-		"ru"			"{olive}{1}{default} готов убивать!"
 	}
 	"Arrival4"
 	{
@@ -326,15 +281,13 @@
 		"en"			"Are you ready to face{olive} {1}{default}?"
 		"hu"			"Készen állsz szembenézni a(z){olive} {1}{default}-al?"
 		"chi"			"准备好面对 {olive}{1}{default} 了么?"
-		"ru"			"Готовы столкнуться c{olive} {1}{default}?"
 	}
 	"Arrival5"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} came for a challenge!"
 		"hu"			"{olive}{1}{default} kihívásra érkezett!"
-		"chi"			"{olive}{1}{default} 来了, 迎接挑战吧!"
-		"ru"			"{olive}{1}{default} пришёл на вызов!"
+		"chi"			"{olive}{1}{default} 来了,迎接挑战吧!"
 	}
 	"Arrival6"
 	{
@@ -342,7 +295,6 @@
 		"en"			"Get ready!{olive} {1}{default} is coming!"
 		"hu"			"Állj készen!{olive} {1}{default} érkezik!"
 		"chi"			"都给我准备好! {olive}{1}{default} 来了!"
-		"ru"			"Готовьтесь!{olive} {1}{default} идёт!"
 	}
 	"Arrival7"
 	{
@@ -350,7 +302,6 @@
 		"en"			"{olive}{1}{default} is here!"
 		"hu"			"{olive}{1}{default} itt van!"
 		"chi"			"{olive}{1}{default} 在这里!"
-		"ru"			"{olive}{1}{default} здесь!"
 	}
 	"Arrival8"
 	{
@@ -358,7 +309,6 @@
 		"en"			"Oh no!{olive} {1}{default} is nearing!"
 		"hu"			"Jaj ne!{olive} {1}{default} közeledik!"
 		"chi"			"糟糕! {olive}{1}{default} 正在靠近!"
-		"ru"			"О нет!{olive} {1}{default} приближается!"
 	}
 	"Arrival9"
 	{
@@ -366,7 +316,6 @@
 		"en"			"{olive}{1}{default} joined the game"
 		"hu"			"{olive}{1}{default} csatlakozott a játékba"
 		"chi"			"{olive}{1}{default} 加入游戏"
-		"ru"			"{olive}{1}{default} вступает в игру"
 	}
 	"Arrival10"
 	{
@@ -374,7 +323,6 @@
 		"en"			"It seems{olive} {1}{default} is joining your company!"
 		"hu"			"Úgy látszik{olive} {1}{default} csatlakozik a társasághoz!"
 		"chi"			"看来 {olive}{1}{default} 正往你们那边去!"
-		"ru"			"Похоже,{olive} {1}{default} присоединится к вашей компании!"
 	}
 	"Assist1"
 	{
@@ -382,7 +330,6 @@
 		"en"			"{olive}{1}{default} is defeated!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"hu"			"{olive}{1}{default} legyőzve!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"chi"			"{olive}{1}{default} 被击败了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"ru"			"{olive}{1}{default} терпит поражение!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"Assist2"
 	{
@@ -390,7 +337,6 @@
 		"en"			"The survivors defeated{olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"chi"			"幸存者消灭了 {olive}{1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"ru"			"Выжившие победили{olive} {1}{default}!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"Assist3"
 	{
@@ -398,7 +344,6 @@
 		"en"			"{olive}{1}{default} goes to hell!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"hu"			"{olive}{1}{default} elindult a pokolba!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"chi"			"{olive}{1}{default} 被打下了地狱!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"ru"			"{olive}{1}{default} был отправлен обратно в ад!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"Assist4"
 	{
@@ -406,7 +351,6 @@
 		"en"			"Is{olive} {1}{default} really dead...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"hu"			"A(z){olive} {1}{default} tényleg halott...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"chi"			"{olive}{1}{default} 真的死了...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"ru"			"{olive} {1}{default} действительно мёртв...?{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"Assist5"
 	{
@@ -414,7 +358,6 @@
 		"en"			"{olive}{1}{default} lost the challenge against the survivors!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"hu"			"{olive}{1}{default} elvesztette a kihívást a túlélőkkel szemben!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"chi"			"{olive}{1}{default} 挑战幸存者失败!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"ru"			"{olive}{1}{default} проиграл вызов выжившим!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"Assist6"
 	{
@@ -422,7 +365,6 @@
 		"en"			"The{olive} {1}{default} failed to kill the survivors!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"hu"			"A(z){olive} {1}{default} elbukta a túlélők megölését!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"chi"			"{olive}{1}{default} 未能团灭幸存者!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"ru"			"{olive} {1}{default} не смог убить выживших!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"Assist7"
 	{
@@ -430,7 +372,6 @@
 		"en"			"{olive}{1}{default} has met their demise!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"hu"			"{olive}{1}{default} találkozott a halállal!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"chi"			"{olive}{1}{default} 已经消逝了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"ru"			"{olive}{1}{default} встретил свою кончину!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"Assist8"
 	{
@@ -438,7 +379,6 @@
 		"en"			"Yay!{olive} {1}{default} is dead!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"hu"			"Éljen!{olive} {1}{default} halott!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"chi"			"哎呀! {olive}{1}{default} 死了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"ru"			"Ура!{olive} {1}{default} мёртв!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"Assist9"
 	{
@@ -446,7 +386,6 @@
 		"en"			"{olive}{1}{default} left the game{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"hu"			"{olive}{1}{default} elhagyta a játékot{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"chi"			"{olive}{1}{default} 被打出游戏{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"ru"			"{olive}{1}{default} покидает игру{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"Assist10"
 	{
@@ -454,21 +393,18 @@
 		"en"			"It seems{olive} {1}{default} could not beat the survivors after all.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 		"chi"			"看来 {olive}{1}{default} 根本无法团灭幸存者嘛.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
-		"ru"			"Похоже,{olive} {1}{default} не смог победить выживших.{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 	"ChangeType"
 	{
 		"en"			"Your personal Mutant Tank type changed."
 		"hu"			"A személyes Mutáns Tank típusod megváltozott."
 		"chi"			"你的突变坦克类型已变更."
-		"ru"			"Ваш личный тип танка-мутанта изменён."
 	}
 	"CheckConsole"
 	{
 		"en"			"See console for full output."
 		"hu"			"Nézd meg a konzolban a teljes kimenetett."
 		"chi"			"完整的输出信息请查看控制台."
-		"ru"			"Проверьте консоль для полного вывода."
 	}
 	"CommandUsage"
 	{
@@ -476,14 +412,12 @@
 		"en"			"Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>"
 		"hu"			"Használat: {1} <írd {2}-{3}> <mennyíség: 1-32> <0: születés célkeresztnél|1: születés automatikusan>"
 		"chi"			"用法: {1} <类型 {2}-{3}> <数量: 1-32> <0: 在十字准星处生成|1: 自动生成>"
-		"ru"			"Использование: {1} <введите {2}-{3}> <количество: 1-32> <0: появиться на прицеле|1: появиться автоматически>"
 	}
 	"CompletedParsing"
 	{
-		"en"			"Parsing complete..."
-		"hu"			"Elemzés befejezve..."
-		"chi"			"解析完成..."
-		"ru"			"Разбор завершён..."
+		"en"			"Parsing complete!"
+		"hu"			"Elemzés befejezve!"
+		"chi"			"解析完成!"
 	}
 	"Death1"
 	{
@@ -491,15 +425,13 @@
 		"en"			"{olive}{1}{default} is defeated!"
 		"hu"			"{olive}{1}{default} legyőzve!"
 		"chi"			"{olive}{1}{default} 被击败了!"
-		"ru"			"{olive}{1}{default} терпит поражение!"
 	}
 	"Death2"
 	{
 		"#format"		"{1:t}"
 		"en"			"The survivors defeated{olive} {1}{default}!"
 		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!"
-		"chi"			"幸存者消灭了 {olive}{1}{default} !"
-		"ru"			"Выжившие победили{olive} {1}{default}!"
+		"chi"			"幸存者消灭了 {olive}{1}{default}!"
 	}
 	"Death3"
 	{
@@ -507,7 +439,6 @@
 		"en"			"{olive}{1}{default} goes to hell!"
 		"hu"			"{olive}{1}{default} elindult a pokolba!"
 		"chi"			"{olive}{1}{default} 被打下了地狱!"
-		"ru"			"{olive}{1}{default} был отправлен обратно в ад!"
 	}
 	"Death4"
 	{
@@ -515,7 +446,6 @@
 		"en"			"Is{olive} {1}{default} really dead...?"
 		"hu"			"A(z){olive} {1}{default} tényleg halott...?"
 		"chi"			"{olive}{1}{default} 真的死了...?"
-		"ru"			"{olive} {1}{default} действительно мёртв...?"
 	}
 	"Death5"
 	{
@@ -523,7 +453,6 @@
 		"en"			"{olive}{1}{default} lost the challenge against the survivors!"
 		"hu"			"{olive}{1}{default} elvesztette a kihívást a túlélőkkel szemben!"
 		"chi"			"{olive}{1}{default} 挑战幸存者失败!"
-		"ru"			"{olive}{1}{default} проиграл вызов выжившим!"
 	}
 	"Death6"
 	{
@@ -531,15 +460,13 @@
 		"en"			"The{olive} {1}{default} failed to kill the survivors!"
 		"hu"			"A(z){olive} {1}{default} elbukta a túlélők megölését!"
 		"chi"			"{olive}{1}{default} 未能团灭幸存者!"
-		"ru"			"{olive} {1}{default} не смог убить выживших!"
 	}
 	"Death7"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{default} has met their demise!"
 		"hu"			"{olive}{1}{default} találkozott a halállal!"
 		"chi"			"{olive}{1}{default} 已经消逝了!"
-		"ru"			"{olive}{1}{default} встретил свою кончину!"
 	}
 	"Death8"
 	{
@@ -547,7 +474,6 @@
 		"en"			"Yay!{olive} {1}{default} is dead!"
 		"hu"			"Éljen!{olive} {1}{default} halott!"
 		"chi"			"哎呀! {olive}{1}{default} 死了!"
-		"ru"			"Ура!{olive} {1}{default} мёртв!"
 	}
 	"Death9"
 	{
@@ -555,7 +481,6 @@
 		"en"			"{olive}{1}{default} left the game"
 		"hu"			"{olive}{1}{default} elhagyta a játékot"
 		"chi"			"{olive}{1}{default} 被打出游戏"
-		"ru"			"{olive}{1}{default} покидает игру"
 	}
 	"Death10"
 	{
@@ -563,45 +488,39 @@
 		"en"			"It seems{olive} {1}{default} could not beat the survivors after all!"
 		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket!"
 		"chi"			"看来 {olive}{1}{default} 根本无法团灭幸存者嘛!"
-		"ru"			"Похоже,{olive} {1}{default} не смог победить выживших!"
 	}
 	"ErrorParsing"
 	{
 		"#format"		"{1:s},{2:s}"
 		"en"			"Error while parsing the \"{1}\" file. Error Message: {2}."
-		"hu"			"Hiba a fájl elemzésekor \"{1}\". Hiba üzenet: {2}."
-		"chi"			"解析文件 \"{1}\". 时出错.错误信息: {2}."
-		"ru"			"Ошибка при разборе файла \"{1}\". Сообщение об ошибке: {2}."
+		"hu"			"Hiba a fájl elemzésekor \"{1}\" Hiba üzenet: {2}."
+		"chi"			"解析文件 \"{1}\" 时出错.错误信息: {2}."
 	}
 	"Evolved"
 	{
-		"#format"		"{1:t},{2:s},{3:i}"
+		"#format"		"{1:t},{2:t},{3:i}"
 		"en"			"{olive}{1}{mint} evolved into{olive} {2}{yellow} (Stage {3}){mint}!"
 		"hu"			"{olive}{1}{mint} tovább fejlődött{olive} {2}{yellow} (Stage {3}){mint}!"
 		"chi"			"{olive}{1}{mint} 演变为{olive} {2}{yellow} (阶段 {3}){mint}!"
-		"ru"			"{olive}{1}{mint} эволюционировал в{olive} {2}{yellow} (Стадия {3}){mint}!"
 	}
 	"FailedParsing"
 	{
 		"#format"		"{1:s}"
 		"en"			"Failed to parse the \"{1}\" file."
 		"hu"			"Nem sikerült elemezni a \"{1}\" fájlt."
-		"chi"			"无法解析文件 \"{1}\"."
-		"ru"			"Не удалось разобрать файл \"{1}\"."
+		"chi"			"无法解析文件 \"{1}\" ."
 	}
 	"FavoriteUnused"
 	{
 		"en"			"You chose not to use your favorite Mutant Tank type."
 		"hu"			"Úgy döntöttél nem használod a kedvenc Mutáns Tank típusodat."
 		"chi"			"你选择不使用自己喜爱的坦克类型."
-		"ru"			"Вы решили не использовать свой любимый тип танка-мутанта."
 	}
 	"GeneralDetails"
 	{
 		"en"			"Mutant Tanks makes fighting Tanks great again!"
 		"hu"			"A Mutáns Tankok újra izgalmassá teszik a küzdelmet!"
 		"chi"			"突变坦克让坦克对抗更加多姿多彩!"
-		"ru"			"Танки-мутанты снова делают бои против танков великолепными!"
 	}
 	"HumanCooldown"
 	{
@@ -609,14 +528,12 @@
 		"en"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Tank type."
 		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Tankra váltasz."
 		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变坦克类型."
-		"ru"			"Вы должны подождать ещё{olive} {1} сек.{mint} Прежде чем сменить на другой тип танка-мутанта."
 	}
 	"HumanTag"
 	{
 		"en"			"[HUMAN]"
 		"hu"			"[EMBER]"
 		"chi"			"[玩家控制]"
-		"ru"			"[ЧЕЛОВЕК]"
 	}
 	"Kill1"
 	{
@@ -624,7 +541,6 @@
 		"en"			"{olive}{1}{default} finished off{mint} {2}{default}!"
 		"hu"			"{olive}{1}{default} kivégezte{mint} {2}{default}!"
 		"chi"			"{olive}{1}{default} 完成了{mint} {2}{default}!"
-		"ru"			"{olive}{1}{default} прикончил{mint} {2}{default}!"
 	}
 	"Kill2"
 	{
@@ -632,7 +548,6 @@
 		"en"			"{olive}{1}{default} defeated{mint} {2}{default}!"
 		"hu"			"{olive}{1}{default} legyőzte{mint} {2}{default}!"
 		"chi"			"{olive}{1}{default} 被击败了{mint} {2}{default}!"
-		"ru"			"{olive}{1}{default} победил{mint} {2}{default}!"
 	}
 	"Kill3"
 	{
@@ -640,15 +555,13 @@
 		"en"			"{olive}{1}{default} sent{mint} {2}{default} to hell!"
 		"hu"			"{olive}{1}{default} elküldte{mint} {2}{default} a pokolba!"
 		"chi"			"{olive}{1}{default} 发送了{mint} {2}{default}到地狱!"
-		"ru"			"{olive}{1}{default} отправил{mint} {2}{default} обратно в ад!"
 	}
 	"Kill4"
 	{
 		"#format"		"{1:t},{2:N}"
 		"en"			"Did{olive} {1}{default} actually kill{mint} {2}{default}...?"
 		"hu"			"Biztos hogy{olive} {1}{default} tényleg megölte{mint} {2}{default}...?"
-		"chi"			"{olive}{1}{default} 实际上杀死了{mint} {2}{default}... 吗?"
-		"ru"			"Действительно ли{olive} {1}{default} убил{mint} {2}{default}...?"
+		"chi"			"{olive}{1}{default} 实际上杀死了{mint} {2}{default}...吗?"
 	}
 	"Kill5"
 	{
@@ -656,7 +569,6 @@
 		"en"			"{mint}{2}{default} lost the challenge against{olive} {1}{default}!"
 		"hu"			"{mint}{2}{default} elvesztette a kihívást{olive} {1}{default} ellen!"
 		"chi"			"{mint}{2}{default} 输掉了对{olive} {1}{default}的挑战!"
-		"ru"			"{mint}{2}{default} проиграл вызов{olive} {1}{default}!"
 	}
 	"Kill6"
 	{
@@ -664,7 +576,6 @@
 		"en"			"{mint}{2}{default} failed to kill{olive} {1}{default}!"
 		"hu"			"{mint}{2}{default}-nak nem sikerült megölnie{olive} {1}{default}!"
 		"chi"			"{mint}{2}{default} 无法杀死{olive} {1}{default}!"
-		"ru"			"{mint}{2}{default} не удалось убить{olive} {1}{default}!"
 	}
 	"Kill7"
 	{
@@ -672,7 +583,6 @@
 		"en"			"{mint}{2}{default} has met their demise at the hands of{olive} {1}{default}!"
 		"hu"			"{mint}{2}{default} elérte a pusztulás {olive} {1}{default} keze által!"
 		"chi"			"{mint}{2}{default} 已在{olive} {1}{default} 手中灭亡!"
-		"ru"			"{mint}{2}{default} встретил свою кончину от рук{olive} {1}{default}!"
 	}
 	"Kill8"
 	{
@@ -680,7 +590,6 @@
 		"en"			"Yay!{mint} {2}{default} is dead thanks to{olive} {1}{default}!"
 		"hu"			"Éljen!{mint} {2}{default} halott, hála{olive} {1}{default}!"
 		"chi"			"哎呀!{mint} {2}{default} 死了, 这要感谢{olive} {1}{default}!"
-		"ru"			"Ура!{mint} {2}{default} мёртв благодаря{olive} {1}{default}!"
 	}
 	"Kill9"
 	{
@@ -688,7 +597,6 @@
 		"en"			"{olive}{1}{default} made{mint} {2}{default} ragequit!"
 		"hu"			"{olive}{1}{default} rávette{mint} {2}{default} hogy mérgében kilépjen!"
 		"chi"			"{olive}{1}{default} 变成了{mint} {2}{default} 流行语!"
-		"ru"			"{2}{default} вышел из игры в ярости из-за {olive}{1}!"
 	}
 	"Kill10"
 	{
@@ -696,7 +604,6 @@
 		"en"			"It seems{mint} {2}{default} could not beat{olive} {1}{default} after all!"
 		"hu"			"Úgy látszik{mint} {2}{default} nem tudta legyőzni{olive} {1}{default} végül is!"
 		"chi"			"看来{mint} {2}{default} 毕竟无法击败{olive} {1}{default}!"
-		"ru"			"Кажется,{mint} {2}{default} все-таки не смог победить{olive} {1}{default}!"
 	}
 	"Killer1"
 	{
@@ -724,7 +631,7 @@
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
-		"chi"			"{mint}{1}{default} 实际上杀死了{olive} {2}{default}... 吗?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 实际上杀死了{olive} {2}{default}...吗?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 	"Killer5"
 	{
@@ -768,13 +675,12 @@
 		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 		"chi"			"看来{olive} {2}{default} 毕竟无法击败{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
-    "LogEnded"
+	"LogEnded"
 	{
 		"#format"		"{1:s},{2:s}"
 		"en"			"[{1}] --- LOG ENDED ON MAP: {2} ---"
 		"hu"			"[{1}] --- NAPLÓZÁS VÉGE EZEN A PÁLYÁN: {2} ---"
 		"chi"			"[{1}] --- 在地图上结束的日志: {2} ---"
-		"ru"			"[{1}] --- ЖУРНАЛ ЗАКОНЧЕН НА КАРТЕ: {2} ---"
 	}
 	"LogStarted"
 	{
@@ -782,85 +688,79 @@
 		"en"			"[{1}] --- LOG STARTED ON MAP: {2} ---"
 		"hu"			"[{1}] --- NAPLÓZÁS ELINDULT EZEN A PÁLYÁN: {2} ---"
 		"chi"			"[{1}] --- 在地图上开始记录日志: {2} ---"
-		"ru"			"[{1}] --- ЖУРНАЛ НАЧАЛСЯ НА КАРТЕ: {2} ---"
 	}
 	"MultipleMatches"
 	{
 		"en"			"Multiple{olive} Tank types{mint} matched that name. Selecting a random match..."
 		"hu"			"Többféle{olive} Tank típushoz{mint} illik a név. Választunk véletlenszerűen..."
 		"chi"			"多个{olive} 坦克类型{mint} 匹配该名称. 将随机选择一个匹配结果..."
-		"ru"			"Этому названию соответствуют несколько{olive} типов танка{mint}. Выбор случайного совпадения..."
 	}
 	"NoAbilities"
 	{
 		"en"			"No abilities were found."
 		"hu"			"Nem találtunk képességeket."
 		"chi"			"找不到此能力."
-		"ru"			"Способностей не обнаружено."
 	}
 	"NoCommandAccess"
 	{
 		"en"			"You do not have access to this command."
 		"hu"			"Nincs hozzáférésed ehhez a parancshoz."
 		"chi"			"你无权使用此指令."
-		"ru"			"У вас нет доступа к этой команде."
 	}
 	"NoItems"
 	{
 		"en"			"There are no items available."
 		"hu"			"Nincsenek elérhető tételek."
 		"chi"			"没有可用的物品."
-		"ru"			"Нет доступных элементов."
 	}
 	"NoName"
 	{
 		"en"			"Tank"
 		"hu"			"Tank"
 		"chi"			"坦克"
-		"ru"			"Танк"
 	}
 	"NoNote"
 	{
 		"en"			"No note found for this Mutant Tank."
 		"hu"			"Nincs jegyzet ehhez a Szuper Tankhoz."
 		"chi"			"找不到该突变坦克的注释文本."
-		"ru"			"Для этого танка-мутанта заметок не найдено."
 	}
 	"NoTypeAccess"
 	{
 		"en"			"You do not have access to this Mutant Tank type."
 		"hu"			"Nincs hozzáférésed ehhez a Mutáns Tank típushoz."
 		"chi"			"你无权使用此突变坦克类型."
-		"ru"			"У вас нет доступа к этому типу танков-мутантов."
 	}
 	"OptionNo"
 	{
 		"en"			"No"
 		"hu"			"Nem"
 		"chi"			"否"
-		"ru"			"Нет"
 	}
 	"OptionYes"
 	{
 		"en"			"Yes"
 		"hu"			"Igen"
 		"chi"			"是"
-		"ru"			"Да"
 	}
 	"PluginDisabled"
 	{
 		"en"			"Mutant Tanks{default} is disabled."
 		"hu"			"Mutáns Tankok{default} letiltva."
 		"chi"			"突变坦克{default} 已禁用."
-		"ru"			"Танки-мутанты{default} отключены."
 	}
 	"Randomized"
 	{
-		"#format"		"{1:t},{2:s}"
+		"#format"		"{1:t},{2:t}"
 		"en"			"{olive}{1}{mint} randomized into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} randomizálva{olive} {2}{mint}!"
 		"chi"			"{olive}{1}{mint} 随机为{olive} {2}{mint}!"
-		"ru"			"{olive}{1}{mint} случайным образом превратился в{olive} {2}{mint}!"
+	}
+	"ReloadedConfig"
+	{
+		"en"			"All config files have been reloaded."
+		"hu"			"Az összes konfig fájl újra lett töltve."
+		"chi"			"所有配置文件均已重新加载."
 	}
 	"ReloadingConfig"
 	{
@@ -868,29 +768,25 @@
 		"en"			"Reloading config file \"{1}\" file..."
 		"hu"			"Konfig fájl újratöltése \"{1}\" fájl..."
 		"chi"			"正在重新加载配置文件 \"{1}\"..."
-		"ru"			"Перезагрузка файла конфигурации \"{1}\"..."
 	}
 	"RequestFailed"
 	{
 		"en"			"No{olive} Tank types{mint} matched that name. Request failed..."
-		"hu"			"Nem találtunk{olive} ilyen nevű Tank típust.{mint}. Kérés sikertelen..."
+		"hu"			"Nem találtunk{olive} ilyen nevű Tank típust.{mint} Kérés sikertelen..."
 		"chi"			"没有{olive} 坦克类型{mint} 匹配该名称. 请求失败..."
-		"ru"			"Ни один{olive} тип танков{mint} не соответствовал этому названию. Запрос не выполнен..."
 	}
 	"RequestSucceeded"
 	{
 		"en"			"{mint}One Tank type matched that name. Request succeeded!"
 		"hu"			"{mint}Találtunk ilyen nevű Tank típust. Kérés sikeres!"
 		"chi"			"{mint}有一个坦克类型匹配该名称. 请求成功!"
-		"ru"			"{mint}Этому названию соответствовал один тип танка. Запрос выполнен!"
 	}
-    "RewardAmmo"
+	"RewardAmmo"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} ammunition{default} for killing{olive} {1}{default}!"
 		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert megölted{olive} {1}{default}!"
 		"chi"			"您{default} 收到{yellow} 弹药{default}, 以杀死{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} боеприпасы{default} за убийство{olive} {1}{default}!"
 	}
 	"RewardAmmo2"
 	{
@@ -898,7 +794,6 @@
 		"en"			"You{default} received{yellow} ammunition{default} for assisting the most against{olive} {1}{default}!"
 		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 弹药{default}, 以协助{olive} {1}{default} 的最大支援!"
-		"ru"			"Вы{default} получили{yellow} боеприпасы{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardAmmo3"
 	{
@@ -906,7 +801,6 @@
 		"en"			"You{default} received{yellow} ammunition{default} for assisting against{olive} {1}{default}!"
 		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 弹药{default}, 以协助{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} боеприпасы{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardDamageBoost"
 	{
@@ -914,7 +808,6 @@
 		"en"			"You{default} received{yellow} damage boost{default} for killing{olive} {1}{default}!"
 		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert megölted{olive} {1}{default}!"
 		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以杀死{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} усиление урона{default} за убийство{olive} {1}{default}!"
 	}
 	"RewardDamageBoost2"
 	{
@@ -922,7 +815,6 @@
 		"en"			"You{default} received{yellow} damage boost{default} for assisting the most against{olive} {1}{default}!"
 		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以协助{olive} {1}{default} 的最大支援!"
-		"ru"			"Вы{default} получили{yellow} усиление урона{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardDamageBoost3"
 	{
@@ -930,14 +822,12 @@
 		"en"			"You{default} received{yellow} damage boost{default} for assisting against{olive} {1}{default}!"
 		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以协助{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} усиление урона{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardDamageBoostEnd"
 	{
 		"en"			"Your{yellow} damage boost{default} ended!"
 		"hu"			"A{yellow} sebzés növelésed{default} véget ért!"
 		"chi"			"您的{yellow} 伤害加成{default} 结束了!"
-		"ru"			"Ваше{yellow} усиление урона{default} закончилось!"
 	}
 	"RewardGod"
 	{
@@ -945,7 +835,6 @@
 		"en"			"You{default} received{yellow} god mode{default} for killing{olive} {1}{default}!"
 		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert megölted{olive} {1}{default}!"
 		"chi"			"您{default} 收到{yellow} 神模式{default}, 以杀死{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} режим бога{default} за убийство{olive} {1}{default}!"
 	}
 	"RewardGod2"
 	{
@@ -953,7 +842,6 @@
 		"en"			"You{default} received{yellow} god mode{default} for assisting the most against{olive} {1}{default}!"
 		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 神模式{default}, 以协助{olive} {1}{default} 的最大支援!"
-		"ru"			"Вы{default} получили{yellow} режим бога{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardGod3"
 	{
@@ -961,193 +849,168 @@
 		"en"			"You{default} received{yellow} god mode{default} for assisting against{olive} {1}{default}!"
 		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert segítettél{olive} {1}{default}ellen!"
 		"chi"			"您{default} 收到{yellow} 神模式{default}, 以协助{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} режим бога{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardGodEnd"
 	{
 		"en"			"Your{yellow} god mode{default} ended!"
 		"hu"			"A{yellow} halhatatlanságod{default} véget ért!"
 		"chi"			"您的{yellow} 上帝模式{default} 已结束!"
-		"ru"			"Ваш{yellow} режим бога{default} закончился!"
 	}
 	"RewardHealth"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health{default} for killing{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál{yellow} életet{default} mert megölted{olive} {1}{default}!"
+		"hu"			""
 		"chi"			"您{default} 收到{yellow} 健康{default}, 以杀死{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} здоровье{default} за убийство{olive} {1}{default}!"
 	}
 	"RewardHealth2"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health{default} for assisting the most against{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál{yellow} életet{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
+		"hu"			""
 		"chi"			"您{default} 收到{yellow} 健康{default}, 以协助{olive} {1}{default} 的最大支援!"
-		"ru"			"Вы{default} получили{yellow} здоровье{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardHealth3"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health{default} for assisting against{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál{yellow} életet{default} mert segítettél{olive} {1}{default}ellen!"
+		"hu"			""
 		"chi"			"您{default} 收到{yellow} 健康{default}, 以协助{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} здоровье{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardItem"
 	{
 		"#format"		"{1:s},{2:t}"
 		"en"			"You{default} received a(n){yellow} {1}{default} for killing{olive} {2}{default}!"
-		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert megölted{olive} {2}{default}!"
+		"hu"			""
 		"chi"			"您{default} 收到{yellow} {1}{default}, 以杀死{olive} {1}{default}!"
-		"ru"			"Вы{default} получили {yellow} {1}{default} за убийство{olive} {2}{default}!"
 	}
 	"RewardItem2"
 	{
 		"#format"		"{1:s},{2:t}"
 		"en"			"You{default} received a(n){yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
-		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert nagyrészt segítettél{olive} {2}{default}ellen!"
+		"hu"			""
 		"chi"			"您{default} 收到了{yellow} {1}{default}, 以协助{olive} {2}{default} 的最大支援!"
-		"ru"			"Вы{default} получили {yellow} {1}{default} за наибольшую помощь в убийстве{olive} {2}{default}!"
 	}
 	"RewardItem3"
 	{
 		"#format"		"{1:s},{2:t}"
 		"en"			"You{default} received a(n){yellow} {1}{default} for assisting against{olive} {2}{default}!"
-		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert segítettél{olive} {2}{default}ellen!"
+		"hu"			""
 		"chi"			"您{default} 收到了{yellow} {1}{default}, 以协助{olive} {2}{default}!"
-		"ru"			"Вы{default} получили {yellow} {1}{default} за помощь в убийстве{olive} {2}{default}!"
 	}
 	"RewardNone"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} did not do enough damage to{olive} {1}{default} to receive any rewards."
-		"hu"			"Nem{default} okoztál elég sebzést{olive} {1}{default} nak, hogy jutalmat kapj."
+		"hu"			""
 		"chi"			"您{default} 对{olive} {1}{default} 的伤害不足，无法获得任何奖励."
-		"ru"			"Вы{default} не нанесли достаточного урона{olive} {1}{default} для какой-либо награды."
 	}
 	"RewardRefill"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health and ammunition{default} for killing{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert megölted{olive} {1}{default}!"
+		"hu"			""
 		"chi"			"您{default} 收到{yellow} 健康和弹药{default}, 以杀死{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} здоровье и боеприпасы{default} за убийство{olive} {1}{default}!"
 	}
 	"RewardRefill2"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health and ammunition{default} for assisting the most against{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
+		"hu"			""
 		"chi"			"您{default} 收到{yellow} 的健康和弹药{default}, 以协助{olive} {1}{default} 的最大支援!"
-		"ru"			"Вы{default} получили{yellow} здоровье и боеприпасы{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardRefill3"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} health and ammunition{default} for assisting against{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert segítettél{olive} {1}{default}ellen!"
+		"hu"			""
 		"chi"			"您{default} 收到{yellow} 的健康和弹药{default}, 以协助{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} здоровье и боеприпасы{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardRespawn"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received a(n){yellow} respawn{default} for killing{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert megölted{olive} {1}{default}!"
+		"hu"			""
 		"chi"			"您{default} 收到{yellow} 重生{default}, 以杀死{olive} {1}{default}!"
-		"ru"			"Вы{default} получили {yellow} возрождение{default} за убийство{olive} {1}{default}!"
 	}
 	"RewardRespawn2"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received a(n){yellow} respawn{default} for assisting the most against{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
+		"hu"			""
 		"chi"			"您{default} 收到了{yellow} 重生{default}, 以协助{olive} {2}{default} 的最大支援!"
-		"ru"			"Вы{default} получили {yellow} возрождение{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardRespawn3"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received a(n){yellow} respawn{default} for assisting against{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert segítettél{olive} {1}{default}ellen!"
+		"hu"			""
 		"chi"			"您{default} 收到了{yellow} 重生{default}, 以协助{olive} {2}{default}!"
-		"ru"			"Вы{default} получили {yellow} возрождение{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardSpeedBoost"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} speed boost{default} for killing{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert megölted{olive} {1}{default}!"
+		"hu"			""
 		"chi"			"您{default} 收到{yellow} 提速{default}, 以杀死{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} ускорение{default} за убийство{olive} {1}{default}!"
 	}
 	"RewardSpeedBoost2"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} speed boost{default} for assisting the most against{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
+		"hu"			""
 		"chi"			"您{default} 收到{yellow} 提速{default}, 以协助{olive} {1}{default} 的最大支援!"
-		"ru"			"Вы{default} получили{yellow} ускорение{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardSpeedBoost3"
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received{yellow} speed boost{default} for assisting against{olive} {1}{default}!"
-		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert segítettél{olive} {1}{default}ellen!"
+		"hu"			""
 		"chi"			"您{default} 收到{yellow} 提速{default}, 以协助{olive} {1}{default}!"
-		"ru"			"Вы{default} получили{yellow} ускорение{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 	"RewardSpeedBoostEnd"
 	{
 		"en"			"Your{yellow} speed boost{default} ended!"
-		"hu"			"A{yellow} sebesség növelésed{default} véget ért!"
+		"hu"			""
 		"chi"			"您的{yellow} 速度提升{default} 已结束!"
-		"ru"			"Ваше{yellow} ускорение{default} закончилось!"
 	}
 	"SpawnMessage"
 	{
 		"en"			"You spawned as a Mutant Tank! You can now use the following:"
 		"hu"			"Mutáns Tank lettél! Használhatod a következőket:"
 		"chi"			"你变成突变坦克了!你可以使用以下功能:"
-		"ru"			"Вы возродились в качестве танк-мутанта! Теперь вы можете использовать следующие:"
 	}
 	"StartParsing"
 	{
 		"en"			"Parsing the config file..."
 		"hu"			"Konfig fájl ellenőrzése..."
 		"chi"			"正在解析配置文件..."
-		"ru"			"Разбор файла конфигурации..."
 	}
 	"StillParsing"
 	{
 		"en"			"The plugin is still parsing the config file."
 		"hu"			"A plugin még elemzi a konfig fájlt."
 		"chi"			"插件还在解析配置文件."
-		"ru"			"Плагин всё ещё анализирует файл конфигурации."
 	}
 	"Transformed"
 	{
-		"#format"		"{1:t},{2:s}"
+		"#format"		"{1:t},{2:t}"
 		"en"			"{olive}{1}{mint} transformed into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} átalakult{olive} {2}{mint}!"
 		"chi"			"{olive}{1}{mint} 变成了{olive} {2}{mint}!"
-		"ru"			"{olive}{1}{mint} превратился в{olive} {2}{mint}!"
 	}
 	"Untransformed"
 	{
-		"#format"		"{1:s},{2:t}"
+		"#format"		"{1:t},{2:t}"
 		"en"			"{olive}{1}{mint} reverted back into{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} visszaváltozott{olive} {2}{mint}!"
 		"chi"			"{olive}{1}{mint} 恢复为{olive} {2}{mint}!"
-		"ru"			"{olive}{1}{mint} вернулся обратно в{olive} {2}{mint}!"
 	}
 	"SpawnManually"
 	{
 		"en"			"You will have to spawn manually."
 		"hu"			"Manuálisan kell megszületned."
 		"chi"			"你必须手动出生."
-		"ru"			"Вам придётся возрождаться вручную."
 	}
 	"TankDisabled"
 	{
@@ -1155,7 +1018,6 @@
 		"en"			"{1}{yellow} (Tank #{2}){default} is disabled."
 		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
 		"chi"			"{1}{yellow} (坦克 #{2}){default} 已禁用."
-		"ru"			"{1}{yellow} (Танк #{2}){default} отключен."
 	}
 	"Absorb"
 	{
@@ -1163,7 +1025,6 @@
 		"en"			"{olive}{1}{mint} is temporarily absorbing most of your damage!"
 		"hu"			"{olive}{1}{mint} ideiglenesen elnyeli a sebzésed nagy részét!"
 		"chi"			"{olive}{1}{mint} 正在吸收你造成的大部分伤害!"
-		"ru"			"{olive}{1}{mint} временно поглощает большую часть вашего урона!"
 	}
 	"Absorb2"
 	{
@@ -1171,21 +1032,18 @@
 		"en"			"{olive}{1}{mint} is no longer absorbing most of your damage!"
 		"hu"			"{olive}{1}{mint} már nem nyeli el a sebzésed nagy részét!"
 		"chi"			"{olive}{1}{mint} 不再吸收你造成的大部分伤害!"
-		"ru"			"{olive}{1}{mint} больше не поглощает большую часть вашего урона!"
 	}
 	"AbsorbAmmo"
 	{
 		"en"			"You've used up all your absorption ability's ammo."
 		"hu"			"Elhasználtad az elnyelő képességed összes lőszerét."
 		"chi"			"你已经用光了所有 吸收 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей поглощающей способности."
 	}
 	"AbsorbDetails"
 	{
 		"en"			"You absorb most of the damage you receive."
 		"hu"			"Elnyeled a sebzések nagy részét amit kapsz."
 		"chi"			"您可以吸收对你造成的大部分伤害."
-		"ru"			"Вы поглощаете большую часть получаемого урона."
 	}
 	"AbsorbHuman"
 	{
@@ -1193,21 +1051,18 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your absorption ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik elnyelő képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 吸收 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей поглощающей способности!"
 	}
 	"AbsorbHuman2"
 	{
 		"en"			"Your absorption ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az elnyelő képességedet. Próbáld újra."
-		"chi"			"你的 吸收 能力未能激活. 请重试."
-		"ru"			"Ваша способность поглощения не сработала. Попробуйте снова."
+		"chi"			"你的 吸收 能力未能激活.请重试."
 	}
 	"AbsorbHuman3"
 	{
 		"en"			"You already activated your absorption ability."
 		"hu"			"Már aktiváltad az elnyelő képességedet."
 		"chi"			"你已经激活了 吸收 能力."
-		"ru"			"Вы уже активировали свою способность поглощения."
 	}
 	"AbsorbHuman4"
 	{
@@ -1215,29 +1070,25 @@
 		"en"			"Your absorption ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az elnyelő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 吸收 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности поглощения нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"AbsorbHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your absorption ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az elnyelő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 吸收 能力已结束, 需要{yellow} {1} 秒{mint }进行充能."
-		"ru"			"Ваша способность поглощения закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
+		"chi"			"你的 吸收 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"AbsorbMenu"
 	{
 		"en"			"Absorb Ability Information"
 		"hu"			"Elnyelő képesség információ"
 		"chi"			"吸收 能力信息"
-		"ru"			"Информация о способности поглощения"
 	}
 	"AbsorbMenu2"
 	{
 		"en"			"Absorb Ability"
 		"hu"			"Elnyelő Képesség"
 		"chi"			"吸收 能力"
-		"ru"			"Поглощающая способность"
 	}
 	"Acid"
 	{
@@ -1245,7 +1096,6 @@
 		"en"			"{olive}{1}{mint} just created an acid puddle underneath{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} létrehozott egy savas pocsolyát{olive} {2}{mint}alatt!"
 		"chi"			"{olive}{1}{mint} 刚刚在{olive} {2}{mint} 脚下生成一个酸液地带!"
-		"ru"			"{olive}{1}{mint} только что образовал кислотную лужу внизу{olive} {2}{mint}!"
 	}
 	"Acid2"
 	{
@@ -1253,21 +1103,18 @@
 		"en"			"{olive}{1}'s{mint} rock created an acid puddle."
 		"hu"			"{olive}{1}{mint} sziklája létrehozott egy savas pocsolyát."
 		"chi"			"{olive}{1}{mint} 的岩石创造了一个酸液地带."
-		"ru"			"Камень {olive}{1}{mint} образовал лужу кислоты."
 	}
 	"AcidAmmo"
 	{
 		"en"			"You've used up all your acid range ability's ammo."
 		"hu"			"Elhasználtad a távolsági savas képességed összes lőszerét."
 		"chi"			"你已经用光了所有 酸液 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей кислотной способности."
 	}
 	"AcidDetails"
 	{
 		"en"			"You create acid puddles."
 		"hu"			"Savas pocsolyákat hozol létre."
 		"chi"			"您可以制造酸液地带."
-		"ru"			"Вы создаёте кислотные лужи."
 	}
 	"AcidHuman"
 	{
@@ -1275,14 +1122,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your acid range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági sav képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 酸液 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей кислотной способности!"
 	}
 	"AcidHuman2"
 	{
 		"en"			"Your acid range ability failed to activate. Try again."
 		"hu"			"A távolsági sav képességed aktiválása nem sikerült. Próbáld újra"
-		"chi"			"你的 酸液 能力未能激活. 请重试."
-		"ru"			"Ваша кислотная способность не сработала. Попробуйте снова."
+		"chi"			"你的 酸液 能力未能激活.请重试."
 	}
 	"AcidHuman3"
 	{
@@ -1290,14 +1135,12 @@
 		"en"			"Your acid range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági sav képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 酸液 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей кислотной способности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"AcidHuman4"
 	{
 		"en"			"There are no survivors nearby to use your acid range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági sav képességedet."
 		"chi"			"附近没有幸存者可以让你使用 酸液 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу кислотную способность."
 	}
 	"AcidHuman5"
 	{
@@ -1305,21 +1148,18 @@
 		"en"			"Your acid range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági sav képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 酸液 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша кислотная способность закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"AcidMenu"
 	{
 		"en"			"Acid Ability Information"
 		"hu"			"Sav képesség információ"
 		"chi"			"酸液 能力信息"
-		"ru"			"Информация о кислотной способности"
 	}
 	"AcidMenu2"
 	{
 		"en"			"Acid Ability"
 		"hu"			"Sav Képesség"
 		"chi"			"酸液 能力"
-		"ru"			"Кислотная способность"
 	}
 	"Aimless"
 	{
@@ -1327,7 +1167,6 @@
 		"en"			"{olive}{1}{mint} is preventing{olive} {2}{mint} from aiming!"
 		"hu"			"{olive}{1}{mint} akadályozza{olive} {2}{mint} a célzásban!"
 		"chi"			"{olive}{1}{mint} 正在阻止{olive} {2}{mint} 使用瞄准!"
-		"ru"			"{olive}{1}{mint} мешает{olive} {2}{mint} прицелиться!"
 	}
 	"Aimless2"
 	{
@@ -1335,21 +1174,18 @@
 		"en"			"{olive}{1}{mint} can aim again!"
 		"hu"			"{olive}{1}{mint} újra tud célozni!"
 		"chi"			"{olive}{1}{mint} 又可以进行瞄准了!"
-		"ru"			"{olive}{1}{mint} может снова прицелиться!"
 	}
 	"AimlessAmmo"
 	{
 		"en"			"You've used up all your aimless range ability's ammo."
 		"hu"			"Elhasználtad a céltalan képességed összes lőszerét."
 		"chi"			"你已经用光了所有 禁瞄 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности бесприцельности."
 	}
 	"AimlessDetails"
 	{
 		"en"			"You prevent survivors from aiming."
 		"hu"			"Megakadályozod a túlélőket a célzásban."
 		"chi"			"你可以阻止玩家瞄准"
-		"ru"			"Вы мешаете выжившим прицелиться."
 	}
 	"AimlessHuman"
 	{
@@ -1357,14 +1193,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your aimless range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági céltalan képességed!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 禁瞄 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности бесприцельности!"
 	}
 	"AimlessHuman2"
 	{
 		"en"			"Your aimless range ability failed to activate. Try again."
 		"hu"			"A távolsági céltalan képességed aktiválása nem sikerült. Próbáld újra."
 		"chi"			"你的 禁瞄 能力未能激活.请重试."
-		"ru"			"Ваша способность бесприцельности не сработала. Попробуйте снова."
 	}
 	"AimlessHuman3"
 	{
@@ -1372,14 +1206,12 @@
 		"en"			"Your aimless range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági céltalan képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 禁瞄 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности бесприцельности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"AimlessHuman4"
 	{
 		"en"			"There are no survivors nearby to use your aimless range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a céltalan távolsági képességedet."
 		"chi"			"附近没有幸存者可以让你使用 禁瞄 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность бесприцельности."
 	}
 	"AimlessHuman5"
 	{
@@ -1387,21 +1219,18 @@
 		"en"			"Your aimless range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági céltalan képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 禁瞄 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность бесприцельности закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"AimlessMenu"
 	{
 		"en"			"Aimless Ability Information"
 		"hu"			"Céltalan képesség információ"
 		"chi"			"禁瞄 能力信息"
-		"ru"			"Информация о способности бесприцельности"
 	}
 	"AimlessMenu2"
 	{
 		"en"			"Aimless Ability"
 		"hu"			"Céltalan Képesség"
 		"chi"			"禁瞄 能力"
-		"ru"			"Способность бесприцельности"
 	}
 	"Ammo"
 	{
@@ -1409,21 +1238,18 @@
 		"en"			"{olive}{1}{mint} took all of{olive} {2}'s{mint} ammunition!"
 		"hu"			"{olive}{1}{mint} elvette{olive} {2}{mint}-tól az összes lőszert!"
 		"chi"			"{olive}{1}{mint} 夺走了{olive} {2}{mint} 全部弹药!"
-		"ru"			"{olive}{1}{mint} забрал все {mint}боеприпасы выжившего{olive} {2}!"
 	}
 	"AmmoAmmo"
 	{
 		"en"			"You've used up all your ammo range ability's ammo."
 		"hu"			"Elhasználtad az összes távolsági lőszer képességed lőszerét."
 		"chi"			"你已经用光了所有 掠弹 能力次数."
-		"ru"			"Вы израсходовали боеприпасы вашей способности боеприпасов."
 	}
 	"AmmoDetails"
 	{
 		"en"			"You take away survivors' ammunition."
 		"hu"			"Elveszed a túlélők lőszerét."
 		"chi"			"您可以夺走幸存者弹药."
-		"ru"			"Вы забираете боеприпасы у выживших."
 	}
 	"AmmoHuman"
 	{
@@ -1431,14 +1257,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ammo range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lőszer képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 掠弹 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от способности боеприпасов!"
 	}
 	"AmmoHuman2"
 	{
 		"en"			"Your ammo range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lőszer képességedet. Próbáld újra."
-		"chi"			"你的 掠弹 能力未能激活. 请重试."
-		"ru"			"Не удалось активировать вашу способность боеприпасов. Попробуйте снова."
+		"chi"			"你的 掠弹 能力未能激活,请重试."
 	}
 	"AmmoHuman3"
 	{
@@ -1446,14 +1270,12 @@
 		"en"			"Your ammo range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lőszer képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 掠弹 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности боеприпасов нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"AmmoHuman4"
 	{
 		"en"			"There are no survivors nearby to use your ammo range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági lőszer képességedet."
 		"chi"			"附近没有幸存者可以让你使用 掠弹 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность боеприпасов."
 	}
 	"AmmoHuman5"
 	{
@@ -1461,21 +1283,18 @@
 		"en"			"Your ammo range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lőszer képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 掠弹 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность боеприпасов закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"AmmoMenu"
 	{
 		"en"			"Ammo Ability Information"
 		"hu"			"Lőszer Képesség Információ"
 		"chi"			"掠弹 能力信息"
-		"ru"			"Информация о способности боеприпасов"
 	}
 	"AmmoMenu2"
 	{
 		"en"			"Ammo Ability"
 		"hu"			"Lőszer Képesség"
 		"chi"			"掠弹 能力"
-		"ru"			"Способность боеприпасов"
 	}
 	"Blind"
 	{
@@ -1483,7 +1302,6 @@
 		"en"			"{olive}{1}{mint} blinded{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} megvakította{olive} {2}{mint}!"
 		"chi"			"{olive}{1}{mint} 致盲了{olive} {2}{mint}!"
-		"ru"			"{olive}{1}{mint} ослепил{olive} {2}{mint}!"
 	}
 	"Blind2"
 	{
@@ -1491,21 +1309,18 @@
 		"en"			"{olive}{1}{mint} is no longer blind!"
 		"hu"			"{olive}{1}{mint} többé már nem vak!"
 		"chi"			"{olive}{1}{mint} 可以看见东西了!"
-		"ru"			"{olive}{1}{mint} больше не слеплён!"
 	}
 	"BlindAmmo"
 	{
 		"en"			"You've used up all your blind range ability's ammo."
 		"hu"			"Elhasználtad az összes távolsági vakító képességed lőszerét."
 		"chi"			"你已经用光了所有 致盲 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности ослепления."
 	}
 	"BlindDetails"
 	{
 		"en"			"You blind survivors."
 		"hu"			"Megvakítod a túlélőket."
 		"chi"			"您可以致盲幸存者."
-		"ru"			"Вы ослепляете выживших."
 	}
 	"BlindHuman"
 	{
@@ -1513,14 +1328,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your blind range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági vakító képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 致盲 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности ослепления!"
 	}
 	"BlindHuman2"
 	{
 		"en"			"Your blind range ability failed to activate. Try again."
 		"hu"			"A távolsági vakító képességed aktiválása nem sikerült. Próbáld újra."
-		"chi"			"你的 致盲 能力未能激活. 请重试."
-		"ru"			"Ваша способность ослепления не сработала. Попробуйте снова."
+		"chi"			"你的 致盲 能力未能激活,请重试."
 	}
 	"BlindHuman3"
 	{
@@ -1528,14 +1341,12 @@
 		"en"			"Your blind range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági vakító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 致盲 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности ослепления нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"BlindHuman4"
 	{
 		"en"			"There are no survivors nearby to use your blind range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági vakító képességedet."
 		"chi"			"附近没有幸存者可以让你使用 致盲 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность ослепления."
 	}
 	"BlindHuman5"
 	{
@@ -1543,21 +1354,18 @@
 		"en"			"Your blind range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági vakító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 致盲 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность боеприпасов закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"BlindMenu"
 	{
 		"en"			"Blind Ability Information"
 		"hu"			"Távolsági Vakító Információ"
 		"chi"			"致盲 能力信息"
-		"ru"			"Информация о способности ослепления"
 	}
 	"BlindMenu2"
 	{
 		"en"			"Blind Ability"
 		"hu"			"Vakító Képesség"
 		"chi"			"致盲 能力"
-		"ru"			"Способность ослепления"
 	}
 	"Bomb"
 	{
@@ -1565,29 +1373,25 @@
 		"en"			"{olive}{1}{mint} just created an explosion at{olive} {2}'s{mint} location!"
 		"hu"			"{olive}{1}{mint} létrehozott egy robbanást{olive} {2}{mint} helyzeténél!"
 		"chi"			"{olive}{1}{mint} 刚刚在{olive} {2}{mint} 的位置爆炸了!"
-		"ru"			"{olive}{1}{mint} только что произвёл взрыв в расположении{olive} {2}{mint}!"
 	}
 	"Bomb2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} rock created an explosion."
 		"hu"			"{olive}{1}{mint} sziklája robbanást okozott."
 		"chi"			"{olive}{1}{mint} 的岩石爆炸了.."
-		"ru"			"Камень {olive}{1}{mint} произвёл взрыв."
 	}
 	"BombAmmo"
 	{
 		"en"			"You've used up all your bomb range ability's ammo."
 		"hu"			"Elhasználtad a távolsági robbantás képességed összes lőszerét."
 		"chi"			"你已经用光了所有 爆炸 能力次数."
-		"ru"			"Вы израсходовали боеприпасы на все свои бомбы."
 	}
 	"BombDetails"
 	{
 		"en"			"You create explosions."
 		"hu"			"Robbantásokat hozol létre."
 		"chi"			"您可以制造爆炸."
-		"ru"			"Вы создаёте взрывы."
 	}
 	"BombHuman"
 	{
@@ -1595,14 +1399,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bomb range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági robbantás képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 爆炸 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности бомбы!"
 	}
 	"BombHuman2"
 	{
 		"en"			"Your bomb range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bomba képességedet. Próbáld újra."
-		"chi"			"你的 爆炸 能力未能激活. 请重试."
-		"ru"			"Не удалось активировать вашу способность бомбы. Попробуйте снова."
+		"chi"			"你的 爆炸 能力未能激活,请重试."
 	}
 	"BombHuman3"
 	{
@@ -1610,14 +1412,12 @@
 		"en"			"Your bomb range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági bomba képességedet még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 爆炸 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности бомбы нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"BombHuman4"
 	{
 		"en"			"There are no survivors nearby to use your bomb range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági bomba képességedet."
 		"chi"			"附近没有幸存者可以让你使用 爆炸 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность бомбы."
 	}
 	"BombHuman5"
 	{
@@ -1625,21 +1425,18 @@
 		"en"			"Your bomb range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bomba képességed véget ért az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 爆炸 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность бомбы закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"BombMenu"
 	{
 		"en"			"Bomb Ability Information"
 		"hu"			"Bomba Képesség Információ"
 		"chi"			"爆炸 能力信息"
-		"ru"			"Информация о способности бомбы"
 	}
 	"BombMenu2"
 	{
 		"en"			"Bomb Ability"
 		"hu"			"Bomba Képesség"
 		"chi"			"爆炸 能力"
-		"ru"			"Способность бомбы"
 	}
 	"Bury"
 	{
@@ -1647,7 +1444,6 @@
 		"en"			"{olive}{1}{mint} buried{olive} {2}{yellow} {3}{mint} feet into the ground!"
 		"hu"			"{olive}{1}{mint} eltemette{olive} {2}{yellow} {3}{mint} lábát a föld alá!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 埋入地下{yellow} {3} {mint}尺!"
-		"ru"			"{olive}{1}{mint} закопал ноги{olive} {2}{yellow} {3}{mint} в землю!"
 	}
 	"Bury2"
 	{
@@ -1655,21 +1451,18 @@
 		"en"			"{olive}{1}{mint} is no longer buried into the ground!"
 		"hu"			"{olive}{1}{mint} nincs többé eltemetve!"
 		"chi"			"{olive}{1}{mint} 爬出地面了!"
-        "ru"			"{olive}{1}{mint} больше не закопан в землю!"
 	}
 	"BuryAmmo"
 	{
 		"en"			"You've used up all your bury range ability's ammo."
 		"hu"			"Elhasználtad a távolsági eltemetés képességed összes lőszerét."
 		"chi"			"你已经用光了所有 埋葬 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности закапывания."
 	}
 	"BuryDetails"
 	{
 		"en"			"You bury survivors."
 		"hu"			"Eltemeted a túlélőket."
 		"chi"			"您可以埋葬幸存者"
-		"ru"			"Вы закапываете выживших."
 	}
 	"BuryHuman"
 	{
@@ -1677,14 +1470,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bury range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági eltemetés képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 埋葬 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности закапывания!"
 	}
 	"BuryHuman2"
 	{
 		"en"			"Your bury range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági eltemetés képességedet. Próbáld újra."
-		"chi"			"你的 埋葬 能力未能激活. 请重试."
-		"ru"			"Ваша способность закапывания не сработала. Попробуйте снова."
+		"chi"			"你的 埋葬 能力未能激活,请重试."
 	}
 	"BuryHuman3"
 	{
@@ -1692,14 +1483,12 @@
 		"en"			"Your bury range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági eltemetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 埋葬 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности закапывания нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"BuryHuman4"
 	{
 		"en"			"There are no survivors nearby to use your bury range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági eltemetés képességedet."
 		"chi"			"附近没有幸存者可以让你使用 埋葬 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность закапывания."
 	}
 	"BuryHuman5"
 	{
@@ -1707,21 +1496,18 @@
 		"en"			"Your bury range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági eltemető képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 埋葬 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность закапывания закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"BuryMenu"
 	{
 		"en"			"Bury Ability Information"
 		"hu"			"Eltemetés Képesség Információ"
 		"chi"			"埋葬 能力信息"
-		"ru"			"Информация о способности закапывания"
 	}
 	"BuryMenu2"
 	{
 		"en"			"Bury Ability"
 		"hu"			"Eltemetés Képesség"
 		"chi"			"埋葬 能力"
-		"ru"			"Способность закапывания"
 	}
 	"Car"
 	{
@@ -1729,29 +1515,25 @@
 		"en"			"{olive}{1}{mint} started a{yellow} car shower{mint}!"
 		"hu"			"{olive}{1}{mint} autó záport{yellow} indított{mint}!"
 		"chi"			"{olive}{1}{mint} 开始召唤{yellow} 汽车雨 {mint}!"
-		"ru"			"{olive}{1}{mint} начал{yellow} автомобильный душ{mint}!"
 	}
 	"Car2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} car shower ended!"
 		"hu"			"{olive}{1}{mint} autó zápora véget ért!"
 		"chi"			"{olive}{1}{mint} 的 汽车雨 结束了!"
-		"ru"			"Автомобильный душ {olive}{1}{mint} закончился!"
 	}
 	"CarAmmo"
 	{
 		"en"			"You've used up all your car showers."
 		"hu"			"Elhasználtad az összes autó záporod."
 		"chi"			"你已经用光了所有 汽车雨 次数."
-		"ru"			"Вы израсходовали все свои автомобильные души."
 	}
 	"CarDetails"
 	{
 		"en"			"You create car showers."
 		"hu"			"Autó záporokat hozol létre."
 		"chi"			"您可以召唤汽车雨"
-		"ru"			"Вы создаёте падающие с неба автомобили."
 	}
 	"CarHuman"
 	{
@@ -1759,21 +1541,18 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your car showers!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik autó zápor képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 汽车雨!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности автомобильного душа!"
 	}
 	"CarHuman2"
 	{
 		"en"			"Your car shower failed to activate. Try again."
 		"hu"			"Nem sikerült autó záport létrehoznod. Próbáld újra."
-		"chi"			"你的 汽车雨 未能激活. 请重试."
-		"ru"			"Не удалось активировать автомобильный душ. Попробуйте снова."
+		"chi"			"你的 汽车雨 未能激活,请重试."
 	}
 	"CarHuman3"
 	{
 		"en"			"You already activated your car shower."
 		"hu"			"Már létrehoztál egy autó záport."
 		"chi"			"你已经激活了 汽车雨."
-		"ru"			"Вы уже активировали автомобильный душ."
 	}
 	"CarHuman4"
 	{
@@ -1781,7 +1560,6 @@
 		"en"			"Your car shower still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az autó záporodnak még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 汽车雨 还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности автомобильного душа нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"CarHuman5"
 	{
@@ -1789,21 +1567,18 @@
 		"en"			"Your car shower ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az autó záporod véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 汽车雨 已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность автомобильного душа закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"CarMenu"
 	{
 		"en"			"Car Ability Information"
 		"hu"			"Autó Képesség Információ"
 		"chi"			"汽车雨 能力信息"
-		"ru"			"Информация о способности автомобиля"
 	}
 	"CarMenu2"
 	{
 		"en"			"Car Ability"
 		"hu"			"Autó Képesség"
 		"chi"			"汽车雨 能力"
-		"ru"			"Способность автомобиля"
 	}
 	"Choke"
 	{
@@ -1811,7 +1586,6 @@
 		"en"			"{olive}{1}{mint} is choking{olive} {2}{mint} in the air!"
 		"hu"			"{olive}{1}{mint} fojtogatja{olive} {2}{mint} -t a levegőben!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 弄到窒息!"
-		"ru"			"{olive}{1}{mint} душит{olive} {2}{mint} в воздухе!"
 	}
 	"Choke2"
 	{
@@ -1819,21 +1593,18 @@
 		"en"			"{olive}{1}{mint} is no longer being choked in the air!"
 		"hu"			"{olive}{1}{mint} többé már nem fuldoklik a levegőben!"
 		"chi"			"{olive}{1}{mint} 可以呼吸了!"
-		"ru"			"{olive}{1}{mint} больше не душат в воздухе!"
 	}
 	"ChokeAmmo"
 	{
 		"en"			"You've used up all your choke range ability's ammo."
 		"hu"			"Elhasználtad a távolsági fojtogatás képességed összes lőszerét."
 		"chi"			"你已经用光了所有 窒息 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности удушения."
 	}
 	"ChokeDetails"
 	{
 		"en"			"You choke survivors in midair."
 		"hu"			"A levegőben fojtogatod a túlélőket."
 		"chi"			"您可以在半空窒息幸存者."
-		"ru"			"Вы душите выживших в воздухе."
 	}
 	"ChokeHuman"
 	{
@@ -1841,14 +1612,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your choke range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági fojtogatás képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 窒息 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности удушения!"
 	}
 	"ChokeHuman2"
 	{
 		"en"			"Your choke range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági fojtogatás képességedet. Próbáld újra."
-		"chi"			"你的 窒息 能力未能激活. 请重试."
-		"ru"			"Не удалось активировать вашу способность удушения. Попробуйте снова."
+		"chi"			"你的 窒息 能力未能激活,请重试."
 	}
 	"ChokeHuman3"
 	{
@@ -1856,14 +1625,12 @@
 		"en"			"Your choke range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági fojtogatás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 窒息 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности удушения нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"ChokeHuman4"
 	{
 		"en"			"There are no survivors nearby to use your choke range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági fojtogatás képességedet."
 		"chi"			"附近没有幸存者可以让你使用 窒息 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность удушения."
 	}
 	"ChokeHuman5"
 	{
@@ -1871,21 +1638,18 @@
 		"en"			"Your choke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági fojtogató képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 窒息 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность удушения закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"ChokeMenu"
 	{
 		"en"			"Choke Ability Information"
 		"hu"			"Fojtogató Képesség Információ"
 		"chi"			"窒息 能力信息"
-		"ru"			"Информация о способности удушения"
 	}
 	"ChokeMenu2"
 	{
 		"en"			"Choke Ability"
 		"hu"			"Fojtógató Képesség"
 		"chi"			"窒息 能力"
-		"ru"			"Способность удушения"
 	}
 	"Clone"
 	{
@@ -1893,21 +1657,18 @@
 		"en"			"{olive}{1}{mint} created a clone of itself!"
 		"hu"			"{olive}{1}{mint} klónozta magát!"
 		"chi"			"{olive}{1}{mint} 创造了自己的 克隆体!"
-		"ru"			"{olive}{1}{mint} создал клон самого себя!"
 	}
 	"CloneAmmo"
 	{
 		"en"			"You've used up all your clones."
 		"hu"			"Elhasználtad az összes klónodat."
 		"chi"			"你已经用光了所有 克隆 次数."
-		"ru"			"Вы израсходовали всех свох клонов."
 	}
 	"CloneDetails"
 	{
 		"en"			"You create clones of yourself."
 		"hu"			"Klónozni tudod önmagad."
 		"chi"			"您可以制造克隆体."
-		"ru"			"Вы создаёте клонов самого себя."
 	}
 	"CloneHuman"
 	{
@@ -1915,21 +1676,18 @@
 		"en"			"You created{olive} {1}{mint}/{olive}{2}{mint} clones!"
 		"hu"			"Létrehoztál{olive} {1}{mint}/{olive}{2}{mint} klónt!"
 		"chi"			"你创造了{olive} {1}{mint}/{olive}{2}{mint} 克隆体!"
-		"ru"			"Вы создали{olive} {1}{mint}/{olive}{2}{mint} клонов!"
 	}
 	"CloneHuman2"
 	{
 		"en"			"You failed to create a clone. Try again."
 		"hu"			"Nem sikerült klónt létrehozni. Próbáld újra."
-		"chi"			"你制造 克隆体 失败. 请重试."
-		"ru"			"Вам не удалось создать клона. Попробуйте снова."
+		"chi"			"你制造 克隆体 失败,请重试."
 	}
 	"CloneHuman3"
 	{
 		"en"			"You cannot create clones as a clone."
 		"hu"			"Nem tudod klónozni magad klónként."
 		"chi"			"你无法为克隆体制造克隆体."
-		"ru"			"Вы не можете создать клона будучи клоном."
 	}
 	"CloneHuman4"
 	{
@@ -1937,14 +1695,12 @@
 		"en"			"Your clone ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A klónozó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 克隆 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности клона нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"CloneHuman5"
 	{
 		"en"			"One of your clones just died."
 		"hu"			"Az egyik klónod meghalt."
 		"chi"			"你的一个 克隆体 死了."
-		"ru"			"Один из ваших клонов только что умер."
 	}
 	"CloneHuman6"
 	{
@@ -1952,21 +1708,18 @@
 		"en"			"All your clones died and your clone ability needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az összes klónod meghalt, a klón képességed újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 克隆体 已全部死亡, 克隆 能力需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность клона закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"CloneMenu"
 	{
 		"en"			"Clone Ability Information"
 		"hu"			"Klón Képesség Információ"
 		"chi"			"克隆 能力信息"
-		"ru"			"Информация о способности клонирования"
 	}
 	"CloneMenu2"
 	{
 		"en"			"Clone Ability"
 		"hu"			"Klonozó Képesség"
 		"chi"			"克隆 能力"
-		"ru"			"Способность клонирования"
 	}
 	"Cloud"
 	{
@@ -1974,29 +1727,25 @@
 		"en"			"{olive}{1}{mint} is emitting clouds of smoke!"
 		"hu"			"{olive}{1}{mint} füstfelhőt bocsát ki!"
 		"chi"			"{olive}{1}{mint} 正在释放烟雾!"
-		"ru"			"{olive}{1}{mint} испускает клубы дыма!"
 	}
 	"Cloud2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} stopped emitting clouds of smoke!"
 		"hu"			"{olive}{1}{mint} már nem bocsát ki füstfelhőt!"
 		"chi"			"{olive}{1}{mint} 停止了释放烟雾!"
-		"ru"			"{olive}{1}{mint} перестал выпускать клубы дыма!"
 	}
 	"CloudAmmo"
 	{
 		"en"			"You've used up all your cloud ability's ammo."
 		"hu"			"Elhasználtad a felhő képességed összes lőszerét."
 		"chi"			"你已经用光了所有 毒云 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы своей дымовой способности."
 	}
 	"CloudDetails"
 	{
 		"en"			"You constantly emit clouds of smoke that damage survivors caught in them."
 		"hu"			"Folyamatosan füstfelhőt bocsátasz ki, ami sebzi a túlélőket."
 		"chi"			"您可以制造不断伤害幸存者的毒云."
-		"ru"			"Вы постоянно испускаете клубы дыма, которые наносят урон попавшим в них выжившим."
 	}
 	"CloudHuman"
 	{
@@ -2004,21 +1753,18 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your cloud ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik felhő képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 毒云 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей дымовой способности!"
 	}
 	"CloudHuman2"
 	{
 		"en"			"Your cloud ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a felhő képességedet. Próbáld újra."
-		"chi"			"你的 毒云 能力未能激活. 请重试."
-		"ru"			"Не удалось активировать вашу дымовую способность. Попробуйте снова."
+		"chi"			"你的 毒云 能力未能激活,请重试."
 	}
 	"CloudHuman3"
 	{
 		"en"			"You already activated your cloud ability."
 		"hu"			"Már aktiváltad a felhő képességedet."
 		"chi"			"你已经激活了你的 毒云 能力."
-		"ru"			"Вы уже активировали свою дымовую способность."
 	}
 	"CloudHuman4"
 	{
@@ -2026,7 +1772,6 @@
 		"en"			"Your cloud ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A felhő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 毒云 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей дымовой способности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"CloudHuman5"
 	{
@@ -2034,21 +1779,18 @@
 		"en"			"Your cloud ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A felhő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 毒云 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша дымовая способность закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"CloudMenu"
 	{
 		"en"			"Cloud Ability Information"
 		"hu"			"Felhő Képesség Információ"
 		"chi"			"毒云 能力信息"
-		"ru"			"Информация о дымовой способности"
 	}
 	"CloudMenu2"
 	{
 		"en"			"Cloud Ability"
 		"hu"			"Felhő Képesség"
 		"chi"			"毒云 能力"
-		"ru"			"Дымовая способность"
 	}
 	"Drop"
 	{
@@ -2056,7 +1798,6 @@
 		"en"			"{olive}{1}{mint} dropped a gun!"
 		"hu"			"{olive}{1}{mint} dobott egy fegyvert!"
 		"chi"			"{olive}{1}{mint} 掉落了枪械!"
-		"ru"			"{olive}{1}{mint} уронил своё огнестрельное оружие!"
 	}
 	"Drop2"
 	{
@@ -2064,42 +1805,36 @@
 		"en"			"{olive}{1}{mint} dropped a melee weapon!"
 		"hu"			"{olive}{1}{mint} dobott egy közelharci fegyvert!"
 		"chi"			"{olive}{1}{mint} 掉落了近战武器!"
-		"ru"			"{olive}{1}{mint} уронил своё холодное оружие!"
 	}
 	"DropDetails"
 	{
 		"en"			"You drop a weapon upon death."
 		"hu"			"Fegyvert dobsz a halálod után."
 		"chi"			"您死亡时掉落武器."
-		"ru"			"Вы роняете оружие после смерти."
 	}
 	"DropHuman"
 	{
 		"en"			"You will drop a weapon when you die!"
 		"hu"			"Fegyvert dobsz miután meghalsz!"
 		"chi"			"你死亡后会掉落武器."
-		"ru"			"Вы уроните своё оружие, когда умрёте!"
 	}
 	"DropHuman2"
 	{
 		"en"			"You will already drop a weapon upon death."
 		"hu"			"Azonnal fegyvert dobsz a halálod után."
 		"chi"			"你将在死亡后掉落武器."
-		"ru"			"Вы уже уронили своё оружие после смерти."
 	}
 	"DropMenu"
 	{
 		"en"			"Drop Ability Information"
 		"hu"			"Dobás Képesség Információ"
 		"chi"			"掉落 能力信息"
-		"ru"			"Информация о способности выпадения оружия"
 	}
 	"DropMenu2"
 	{
 		"en"			"Drop Ability"
 		"hu"			"Dobás Képesség"
 		"chi"			"掉落 能力"
-		"ru"			"Способность выпадения оружия"
 	}
 	"Drug"
 	{
@@ -2107,7 +1842,6 @@
 		"en"			"{olive}{1}{mint} drugged{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} bedrogozta{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 对{olive} {2}{mint} 投毒了!"
-		"ru"			"{olive}{1}{mint} наложил наркотический эффект на{olive} {2}{mint}!"
 	}
 	"Drug2"
 	{
@@ -2115,21 +1849,18 @@
 		"en"			"{olive}{1}{mint} is no longer drugged!"
 		"hu"			"{olive}{1}{mint} többé már nincs bedrogozva!"
 		"chi"			"{olive}{1}{mint} 的毒药失效!"
-		"ru"			"{olive}{1}{mint} больше не под наркотическим эффектом!"
 	}
 	"DrugAmmo"
 	{
 		"en"			"You've used up all your drug range ability's ammo."
 		"hu"			"Elhasználtad a távolsági bedrogozás képességed összes lőszerét."
 		"chi"			"你已经用光了所有 中毒 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности наркотического эффекта."
 	}
 	"DrugDetails"
 	{
 		"en"			"You drug survivors."
 		"hu"			"Bedrogozod a túlélőket."
 		"chi"			"您可以让幸存者中毒."
-		"ru"			"Вы накладываете наркотический эффект на выживших."
 	}
 	"DrugHuman"
 	{
@@ -2137,14 +1868,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drug range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági bedrogozás képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 中毒 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности наркотического эффекта!"
 	}
 	"DrugHuman2"
 	{
 		"en"			"Your drug range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bedrogozás képességedet. Próbáld újra."
-		"chi"			"你的 中毒 能力未能激活. 请重试."
-		"ru"			"Не удалось активировать вашу способность наркотического эффекта. Попробуйте снова."
+		"chi"			"你的 中毒 能力未能激活,请重试."
 	}
 	"DrugHuman3"
 	{
@@ -2152,14 +1881,12 @@
 		"en"			"Your drug range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági bedrogozás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 中毒 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности наркотического эффекта нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"DrugHuman4"
 	{
 		"en"			"There are no survivors nearby to use your drug range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági bedrogozás képességedet."
 		"chi"			"附近没有幸存者可以让你使用 中毒 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность наркотического эффекта."
 	}
 	"DrugHuman5"
 	{
@@ -2167,21 +1894,18 @@
 		"en"			"Your drug range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bedrogozás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 中毒 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность наркотического эффекта закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"DrugMenu"
 	{
 		"en"			"Drug Ability Information"
 		"hu"			"Bedrogozás Képesség Információ"
 		"chi"			"中毒 能力信息"
-		"ru"			"Информация о способности наркотического эффекта"
 	}
 	"DrugMenu2"
 	{
 		"en"			"Drug Ability"
 		"hu"			"Bedrogozás Képesség"
 		"chi"			"中毒 能力"
-		"ru"			"Способность наркотического эффекта"
 	}
 	"Drunk"
 	{
@@ -2189,7 +1913,6 @@
 		"en"			"{olive}{1}{mint} made{olive} {2}{mint} drunk!"
 		"hu"			"{olive}{1}{mint} részeggé tette{olive} {2}{mint} -t!"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 喝醉了!"
-		"ru"			"{olive}{1}{mint} опьянил{olive} {2}{mint}!"
 	}
 	"Drunk2"
 	{
@@ -2197,21 +1920,18 @@
 		"en"			"{olive}{1}{mint} is no longer drunk!"
 		"hu"			"{olive}{1}{mint} többé már nem részeg!"
 		"chi"			"{olive}{1}{mint} 醒酒了!"
-		"ru"			"{olive}{1}{mint} больше не опьянён!"
 	}
 	"DrunkAmmo"
 	{
 		"en"			"You've used up all your drunk range ability's ammo."
 		"hu"			"Elhasználtad a távolsági részegítő képességed összes lőszerét."
 		"chi"			"你已经用光了所有 醉酒 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности опьянения."
 	}
 	"DrunkDetails"
 	{
 		"en"			"You make survivors drunk."
 		"hu"			"Részeggé teszed a túlélőket."
 		"chi"			"您可以让幸存者喝醉."
-		"ru"			"Вы опьяняете выживших."
 	}
 	"DrunkHuman"
 	{
@@ -2219,14 +1939,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drunk range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági részegítő képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 醉酒 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности опьянения!"
 	}
 	"DrunkHuman2"
 	{
 		"en"			"Your drunk range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági részegítő képességedet. Próbáld újra."
-		"chi"			"你的 醉酒 能力未能激活. 请重试."
-		"ru"			"Не удалось активировать вашу способность опьянения. Попробуйте снова."
+		"chi"			"你的 醉酒 能力未能激活,请重试."
 	}
 	"DrunkHuman3"
 	{
@@ -2234,14 +1952,12 @@
 		"en"			"Your drunk range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági részegítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 醉酒 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности опьянения нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"DrunkHuman4"
 	{
 		"en"			"There are no survivors nearby to use your drunk range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági részegítő képességedet."
 		"chi"			"附近没有幸存者可以让你使用 醉酒 能力."
-		"ru"			"Поблизости нет выживших, на которых можно было бы использовать вашу способность опьянения."
 	}
 	"DrunkHuman5"
 	{
@@ -2249,21 +1965,18 @@
 		"en"			"Your drunk range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági részegítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 醉酒 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность опьянения закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"DrunkMenu"
 	{
 		"en"			"Drunk Ability Information"
 		"hu"			"Részeg Képesség Információ"
 		"chi"			"醉酒 能力信息"
-		"ru"			"Информация о способности опьянения"
 	}
 	"DrunkMenu2"
 	{
 		"en"			"Drunk Ability"
 		"hu"			"Részeg Képesség"
 		"chi"			"醉酒 能力"
-		"ru"			"Способность опьянения"
 	}
 	"Electric"
 	{
@@ -2271,7 +1984,6 @@
 		"en"			"{olive}{1}{mint} is electrocuting{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} megrázta{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 正在电击{olive} {2}{mint}!"
-		"ru"			"{olive}{1}{mint} поражает током{olive} {2}{mint}!"
 	}
 	"Electric2"
 	{
@@ -2279,21 +1991,18 @@
 		"en"			"{olive}{1}{mint} is no longer being electrocuted!"
 		"hu"			"{olive}{1}{mint} többé már nincs megrázva!"
 		"chi"			"{olive}{1}{mint} 脱离了电击!"
-		"ru"			"{olive}{1}{mint} больше поражён током!"
 	}
 	"ElectricAmmo"
 	{
 		"en"			"You've used up all your electric range ability's ammo."
 		"hu"			"Elhasználtad a távolsági elektromos képességed összes lőszerét."
 		"chi"			"你已经用光了所有 电击 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей электрической способности."
 	}
 	"ElectricDetails"
 	{
 		"en"			"You electrocute survivors."
 		"hu"			"Megrázod a túlélőket."
 		"chi"			"您可以电击幸存者."
-		"ru"			"Вы убиваете выживших электрическим током."
 	}
 	"ElectricHuman"
 	{
@@ -2301,14 +2010,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your electric range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági elektromos képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 电击 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей электрической способности!"
 	}
 	"ElectricHuman2"
 	{
 		"en"			"Your electric range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági elektromos képességedet. Próbáld újra."
-		"chi"			"你的 电击 能力未能激活. 请重试."
-		"ru"			"Ваша электрическая способность не сработала. Попробуйте снова."
+		"chi"			"你的 电击 能力未能激活,请重试."
 	}
 	"ElectricHuman3"
 	{
@@ -2316,14 +2023,12 @@
 		"en"			"Your electric range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági elektromos képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 电击 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей электрической способности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"ElectricHuman4"
 	{
 		"en"			"There are no survivors nearby to use your electric range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz, hogy használni tudd a távolsági elektromos képességedet."
 		"chi"			"附近没有幸存者可以让你使用 电击 能力."
-		"ru"			"Поблизости нет выживших, на которых можно было бы использовать вашу электрическую способность."
 	}
 	"ElectricHuman5"
 	{
@@ -2331,21 +2036,18 @@
 		"en"			"Your electric range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági elektromos képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 电击 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша электрическая способность закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"ElectricMenu"
 	{
 		"en"			"Electric Ability Information"
 		"hu"			"Elektromos Képesség Információ"
 		"chi"			"电击 能力信息"
-		"ru"			"Информация о электрической способности"
 	}
 	"ElectricMenu2"
 	{
 		"en"			"Electric Ability"
 		"hu"			"Elektromos Képesség"
 		"chi"			"电击 能力"
-		"ru"			"Электрическая способность"
 	}
 	"Enforce"
 	{
@@ -2353,7 +2055,6 @@
 		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to only use their weapon slot{yellow} #{3}{mint}!"
 		"hu"			"{olive}{1}{mint} kényszeríti{olive} {2}{mint} hogy csak a{yellow} #{3} slottot használja{mint}!"
 		"chi"			"{olive}{1}{mint} 强迫{olive} {2}{mint} 只能使用{yellow} #{3}{mint}号武器槽位!"
-		"ru"			"{olive}{1}{mint} заставляет{olive} {2}{mint} использовать только слот оружия{yellow} #{3}{mint}!"
 	}
 	"Enforce2"
 	{
@@ -2361,21 +2062,18 @@
 		"en"			"{olive}{1}{mint} can use all weapon slots again!"
 		"hu"			"{olive}{1}{mint} újra használhatja minden fegyverét!"
 		"chi"			"{olive}{1}{mint} 可以使用全部武器槽位了!"
-		"ru"			"{olive}{1}{mint} может снова использовать все слоты для оружия!"
 	}
 	"EnforceAmmo"
 	{
 		"en"			"You've used up all your enforce range ability's ammo."
 		"hu"			"Elhasználtad a távolsági kényszerítő képességed összes lőszerét."
 		"chi"			"你已经用光了所有 迫用 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности принуждения."
 	}
 	"EnforceDetails"
 	{
 		"en"			"You force survivors to only use a certain weapon slot."
 		"hu"			"Kényszeríted a túlélőket hogy csak bizonyos fegyvereket használhassanak."
 		"chi"			"您可以迫使幸存者使用指定武器槽."
-		"ru"			"Вы заставляете выживших использовать только определённый слот для оружия."
 	}
 	"EnforceHuman"
 	{
@@ -2383,14 +2081,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your enforce range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági kényszerítő képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 迫用 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности принуждения!"
 	}
 	"EnforceHuman2"
 	{
 		"en"			"Your enforce range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági kényszerítő képességedet. Próbáld újra."
-		"chi"			"你的 迫用 能力未能激活. 请重试."
-		"ru"			"Не удалось активировать вашу способность принуждения. Попробуйте снова."
+		"chi"			"你的 迫用 能力未能激活,请重试."
 	}
 	"EnforceHuman3"
 	{
@@ -2398,14 +2094,12 @@
 		"en"			"Your enforce range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági kényszerítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 迫用 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности принуждения нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"EnforceHuman4"
 	{
 		"en"			"There are no survivors nearby to use your enforce range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági kényszerítő képességedet."
 		"chi"			"附近没有幸存者可以让你使用 迫用 能力."
-		"ru"			"Поблизости нет выживших, на которых можно было бы использовать вашу способность принуждения."
 	}
 	"EnforceHuman5"
 	{
@@ -2413,21 +2107,18 @@
 		"en"			"Your enforce range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági kényszerítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 迫用 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность принуждения закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"EnforceMenu"
 	{
 		"en"			"Enforce Ability Information"
 		"hu"			"Kényszerítő Képesség Információ"
 		"chi"			"迫用 能力信息"
-		"ru"			"Информация о способности принуждения"
 	}
 	"EnforceMenu2"
 	{
 		"en"			"Enforce Ability"
 		"hu"			"Kényszerítő Képesség"
 		"chi"			"迫用 能力"
-		"ru"			"Способность принуждения"
 	}
 	"Fast"
 	{
@@ -2435,29 +2126,25 @@
 		"en"			"{olive}{1}'s{mint} special speed activated!"
 		"hu"			"{olive}{1}{mint} speciális sebessége aktiválva!"
 		"chi"			"{olive}{1}{mint} 的速度加成已激活!"
-		"ru"			"{olive}{1}{mint} активировал особую скорость!"
 	}
 	"Fast2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} special speed deactivated!"
 		"hu"			"{olive}{1}{mint} speciális sebessége deaktiválva!"
 		"chi"			"{olive}{1}{mint} 的速度加成已结束!"
-		"ru"			"Особая скорость {olive}{1}{mint} отключена!"
 	}
 	"FastAmmo"
 	{
 		"en"			"You've used up all your fast ability's ammo."
 		"hu"			"Elhasználtad a gyorsaság képességed összes lőszerét."
 		"chi"			"你已经用光了所有 迅速 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы своей способности скорости."
 	}
 	"FastDetails"
 	{
 		"en"			"You run really fast like the Flash."
 		"hu"			"Olyan gyorsan futsz mint Flash."
 		"chi"			"您可以跑的跟闪电一样快."
-		"ru"			"Вы очень быстро передвигаетесь, как Флэш."
 	}
 	"FastHuman"
 	{
@@ -2465,21 +2152,18 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fast ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gyorsaság képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 迅速 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности скорости!"
 	}
 	"FastHuman2"
 	{
 		"en"			"Your fast ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a gyorsaság képességedet. Próbáld újra!"
-		"chi"			"你的 迅速 能力未能激活. 请重试."
-		"ru"			"Ваша способность скорости не сработала. Попробуйте снова."
+		"chi"			"你的 迅速 能力未能激活,请重试."
 	}
 	"FastHuman3"
 	{
 		"en"			"You already activated your fast ability."
 		"hu"			"Már aktiváltad a gyorsaság képességedet."
 		"chi"			"你已经激活了你的 迅速 能力."
-		"ru"			"Вы уже активировали свою способность скорости."
 	}
 	"FastHuman4"
 	{
@@ -2487,7 +2171,6 @@
 		"en"			"Your fast ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A gyorsaság képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 迅速 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности скорости нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"FastHuman5"
 	{
@@ -2495,21 +2178,18 @@
 		"en"			"Your fast ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A gyorsaság képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 迅速 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность скорости закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"FastMenu"
 	{
 		"en"			"Fast Ability Information"
 		"hu"			"Gyorsaság Képesség Információ"
 		"chi"			"迅速 能力信息"
-		"ru"			"Информация о способности скорости"
 	}
 	"FastMenu2"
 	{
 		"en"			"Fast Ability"
 		"hu"			"Gyorsaság Képesség"
 		"chi"			"迅速 能力"
-		"ru"			"Способность скорости"
 	}
 	"Fire"
 	{
@@ -2517,29 +2197,25 @@
 		"en"			"{olive}{1}{mint} just created a fire underneath{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} tüzet okozott{olive} {2}{mint}alatt!"
 		"chi"			"{olive}{1}{mint} 刚在{olive} {2}{mint} 下方生成了火焰!"
-		"ru"			"{olive}{1}{mint} только-что создал огонь под{olive} {2}{mint}!"
 	}
 	"Fire2"
 	{
-		"#format"		"{1:s}"
+		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} rock created a fire."
 		"hu"			"{olive}{1}{mint} sziklája tüzet okozott."
 		"chi"			"{olive}{1}{mint} 的岩石生成了火焰."
-		"ru"			"Камень {olive}{1}{mint} создал огонь."
 	}
 	"FireAmmo"
 	{
 		"en"			"You've used up all your fire range ability's ammo."
 		"hu"			"Elhasználtad a távolsági tűz képességed összes lőszerét."
 		"chi"			"你已经用光了所有 火焰 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы способности огня."
 	}
 	"FireDetails"
 	{
 		"en"			"You create fires."
 		"hu"			"Tüzet okozol."
 		"chi"			"您可以创造火焰."
-		"ru"			"Вы создаёте огонь."
 	}
 	"FireHuman"
 	{
@@ -2547,14 +2223,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fire range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági tűz képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 火焰 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности огня!"
 	}
 	"FireHuman2"
 	{
 		"en"			"Your fire range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági tűz képességedet. Próbáld újra."
-		"chi"			"你的 火焰 能力未能激活. 请重试."
-		"ru"			"Ваша способность огня не сработала. Попробуйте снова."
+		"chi"			"你的 火焰 能力未能激活,请重试."
 	}
 	"FireHuman3"
 	{
@@ -2562,14 +2236,12 @@
 		"en"			"Your fire range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági tűz képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 火焰 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности огня нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"FireHuman4"
 	{
 		"en"			"There are no survivors nearby to use your fire range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági tűz képességedet."
 		"chi"			"附近没有幸存者可以让你使用 火焰 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность огня."
 	}
 	"FireHuman5"
 	{
@@ -2577,21 +2249,18 @@
 		"en"			"Your fire range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági tűz képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 火焰 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность огня закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"FireMenu"
 	{
 		"en"			"Fire Ability Information"
 		"hu"			"Tűz Képesség Információ"
 		"chi"			"火焰 能力信息"
-		"ru"			"Информация о способности огня"
 	}
 	"FireMenu2"
 	{
 		"en"			"Fire Ability"
 		"hu"			"Tűz Képesség"
 		"chi"			"火焰 能力"
-		"ru"			"Способность огня"
 	}
 	"Fling"
 	{
@@ -2599,21 +2268,18 @@
 		"en"			"{olive}{1}{mint} flung{olive} {2}{mint} into the air!"
 		"hu"			"{olive}{1}{mint} feldobta{olive} {2}{mint} -t a levegőbe!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 抛向高空!"
-		"ru"			"{olive}{1}{mint} подбросил{olive} {2}{mint} в воздух!"
 	}
 	"FlingAmmo"
 	{
 		"en"			"You've used up all your fling range ability's ammo."
 		"hu"			"Elhasználtad a távolsági dobás képességed összes lőszerét."
 		"chi"			"你已经用光了所有 抛空 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы способности броска."
 	}
 	"FlingDetails"
 	{
 		"en"			"You fling survivors high into the air."
 		"hu"			"Magasba dobod a túlélőket."
 		"chi"			"您可以把幸存者抛向高空."
-		"ru"			"Вы подбрасываете выживших высоко в воздух."
 	}
 	"FlingHuman"
 	{
@@ -2621,14 +2287,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fling range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági dobás képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 抛空 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности броска!"
 	}
 	"FlingHuman2"
 	{
 		"en"			"Your fling range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági dobás képességedet. Próbáld újra."
-		"chi"			"你的 抛空 能力未能激活. 请重试."
-		"ru"			"Ваша способность броска не сработала. Попробуйте снова."
+		"chi"			"你的 抛空 能力未能激活,请重试."
 	}
 	"FlingHuman3"
 	{
@@ -2636,14 +2300,12 @@
 		"en"			"Your fling range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági dobás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 抛空 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности броска нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"FlingHuman4"
 	{
 		"en"			"There are no survivors nearby to use your fling range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági dobás képességedet."
 		"chi"			"附近没有幸存者可以让你使用 抛空 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность броска."
 	}
 	"FlingHuman5"
 	{
@@ -2651,118 +2313,102 @@
 		"en"			"Your fling range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági dobás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 抛空 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность броска закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"FlingMenu"
 	{
 		"en"			"Fling Ability Information"
 		"hu"			"Dobás Képesség Információ"
 		"chi"			"抛空 能力信息"
-		"ru"			"Информация о способности броска"
 	}
 	"FlingMenu2"
 	{
 		"en"			"Fling Ability"
 		"hu"			"Dobás Képesség"
 		"chi"			"抛空 能力"
-		"ru"			"Способность броска"
 	}
 	"Fly"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is flying!"
-		"hu"			"{olive}{1}{mint} repül!"
+		"hu"			""
 		"chi"			"{olive}{1}{mint} 正在飞翔!"
-		"ru"			"{olive}{1}{mint} летает!"
 	}
 	"Fly2"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} stopped flying!"
-		"hu"			"{olive}{1}{mint} abbahagyta a repülést!"
+		"hu"			""
 		"chi"			"{olive}{1}{mint} 停止飞行!"
-		"ru"			"{olive}{1}{mint} больше не летает!"
 	}
 	"FlyAmmo"
 	{
 		"en"			"You've used up all your flight ability's ammo."
-		"hu"			"Elhasználtad a repülő képességed összes lőszerét."
+		"hu"			""
 		"chi"			"您已经用完了所有飞行技能的弹药."
-		"ru"			"Вы израсходовали все боеприпасы способности полёта."
 	}
 	"FlyDetails"
 	{
 		"en"			"You can fly around."
-		"hu"			"Tudsz repülni."
+		"hu"			""
 		"chi"			"你可以飞来飞去."
-		"ru"			"Вы можете летать."
 	}
 	"FlyHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your flight ability!"
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik repülő képességedet!"
+		"hu"			""
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 飞行能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности полёта!"
 	}
 	"FlyHuman2"
 	{
 		"en"			"Your flight ability failed to activate. Try again."
-		"hu"			"A repülő képességed aktiválása nem sikerült. Próbáld újra."
-		"chi"			"您的飞行能力无法激活. 请重试."
-		"ru"			"Не удалось активировать вашу способность полёта. Попробуйте снова."
+		"hu"			""
+		"chi"			"您的飞行能力无法激活. 再试一次."
 	}
 	"FlyHuman3"
 	{
 		"en"			"You already activated your flight ability."
-		"hu"			"Már aktiváltad a repülő képességedet."
+		"hu"			""
 		"chi"			"您已经激活了飞行能力."
-		"ru"			"Вы уже активировали способность полёта."
 	}
 	"FlyHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your flight ability still needs another{yellow} {1} second(s){mint} to recharge."
-		"hu"			"A repülő képességednek kell még{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			""
 		"chi"			"您的飞行能力还需要另外{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности полёта нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"FlyHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your flight ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-		"hu"			"A repülő képességed véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
+		"hu"			""
 		"chi"			"您的飞行能力已结束, 需要充电{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность полёта закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"FlyHuman6"
 	{
 		"en"			"The place you are in is too narrow for you to fly around."
-		"hu"			"A hely ahol éppen vagy, túl keskeny ahhoz hogy repülhess."
+		"hu"			""
 		"chi"			"您所处的地方太狭窄, 无法四处飞翔."
-		"ru"			"Место, в котором вы находитесь, слишком узкое для полёта."
 	}
 	"FlyMenu"
 	{
 		"en"			"Fly Ability Information"
-		"hu"			"Repülő Képesség Információ"
+		"hu"			""
 		"chi"			"飞行能力信息"
-		"ru"			"Информация о способности летать"
 	}
 	"FlyMenu2"
 	{
 		"en"			"Fly Ability"
-		"hu"			"Repülő Képesség"
+		"hu"			""
 		"chi"			"飞行能力"
-		"ru"			"Способность летать"
 	}
 	"Fragile"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is temporarily fragile to damage but can deal more damage and run faster!"
 		"hu"			"{olive}{1}{mint} ideiglenesen érzékeny a sebzésre, de többet sebez és gyorsabban fut!"
-		"chi"			"{olive}{1}{mint} 的伤害抗性降低了, 同时移动速度和对你的伤害更高了!"
-		"ru"			"{olive}{1}{mint} временно уязвим к урону, но может нанести больший урон и быстрее бегать!"
+		"chi"			"{olive}{1}{mint} 的伤害抗性降低了,同时移动速度和对你的伤害更高了!"
 	}
 	"Fragile2"
 	{
@@ -2770,21 +2416,18 @@
 		"en"			"{olive}{1}{mint} is no longer fragile to damage!"
 		"hu"			"{olive}{1}{mint} már nem érzékeny a sebzésre"
 		"chi"			"{olive}{1}{mint} 的伤害抗性恢复正常了!"
-		"ru"			"{olive}{1}{mint} больше не уязвим к урону!"
 	}
 	"FragileAmmo"
 	{
 		"en"			"You've used up all your fragility ability's ammo."
 		"hu"			"Elhasználtad a sebzés érzékenység képességed összes lőszerét."
 		"chi"			"你已经用光了所有 脆弱 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности уязвимости."
 	}
 	"FragileDetails"
 	{
 		"en"			"You take more damage while dealing more damage and running faster."
 		"hu"			"Több sebzést szenvedsz el de közben többet sebzel és gyorsabban futsz."
-		"chi"			"你会受到更多伤害, 但对幸存者造成的伤害也更多,移动速度也更快."
-		"ru"			"Вы получаете больше урона, нанося больше урона и бегая быстрее."
+		"chi"			"你会受到更多伤害,但对幸存者造成的伤害也更多,移动速度也更快."
 	}
 	"FragileHuman"
 	{
@@ -2792,21 +2435,18 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fragility ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik sebzés érzékeny képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 脆弱 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности уязвимости!"
 	}
 	"FragileHuman2"
 	{
 		"en"			"Your fragility ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a sebzés érzékeny képességedet. Próbáld újra."
-		"chi"			"你的 脆弱 能力未能激活. 请重试."
-		"ru"			"Ваша способность уязвимости не сработала. Попробуйте снова."
+		"chi"			"你的 脆弱 能力未能激活,请重试."
 	}
 	"FragileHuman3"
 	{
 		"en"			"You already activated your fragility ability."
 		"hu"			"Már aktiváltad a sebzés érzékeny képességedet."
 		"chi"			"你已经激活了你的 脆弱 能力."
-		"ru"			"Вы уже активировали свою способность уязвимости."
 	}
 	"FragileHuman4"
 	{
@@ -2814,7 +2454,6 @@
 		"en"			"Your fragility ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A sebzés érzékeny képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 脆弱 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности уязвимости нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"FragileHuman5"
 	{
@@ -2822,21 +2461,18 @@
 		"en"			"Your fragility ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A sebzés érzékeny képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 脆弱 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность уязвимости закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"FragileMenu"
 	{
 		"en"			"Fragile Ability Information"
 		"hu"			"Érzékeny Képesség Információ"
 		"chi"			"脆弱 能力信息"
-		"ru"			"Информация о способности уязвимости"
 	}
 	"FragileMenu2"
 	{
 		"en"			"Fragile Ability"
 		"hu"			"Érzékeny Képesség"
 		"chi"			"脆弱 能力"
-		"ru"			"Способность уязвимости"
 	}
 	"Ghost"
 	{
@@ -2844,7 +2480,6 @@
 		"en"			"{olive}{1}{mint} disarmed{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lefegyverezte{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 缴械了!"
-		"ru"			"{olive}{1}{mint} обезоружил{olive} {2}{mint}!"
 	}
 	"Ghost2"
 	{
@@ -2852,7 +2487,6 @@
 		"en"			"{olive}{1}{mint} is cloaking itself!"
 		"hu"			"{olive}{1}{mint} álcázza magát!"
 		"chi"			"{olive}{1}{mint} 给自己伪装了!"
-		"ru"			"{olive}{1}{mint} стал невидим!"
 	}
 	"Ghost3"
 	{
@@ -2860,28 +2494,24 @@
 		"en"			"{olive}{1}{mint} is visible again!"
 		"hu"			"{olive}{1}{mint} újra látható!"
 		"chi"			"{olive}{1}{mint} 的伪装结束了!"
-		"ru"			"{olive}{1}{mint} снова виден!"
 	}
 	"GhostAmmo"
 	{
 		"en"			"You've used up all your cloaking ability's ammo."
-		"hu"		    "Elhasználtad az álcázó képességed összes lőszerét."
+		"hu"			"Elhasználtad az álcázó képességed összes lőszerét."
 		"chi"			"你已经用光了所有 伪装 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности невидимости."
 	}
 	"GhostAmmo2"
 	{
 		"en"			"You've used up all your disarming range ability's ammo."
 		"hu"			"Elhasználtad a távolsági lefegyverző képességed összes lőszerét."
 		"chi"			"你已经用光了所有 缴械 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности обезоруживания."
 	}
 	"GhostDetails"
 	{
 		"en"			"You cloak yourself and disarm survivors."
 		"hu"			"Álcázod magad és lefegyverzed a túlélőket."
 		"chi"			"您可以让自己隐身且让幸存者缴械."
-		"ru"			"Вы входите в невидимость и обезоруживаете выживших."
 	}
 	"GhostHuman"
 	{
@@ -2889,7 +2519,6 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your cloaking ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik álcázó képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 伪装 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности невидимости!"
 	}
 	"GhostHuman2"
 	{
@@ -2897,21 +2526,18 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your disarming range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lefegyverző képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 缴械 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности обезоруживания!"
 	}
 	"GhostHuman3"
 	{
 		"en"			"Your disarming range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lefegyverző képességedet. Próbáld újra."
-		"chi"			"你的 缴械 能力未能激活. 请重试."
-		"ru"			"Ваша способность обезоруживания не сработала. Попробуйте снова."
+		"chi"			"你的 缴械 能力未能激活,请重试."
 	}
 	"GhostHuman4"
 	{
 		"en"			"You already activated your cloaking ability."
 		"hu"			"Már aktiváltad az álcázó képességedet."
 		"chi"			"你已经激活了你的 伪装 能力."
-		"ru"			"Вы уже активировали свою способность невидимости."
 	}
 	"GhostHuman5"
 	{
@@ -2919,7 +2545,6 @@
 		"en"			"Your cloaking ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az álcázó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 伪装 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности невидимости нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"GhostHuman6"
 	{
@@ -2927,14 +2552,12 @@
 		"en"			"Your disarming range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági lefegyverző képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 缴械 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности обезоруживания нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"GhostHuman7"
 	{
 		"en"			"There are no survivors nearby to use your disarming range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági lefegyverző képességedet."
 		"chi"			"附近没有幸存者可以让你使用 缴械 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность обезоруживания."
 	}
 	"GhostHuman8"
 	{
@@ -2942,7 +2565,6 @@
 		"en"			"Your cloaking ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az álcázó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 伪装 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность невидимости закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"GhostHuman9"
 	{
@@ -2950,21 +2572,18 @@
 		"en"			"Your disarming range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági lefegyverző képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 缴械 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность обезоруживания закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"GhostMenu"
 	{
 		"en"			"Ghost Ability Information"
 		"hu"			"Szellem Képesség Információ"
 		"chi"			"幽灵 能力信息"
-		"ru"			"Информация о способности призрак"
 	}
 	"GhostMenu2"
 	{
 		"en"			"Ghost Ability"
 		"hu"			"Szellem Képesség"
 		"chi"			"幽灵 能力"
-		"ru"			"Способность призрак"
 	}
 	"God"
 	{
@@ -2972,7 +2591,6 @@
 		"en"			"{olive}{1}{mint} is temporarily invincible!"
 		"hu"			"{olive}{1}{mint} ideiglenesen legyőzhetetlen!"
 		"chi"			"{olive}{1}{mint} 暂时无敌了!"
-		"ru"			"{olive}{1}{mint} временно неуязвим!"
 	}
 	"God2"
 	{
@@ -2980,21 +2598,18 @@
 		"en"			"{olive}{1}{mint} is no longer invincible!"
 		"hu"			"{olive}{1}{mint} többé már nem legyőzhetetlen!"
 		"chi"			"{olive}{1}{mint} 无敌结束了!"
-		"ru"			"{olive}{1}{mint} больше не неуязвим!"
 	}
 	"GodAmmo"
 	{
 		"en"			"You've used up all your godlike ability's ammo."
 		"hu"			"Elhasználtad az isteni képességed összes lőszerét."
 		"chi"			"你已经用光了所有 上帝 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы своей способности бога."
 	}
 	"GodDetails"
 	{
 		"en"			"You gain temporary immunity to all types of damage."
 		"hu"			"Ideiglenesen védett vagy az összes fajta sebzés ellen."
 		"chi"			"您暂时免疫所有伤害."
-		"ru"			"Вы получаете временный иммунитет ко всем видам урона."
 	}
 	"GodHuman"
 	{
@@ -3002,21 +2617,18 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your godlike ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik isteni képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 上帝 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности бога!"
 	}
 	"GodHuman2"
 	{
 		"en"			"Your godlike ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az isteni képességedet. Próbáld újra."
-		"chi"			"你的 上帝 能力未能激活. 请重试."
-		"ru"			"Ваша способность бога не сработала. Попробуйте снова."
+		"chi"			"你的 上帝 能力未能激活,请重试."
 	}
 	"GodHuman3"
 	{
 		"en"			"You already activated your godlike ability."
 		"hu"			"Már aktiváltad az isteni képességedet."
 		"chi"			"你已经激活了你的 上帝 能力."
-		"ru"			"Вы уже активировали свою способность бога."
 	}
 	"GodHuman4"
 	{
@@ -3024,7 +2636,6 @@
 		"en"			"Your godlike ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az isteni képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 上帝 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности бога нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"GodHuman5"
 	{
@@ -3032,21 +2643,18 @@
 		"en"			"Your godlike ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az isteni képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 上帝 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность бога закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"GodMenu"
 	{
 		"en"			"God Ability Information"
 		"hu"			"Isteni Képesség Információ"
 		"chi"			"上帝 能力信息"
-		"ru"			"Информация о способности бога"
 	}
 	"GodMenu2"
 	{
 		"en"			"God Ability"
 		"hu"			"Isteni Képesség"
 		"chi"			"上帝 能力"
-		"ru"			"Способность бога"
 	}
 	"Gravity"
 	{
@@ -3054,7 +2662,6 @@
 		"en"			"{olive}{1}{mint} changed{olive} {2}'s{mint} gravity to{yellow} {3}{mint}!"
 		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} gravitációját{yellow} {3}{mint}!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的重力变成{yellow} {3}{mint}!"
-		"ru"			"{olive}{1}{mint} изменил гравитацию{olive} {2}{mint} на{yellow} {3}{mint}!"
 	}
 	"Gravity2"
 	{
@@ -3062,7 +2669,6 @@
 		"en"			"{olive}{1}'s{mint} gravity is back to normal!"
 		"hu"			"{olive}{1}{mint} gravitációja újra normális!"
 		"chi"			"{olive}{1}{mint} 的重力恢复正常了!"
-		"ru"			"Гравитация {olive}{1}{mint} вернулась в норму!"
 	}
 	"Gravity3"
 	{
@@ -3070,7 +2676,6 @@
 		"en"			"{olive}{1}{mint} created a gravitational pull!"
 		"hu"			"{olive}{1}{mint} gravitációs vonzást hozott létre!"
 		"chi"			"{olive}{1}{mint} 生成了引力/推力!"
-		"ru"			"{olive}{1}{mint} создал гравитационное притяжение!"
 	}
 	"Gravity4"
 	{
@@ -3078,28 +2683,24 @@
 		"en"			"{olive}{1}{mint}'s gravitational pull ended!"
 		"hu"			"{olive}{1}{mint}gravitációs vonzása véget ért!"
 		"chi"			"{olive}{1}{mint} 的引力/推力结束了!"
-		"ru"			"Гравитационное притяжение {olive}{1}{mint} закончилось!"
 	}
 	"GravityAmmo"
 	{
 		"en"			"You've used up all your gravitational pull ability's ammo."
 		"hu"			"Elhasználtad a gravitációs vonzásod összes lőszerét."
 		"chi"			"你已经用光了所有 引力/推力 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности гравитационного притяжения."
 	}
 	"GravityAmmo2"
 	{
 		"en"			"You've used up all your low gravity range ability's ammo."
 		"hu"			"Elhasználtad a távolsági alacsony gravitáció képességed összes lőszerét."
 		"chi"			"你已经用光了所有 重力 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности слабой гравитации."
 	}
 	"GravityDetails"
 	{
 		"en"			"You pull in or push away survivors and any other nearby infected, and change the survivors' gravity."
 		"hu"			"Eltolsz vagy magadhoz húzol mindenkit, és megváltoztatod a túlélők gravitációját."
-		"chi"			"您可以吸引或推开幸存者和附近的特殊感染者, 并改变幸存者的重力值."
-		"ru"			"Вы притягиваете или отталкиваете выживших и других заражённых поблизости и изменяете гравитацию выживших."
+		"chi"			"您可以吸引或推开幸存者和附近的特殊感染者,并改变幸存者的重力值."
 	}
 	"GravityHuman"
 	{
@@ -3107,7 +2708,6 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your gravitational pull ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gravitációs vonzás képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 引力/推力 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности гравитационного притяжения!"
 	}
 	"GravityHuman2"
 	{
@@ -3115,21 +2715,18 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your low gravity range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági alacsony gravitáció képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重力 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности низкой гравитации!"
 	}
 	"GravityHuman3"
 	{
 		"en"			"Your low gravity range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági alacsony gravitáció képességedet. Próbáld újra."
-		"chi"			"你的 重力 能力未能激活. 请重试."
-		"ru"			"Ваша способность низкой гравитации не сработала. Попробуйте снова."
+		"chi"			"你的 重力 能力未能激活,请重试."
 	}
 	"GravityHuman4"
 	{
 		"en"			"You already activated your gravitational pull ability."
 		"hu"			"Már aktiváltad a gravitációs vonzás képességedet."
 		"chi"			"你已经激活了你的 引力/推力 能力."
-		"ru"			"Вы уже активировали свою способность гравитационного притяжения."
 	}
 	"GravityHuman5"
 	{
@@ -3137,7 +2734,6 @@
 		"en"			"Your gravitational pull ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A gravitációs vonzás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 引力/推力 还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности гравитационного притяжения нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"GravityHuman6"
 	{
@@ -3145,14 +2741,12 @@
 		"en"			"Your low gravity range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági alacsony gravitációs képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 重力 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности низкой гравитации нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"GravityHuman7"
 	{
 		"en"			"There are no survivors nearby to use your low gravity range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági alacsony gravitáció képességedet."
 		"chi"			"附近没有幸存者可以让你使用 重力 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность низкой гравитации."
 	}
 	"GravityHuman8"
 	{
@@ -3160,7 +2754,6 @@
 		"en"			"Your gravitational pull ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A gravitációs vonzás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 引力/推力 已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность гравитационного притяжения закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"GravityHuman9"
 	{
@@ -3168,29 +2761,25 @@
 		"en"			"Your low gravity range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az alacsony gravitációs képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 重力 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность низкой гравитации закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"GravityMenu"
 	{
 		"en"			"Gravity Ability Information"
 		"hu"			"Gravitációs Képesség Információ"
 		"chi"			"重力 能力信息"
-		"ru"			"Информация о способности гравитации"
 	}
 	"GravityMenu2"
 	{
 		"en"			"Gravity Ability"
 		"hu"			"Gravitációs Képesség"
 		"chi"			"重力 能力"
-		"ru"			"Способность гравитации"
 	}
 	"Heal"
 	{
 		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} set{olive} {2}{mint} to temporary health who will die when their HP reaches 0!"
 		"hu"			"{olive}{1}{mint} átállította{olive} {2}{mint} életerejét ideiglenesre, aki meghal amint eléri a 0-át!"
-		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的生命值改为临时生命值, 同时生命值归0时将会死亡!"
-		"ru"			"{olive}{1}{mint} сделал временое здоровье для{olive} {2}{mint}, но когда его здоровье достигнет 0, то он умрёт!"
+		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的生命值改为临时生命值,同时生命值归0时将会死亡!"
 	}
 	"Heal2"
 	{
@@ -3198,7 +2787,6 @@
 		"en"			"{olive}{1}{mint} is absorbing health from nearby infected!"
 		"hu"			"{olive}{1}{mint} épp elnyeli az életerőt a közelben lévő fertőzőtektől!"
 		"chi"			"{olive}{1}{mint} 正在吸收附近特殊感染者的生命值!"
-		"ru"			"{olive}{1}{mint} поглощает здоровье у находящихся поблизости заражённых!"
 	}
 	"Heal3"
 	{
@@ -3206,28 +2794,24 @@
 		"en"			"{olive}{1}{mint} is no longer absorbing health from nearby infected!"
 		"hu"			"{olive}{1}{mint} már nem nyeli az életerőt a közelben lévő fertőzőtektől!"
 		"chi"			"{olive}{1}{mint} 停止了吸收附近特殊感染者的生命值!"
-		"ru"			"{olive}{1}{mint} больше не поглощает здоровье у находящихся поблизости заражённых!"
 	}
 	"HealAmmo"
 	{
 		"en"			"You've used up all your healing ability's ammo."
 		"hu"			"Elhasználtad a gyógyító képességed összes lőszerét."
 		"chi"			"你已经用光了所有 治疗 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы своей лечебной способности."
 	}
 	"HealAmmo2"
 	{
 		"en"			"You've used up all your bad-health range ability's ammo."
 		"hu"			"Elhasználtad a távolsági rossz-életerő képességed összes lőszerét."
 		"chi"			"你已经用光了所有 败血 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности слабого здоровья."
 	}
 	"HealDetails"
 	{
 		"en"			"You gain health from other nearby infected and set survivors to temporary health who will die when they reach 0 HP."
 		"hu"			"Életerőt nyelsz el a közelben lévő fertőzöttektől és ideiglenes életerőre állítod a túlélőket, akik meghalnak ha elérik a 0-át."
-		"chi"			"您可以从附近的特殊感染者身上获得生命值, 并把幸存者生命值改为临时生命值, 当幸存者到达0HP时将立即死亡."
-		"ru"			"Вы получаете здоровье от других находящихся поблизости заражённых и делаете выжившим временное здоровье, которое спадёт, когда оно достигнет 0 ед."
+		"chi"			"您可以从附近的特殊感染者身上获得生命值,并把幸存者生命值改为临时生命值,当幸存者到达0HP时将立即死亡."
 	}
 	"HealHuman"
 	{
@@ -3235,7 +2819,6 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your healing ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gyógyító képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 治疗 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей лечебной способности!"
 	}
 	"HealHuman2"
 	{
@@ -3243,21 +2826,18 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bad-health range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rossz-életerő képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 败血 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности слабого здоровья!"
 	}
 	"HealHuman3"
 	{
 		"en"			"Your bad-health range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rossz-életerő képességedet. Próbáld újra."
-		"chi"			"你的 败血 能力未能激活. 请重试."
-		"ru"			"Ваша способность слабого здоровья не сработала. Попробуйте снова."
+		"chi"			"你的 败血 能力未能激活,请重试."
 	}
 	"HealHuman4"
 	{
 		"en"			"You already activated your healing ability."
 		"hu"			"Már aktiváltad a gyógyító képességedet."
 		"chi"			"你已经激活了你的 治疗 能力."
-		"ru"			"Вы уже активировали свою лечебную способность."
 	}
 	"HealHuman5"
 	{
@@ -3265,7 +2845,6 @@
 		"en"			"Your healing ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A gyógyító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 治疗 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей лечебной способности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"HealHuman6"
 	{
@@ -3273,14 +2852,12 @@
 		"en"			"Your bad-health range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági rossz-életerő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 败血 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности слабого здоровья нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"HealHuman7"
 	{
 		"en"			"There are no survivors nearby to use your bad-health range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági rossz-életerő képességedet."
 		"chi"			"附近没有幸存者可以让你使用 败血 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность слабого здоровья."
 	}
 	"HealHuman8"
 	{
@@ -3288,7 +2865,6 @@
 		"en"			"Your healing ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A gyógyító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 治疗 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша лечебная способность закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"HealHuman9"
 	{
@@ -3296,42 +2872,36 @@
 		"en"			"Your bad-health range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági rossz-életerő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 败血 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность слабого здоровья закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"HealMenu"
 	{
 		"en"			"Heal Ability Information"
 		"hu"			"Gyógyító Képesség Információ"
 		"chi"			"生命 能力信息"
-		"ru"			"Информация о лечебной способности"
 	}
 	"HealMenu2"
 	{
 		"en"			"Heal Ability"
 		"hu"			"Gyógyító Képesség"
 		"chi"			"生命 能力"
-		"ru"			"Лечебная способность"
 	}
 	"HitDetails"
 	{
 		"en"			"You only take damage on certain parts of your body."
 		"hu"			"Csak a tested bizonyos pontjain vagy sebezhető."
 		"chi"			"你只有特定部位能受到伤害."
-		"ru"			"Вы получаете урон только определённым частям своего тела."
 	}
 	"HitMenu"
 	{
 		"en"			"Hit Ability Information"
 		"hu"			"Ütő Képesség Információ"
 		"chi"			"狙击 能力信息"
-		"ru"			"Информация о способности слабого места"
 	}
 	"HitMenu2"
 	{
 		"en"			"Hit Ability"
 		"hu"			"Ütő Képesség"
 		"chi"			"狙击 能力"
-		"ru"			"Способность слабого места"
 	}
 	"Hurt"
 	{
@@ -3339,7 +2909,6 @@
 		"en"			"{olive}{1}{mint} is hurting{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} bántja{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 对 {olive} {2}{mint} 造成的伤口在不断流血!"
-		"ru"			"{olive}{1}{mint} причиняет боль{olive} {2}{mint}!"
 	}
 	"Hurt2"
 	{
@@ -3347,21 +2916,18 @@
 		"en"			"{olive}{1}{mint} is no longer hurting!"
 		"hu"			"{olive}{1}{mint} többé már nincs bántalmazás alatt!"
 		"chi"			"{olive}{1}{mint} 的伤口好了!"
-		"ru"			"{olive}{1}{mint} больше испытывает боль!"
 	}
 	"HurtAmmo"
 	{
 		"en"			"You've used up all your hurt range ability's ammo."
 		"hu"			"Elhasználtad a távolsági bántalmazás képességed összes lőszerét."
 		"chi"			"你已经用光了所有 创伤 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности боли."
 	}
 	"HurtDetails"
 	{
 		"en"			"You repeatedly hurt survivors."
 		"hu"			"Többször bántalmazod a túlélőket."
 		"chi"			"你可以反复伤害幸存者."
-		"ru"			"Вы неоднократно причиняете боль выжившим."
 	}
 	"HurtHuman"
 	{
@@ -3369,14 +2935,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hurt range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági bántalmazó képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 创伤 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности боли!"
 	}
 	"HurtHuman2"
 	{
 		"en"			"Your hurt range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági bántalmazó képességedet. Próbáld újra."
-		"chi"			"你的 创伤 能力未能激活. 请重试."
-		"ru"			"Ваша способность боли не сработала. Попробуйте снова."
+		"chi"			"你的 创伤 能力未能激活,请重试."
 	}
 	"HurtHuman3"
 	{
@@ -3384,14 +2948,12 @@
 		"en"			"Your hurt range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági bántalmazó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 创伤 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности боли нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"HurtHuman4"
 	{
 		"en"			"There are no survivors nearby to use your hurt range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági bántalmazó képességedet."
 		"chi"			"附近没有幸存者可以让你使用 创伤 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность боли."
 	}
 	"HurtHuman5"
 	{
@@ -3399,21 +2961,18 @@
 		"en"			"Your hurt range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági bántalmazó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 创伤 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность боли закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"HurtMenu"
 	{
 		"en"			"Hurt Ability Information"
 		"hu"			"Bántalmazó Képesség Információ"
 		"chi"			"创伤 能力信息"
-		"ru"			"Информация о способности боли"
 	}
 	"HurtMenu2"
 	{
 		"en"			"Hurt Ability"
 		"hu"			"Bántalmazó Képesség"
 		"chi"			"创伤 能力"
-		"ru"			"Способность боли"
 	}
 	"Hypno"
 	{
@@ -3421,7 +2980,6 @@
 		"en"			"{olive}{1}{mint} hypnotized{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} hipnotizálja{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 催眠了{olive} {2}{mint}!"
-		"ru"			"{olive}{1}{mint} гипнотизирует{olive} {2}{mint}!"
 	}
 	"Hypno2"
 	{
@@ -3429,21 +2987,18 @@
 		"en"			"{olive}{1}{mint} is no longer hypnotized!"
 		"hu"			"{olive}{1}{mint} többé már nincs hipnotizálva!"
 		"chi"			"{olive}{1}{mint} 醒来了!"
-		"ru"			"{olive}{1}{mint} больше не под гипнозом!"
 	}
 	"HypnoAmmo"
 	{
 		"en"			"You've used up all your hypno range ability's ammo."
 		"hu"			"Elhasználtad a távolsági hipnotizáló képességed összes lőszerét."
 		"chi"			"你已经用光了所有 催眠 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности гипноза."
 	}
 	"HypnoDetails"
 	{
 		"en"			"You hypnotize survivors to damage themselves or their teammates."
 		"hu"			"Hipnotizálod a túlélőket hogy sebezzék magukat vagy a társaikat."
 		"chi"			"你可以催眠幸存者让其伤害自身或队友."
-		"ru"			"Вы гипнотизируете выживших, чтобы они навредили себе или своим товарищам по команде."
 	}
 	"HypnoHuman"
 	{
@@ -3451,14 +3006,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hypno range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hipnotizáló képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 催眠 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности гипноза!"
 	}
 	"HypnoHuman2"
 	{
 		"en"			"Your hypno range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági hipnotizálás képességedet. Próbáld újra."
-		"chi"			"你的 催眠 能力未能激活. 请重试."
-		"ru"			"Ваша способность гипноза не сработала. Попробуйте снова."
+		"chi"			"你的 催眠 能力未能激活,请重试."
 	}
 	"HypnoHuman3"
 	{
@@ -3466,14 +3019,12 @@
 		"en"			"Your hypno range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági hipnotizálás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 催眠 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности гипноза нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"HypnoHuman4"
 	{
 		"en"			"There are no survivors nearby to use your hypno range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági hipnotizálás képességedet."
 		"chi"			"附近没有幸存者可以让你使用 催眠 能力."
-		"ru"			"Поблизости нет выживших, на которых можно было бы использовать вашу способность гипноза."
 	}
 	"HypnoHuman5"
 	{
@@ -3481,21 +3032,18 @@
 		"en"			"Your hypno range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági hipnotizálás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 催眠 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность гипноза закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"HypnoMenu"
 	{
 		"en"			"Hypno Ability Information"
 		"hu"			"Hipnotizáló Képesség Információ"
 		"chi"			"催眠 能力信息"
-		"ru"			"Информация о гипно-способности"
 	}
 	"HypnoMenu2"
 	{
 		"en"			"Hypno Ability"
 		"hu"			"Hipnotizáló Képesség"
 		"chi"			"催眠 能力"
-		"ru"			"Гипно-способность"
 	}
 	"Ice"
 	{
@@ -3503,7 +3051,6 @@
 		"en"			"{olive}{1}{mint} froze{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lefagyasztotta{olive} {2}{mint}-t!"
 		"chi"			"{olive}{1}{mint} 冻结了{olive} {2}{mint}!"
-		"ru"			"{olive}{1}{mint} заморозил{olive} {2}{mint}!"
 	}
 	"Ice2"
 	{
@@ -3511,21 +3058,18 @@
 		"en"			"{olive}{1}{mint} is unfrozen!"
 		"hu"			"{olive}{1}{mint} felolvasztva!"
 		"chi"			"{olive}{1}{mint} 解冻了!"
-		"ru"			"{olive}{1}{mint} разморозился!"
 	}
 	"IceAmmo"
 	{
 		"en"			"You've used up all your ice range ability's ammo."
 		"hu"			"Elhasználtad a távolsági fagyasztás képességed összes lőszerét."
 		"chi"			"你已经用光了所有 冻结 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности льда."
 	}
 	"IceDetails"
 	{
 		"en"			"You freeze survivors."
 		"hu"			"Lefagyasztod a túlélőket."
 		"chi"			"你可以冻结幸存者."
-		"ru"			"Вы замораживаете выживших."
 	}
 	"IceHuman"
 	{
@@ -3533,14 +3077,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ice range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági fagyasztás képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 冻结 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности льда!"
 	}
 	"IceHuman2"
 	{
 		"en"			"Your ice range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági fagyasztás képességedet. Próbáld újra."
-		"chi"			"你的 冻结 能力未能激活. 请重试."
-		"ru"			"Ваша способность льда не сработала. Попробуйте снова."
+		"chi"			"你的 冻结 能力未能激活,请重试."
 	}
 	"IceHuman3"
 	{
@@ -3548,36 +3090,31 @@
 		"en"			"Your ice range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági fagyasztás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 冻结 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности льда нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"IceHuman4"
 	{
 		"en"			"There are no survivors nearby to use your ice range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági fagyasztás képességedet."
 		"chi"			"附近没有幸存者可以让你使用 冻结 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность льда."
 	}
 	"IceHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your ice range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági fagyasztás képességed vége ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 冻结 能力已结束,需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность льда закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
+		"chi"			"你的 冻结 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"IceMenu"
 	{
 		"en"			"Ice Ability Information"
 		"hu"			"Fagyasztás Képesség Információ"
 		"chi"			"冻结 能力信息"
-		"ru"			"Информация о способности льда"
 	}
 	"IceMenu2"
 	{
 		"en"			"Ice Ability"
 		"hu"			"Fagyasztás Képesség"
 		"chi"			"冻结 能力"
-		"ru"			"Способность льда"
 	}
 	"Idle"
 	{
@@ -3585,21 +3122,18 @@
 		"en"			"{olive}{1}{mint} made{olive} {2}{mint} go idle!"
 		"hu"			"{olive}{1}{mint} kényszerítette{olive} {2}{mint} hogy szünetet tartson!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 吓到闲置!"
-		"ru"			"{olive}{1}{mint} отправил{olive} {2}{mint} в бездействие!"
 	}
 	"IdleAmmo"
 	{
 		"en"			"You've used up all your idle range ability's ammo."
 		"hu"			"Elhasználtad a távolsági szüneteltetés képességed összes lőszerét."
 		"chi"			"你已经用光了所有 闲置 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности бездействия."
 	}
 	"IdleDetails"
 	{
 		"en"			"You force survivors to go idle."
 		"hu"			"Kényszeríted a túlélőket arra hogy szünetet tartsanak."
 		"chi"			"你可以让幸存者进入闲置模式."
-		"ru"			"Вы заставляете выживших бездействовать."
 	}
 	"IdleHuman"
 	{
@@ -3607,14 +3141,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your idle range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági szüneteltetés képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 闲置 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности бездействия!"
 	}
 	"IdleHuman2"
 	{
 		"en"			"Your idle range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági szüneteltetés képességedet. Próbáld újra."
-		"chi"			"你的 闲置 能力未能激活. 请重试."
-		"ru"			"Ваша способность бездействия не сработала. Попробуйте снова."
+		"chi"			"你的 闲置 能力未能激活,请重试."
 	}
 	"IdleHuman3"
 	{
@@ -3622,14 +3154,12 @@
 		"en"			"Your idle range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági szüneteltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 闲置 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности бездействия нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"IdleHuman4"
 	{
 		"en"			"There are no survivors nearby to use your idle range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági szüneteltetés képességedet."
 		"chi"			"附近没有幸存者可以让你使用 闲置 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность бездействия."
 	}
 	"IdleHuman5"
 	{
@@ -3637,21 +3167,18 @@
 		"en"			"Your idle range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági szüneteltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 闲置 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность бездействия закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"IdleMenu"
 	{
 		"en"			"Idle Ability Information"
 		"hu"			"Szüneteltetés Képesség Információ"
 		"chi"			"闲置 能力信息"
-		"ru"			"Информация о способности бездействия"
 	}
 	"IdleMenu2"
 	{
 		"en"			"Idle Ability"
 		"hu"			"Szüneteltetés Képesség"
 		"chi"			"闲置 能力"
-		"ru"			"Способность бездействия"
 	}
 	"Invert"
 	{
@@ -3659,7 +3186,6 @@
 		"en"			"{olive}{1}{mint} inverted{olive} {2}'s{mint} movement keys!"
 		"hu"			"{olive}{1}{mint} megfordította{olive} {2}{mint} gomb kiosztását!"
 		"chi"			"{olive}{1}{mint} 颠倒了{olive} {2}{mint} 的方向键!"
-		"ru"			"{olive}{1}{mint} инвертировал клавиши передвижения{olive} {2}{mint}!"
 	}
 	"Invert2"
 	{
@@ -3667,21 +3193,18 @@
 		"en"			"{olive}{1}'s{mint} keys are no longer inverted!"
 		"hu"			"{olive}{1}{mint} gomb kiosztása nincs többé megfordítva!"
 		"chi"			"{olive}{1}{mint} 的方向键恢复正常了!"
-		"ru"			"Клавиши {olive}{1}{mint} больше не инвертированы!"
 	}
 	"InvertAmmo"
 	{
 		"en"			"You've used up all your invert range ability's ammo."
 		"hu"			"Elhasználtad a távolsági megfordítás képességed összes lőszerét."
 		"chi"			"你已经用光了所有 反向 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности инвертирования."
 	}
 	"InvertDetails"
 	{
 		"en"			"You invert the survivors' movement keys."
 		"hu"			"Megfordítod a túlélők gomb kiosztását."
 		"chi"			"你可以颠倒幸存者方向键."
-		"ru"			"Вы инвертируете клавиши передвижения выживших."
 	}
 	"InvertHuman"
 	{
@@ -3689,14 +3212,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your invert range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági megfordítás képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 反向 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности инвертирования!"
 	}
 	"InvertHuman2"
 	{
 		"en"			"Your invert range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági megfordítás képességedet. Próbáld újra."
-		"chi"			"你的 反向 能力未能激活. 请重试."
-		"ru"			"Ваша способность инвертирования не сработала. Попробуйте снова."
+		"chi"			"你的 反向 能力未能激活,请重试."
 	}
 	"InvertHuman3"
 	{
@@ -3704,14 +3225,12 @@
 		"en"			"Your invert range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági megfordítás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 反向 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности инвертирования нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"InvertHuman4"
 	{
 		"en"			"There are no survivors nearby to use your invert range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági megfordítás képességedet."
 		"chi"			"附近没有幸存者可以让你使用 反向 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность инвертирования."
 	}
 	"InvertHuman5"
 	{
@@ -3719,21 +3238,18 @@
 		"en"			"Your invert range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági megfordítás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 反向 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность инвертирования закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"InvertMenu"
 	{
 		"en"			"Invert Ability Information"
 		"hu"			"Megfordítás Képesség Információ"
 		"chi"			"反向 能力信息"
-		"ru"			"Информация о способности инвертирования"
 	}
 	"InvertMenu2"
 	{
 		"en"			"Invert Ability"
 		"hu"			"Megfordítás Képesség"
 		"chi"			"反向 能力"
-		"ru"			"Способность инвертирования"
 	}
 	"Item"
 	{
@@ -3741,42 +3257,36 @@
 		"en"			"{olive}{1}{mint} gave the survivors{yellow} items{mint}!"
 		"hu"			"{olive}{1}{mint} tételeket adott{yellow} a túlélőknek{mint}!"
 		"chi"			"{olive}{1}{mint} 给予了幸存者{yellow} 物品{mint}!"
-		"ru"			"{olive}{1}{mint} дал выжившим{yellow} предметы{mint}!"
 	}
 	"ItemDetails"
 	{
 		"en"			"You give survivors items upon death."
 		"hu"			"Tételeket adsz a túlélőknek halálod után."
 		"chi"			"你死亡后会给予幸存者物品."
-		"ru"			"После смерти вы даёте выжившим предметы."
 	}
 	"ItemHuman"
 	{
 		"en"			"You will give survivors items when you die!"
 		"hu"			"Tételeket adsz a túlélőknek miután meghalsz!"
 		"chi"			"死后你会给予幸存者物品!"
-		"ru"			"Вы дадите выжившим предметы, когда умрёте!"
 	}
 	"ItemHuman2"
 	{
 		"en"			"You will already give survivors items upon death."
 		"hu"			"Már adtál tételeket a túlélőknek a halálod után."
 		"chi"			"你将在死亡后给予幸存者物品."
-		"ru"			"Вы уже дадите выжившим предметы после смерти."
 	}
 	"ItemMenu"
 	{
 		"en"			"Item Ability Information"
 		"hu"			"Tétel Képesség Információ"
 		"chi"			"赠物 能力信息"
-		"ru"			"Информация о способности выпадения предметов"
 	}
 	"ItemMenu2"
 	{
 		"en"			"Item Ability"
 		"hu"			"Tétel Képesség"
 		"chi"			"赠物 能力"
-		"ru"			"Способность выпадения предметов"
 	}
 	"Jump"
 	{
@@ -3784,7 +3294,6 @@
 		"en"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to jump uncontrollably!"
 		"hu"			"{olive}{1}{mint} kényszeríti{olive} {2}{mint} -t hogy kontrollálhatatlanul ugráljon!"
 		"chi"			"{olive}{1}{mint} 迫使{olive} {2}{mint} 乱跳!"
-		"ru"			"{olive}{1}{mint} заставляет{olive} {2}{mint} бесконтрольно прыгать!"
 	}
 	"Jump2"
 	{
@@ -3792,7 +3301,6 @@
 		"en"			"{olive}{1}{mint} is no longer being forced to jump!"
 		"hu"			"{olive}{1}{mint} többé már nincs kényszerítve arra hogy ugráljon!"
 		"chi"			"{olive}{1}{mint} 不再乱跳了!"
-		"ru"			"{olive}{1}{mint} больше бесконтрольно не прыгает!"
 	}
 	"Jump3"
 	{
@@ -3800,28 +3308,24 @@
 		"en"			"{olive}{1}{mint} will jump periodically!"
 		"hu"			"{olive}{1}{mint} időszakosan ugrálni fog!"
 		"chi"			"{olive}{1}{mint} 将进行周期性跳跃!"
-		"ru"			"{olive}{1}{mint} будет периодически прыгать!"
 	}
 	"JumpAmmo"
 	{
 		"en"			"You've used up all your periodical jumping ability's ammo."
 		"hu"			"Elhasználtad az időszakos ugrálás képességed összes lőszerét."
 		"chi"			"你已经用光了所有 周期性跳跃 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности периодического прыжка."
 	}
 	"JumpAmmo2"
 	{
 		"en"			"You've used up all your jump range ability's ammo."
 		"hu"			"Elhasználtad a távolsági ugrás képességed összes lőszerét."
 		"chi"			"你已经用光了所有 跳跃 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности прыжка."
 	}
 	"JumpDetails"
 	{
 		"en"			"You jump periodically or sporadically and make survivors jump uncontrollably."
 		"hu"			"Időszakosan vagy szórványosan ugrálsz és kontrollálhatatlanul ugráltatod a túlélőket."
 		"chi"			"你会定期或不定期进行跳跃和使幸存者无法自控的跳跃."
-		"ru"			"Вы периодически или спорадически прыгаете и заставляете выживших прыгать безудержно."
 	}
 	"JumpHuman"
 	{
@@ -3829,7 +3333,6 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your periodical jumping ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik időszakos ugrálás képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 周期性跳跃 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности периодического прыжка!"
 	}
 	"JumpHuman2"
 	{
@@ -3837,21 +3340,18 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your jump range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági ugrás képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 跳跃 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности прыжка!"
 	}
 	"JumpHuman3"
 	{
 		"en"			"Your jump range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági ugrás képességedet. Próbáld újra."
-		"chi"			"你的 跳跃 能力未能激活. 请重试."
-		"ru"			"Ваша способность прыжка не сработала. Попробуйте снова."
+		"chi"			"你的 跳跃 能力未能激活,请重试."
 	}
 	"JumpHuman4"
 	{
 		"en"			"You already activated your periodical jumping ability."
 		"hu"			"Már aktiváltad az időszakos ugrás képességedet."
 		"chi"			"你已经激活了你的 周期性跳跃 能力."
-		"ru"			"Вы уже активировали свою способность периодического прыжка."
 	}
 	"JumpHuman5"
 	{
@@ -3859,7 +3359,6 @@
 		"en"			"Your periodical jumping ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"Az időszakos ugrás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 周期性跳跃 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности периодического прыжка нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"JumpHuman6"
 	{
@@ -3867,14 +3366,12 @@
 		"en"			"Your jump range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági ugrás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 跳跃 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности прыжка нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"JumpHuman7"
 	{
 		"en"			"There are no survivors nearby to use your jump range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági ugrás képességedet."
 		"chi"			"附近没有幸存者可以让你使用 跳跃 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность прыжка."
 	}
 	"JumpHuman8"
 	{
@@ -3882,7 +3379,6 @@
 		"en"			"Your periodical jumping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"Az időszakos ugrás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 周期性跳跃 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность периодического прыжка закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"JumpHuman9"
 	{
@@ -3890,21 +3386,18 @@
 		"en"			"Your jump range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági ugrás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 跳跃 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность прыжка закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"JumpMenu"
 	{
 		"en"			"Jump Ability Information"
 		"hu"			"Ugrás Képesség Információ"
 		"chi"			"跳跃 能力信息"
-		"ru"			"Информация о способности прыжка"
 	}
 	"JumpMenu2"
 	{
 		"en"			"Jump Ability"
 		"hu"			"Ugrás Képesség"
 		"chi"			"跳跃 能力"
-		"ru"			"Способность прыжка"
 	}
 	"Kamikaze"
 	{
@@ -3912,49 +3405,42 @@
 		"en"			"{olive}{1}{mint} just went kamikaze on{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} kamikazét adott {olive} {2}{mint}-nak!"
 		"chi"			"{olive}{1}{mint} 与{olive} {2}{mint} 同归于尽了!"
-		"ru"			"{olive}{1}{mint} как камикадзе взорвал{olive} {2}{mint}!"
 	}
 	"KamikazeDetails"
 	{
 		"en"			"You kill yourself along with a survivor victim."
 		"hu"			"Megölöd magad és áldozatként viszed magaddal a túlélőket is."
 		"chi"			"你会与幸存者同归于尽."
-		"ru"			"Вы убиваете себя вместе с выжившим."
 	}
 	"KamikazeHuman"
 	{
 		"en"			"You activated your kamikaze range ability!"
 		"hu"			"Aktiváltad a távolsági kamikaze képességedet!"
 		"chi"			"你激活了你的 神风 能力!"
-		"ru"			"Вы активировали свою способность камикадзе!"
 	}
 	"KamikazeHuman2"
 	{
 		"en"			"Your kamikaze range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági kamikaze képességedet. Próbáld újra."
-		"chi"			"你的 神风 能力未能激活. 请重试."
-		"ru"			"Ваша способность камикадзе не сработала. Попробуйте снова."
+		"chi"			"你的 神风 能力未能激活,请重试."
 	}
 	"KamikazeHuman3"
 	{
 		"en"			"There are no survivors nearby to use your kamikaze range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági kamikaze képességedet."
 		"chi"			"附近没有幸存者可以让你使用 神风 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность камикадзе."
 	}
 	"KamikazeMenu"
 	{
 		"en"			"Kamikaze Ability Information"
 		"hu"			"Kamikaze Képesség Információ"
 		"chi"			"神风 能力信息"
-		"ru"			"Информация о способности камикадзе"
 	}
 	"KamikazeMenu2"
 	{
 		"en"			"Kamikaze Ability"
 		"hu"			"Kamikaze Képesség"
 		"chi"			"神风 能力"
-		"ru"			"Способность камикадзе"
 	}
 	"Lag"
 	{
@@ -3962,7 +3448,6 @@
 		"en"			"{olive}{1}{mint} is making{olive} {2}{mint} lag!"
 		"hu"			"{olive}{1}{mint} késlelteti{olive} {2}{mint} -t!"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 打出延迟!"
-		"ru"			"{olive}{1}{mint} создаёт задержку для{olive} {2}{mint}!"
 	}
 	"Lag2"
 	{
@@ -3970,21 +3455,18 @@
 		"en"			"{olive}{1}{mint} is no longer lagging!"
 		"hu"			"{olive}{1}{mint} többé már nem késik!"
 		"chi"			"{olive}{1}{mint} 的延迟恢复正常了!"
-		"ru"			"{olive}{1}{mint} больше не имеет задержек!"
 	}
 	"LagAmmo"
 	{
 		"en"			"You've used up all your lag range ability's ammo."
 		"hu"			"Elhasználtad a távolsági késleltetés képességed összes lőszerét."
 		"chi"			"你已经用光了所有 滞后 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы вашей способности задержки."
 	}
 	"LagDetails"
 	{
 		"en"			"You make survivors lag."
 		"hu"			"Késlelteted a túlélőket."
 		"chi"			"你可以让幸存者产生滞后感."
-		"ru"			"Вы создаёте задержку(лаги) в игре для выживших."
 	}
 	"LagHuman"
 	{
@@ -3992,14 +3474,12 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lag range ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági késleltetés képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 滞后 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности задержки!"
 	}
 	"LagHuman2"
 	{
 		"en"			"Your lag range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági késleltetés képességedet. Próbáld újra."
-		"chi"			"你的 滞后 能力未能激活. 请重试."
-		"ru"			"Ваша способность задержки не сработала. Попробуйте снова."
+		"chi"			"你的 滞后 能力未能激活,请重试."
 	}
 	"LagHuman3"
 	{
@@ -4007,14 +3487,12 @@
 		"en"			"Your lag range ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A távolsági késleltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 滞后 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей способности задержки нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"LagHuman4"
 	{
 		"en"			"There are no survivors nearby to use your lag range ability on."
 		"hu"			"Nincsenek túlélők a közelben ahhoz hogy használni tudd a távolsági késleltetés képességedet."
 		"chi"			"附近没有幸存者可以让你使用 滞后 能力."
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность задержки."
 	}
 	"LagHuman5"
 	{
@@ -4022,21 +3500,18 @@
 		"en"			"Your lag range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A távolsági késleltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 滞后 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша способность задержки закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"LagMenu"
 	{
 		"en"			"Lag Ability Information"
 		"hu"			"Késleltetés Képesség Információ"
 		"chi"			"滞后 能力信息"
-		"ru"			"Информация о способности задержки"
 	}
 	"LagMenu2"
 	{
 		"en"			"Lag Ability"
 		"hu"			"Késleltetés Képesség"
 		"chi"			"滞后 能力"
-		"ru"			"Способность задержки"
 	}
 	"Laser"
 	{
@@ -4044,7 +3519,6 @@
 		"en"			"{olive}{1}{mint} is shooting a laser at{olive} {2}{mint}!"
 		"hu"			"{olive}{1}{mint} lézert lő{olive} {2}{mint}felé!"
 		"chi"			"{olive}{1}{mint} 正对{olive} {2}{mint} 发射激光!"
-		"ru"			"{olive}{1}{mint} стреляет лазером в{olive} {2}{mint}!"
 	}
 	"Laser2"
 	{
@@ -4052,21 +3526,18 @@
 		"en"			"{olive}{1}{mint} is no longer shooting a laser!"
 		"hu"			"{olive}{1}{mint} többé már nem lő lézert!"
 		"chi"			"{olive}{1}{mint} 停止了发射激光!"
-		"ru"			"{olive}{1}{mint} больше не стреляет лазером!"
 	}
 	"LaserAmmo"
 	{
 		"en"			"You've used up all your laser ability's ammo."
 		"hu"			"Elhasználtad a lézer képességed összes lőszerét."
 		"chi"			"你已经用光了所有 激光 能力次数."
-		"ru"			"Вы израсходовали все боеприпасы своей лазерной способности."
 	}
 	"LaserDetails"
 	{
 		"en"			"You shoot lasers at survivors."
 		"hu"			"Lézert lősz a túlélőkre."
 		"chi"			"你可以向幸存者发射激光."
-		"ru"			"Вы стреляете лазерами в выживших."
 	}
 	"LaserHuman"
 	{
@@ -4074,21 +3545,18 @@
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your laser ability!"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik lézer képességedet!"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 激光 能力!"
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей лазерной способности!"
 	}
 	"LaserHuman2"
 	{
 		"en"			"Your laser ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a lézer képességedet. Próbáld újra."
-		"chi"			"你的 激光 能力未能激活. 请重试."
-		"ru"			"Ваша лазерная способность не сработала. Попробуйте снова."
+		"chi"			"你的 激光 能力未能激活,请重试."
 	}
 	"LaserHuman3"
 	{
 		"en"			"You already activated your laser ability."
 		"hu"			"Már aktiváltad a lézer képességedet."
 		"chi"			"你已经激活了你的 激光 能力."
-		"ru"			"Вы уже активировали свою лазерную способность."
 	}
 	"LaserHuman4"
 	{
@@ -4096,7 +3564,6 @@
 		"en"			"Your laser ability still needs another{yellow} {1} second(s){mint} to recharge."
 		"hu"			"A lézer képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 		"chi"			"你的 激光 能力还需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Для вашей лазерной способности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 	"LaserHuman5"
 	{
@@ -4104,21 +3571,18 @@
 		"en"			"Your laser ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A lézer képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 		"chi"			"你的 激光 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
-		"ru"			"Ваша лазерной способность закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 	"LaserMenu"
 	{
 		"en"			"Laser Ability Information"
 		"hu"			"Lézer Képesség Információ"
 		"chi"			"激光 能力信息"
-		"ru"			"Информация о лазерной способности"
 	}
 	"LaserMenu2"
 	{
 		"en"			"Laser Ability"
 		"hu"			"Lézer Képesség"
 		"chi"			"激光 能力"
-		"ru"			"Лазерная способность"
 	}
 	"Leech"
 	{
@@ -4157,7 +3621,7 @@
 	{
 		"en"			"Your leech range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági pióca képességedet. Próbáld újra."
-		"chi"			"你的 水蛭 能力未能激活. 请重试."
+		"chi"			"你的 水蛭 能力未能激活,请重试."
 	}
 	"LeechHuman3"
 	{
@@ -4195,149 +3659,149 @@
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} started a{yellow} lightning storm{mint}!"
-		"hu"			"{olive}{1}{mint} elindított egy{yellow} villám vihart{mint}!"
+		"hu"			""
 		"chi"			"{olive}{1}{mint} 开始了{yellow} 雷电风暴{mint}!"
 	}
 	"Lightning2"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}'s{mint} lightning storm ended!"
-		"hu"			"{olive}{1}{mint} villám vihara véget ért!"
+		"hu"			""
 		"chi"			"{olive}{1}{mint} 雷雨结束了!"
 	}
 	"LightningAmmo"
 	{
 		"en"			"You've used up all your lightning storms."
-		"hu"			"Elhasználtad az összes villám viharodat."
+		"hu"			""
 		"chi"			"您已经用尽了所有的雷电风暴."
 	}
 	"LightningDetails"
 	{
 		"en"			"You create lightning storms."
-		"hu"			"Villám viharokat indítasz."
+		"hu"			""
 		"chi"			"您会产生闪电风暴."
 	}
 	"LightningHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lightning storms!"
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik villám vihar képességedet!"
+		"hu"			""
 		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 的闪电风暴!"
 	}
 	"LightningHuman2"
 	{
 		"en"			"Your lightning storm failed to activate. Try again."
-		"hu"			"A villám vihar aktiválása nem sikerült. Próbáld újra."
-		"chi"			"您的闪电风暴未能激活. 请重试."
+		"hu"			""
+		"chi"			"您的闪电风暴未能激活. 再试一次."
 	}
 	"LightningHuman3"
 	{
 		"en"			"You already activated your lightning storm."
-		"hu"			"Már aktiváltad a villám viharodat."
+		"hu"			""
 		"chi"			"您已经激活了闪电风暴."
 	}
 	"LightningHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your lightning storm still needs another{yellow} {1} second(s){mint} to recharge."
-		"hu"			"A villám viharodnak kell még{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			""
 		"chi"			"您的雷雨仍然需要另外{yellow} {1} 秒{mint} 进行充能."
 	}
 	"LightningHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your lightning storm ended and needs to recharge for{yellow} {1} second(s){mint}."
-		"hu"			"A villám viharod véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
+		"hu"			""
 		"chi"			"您的闪电风暴结束了, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"LightningMenu"
 	{
 		"en"			"Lightning Ability Information"
-		"hu"			"Villám Képesség Információ"
+		"hu"			""
 		"chi"			"闪电能力信息"
 	}
 	"LightningMenu2"
 	{
 		"en"			"Lightning Ability"
-		"hu"			"Villám Képesség"
+		"hu"			""
 		"chi"			"闪电能力"
 	}
 	"Medic"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} is healing nearby special infected!"
-		"hu"			"{olive}{1}{mint} gyógyítja a közelben lévő speciális fertőzötteket!"
+		"hu"			""
 		"chi"			"{olive}{1}{mint} 正在治愈附近的特殊感染者!"
 	}
 	"Medic2"
 	{
 		"#format"		"{1:t},{2:N}"
 		"en"			"{olive}{1}{mint} just healed{yellow} {2}{mint}!"
-		"hu"			"{olive}{1}{mint} épp meggyógyította{yellow} {2}{mint}"
+		"hu"			""
 		"chi"			"{olive}{1}{mint} 刚刚恢复{yellow} {2}{mint}!"
 	}
 	"Medic3"
 	{
 		"#format"		"{1:t}"
 		"en"			"{olive}{1}{mint} stopped healing nearby special infected!"
-		"hu"			"{olive}{1}{mint} abbahagyta a közelben lévő spec. fertőzöttek gyógyítását!"
+		"hu"			""
 		"chi"			"{olive}{1}{mint} 停止治愈附近的特殊感染者!"
 	}
 	"MedicAmmo"
 	{
 		"en"			"You've used up all your medic ability's ammo."
-		"hu"			"Elhasználtad az orvos képességed összes lőszerét."
+		"hu"			""
 		"chi"			"您已经用完了所有医务能力的弹药."
 	}
 	"MedicDetails"
 	{
 		"en"			"You heal nearby special infected."
-		"hu"			"Gyógyítod a közelben lévő spec. fertőzötteket."
+		"hu"			""
 		"chi"			"您可以治愈附近的特殊感染者."
 	}
 	"MedicHuman"
 	{
 		"#format"		"{1:i},{2:i}"
 		"en"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your medic ability!"
-		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik orvos képességedet!"
+		"hu"			""
 		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 您的医疗能力！"
 	}
 	"MedicHuman2"
 	{
 		"en"			"Your medic ability failed to activate. Try again."
-		"hu"			"Az orvos képességed aktiválása nem sikerült. Próbáld újra."
-		"chi"			"您的医护技能无法激活. 请重试."
+		"hu"			""
+		"chi"			"您的医护技能无法激活. 再试一次."
 	}
 	"MedicHuman3"
 	{
 		"en"			"You already activated your medic ability."
-		"hu"			"Már aktiváltad az orvos képességedet."
+		"hu"			""
 		"chi"			"您已经激活了医务能力."
 	}
 	"MedicHuman4"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your medic ability still needs another{yellow} {1} second(s){mint} to recharge."
-		"hu"			"Az orvos képességednek kell még{yellow} {1} másodperc{mint} az újratöltéshez."
+		"hu"			""
 		"chi"			"您的军医技能仍需要另外{yellow} {1} 秒{mint} 进行充能."
 	}
 	"MedicHuman5"
 	{
 		"#format"		"{1:i}"
 		"en"			"Your medic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
-		"hu"			"Az orvos képességed véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
+		"hu"			""
 		"chi"			"您的医务能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"MedicMenu"
 	{
 		"en"			"Medic Ability Information"
-		"hu"			"Orvos Képesség Információ"
+		"hu"			"Medikus Képesség Információ"
 		"chi"			"医生 能力信息"
 	}
 	"MedicMenu2"
 	{
 		"en"			"Medic Ability"
-		"hu"			"Orvos Képesség"
+		"hu"			"Medikus Képesség"
 		"chi"			"医生 能力"
 	}
 	"Meteor"
@@ -4377,7 +3841,7 @@
 	{
 		"en"			"Your meteor shower failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a meteor záporodat. Próbáld újra."
-		"chi"			"你的 流星雨 未能激活. 请重试."
+		"chi"			"你的 流星雨 未能激活,请重试."
 	}
 	"MeteorHuman3"
 	{
@@ -4441,7 +3905,7 @@
 	{
 		"en"			"You failed to create a minion. Try again."
 		"hu"			"Nem sikerült minyonokat létrehozni. Próbáld újra."
-		"chi"			"你制造 仆从 失败. 请重试."
+		"chi"			"你制造 仆从 失败,请重试."
 	}
 	"MinionHuman3"
 	{
@@ -4505,7 +3969,7 @@
 	{
 		"en"			"Your necro ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a haláli képességedet. Próbáld újra."
-		"chi"			"你的 死灵 能力未能激活. 请重试."
+		"chi"			"你的 死灵 能力未能激活,请重试."
 	}
 	"NecroHuman3"
 	{
@@ -4576,7 +4040,7 @@
 	{
 		"en"			"Your damage nullifier range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági sebzés hatástalanító képességedet. Próbáld újra."
-		"chi"			"你的 伤害无效化 能力未能激活. 请重试."
+		"chi"			"你的 伤害无效化 能力未能激活,请重试."
 	}
 	"NullifyHuman3"
 	{
@@ -4647,7 +4111,7 @@
 	{
 		"en"			"Your omni ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a mindenség képességedet. Próbáld újra."
-		"chi"			"你的 全能 能力未能激活. 请重试."
+		"chi"			"你的 全能 能力未能激活,请重试."
 	}
 	"OmniHuman3"
 	{
@@ -4718,7 +4182,7 @@
 	{
 		"en"			"Your panic ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a pánik képességedet. Próbáld újra."
-		"chi"			"你的 唤潮 能力未能激活. 请重试."
+		"chi"			"你的 唤潮 能力未能激活,请重试."
 	}
 	"PanicHuman3"
 	{
@@ -4789,7 +4253,7 @@
 	{
 		"en"			"Your pimp slap range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági csapdosó képességedet. Próbáld újra."
-		"chi"			"你的 鞭挞 能力未能激活. 请重试."
+		"chi"			"你的 鞭挞 能力未能激活,请重试."
 	}
 	"PimpHuman3"
 	{
@@ -4853,7 +4317,7 @@
 	{
 		"en"			"Your puke range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági hányás képességedet. Próbáld újra."
-		"chi"			"你的 呕吐 能力未能激活. 请重试."
+		"chi"			"你的 呕吐 能力未能激活,请重试."
 	}
 	"PukeHuman3"
 	{
@@ -4918,7 +4382,7 @@
 	{
 		"en"			"You ignite yourself and gain a speed boost when on fire."
 		"hu"			"Meggyújtod önmagad, a sebességed gyorsabb lesz miközben égsz."
-		"chi"			"着火时, 在燃烧自己的同时也获得移动速度的提升."
+		"chi"			"着火时,在燃烧自己的同时也获得移动速度的提升."
 	}
 	"PyroHuman"
 	{
@@ -4931,7 +4395,7 @@
 	{
 		"en"			"Your pyro ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a piro képességedet. Próbáld újra."
-		"chi"			"你的 火速 能力未能激活. 请重试."
+		"chi"			"你的 火速 能力未能激活,请重试."
 	}
 	"PyroHuman3"
 	{
@@ -5002,7 +4466,7 @@
 	{
 		"en"			"Your quiet range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági csend képességedet. Próbáld újra."
-		"chi"			"你的 沉默 能力未能激活. 请重试."
+		"chi"			"你的 沉默 能力未能激活,请重试."
 	}
 	"QuietHuman3"
 	{
@@ -5073,7 +4537,7 @@
 	{
 		"en"			"Your recoil range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági visszarúgás képességedet. Próbáld újra."
-		"chi"			"你的 后坐力 能力未能激活. 请重试."
+		"chi"			"你的 后坐力 能力未能激活,请重试."
 	}
 	"RecoilHuman3"
 	{
@@ -5144,7 +4608,7 @@
 	{
 		"en"			"Your regen ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a regeneráló képességedet. Próbáld újra."
-		"chi"			"你的 自愈 能力未能激活. 请重试."
+		"chi"			"你的 自愈 能力未能激活,请重试."
 	}
 	"RegenHuman3"
 	{
@@ -5258,7 +4722,7 @@
 	{
 		"en"			"Your restart range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági újrakezdő képességedet. Próbáld újra."
-		"chi"			"你的 重来 能力未能激活. 请重试."
+		"chi"			"你的 重来 能力未能激活,请重试."
 	}
 	"RestartHuman3"
 	{
@@ -5329,7 +4793,7 @@
 	{
 		"en"			"Your rock shower failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a szikla záporodat. Próbáld újra."
-		"chi"			"你的 岩石雨 未能激活. 请重试."
+		"chi"			"你的 岩石雨 未能激活,请重试."
 	}
 	"RockHuman3"
 	{
@@ -5349,7 +4813,7 @@
 		"#format"		"{1:i}"
 		"en"			"Your rock shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
 		"hu"			"A szikla zápor képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
-		"chi"			"你的 岩石雨 能力已结束, 还需要{yellow} {1} 秒{mint} 进行充能."
+		"chi"			"你的 岩石雨 能力已结束,还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 	"RockMenu"
 	{
@@ -5393,7 +4857,7 @@
 	{
 		"en"			"Your rocket range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rakéta képességedet. Próbáld újra."
-		"chi"			"你的 火箭 能力未能激活. 请重试."
+		"chi"			"你的 火箭 能力未能激活,请重试."
 	}
 	"RocketHuman3"
 	{
@@ -5464,7 +4928,7 @@
 	{
 		"en"			"Your shake range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági rázó képességedet. Próbáld újra."
-		"chi"			"你的 震动 能力未能激活. 请重试."
+		"chi"			"你的 震动 能力未能激活,请重试."
 	}
 	"ShakeHuman3"
 	{
@@ -5522,7 +4986,7 @@
 	{
 		"en"			"You protect yourself with a shield and throw propane tanks or gas cans."
 		"hu"			"Megvéded magad egy pajzzsal, propán tartályt vagy benzines kannát dobsz."
-		"chi"			"你可以用护盾保护自己, 并且会扔出煤气瓶或汽油罐."
+		"chi"			"你可以用护盾保护自己,并且会扔出煤气瓶或汽油罐."
 	}
 	"ShieldHuman"
 	{
@@ -5535,7 +4999,7 @@
 	{
 		"en"			"Your shield failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a pajzsodat. Próbáld újra."
-		"chi"			"你的 护盾 未能激活. 请重试."
+		"chi"			"你的 护盾 未能激活,请重试."
 	}
 	"ShieldHuman3"
 	{
@@ -5613,7 +5077,7 @@
 	{
 		"en"			"Your shove range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lökés képességedet. Próbáld újra."
-		"chi"			"你的 推挤 能力未能激活. 请重试."
+		"chi"			"你的 推挤 能力未能激活,请重试."
 	}
 	"ShoveHuman3"
 	{
@@ -5684,7 +5148,7 @@
 	{
 		"en"			"Your slow range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lassító képességedet. Próbáld újra."
-		"chi"			"你的 减速 能力未能激活. 请重试."
+		"chi"			"你的 减速 能力未能激活,请重试."
 	}
 	"SlowHuman3"
 	{
@@ -5748,7 +5212,7 @@
 	{
 		"en"			"Your smash range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági zúzó képességedet. Próbáld újra."
-		"chi"			"你的 粉碎 能力未能激活. 请重试."
+		"chi"			"你的 粉碎 能力未能激活,请重试."
 	}
 	"SmashHuman3"
 	{
@@ -5812,7 +5276,7 @@
 	{
 		"en"			"Your smite range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági lesújtó képességedet. Próbáld újra."
-		"chi"			"你的 重击 能力未能激活. 请重试."
+		"chi"			"你的 重击 能力未能激活,请重试."
 	}
 	"SmiteHuman3"
 	{
@@ -5883,7 +5347,7 @@
 	{
 		"en"			"Your rock spammer ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a folyamatos szikla képességedet. Próbáld újra."
-		"chi"			"你的 岩石连投 能力未能激活. 请重试."
+		"chi"			"你的 岩石连投 能力未能激活,请重试."
 	}
 	"SpamHuman3"
 	{
@@ -5954,7 +5418,7 @@
 	{
 		"en"			"Your splash ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a területi képességedet. Próbáld újra."
-		"chi"			"你的 溅射 能力未能激活. 请重试."
+		"chi"			"你的 溅射 能力未能激活,请重试."
 	}
 	"SplashHuman3"
 	{
@@ -6025,7 +5489,7 @@
 	{
 		"en"			"Your splatter ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a fröcskölő képességedet. Próbáld újra."
-		"chi"			"您的飞溅技能无法激活. 请重试."
+		"chi"			"您的飞溅技能无法激活. 再试一次."
 	}
 	"SplatterHuman3"
 	{
@@ -6233,7 +5697,7 @@
 	{
 		"en"			"You activate ultimate mode when low on health to gain temporary godmode and damage boost"
 		"hu"			"Aktiválod a végső módot, amikor már kevés az életerőd, hogy ideiglenesen sebezhetetlen legyél és sebzés növelést kapj."
-		"chi"			"生命值较低时激活终极模式, 以获得暂时的无敌和伤害加成."
+		"chi"			"生命值较低时激活终极模式,以获得暂时的无敌和伤害加成."
 	}
 	"UltimateHuman"
 	{
@@ -6317,7 +5781,7 @@
 	{
 		"en"			"Your undead ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az élőholt képességedet. Próbáld újra."
-		"chi"			"你的 不死 能力未能激活. 请重试."
+		"chi"			"你的 不死 能力未能激活,请重试."
 	}
 	"UndeadHuman3"
 	{
@@ -6413,7 +5877,7 @@
 	{
 		"en"			"Your visual range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági vizuális képességedet. Próbáld újra."
-		"chi"			"你的 视觉 能力未能激活. 请重试."
+		"chi"			"你的 视觉 能力未能激活,请重试."
 	}
 	"VisionHuman3"
 	{
@@ -6504,7 +5968,7 @@
 	{
 		"en"			"Your warp range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági teleportáló képességedet. Próbáld újra."
-		"chi"			"你的 传送 能力未能激活. 请重试."
+		"chi"			"你的 传送 能力未能激活,请重试."
 	}
 	"WarpHuman4"
 	{
@@ -6595,7 +6059,7 @@
 	{
 		"en"			"Your whirl range ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a távolsági megpörgető képességedet. Próbáld újra."
-		"chi"			"你的 翻转 能力未能激活. 请重试."
+		"chi"			"你的 翻转 能力未能激活,请重试."
 	}
 	"WhirlHuman3"
 	{
@@ -6659,7 +6123,7 @@
 	{
 		"en"			"Your witch spawner ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a boszorka létrehozó képességedet. Próbáld újra."
-		"chi"			"你的 召唤女巫 能力未能激活. 请重试."
+		"chi"			"你的 召唤女巫 能力未能激活,请重试."
 	}
 	"WitchHuman3"
 	{
@@ -6705,7 +6169,7 @@
 	{
 		"en"			"You can steal health from survivors and vice-versa."
 		"hu"			"Életerőt tudsz lopni a túlélőktől, és fordítva."
-		"chi"			"你可以从幸存者身上窃取生命值, 反之亦然."
+		"chi"			"你可以从幸存者身上窃取生命值,反之亦然."
 	}
 	"XiphosMenu"
 	{
@@ -6756,7 +6220,7 @@
 	{
 		"en"			"Your yell ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni az üvöltő képességedet. Próbáld újra."
-		"chi"			"你的 战吼 能力未能激活. 请重试."
+		"chi"			"你的 战吼 能力未能激活,请重试."
 	}
 	"YellHuman3"
 	{
@@ -6827,7 +6291,7 @@
 	{
 		"en"			"Your zombie spawner ability failed to activate. Try again."
 		"hu"			"Nem sikerült aktiválni a zombi létrehozó képességedet. Próbáld újra."
-		"chi"			"你的 召唤僵尸 能力未能激活. 请重试."
+		"chi"			"你的 召唤僵尸 能力未能激活,请重试."
 	}
 	"ZombieHuman3"
 	{
@@ -6931,7 +6395,7 @@
 	{
 		"en"			"{mint}This Tank can cause explosions and is immune to explosive damage."
 		"hu"			"{mint}Ez a Tank robbanásokat okozhat és immunis a robbanásokra."
-		"chi"			"{mint}这个坦克可以引发爆炸, 同时免疫爆炸伤害."
+		"chi"			"{mint}这个坦克可以引发爆炸,同时免疫爆炸伤害."
 	}
 	"Tank #7 Name"
 	{
@@ -6979,7 +6443,7 @@
 	{
 		"en"			"{mint}This Tank can throw cars at survivors. The cars disappear after 30 seconds."
 		"hu"			"{mint}Ez a Tank autókat dobhat a túlélők felé. Az autók eltűnnek 30mp után"
-		"chi"			"{mint}这个坦克可以向幸存者投掷汽车. 投掷出来的汽车在30秒后消失."
+		"chi"			"{mint}这个坦克可以向幸存者投掷汽车.投掷出来的汽车在30秒后消失."
 	}
 	"Tank #11 Name"
 	{
@@ -7128,13 +6592,13 @@
 	"Tank #23 Name"
 	{
 		"en"			"Flying Tank"
-		"hu"			"Repülő Tank"
+		"hu"			""
 		"chi"			"飞行坦克"
 	}
 	"Tank #23"
 	{
 		"en"			"{mint}This Tank flies around looking for victims."
-		"hu"			"{mint}Ez a Tank körbe-körbe repül, áldozatokat keresve."
+		"hu"			""
 		"chi"			"{mint}这辆战车四处寻找受害者."
 	}
 	"Tank #24 Name"
@@ -7147,7 +6611,7 @@
 	{
 		"en"			"{mint}This Tank takes extra damage while dealing more damage and running faster."
 		"hu"			"{mint}Ez a Tank érzékenyebb a sebzésre, de közben többet sebez és gyorsabban fut."
-		"chi"			"{mint}这个坦克在受到更多伤害的同时, 移动速度变快且对幸存者造成的伤害也更高."
+		"chi"			"{mint}这个坦克在受到更多伤害的同时,移动速度变快且对幸存者造成的伤害也更高."
 	}
 	"Tank #25 Name"
 	{
@@ -7183,7 +6647,7 @@
 	{
 		"en"			"{mint}This Tank can pull survivors and infected towards it and lower survivors' gravity."
 		"hu"			"{mint}Ez a Tank magához húzhatja a túlélőket és a fertőzötteket és csökkentheti a túlélők gravitációját."
-		"chi"			"{mint}这个坦克可以把附近的幸存者和感染者拉向他的脚下, 同时降低幸存者的重力值."
+		"chi"			"{mint}这个坦克可以把附近的幸存者和感染者拉向他的脚下,同时降低幸存者的重力值."
 	}
 	"Tank #28 Name"
 	{
@@ -7195,7 +6659,7 @@
 	{
 		"en"			"{mint}This Tank can give survivors temporary health, and it can absorb health from nearby infected."
 		"hu"			"{mint}Ez a Tank ideiglenes életerőt adhat a túlélőknek, és életerőt nyelhet el a közeli fertőzöttektől."
-		"chi"			"{mint}这个坦克可以让幸存者的生命变成临时生命值, 并且可以吸收附近特殊感染者的生命值."
+		"chi"			"{mint}这个坦克可以让幸存者的生命变成临时生命值,并且可以吸收附近特殊感染者的生命值."
 	}
 	"Tank #29 Name"
 	{
@@ -7267,7 +6731,7 @@
 	{
 		"en"			"{mint}This Tank can make survivors go idle. (This doesn't affect bots.)"
 		"hu"			"{mint}Ez a Tank ráveheti a túlélőket arra hogy szünetet tartsanak. (Botokra ez nem hat.)"
-		"chi"			"{mint}这个坦克可以让幸存者进入闲置模式. (这对Bot无效.)"
+		"chi"			"{mint}这个坦克可以让幸存者进入闲置模式.(这对Bot无效.)"
 	}
 	"Tank #35 Name"
 	{
@@ -7368,13 +6832,13 @@
 	"Tank #43 Name"
 	{
 		"en"			"Lightning Tank"
-		"hu"			"Villám Tank"
+		"hu"			""
 		"chi"			"闪电坦克"
 	}
 	"Tank #43"
 	{
 		"en"			"{mint}This Tank creates lightning storms."
-		"hu"			"{mint}Ez a Tank villám viharokat indít."
+		"hu"			""
 		"chi"			"{mint}这辆战车制造了闪电风暴."
 	}
 	"Tank #44 Name"
@@ -7399,7 +6863,7 @@
 	{
 		"en"			"{mint}This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
 		"hu"			"{mint}Ez a Tank meteor záport indíthat, meteorokkal ami elég és felrobban pár másodperc múlva."
-		"chi"			"{mint}这个坦克可以召唤带火焰和爆炸效果的流星雨, 会持续好几秒."
+		"chi"			"{mint}这个坦克可以召唤带火焰和爆炸效果的流星雨,会持续好几秒."
 	}
 	"Tank #46 Name"
 	{
@@ -7471,7 +6935,7 @@
 	{
 		"en"			"{mint}This Tank can pimp slap survivors repeatedly to show them who's boss."
 		"hu"			"{mint}Ez a Tank folyamatosan csapdossa a túlélőket, megmutatja nekik ki a főnök."
-		"chi"			"{mint}这个坦克可以鞭挞幸存者, 让幸存者知道谁才是老大."
+		"chi"			"{mint}这个坦克可以鞭挞幸存者,让幸存者知道谁才是老大."
 	}
 	"Tank #52 Name"
 	{
@@ -7627,7 +7091,7 @@
 	{
 		"en"			"{mint}This Tank spawns with a shield and throws propane tanks or gas cans which survivors can use to break the shield."
 		"hu"			"{mint}Ez a Tank egy pajzzsal születik, propán tartályokat vagy benzines kannákat dobál. Ezek segítségével a túlélők áttörhetnek a pajzson."
-		"chi"			"{mint}这个坦克出生时会被护盾保护, 投掷的石头会变成煤气瓶或汽油桶, 幸存者可以用他们打破盾牌."
+		"chi"			"{mint}这个坦克出生时会被护盾保护,投掷的石头会变成煤气瓶或汽油桶,幸存者可以用他们打破盾牌."
 	}
 	"Tank #65 Name"
 	{
@@ -7759,7 +7223,7 @@
 	{
 		"en"			"{mint}This Tank can throw cars, special infected, Tanks, Witches, and itself!"
 		"hu"			"{mint}Ez a Tank tud dobni autókat, speciális fertőzötteket, Tankokat, Boszorkákat, és saját magát!"
-		"chi"			"{mint}这个坦克可以投掷汽车/特殊感染者/坦克/女巫, 甚至它自己!"
+		"chi"			"{mint}这个坦克可以投掷汽车/特殊感染者/坦克/女巫,甚至它自己!"
 	}
 	"Tank #76 Name"
 	{
@@ -7867,7 +7331,7 @@
 	{
 		"en"			"{mint}This Tank can steal health from survivors and vice-versa."
 		"hu"			"{mint}Ez a Tank tud életerőt lopni a túlélőktől és fordítva."
-		"chi"			"{mint}这个坦克可以窃取幸存者生命值, 反之亦然."
+		"chi"			"{mint}这个坦克可以窃取幸存者生命值,反之亦然."
 	}
 	"Tank #85 Name"
 	{
@@ -7903,7 +7367,7 @@
 	{
 		"en"			"{mint}This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
 		"hu"			"{mint}Ez a Tank immunis a robbanásokra, magához húzza a túlélőket és fertőzötteket, meteor záport indít."
-		"chi"			"{mint}这个坦克免疫爆炸伤害, 可以把幸存者和特殊感染者拉向它身边. 并且可以召唤流星雨."
+		"chi"			"{mint}这个坦克免疫爆炸伤害,可以把幸存者和特殊感染者拉向它身边.并且可以召唤流星雨."
 	}
 	"Tank #88 Name"
 	{
@@ -7915,7 +7379,7 @@
 	{
 		"en"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
 		"hu"			"{mint}Tűz immunitás, gyors, álcázza magát, lefegyverzi a túlélőket, magához húzza és megváltoztatja a túlélők gravitációját, időszakosan ugrik, meteor záport indít, pajzzsal születik, lecsapja a túlélőket, túlélőkhöz teleportál, és Boszorkákat/zombikat hozz létre."
-		"chi"			"{mint}对火免疫, 跑得快, 伪装自己, 让幸存者缴械, 把幸存者拉向它身边同时改变他们的重力, 周期性跳跃和召唤流星雨, 出生自带护盾, 会重击幸存者, 会传送到幸存者身边并生成女巫/僵尸."
+		"chi"			"{mint}对火免疫,跑得快,伪装自己,让幸存者缴械,把幸存者拉向它身边同时改变他们的重力,周期性跳跃和召唤流星雨,出生自带护盾,会重击幸存者,会传送到幸存者身边并生成女巫/僵尸."
 	}
 	"Tank #89 Name"
 	{
@@ -7939,7 +7403,7 @@
 	{
 		"en"			"{mint}This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
 		"hu"			"{mint}Ez a Tank időszakosan ugrik, ráveszi a túlélőket arra hogy kontrollálhatatlanul ugráljanak, és a túlélőkhöz teleportál."
-		"chi"			"{mint}这个坦克会周期性的跳跃, 让幸存者不受控制的跳跃并且会传送到幸存者身边."
+		"chi"			"{mint}这个坦克会周期性的跳跃,让幸存者不受控制的跳跃并且会传送到幸存者身边."
 	}
 	"Tank #91 Name"
 	{
@@ -7962,7 +7426,7 @@
 	"Tank #92"
 	{
 		"en"			"{mint}This Tank can run really fast, throw electricity at survivors, and slow down time around itself, all while having temporary invincibility."
-		"hu"			"{mint}Ez a Tank nagyon gyorsan tud futni, elektromosságot dob a túlélőkre, lelassítja az időt maga körül, miközben ideiglenesen legyőzhetetlen."
+		"hu"			""
 		"chi"			"{mint}这辆战车的运行速度非常快，可以向生还者投掷电力，并可以减慢其周围的时间，而这一切都是暂时的."
 	}
 	"Tank #93 Name"
@@ -7975,7 +7439,7 @@
 	{
 		"en"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
 		"hu"			"{mint}Tűz immunitás, lassan mozog, ideiglenes életerőt ad a túlélőknek, életerőt szív el a közeli fertőzöttektől, pajzzsal születik, és lecsapja a túlélőket."
-		"chi"			"{mint}免疫火焰伤害, 移动速度慢, 会给予幸存者临时生命值, 吸收附近特殊感染者的生命值, 出生自带护盾和重击幸存者."
+		"chi"			"{mint}免疫火焰伤害,移动速度慢,会给予幸存者临时生命值,吸收附近特殊感染者的生命值,出生自带护盾和重击幸存者."
 	}
 	"Tank #94 Name"
 	{
@@ -7987,7 +7451,7 @@
 	{
 		"en"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Tűz immunitás, álcázza magát, és a túlélőkhöz teleportál."
-		"chi"			"{mint}免疫火焰伤害, 伪装自己且会传送到幸存者身边."
+		"chi"			"{mint}免疫火焰伤害,伪装自己且会传送到幸存者身边."
 	}
 	"Tank #95 Name"
 	{
@@ -7999,7 +7463,7 @@
 	{
 		"en"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
 		"hu"			"{mint}Tűz immunitás, sebzés elnyelés, gyorsan fut, álcázza magát, magához vonzza a túlélőket és megváltoztatja a gravitációjukat, magasra ugrik, meteor záport indít, lecsapja a túlélőket, sziklákat dobál folyamatosan, túlélőkhöz teleportál, és Boszorkákat/zombikat hoz létre."
-		"chi"			"{mint}免疫火焰伤害, 吸收伤害, 跑得快, 伪装自己, 将幸存者拉向自己并改变他们重力值, 跳得高, 召唤流星雨, 重击幸存者, 投掷一堆岩石, 会传送到幸存者身边和召唤女巫/僵尸."
+		"chi"			"{mint}免疫火焰伤害,吸收伤害,跑得快,伪装自己,将幸存者拉向自己并改变他们重力值,跳得高,召唤流星雨,重击幸存者,投掷一堆岩石,会传送到幸存者身边和召唤女巫/僵尸."
 	}
 	"Tank #96 Name"
 	{
@@ -8011,7 +7475,7 @@
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, és a túlélőkhöz teleportál."
-		"chi"			"{mint}这个坦克免疫火焰伤害, 跑得快并可以传送到幸存者身边."
+		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快并可以传送到幸存者身边."
 	}
 	"Tank #97 Name"
 	{
@@ -8023,7 +7487,7 @@
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, gyorsan fut, álcázza magát, és a túlélőkhöz teleportál."
-		"chi"			"{mint}这个坦克免疫火焰伤害, 跑得快, 伪装自己并可以传送到幸存者身边."
+		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,伪装自己并可以传送到幸存者身边."
 	}
 	"Tank #98 Name"
 	{
@@ -8047,7 +7511,7 @@
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
-		"chi"			"{mint}这个坦克免疫火焰伤害, 跑得快, 并且可以传送到幸存者身边."
+		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,并且可以传送到幸存者身边."
 	}
 	"Tank #100 Name"
 	{
@@ -8071,18 +7535,18 @@
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, nagyon gyorsan fut, és teleportál a túlélőkhöz."
-		"chi"			"{mint}这个坦克免疫火焰伤害, 跑得快, 并且会传送到幸存者身边."
+		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,并且会传送到幸存者身边."
 	}
 	"Tank #102 Name"
 	{
 		"en"			"Trap Tank"
-		"hu"			"Csapda Tank"
+		"hu"			""
 		"chi"			"陷阱坦克"
 	}
 	"Tank #102"
 	{
 		"en"			"{mint}This Tank is not what it seems."
-		"hu"			"{mint}Ez a Tank nem az aminek látszik."
+		"hu"			""
 		"chi"			"{mint}这辆战车看起来并不像."
 	}
 	"Tank #103 Name"
@@ -8094,7 +7558,7 @@
 	"Tank #103"
 	{
 		"en"			"{mint}This Tank can partially blind survivors."
-		"hu"			"{mint}Ez a Tank megtudja részben vakítani a túlélőket."
+		"hu"			""
 		"chi"			"{mint}该坦克可以使幸存者部分失明."
 	}
 	"Tank #104 Name"
@@ -8118,7 +7582,7 @@
 	"Tank #105"
 	{
 		"en"			"{mint}This Tank can hurl rocks at survivors."
-		"hu"			"{mint}Ez a Tank odadobja a sziklákat a túlélőkre."
+		"hu"			""
 		"chi"			"{mint}该坦克可以向生还者投掷石块."
 	}
 	"Tank #106 Name"
@@ -8130,7 +7594,7 @@
 	"Tank #106"
 	{
 		"en"			"{mint}This Tank does extra damage and runs really fast while cloaking itself and slowing survivors down."
-		"hu"			"{mint}Ez a Tank extra sebzést okozz, nagyon gyorsan fut miközben álcázza magát és lelassítja a túlélőket."
+		"hu"			""
 		"chi"			"{mint}这辆坦克会造成额外的伤害，并且在掩盖自身并减慢幸存者的速度时会非常快地运行."
 	}
 	"Tank #107 Name"
@@ -8143,7 +7607,7 @@
 	{
 		"en"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
 		"hu"			"{mint}Ez a Tank immunis a tűzre, kicsit gyorsabban fut, meteor záport, pánik eseményt, és szikla záport indít."
-		"chi"			"{mint}这个坦克免疫火焰伤害, 跑得快, 会召唤流星雨/尸潮和岩石雨"
+		"chi"			"{mint}这个坦克免疫火焰伤害,跑得快,会召唤流星雨/尸潮和岩石雨"
 	}
 	"Tank #108 Name"
 	{
@@ -8155,18 +7619,18 @@
 	{
 		"en"			"{mint}It's Darth Vader... And he is... A Mutant Tank with the Force!"
 		"hu"			"{mint}Ez Darth Vader... És ő egy... Mutáns Tank az erővel!"
-		"chi"			"{mint}是... 是达斯·维达... 它... 它是帝国的突变坦克!"
+		"chi"			"{mint}是...是达斯·维达...它...它是帝国的突变坦克!"
 	}
 	"Tank #109 Name"
 	{
 		"en"			"Drug Addict Tank"
-		"hu"			"Drog Szenvedélye Tank"
+		"hu"			""
 		"chi"			"吸毒者坦克"
 	}
 	"Tank #109"
 	{
 		"en"			"{mint}This Tank has a contagious addiction."
-		"hu"			"{mint}Ennek a Tanknak fertőző a szenvedélye."
+		"hu"			""
 		"chi"			"{mint}这辆战车具有传染性上瘾."
 	}
 	"Tank #110 Name"
@@ -8179,7 +7643,7 @@
 	{
 		"en"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, eltemeti a túlélőket, álcázza magát, túlélőkhöz teleportál."
-		"chi"			"{mint}这个坦克跑的比一般的快, 会伪装自己, 可以埋葬幸存者和传送到幸存者身边."
+		"chi"			"{mint}这个坦克跑的比一般的快,会伪装自己,可以埋葬幸存者和传送到幸存者身边."
 	}
 	"Tank #111 Name"
 	{
@@ -8190,7 +7654,7 @@
 	"Tank #111"
 	{
 		"en"			"{mint}This Tank can start panic events and puke on survivors to help prolong them."
-		"hu"			"{mint}Ez a Tank pánik eseményt indíthat és lehányhatja a túlélőket hogy segítsen."
+		"hu"			""
 		"chi"			"{mint}这辆战车可以引发恐慌事件，还可以对幸存者进行呕吐以延长生存时间."
 	}
 	"Tank #112 Name"
@@ -8215,7 +7679,7 @@
 	{
 		"en"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
 		"hu"			"{mint}Ez a Tank tud teleportálni, csendben mozogni, és tudja álcázni magát. Légy óvatos!"
-		"chi"			"{mint}这个坦克可以瞬移, 消无声息的移动和伪装自己. 需要特别小心!"
+		"chi"			"{mint}这个坦克可以瞬移,消无声息的移动和伪装自己.需要特别小心!"
 	}
 	"Tank #114 Name"
 	{
@@ -8227,12 +7691,12 @@
 	{
 		"en"			"{mint}This Tank is too busy meditating to care about you."
 		"hu"			"{mint}Ez a Tank éppen meditál, túl elfoglalt hogy foglalkozzon veled."
-		"chi"			"{mint}这个坦克沉迷冥思, 根本对你毫无兴趣."
+		"chi"			"{mint}这个坦克沉迷冥思,根本对你毫无兴趣."
 	}
 	"Tank #115 Name"
 	{
 		"en"			"The Boss (1st Form)"
-		"hu"			"A Főnök (1. Alak)"
+		"hu"			"A Főnök (1. alak)"
 		"chi"			"老板（第一形式）"
 	}
 	"Tank #115"
@@ -8251,7 +7715,7 @@
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a közelharcra, erősebb a szokásosnál, robbanó sziklákat dob, megváltoztathatja a túlélők gravitációját, időszakosan teleportál egy túlélőhöz."
-		"chi"			"{mint}这个坦克跑得比一般的快, 免疫近战伤害, 比一般的坦克强一点, 会投掷爆炸的岩石, 可以改变幸存者的重力值和传送到幸存者身边."
+		"chi"			"{mint}这个坦克跑得比一般的快,免疫近战伤害,比一般的坦克强一点,会投掷爆炸的岩石,可以改变幸存者的重力值和传送到幸存者身边."
 	}
 	"Tank #117 Name"
 	{
@@ -8263,7 +7727,7 @@
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, gyengébb a szokásosnál, robbanó sziklákat dob, megvakítja a túlélőket, láthatatlanná tud válni, időszakosan teleportál egy túlélőhöz."
-		"chi"			"{mint}这个坦克跑得比一般的快, 免疫火焰伤害, 比一般的坦克弱一点, 会投掷爆炸的岩石, 可以让幸存者失明和伪装自己, 并会定期传送到幸存者身边."
+		"chi"			"{mint}这个坦克跑得比一般的快,免疫火焰伤害,比一般的坦克弱一点,会投掷爆炸的岩石,可以让幸存者失明和伪装自己,并会定期传送到幸存者身边."
 	}
 	"Tank #118 Name"
 	{
@@ -8275,7 +7739,7 @@
 	{
 		"en"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
 		"hu"			"{mint}Ez a Tank egy kicsit gyorsabban fut, immunis a tűzre, erősebb a szokásosnál, robbanó sziklákat dob, tüzet okoz, ideiglenes életerőt ad a túlélőknek, időszakosan ugrál, időszakosan teleportál egy túlélőhöz."
-		"chi"			"{mint}这个坦克跑的比一般的快, 免疫火焰伤害, 比一般的坦克强一点, 会投掷爆炸的岩石和引发火灾, 给予幸存者临时生命值, 会定期进行跳跃和传送到幸存者身边."
+		"chi"			"{mint}这个坦克跑的比一般的快,免疫火焰伤害,比一般的坦克强一点,会投掷爆炸的岩石和引发火灾,给予幸存者临时生命值,会定期进行跳跃和传送到幸存者身边."
 	}
 	"Tank #119 Name"
 	{
@@ -8287,7 +7751,7 @@
 	{
 		"en"			"{mint}This Tank randomly switches into different Mutant Tank types and deals increased damage. Be careful..."
 		"hu"			"{mint}Ez a tank véletlenszerűen átalakul egy másik típusú Mutáns Tankká, a sebzése megnő. Légy óvatos..."
-		"chi"			"{mint}这个坦克会随机转化成其他突变坦克类型, 会造成巨大威胁. 请小心..."
+		"chi"			"{mint}这个坦克会随机转化成其他突变坦克类型,会造成巨大威胁.请小心..."
 	}
 	"Tank #120 Name"
 	{
@@ -8299,7 +7763,7 @@
 	{
 		"en"			"{mint}This Tank can shapeshift into different Mutant Tank types. Don't underestimate it..."
 		"hu"			"{mint}Ez a tank át tud alakulni egy másik típusú Mutáns Tankká. Ne becsüld le..."
-		"chi"			"{mint}这个坦克可以变成其他突变坦克类型. 要特别小心..."
+		"chi"			"{mint}这个坦克可以变成其他突变坦克类型,要特别小心..."
 	}
 	"Tank #121 Name"
 	{
@@ -8349,19 +7813,25 @@
 		"hu"			"{mint}Ez a Tank egyszerűen csak nem megy el."
 		"chi"			"{mint}这辆坦克不会消失."
 	}
+
 	// This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
 	// Ez egy valós Steam32ID. Ne töröld! Ez csak egy példa.
-	// 这实际上是一个有效的 Steam32ID, 所以请不要取消注释,这只是一个示例
-	// На самом деле это действительный Steam32ID, поэтому не комментируйте его; это просто пример.
+	// 这实际上是一个有效的 Steam32ID, 所以请不要取消注释, 这只是一个示例
+	// --
+	// "STEAM_0:1:23456789 Name"
+	// {
+	//	"en"			"Tank"
+	//	"hu"			"Tank"
+	//	"chi"			"坦克"
+	// }
 	// "STEAM_0:1:23456789"
 	// {
 	//	"en"			"{mint}This Tank is controlled by someone."
 	//	"hu"			"{mint}Ezt a Tankot valaki irányítja."
 	//	"chi"			"{mint}这个坦克是某某某在控制的."
-	//	"ru"			"{mint}Этот Танк кем-то управляется."
 	// }
+	// --
 	// Add Tank Note phrases for your own Mutant Tanks below!
 	// Adj saját kifejezést a saját Mutáns Tankjaidnak lentebb!
 	// 给你自己所控的突变坦克添加坦克注释短语文本!
-	// Добавьте ниже переводимые фразы для ваших собственных танков-мутантов!
 }
