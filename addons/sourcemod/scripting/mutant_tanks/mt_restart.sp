@@ -703,12 +703,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		g_esPlayer[GetClientOfUserId(event.GetInt("userid"))].g_bCheckpoint = true;
 	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
 		vReset();
 	}
 
-	if (StrEqual(name, "round_start"))
+	if (StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++ )
 		{

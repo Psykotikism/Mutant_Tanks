@@ -1928,14 +1928,13 @@ stock float flGetAngle(float angle1[3], float angle2[3])
 
 stock float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity, int type)
 {
-	static float flAngle[3];
+	static float flAngle[3], flDistance;
 	vCopyVector(angle, flAngle);
 	flAngle[0] += offset1;
 	flAngle[1] += offset2;
 	GetAngleVectors(flAngle, force, NULL_VECTOR, NULL_VECTOR);
-
-	static float flDistance;
 	flDistance = flGetRayDistance(pos, flAngle, entity, type);
+
 	return flDistance;
 }
 
@@ -1993,9 +1992,9 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 
 stock float flGetKeywordValue(const char[] key, float curVal, const char[] value, float min, float max)
 {
-	if (min == 0.0 && max == 1.0)
+	if (StrEqual(value, "default", false))
 	{
-		return (StringToFloat(value) == max || StrEqual(value, "true", false) || StrEqual(value, "on", false) || StrEqual(value, "yes", false)) ? max : min;
+		return curVal;
 	}
 	else if (StrContains(key, "chance", false) != -1 && min == 0.0 && max == 100.0)
 	{
@@ -2029,10 +2028,6 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 		else if (StrEqual(value, "farthest", false))
 		{
 			return max;
-		}
-		else if (StrEqual(value, "default", false))
-		{
-			return curVal;
 		}
 	}
 
@@ -2173,13 +2168,24 @@ stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] 
 
 stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int min, int max)
 {
-	if (min == 0 && max == 1)
+	if (StrEqual(value, "default", false))
 	{
-		return (StringToInt(value) == max || StrEqual(value, "true", false) || StrEqual(value, "on", false) || StrEqual(value, "yes", false)) ? max : min;
+		return curVal;
+	}
+	else if (min == 0 && max == 1)
+	{
+		if (StringToInt(value) == min || StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
+		{
+			return min;
+		}
+		else if (StringToInt(value) == max || StrEqual(value, "enabled", false) || StrEqual(value, "true", false) || StrEqual(value, "on", false) || StrEqual(value, "yes", false))
+		{
+			return max;
+		}
 	}
 	else if ((StrContains(key, "hitmode", false) != -1 || StrContains(key, "hit mode", false) != -1 || StrContains(key, "hit_mode", false) != -1) && min == 0 && max == 2)
 	{
-		if (StrEqual(value, "both", false))
+		if (StrEqual(value, "both", false) || StrEqual(value, "all", false))
 		{
 			return min;
 		}

@@ -745,7 +745,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveGhost(iTank);
 		}
 	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
 		vReset();
 	}
