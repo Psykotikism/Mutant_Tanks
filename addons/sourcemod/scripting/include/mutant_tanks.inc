@@ -1973,23 +1973,70 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 	{
 		static char sSet[16][16];
 		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 		{
 			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false) || StrEqual(sSet[iPos], sub4, false))
 				&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 			{
-				return flClamp(StringToFloat(value), min, max);
+				return flGetKeywordValue(key, curVal, value, min, max);
 			}
 		}
 	}
 	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
 		&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
-		return flClamp(StringToFloat(value), min, max);
+		return flGetKeywordValue(key, curVal, value, min, max);
 	}
 
 	return curVal;
+}
+
+stock float flGetKeywordValue(const char[] key, float curVal, const char[] value, float min, float max)
+{
+	if (min == 0.0 && max == 1.0)
+	{
+		return (StringToFloat(value) == 1.0 || StrEqual(value, "true", false) || StrEqual(value, "on", false) || StrEqual(value, "yes", false)) ? max : min;
+	}
+	else if (StrContains(key, "chance", false) != -1 && min == 0.0 && max == 100.0)
+	{
+		if (StrEqual(value, "never", false))
+		{
+			return min;
+		}
+		else if (StrEqual(value, "sometimes", false) || StrEqual(value, "unlikely", false) || StrEqual(value, "seldom", false))
+		{
+			return 33.3;
+		}
+		else if (StrEqual(value, "maybe", false))
+		{
+			return max / 2.0;
+		}
+		else if (StrEqual(value, "often", false) || StrEqual(value, "likely", false) || StrEqual(value, "frequently", false))
+		{
+			return 66.6;
+		}
+		else if (StrEqual(value, "always", false))
+		{
+			return max;
+		}
+	}
+	else if (StrContains(key, "range", false) != -1 && min == 1.0 && max == 999999.0)
+	{
+		if (StrEqual(value, "closest", false))
+		{
+			return min;
+		}
+		else if (StrEqual(value, "farthest", false))
+		{
+			return max;
+		}
+		else if (StrEqual(value, "default", false))
+		{
+			return curVal;
+		}
+	}
+
+	return flClamp(StringToFloat(value), min, max);
 }
 
 stock float flGetRayDistance(float pos[3], float angle[3], int entity, int type)
@@ -2106,23 +2153,82 @@ stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] 
 	{
 		static char sSet[16][16];
 		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 		{
 			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false) || StrEqual(sSet[iPos], sub4, false))
 				&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 			{
-				return iClamp(StringToInt(value), min, max);
+				return iGetKeywordValue(key, curVal, value, min, max);
 			}
 		}
 	}
 	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
 		&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
-		return iClamp(StringToInt(value), min, max);
+		return iGetKeywordValue(key, curVal, value, min, max);
 	}
 
 	return curVal;
+}
+
+stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int min, int max)
+{
+	if (min == 0 && max == 1)
+	{
+		return (StringToInt(value) == max || StrEqual(value, "true", false) || StrEqual(value, "on", false) || StrEqual(value, "yes", false)) ? max : min;
+	}
+	else if ((StrContains(key, "hitmode", false) != -1 || StrContains(key, "hit mode", false) != -1 || StrContains(key, "hit_mode", false) != -1) && min == 0 && max == 2)
+	{
+		if (StrEqual(value, "both", false))
+		{
+			return min;
+		}
+		else if (StrEqual(value, "tank", false) || StrEqual(value, "attack", false))
+		{
+			return 1;
+		}
+		else if (StrEqual(value, "survivor", false) || StrEqual(value, "hurt", false))
+		{
+			return max;
+		}
+	}
+	else if (StrContains(key, "effect", false) != -1 && min == 0 && max == 7)
+	{
+		if (StrEqual(value, "none", false) || StrEqual(value, "off", false))
+		{
+			return min;
+		}
+		else if (StrEqual(value, "attack", false))
+		{
+			return 1;
+		}
+		else if (StrEqual(value, "hurt", false))
+		{
+			return 2;
+		}
+		else if (StrEqual(value, "attack,hurt", false))
+		{
+			return 3;
+		}
+		else if (StrEqual(value, "range", false))
+		{
+			return 4;
+		}
+		else if (StrEqual(value, "attack,range", false))
+		{
+			return 5;
+		}
+		else if (StrEqual(value, "hurt,range", false))
+		{
+			return 6;
+		}
+		else if (StrEqual(value, "attack,hurt,range", false))
+		{
+			return max;
+		}
+	}
+
+	return iClamp(StringToInt(value), min, max);
 }
 
 stock int iGetPlayerCount()

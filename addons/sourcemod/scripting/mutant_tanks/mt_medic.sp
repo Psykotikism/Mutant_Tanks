@@ -452,7 +452,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 				for (int iPos = 0; iPos < sizeof(sSet) - 1; iPos++)
 				{
 					g_esPlayer[admin].g_iMedicFieldColor[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
@@ -466,7 +465,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 				{
 					if (StrEqual(key, "MedicHealth", false) || StrEqual(key, "Medic Health", false) || StrEqual(key, "Medic_Health", false) || StrEqual(key, "health", false))
@@ -511,7 +509,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 				for (int iPos = 0; iPos < sizeof(sSet) - 1; iPos++)
 				{
 					g_esAbility[type].g_iMedicFieldColor[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
@@ -525,7 +522,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 				{
 					if (StrEqual(key, "MedicHealth", false) || StrEqual(key, "Medic Health", false) || StrEqual(key, "Medic_Health", false) || StrEqual(key, "health", false))

@@ -1207,6 +1207,8 @@ public void OnPluginStart()
 	}
 
 	HookEvent("round_start", vEventHandler);
+	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -1448,7 +1450,6 @@ public void OnConfigsExecuted()
 	{
 		vPluginStatus();
 		vResetTimers();
-
 		CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 
@@ -4560,11 +4561,9 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				{
 					if (StrEqual(key, "TypeRange", false) || StrEqual(key, "Type Range", false) || StrEqual(key, "Type_Range", false) || StrEqual(key, "types", false))
 					{
-						static char sValue[10];
+						static char sValue[10], sRange[2][5];
 						strcopy(sValue, sizeof(sValue), value);
 						ReplaceString(sValue, sizeof(sValue), " ", "");
-
-						static char sRange[2][5];
 						ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
 						g_esGeneral.g_iMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 1, MT_MAXTYPES) : g_esGeneral.g_iMinType;
@@ -4573,13 +4572,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				}
 				else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARDS, false))
 				{
-					static char sValue[960];
+					static char sValue[960], sSet[3][320];
 					strcopy(sValue, sizeof(sValue), value);
 					ReplaceString(sValue, sizeof(sValue), " ", "");
-
-					static char sSet[3][320];
 					ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 					for (int iPos = 0; iPos < sizeof(esGeneral::g_iRewardEnabled); iPos++)
 					{
 						if (StrEqual(key, "RewardEnabled", false) || StrEqual(key, "Reward Enabled", false) || StrEqual(key, "Reward_Enabled", false) || StrEqual(key, "renabled", false))
@@ -4629,13 +4625,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				{
 					if (StrEqual(key, "DifficultyDamage", false) || StrEqual(key, "Difficulty Damage", false) || StrEqual(key, "Difficulty_Damage", false) || StrEqual(key, "diffdmg", false))
 					{
-						static char sValue[36];
+						static char sValue[36], sSet[4][9];
 						strcopy(sValue, sizeof(sValue), value);
 						ReplaceString(sValue, sizeof(sValue), " ", "");
-
-						static char sSet[4][9];
 						ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 						for (int iPos = 0; iPos < sizeof(esGeneral::g_flDifficultyDamage); iPos++)
 						{
 							g_esGeneral.g_flDifficultyDamage[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 999999.0) : g_esGeneral.g_flDifficultyDamage[iPos];
@@ -4664,11 +4657,9 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				{
 					if (StrEqual(key, "RegularType", false) || StrEqual(key, "Regular Type", false) || StrEqual(key, "Regular_Type", false) || StrEqual(key, "regtype", false))
 					{
-						static char sValue[10];
+						static char sValue[10], sRange[2][5];
 						strcopy(sValue, sizeof(sValue), value);
 						ReplaceString(sValue, sizeof(sValue), " ", "");
-
-						static char sRange[2][5];
 						ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
 						g_esGeneral.g_iRegularMinType = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, g_esGeneral.g_iMaxType) : g_esGeneral.g_iRegularMinType;
@@ -4676,13 +4667,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					}
 					else if (StrEqual(key, "FinaleTypes", false) || StrEqual(key, "Finale Types", false) || StrEqual(key, "Finale_Types", false) || StrEqual(key, "fintypes", false))
 					{
-						static char sValue[100];
+						static char sValue[100], sRange[10][10], sSet[2][5];
 						strcopy(sValue, sizeof(sValue), value);
 						ReplaceString(sValue, sizeof(sValue), " ", "");
-
-						static char sRange[10][10];
 						ExplodeString(sValue, ",", sRange, sizeof(sRange), sizeof(sRange[]));
-
 						for (int iPos = 0; iPos < sizeof(sRange); iPos++)
 						{
 							if (sRange[iPos][0] == '\0')
@@ -4690,7 +4678,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								continue;
 							}
 
-							static char sSet[2][5];
 							ExplodeString(sRange[iPos], "-", sSet, sizeof(sSet), sizeof(sSet[]));
 
 							g_esGeneral.g_iFinaleMinTypes[iPos] = (sSet[0][0] != '\0') ? iClamp(StringToInt(sSet[0]), 0, g_esGeneral.g_iMaxType) : g_esGeneral.g_iFinaleMinTypes[iPos];
@@ -4699,13 +4686,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					}
 					else if (StrEqual(key, "FinaleWaves", false) || StrEqual(key, "Finale Waves", false) || StrEqual(key, "Finale_Waves", false) || StrEqual(key, "finwaves", false))
 					{
-						static char sValue[30];
+						static char sValue[30], sSet[10][3];
 						strcopy(sValue, sizeof(sValue), value);
 						ReplaceString(sValue, sizeof(sValue), " ", "");
-
-						static char sSet[10][3];
 						ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 						for (int iPos = 0; iPos < sizeof(esGeneral::g_iFinaleWave); iPos++)
 						{
 							g_esGeneral.g_iFinaleWave[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 32) : g_esGeneral.g_iFinaleWave[iPos];
@@ -4821,13 +4805,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 								{
-									static char sValue[16];
+									static char sValue[16], sSet[4][4];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[4][4];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esTank::g_iSkinColor); iPos++)
 									{
 										g_esTank[iIndex].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
@@ -4836,13 +4817,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							}
 							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARDS, false))
 							{
-								static char sValue[960];
+								static char sValue[960], sSet[3][320];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
-
-								static char sSet[3][320];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 								for (int iPos = 0; iPos < sizeof(esTank::g_iRewardEnabled); iPos++)
 								{
 									if (StrEqual(key, "RewardEnabled", false) || StrEqual(key, "Reward Enabled", false) || StrEqual(key, "Reward_Enabled", false) || StrEqual(key, "renabled", false))
@@ -4892,13 +4870,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
 								{
-									static char sValue[12];
+									static char sValue[12], sSet[3][4];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[3][4];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esTank::g_iGlowColor); iPos++)
 									{
 										g_esTank[iIndex].g_iGlowColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
@@ -4906,11 +4881,9 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else if (StrEqual(key, "GlowRange", false) || StrEqual(key, "Glow Range", false) || StrEqual(key, "Glow_Range", false))
 								{
-									static char sValue[50];
+									static char sValue[50], sRange[2][7];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sRange[2][7];
 									ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
 									g_esTank[iIndex].g_iGlowMinRange = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, 999999) : g_esTank[iIndex].g_iGlowMinRange;
@@ -4937,13 +4910,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							}
 							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_BOSS, false))
 							{
-								static char sValue[24];
+								static char sValue[24], sSet[4][6];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
-
-								static char sSet[4][6];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 								for (int iPos = 0; iPos < sizeof(esTank::g_iBossHealth); iPos++)
 								{
 									if (StrEqual(key, "BossHealthStages", false) || StrEqual(key, "Boss Health Stages", false) || StrEqual(key, "Boss_Health_Stages", false) || StrEqual(key, "bosshpstages", false))
@@ -4960,13 +4930,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "ComboTypeChance", false) || StrEqual(key, "Combo Type Chance", false) || StrEqual(key, "Combo_Type_Chance", false) || StrEqual(key, "typechance", false))
 								{
-									static char sValue[42];
+									static char sValue[42], sSet[7][6];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[7][6];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esTank::g_flComboTypeChance); iPos++)
 									{
 										g_esTank[iIndex].g_flComboTypeChance[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_esTank[iIndex].g_flComboTypeChance[iPos];
@@ -4978,13 +4945,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else
 								{
-									static char sValue[140];
+									static char sValue[140], sSet[10][14];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[10][14];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esTank::g_flComboChance); iPos++)
 									{
 										if (StrEqual(key, "ComboChance", false) || StrEqual(key, "Combo Chance", false) || StrEqual(key, "Combo_Chance", false) || StrEqual(key, "chance", false))
@@ -5048,13 +5012,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false))
 								{
-									static char sValue[50];
+									static char sValue[50], sSet[10][5];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[10][5];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esTank::g_iTransformType); iPos++)
 									{
 										g_esTank[iIndex].g_iTransformType[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType) : g_esTank[iIndex].g_iTransformType[iPos];
@@ -5065,13 +5026,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "PropsChance", false) || StrEqual(key, "Props Chance", false) || StrEqual(key, "Props_Chance", false) || StrEqual(key, "chance", false))
 								{
-									static char sValue[54];
+									static char sValue[54], sSet[9][6];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[9][6];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esTank::g_flPropsChance); iPos++)
 									{
 										g_esTank[iIndex].g_flPropsChance[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_esTank[iIndex].g_flPropsChance[iPos];
@@ -5079,13 +5037,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else
 								{
-									static char sValue[16];
+									static char sValue[16], sSet[4][4];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[4][4];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esTank::g_iLightColor); iPos++)
 									{
 										if (StrEqual(key, "LightColor", false) || StrEqual(key, "Light Color", false) || StrEqual(key, "Light_Color", false) || StrEqual(key, "light", false))
@@ -5209,13 +5164,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else if (StrEqual(key, "SkinColor", false) || StrEqual(key, "Skin Color", false) || StrEqual(key, "Skin_Color", false) || StrEqual(key, "skin", false))
 								{
-									static char sValue[16];
+									static char sValue[16], sSet[4][4];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[4][4];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_iSkinColor); iPos++)
 									{
 										g_esPlayer[iPlayer].g_iSkinColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
@@ -5224,13 +5176,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							}
 							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_REWARDS, false))
 							{
-								static char sValue[960];
+								static char sValue[960], sSet[3][320];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
-
-								static char sSet[3][320];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 								for (int iPos = 0; iPos < sizeof(esPlayer::g_iRewardEnabled); iPos++)
 								{
 									if (StrEqual(key, "RewardEnabled", false) || StrEqual(key, "Reward Enabled", false) || StrEqual(key, "Reward_Enabled", false) || StrEqual(key, "renabled", false))
@@ -5280,13 +5229,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "GlowColor", false) || StrEqual(key, "Glow Color", false) || StrEqual(key, "Glow_Color", false))
 								{
-									static char sValue[12];
+									static char sValue[12], sSet[3][4];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[3][4];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_iGlowColor); iPos++)
 									{
 										g_esPlayer[iPlayer].g_iGlowColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
@@ -5294,11 +5240,9 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else if (StrEqual(key, "GlowRange", false) || StrEqual(key, "Glow Range", false) || StrEqual(key, "Glow_Range", false))
 								{
-									static char sValue[14];
+									static char sValue[14], sRange[2][7];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sRange[2][7];
 									ExplodeString(sValue, "-", sRange, sizeof(sRange), sizeof(sRange[]));
 
 									g_esPlayer[iPlayer].g_iGlowMinRange = (sRange[0][0] != '\0') ? iClamp(StringToInt(sRange[0]), 0, 999999) : g_esPlayer[iPlayer].g_iGlowMinRange;
@@ -5325,13 +5269,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							}
 							else if (StrEqual(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTION_BOSS, false))
 							{
-								static char sValue[24];
+								static char sValue[24], sSet[4][6];
 								strcopy(sValue, sizeof(sValue), value);
 								ReplaceString(sValue, sizeof(sValue), " ", "");
-
-								static char sSet[4][6];
 								ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 								for (int iPos = 0; iPos < sizeof(esPlayer::g_iBossHealth); iPos++)
 								{
 									if (StrEqual(key, "BossHealthStages", false) || StrEqual(key, "Boss Health Stages", false) || StrEqual(key, "Boss_Health_Stages", false) || StrEqual(key, "bosshpstages", false))
@@ -5348,13 +5289,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "ComboTypeChance", false) || StrEqual(key, "Combo Type Chance", false) || StrEqual(key, "Combo_Type_Chance", false) || StrEqual(key, "typechance", false))
 								{
-									static char sValue[42];
+									static char sValue[42], sSet[7][6];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[7][6];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_flComboTypeChance); iPos++)
 									{
 										g_esPlayer[iPlayer].g_flComboTypeChance[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_esPlayer[iPlayer].g_flComboTypeChance[iPos];
@@ -5366,13 +5304,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else
 								{
-									static char sValue[140];
+									static char sValue[140], sSet[10][14];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[10][14];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_flComboChance); iPos++)
 									{
 										if (StrEqual(key, "ComboChance", false) || StrEqual(key, "Combo Chance", false) || StrEqual(key, "Combo_Chance", false) || StrEqual(key, "chance", false))
@@ -5436,13 +5371,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "TransformTypes", false) || StrEqual(key, "Transform Types", false) || StrEqual(key, "Transform_Types", false) || StrEqual(key, "transtypes", false))
 								{
-									static char sValue[50];
+									static char sValue[50], sSet[10][5];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[10][5];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_iTransformType); iPos++)
 									{
 										g_esPlayer[iPlayer].g_iTransformType[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType) : g_esPlayer[iPlayer].g_iTransformType[iPos];
@@ -5453,13 +5385,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							{
 								if (StrEqual(key, "PropsChance", false) || StrEqual(key, "Props Chance", false) || StrEqual(key, "Props_Chance", false) || StrEqual(key, "chance", false))
 								{
-									static char sValue[54];
+									static char sValue[54], sSet[9][6];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[9][6];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_flPropsChance); iPos++)
 									{
 										g_esPlayer[iPlayer].g_flPropsChance[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_esPlayer[iPlayer].g_flPropsChance[iPos];
@@ -5467,13 +5396,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else
 								{
-									static char sValue[16];
+									static char sValue[16], sSet[4][4];
 									strcopy(sValue, sizeof(sValue), value);
 									ReplaceString(sValue, sizeof(sValue), " ", "");
-
-									static char sSet[4][4];
 									ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 									for (int iPos = 0; iPos < sizeof(esPlayer::g_iLightColor); iPos++)
 									{
 										if (StrEqual(key, "LightColor", false) || StrEqual(key, "Light Color", false) || StrEqual(key, "Light_Color", false) || StrEqual(key, "light", false))
@@ -5686,7 +5612,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				g_esPlayer[iSurvivor].g_bLastLife = false;
 			}
 		}
-		else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+		else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 		{
 			vResetRound();
 		}

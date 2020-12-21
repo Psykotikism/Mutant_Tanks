@@ -629,7 +629,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 				{
 					if (sSet[iPos][0] == '\0')
@@ -684,7 +683,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 				{
 					if (sSet[iPos][0] == '\0')
