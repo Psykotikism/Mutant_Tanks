@@ -629,7 +629,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 				{
 					if (sSet[iPos][0] == '\0')
@@ -684,7 +683,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-
 				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 				{
 					if (sSet[iPos][0] == '\0')
@@ -785,7 +783,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vReset2(iTank);
 		}
 	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
 		vReset();
 	}

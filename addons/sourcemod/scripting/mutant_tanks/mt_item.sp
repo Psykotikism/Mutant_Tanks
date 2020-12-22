@@ -444,7 +444,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vItemAbility(iTank);
 		}
 	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start"))
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
 		vReset();
 	}
@@ -521,7 +521,6 @@ static void vItemAbility(int tank)
 	static char sItems[5][64];
 	ReplaceString(g_esCache[tank].g_sItemLoadout, sizeof(esCache::g_sItemLoadout), " ", "");
 	ExplodeString(g_esCache[tank].g_sItemLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
