@@ -5773,7 +5773,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 static void vVocalizeDeath(int killer, int assistant, int tank)
 {
-	int iTimestamp = RoundToNearest(GetGameTime() * 10.0) + 2;
+	int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
 	if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
 	{
 		FakeClientCommand(killer, "vocalize PlayerHurrah #%i", iTimestamp);
@@ -6098,7 +6098,7 @@ static void vSurvivorReactions(int tank)
 	static char sModel[40];
 	static float flTankPos[3], flSurvivorPos[3];
 	static int iTimestamp;
-	iTimestamp = RoundToNearest(GetGameTime() * 10.0) + 2;
+	iTimestamp = RoundToNearest(GetGameTime() * 10.0);
 	GetClientAbsOrigin(tank, flTankPos);
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -7722,7 +7722,7 @@ static void vAnnounceArrival(int tank, const char[] name)
 {
 	if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_SPAWN)
 	{
-		int iOption = iGetMessage(g_esCache[tank].g_iArrivalMessage), iTimestamp = RoundToNearest(GetGameTime() * 10.0) + 2;
+		int iOption = iGetMessage(g_esCache[tank].g_iArrivalMessage), iTimestamp = RoundToNearest(GetGameTime() * 10.0);
 		if (iOption > 0)
 		{
 			char sPhrase[32];
