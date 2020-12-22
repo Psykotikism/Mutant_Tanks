@@ -112,22 +112,22 @@
 
 	"AbilityButtons"
 	{
-		"en"			"{yellow}+use (default: E}:{olive} Activate your main ability."
+		"en"			"{yellow}+use (default: E):{olive} Activate your main ability."
 	}
 
 	"AbilityButtons2"
 	{
-		"en"			"{yellow}+reload (default: R}:{olive} Activate your range ability."
+		"en"			"{yellow}+reload (default: R):{olive} Activate your range ability."
 	}
 
 	"AbilityButtons3"
 	{
-		"en"			"{yellow}+zoom (default: Mouse3/Scroll wheel}:{olive} Activate your special ability."
+		"en"			"{yellow}+zoom (default: Mouse3/Scroll wheel):{olive} Activate your special ability."
 	}
 
 	"AbilityButtons4"
 	{
-		"en"			"{yellow}+duck (default: CTRL}:{olive} Activate your upon-death ability."
+		"en"			"{yellow}+duck (default: CTRL):{olive} Activate your upon-death ability."
 	}
 
 	"Cooldown"

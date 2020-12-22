@@ -64,7 +64,6 @@
 
 	"MTTankItem"
 	{
-		"#format"		"{1:t},{2:i}"
 		"chi"			"{1} (坦克 #{2})"
 	}
 
@@ -80,13 +79,11 @@
 
 	"AbilityAmmo"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你的主要/特殊/临终能力还剩余{olive} {1}{mint}/{olive}{2}{mint} 次."
 	}
 
 	"AbilityAmmo2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你的 能力还剩余{olive} {1}{mint}/{olive}{2}{mint} 次."
 	}
 
@@ -112,22 +109,22 @@
 
 	"AbilityButtons"
 	{
-		"chi"			"{yellow}+使用键 (默认: E}:{olive} 触发你的主要能力."
+		"chi"			"{yellow}+使用键 (默认: E):{olive} 触发你的主要能力."
 	}
 
 	"AbilityButtons2"
 	{
-		"chi"			"{yellow}+换弹键 (默认: R}:{olive} 触发你的 能力."
+		"chi"			"{yellow}+换弹键 (默认: R):{olive} 触发你的 能力."
 	}
 
 	"AbilityButtons3"
 	{
-		"chi"			"{yellow}+瞄镜键 (默认: 中键/滚轮}:{olive} 触发你的特殊能力."
+		"chi"			"{yellow}+瞄镜键 (默认: 中键/滚轮):{olive} 触发你的特殊能力."
 	}
 
 	"AbilityButtons4"
 	{
-		"chi"			"{yellow}+蹲伏键 (默认: CTRL}:{olive} 触发你的临终能力."
+		"chi"			"{yellow}+蹲伏键 (默认: CTRL):{olive} 触发你的临终能力."
 	}
 
 	"Cooldown"
@@ -137,7 +134,6 @@
 
 	"AbilityCooldown"
 	{
-		"#format"		"{1:i}"
 		"chi"			"冷却时间:{olive} {1} 秒"
 	}
 
@@ -153,13 +149,11 @@
 
 	"AbilityDuration"
 	{
-		"#format"		"{1:.2f}"
 		"chi"			"持续时间:{olive} {1} 秒"
 	}
 
 	"AbilityDuration2"
 	{
-		"#format"		"{1:i}"
 		"chi"			"持续时间:{olive} {1} 秒"
 	}
 
@@ -185,13 +179,11 @@
 
 	"AbilityInstalled"
 	{
-		"#format"		"{1:s}"
 		"chi"			"{1}{olive} 已安装."
 	}
 
 	"AbilityInstalled2"
 	{
-		"#format"		"{1:s}"
 		"chi"			"{1} 已安装."
 	}
 
@@ -207,121 +199,101 @@
 
 	"Arrival1"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 已经出现了!"
 	}
 
 	"Arrival2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 来了!"
 	}
 
 	"Arrival3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 已准备好杀戮了!"
 	}
 
 	"Arrival4"
 	{
-		"#format"		"{1:t}"
 		"chi"			"准备好面对 {olive}{1}{default} 了么?"
 	}
 
 	"Arrival5"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 来了, 迎接挑战吧!"
 	}
 
 	"Arrival6"
 	{
-		"#format"		"{1:t}"
 		"chi"			"都给我准备好! {olive}{1}{default} 来了!"
 	}
 
 	"Arrival7"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 在这里!"
 	}
 
 	"Arrival8"
 	{
-		"#format"		"{1:t}"
 		"chi"			"糟糕! {olive}{1}{default} 正在靠近!"
 	}
 
 	"Arrival9"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 加入游戏"
 	}
 
 	"Arrival10"
 	{
-		"#format"		"{1:t}"
 		"chi"			"看来 {olive}{1}{default} 正往你们那边去!"
 	}
 
 	"Assist1"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"chi"			"{olive}{1}{default} 被击败了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist2"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"chi"			"幸存者消灭了 {olive}{1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist3"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"chi"			"{olive}{1}{default} 被打下了地狱!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist4"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"chi"			"{olive}{1}{default} 真的死了...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist5"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"chi"			"{olive}{1}{default} 挑战幸存者失败!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist6"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"chi"			"{olive}{1}{default} 未能团灭幸存者!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist7"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"chi"			"{olive}{1}{default} 已经消逝了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist8"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"chi"			"哎呀! {olive}{1}{default} 死了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist9"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"chi"			"{olive}{1}{default} 被打出游戏{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist10"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"chi"			"看来 {olive}{1}{default} 根本无法团灭幸存者嘛.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
@@ -337,7 +309,6 @@
 
 	"CommandUsage"
 	{
-		"#format"		"{1:s},{2:i},{3:i}"
 		"chi"			"用法: {1} <类型 {2}-{3}> <数量: 1-32> <0: 在十字准星处生成|1: 自动生成>"
 	}
 
@@ -348,79 +319,66 @@
 
 	"Death1"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 被击败了!"
 	}
 
 	"Death2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"幸存者消灭了 {olive}{1}{default}!"
 	}
 
 	"Death3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 被打下了地狱!"
 	}
 
 	"Death4"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 真的死了...?"
 	}
 
 	"Death5"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 挑战幸存者失败!"
 	}
 
 	"Death6"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 未能团灭幸存者!"
 	}
 
 	"Death7"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 已经消逝了!"
 	}
 
 	"Death8"
 	{
-		"#format"		"{1:t}"
 		"chi"			"哎呀! {olive}{1}{default} 死了!"
 	}
 
 	"Death9"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{default} 被打出游戏"
 	}
 
 	"Death10"
 	{
-		"#format"		"{1:t}"
 		"chi"			"看来 {olive}{1}{default} 根本无法团灭幸存者嘛!"
 	}
 
 	"ErrorParsing"
 	{
-		"#format"		"{1:s},{2:s}"
 		"chi"			"解析文件 \"{1}\" 时出错. 错误信息: {2}."
 	}
 
 	"Evolved"
 	{
-		"#format"		"{1:t},{2:t},{3:i}"
 		"chi"			"{olive}{1}{mint} 演变为{olive} {2}{yellow} (阶段 {3}){mint}!"
 	}
 
 	"FailedParsing"
 	{
-		"#format"		"{1:s}"
 		"chi"			"无法解析文件 \"{1}\"."
 	}
 
@@ -436,7 +394,6 @@
 
 	"HumanCooldown"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你需要等待{olive} {1} 秒{mint} 才能变更为其他突变坦克类型."
 	}
 
@@ -447,133 +404,111 @@
 
 	"Kill1"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{default} 完成了{mint} {2}{default}!"
 	}
 
 	"Kill2"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{default} 被击败了{mint} {2}{default}!"
 	}
 
 	"Kill3"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{default} 发送了{mint} {2}{default}到地狱!"
 	}
 
 	"Kill4"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{default} 实际上杀死了{mint} {2}{default}... 吗?"
 	}
 
 	"Kill5"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{mint}{2}{default} 输掉了对{olive} {1}{default}的挑战!"
 	}
 
 	"Kill6"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{mint}{2}{default} 无法杀死{olive} {1}{default}!"
 	}
 
 	"Kill7"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{mint}{2}{default} 已在{olive} {1}{default} 手中灭亡!"
 	}
 
 	"Kill8"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"哎呀!{mint} {2}{default} 死了, 这要感谢{olive} {1}{default}!"
 	}
 
 	"Kill9"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{default} 变成了{mint} {2}{default} 流行语!"
 	}
 
 	"Kill10"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"看来{mint} {2}{default} 毕竟无法击败{olive} {1}{default}!"
 	}
 
 	"Killer1"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"chi"			"{mint}{1}{default} 完成了{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer2"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"chi"			"{mint}{1}{default} 被击败了{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer3"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"chi"			"{mint}{1}{default} 发送了{olive} {2}{default}到地狱!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer4"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"chi"			"{mint}{1}{default} 实际上杀死了{olive} {2}{default}... 吗?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer5"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"chi"			"{olive}{2}{default} 输掉了对{mint} {1}{default}的挑战!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer6"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"chi"			"{olive}{2}{default} 无法杀死{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer7"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"chi"			"{olive}{2}{default} 已在{mint} {1}{default} 手中灭亡!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer8"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"chi"			"哎呀!{olive} {2}{default} 死了, 这要感谢{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer9"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"chi"			"{mint}{1}{default} 变成了{olive} {2}{default} 流行语!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer10"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"chi"			"看来{olive} {2}{default} 毕竟无法击败{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"LogEnded"
 	{
-		"#format"		"{1:s},{2:s}"
 		"chi"			"[{1}] --- 在地图上结束的日志: {2} ---"
 	}
 
 	"LogStarted"
 	{
-		"#format"		"{1:s},{2:s}"
 		"chi"			"[{1}] --- 在地图上开始记录日志: {2} ---"
 	}
 
@@ -629,7 +564,6 @@
 
 	"Randomized"
 	{
-		"#format"		"{1:t},{2:t}"
 		"chi"			"{olive}{1}{mint} 随机为{olive} {2}{mint}!"
 	}
 
@@ -640,7 +574,6 @@
 
 	"ReloadingConfig"
 	{
-		"#format"		"{1:s}"
 		"chi"			"正在重新加载配置文件 \"{1}\"..."
 	}
 
@@ -656,37 +589,31 @@
 
 	"RewardAmmo"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 弹药{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardAmmo2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 弹药{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 
 	"RewardAmmo3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 弹药{default}, 以协助{olive} {1}{default}!"
 	}
 
 	"RewardDamageBoost"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardDamageBoost2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 
 	"RewardDamageBoost3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以协助{olive} {1}{default}!"
 	}
 
@@ -697,19 +624,16 @@
 
 	"RewardGod"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 神模式{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardGod2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 神模式{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 
 	"RewardGod3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 神模式{default}, 以协助{olive} {1}{default}!"
 	}
 
@@ -720,97 +644,81 @@
 
 	"RewardHealth"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 健康{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardHealth2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 健康{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 
 	"RewardHealth3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 健康{default}, 以协助{olive} {1}{default}!"
 	}
 
 	"RewardItem"
 	{
-		"#format"		"{1:s},{2:t}"
 		"chi"			"您{default} 收到{yellow} {1}{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardItem2"
 	{
-		"#format"		"{1:s},{2:t}"
 		"chi"			"您{default} 收到了{yellow} {1}{default}, 以协助{olive} {2}{default} 的最大支援!"
 	}
 
 	"RewardItem3"
 	{
-		"#format"		"{1:s},{2:t}"
 		"chi"			"您{default} 收到了{yellow} {1}{default}, 以协助{olive} {2}{default}!"
 	}
 
 	"RewardNone"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 对{olive} {1}{default} 的伤害不足，无法获得任何奖励."
 	}
 
 	"RewardRefill"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 健康和弹药{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardRefill2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 的健康和弹药{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 
 	"RewardRefill3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 的健康和弹药{default}, 以协助{olive} {1}{default}!"
 	}
 
 	"RewardRespawn"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 重生{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardRespawn2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到了{yellow} 重生{default}, 以协助{olive} {2}{default} 的最大支援!"
 	}
 
 	"RewardRespawn3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到了{yellow} 重生{default}, 以协助{olive} {2}{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 提速{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardSpeedBoost2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 提速{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 
 	"RewardSpeedBoost3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"您{default} 收到{yellow} 提速{default}, 以协助{olive} {1}{default}!"
 	}
 
@@ -836,13 +744,11 @@
 
 	"Transformed"
 	{
-		"#format"		"{1:t},{2:t}"
 		"chi"			"{olive}{1}{mint} 变成了{olive} {2}{mint}!"
 	}
 
 	"Untransformed"
 	{
-		"#format"		"{1:t},{2:t}"
 		"chi"			"{olive}{1}{mint} 恢复为{olive} {2}{mint}!"
 	}
 
@@ -853,19 +759,16 @@
 
 	"TankDisabled"
 	{
-		"#format"		"{1:t},{2:i}"
 		"chi"			"{1}{yellow} (坦克 #{2}){default} 已禁用."
 	}
 
 	"Absorb"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 正在吸收你造成的大部分伤害!"
 	}
 
 	"Absorb2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 不再吸收你造成的大部分伤害!"
 	}
 
@@ -881,7 +784,6 @@
 
 	"AbsorbHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 吸收 能力!"
 	}
 
@@ -897,13 +799,11 @@
 
 	"AbsorbHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 吸收 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"AbsorbHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 吸收 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -919,13 +819,11 @@
 
 	"Acid"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 刚刚在{olive} {2}{mint} 脚下生成一个酸液地带!"
 	}
 
 	"Acid2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的岩石创造了一个酸液地带."
 	}
 
@@ -941,7 +839,6 @@
 
 	"AcidHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 酸液 能力!"
 	}
 
@@ -952,7 +849,6 @@
 
 	"AcidHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 酸液 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -963,7 +859,6 @@
 
 	"AcidHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 酸液 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -979,13 +874,11 @@
 
 	"Aimless"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 正在阻止{olive} {2}{mint} 使用瞄准!"
 	}
 
 	"Aimless2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 又可以进行瞄准了!"
 	}
 
@@ -1001,7 +894,6 @@
 
 	"AimlessHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 禁瞄 能力!"
 	}
 
@@ -1012,7 +904,6 @@
 
 	"AimlessHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 禁瞄 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1023,7 +914,6 @@
 
 	"AimlessHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 禁瞄 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1039,7 +929,6 @@
 
 	"Ammo"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 夺走了{olive} {2}{mint} 全部弹药!"
 	}
 
@@ -1055,7 +944,6 @@
 
 	"AmmoHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 掠弹 能力!"
 	}
 
@@ -1066,7 +954,6 @@
 
 	"AmmoHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 掠弹 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1077,7 +964,6 @@
 
 	"AmmoHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 掠弹 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1093,13 +979,11 @@
 
 	"Blind"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 致盲了{olive} {2}{mint}!"
 	}
 
 	"Blind2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 可以看见东西了!"
 	}
 
@@ -1115,7 +999,6 @@
 
 	"BlindHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 致盲 能力!"
 	}
 
@@ -1126,7 +1009,6 @@
 
 	"BlindHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 致盲 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1137,7 +1019,6 @@
 
 	"BlindHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 致盲 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1153,13 +1034,11 @@
 
 	"Bomb"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 刚刚在{olive} {2}{mint} 的位置爆炸了!"
 	}
 
 	"Bomb2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的岩石爆炸了.."
 	}
 
@@ -1175,7 +1054,6 @@
 
 	"BombHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 爆炸 能力!"
 	}
 
@@ -1186,7 +1064,6 @@
 
 	"BombHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 爆炸 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1197,7 +1074,6 @@
 
 	"BombHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 爆炸 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1213,13 +1089,11 @@
 
 	"Bury"
 	{
-		"#format"		"{1:t},{2:N},{3:.2f}"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 埋入地下{yellow} {3} {mint}尺!"
 	}
 
 	"Bury2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 爬出地面了!"
 	}
 
@@ -1235,7 +1109,6 @@
 
 	"BuryHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 埋葬 能力!"
 	}
 
@@ -1246,7 +1119,6 @@
 
 	"BuryHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 埋葬 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1257,7 +1129,6 @@
 
 	"BuryHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 埋葬 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1273,13 +1144,11 @@
 
 	"Car"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 开始召唤{yellow} 汽车雨 {mint}!"
 	}
 
 	"Car2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的 汽车雨 结束了!"
 	}
 
@@ -1295,7 +1164,6 @@
 
 	"CarHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 汽车雨!"
 	}
 
@@ -1311,13 +1179,11 @@
 
 	"CarHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 汽车雨 还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"CarHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 汽车雨 已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1333,13 +1199,11 @@
 
 	"Choke"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 弄到窒息!"
 	}
 
 	"Choke2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 可以呼吸了!"
 	}
 
@@ -1355,7 +1219,6 @@
 
 	"ChokeHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 窒息 能力!"
 	}
 
@@ -1366,7 +1229,6 @@
 
 	"ChokeHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 窒息 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1377,7 +1239,6 @@
 
 	"ChokeHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 窒息 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1393,7 +1254,6 @@
 
 	"Clone"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 创造了自己的 克隆体!"
 	}
 
@@ -1409,7 +1269,6 @@
 
 	"CloneHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你创造了{olive} {1}{mint}/{olive}{2}{mint} 克隆体!"
 	}
 
@@ -1425,7 +1284,6 @@
 
 	"CloneHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 克隆 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1436,7 +1294,6 @@
 
 	"CloneHuman6"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 克隆体 已全部死亡, 克隆 能力需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1452,13 +1309,11 @@
 
 	"Cloud"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 正在释放烟雾!"
 	}
 
 	"Cloud2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 停止了释放烟雾!"
 	}
 
@@ -1474,7 +1329,6 @@
 
 	"CloudHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 毒云 能力!"
 	}
 
@@ -1490,13 +1344,11 @@
 
 	"CloudHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 毒云 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"CloudHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 毒云 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1512,13 +1364,11 @@
 
 	"Drop"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 掉落了枪械!"
 	}
 
 	"Drop2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 掉落了近战武器!"
 	}
 
@@ -1549,13 +1399,11 @@
 
 	"Drug"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 对{olive} {2}{mint} 投毒了!"
 	}
 
 	"Drug2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 的毒药失效!"
 	}
 
@@ -1571,7 +1419,6 @@
 
 	"DrugHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 中毒 能力!"
 	}
 
@@ -1582,7 +1429,6 @@
 
 	"DrugHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 中毒 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1593,7 +1439,6 @@
 
 	"DrugHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 中毒 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1609,13 +1454,11 @@
 
 	"Drunk"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 喝醉了!"
 	}
 
 	"Drunk2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 醒酒了!"
 	}
 
@@ -1631,7 +1474,6 @@
 
 	"DrunkHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 醉酒 能力!"
 	}
 
@@ -1642,7 +1484,6 @@
 
 	"DrunkHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 醉酒 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1653,7 +1494,6 @@
 
 	"DrunkHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 醉酒 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1669,13 +1509,11 @@
 
 	"Electric"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 正在电击{olive} {2}{mint}!"
 	}
 
 	"Electric2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 脱离了电击!"
 	}
 
@@ -1691,7 +1529,6 @@
 
 	"ElectricHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 电击 能力!"
 	}
 
@@ -1702,7 +1539,6 @@
 
 	"ElectricHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 电击 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1713,7 +1549,6 @@
 
 	"ElectricHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 电击 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1729,13 +1564,11 @@
 
 	"Enforce"
 	{
-		"#format"		"{1:t},{2:N},{3:i}"
 		"chi"			"{olive}{1}{mint} 强迫{olive} {2}{mint} 只能使用{yellow} #{3}{mint}号武器槽位!"
 	}
 
 	"Enforce2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 可以使用全部武器槽位了!"
 	}
 
@@ -1751,7 +1584,6 @@
 
 	"EnforceHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 迫用 能力!"
 	}
 
@@ -1762,7 +1594,6 @@
 
 	"EnforceHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 迫用 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1773,7 +1604,6 @@
 
 	"EnforceHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 迫用 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1789,13 +1619,11 @@
 
 	"Fast"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的速度加成已激活!"
 	}
 
 	"Fast2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的速度加成已结束!"
 	}
 
@@ -1811,7 +1639,6 @@
 
 	"FastHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 迅速 能力!"
 	}
 
@@ -1827,13 +1654,11 @@
 
 	"FastHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 迅速 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"FastHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 迅速 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1849,13 +1674,11 @@
 
 	"Fire"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 刚在{olive} {2}{mint} 下方生成了火焰!"
 	}
 
 	"Fire2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的岩石生成了火焰."
 	}
 
@@ -1871,7 +1694,6 @@
 
 	"FireHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 火焰 能力!"
 	}
 
@@ -1882,7 +1704,6 @@
 
 	"FireHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 火焰 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1893,7 +1714,6 @@
 
 	"FireHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 火焰 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1909,7 +1729,6 @@
 
 	"Fling"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 抛向高空!"
 	}
 
@@ -1925,7 +1744,6 @@
 
 	"FlingHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 抛空 能力!"
 	}
 
@@ -1936,7 +1754,6 @@
 
 	"FlingHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 抛空 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1947,7 +1764,6 @@
 
 	"FlingHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 抛空 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -1963,13 +1779,11 @@
 
 	"Fly"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 正在飞翔!"
 	}
 
 	"Fly2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 停止飞行!"
 	}
 
@@ -1985,7 +1799,6 @@
 
 	"FlyHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 飞行能力!"
 	}
 
@@ -2001,13 +1814,11 @@
 
 	"FlyHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"您的飞行能力还需要另外{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"FlyHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"您的飞行能力已结束, 需要充电{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2028,13 +1839,11 @@
 
 	"Fragile"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的伤害抗性降低了, 同时移动速度和对你的伤害更高了!"
 	}
 
 	"Fragile2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的伤害抗性恢复正常了!"
 	}
 
@@ -2050,7 +1859,6 @@
 
 	"FragileHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 脆弱 能力!"
 	}
 
@@ -2066,13 +1874,11 @@
 
 	"FragileHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 脆弱 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"FragileHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 脆弱 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2088,19 +1894,16 @@
 
 	"Ghost"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 缴械了!"
 	}
 
 	"Ghost2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 给自己伪装了!"
 	}
 
 	"Ghost3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的伪装结束了!"
 	}
 
@@ -2121,13 +1924,11 @@
 
 	"GhostHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 伪装 能力!"
 	}
 
 	"GhostHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 缴械 能力!"
 	}
 
@@ -2143,13 +1944,11 @@
 
 	"GhostHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 伪装 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"GhostHuman6"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 缴械 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2160,13 +1959,11 @@
 
 	"GhostHuman8"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 伪装 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"GhostHuman9"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 缴械 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2182,13 +1979,11 @@
 
 	"God"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 暂时无敌了!"
 	}
 
 	"God2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 无敌结束了!"
 	}
 
@@ -2204,7 +1999,6 @@
 
 	"GodHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 上帝 能力!"
 	}
 
@@ -2220,13 +2014,11 @@
 
 	"GodHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 上帝 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"GodHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 上帝 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2242,25 +2034,21 @@
 
 	"Gravity"
 	{
-		"#format"		"{1:t},{2:N},{3:.2f}"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的重力变成{yellow} {3}{mint}!"
 	}
 
 	"Gravity2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 的重力恢复正常了!"
 	}
 
 	"Gravity3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 生成了引力/推力!"
 	}
 
 	"Gravity4"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的引力/推力结束了!"
 	}
 
@@ -2281,13 +2069,11 @@
 
 	"GravityHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 引力/推力 能力!"
 	}
 
 	"GravityHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重力 能力!"
 	}
 
@@ -2303,13 +2089,11 @@
 
 	"GravityHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 引力/推力 还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"GravityHuman6"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 重力 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2320,13 +2104,11 @@
 
 	"GravityHuman8"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 引力/推力 已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"GravityHuman9"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 重力 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2342,19 +2124,16 @@
 
 	"Heal"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的生命值改为临时生命值, 同时生命值归0时将会死亡!"
 	}
 
 	"Heal2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 正在吸收附近特殊感染者的生命值!"
 	}
 
 	"Heal3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 停止了吸收附近特殊感染者的生命值!"
 	}
 
@@ -2375,13 +2154,11 @@
 
 	"HealHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 治疗 能力!"
 	}
 
 	"HealHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 败血 能力!"
 	}
 
@@ -2397,13 +2174,11 @@
 
 	"HealHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 治疗 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"HealHuman6"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 败血 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2414,13 +2189,11 @@
 
 	"HealHuman8"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 治疗 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"HealHuman9"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 败血 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2451,13 +2224,11 @@
 
 	"Hurt"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 对 {olive} {2}{mint} 造成的伤口在不断流血!"
 	}
 
 	"Hurt2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 的伤口好了!"
 	}
 
@@ -2473,7 +2244,6 @@
 
 	"HurtHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 创伤 能力!"
 	}
 
@@ -2484,7 +2254,6 @@
 
 	"HurtHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 创伤 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2495,7 +2264,6 @@
 
 	"HurtHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 创伤 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2511,13 +2279,11 @@
 
 	"Hypno"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 催眠了{olive} {2}{mint}!"
 	}
 
 	"Hypno2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 醒来了!"
 	}
 
@@ -2533,7 +2299,6 @@
 
 	"HypnoHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 催眠 能力!"
 	}
 
@@ -2544,7 +2309,6 @@
 
 	"HypnoHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 催眠 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2555,7 +2319,6 @@
 
 	"HypnoHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 催眠 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2571,13 +2334,11 @@
 
 	"Ice"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 冻结了{olive} {2}{mint}!"
 	}
 
 	"Ice2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 解冻了!"
 	}
 
@@ -2593,7 +2354,6 @@
 
 	"IceHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 冻结 能力!"
 	}
 
@@ -2604,7 +2364,6 @@
 
 	"IceHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 冻结 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2615,7 +2374,6 @@
 
 	"IceHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 冻结 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2631,7 +2389,6 @@
 
 	"Idle"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 吓到闲置!"
 	}
 
@@ -2647,7 +2404,6 @@
 
 	"IdleHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 闲置 能力!"
 	}
 
@@ -2658,7 +2414,6 @@
 
 	"IdleHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 闲置 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2669,7 +2424,6 @@
 
 	"IdleHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 闲置 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2685,13 +2439,11 @@
 
 	"Invert"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 颠倒了{olive} {2}{mint} 的方向键!"
 	}
 
 	"Invert2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 的方向键恢复正常了!"
 	}
 
@@ -2707,7 +2459,6 @@
 
 	"InvertHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 反向 能力!"
 	}
 
@@ -2718,7 +2469,6 @@
 
 	"InvertHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 反向 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2729,7 +2479,6 @@
 
 	"InvertHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 反向 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2745,7 +2494,6 @@
 
 	"Item"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 给予了幸存者{yellow} 物品{mint}!"
 	}
 
@@ -2776,19 +2524,16 @@
 
 	"Jump"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 迫使{olive} {2}{mint} 乱跳!"
 	}
 
 	"Jump2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 不再乱跳了!"
 	}
 
 	"Jump3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 将进行周期性跳跃!"
 	}
 
@@ -2809,13 +2554,11 @@
 
 	"JumpHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 周期性跳跃 能力!"
 	}
 
 	"JumpHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 跳跃 能力!"
 	}
 
@@ -2831,13 +2574,11 @@
 
 	"JumpHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 周期性跳跃 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"JumpHuman6"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 跳跃 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2848,13 +2589,11 @@
 
 	"JumpHuman8"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 周期性跳跃 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"JumpHuman9"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 跳跃 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2870,7 +2609,6 @@
 
 	"Kamikaze"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 与{olive} {2}{mint} 同归于尽了!"
 	}
 
@@ -2906,13 +2644,11 @@
 
 	"Lag"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 打出延迟!"
 	}
 
 	"Lag2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 的延迟恢复正常了!"
 	}
 
@@ -2928,7 +2664,6 @@
 
 	"LagHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 滞后 能力!"
 	}
 
@@ -2939,7 +2674,6 @@
 
 	"LagHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 滞后 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2950,7 +2684,6 @@
 
 	"LagHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 滞后 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -2966,13 +2699,11 @@
 
 	"Laser"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 正对{olive} {2}{mint} 发射激光!"
 	}
 
 	"Laser2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 停止了发射激光!"
 	}
 
@@ -2988,7 +2719,6 @@
 
 	"LaserHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 激光 能力!"
 	}
 
@@ -3004,13 +2734,11 @@
 
 	"LaserHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 激光 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"LaserHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 激光 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3026,13 +2754,11 @@
 
 	"Leech"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 正用{yellow} 水蛭{mint} 汲取{olive} {2}{mint} 的生命值!"
 	}
 
 	"Leech2"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 的{yellow} 水蛭{mint} 不在汲取{olive} {2}{mint} 的生命值了!"
 	}
 
@@ -3048,7 +2774,6 @@
 
 	"LeechHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 水蛭 能力!"
 	}
 
@@ -3059,7 +2784,6 @@
 
 	"LeechHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 水蛭 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3070,7 +2794,6 @@
 
 	"LeechHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 水蛭 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3086,13 +2809,11 @@
 
 	"Lightning"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 开始了{yellow} 雷电风暴{mint}!"
 	}
 
 	"Lightning2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 雷雨结束了!"
 	}
 
@@ -3108,7 +2829,6 @@
 
 	"LightningHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 的闪电风暴!"
 	}
 
@@ -3124,13 +2844,11 @@
 
 	"LightningHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"您的雷雨仍然需要另外{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"LightningHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"您的闪电风暴结束了, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3146,19 +2864,16 @@
 
 	"Medic"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 正在治愈附近的特殊感染者!"
 	}
 
 	"Medic2"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 刚刚恢复{yellow} {2}{mint}!"
 	}
 
 	"Medic3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 停止治愈附近的特殊感染者!"
 	}
 
@@ -3174,7 +2889,6 @@
 
 	"MedicHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 您的医疗能力！"
 	}
 
@@ -3190,13 +2904,11 @@
 
 	"MedicHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"您的军医技能仍需要另外{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"MedicHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"您的医务能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3212,13 +2924,11 @@
 
 	"Meteor"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 开始召唤{yellow} 流星雨{mint}!"
 	}
 
 	"Meteor2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的 流星雨 结束了!"
 	}
 
@@ -3234,7 +2944,6 @@
 
 	"MeteorHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次你的流星雨!"
 	}
 
@@ -3250,13 +2959,11 @@
 
 	"MeteorHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 流星雨 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"MeteorHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 流星雨 已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3272,7 +2979,6 @@
 
 	"Minion"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 召唤了一个{yellow} 仆从{mint}!"
 	}
 
@@ -3288,7 +2994,6 @@
 
 	"MinionHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你创造了{olive} {1}{mint}/{olive}{2}{mint} 个仆从!"
 	}
 
@@ -3299,7 +3004,6 @@
 
 	"MinionHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你召唤 仆从 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3310,7 +3014,6 @@
 
 	"MinionHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 仆从 已全部死亡, 仆从 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3326,7 +3029,6 @@
 
 	"Necro"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 复活了附近的特殊感染者!"
 	}
 
@@ -3342,7 +3044,6 @@
 
 	"NecroHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 死灵 能力!"
 	}
 
@@ -3358,13 +3059,11 @@
 
 	"NecroHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 死灵 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"NecroHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 死灵 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3380,13 +3079,11 @@
 
 	"Nullify"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 暂时免疫来自{olive} {2}{mint} 的伤害!"
 	}
 
 	"Nullify2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 的伤害恢复正常了!"
 	}
 
@@ -3402,7 +3099,6 @@
 
 	"NullifyHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 伤害无效化 能力!"
 	}
 
@@ -3413,7 +3109,6 @@
 
 	"NullifyHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 伤害无效化 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3424,7 +3119,6 @@
 
 	"NullifyHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 伤害无效化 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3440,13 +3134,11 @@
 
 	"Omni"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的 全能 能力激活了!"
 	}
 
 	"Omni2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的 全能 能力失效了!"
 	}
 
@@ -3462,7 +3154,6 @@
 
 	"OmniHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 全能 能力!"
 	}
 
@@ -3478,13 +3169,11 @@
 
 	"OmniHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 全能 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"OmniHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 全能 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3500,13 +3189,11 @@
 
 	"Panic"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 将定期引发尸潮!"
 	}
 
 	"Panic2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 引发了一次{yellow} 尸潮{mint}!"
 	}
 
@@ -3522,7 +3209,6 @@
 
 	"PanicHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 唤潮 能力!"
 	}
 
@@ -3538,13 +3224,11 @@
 
 	"PanicHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 唤潮 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"PanicHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 唤潮 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3560,13 +3244,11 @@
 
 	"Pimp"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 鞭挞了{olive} {2}{mint} 好几次!"
 	}
 
 	"Pimp2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 逃过了鞭挞!"
 	}
 
@@ -3582,7 +3264,6 @@
 
 	"PimpHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 鞭挞 能力!"
 	}
 
@@ -3593,7 +3274,6 @@
 
 	"PimpHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 鞭挞 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3604,7 +3284,6 @@
 
 	"PimpHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 鞭挞 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3620,7 +3299,6 @@
 
 	"Puke"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 吐了{olive} {2}{mint} 一身!"
 	}
 
@@ -3636,7 +3314,6 @@
 
 	"PukeHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 呕吐 能力!"
 	}
 
@@ -3647,7 +3324,6 @@
 
 	"PukeHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 呕吐 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3658,7 +3334,6 @@
 
 	"PukeHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 呕吐 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3674,19 +3349,16 @@
 
 	"Pyro"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 自燃了!"
 	}
 
 	"Pyro2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 烧起来后跑得更快了!"
 	}
 
 	"Pyro3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 灭火后恢复正常速度了!"
 	}
 
@@ -3702,7 +3374,6 @@
 
 	"PyroHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 火速 能力!"
 	}
 
@@ -3718,13 +3389,11 @@
 
 	"PyroHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 火速 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"PyroHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 火速 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3740,13 +3409,11 @@
 
 	"Quiet"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 在{olive} {2}{mint} 周围沉默了!"
 	}
 
 	"Quiet2"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 不再在{olive} {2}{mint} 周围沉默了!"
 	}
 
@@ -3762,7 +3429,6 @@
 
 	"QuietHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 沉默 能力!"
 	}
 
@@ -3773,7 +3439,6 @@
 
 	"QuietHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 沉默 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3784,7 +3449,6 @@
 
 	"QuietHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 沉默 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3800,13 +3464,11 @@
 
 	"Recoil"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 给予{olive} {2}{mint} 强大的后坐力!"
 	}
 
 	"Recoil2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 的后坐力恢复正常了!"
 	}
 
@@ -3822,7 +3484,6 @@
 
 	"RecoilHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 后坐力 能力!"
 	}
 
@@ -3833,7 +3494,6 @@
 
 	"RecoilHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 后坐力 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3844,7 +3504,6 @@
 
 	"RecoilHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 后坐力 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3860,13 +3519,11 @@
 
 	"Regen"
 	{
-		"#format"		"{1:t},{2:.2f}"
 		"chi"			"{olive}{1}{mint} 每隔{yellow} {2}{mint} 秒会恢复一次生命值!"
 	}
 
 	"Regen2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 停止了恢复生命值!"
 	}
 
@@ -3882,7 +3539,6 @@
 
 	"RegenHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 自愈 能力!"
 	}
 
@@ -3898,13 +3554,11 @@
 
 	"RegenHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 自愈 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"RegenHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 自愈 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -3920,7 +3574,6 @@
 
 	"Respawn"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 复活了!"
 	}
 
@@ -3946,7 +3599,6 @@
 
 	"RespawnHuman3"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重生!"
 	}
 
@@ -3962,7 +3614,6 @@
 
 	"Restart"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 用不同的装备重新开始!"
 	}
 
@@ -3978,7 +3629,6 @@
 
 	"RestartHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重来 能力!"
 	}
 
@@ -3989,7 +3639,6 @@
 
 	"RestartHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 重来 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4000,7 +3649,6 @@
 
 	"RestartHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 重来 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4016,13 +3664,11 @@
 
 	"Rock"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 开始召唤{yellow} 岩石雨{mint}!"
 	}
 
 	"Rock2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的 岩石雨 结束了!"
 	}
 
@@ -4038,7 +3684,6 @@
 
 	"RockHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 岩石雨!"
 	}
 
@@ -4054,13 +3699,11 @@
 
 	"RockHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 岩石雨 还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"RockHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 岩石雨 能力已结束, 还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4076,7 +3719,6 @@
 
 	"Rocket"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 送上了太空!"
 	}
 
@@ -4092,7 +3734,6 @@
 
 	"RocketHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 火箭 能力!"
 	}
 
@@ -4103,7 +3744,6 @@
 
 	"RocketHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 火箭 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4114,7 +3754,6 @@
 
 	"RocketHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 火箭 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4130,13 +3769,11 @@
 
 	"Shake"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 的屏幕疯狂抖动!"
 	}
 
 	"Shake2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 的屏幕停止了抖动!"
 	}
 
@@ -4152,7 +3789,6 @@
 
 	"ShakeHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 震动 能力!"
 	}
 
@@ -4163,7 +3799,6 @@
 
 	"ShakeHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 震动 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4174,7 +3809,6 @@
 
 	"ShakeHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 震动 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4190,13 +3824,11 @@
 
 	"Shield"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的护盾{yellow} 已激活{mint}!"
 	}
 
 	"Shield2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的护盾{yellow} 已失效{mint}!"
 	}
 
@@ -4212,7 +3844,6 @@
 
 	"ShieldHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 护盾!"
 	}
 
@@ -4228,13 +3859,11 @@
 
 	"ShieldHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 护盾 还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"ShieldHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 护盾 破了, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4250,19 +3879,16 @@
 
 	"ShieldOwner"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{1} 的护盾"
 	}
 
 	"Shove"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 正在推挤{olive} {2}{mint}!"
 	}
 
 	"Shove2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 不在被推挤了!"
 	}
 
@@ -4278,7 +3904,6 @@
 
 	"ShoveHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 推挤 能力!"
 	}
 
@@ -4289,7 +3914,6 @@
 
 	"ShoveHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 推挤 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4300,7 +3924,6 @@
 
 	"ShoveHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 推挤 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4316,13 +3939,11 @@
 
 	"Slow"
 	{
-		"#format"		"{1:t},{2:N},{3:.2f}"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 的速度变成{yellow} {3}{mint}!"
 	}
 
 	"Slow2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 的速度恢复正常了!"
 	}
 
@@ -4338,7 +3959,6 @@
 
 	"SlowHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 减速 能力!"
 	}
 
@@ -4349,7 +3969,6 @@
 
 	"SlowHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 减速 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4360,7 +3979,6 @@
 
 	"SlowHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 减速 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4376,7 +3994,6 @@
 
 	"Smash"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 砸死了!"
 	}
 
@@ -4392,7 +4009,6 @@
 
 	"SmashHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 粉碎 能力!"
 	}
 
@@ -4403,7 +4019,6 @@
 
 	"SmashHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 粉碎 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4414,7 +4029,6 @@
 
 	"SmashHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 粉碎 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4430,7 +4044,6 @@
 
 	"Smite"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 重击了{olive} {2}{mint}!"
 	}
 
@@ -4446,7 +4059,6 @@
 
 	"SmiteHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 重击 能力!"
 	}
 
@@ -4457,7 +4069,6 @@
 
 	"SmiteHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 重击 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4468,7 +4079,6 @@
 
 	"SmiteHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 重击 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4484,13 +4094,11 @@
 
 	"Spam"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 正在连投岩石!"
 	}
 
 	"Spam2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 停止了连投岩石!"
 	}
 
@@ -4506,7 +4114,6 @@
 
 	"SpamHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 岩石连投 能力!"
 	}
 
@@ -4522,13 +4129,11 @@
 
 	"SpamHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 岩石连投 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"SpamHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 岩石连投 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4544,13 +4149,11 @@
 
 	"Splash"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 正在对幸存者溅射伤害!"
 	}
 
 	"Splash2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 停止了对幸存者溅射伤害!"
 	}
 
@@ -4566,7 +4169,6 @@
 
 	"SplashHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 溅射 能力!"
 	}
 
@@ -4582,13 +4184,11 @@
 
 	"SplashHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 溅射 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"SplashHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 溅射 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4604,13 +4204,11 @@
 
 	"Splatter"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 会定期用飞溅覆盖每个人的屏幕!"
 	}
 
 	"Splatter2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 用{yellow} 飞溅{mint} 覆盖了每个人的屏幕!"
 	}
 
@@ -4626,7 +4224,6 @@
 
 	"SplatterHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 的飞溅能力!"
 	}
 
@@ -4642,13 +4239,11 @@
 
 	"SplatterHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"您的飞溅能力仍然需要另外{yellow} {1} 秒{mint}来补充."
 	}
 
 	"SplatterHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"您的飞溅能力结束, 需要{yellow} {1} 秒{mint}补充能量."
 	}
 
@@ -4664,25 +4259,21 @@
 
 	"Throw"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 扔出了 汽车!"
 	}
 
 	"Throw2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 扔出了{yellow} 特殊感染者{mint}!"
 	}
 
 	"Throw3"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 扔出了 自己!"
 	}
 
 	"Throw4"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 扔出了 女巫!"
 	}
 
@@ -4698,7 +4289,6 @@
 
 	"ThrowHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 投掷 能力!"
 	}
 
@@ -4709,13 +4299,11 @@
 
 	"ThrowHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 投掷 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"ThrowHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 投掷 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4731,7 +4319,6 @@
 
 	"Track"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的岩石{yellow} 正在追踪{mint} 幸存者!"
 	}
 
@@ -4747,7 +4334,6 @@
 
 	"TrackHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 追踪 能力!"
 	}
 
@@ -4758,13 +4344,11 @@
 
 	"TrackHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 追踪 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"TrackHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 追踪 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4780,19 +4364,16 @@
 
 	"Ultimate"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 激活了 终极 模式!"
 	}
 
 	"Ultimate2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的 终极 模式已结束!"
 	}
 
 	"Ultimate3"
 	{
-		"#format"		"{1:.2f},{2:.2f}"
 		"chi"			"你要对幸存者造成 {yellow}{1}{mint}/{yellow}{2}{mint} 伤害才能解锁 终极 模式."
 	}
 
@@ -4813,7 +4394,6 @@
 
 	"UltimateHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 终极 能力!"
 	}
 
@@ -4829,13 +4409,11 @@
 
 	"UltimateHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 终极 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"UltimateHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 终极 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4851,13 +4429,11 @@
 
 	"Undead"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 延长了自己的寿命!"
 	}
 
 	"Undead2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 的生命值全满了!"
 	}
 
@@ -4873,7 +4449,6 @@
 
 	"UndeadHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 不死 能力!"
 	}
 
@@ -4889,13 +4464,11 @@
 
 	"UndeadHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 不死 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"UndeadHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 不死 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4911,7 +4484,6 @@
 
 	"Vampire"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 从{olive} {2}{mint} 偷走了一些生命值!"
 	}
 
@@ -4932,13 +4504,11 @@
 
 	"Vision"
 	{
-		"#format"		"{1:t},{2:N},{3:i}"
 		"chi"			"{olive}{1}{mint} 让{olive} {2}{mint} 的视觉系数变成了{yellow} {3}{mint}!"
 	}
 
 	"Vision2"
 	{
-		"#format"		"{1:N},{2:i}"
 		"chi"			"{olive}{1}{mint} 让{yellow} {2}{mint} 的视觉系数变回去了!"
 	}
 
@@ -4954,7 +4524,6 @@
 
 	"VisionHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 视觉 能力!"
 	}
 
@@ -4965,7 +4534,6 @@
 
 	"VisionHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 视觉 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4976,7 +4544,6 @@
 
 	"VisionHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 视觉 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -4992,19 +4559,16 @@
 
 	"Warp"
 	{
-		"#format"		"{1:t},{2:N},{3:N}"
 		"chi"			"{olive}{1}{mint} 传送{olive} {2}{mint} 到{olive} {3}{mint} 身边!"
 	}
 
 	"Warp2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 将周期性的传送到幸存者身边!"
 	}
 
 	"Warp3"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 传送到{olive} {2}{mint} 身边!"
 	}
 
@@ -5025,13 +4589,11 @@
 
 	"WarpHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 定期传送 能力!"
 	}
 
 	"WarpHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 传送 能力!"
 	}
 
@@ -5047,13 +4609,11 @@
 
 	"WarpHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 定期传送 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"WarpHuman6"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 传送 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -5064,13 +4624,11 @@
 
 	"WarpHuman8"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 定期传送 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"WarpHuman9"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 传送 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -5086,13 +4644,11 @@
 
 	"Whirl"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 翻转了{olive} {2}{mint}."
 	}
 
 	"Whirl2"
 	{
-		"#format"		"{1:N}"
 		"chi"			"{olive}{1}{mint} 的翻转停止了."
 	}
 
@@ -5108,7 +4664,6 @@
 
 	"WhirlHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 翻转 能力!"
 	}
 
@@ -5119,7 +4674,6 @@
 
 	"WhirlHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 翻转 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -5130,7 +4684,6 @@
 
 	"WhirlHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 翻转 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -5146,7 +4699,6 @@
 
 	"Witch"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 将一些普通感染者转化成{olive} 女巫仆从{mint}!"
 	}
 
@@ -5162,7 +4714,6 @@
 
 	"WitchHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 召唤女巫 能力!"
 	}
 
@@ -5173,13 +4724,11 @@
 
 	"WitchHuman3"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 召唤女巫 能力还需要{yellow} 秒{mint} 进行充能."
 	}
 
 	"WitchHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 召唤女巫 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -5195,13 +4744,11 @@
 
 	"Xiphos"
 	{
-		"#format"		"{1:t},{2:N}"
 		"chi"			"{olive}{1}{mint} 从{olive} {2}{mint} 身上偷取了一些生命值!"
 	}
 
 	"Xiphos2"
 	{
-		"#format"		"{1:N},{2:t}"
 		"chi"			"{olive}{1}{mint} 从{olive} {2}{mint} 身上偷取了一些生命值!"
 	}
 
@@ -5222,13 +4769,11 @@
 
 	"Yell"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 对幸存者大喊!"
 	}
 
 	"Yell2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint}不再大喊大叫!"
 	}
 
@@ -5244,7 +4789,6 @@
 
 	"YellHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 战吼 能力!"
 	}
 
@@ -5260,13 +4804,11 @@
 
 	"YellHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 战吼 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"YellHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 战吼 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
@@ -5282,13 +4824,11 @@
 
 	"Zombie"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 将定期召唤僵尸!"
 	}
 
 	"Zombie2"
 	{
-		"#format"		"{1:t}"
 		"chi"			"{olive}{1}{mint} 召唤了 {yellow} 僵尸{mint}!"
 	}
 
@@ -5304,7 +4844,6 @@
 
 	"ZombieHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"chi"			"你激活了{olive} {1}{mint}/{olive}{2}{mint} 次 召唤僵尸 能力!"
 	}
 
@@ -5320,13 +4859,11 @@
 
 	"ZombieHuman4"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 召唤僵尸 能力还需要{yellow} {1} 秒{mint} 进行充能."
 	}
 
 	"ZombieHuman5"
 	{
-		"#format"		"{1:i}"
 		"chi"			"你的 召唤僵尸 能力已结束, 需要{yellow} {1} 秒{mint} 进行充能."
 	}
 

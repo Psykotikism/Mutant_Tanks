@@ -64,7 +64,6 @@
 
 	"MTTankItem"
 	{
-		"#format"		"{1:t},{2:i}"
 		"hu"			"{1} (Tank #{2})"
 	}
 
@@ -80,13 +79,11 @@
 
 	"AbilityAmmo"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"A képességednek{olive} {1}{mint}/{olive}{2}{mint} lőszere maradt."
 	}
 
 	"AbilityAmmo2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"A távolsági képességednek{olive} {1}{mint}/{olive}{2}{mint} lőszere maradt."
 	}
 
@@ -112,22 +109,22 @@
 
 	"AbilityButtons"
 	{
-		"hu"			"{yellow}+használat (alapért.: E}:{olive} Aktiválja a fő képességedet."
+		"hu"			"{yellow}+használat (alapért.: E):{olive} Aktiválja a fő képességedet."
 	}
 
 	"AbilityButtons2"
 	{
-		"hu"			"{yellow}+újratöltés (alapért.: R}:{olive} Aktiválja a távolsági képességedet."
+		"hu"			"{yellow}+újratöltés (alapért.: R):{olive} Aktiválja a távolsági képességedet."
 	}
 
 	"AbilityButtons3"
 	{
-		"hu"			"{yellow}+közelítés (alapért.: Egér3/Görgő}:{olive} Aktiválja a speciális képességedet."
+		"hu"			"{yellow}+közelítés (alapért.: Egér3/Görgő):{olive} Aktiválja a speciális képességedet."
 	}
 
 	"AbilityButtons4"
 	{
-		"hu"			"{yellow}+guggolás (alapért.: CTRL}:{olive} Aktiválja a halál utáni képességedet."
+		"hu"			"{yellow}+guggolás (alapért.: CTRL):{olive} Aktiválja a halál utáni képességedet."
 	}
 
 	"Cooldown"
@@ -137,7 +134,6 @@
 
 	"AbilityCooldown"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Újratöltés:{olive} {1} másodperc"
 	}
 
@@ -153,13 +149,11 @@
 
 	"AbilityDuration"
 	{
-		"#format"		"{1:.2f}"
 		"hu"			"Élettartam:{olive} {1} másodperc"
 	}
 
 	"AbilityDuration2"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Élettartam:{olive} {1} másodperc"
 	}
 
@@ -185,13 +179,11 @@
 
 	"AbilityInstalled"
 	{
-		"#format"		"{1:s}"
 		"hu"			"{1}{olive} telepítve."
 	}
 
 	"AbilityInstalled2"
 	{
-		"#format"		"{1:s}"
 		"hu"			"{1} telepítve."
 	}
 
@@ -207,121 +199,101 @@
 
 	"Arrival1"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{default} megérkezett!"
 	}
 
 	"Arrival2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Itt jön a(z){olive} {1}{default}!"
 	}
 
 	"Arrival3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{default} készen áll gyilkolni!"
 	}
 
 	"Arrival4"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Készen állsz szembenézni a(z){olive} {1}{default}-al?"
 	}
 
 	"Arrival5"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{default} kihívásra érkezett!"
 	}
 
 	"Arrival6"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Állj készen!{olive} {1}{default} érkezik!"
 	}
 
 	"Arrival7"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{default} itt van!"
 	}
 
 	"Arrival8"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Jaj ne!{olive} {1}{default} közeledik!"
 	}
 
 	"Arrival9"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{default} csatlakozott a játékba"
 	}
 
 	"Arrival10"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Úgy látszik{olive} {1}{default} csatlakozik a társasághoz!"
 	}
 
 	"Assist1"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"hu"			"{olive}{1}{default} legyőzve!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist2"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist3"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"hu"			"{olive}{1}{default} elindult a pokolba!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist4"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"hu"			"A(z){olive} {1}{default} tényleg halott...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist5"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"hu"			"{olive}{1}{default} elvesztette a kihívást a túlélőkkel szemben!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist6"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"hu"			"A(z){olive} {1}{default} elbukta a túlélők megölését!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist7"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"hu"			"{olive}{1}{default} találkozott a halállal!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist8"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"hu"			"Éljen!{olive} {1}{default} halott!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist9"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"hu"			"{olive}{1}{default} elhagyta a játékot{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist10"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
 		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
@@ -337,7 +309,6 @@
 
 	"CommandUsage"
 	{
-		"#format"		"{1:s},{2:i},{3:i}"
 		"hu"			"Használat: {1} <írd {2}-{3}> <mennyíség: 1-32> <0: születés célkeresztnél|1: születés automatikusan>"
 	}
 
@@ -348,79 +319,66 @@
 
 	"Death1"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{default} legyőzve!"
 	}
 
 	"Death2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!"
 	}
 
 	"Death3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{default} elindult a pokolba!"
 	}
 
 	"Death4"
 	{
-		"#format"		"{1:t}"
 		"hu"			"A(z){olive} {1}{default} tényleg halott...?"
 	}
 
 	"Death5"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{default} elvesztette a kihívást a túlélőkkel szemben!"
 	}
 
 	"Death6"
 	{
-		"#format"		"{1:t}"
 		"hu"			"A(z){olive} {1}{default} elbukta a túlélők megölését!"
 	}
 
 	"Death7"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{default} találkozott a halállal!"
 	}
 
 	"Death8"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Éljen!{olive} {1}{default} halott!"
 	}
 
 	"Death9"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{default} elhagyta a játékot"
 	}
 
 	"Death10"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket!"
 	}
 
 	"ErrorParsing"
 	{
-		"#format"		"{1:s},{2:s}"
 		"hu"			"Hiba a fájl elemzésekor \"{1}\". Hiba üzenet: {2}."
 	}
 
 	"Evolved"
 	{
-		"#format"		"{1:t},{2:t},{3:i}"
 		"hu"			"{olive}{1}{mint} tovább fejlődött{olive} {2}{yellow} (Stage {3}){mint}!"
 	}
 
 	"FailedParsing"
 	{
-		"#format"		"{1:s}"
 		"hu"			"Nem sikerült elemezni a \"{1}\" fájlt."
 	}
 
@@ -436,7 +394,6 @@
 
 	"HumanCooldown"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Várnod kell még{olive} {1} másodpercet{mint} mielőtt egy másik típusú Mutáns Tankra váltasz."
 	}
 
@@ -447,133 +404,111 @@
 
 	"Kill1"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{default} kivégezte{mint} {2}{default}!"
 	}
 
 	"Kill2"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{default} legyőzte{mint} {2}{default}!"
 	}
 
 	"Kill3"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{default} elküldte{mint} {2}{default} a pokolba!"
 	}
 
 	"Kill4"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"Biztos hogy{olive} {1}{default} tényleg megölte{mint} {2}{default}...?"
 	}
 
 	"Kill5"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{mint}{2}{default} elvesztette a kihívást{olive} {1}{default} ellen!"
 	}
 
 	"Kill6"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{mint}{2}{default}-nak nem sikerült megölnie{olive} {1}{default}!"
 	}
 
 	"Kill7"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{mint}{2}{default} elérte a pusztulás {olive} {1}{default} keze által!"
 	}
 
 	"Kill8"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"Éljen!{mint} {2}{default} halott, hála{olive} {1}{default}!"
 	}
 
 	"Kill9"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{default} rávette{mint} {2}{default} hogy mérgében kilépjen!"
 	}
 
 	"Kill10"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"Úgy látszik{mint} {2}{default} nem tudta legyőzni{olive} {1}{default} végül is!"
 	}
 
 	"Killer1"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"hu"			"{mint}{1}{default} kivégezte{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer2"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"hu"			"{mint}{1}{default} legyőzte{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer3"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"hu"			"{mint}{1}{default} elküldte{olive} {2}{default} a pokolba!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer4"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer5"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"hu"			"{olive}{2}{default} elvesztette a kihívást{mint} {1}{default} ellen!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer6"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"hu"			"A(z){olive} {2}{default}-nak nem sikerült megölnie{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer7"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"hu"			"{olive}{2}{default} elérte a pusztulás {mint} {1}{default} keze által!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer8"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"hu"			"Éljen!{olive} {2}{default} halott, hála{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer9"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer10"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
 		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"LogEnded"
 	{
-		"#format"		"{1:s},{2:s}"
 		"hu"			"[{1}] --- NAPLÓZÁS VÉGE EZEN A PÁLYÁN: {2} ---"
 	}
 
 	"LogStarted"
 	{
-		"#format"		"{1:s},{2:s}"
 		"hu"			"[{1}] --- NAPLÓZÁS ELINDULT EZEN A PÁLYÁN: {2} ---"
 	}
 
@@ -629,7 +564,6 @@
 
 	"Randomized"
 	{
-		"#format"		"{1:t},{2:t}"
 		"hu"			"{olive}{1}{mint} randomizálva{olive} {2}{mint}!"
 	}
 
@@ -640,7 +574,6 @@
 
 	"ReloadingConfig"
 	{
-		"#format"		"{1:s}"
 		"hu"			"Konfig fájl újratöltése \"{1}\" fájl..."
 	}
 
@@ -656,37 +589,31 @@
 
 	"RewardAmmo"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert megölted{olive} {1}{default}!"
 	}
 
 	"RewardAmmo2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardAmmo3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardDamageBoost"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert megölted{olive} {1}{default}!"
 	}
 
 	"RewardDamageBoost2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardDamageBoost3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert segítettél{olive} {1}{default}ellen!"
 	}
 
@@ -697,19 +624,16 @@
 
 	"RewardGod"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert megölted{olive} {1}{default}!"
 	}
 
 	"RewardGod2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardGod3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} halhatatlanságot{default} mert segítettél{olive} {1}{default}ellen!"
 	}
 
@@ -720,97 +644,81 @@
 
 	"RewardHealth"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} életet{default} mert megölted{olive} {1}{default}!"
 	}
 
 	"RewardHealth2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} életet{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardHealth3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} életet{default} mert segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardItem"
 	{
-		"#format"		"{1:s},{2:t}"
 		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert megölted{olive} {2}{default}!"
 	}
 
 	"RewardItem2"
 	{
-		"#format"		"{1:s},{2:t}"
 		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert nagyrészt segítettél{olive} {2}{default}ellen!"
 	}
 
 	"RewardItem3"
 	{
-		"#format"		"{1:s},{2:t}"
 		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert segítettél{olive} {2}{default}ellen!"
 	}
 
 	"RewardNone"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Nem{default} okoztál elég sebzést{olive} {1}{default} nak, hogy jutalmat kapj."
 	}
 
 	"RewardRefill"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert megölted{olive} {1}{default}!"
 	}
 
 	"RewardRefill2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardRefill3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál{yellow} életet és lőszert{default} mert segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardRespawn"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert megölted{olive} {1}{default}!"
 	}
 
 	"RewardRespawn2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardRespawn3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert megölted{olive} {1}{default}!"
 	}
 
 	"RewardSpeedBoost2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardSpeedBoost3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"Most{default} kaptál egy{yellow} sebesség növelést{default} mert segítettél{olive} {1}{default}ellen!"
 	}
 
@@ -836,13 +744,11 @@
 
 	"Transformed"
 	{
-		"#format"		"{1:t},{2:t}"
 		"hu"			"{olive}{1}{mint} átalakult{olive} {2}{mint}!"
 	}
 
 	"Untransformed"
 	{
-		"#format"		"{1:t},{2:t}"
 		"hu"			"{olive}{1}{mint} visszaváltozott{olive} {2}{mint}!"
 	}
 
@@ -853,19 +759,16 @@
 
 	"TankDisabled"
 	{
-		"#format"		"{1:t},{2:i}"
 		"hu"			"{1}{yellow} (Tank #{2}){default} letiltva."
 	}
 
 	"Absorb"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} ideiglenesen elnyeli a sebzésed nagy részét!"
 	}
 
 	"Absorb2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} már nem nyeli el a sebzésed nagy részét!"
 	}
 
@@ -881,7 +784,6 @@
 
 	"AbsorbHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik elnyelő képességedet!"
 	}
 
@@ -897,13 +799,11 @@
 
 	"AbsorbHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az elnyelő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"AbsorbHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az elnyelő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -919,13 +819,11 @@
 
 	"Acid"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} létrehozott egy savas pocsolyát{olive} {2}{mint}alatt!"
 	}
 
 	"Acid2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} sziklája létrehozott egy savas pocsolyát."
 	}
 
@@ -941,7 +839,6 @@
 
 	"AcidHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági sav képességedet!"
 	}
 
@@ -952,7 +849,6 @@
 
 	"AcidHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági sav képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -963,7 +859,6 @@
 
 	"AcidHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági sav képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -979,13 +874,11 @@
 
 	"Aimless"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} akadályozza{olive} {2}{mint} a célzásban!"
 	}
 
 	"Aimless2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} újra tud célozni!"
 	}
 
@@ -1001,7 +894,6 @@
 
 	"AimlessHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági céltalan képességed!"
 	}
 
@@ -1012,7 +904,6 @@
 
 	"AimlessHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági céltalan képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1023,7 +914,6 @@
 
 	"AimlessHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági céltalan képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1039,7 +929,6 @@
 
 	"Ammo"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} elvette{olive} {2}{mint}-tól az összes lőszert!"
 	}
 
@@ -1055,7 +944,6 @@
 
 	"AmmoHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lőszer képességedet!"
 	}
 
@@ -1066,7 +954,6 @@
 
 	"AmmoHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági lőszer képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1077,7 +964,6 @@
 
 	"AmmoHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági lőszer képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1093,13 +979,11 @@
 
 	"Blind"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} megvakította{olive} {2}{mint}!"
 	}
 
 	"Blind2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nem vak!"
 	}
 
@@ -1115,7 +999,6 @@
 
 	"BlindHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági vakító képességedet!"
 	}
 
@@ -1126,7 +1009,6 @@
 
 	"BlindHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági vakító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1137,7 +1019,6 @@
 
 	"BlindHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági vakító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1153,13 +1034,11 @@
 
 	"Bomb"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} létrehozott egy robbanást{olive} {2}{mint} helyzeténél!"
 	}
 
 	"Bomb2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} sziklája robbanást okozott."
 	}
 
@@ -1175,7 +1054,6 @@
 
 	"BombHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági robbantás képességedet!"
 	}
 
@@ -1186,7 +1064,6 @@
 
 	"BombHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági bomba képességedet még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1197,7 +1074,6 @@
 
 	"BombHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági bomba képességed véget ért az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1213,13 +1089,11 @@
 
 	"Bury"
 	{
-		"#format"		"{1:t},{2:N},{3:.2f}"
 		"hu"			"{olive}{1}{mint} eltemette{olive} {2}{yellow} {3}{mint} lábát a föld alá!"
 	}
 
 	"Bury2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} nincs többé eltemetve!"
 	}
 
@@ -1235,7 +1109,6 @@
 
 	"BuryHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági eltemetés képességedet!"
 	}
 
@@ -1246,7 +1119,6 @@
 
 	"BuryHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági eltemetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1257,7 +1129,6 @@
 
 	"BuryHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági eltemető képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1273,13 +1144,11 @@
 
 	"Car"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} autó záport{yellow} indított{mint}!"
 	}
 
 	"Car2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} autó zápora véget ért!"
 	}
 
@@ -1295,7 +1164,6 @@
 
 	"CarHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik autó zápor képességedet!"
 	}
 
@@ -1311,13 +1179,11 @@
 
 	"CarHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az autó záporodnak még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"CarHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az autó záporod véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1333,13 +1199,11 @@
 
 	"Choke"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} fojtogatja{olive} {2}{mint} -t a levegőben!"
 	}
 
 	"Choke2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nem fuldoklik a levegőben!"
 	}
 
@@ -1355,7 +1219,6 @@
 
 	"ChokeHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági fojtogatás képességedet!"
 	}
 
@@ -1366,7 +1229,6 @@
 
 	"ChokeHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági fojtogatás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1377,7 +1239,6 @@
 
 	"ChokeHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági fojtogató képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1393,7 +1254,6 @@
 
 	"Clone"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} klónozta magát!"
 	}
 
@@ -1409,7 +1269,6 @@
 
 	"CloneHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Létrehoztál{olive} {1}{mint}/{olive}{2}{mint} klónt!"
 	}
 
@@ -1425,7 +1284,6 @@
 
 	"CloneHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A klónozó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1436,7 +1294,6 @@
 
 	"CloneHuman6"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az összes klónod meghalt, a klón képességed újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1452,13 +1309,11 @@
 
 	"Cloud"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} füstfelhőt bocsát ki!"
 	}
 
 	"Cloud2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} már nem bocsát ki füstfelhőt!"
 	}
 
@@ -1474,7 +1329,6 @@
 
 	"CloudHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik felhő képességedet!"
 	}
 
@@ -1490,13 +1344,11 @@
 
 	"CloudHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A felhő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"CloudHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A felhő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1512,13 +1364,11 @@
 
 	"Drop"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} dobott egy fegyvert!"
 	}
 
 	"Drop2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} dobott egy közelharci fegyvert!"
 	}
 
@@ -1549,13 +1399,11 @@
 
 	"Drug"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} bedrogozta{olive} {2}{mint}-t!"
 	}
 
 	"Drug2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nincs bedrogozva!"
 	}
 
@@ -1571,7 +1419,6 @@
 
 	"DrugHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági bedrogozás képességedet!"
 	}
 
@@ -1582,7 +1429,6 @@
 
 	"DrugHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági bedrogozás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1593,7 +1439,6 @@
 
 	"DrugHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági bedrogozás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1609,13 +1454,11 @@
 
 	"Drunk"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} részeggé tette{olive} {2}{mint} -t!"
 	}
 
 	"Drunk2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nem részeg!"
 	}
 
@@ -1631,7 +1474,6 @@
 
 	"DrunkHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági részegítő képességedet!"
 	}
 
@@ -1642,7 +1484,6 @@
 
 	"DrunkHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági részegítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1653,7 +1494,6 @@
 
 	"DrunkHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági részegítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1669,13 +1509,11 @@
 
 	"Electric"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} megrázta{olive} {2}{mint}-t!"
 	}
 
 	"Electric2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nincs megrázva!"
 	}
 
@@ -1691,7 +1529,6 @@
 
 	"ElectricHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági elektromos képességedet!"
 	}
 
@@ -1702,7 +1539,6 @@
 
 	"ElectricHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági elektromos képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1713,7 +1549,6 @@
 
 	"ElectricHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági elektromos képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1729,13 +1564,11 @@
 
 	"Enforce"
 	{
-		"#format"		"{1:t},{2:N},{3:i}"
 		"hu"			"{olive}{1}{mint} kényszeríti{olive} {2}{mint} hogy csak a{yellow} #{3} slottot használja{mint}!"
 	}
 
 	"Enforce2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} újra használhatja minden fegyverét!"
 	}
 
@@ -1751,7 +1584,6 @@
 
 	"EnforceHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági kényszerítő képességedet!"
 	}
 
@@ -1762,7 +1594,6 @@
 
 	"EnforceHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági kényszerítő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1773,7 +1604,6 @@
 
 	"EnforceHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági kényszerítő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1789,13 +1619,11 @@
 
 	"Fast"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} speciális sebessége aktiválva!"
 	}
 
 	"Fast2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} speciális sebessége deaktiválva!"
 	}
 
@@ -1811,7 +1639,6 @@
 
 	"FastHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gyorsaság képességedet!"
 	}
 
@@ -1827,13 +1654,11 @@
 
 	"FastHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A gyorsaság képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"FastHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A gyorsaság képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1849,13 +1674,11 @@
 
 	"Fire"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} tüzet okozott{olive} {2}{mint}alatt!"
 	}
 
 	"Fire2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} sziklája tüzet okozott."
 	}
 
@@ -1871,7 +1694,6 @@
 
 	"FireHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági tűz képességedet!"
 	}
 
@@ -1882,7 +1704,6 @@
 
 	"FireHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági tűz képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1893,7 +1714,6 @@
 
 	"FireHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági tűz képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1909,7 +1729,6 @@
 
 	"Fling"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} feldobta{olive} {2}{mint} -t a levegőbe!"
 	}
 
@@ -1925,7 +1744,6 @@
 
 	"FlingHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági dobás képességedet!"
 	}
 
@@ -1936,7 +1754,6 @@
 
 	"FlingHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági dobás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -1947,7 +1764,6 @@
 
 	"FlingHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági dobás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -1963,13 +1779,11 @@
 
 	"Fly"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} repül!"
 	}
 
 	"Fly2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} abbahagyta a repülést!"
 	}
 
@@ -1985,7 +1799,6 @@
 
 	"FlyHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik repülő képességedet!"
 	}
 
@@ -2001,13 +1814,11 @@
 
 	"FlyHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A repülő képességednek kell még{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"FlyHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A repülő képességed véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
 	}
 
@@ -2028,13 +1839,11 @@
 
 	"Fragile"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} ideiglenesen érzékeny a sebzésre, de többet sebez és gyorsabban fut!"
 	}
 
 	"Fragile2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} már nem érzékeny a sebzésre"
 	}
 
@@ -2050,7 +1859,6 @@
 
 	"FragileHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik sebzés érzékeny képességedet!"
 	}
 
@@ -2066,13 +1874,11 @@
 
 	"FragileHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A sebzés érzékeny képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"FragileHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A sebzés érzékeny képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2088,19 +1894,16 @@
 
 	"Ghost"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} lefegyverezte{olive} {2}{mint}-t!"
 	}
 
 	"Ghost2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} álcázza magát!"
 	}
 
 	"Ghost3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} újra látható!"
 	}
 
@@ -2121,13 +1924,11 @@
 
 	"GhostHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik álcázó képességedet!"
 	}
 
 	"GhostHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lefegyverző képességedet!"
 	}
 
@@ -2143,13 +1944,11 @@
 
 	"GhostHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az álcázó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"GhostHuman6"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági lefegyverző képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -2160,13 +1959,11 @@
 
 	"GhostHuman8"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az álcázó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"GhostHuman9"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági lefegyverző képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2182,13 +1979,11 @@
 
 	"God"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} ideiglenesen legyőzhetetlen!"
 	}
 
 	"God2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} többé már nem legyőzhetetlen!"
 	}
 
@@ -2204,7 +1999,6 @@
 
 	"GodHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik isteni képességedet!"
 	}
 
@@ -2220,13 +2014,11 @@
 
 	"GodHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az isteni képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"GodHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az isteni képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2242,25 +2034,21 @@
 
 	"Gravity"
 	{
-		"#format"		"{1:t},{2:N},{3:.2f}"
 		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} gravitációját{yellow} {3}{mint}!"
 	}
 
 	"Gravity2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} gravitációja újra normális!"
 	}
 
 	"Gravity3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} gravitációs vonzást hozott létre!"
 	}
 
 	"Gravity4"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint}gravitációs vonzása véget ért!"
 	}
 
@@ -2281,13 +2069,11 @@
 
 	"GravityHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gravitációs vonzás képességedet!"
 	}
 
 	"GravityHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági alacsony gravitáció képességedet!"
 	}
 
@@ -2303,13 +2089,11 @@
 
 	"GravityHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A gravitációs vonzás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"GravityHuman6"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági alacsony gravitációs képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -2320,13 +2104,11 @@
 
 	"GravityHuman8"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A gravitációs vonzás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"GravityHuman9"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az alacsony gravitációs képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2342,19 +2124,16 @@
 
 	"Heal"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} átállította{olive} {2}{mint} életerejét ideiglenesre, aki meghal amint eléri a 0-át!"
 	}
 
 	"Heal2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} épp elnyeli az életerőt a közelben lévő fertőzőtektől!"
 	}
 
 	"Heal3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} már nem nyeli az életerőt a közelben lévő fertőzőtektől!"
 	}
 
@@ -2375,13 +2154,11 @@
 
 	"HealHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik gyógyító képességedet!"
 	}
 
 	"HealHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rossz-életerő képességedet!"
 	}
 
@@ -2397,13 +2174,11 @@
 
 	"HealHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A gyógyító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"HealHuman6"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági rossz-életerő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -2414,13 +2189,11 @@
 
 	"HealHuman8"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A gyógyító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"HealHuman9"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági rossz-életerő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2451,13 +2224,11 @@
 
 	"Hurt"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} bántja{olive} {2}{mint}-t!"
 	}
 
 	"Hurt2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nincs bántalmazás alatt!"
 	}
 
@@ -2473,7 +2244,6 @@
 
 	"HurtHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági bántalmazó képességedet!"
 	}
 
@@ -2484,7 +2254,6 @@
 
 	"HurtHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági bántalmazó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -2495,7 +2264,6 @@
 
 	"HurtHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági bántalmazó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2511,13 +2279,11 @@
 
 	"Hypno"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} hipnotizálja{olive} {2}{mint}-t!"
 	}
 
 	"Hypno2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nincs hipnotizálva!"
 	}
 
@@ -2533,7 +2299,6 @@
 
 	"HypnoHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hipnotizáló képességedet!"
 	}
 
@@ -2544,7 +2309,6 @@
 
 	"HypnoHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági hipnotizálás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -2555,7 +2319,6 @@
 
 	"HypnoHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági hipnotizálás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2571,13 +2334,11 @@
 
 	"Ice"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} lefagyasztotta{olive} {2}{mint}-t!"
 	}
 
 	"Ice2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} felolvasztva!"
 	}
 
@@ -2593,7 +2354,6 @@
 
 	"IceHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági fagyasztás képességedet!"
 	}
 
@@ -2604,7 +2364,6 @@
 
 	"IceHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági fagyasztás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -2615,7 +2374,6 @@
 
 	"IceHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági fagyasztás képességed vége ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2631,7 +2389,6 @@
 
 	"Idle"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} kényszerítette{olive} {2}{mint} hogy szünetet tartson!"
 	}
 
@@ -2647,7 +2404,6 @@
 
 	"IdleHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági szüneteltetés képességedet!"
 	}
 
@@ -2658,7 +2414,6 @@
 
 	"IdleHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági szüneteltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -2669,7 +2424,6 @@
 
 	"IdleHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági szüneteltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2685,13 +2439,11 @@
 
 	"Invert"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} megfordította{olive} {2}{mint} gomb kiosztását!"
 	}
 
 	"Invert2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} gomb kiosztása nincs többé megfordítva!"
 	}
 
@@ -2707,7 +2459,6 @@
 
 	"InvertHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági megfordítás képességedet!"
 	}
 
@@ -2718,7 +2469,6 @@
 
 	"InvertHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági megfordítás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -2729,7 +2479,6 @@
 
 	"InvertHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági megfordítás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2745,7 +2494,6 @@
 
 	"Item"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} tételeket adott{yellow} a túlélőknek{mint}!"
 	}
 
@@ -2776,19 +2524,16 @@
 
 	"Jump"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} kényszeríti{olive} {2}{mint} -t hogy kontrollálhatatlanul ugráljon!"
 	}
 
 	"Jump2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nincs kényszerítve arra hogy ugráljon!"
 	}
 
 	"Jump3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} időszakosan ugrálni fog!"
 	}
 
@@ -2809,13 +2554,11 @@
 
 	"JumpHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik időszakos ugrálás képességedet!"
 	}
 
 	"JumpHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági ugrás képességedet!"
 	}
 
@@ -2831,13 +2574,11 @@
 
 	"JumpHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az időszakos ugrás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"JumpHuman6"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági ugrás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -2848,13 +2589,11 @@
 
 	"JumpHuman8"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az időszakos ugrás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
 	"JumpHuman9"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági ugrás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2870,7 +2609,6 @@
 
 	"Kamikaze"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} kamikazét adott {olive} {2}{mint}-nak!"
 	}
 
@@ -2906,13 +2644,11 @@
 
 	"Lag"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} késlelteti{olive} {2}{mint} -t!"
 	}
 
 	"Lag2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nem késik!"
 	}
 
@@ -2928,7 +2664,6 @@
 
 	"LagHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági késleltetés képességedet!"
 	}
 
@@ -2939,7 +2674,6 @@
 
 	"LagHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági késleltetés képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -2950,7 +2684,6 @@
 
 	"LagHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági késleltetés képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -2966,13 +2699,11 @@
 
 	"Laser"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} lézert lő{olive} {2}{mint}felé!"
 	}
 
 	"Laser2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} többé már nem lő lézert!"
 	}
 
@@ -2988,7 +2719,6 @@
 
 	"LaserHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik lézer képességedet!"
 	}
 
@@ -3004,13 +2734,11 @@
 
 	"LaserHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A lézer képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"LaserHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A lézer képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3026,13 +2754,11 @@
 
 	"Leech"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} életet{yellow} szív{mint} el{olive} {2}{mint}-tól!"
 	}
 
 	"Leech2"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} már nem szív{yellow} életet{mint} el{olive} {2}{mint}-tól!"
 	}
 
@@ -3048,7 +2774,6 @@
 
 	"LeechHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági pióca képességedet!"
 	}
 
@@ -3059,7 +2784,6 @@
 
 	"LeechHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági pióca képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -3070,7 +2794,6 @@
 
 	"LeechHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági pióca képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3086,13 +2809,11 @@
 
 	"Lightning"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} elindított egy{yellow} villám vihart{mint}!"
 	}
 
 	"Lightning2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} villám vihara véget ért!"
 	}
 
@@ -3108,7 +2829,6 @@
 
 	"LightningHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik villám vihar képességedet!"
 	}
 
@@ -3124,13 +2844,11 @@
 
 	"LightningHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A villám viharodnak kell még{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"LightningHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A villám viharod véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
 	}
 
@@ -3146,19 +2864,16 @@
 
 	"Medic"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} gyógyítja a közelben lévő speciális fertőzötteket!"
 	}
 
 	"Medic2"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} épp meggyógyította{yellow} {2}{mint}"
 	}
 
 	"Medic3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} abbahagyta a közelben lévő spec. fertőzöttek gyógyítását!"
 	}
 
@@ -3174,7 +2889,6 @@
 
 	"MedicHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik orvos képességedet!"
 	}
 
@@ -3190,13 +2904,11 @@
 
 	"MedicHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az orvos képességednek kell még{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"MedicHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az orvos képességed véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
 	}
 
@@ -3212,13 +2924,11 @@
 
 	"Meteor"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} Meteor záport{yellow} indított{mint}!"
 	}
 
 	"Meteor2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} meteor zápora véget ért!"
 	}
 
@@ -3234,7 +2944,6 @@
 
 	"MeteorHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik meteor záporodat!"
 	}
 
@@ -3250,13 +2959,11 @@
 
 	"MeteorHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A meteor zápor képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"MeteorHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A meteor zápor képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3272,7 +2979,6 @@
 
 	"Minion"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} megidézett egy{yellow} minyont{mint}!"
 	}
 
@@ -3288,7 +2994,6 @@
 
 	"MinionHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Készítettél{olive} {1}{mint}/{olive}{2}{mint} minyonokat!"
 	}
 
@@ -3299,7 +3004,6 @@
 
 	"MinionHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A minyon létrehozó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -3310,7 +3014,6 @@
 
 	"MinionHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az összes minyonod meghalt, a minyon létrehozó képességed újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3326,7 +3029,6 @@
 
 	"Necro"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} visszahozta a közelben lévő speciális fertőzötteket!"
 	}
 
@@ -3342,7 +3044,6 @@
 
 	"NecroHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik haláli képességedet!"
 	}
 
@@ -3358,13 +3059,11 @@
 
 	"NecroHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A haláli képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"NecroHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A haláli képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3380,13 +3079,11 @@
 
 	"Nullify"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} hatástalanítja{olive} {2}{mint} összes sebzését!"
 	}
 
 	"Nullify2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} sebzése többé már nincs hatástalanítva!"
 	}
 
@@ -3402,7 +3099,6 @@
 
 	"NullifyHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági sebzés hatástalanító képességedet!"
 	}
 
@@ -3413,7 +3109,6 @@
 
 	"NullifyHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági hatástalanító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -3424,7 +3119,6 @@
 
 	"NullifyHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági hatástalanító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3440,13 +3134,11 @@
 
 	"Omni"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} mindenség képessége aktiválva!"
 	}
 
 	"Omni2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} mindenség képessége deaktiválva!"
 	}
 
@@ -3462,7 +3154,6 @@
 
 	"OmniHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik mindenség képességedet!"
 	}
 
@@ -3478,13 +3169,11 @@
 
 	"OmniHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A mindenség képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"OmniHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A mindenség képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3500,13 +3189,11 @@
 
 	"Panic"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} időszakosan pánikot indít!"
 	}
 
 	"Panic2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} pánikot{yellow} indított{mint}!"
 	}
 
@@ -3522,7 +3209,6 @@
 
 	"PanicHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik pánik képességedet!"
 	}
 
@@ -3538,13 +3224,11 @@
 
 	"PanicHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A pánik képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"PanicHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A pánik képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3560,13 +3244,11 @@
 
 	"Pimp"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} csapdossa{olive} {2}{mint}-t!"
 	}
 
 	"Pimp2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nincs csapdosva!"
 	}
 
@@ -3582,7 +3264,6 @@
 
 	"PimpHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági csapdosó képességedet!"
 	}
 
@@ -3593,7 +3274,6 @@
 
 	"PimpHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági csapdosó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -3604,7 +3284,6 @@
 
 	"PimpHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági csapdosó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3620,7 +3299,6 @@
 
 	"Puke"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} lehányta{olive} {2}{mint}-t!"
 	}
 
@@ -3636,7 +3314,6 @@
 
 	"PukeHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági hányás képességedet!"
 	}
 
@@ -3647,7 +3324,6 @@
 
 	"PukeHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági hányás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -3658,7 +3334,6 @@
 
 	"PukeHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági hányás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3674,19 +3349,16 @@
 
 	"Pyro"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} meggyújtotta önmagát!"
 	}
 
 	"Pyro2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} ég és nagyon gyorsan fut!"
 	}
 
 	"Pyro3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} többé már nem ég és a sebessége is normális lett!"
 	}
 
@@ -3702,7 +3374,6 @@
 
 	"PyroHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik piro képességedet!"
 	}
 
@@ -3718,13 +3389,11 @@
 
 	"PyroHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A piro képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"PyroHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A piro képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3740,13 +3409,11 @@
 
 	"Quiet"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} lenémította magát{olive} {2}{mint}körül!"
 	}
 
 	"Quiet2"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} többé már nem csendes{olive} {2}{mint}körül!"
 	}
 
@@ -3762,7 +3429,6 @@
 
 	"QuietHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági csend képességedet!"
 	}
 
@@ -3773,7 +3439,6 @@
 
 	"QuietHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági csend képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -3784,7 +3449,6 @@
 
 	"QuietHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági csend képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3800,13 +3464,11 @@
 
 	"Recoil"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} erős visszarúgást adott{olive} {2}{mint} -nak!"
 	}
 
 	"Recoil2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} -nak többé már nincs erős visszarúgása!"
 	}
 
@@ -3822,7 +3484,6 @@
 
 	"RecoilHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági visszarúgás képességedet!"
 	}
 
@@ -3833,7 +3494,6 @@
 
 	"RecoilHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági visszarúgás képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -3844,7 +3504,6 @@
 
 	"RecoilHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági visszarúgás képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3860,13 +3519,11 @@
 
 	"Regen"
 	{
-		"#format"		"{1:t},{2:.2f}"
 		"hu"			"{olive}{1}{mint} regenerálja az életerejét minden{yellow} {2}{mint} másodpercben!"
 	}
 
 	"Regen2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} már nem regenerálja az életerejét!"
 	}
 
@@ -3882,7 +3539,6 @@
 
 	"RegenHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik regeneráló képességedet!"
 	}
 
@@ -3898,13 +3554,11 @@
 
 	"RegenHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A regeneráló képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"RegenHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A regeneráló képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -3920,7 +3574,6 @@
 
 	"Respawn"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} visszahozta önmagát!"
 	}
 
@@ -3946,7 +3599,6 @@
 
 	"RespawnHuman3"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik újjászületésedet!"
 	}
 
@@ -3962,7 +3614,6 @@
 
 	"Restart"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} rávette{olive} {2}{mint} -t hogy újrakezdje egy eltérő felszereléssel!"
 	}
 
@@ -3978,7 +3629,6 @@
 
 	"RestartHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági újrakezdő képességedet!"
 	}
 
@@ -3989,7 +3639,6 @@
 
 	"RestartHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági újrakezdő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -4000,7 +3649,6 @@
 
 	"RestartHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági újrakezdő képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -4016,13 +3664,11 @@
 
 	"Rock"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} szikla záport{yellow} indított{mint}!"
 	}
 
 	"Rock2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} szikla zápora véget ért!"
 	}
 
@@ -4038,7 +3684,6 @@
 
 	"RockHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik szikla záporodat!"
 	}
 
@@ -4054,13 +3699,11 @@
 
 	"RockHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A szikla zápor képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"RockHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A szikla zápor képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -4076,7 +3719,6 @@
 
 	"Rocket"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} elküldte{olive} {2}{mint} -t az űrbe!"
 	}
 
@@ -4092,7 +3734,6 @@
 
 	"RocketHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rakéta képességedet!"
 	}
 
@@ -4103,7 +3744,6 @@
 
 	"RocketHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági rakéta képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -4114,7 +3754,6 @@
 
 	"RocketHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági rakéta képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -4130,13 +3769,11 @@
 
 	"Shake"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} rázza{olive} {2}{mint}-t!"
 	}
 
 	"Shake2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nem rázkódik!"
 	}
 
@@ -4152,7 +3789,6 @@
 
 	"ShakeHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági rázó képességedet!"
 	}
 
@@ -4163,7 +3799,6 @@
 
 	"ShakeHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági rázó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -4174,7 +3809,6 @@
 
 	"ShakeHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági rázó képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -4190,13 +3824,11 @@
 
 	"Shield"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} pajzsa{yellow} aktiválva{mint}!"
 	}
 
 	"Shield2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} pajzsa{yellow} deaktiválva{mint}!"
 	}
 
@@ -4212,7 +3844,6 @@
 
 	"ShieldHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik pajzsodat!"
 	}
 
@@ -4228,13 +3859,11 @@
 
 	"ShieldHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A pajzsodnak még kell{yellow} {1} másodperc{mint} a regenerálódáshoz."
 	}
 
 	"ShieldHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A pajzsod eltört, a regenerálódáshoz még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -4250,19 +3879,16 @@
 
 	"ShieldOwner"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{1} Pajzsa"
 	}
 
 	"Shove"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} lökdösi{olive} {2}{mint}-t!"
 	}
 
 	"Shove2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nincs lökdösve!"
 	}
 
@@ -4278,7 +3904,6 @@
 
 	"ShoveHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lökés képességedet!"
 	}
 
@@ -4289,7 +3914,6 @@
 
 	"ShoveHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági lökés képességednek még kell{yellow} {1} másodperc{mint} sz újratöltéshez."
 	}
 
@@ -4300,7 +3924,6 @@
 
 	"ShoveHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági lökés képességed véget ért, Az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -4316,13 +3939,11 @@
 
 	"Slow"
 	{
-		"#format"		"{1:t},{2:N},{3:.2f}"
 		"hu"			"{olive}{1}{mint} éppen{olive} {2}{mint} lelassította{yellow} {3}{mint}-t!"
 	}
 
 	"Slow2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nincs lelassítva!"
 	}
 
@@ -4338,7 +3959,6 @@
 
 	"SlowHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lassító képességedet!"
 	}
 
@@ -4349,7 +3969,6 @@
 
 	"SlowHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági lassító képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -4360,7 +3979,6 @@
 
 	"SlowHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági lassító képességed véget ért, az újratöltéséhez még kell{yellow} {1} másodperc{mint}."
 	}
 
@@ -4376,7 +3994,6 @@
 
 	"Smash"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} halálra zúzta{olive} {2}{mint} -t!"
 	}
 
@@ -4392,7 +4009,6 @@
 
 	"SmashHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik zúzó képességedet!"
 	}
 
@@ -4403,7 +4019,6 @@
 
 	"SmashHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági zúzó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -4414,7 +4029,6 @@
 
 	"SmashHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
@@ -4430,7 +4044,6 @@
 
 	"Smite"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} lesújtott{olive} {2}{mint}-ra!"
 	}
 
@@ -4446,7 +4059,6 @@
 
 	"SmiteHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági lesújtó képességedet!"
 	}
 
@@ -4457,7 +4069,6 @@
 
 	"SmiteHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági lesújtó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -4468,7 +4079,6 @@
 
 	"SmiteHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági zúzó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
@@ -4484,13 +4094,11 @@
 
 	"Spam"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} folyamatosan sziklákat dobál!"
 	}
 
 	"Spam2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} többé már nem dobál folyamatosan sziklákat!"
 	}
 
@@ -4506,7 +4114,6 @@
 
 	"SpamHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik folyamatos szikla képességedet!"
 	}
 
@@ -4522,13 +4129,11 @@
 
 	"SpamHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A folyamatos szikla képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"SpamHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A folyamatos szikla képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
 
@@ -4544,13 +4149,11 @@
 
 	"Splash"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} területi sebzést okoz a közelben lévő túlélőkre!"
 	}
 
 	"Splash2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} többé már nem okoz területi sebzést a túlélőkre!"
 	}
 
@@ -4566,7 +4169,6 @@
 
 	"SplashHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik területi sebzés képességedet!"
 	}
 
@@ -4582,13 +4184,11 @@
 
 	"SplashHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A területi képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"SplashHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A területi képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
@@ -4604,13 +4204,11 @@
 
 	"Splatter"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} időszakosan mindenki képernyőjét befröcsköli!"
 	}
 
 	"Splatter2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} mindenki képernyőjét{yellow} befröcskölte{mint}!"
 	}
 
@@ -4626,7 +4224,6 @@
 
 	"SplatterHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} fröcskölő képességedet!"
 	}
 
@@ -4642,13 +4239,11 @@
 
 	"SplatterHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A fröcskölő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"SplatterHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A fröcskölő képességed véget ért, az újratöltéshez kell még{yellow} {1} másodperc{mint}."
 	}
 
@@ -4664,25 +4259,21 @@
 
 	"Throw"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} dobott egy autót!"
 	}
 
 	"Throw2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} dobott egy{yellow} speciális fertőzöttet{mint}!"
 	}
 
 	"Throw3"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} eldobta magát!"
 	}
 
 	"Throw4"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} dobott egy boszorkát!"
 	}
 
@@ -4698,7 +4289,6 @@
 
 	"ThrowHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik dobó képességedet!"
 	}
 
@@ -4709,13 +4299,11 @@
 
 	"ThrowHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A dobó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"ThrowHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A dobó képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
 
@@ -4731,7 +4319,6 @@
 
 	"Track"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} sziklája{yellow} követ{mint} egy túlélőt!"
 	}
 
@@ -4747,7 +4334,6 @@
 
 	"TrackHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik követő képességedet!"
 	}
 
@@ -4758,13 +4344,11 @@
 
 	"TrackHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A követő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"TrackHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A követő képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
 
@@ -4780,19 +4364,16 @@
 
 	"Ultimate"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} aktiválta a végső módját!"
 	}
 
 	"Ultimate2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} deaktiválta a végső módját!"
 	}
 
 	"Ultimate3"
 	{
-		"#format"		"{1:.2f},{2:.2f}"
 		"hu"			"Ennyi sebzést {yellow}{1}{mint}/{yellow}{2}{mint} okoztál a túlélőknek ahhoz hogy felold a végső módodat."
 	}
 
@@ -4813,7 +4394,6 @@
 
 	"UltimateHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik végső képességedet!"
 	}
 
@@ -4829,13 +4409,11 @@
 
 	"UltimateHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A végső képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"UltimateHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A végső képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
@@ -4851,13 +4429,11 @@
 
 	"Undead"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} növelte az élettartamát!"
 	}
 
 	"Undead2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} újra teljes életerőn van!"
 	}
 
@@ -4873,7 +4449,6 @@
 
 	"UndeadHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik élőholt képességedet!"
 	}
 
@@ -4889,13 +4464,11 @@
 
 	"UndeadHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az élőholt képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"UndeadHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az élőholt képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
 
@@ -4911,7 +4484,6 @@
 
 	"Vampire"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} életerőt lopott{olive} {2}{mint}-tol!"
 	}
 
@@ -4932,13 +4504,11 @@
 
 	"Vision"
 	{
-		"#format"		"{1:t},{2:N},{3:i}"
 		"hu"			"{olive}{1}{mint} megváltoztatta{olive} {2}{mint} látómezejét{yellow} {3}{mint} -ra!"
 	}
 
 	"Vision2"
 	{
-		"#format"		"{1:N},{2:i}"
 		"hu"			"{olive}{1}{mint} látómezeje visszaállt{yellow} {2}{mint} -ra!"
 	}
 
@@ -4954,7 +4524,6 @@
 
 	"VisionHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági vizuális képességedet!"
 	}
 
@@ -4965,7 +4534,6 @@
 
 	"VisionHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági látómező képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -4976,7 +4544,6 @@
 
 	"VisionHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági látómező képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
 
@@ -4992,19 +4559,16 @@
 
 	"Warp"
 	{
-		"#format"		"{1:t},{2:N},{3:N}"
 		"hu"			"{olive}{1}{mint} éppen{olive} {2}{mint} odateleportált{olive} {3}{mint}-hoz!"
 	}
 
 	"Warp2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} időszakosan a túlélőkhöz teleportál!"
 	}
 
 	"Warp3"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} odateleportált{olive} {2}{mint}-hoz!"
 	}
 
@@ -5025,13 +4589,11 @@
 
 	"WarpHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik időszakos teleportáló képességedet!"
 	}
 
 	"WarpHuman2"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik távolsági teleportáló képességedet!"
 	}
 
@@ -5047,13 +4609,11 @@
 
 	"WarpHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az időszakos teleportálási képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"WarpHuman6"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági teleportáló képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -5064,13 +4624,11 @@
 
 	"WarpHuman8"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az időszakos teleportáló képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
 	"WarpHuman9"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági teleportáló képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
@@ -5086,13 +4644,11 @@
 
 	"Whirl"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} éppen megpörgeti{olive} {2}{mint} -t."
 	}
 
 	"Whirl2"
 	{
-		"#format"		"{1:N}"
 		"hu"			"{olive}{1}{mint} többé már nem pörög."
 	}
 
@@ -5108,7 +4664,6 @@
 
 	"WhirlHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik megpörgető képességedet!"
 	}
 
@@ -5119,7 +4674,6 @@
 
 	"WhirlHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági megpörgető képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
@@ -5130,7 +4684,6 @@
 
 	"WhirlHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A távolsági megpörgető képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
@@ -5146,7 +4699,6 @@
 
 	"Witch"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} átalakított pár közönséges fertőzöttet{olive} Boszorka minyonná{mint}!"
 	}
 
@@ -5162,7 +4714,6 @@
 
 	"WitchHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik boszorka létrehozó képességedet!"
 	}
 
@@ -5173,13 +4724,11 @@
 
 	"WitchHuman3"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A boszorka létrehozó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"WitchHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A boszorka létrehozó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
@@ -5195,13 +4744,11 @@
 
 	"Xiphos"
 	{
-		"#format"		"{1:t},{2:N}"
 		"hu"			"{olive}{1}{mint} ellopott egy kis életerőt{olive} {2}{mint}-tol!"
 	}
 
 	"Xiphos2"
 	{
-		"#format"		"{1:N},{2:t}"
 		"hu"			"{olive}{1}{mint} ellopott egy kis életerőt{olive} {2}{mint}-tol!"
 	}
 
@@ -5222,13 +4769,11 @@
 
 	"Yell"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} ráordított a túlélőkre"
 	}
 
 	"Yell2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} abbahagyta az ordítást!"
 	}
 
@@ -5244,7 +4789,6 @@
 
 	"YellHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik üvöltő képességedet!"
 	}
 
@@ -5260,13 +4804,11 @@
 
 	"YellHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az üvöltő képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"YellHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"Az üvöltő képességed véget ért, az újratöltés ideje{yellow} {1} másodperc{mint}."
 	}
 
@@ -5282,13 +4824,11 @@
 
 	"Zombie"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} időszakosan zombikat hozz létre!"
 	}
 
 	"Zombie2"
 	{
-		"#format"		"{1:t}"
 		"hu"			"{olive}{1}{mint} zombikat {yellow} hozott létre{mint}!"
 	}
 
@@ -5304,7 +4844,6 @@
 
 	"ZombieHuman"
 	{
-		"#format"		"{1:i},{2:i}"
 		"hu"			"Aktiváltad{olive} {1}{mint}/{olive}{2}{mint} az egyik zombi létrehozó képességedet!"
 	}
 
@@ -5320,13 +4859,11 @@
 
 	"ZombieHuman4"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A zombi létrehozó képességednek még kell{yellow} {1} másodperc{mint} az újratöltéshez."
 	}
 
 	"ZombieHuman5"
 	{
-		"#format"		"{1:i}"
 		"hu"			"A zombi létrehozó képességed véget ért, az újratöltés időtartama{yellow} {1} másodperc{mint}."
 	}
 
