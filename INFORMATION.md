@@ -137,16 +137,16 @@
 			// Enable Mutant Tanks.
 			// Note: This setting has a convar equivalent (mt_pluginenabled).
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Plugin Enabled"			"1"
 
 			// Mutant Tanks revert back to default Tanks upon death.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// Note: This feature is simply for cosmetic purposes. You do not need to worry about this setting.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Death Revert"				"1"
 
 			// The plugin will automatically disable any Mutant Tank whose abilities are not installed.
@@ -155,8 +155,8 @@
 			// Note: This does not disable Mutant Tanks that do not have any abilities.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Detect Plugins"			"1"
 
 			// Spawn Mutant Tanks during finales only.
@@ -269,8 +269,8 @@
 			// Announce each Mutant Tank's kill.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Announce Kill"				"1"
 
 			// The message shown to players when a Mutant Tank arrives.
@@ -535,8 +535,8 @@
 
 			// Scale all custom damage caused by Mutant Tanks based on the current difficulty.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Scale Damage"				"0"
 		}
 		"Health"
@@ -635,8 +635,8 @@
 
 			// Allow the developer to access the plugin when joining your server.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Allow Developer"			"0"
 
 			// Admins with one or more of these immunity flags are immune to all Mutant Tanks' attacks.
@@ -658,8 +658,8 @@
 			// Human-controlled Mutant Tanks are exempted from cooldowns when using the "sm_mutanttank" command to switch their current Mutant Tank type.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Master Control"			"0"
 
 			// The mode of how human-controlled Tanks spawn.
@@ -751,8 +751,8 @@
 			// Note: Leave this off if you want a generic spawn rate for Tanks or if you have a Multi-Tanks plugin installed.
 			// Note: This will not work unless "Regular Mode" is set to "1".
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Regular Wave"				"0"
 
 			// Allow this many Tanks on finale maps to spawn regardless of the current wave.
@@ -859,8 +859,8 @@
 			// Enable Mutant Tanks custom configuration.
 			// Note: This setting cannot be changed in custom config files.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Enable Custom Configs"			"0"
 
 			// The type of custom config that Mutant Tanks creates.
@@ -930,8 +930,8 @@
 			// Enable the Mutant Tank.
 			// Note: This setting determines full enablement. Even if other settings are enabled while this is disabled, the Mutant Tank will stay disabled.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Tank Enabled"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to spawn.
@@ -940,6 +940,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Tank Chance"				"100.0"
 
 			// Display a note for the Mutant Tank when it spawns.
@@ -948,23 +955,23 @@
 			// Note: Tank notes support chat color tags in the translation file.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Tank Note"				"0"
 
 			// The Mutant Tank can spawn.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: The Mutant Tank will still appear on the Mutant Tanks menu and other Mutant Tanks can still transform into the Mutant Tank.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Spawn Enabled"				"1"
 
 			// The Mutant Tank can be spawned through the "sm_tank"/"sm_mt_tank" command.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Menu Enabled"				"1"
 
 			// The Mutant Tank reverts back to default a Tank upon death.
@@ -973,8 +980,8 @@
 			// You do not need to worry about this setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Death Revert"				"0"
 
 			// The plugin will automatically disable the Mutant Tank if none of its abilities are installed.
@@ -984,8 +991,8 @@
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Detect Plugins"			"0"
 
 			// These are the RGBA values of the Mutant Tank's skin color.
@@ -1055,8 +1062,8 @@
 			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Announce Kill"				"0"
 
 			// The message shown to players when the Mutant Tank arrives.
@@ -1303,8 +1310,8 @@
 			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Glow Enabled"				"0"
 
 			// These are the RGB values of the Mutant Tank's glow outline color.
@@ -1321,8 +1328,8 @@
 			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Glow Flashing"				"0"
 
 			// The minimum range that a client can be away from the Mutant Tank until the glow outline starts to appear.
@@ -1803,8 +1810,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Random Tank"				"1"
 
 			// How long until the Mutant Tank stops randomizing into different types.
@@ -2177,29 +2184,29 @@
 			// Give the Mutant Tank bullet immunity.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Bullet Immunity"			"0"
 
 			// Give the Mutant Tank explosive immunity.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Explosive Immunity"			"0"
 
 			// Give the Mutant Tank fire immunity.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Fire Immunity"				"0"
 
 			// Give the Mutant Tank melee immunity.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Melee Immunity"			"0"
 		}
 	}
@@ -2238,8 +2245,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -2292,15 +2299,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The bullet damage received by the Mutant Tank is divided by this value.
@@ -2319,6 +2326,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Absorb Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -2405,8 +2419,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -2453,8 +2467,8 @@
 			// Note: This setting does not affect the "Acid Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -2470,6 +2484,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -2492,14 +2516,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Acid Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Acid Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
@@ -2508,6 +2539,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Acid Death Chance"			"33.3"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
@@ -2516,14 +2554,18 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Acid Death Range"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Acid Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -2532,6 +2574,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Acid Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -2540,6 +2587,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Acid Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -2548,6 +2599,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Acid Range Chance"			"15.0"
 
 			// The Mutant Tank's rock creates an acid puddle when it breaks.
@@ -2555,8 +2613,8 @@
 			// Note: This does not need "Ability Enabled" or "Acid Hit" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Acid Rock Break"			"0"
 
 			// The Mutant Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
@@ -2565,6 +2623,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Acid Rock Chance"			"33.3"
 		}
 	}
@@ -2607,8 +2672,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -2655,8 +2720,8 @@
 			// Note: This setting does not affect the "Aimless Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -2672,6 +2737,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -2693,6 +2768,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Aimless Chance"			"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -2706,8 +2788,8 @@
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Aimless Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -2716,6 +2798,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Aimless Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -2724,6 +2811,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Aimless Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -2732,6 +2823,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Aimless Range Chance"			"15.0"
 		}
 	}
@@ -2774,8 +2872,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -2822,8 +2920,8 @@
 			// Note: This setting does not affect the "Ammo Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -2839,6 +2937,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -2860,6 +2968,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Ammo Chance"				"33.3"
 
 			// The Mutant Tank sets survivors' ammunition to this amount.
@@ -2873,8 +2988,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ammo Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -2883,6 +2998,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Ammo Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -2891,6 +3011,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Ammo Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -2899,6 +3023,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Ammo Range Chance"			"15.0"
 		}
 	}
@@ -2941,8 +3072,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -2989,8 +3120,8 @@
 			// Note: This setting does not affect the "Blind Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -3006,6 +3137,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -3027,6 +3168,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Blind Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -3041,8 +3189,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Blind Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -3051,6 +3199,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Blind Hit Mode"			"0"
 
 			// The intensity of the Mutant Tank's blind effect.
@@ -3066,6 +3219,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Blind Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -3074,6 +3231,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Blind Range Chance"			"15.0"
 		}
 	}
@@ -3118,8 +3282,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -3166,8 +3330,8 @@
 			// Note: This setting does not affect the "Bomb Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -3183,6 +3347,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -3205,14 +3379,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Bomb Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Bomb Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -3221,6 +3402,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Bomb Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -3229,6 +3415,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Bomb Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -3237,14 +3427,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Bomb Range Chance"			"15.0"
 
 			// The Mutant Tank's rock creates an explosion when it breaks.
 			// Note: This does not need "Ability Enabled" or "Bomb Hit" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Bomb Rock Break"			"0"
 
 			// The Mutant Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
@@ -3253,6 +3450,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Bomb Rock Chance"			"33.3"
 		}
 	}
@@ -3295,8 +3499,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -3343,8 +3547,8 @@
 			// Note: This setting does not affect the "Bury Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -3360,6 +3564,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -3388,6 +3602,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Bury Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -3409,8 +3630,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Bury Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -3419,6 +3640,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Bury Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -3427,6 +3653,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Bury Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -3435,6 +3665,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Bury Range Chance"			"15.0"
 		}
 	}
@@ -3463,8 +3700,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -3517,15 +3754,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -3534,6 +3771,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Car Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -3627,8 +3871,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -3675,8 +3919,8 @@
 			// Note: This setting does not affect the "Choke Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -3692,6 +3936,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -3713,6 +3967,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Choke Chance"				"33.3"
 
 			// The Mutant Tank's chokes do this much damage.
@@ -3748,8 +4009,8 @@
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Choke Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -3758,6 +4019,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Choke Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -3766,6 +4032,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Choke Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -3774,6 +4044,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Choke Range Chance"			"15.0"
 		}
 	}
@@ -3802,8 +4079,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -3849,15 +4126,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The amount of clones the Mutant Tank can create.
@@ -3873,6 +4150,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Clone Chance"				"33.3"
 
 			// The Mutant Tank's clone's health.
@@ -3900,15 +4184,15 @@
 			// Remove all clones created by the Mutant Tank when it dies.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Clone Remove"				"1"
 
 			// The Mutant Tank's clones are replaced with new ones when they die.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Clone Replace"				"1"
 
 			// The type of the Mutant Tank's clone.
@@ -3964,8 +4248,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -4026,15 +4310,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -4043,6 +4327,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Cloud Chance"				"33.3"
 
 			// The Mutant Tank's clouds do this much damage.
@@ -4079,8 +4370,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -4112,15 +4403,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -4129,6 +4420,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Drop Chance"				"33.3"
 
 			// The Mutant Tank has this many chances out of 100.0% to drop guns with a full clip.
@@ -4136,6 +4434,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Drop Clip Chance"			"33.3"
 
 			// The position of the Mutant Tank's weapon.
@@ -4215,8 +4520,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -4263,8 +4568,8 @@
 			// Note: This setting does not affect the "Drug Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -4280,6 +4585,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -4301,6 +4616,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Drug Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -4315,8 +4637,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Drug Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -4325,6 +4647,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Drug Hit Mode"				"0"
 
 			// The Mutant Tank drugs survivors every time this many seconds passes.
@@ -4341,6 +4668,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Drug Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -4349,6 +4680,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Drug Range Chance"			"15.0"
 		}
 	}
@@ -4391,8 +4729,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -4439,8 +4777,8 @@
 			// Note: This setting does not affect the "Drunk Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -4456,6 +4794,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -4477,6 +4825,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Drunk Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -4490,8 +4845,8 @@
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Drunk Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -4500,6 +4855,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Drunk Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -4508,6 +4868,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Drunk Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -4516,6 +4880,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Drunk Range Chance"			"15.0"
 
 			// The Mutant Tank causes the survivors' speed to randomly change every time this many seconds passes.
@@ -4572,8 +4943,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -4620,8 +4991,8 @@
 			// Note: This setting does not affect the "Electric Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -4637,6 +5008,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -4658,6 +5039,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Electric Chance"			"33.3"
 
 			// The Mutant Tank's electrocutions do this much damage.
@@ -4680,8 +5068,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Electric Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -4690,6 +5078,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Electric Hit Mode"			"0"
 
 			// The Mutant Tank electrocutes survivors every time this many seconds passes.
@@ -4706,6 +5099,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Electric Range"			"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -4714,6 +5111,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Electric Range Chance"			"15.0"
 		}
 	}
@@ -4756,8 +5160,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -4804,8 +5208,8 @@
 			// Note: This setting does not affect the "Enforce Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -4821,6 +5225,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -4842,6 +5256,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Enforce Chance"			"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -4856,8 +5277,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Enforce Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -4866,6 +5287,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Enforce Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -4874,6 +5300,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Enforce Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -4882,6 +5312,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Enforce Range Chance"			"15.0"
 
 			// The Mutant Tank forces survivors to only use one of the following weapon slots.
@@ -4926,8 +5363,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -4980,15 +5417,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -4997,6 +5434,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Fast Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -5058,8 +5502,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -5106,8 +5550,8 @@
 			// Note: This setting does not affect the "Fire Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -5123,6 +5567,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -5145,14 +5599,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Fire Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Fire Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -5161,6 +5622,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Fire Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -5169,6 +5635,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Fire Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -5177,14 +5647,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Fire Range Chance"			"15.0"
 
 			// The Mutant Tank's rock creates a fire when it breaks.
 			// Note: This does not need "Ability Enabled" or "Fire Hit" set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Fire Rock Break"			"0"
 
 			// The Mutant Tank's rock as this many chances out of 100.0% to trigger the rock break ability.
@@ -5193,6 +5670,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Fire Rock Chance"			"33.3"
 		}
 	}
@@ -5238,8 +5722,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -5286,8 +5770,8 @@
 			// Note: This setting does not affect the "Fling Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -5303,6 +5787,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -5324,14 +5818,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Fling Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Fling Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
@@ -5340,6 +5841,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Fling Death Chance"			"33.3"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
@@ -5348,14 +5856,18 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Fling Death Range"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Fling Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -5364,6 +5876,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Fling Hit Mode"			"0"
 
 			// The force of the Mutant Tank's ability.
@@ -5380,6 +5897,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Fling Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -5388,6 +5909,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Fling Range Chance"			"15.0"
 		}
 	}
@@ -5425,8 +5953,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -5479,15 +6007,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -5496,6 +6024,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Fly Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -5565,8 +6100,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -5619,15 +6154,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The bullet damage received by the Mutant Tank is multiplied by this value.
@@ -5646,6 +6181,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Fragile Chance"			"33.3"
 
 			// The Mutant Tank's damage boost value when fragile.
@@ -5760,8 +6302,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -5843,6 +6385,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
@@ -5865,6 +6417,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Ghost Chance"				"33.3"
 
 			// The amount of alpha to take from the Mutant Tank's alpha every X seconds until the limit set by the "Ghost Fade Limit" is reached.
@@ -5901,8 +6460,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ghost Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -5911,6 +6470,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Ghost Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -5919,6 +6483,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Ghost Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -5927,14 +6495,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Ghost Range Chance"			"15.0"
 
 			// The Mutant Tank can cloak nearby special infected.
 			// Note: This setting needs "Ability Enabled" to be set to "2" or higher than "3".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ghost Specials"			"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to cloak nearby special infected.
@@ -5942,6 +6517,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Ghost Specials Chance"			"33.3"
 
 			// The distance between a special infected and the Mutant Tank needed to cloak that special infected.
@@ -5949,6 +6531,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Ghost Specials Range"			"500.0"
 
 			// The Mutant Tank disarms the following weapon slots.
@@ -6001,8 +6587,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -6055,15 +6641,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -6072,6 +6658,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"God Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -6125,8 +6718,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -6200,6 +6793,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -6222,6 +6825,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Gravity Chance"			"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -6247,8 +6857,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Gravity Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -6257,6 +6867,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Gravity Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -6265,6 +6880,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Gravity Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -6273,6 +6892,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Gravity Range Chance"			"15.0"
 
 			// The Mutant Tank sets the survivors' gravity to this value.
@@ -6325,8 +6951,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -6408,6 +7034,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -6429,6 +7065,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Heal Absorb Range"			"500.0"
 
 			// The amount of temporary health given to survivors.
@@ -6444,14 +7084,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Heal Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Heal Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -6460,6 +7107,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Heal Hit Mode"				"0"
 
 			// The Mutant Tank receives health from nearby infected every time this many seconds passes.
@@ -6476,6 +7128,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Heal Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -6484,6 +7140,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Heal Range Chance"			"15.0"
 
 			// The Mutant Tank receives this much health from nearby common infected.
@@ -6573,8 +7236,8 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// The damage received by the Mutant Tank is multiplied by this value.
@@ -6644,8 +7307,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -6692,8 +7355,8 @@
 			// Note: This setting does not affect the "Hurt Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -6709,6 +7372,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -6730,6 +7403,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Hurt Chance"				"33.3"
 
 			// The Mutant Tank's pain inflictions do this much damage.
@@ -6752,8 +7432,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Hurt Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -6762,6 +7442,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Hurt Hit Mode"				"0"
 
 			// The Mutant Tank hurts survivors every time this many seconds passes.
@@ -6778,6 +7463,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Hurt Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -6786,6 +7475,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Hurt Range Chance"			"15.0"
 		}
 	}
@@ -6828,8 +7524,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -6876,8 +7572,8 @@
 			// Note: This setting does not affect the "Hypno Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -6893,6 +7589,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -6924,6 +7630,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Hypno Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -6958,8 +7671,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Hypno Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -6968,6 +7681,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Hypno Hit Mode"			"0"
 
 			// The melee damage reflected towards survivors by the Mutant Tank is divided by this value.
@@ -6993,6 +7711,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Hypno Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -7001,6 +7723,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Hypno Range Chance"			"15.0"
 		}
 	}
@@ -7043,8 +7772,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -7091,8 +7820,8 @@
 			// Note: This setting does not affect the "Ice Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -7108,6 +7837,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -7129,6 +7868,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Ice Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -7143,8 +7889,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ice Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -7153,6 +7899,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Ice Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -7161,6 +7912,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Ice Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -7169,6 +7924,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Ice Range Chance"			"15.0"
 		}
 	}
@@ -7212,8 +7974,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -7260,8 +8022,8 @@
 			// Note: This setting does not affect the "Idle Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -7277,6 +8039,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -7298,14 +8070,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Idle Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Idle Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -7314,6 +8093,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Idle Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -7322,6 +8106,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Idle Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -7330,6 +8118,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Idle Range Chance"			"15.0"
 		}
 	}
@@ -7372,8 +8167,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -7420,8 +8215,8 @@
 			// Note: This setting does not affect the "Invert Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -7437,6 +8232,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -7458,6 +8263,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Invert Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -7471,8 +8283,8 @@
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Invert Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -7481,6 +8293,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Invert Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -7489,6 +8306,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Invert Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -7497,6 +8318,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Invert Range Chance"			"15.0"
 		}
 	}
@@ -7533,8 +8361,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -7566,15 +8394,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -7583,6 +8411,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Item Chance"				"33.3"
 
 			// The Mutant Tank gives survivors this loadout.
@@ -7648,8 +8483,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -7723,6 +8558,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the abilities activate/deactivate.
@@ -7745,6 +8590,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Jump Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -7767,8 +8619,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Jump Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -7777,6 +8629,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Jump Hit Mode"				"0"
 
 			// The Mutant Tank jumps every time this many seconds passes.
@@ -7800,6 +8657,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Jump Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -7808,6 +8669,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Jump Range Chance"			"15.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to jump sporadically.
@@ -7816,6 +8684,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Jump Sporadic Chance"			"33.3"
 
 			// The Mutant Tank jumps this high up into the air.
@@ -7866,8 +8741,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -7900,8 +8775,8 @@
 			// Note: This setting does not affect the "Kamikaze Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -7917,6 +8792,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -7935,8 +8820,8 @@
 			// Removes the death model of the survivor when killed.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Kamikaze Body"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -7945,14 +8830,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Kamikaze Chance"			"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Kamikaze Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -7961,6 +8853,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Kamikaze Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -7969,6 +8866,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Kamikaze Range"			"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -7977,6 +8878,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Kamikaze Range Chance"			"15.0"
 		}
 	}
@@ -8019,8 +8927,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -8067,8 +8975,8 @@
 			// Note: This setting does not affect the "Lag Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -8084,6 +8992,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -8105,6 +9023,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Lag Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -8118,8 +9043,8 @@
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Lag Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -8128,6 +9053,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Lag Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -8136,6 +9066,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Lag Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -8144,6 +9078,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Lag Range Chance"			"15.0"
 		}
 	}
@@ -8180,8 +9121,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -8234,15 +9175,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -8251,6 +9192,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Laser Chance"				"33.3"
 
 			// The Mutant Tank's lasers do this much damage.
@@ -8283,6 +9231,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Laser Range"				"150.0"
 		}
 	}
@@ -8325,8 +9277,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -8373,8 +9325,8 @@
 			// Note: This setting does not affect the "Leech Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -8390,6 +9342,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -8411,6 +9373,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Leech Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -8425,8 +9394,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Leech Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -8435,6 +9404,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Leech Hit Mode"			"0"
 
 			// The Mutant Tank leeches health off of survivors every time this many seconds passes.
@@ -8451,6 +9425,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Leech Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -8459,6 +9437,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Leech Range Chance"			"15.0"
 		}
 	}
@@ -8496,8 +9481,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -8550,15 +9535,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -8567,6 +9552,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Lightning Chance"			"33.3"
 
 			// The Mutant Tank's lightning storm strikes cause this much damage per hit.
@@ -8619,8 +9611,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -8681,15 +9673,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -8698,13 +9690,20 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Medic Chance"				"33.3"
 
 			// The Mutant Tank creates a healing field visual effect around it when healing fellow special infected.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Medic Field"				"1"
 
 			// These are the RGB values of the Mutant Tank's healing field's color.
@@ -8764,6 +9763,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Medic Range"				"500.0"
 		}
 	}
@@ -8800,8 +9803,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -8854,15 +9857,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -8871,6 +9874,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Meteor Chance"				"33.3"
 
 			// The Mutant Tank's meteorites do this much damage.
@@ -8953,8 +9963,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -9000,15 +10010,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The amount of minions the Mutant Tank can spawn.
@@ -9024,6 +10034,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Minion Chance"				"33.3"
 
 			// Minions spawned by the Mutant Tank die after this many seconds.
@@ -9036,15 +10053,15 @@
 			// Remove all minions spawned by the Mutant Tank when it dies.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Minion Remove"				"1"
 
 			// The Mutant Tank's minions are replaced with new ones when they die.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Minion Replace"			"1"
 
 			// The Mutant Tank spawns these minions.
@@ -9090,8 +10107,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -9152,15 +10169,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -9169,6 +10186,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Necro Chance"				"33.3"
 
 			// The distance between a special infected and the Mutant Tank needed to trigger the ability.
@@ -9177,6 +10201,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Necro Range"				"500.0"
 		}
 	}
@@ -9219,8 +10247,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -9267,8 +10295,8 @@
 			// Note: This setting does not affect the "Nullify Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -9284,6 +10312,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -9305,6 +10343,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Nullify Chance"			"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -9318,8 +10363,8 @@
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Nullify Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -9328,6 +10373,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Nullify Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -9336,6 +10386,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Nullify Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -9344,6 +10398,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Nullify Range Chance"			"15.0"
 		}
 	}
@@ -9372,8 +10433,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -9426,15 +10487,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -9443,6 +10504,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Omni Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -9466,6 +10534,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Omni Range"				"500.0"
 		}
 	}
@@ -9494,8 +10566,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -9556,15 +10628,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -9573,6 +10645,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Panic Chance"				"33.3"
 
 			// The Mutant Tank starts a panic event every time this many seconds passes.
@@ -9623,8 +10702,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -9671,8 +10750,8 @@
 			// Note: This setting does not affect the "Pimp Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -9688,6 +10767,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -9709,6 +10798,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Pimp Chance"				"33.3"
 
 			// The Mutant Tank's pimp slaps do this much damage.
@@ -9731,8 +10827,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Pimp Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -9741,6 +10837,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Pimp Hit Mode"				"0"
 
 			// The Mutant Tank pimp slaps survivors every time this many seconds passes.
@@ -9757,6 +10858,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Pimp Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -9765,6 +10870,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Pimp Range Chance"			"15.0"
 		}
 	}
@@ -9810,8 +10922,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -9858,8 +10970,8 @@
 			// Note: This setting does not affect the "Puke Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -9875,6 +10987,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -9896,14 +11018,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Puke Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Puke Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
@@ -9912,6 +11041,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Puke Death Chance"			"33.3"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
@@ -9920,14 +11056,18 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Puke Death Range"			"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Puke Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -9936,6 +11076,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Puke Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -9944,6 +11089,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Puke Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -9952,6 +11101,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Puke Range Chance"			"15.0"
 		}
 	}
@@ -9980,8 +11136,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -10034,15 +11190,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -10051,6 +11207,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Pyro Chance"				"33.3"
 
 			// The Mutant Tank's damage boost value when on fire.
@@ -10127,8 +11290,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -10175,8 +11338,8 @@
 			// Note: This setting does not affect the "Quiet Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -10192,6 +11355,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -10213,6 +11386,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Quiet Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -10227,8 +11407,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Quiet Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -10237,6 +11417,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Quiet Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -10245,6 +11430,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Quiet Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -10253,6 +11442,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Quiet Range Chance"			"15.0"
 		}
 	}
@@ -10295,8 +11491,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -10343,8 +11539,8 @@
 			// Note: This setting does not affect the "Recoil Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -10360,6 +11556,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -10381,6 +11587,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Recoil Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -10394,8 +11607,8 @@
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Recoil Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -10404,6 +11617,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Recoil Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -10412,6 +11630,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Recoil Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -10420,6 +11642,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Recoil Range Chance"			"15.0"
 		}
 	}
@@ -10448,8 +11677,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -10510,15 +11739,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -10527,6 +11756,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Regen Chance"				"33.3"
 
 			// The Mutant Tank regenerates this much health each time.
@@ -10581,8 +11817,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -10621,15 +11857,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank respawns up to this many times.
@@ -10645,6 +11881,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Respawn Chance"			"33.3"
 
 			// The type that the Mutant Tank will respawn as.
@@ -10706,8 +11949,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -10754,8 +11997,8 @@
 			// Note: This setting does not affect the "Restart Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -10771,6 +12014,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -10792,13 +12045,20 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Restart Chance"			"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Restart Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -10807,6 +12067,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Restart Hit Mode"			"0"
 
 			// The Mutant Tank makes survivors restart with this loadout.
@@ -10833,6 +12098,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Restart Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -10841,6 +12110,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Restart Range Chance"			"15.0"
 		}
 	}
@@ -10877,8 +12153,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -10931,15 +12207,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -10948,6 +12224,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Rock Chance"				"33.3"
 
 			// The Mutant Tank's rocks do this much damage.
@@ -11028,8 +12311,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -11076,8 +12359,8 @@
 			// Note: This setting does not affect the "Rocket Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -11093,6 +12376,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -11111,8 +12404,8 @@
 			// Removes the death model of the survivor when killed.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Rocket Body"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -11121,6 +12414,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Rocket Chance"				"33.3"
 
 			// The Mutant Tank sends survivors into space after this many seconds passes upon triggering the ability.
@@ -11133,8 +12433,8 @@
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Rocket Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -11143,6 +12443,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Rocket Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -11151,6 +12456,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Rocket Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -11159,6 +12468,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Rocket Range Chance"			"15.0"
 		}
 	}
@@ -11204,8 +12520,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -11252,8 +12568,8 @@
 			// Note: This setting does not affect the "Shake Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -11269,6 +12585,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -11290,14 +12616,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Shake Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Shake Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
@@ -11306,6 +12639,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Shake Death Chance"			"33.3"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
@@ -11314,6 +12654,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Shake Death Range"			"200.0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -11328,8 +12672,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Shake Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -11338,6 +12682,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Shake Hit Mode"			"0"
 
 			// The Mutant Tank shakes survivors' screems every time this many seconds passes.
@@ -11354,6 +12703,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Shake Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -11362,6 +12715,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Shake Range Chance"			"15.0"
 		}
 	}
@@ -11398,8 +12758,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -11460,15 +12820,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -11477,6 +12837,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Shield Chance"				"33.3"
 
 			// These are the RGBA values of the Mutant Tank's shield prop's color.
@@ -11529,8 +12896,8 @@
 			// Note: The glow outline may not appear most of the time when the "Glow Type" setting is set to "0" because the shield must be fully visible to the player in order for the glow outline to appear. Since a part of the shield is always under the ground, it is only fully visible when the Tank is climbing or is in the air.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Shield Glow"				"1"
 
 			// The Mutant Tank's shield starts out with this much health.
@@ -11558,6 +12925,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Shield Throw Chance"			"100.0"
 
 			// The type of the Mutant Tank's shield.
@@ -11618,8 +12992,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -11666,8 +13040,8 @@
 			// Note: This setting does not affect the "Shove Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -11683,6 +13057,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -11704,14 +13088,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Shove Chance"				"33.3"
 
 			// Enable the Mutant Tank's upon-death range ability.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Shove Death"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the upon-death ability.
@@ -11720,6 +13111,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Shove Death Chance"			"33.3"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the upon-death ability.
@@ -11728,6 +13126,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Shove Death Range"			"200.0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -11742,8 +13144,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Shove Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -11752,6 +13154,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Shove Hit Mode"			"0"
 
 			// The Mutant Tank shoves survivors every time this many seconds passes.
@@ -11768,6 +13175,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Shove Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -11776,6 +13187,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Shove Range Chance"			"15.0"
 		}
 	}
@@ -11818,8 +13236,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -11866,8 +13284,8 @@
 			// Note: This setting does not affect the "Slow Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -11883,6 +13301,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -11904,6 +13332,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Slow Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -11918,8 +13353,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Slow Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -11928,6 +13363,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Slow Hit Mode"				"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -11936,6 +13376,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Slow Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -11944,6 +13388,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Slow Range Chance"			"15.0"
 
 			// The Mutant Tank sets the survivors' run speed to this value.
@@ -11994,8 +13445,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -12042,8 +13493,8 @@
 			// Note: This setting does not affect the "Smash Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -12059,6 +13510,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -12077,8 +13538,8 @@
 			// Removes the death model of the survivor when killed.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Smash Body"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -12087,14 +13548,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Smash Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Smash Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -12103,6 +13571,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Smash Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -12111,6 +13584,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Smash Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -12119,6 +13596,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Smash Range Chance"			"15.0"
 		}
 	}
@@ -12161,8 +13645,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -12209,8 +13693,8 @@
 			// Note: This setting does not affect the "Smite Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -12226,6 +13710,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -12244,8 +13738,8 @@
 			// Removes the death model of the survivor when killed.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Smite Body"				"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -12254,14 +13748,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Smite Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Smite Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -12270,6 +13771,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Smite Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -12278,6 +13784,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Smite Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -12286,6 +13796,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Smite Range Chance"			"15.0"
 		}
 	}
@@ -12322,8 +13839,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -12376,15 +13893,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -12393,6 +13910,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Spam Chance"				"33.3"
 
 			// The Mutant Tank's rocks do this much damage.
@@ -12454,8 +13978,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -12516,15 +14040,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -12533,6 +14057,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Splash Chance"				"33.3"
 
 			// The Mutant Tank's splashes do this much damage.
@@ -12557,6 +14088,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Splash Range"				"500.0"
 		}
 	}
@@ -12586,8 +14121,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -12648,15 +14183,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -12665,6 +14200,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Splatter Chance"			"33.3"
 
 			// The Mutant Tank covers everyone's screens with splatters every time this many seconds passes.
@@ -12734,8 +14276,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -12836,6 +14378,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Throw Chance"				"33.3"
 
 			// The amount of special infected the Mutant Tank can throw at any given time.
@@ -12873,8 +14422,8 @@
 			// Remove all special infected thrown by the Mutant Tank when it dies.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Throw Infected Remove"			"1"
 
 			// The amount of Witches the Mutant Tank can throw at any given time.
@@ -12902,8 +14451,8 @@
 			// Remove all Witches thrown by the Mutant Tank when it dies.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Throw Witch Remove"			"1"
 		}
 	}
@@ -12940,8 +14489,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -12987,15 +14536,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -13004,6 +14553,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Track Chance"				"33.3"
 
 			// The Mutant Tank's heat-seeking rocks have glow outlines when activated.
@@ -13011,8 +14567,8 @@
 			// Note: The glow outline may not appear when the "Glow Type" setting is set to "0" if the rock is not fully visible to the player.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Track Glow"				"1"
 
 			// The mode of the Mutant Tank's track ability.
@@ -13065,8 +14621,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -13112,15 +14668,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank can activate ultimate mode up to this many times.
@@ -13136,6 +14692,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Ultimate Chance"			"33.3"
 
 			// The Mutant Tank's damage boost value during ultimate mode.
@@ -13199,8 +14762,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -13246,15 +14809,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank stays alive up to this many times.
@@ -13270,6 +14833,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Undead Chance"				"33.3"
 		}
 	}
@@ -13329,23 +14899,23 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -13353,6 +14923,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Vampire Chance"			"33.3"
 		}
 	}
@@ -13395,8 +14972,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -13443,8 +15020,8 @@
 			// Note: This setting does not affect the "Vision Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -13460,6 +15037,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -13481,6 +15068,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Vision Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -13502,8 +15096,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Vision Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -13512,6 +15106,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Vision Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -13520,6 +15119,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Vision Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -13528,6 +15131,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Vision Range Chance"			"15.0"
 		}
 	}
@@ -13573,8 +15183,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -13656,6 +15266,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -13678,14 +15298,21 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Warp Chance"				"33.3"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Warp Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -13694,6 +15321,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Warp Hit Mode"				"0"
 
 			// The Mutant Tank warps to a random survivor every time this many seconds passes.
@@ -13719,6 +15351,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Warp Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -13727,6 +15363,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Warp Range Chance"			"15.0"
 		}
 	}
@@ -13769,8 +15412,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -13817,8 +15460,8 @@
 			// Note: This setting does not affect the "Whirl Hit" setting.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
@@ -13834,6 +15477,16 @@
 			// 1: Show effect when the Mutant Tank uses its claw/rock attack.
 			// 2: Show effect when the Mutant Tank is hit by a melee weapon.
 			// 4: Show effect when the Mutant Tank uses its range ability.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "attack" - 1
+			// "hurt" - 2
+			// "attack,hurt" - 3
+			// "range" - 4
+			// "attack,range" - 5
+			// "hurt,range" - 6
+			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -13869,6 +15522,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Whirl Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -13883,8 +15543,8 @@
 			// Note: This setting does not need the "Ability Enabled" setting to be set to "1".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Whirl Hit"				"0"
 
 			// The mode of the Mutant Tank's claw/rock attack.
@@ -13893,6 +15553,11 @@
 			// 0: Both
 			// 1: Ability activates when the Mutant Tank hits a survivor.
 			// 2: Ability activates when the Mutant Tank is hit by a survivor.
+			// --
+			// Keywords:
+			// "both"/"all" - 0
+			// "tank"/"attack" - 1
+			// "survivor"/"hurt" - 2
 			"Whirl Hit Mode"			"0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -13901,6 +15566,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Whirl Range"				"150.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the range ability.
@@ -13909,6 +15578,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Whirl Range Chance"			"15.0"
 
 			// The Mutant Tank makes survivors whirl at this speed.
@@ -13953,8 +15629,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -14000,15 +15676,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank converts this many common infected into Witch minions at once.
@@ -14024,6 +15700,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Witch Chance"				"33.3"
 
 			// The Mutant Tank's Witch minion causes this much damage per hit.
@@ -14047,14 +15730,18 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Witch Range"				"500.0"
 
 			// Remove all Witches spawned by the Mutant Tank when it dies.
 			// Note: This setting spawns a Witch on the Mutant Tank's corpse if it is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Witch Remove"				"1"
 		}
 	}
@@ -14115,16 +15802,16 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Show a screen fade effect when the Mutant Tank uses its abilities.
 			// Note: The colors will randomly change between the colors set in the "Skin Color" and "Glow Color" settings.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Effect"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
@@ -14141,6 +15828,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Xiphos Chance"				"33.3"
 
 			// The survivors' max health.
@@ -14185,8 +15879,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -14239,15 +15933,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -14256,6 +15950,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Yell Chance"				"33.3"
 
 			// The Mutant Tank's ability effects last this long.
@@ -14272,6 +15973,10 @@
 			// --
 			// Minimum: 1.0 (Closest)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "closest" - 1.0 range
+			// "farthest" - 999999.0 range
 			"Yell Range"				"500.0"
 		}
 	}
@@ -14300,8 +16005,8 @@
 			// Note: This setting does not affect human-controlled Mutant Tanks unless the "Human Ability" setting is set to "2".
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Combo Ability"				"0"
 
 			// Allow human-controlled Mutant Tanks to use this ability.
@@ -14362,15 +16067,15 @@
 			// Enable this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Enabled"			"0"
 
 			// Display a message whenever the ability activates/deactivates.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Ability Message"			"0"
 
 			// The Mutant Tank spawns this many common infected at once.
@@ -14386,6 +16091,13 @@
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
+			// --
+			// Keywords:
+			// "never" - 0% chance
+			// "sometimes"/"unlikely"/"seldom" - 33.3% chance
+			// "maybe" - 50% chance
+			// "often"/"likely"/"frequently" - 66.6% chance
+			// "always" - 100% chance
 			"Zombie Chance"				"33.3"
 
 			// The Mutant Tank spawns a zombie mob every time this many seconds passes.

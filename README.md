@@ -1917,6 +1917,10 @@ Examples:
 
 **KasperH** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
 
+**Blueberry** - For Russian translations.
+
+**yuzumi** - For simplified Chinese translations and suggesting ideas.
+
 **Mi.Cura, 3aljiyavslgazana** - For reporting issues, suggesting ideas, testing features, and overall support.
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
@@ -1925,7 +1929,7 @@ Examples:
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, yuzumi, FatalOE71, zaviier, RDiver, BHaType** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 
