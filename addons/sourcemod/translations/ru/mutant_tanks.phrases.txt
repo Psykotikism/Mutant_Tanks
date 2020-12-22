@@ -1,6596 +1,6596 @@
 "Phrases"
 {
-	// MT Chat Color Placeholders
+	// MT Заполнители цвета чата
 	// --
-	// Note: Not all phrases support these placeholders.
+	// Примечание: Не все фразы поддерживают эти заполнители.
 	// --
-	// "{default}" Normal - \x01
+	// "{default}" Обычный - \x01
 	// --
-	// "{mint}" Sky-green - \x03
+	// "{mint}" Небесно-зелёный - \x03
 	// --
-	// "{yellow}" Yellow-orange - \x04
+	// "{yellow}" Жёлто-оранжевый - \x04
 	// --
-	// "{olive}" Yellow-green - \x05
+	// "{olive}" Жёлто-зелёный - \x05
 
 	"MutantTanks"
 	{
-		"ru"			"Mutant Tanks"
+		"ru"			"Танки-мутанты"
 	}
 
 	"MTAbilitiesMenu"
 	{
-		"ru"			"Mutant Tanks Abilities"
+		"ru"			"Способности танков-мутантов"
 	}
 
 	"MTConfigMenu"
 	{
-		"ru"			"Config Parser Menu"
+		"ru"			"Меню разбора конфигурации"
 	}
 
 	"MTDefaultItem"
 	{
-		"ru"			"Default Tank"
+		"ru"			"Танк по умолчанию"
 	}
 
 	"MTFavoriteMenu"
 	{
-		"ru"			"Use your favorite Mutant Tank type?"
+		"ru"			"Использовать ваш любимый тип танка-мутанта?"
 	}
 
 	"MTInfoMenu"
 	{
-		"ru"			"Mutant Tanks Information"
+		"ru"			"Информация о танках-мутантах"
 	}
 
 	"MTListMenu"
 	{
-		"ru"			"Mutant Tanks List"
+		"ru"			"Способности танков-мутантов"
 	}
 
 	"MTPathMenu"
 	{
-		"ru"			"File Path Menu"
+		"ru"			"Меню пути к файлу"
 	}
 
 	"MTReloadMenu"
 	{
-		"ru"			"Reload Config Menu"
+		"ru"			"Обновить меню конфигурации"
 	}
 
 	"MTSettingsItem"
 	{
-		"ru"			"Plugin Settings"
+		"ru"			"Настройки плагина"
 	}
 
 	"MTTankItem"
 	{
 		"#format"		"{1:t},{2:i}"
-		"ru"			"{1} (Tank #{2})"
+		"ru"			"{1} (Танк #{2})"
 	}
 
 	"MTVersionMenu"
 	{
-		"ru"			"Mutant Tanks Version"
+		"ru"			"Танки-мутанты версии"
 	}
 
 	"Ammunition"
 	{
-		"ru"			"Ammunition"
+		"ru"			"Боеприпасы"
 	}
 
 	"AbilityAmmo"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"Your main/special/upon-death ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
+		"ru"			"Ваша основная/особая/после смерти способность имеет{olive} {1}{mint}/{olive}{2}{mint} оставшихся боеприпасов."
 	}
 
 	"AbilityAmmo2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"Your range ability has{olive} {1}{mint}/{olive}{2}{mint} ammo left."
+		"ru"			"Ваша дальняя способность имеет{olive} {1}{mint}/{olive}{2}{mint} оставшихся боеприпасов."
 	}
 
 	"ButtonMode"
 	{
-		"ru"			"Button Mode"
+		"ru"			"Кнопочный режим"
 	}
 
 	"AbilityButtonMode1"
 	{
-		"ru"			"Press button(s) to activate your abilit(y/ies)."
+		"ru"			"Нажмите кнопку (-и), чтобы активировать свои (-ю) способности (-ть)."
 	}
 
 	"AbilityButtonMode2"
 	{
-		"ru"			"Hold button(s) down to use your abilit(y/ies)."
+		"ru"			"Удерживайте кнопку (-и), чтобы использовать свои (-ю) способности (-ть)."
 	}
 
 	"Buttons"
 	{
-		"ru"			"Button(s)"
+		"ru"			"Кнопка (-и)"
 	}
 
 	"AbilityButtons"
 	{
-		"ru"			"{yellow}+use (default: E}:{olive} Activate your main ability."
+		"ru"			"{yellow}+use (по умолчанию): E}:{olive} Активировать свою основную способность."
 	}
 
 	"AbilityButtons2"
 	{
-		"ru"			"{yellow}+reload (default: R}:{olive} Activate your range ability."
+		"ru"			"{yellow}+reload (по умолчанию): R}:{olive} Активировать свою дальнобойную способность."
 	}
 
 	"AbilityButtons3"
 	{
-		"ru"			"{yellow}+zoom (default: Mouse3/Scroll wheel}:{olive} Activate your special ability."
+		"ru"			"{yellow}+zoom (по умолчанию): Mouse3/Колесо мыши}:{olive} Активировать свою особую способность."
 	}
 
 	"AbilityButtons4"
 	{
-		"ru"			"{yellow}+duck (default: CTRL}:{olive} Activate your upon-death ability."
+		"ru"			"{yellow}+duck (по умолчанию): CTRL}:{olive} Активировать свою способность после смерти."
 	}
 
 	"Cooldown"
 	{
-		"ru"			"Cooldown"
+		"ru"			"Перезарядка"
 	}
 
 	"AbilityCooldown"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Cooldown:{olive} {1} second(s)"
+		"ru"			"Перезарядка:{olive} {1} сек."
 	}
 
 	"Details"
 	{
-		"ru"			"Details"
+		"ru"			"Подробности"
 	}
 
 	"Duration"
 	{
-		"ru"			"Duration"
+		"ru"			"Длительность"
 	}
 
 	"AbilityDuration"
 	{
 		"#format"		"{1:.2f}"
-		"ru"			"Duration:{olive} {1} second(s)"
+		"ru"			"Длительность:{olive} {1} сек."
 	}
 
 	"AbilityDuration2"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Duration:{olive} {1} second(s)"
+		"ru"			"Длительность:{olive} {1} сек."
 	}
 
 	"HumanSupport"
 	{
-		"ru"			"Human Support"
+		"ru"			"Человеческая поддержка"
 	}
 
 	"AbilityHumanSupport1"
 	{
-		"ru"			"Enabled:{olive} No"
+		"ru"			"Включено:{olive} Нет"
 	}
 
 	"AbilityHumanSupport2"
 	{
-		"ru"			"Enabled:{olive} Yes"
+		"ru"			"Включено:{olive} Да"
 	}
 
 	"Status"
 	{
-		"ru"			"Status"
+		"ru"			"Статус"
 	}
 
 	"AbilityInstalled"
 	{
 		"#format"		"{1:s}"
-		"ru"			"{1}{olive} is installed."
+		"ru"			"{1}{olive} установлен."
 	}
 
 	"AbilityInstalled2"
 	{
 		"#format"		"{1:s}"
-		"ru"			"{1} is installed."
+		"ru"			"{1} установлен."
 	}
 
 	"AbilityStatus1"
 	{
-		"ru"			"Status:{olive} Disabled"
+		"ru"			"Статус:{olive} Отключено"
 	}
 
 	"AbilityStatus2"
 	{
-		"ru"			"Status:{olive} Enabled"
+		"ru"			"Статус:{olive} Включено"
 	}
 
 	"Arrival1"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{default} has appeared!"
+		"ru"			"{olive}{1}{default} явился!"
 	}
 
 	"Arrival2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"Here comes{olive} {1}{default}!"
+		"ru"			"Сюда идёт{olive} {1}{default}!"
 	}
 
 	"Arrival3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{default} is ready to kill!"
+		"ru"			"{olive}{1}{default} готов убивать!"
 	}
 
 	"Arrival4"
 	{
 		"#format"		"{1:t}"
-		"ru"			"Are you ready to face{olive} {1}{default}?"
+		"ru"			"Готовы столкнуться c{olive} {1}{default}?"
 	}
 
 	"Arrival5"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{default} came for a challenge!"
+		"ru"			"{olive}{1}{default} пришёл на вызов!"
 	}
 
 	"Arrival6"
 	{
 		"#format"		"{1:t}"
-		"ru"			"Get ready!{olive} {1}{default} is coming!"
+		"ru"			"Готовьтесь!{olive} {1}{default} идёт!"
 	}
 
 	"Arrival7"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{default} is here!"
+		"ru"			"{olive}{1}{default} здесь!"
 	}
 
 	"Arrival8"
 	{
 		"#format"		"{1:t}"
-		"ru"			"Oh no!{olive} {1}{default} is nearing!"
+		"ru"			"О нет!{olive} {1}{default} приближается!"
 	}
 
 	"Arrival9"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{default} joined the game"
+		"ru"			"{olive}{1}{default} вступает в игру"
 	}
 
 	"Arrival10"
 	{
 		"#format"		"{1:t}"
-		"ru"			"It seems{olive} {1}{default} is joining your company!"
+		"ru"			"Похоже,{olive} {1}{default} присоединится к вашей компании!"
 	}
 
 	"Assist1"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"ru"			"{olive}{1}{default} is defeated!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} терпит поражение!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist2"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"ru"			"The survivors defeated{olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"Выжившие победили{olive} {1}{default}!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist3"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"ru"			"{olive}{1}{default} goes to hell!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} был отправлен обратно в ад!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist4"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"ru"			"Is{olive} {1}{default} really dead...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive} {1}{default} действительно мёртв...?{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist5"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"ru"			"{olive}{1}{default} lost the challenge against the survivors!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} проиграл вызов выжившим!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist6"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"ru"			"The{olive} {1}{default} failed to kill the survivors!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive} {1}{default} не смог убить выживших!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist7"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"ru"			"{olive}{1}{default} has met their demise!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} встретил свою кончину!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist8"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"ru"			"Yay!{olive} {1}{default} is dead!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"Ура!{olive} {1}{default} мёртв!{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist9"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"ru"			"{olive}{1}{default} left the game{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} покидает игру{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"Assist10"
 	{
 		"#format"		"{1:t},{2:N},{3:.0f}"
-		"ru"			"It seems{olive} {1}{default} could not beat the survivors after all.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"Похоже,{olive} {1}{default} не смог победить выживших.{yellow} Самый наибольший нанесённый урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
 	}
 
 	"ChangeType"
 	{
-		"ru"			"Your personal Mutant Tank type changed."
+		"ru"			"Ваш личный тип танка-мутанта изменён."
 	}
 
 	"CheckConsole"
 	{
-		"ru"			"See console for full output."
+		"ru"			"Проверьте консоль для полного вывода."
 	}
 
 	"CommandUsage"
 	{
 		"#format"		"{1:s},{2:i},{3:i}"
-		"ru"			"Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>"
+		"ru"			"Использование: {1} <введите {2}-{3}> <количество: 1-32> <0: появиться на прицеле|1: появиться автоматически>"
 	}
 
 	"CompletedParsing"
 	{
-		"ru"			"Parsing complete!"
+		"ru"			"Разбор завершён..."
 	}
 
 	"Death1"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{default} is defeated!"
+		"ru"			"{olive}{1}{default} терпит поражение!"
 	}
 
 	"Death2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"The survivors defeated{olive} {1}{default}!"
+		"ru"			"Выжившие победили{olive} {1}{default}!"
 	}
 
 	"Death3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{default} goes to hell!"
+		"ru"			"{olive}{1}{default} был отправлен обратно в ад!"
 	}
 
 	"Death4"
 	{
 		"#format"		"{1:t}"
-		"ru"			"Is{olive} {1}{default} really dead...?"
+		"ru"			"{olive} {1}{default} действительно мёртв...?"
 	}
 
 	"Death5"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{default} lost the challenge against the survivors!"
+		"ru"			"{olive}{1}{default} проиграл вызов выжившим!"
 	}
 
 	"Death6"
 	{
 		"#format"		"{1:t}"
-		"ru"			"The{olive} {1}{default} failed to kill the survivors!"
+		"ru"			"{olive} {1}{default} не смог убить выживших!"
 	}
 
 	"Death7"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{default} has met their demise!"
+		"ru"			"{olive}{1}{default} встретил свою кончину!"
 	}
 
 	"Death8"
 	{
 		"#format"		"{1:t}"
-		"ru"			"Yay!{olive} {1}{default} is dead!"
+		"ru"			"Ура!{olive} {1}{default} мёртв!"
 	}
 
 	"Death9"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{default} left the game"
+		"ru"			"{olive}{1}{default} покидает игру"
 	}
 
 	"Death10"
 	{
 		"#format"		"{1:t}"
-		"ru"			"It seems{olive} {1}{default} could not beat the survivors after all!"
+		"ru"			"Похоже,{olive} {1}{default} не смог победить выживших!"
 	}
 
 	"ErrorParsing"
 	{
 		"#format"		"{1:s},{2:s}"
-		"ru"			"Error while parsing the \"{1}\" file. Error Message: {2}."
+		"ru"			"Ошибка при разборе файла \"{1}\". Сообщение об ошибке: {2}."
 	}
 
 	"Evolved"
 	{
-		"#format"		"{1:t},{2:t},{3:i}"
-		"ru"			"{olive}{1}{mint} evolved into{olive} {2}{yellow} (Stage {3}){mint}!"
+		"#format"		"{1:t},{2:s},{3:i}"
+		"ru"			"{olive}{1}{mint} эволюционировал в{olive} {2}{yellow} (Стадия {3}){mint}!"
 	}
 
 	"FailedParsing"
 	{
 		"#format"		"{1:s}"
-		"ru"			"Failed to parse the \"{1}\" file."
+		"ru"			"Не удалось разобрать файл \"{1}\"."
 	}
 
 	"FavoriteUnused"
 	{
-		"ru"			"You chose not to use your favorite Mutant Tank type."
+		"ru"			"Вы решили не использовать свой любимый тип танка-мутанта."
 	}
 
 	"GeneralDetails"
 	{
-		"ru"			"Mutant Tanks makes fighting Tanks great again!"
+		"ru"			"Танки-мутанты снова делают бои против танков великолепными!"
 	}
 
 	"HumanCooldown"
 	{
 		"#format"		"{1:i}"
-		"ru"			"You must wait another{olive} {1} second(s){mint} before changing into a different Mutant Tank type."
+		"ru"			"Вы должны подождать ещё{olive} {1} сек.{mint} Прежде чем сменить на другой тип танка-мутанта."
 	}
 
 	"HumanTag"
 	{
-		"ru"			"[HUMAN]"
+		"ru"			"[ЧЕЛОВЕК]"
 	}
 
 	"Kill1"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{default} finished off{mint} {2}{default}!"
+		"ru"			"{olive}{1}{default} прикончил{mint} {2}{default}!"
 	}
 
 	"Kill2"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{default} defeated{mint} {2}{default}!"
+		"ru"			"{olive}{1}{default} победил{mint} {2}{default}!"
 	}
 
 	"Kill3"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{default} sent{mint} {2}{default} to hell!"
+		"ru"			"{olive}{1}{default} отправил{mint} {2}{default} обратно в ад!"
 	}
 
 	"Kill4"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"Did{olive} {1}{default} actually kill{mint} {2}{default}...?"
+		"ru"			"Действительно ли{olive} {1}{default} убил{mint} {2}{default}...?"
 	}
 
 	"Kill5"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{mint}{2}{default} lost the challenge against{olive} {1}{default}!"
+		"ru"			"{mint}{2}{default} проиграл вызов{olive} {1}{default}!"
 	}
 
 	"Kill6"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{mint}{2}{default} failed to kill{olive} {1}{default}!"
+		"ru"			"{mint}{2}{default} не удалось убить{olive} {1}{default}!"
 	}
 
 	"Kill7"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{mint}{2}{default} has met their demise at the hands of{olive} {1}{default}!"
+		"ru"			"{mint}{2}{default} встретил свою кончину от рук{olive} {1}{default}!"
 	}
 
 	"Kill8"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"Yay!{mint} {2}{default} is dead thanks to{olive} {1}{default}!"
+		"ru"			"Ура!{mint} {2}{default} мёртв благодаря{olive} {1}{default}!"
 	}
 
 	"Kill9"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{default} made{mint} {2}{default} ragequit!"
+		"ru"			"{2}{default} вышел из игры в ярости из-за {olive}{1}!"
 	}
 
 	"Kill10"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"It seems{mint} {2}{default} could not beat{olive} {1}{default} after all!"
+		"ru"			"Кажется,{mint} {2}{default} все-таки не смог победить{olive} {1}{default}!"
 	}
 
 	"Killer1"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"ru"			"{mint}{1}{default} finished off{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			""
 	}
 
 	"Killer2"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"ru"			"{mint}{1}{default} defeated{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			""
 	}
 
 	"Killer3"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"ru"			"{mint}{1}{default} sent{olive} {2}{default} to hell!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			""
 	}
 
 	"Killer4"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"ru"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			""
 	}
 
 	"Killer5"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"ru"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			""
 	}
 
 	"Killer6"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"ru"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			""
 	}
 
 	"Killer7"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"ru"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			""
 	}
 
 	"Killer8"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"ru"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			""
 	}
 
 	"Killer9"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"ru"			"{mint}{1}{default} made{olive} {2}{default} ragequit!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			""
 	}
 
 	"Killer10"
 	{
 		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"ru"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			""
 	}
 
 	"LogEnded"
 	{
 		"#format"		"{1:s},{2:s}"
-		"ru"			"[{1}] --- LOG ENDED ON MAP: {2} ---"
+		"ru"			"[{1}] --- ЖУРНАЛ ЗАКОНЧЕН НА КАРТЕ: {2} ---"
 	}
 
 	"LogStarted"
 	{
 		"#format"		"{1:s},{2:s}"
-		"ru"			"[{1}] --- LOG STARTED ON MAP: {2} ---"
+		"ru"			"[{1}] --- ЖУРНАЛ НАЧАЛСЯ НА КАРТЕ: {2} ---"
 	}
 
 	"MultipleMatches"
 	{
-		"ru"			"Multiple{olive} Tank types{mint} matched that name. Selecting a random match..."
+		"ru"			"Этому названию соответствуют несколько{olive} типов танка{mint}. Выбор случайного совпадения..."
 	}
 
 	"NoAbilities"
 	{
-		"ru"			"No abilities were found."
+		"ru"			"Способностей не обнаружено."
 	}
 
 	"NoCommandAccess"
 	{
-		"ru"			"You do not have access to this command."
+		"ru"			"У вас нет доступа к этой команде."
 	}
 
 	"NoItems"
 	{
-		"ru"			"There are no items available."
+		"ru"			"Нет доступных элементов."
 	}
 
 	"NoName"
 	{
-		"ru"			"Tank"
+		"ru"			"Танк"
 	}
 
 	"NoNote"
 	{
-		"ru"			"No note found for this Mutant Tank."
+		"ru"			"Для этого танка-мутанта заметок не найдено."
 	}
 
 	"NoTypeAccess"
 	{
-		"ru"			"You do not have access to this Mutant Tank type."
+		"ru"			"У вас нет доступа к этому типу танков-мутантов."
 	}
 
 	"OptionNo"
 	{
-		"ru"			"No"
+		"ru"			"Нет"
 	}
 
 	"OptionYes"
 	{
-		"ru"			"Yes"
+		"ru"			"Да"
 	}
 
 	"PluginDisabled"
 	{
-		"ru"			"Mutant Tanks{default} is disabled."
+		"ru"			"Танки-мутанты{default} отключены."
 	}
 
 	"Randomized"
 	{
-		"#format"		"{1:t},{2:t}"
-		"ru"			"{olive}{1}{mint} randomized into{olive} {2}{mint}!"
+		"#format"		"{1:t},{2:s}"
+		"ru"			"{olive}{1}{mint} случайным образом превратился в{olive} {2}{mint}!"
 	}
 
 	"ReloadedConfig"
 	{
-		"ru"			"All config files have been reloaded."
+		"ru"			""
 	}
 
 	"ReloadingConfig"
 	{
 		"#format"		"{1:s}"
-		"ru"			"Reloading config file \"{1}\" file..."
+		"ru"			"Перезагрузка файла конфигурации \"{1}\"..."
 	}
 
 	"RequestFailed"
 	{
-		"ru"			"No{olive} Tank types{mint} matched that name. Request failed..."
+		"ru"			"Ни один{olive} тип танков{mint} не соответствовал этому названию. Запрос не выполнен..."
 	}
 
 	"RequestSucceeded"
 	{
-		"ru"			"{mint}One Tank type matched that name. Request succeeded!"
+		"ru"			"{mint}Этому названию соответствовал один тип танка. Запрос выполнен!"
 	}
 
 	"RewardAmmo"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} ammunition{default} for killing{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} боеприпасы{default} за убийство{olive} {1}{default}!"
 	}
 
 	"RewardAmmo2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} ammunition{default} for assisting the most against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} боеприпасы{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardAmmo3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} ammunition{default} for assisting against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} боеприпасы{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardDamageBoost"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} damage boost{default} for killing{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} усиление урона{default} за убийство{olive} {1}{default}!"
 	}
 
 	"RewardDamageBoost2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} damage boost{default} for assisting the most against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} усиление урона{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardDamageBoost3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} damage boost{default} for assisting against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} усиление урона{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardDamageBoostEnd"
 	{
-		"ru"			"Your{yellow} damage boost{default} ended!"
+		"ru"			"Ваше{yellow} усиление урона{default} закончилось!"
 	}
 
 	"RewardGod"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} god mode{default} for killing{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} режим бога{default} за убийство{olive} {1}{default}!"
 	}
 
 	"RewardGod2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} god mode{default} for assisting the most against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} режим бога{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardGod3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} god mode{default} for assisting against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} режим бога{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardGodEnd"
 	{
-		"ru"			"Your{yellow} god mode{default} ended!"
+		"ru"			"Ваш{yellow} режим бога{default} закончился!"
 	}
 
 	"RewardHealth"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} health{default} for killing{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} здоровье{default} за убийство{olive} {1}{default}!"
 	}
 
 	"RewardHealth2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} health{default} for assisting the most against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} здоровье{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardHealth3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} health{default} for assisting against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} здоровье{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardItem"
 	{
 		"#format"		"{1:s},{2:t}"
-		"ru"			"You{default} received a(n){yellow} {1}{default} for killing{olive} {2}{default}!"
+		"ru"			"Вы{default} получили {yellow} {1}{default} за убийство{olive} {2}{default}!"
 	}
 
 	"RewardItem2"
 	{
 		"#format"		"{1:s},{2:t}"
-		"ru"			"You{default} received a(n){yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
+		"ru"			"Вы{default} получили {yellow} {1}{default} за наибольшую помощь в убийстве{olive} {2}{default}!"
 	}
 
 	"RewardItem3"
 	{
 		"#format"		"{1:s},{2:t}"
-		"ru"			"You{default} received a(n){yellow} {1}{default} for assisting against{olive} {2}{default}!"
+		"ru"			"Вы{default} получили {yellow} {1}{default} за помощь в убийстве{olive} {2}{default}!"
 	}
 
 	"RewardNone"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} did not do enough damage to{olive} {1}{default} to receive any rewards."
+		"ru"			"Вы{default} не нанесли достаточного урона{olive} {1}{default} для какой-либо награды."
 	}
 
 	"RewardRefill"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} health and ammunition{default} for killing{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} здоровье и боеприпасы{default} за убийство{olive} {1}{default}!"
 	}
 
 	"RewardRefill2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} health and ammunition{default} for assisting the most against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} здоровье и боеприпасы{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardRefill3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} health and ammunition{default} for assisting against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} здоровье и боеприпасы{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardRespawn"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received a(n){yellow} respawn{default} for killing{olive} {1}{default}!"
+		"ru"			"Вы{default} получили {yellow} возрождение{default} за убийство{olive} {1}{default}!"
 	}
 
 	"RewardRespawn2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received a(n){yellow} respawn{default} for assisting the most against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили {yellow} возрождение{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardRespawn3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received a(n){yellow} respawn{default} for assisting against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили {yellow} возрождение{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} speed boost{default} for killing{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} ускорение{default} за убийство{olive} {1}{default}!"
 	}
 
 	"RewardSpeedBoost2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} speed boost{default} for assisting the most against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} ускорение{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardSpeedBoost3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"You{default} received{yellow} speed boost{default} for assisting against{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} ускорение{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardSpeedBoostEnd"
 	{
-		"ru"			"Your{yellow} speed boost{default} ended!"
+		"ru"			"Ваше{yellow} ускорение{default} закончилось!"
 	}
 
 	"SpawnMessage"
 	{
-		"ru"			"You spawned as a Mutant Tank! You can now use the following:"
+		"ru"			"Вы возродились в качестве танк-мутанта! Теперь вы можете использовать следующие:"
 	}
 
 	"StartParsing"
 	{
-		"ru"			"Parsing the config file..."
+		"ru"			"Разбор файла конфигурации..."
 	}
 
 	"StillParsing"
 	{
-		"ru"			"The plugin is still parsing the config file."
+		"ru"			"Плагин всё ещё анализирует файл конфигурации."
 	}
 
 	"Transformed"
 	{
 		"#format"		"{1:t},{2:t}"
-		"ru"			"{olive}{1}{mint} transformed into{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} превратился в{olive} {2}{mint}!"
 	}
 
 	"Untransformed"
 	{
-		"#format"		"{1:t},{2:t}"
-		"ru"			"{olive}{1}{mint} reverted back into{olive} {2}{mint}!"
+		"#format"		"{1:s},{2:t}"
+		"ru"			"{olive}{1}{mint} вернулся обратно в{olive} {2}{mint}!"
 	}
 
 	"SpawnManually"
 	{
-		"ru"			"You will have to spawn manually."
+		"ru"			"Вам придётся возрождаться вручную."
 	}
 
 	"TankDisabled"
 	{
 		"#format"		"{1:t},{2:i}"
-		"ru"			"{1}{yellow} (Tank #{2}){default} is disabled."
+		"ru"			"{1}{yellow} (Танк #{2}){default} отключен."
 	}
 
 	"Absorb"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is temporarily absorbing most of your damage!"
+		"ru"			"{olive}{1}{mint} временно поглощает большую часть вашего урона!"
 	}
 
 	"Absorb2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is no longer absorbing most of your damage!"
+		"ru"			"{olive}{1}{mint} больше не поглощает большую часть вашего урона!"
 	}
 
 	"AbsorbAmmo"
 	{
-		"ru"			"You've used up all your absorption ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей поглощающей способности."
 	}
 
 	"AbsorbDetails"
 	{
-		"ru"			"You absorb most of the damage you receive."
+		"ru"			"Вы поглощаете большую часть получаемого урона."
 	}
 
 	"AbsorbHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your absorption ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей поглощающей способности!"
 	}
 
 	"AbsorbHuman2"
 	{
-		"ru"			"Your absorption ability failed to activate. Try again."
+		"ru"			"Ваша способность поглощения не сработала. Попробуйте снова."
 	}
 
 	"AbsorbHuman3"
 	{
-		"ru"			"You already activated your absorption ability."
+		"ru"			"Вы уже активировали свою способность поглощения."
 	}
 
 	"AbsorbHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your absorption ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности поглощения нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"AbsorbHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your absorption ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность поглощения закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"AbsorbMenu"
 	{
-		"ru"			"Absorb Ability Information"
+		"ru"			"Информация о способности поглощения"
 	}
 
 	"AbsorbMenu2"
 	{
-		"ru"			"Absorb Ability"
+		"ru"			"Поглощающая способность"
 	}
 
 	"Acid"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} just created an acid puddle underneath{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} только что образовал кислотную лужу внизу{olive} {2}{mint}!"
 	}
 
 	"Acid2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} rock created an acid puddle."
+		"ru"			"Камень {olive}{1}{mint} образовал лужу кислоты."
 	}
 
 	"AcidAmmo"
 	{
-		"ru"			"You've used up all your acid range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей кислотной способности."
 	}
 
 	"AcidDetails"
 	{
-		"ru"			"You create acid puddles."
+		"ru"			"Вы создаёте кислотные лужи."
 	}
 
 	"AcidHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your acid range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей кислотной способности!"
 	}
 
 	"AcidHuman2"
 	{
-		"ru"			"Your acid range ability failed to activate. Try again."
+		"ru"			"Ваша кислотная способность не сработала. Попробуйте снова."
 	}
 
 	"AcidHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your acid range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей кислотной способности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"AcidHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your acid range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу кислотную способность."
 	}
 
 	"AcidHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your acid range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша кислотная способность закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"AcidMenu"
 	{
-		"ru"			"Acid Ability Information"
+		"ru"			"Информация о кислотной способности"
 	}
 
 	"AcidMenu2"
 	{
-		"ru"			"Acid Ability"
+		"ru"			"Кислотная способность"
 	}
 
 	"Aimless"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is preventing{olive} {2}{mint} from aiming!"
+		"ru"			"{olive}{1}{mint} мешает{olive} {2}{mint} прицелиться!"
 	}
 
 	"Aimless2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} can aim again!"
+		"ru"			"{olive}{1}{mint} может снова прицелиться!"
 	}
 
 	"AimlessAmmo"
 	{
-		"ru"			"You've used up all your aimless range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности бесприцельности."
 	}
 
 	"AimlessDetails"
 	{
-		"ru"			"You prevent survivors from aiming."
+		"ru"			"Вы мешаете выжившим прицелиться."
 	}
 
 	"AimlessHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your aimless range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности бесприцельности!"
 	}
 
 	"AimlessHuman2"
 	{
-		"ru"			"Your aimless range ability failed to activate. Try again."
+		"ru"			"Ваша способность бесприцельности не сработала. Попробуйте снова."
 	}
 
 	"AimlessHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your aimless range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности бесприцельности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"AimlessHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your aimless range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность бесприцельности."
 	}
 
 	"AimlessHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your aimless range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность бесприцельности закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"AimlessMenu"
 	{
-		"ru"			"Aimless Ability Information"
+		"ru"			"Информация о способности бесприцельности"
 	}
 
 	"AimlessMenu2"
 	{
-		"ru"			"Aimless Ability"
+		"ru"			"Способность бесприцельности"
 	}
 
 	"Ammo"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} took all of{olive} {2}'s{mint} ammunition!"
+		"ru"			"{olive}{1}{mint} забрал все {mint}боеприпасы выжившего{olive} {2}!"
 	}
 
 	"AmmoAmmo"
 	{
-		"ru"			"You've used up all your ammo range ability's ammo."
+		"ru"			"Вы израсходовали боеприпасы вашей способности боеприпасов."
 	}
 
 	"AmmoDetails"
 	{
-		"ru"			"You take away survivors' ammunition."
+		"ru"			"Вы забираете боеприпасы у выживших."
 	}
 
 	"AmmoHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ammo range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от способности боеприпасов!"
 	}
 
 	"AmmoHuman2"
 	{
-		"ru"			"Your ammo range ability failed to activate. Try again."
+		"ru"			"Не удалось активировать вашу способность боеприпасов. Попробуйте снова."
 	}
 
 	"AmmoHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your ammo range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности боеприпасов нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"AmmoHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your ammo range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность боеприпасов."
 	}
 
 	"AmmoHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your ammo range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность боеприпасов закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"AmmoMenu"
 	{
-		"ru"			"Ammo Ability Information"
+		"ru"			"Информация о способности боеприпасов"
 	}
 
 	"AmmoMenu2"
 	{
-		"ru"			"Ammo Ability"
+		"ru"			"Способность боеприпасов"
 	}
 
 	"Blind"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} blinded{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} ослепил{olive} {2}{mint}!"
 	}
 
 	"Blind2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer blind!"
+		"ru"			"{olive}{1}{mint} больше не слеплён!"
 	}
 
 	"BlindAmmo"
 	{
-		"ru"			"You've used up all your blind range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности ослепления."
 	}
 
 	"BlindDetails"
 	{
-		"ru"			"You blind survivors."
+		"ru"			"Вы ослепляете выживших."
 	}
 
 	"BlindHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your blind range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности ослепления!"
 	}
 
 	"BlindHuman2"
 	{
-		"ru"			"Your blind range ability failed to activate. Try again."
+		"ru"			"Ваша способность ослепления не сработала. Попробуйте снова."
 	}
 
 	"BlindHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your blind range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности ослепления нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"BlindHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your blind range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность ослепления."
 	}
 
 	"BlindHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your blind range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность боеприпасов закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"BlindMenu"
 	{
-		"ru"			"Blind Ability Information"
+		"ru"			"Информация о способности ослепления"
 	}
 
 	"BlindMenu2"
 	{
-		"ru"			"Blind Ability"
+		"ru"			"Способность ослепления"
 	}
 
 	"Bomb"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} just created an explosion at{olive} {2}'s{mint} location!"
+		"ru"			"{olive}{1}{mint} только что произвёл взрыв в расположении{olive} {2}{mint}!"
 	}
 
 	"Bomb2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} rock created an explosion."
+		"ru"			"Камень {olive}{1}{mint} произвёл взрыв."
 	}
 
 	"BombAmmo"
 	{
-		"ru"			"You've used up all your bomb range ability's ammo."
+		"ru"			"Вы израсходовали боеприпасы на все свои бомбы."
 	}
 
 	"BombDetails"
 	{
-		"ru"			"You create explosions."
+		"ru"			"Вы создаёте взрывы."
 	}
 
 	"BombHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bomb range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности бомбы!"
 	}
 
 	"BombHuman2"
 	{
-		"ru"			"Your bomb range ability failed to activate. Try again."
+		"ru"			"Не удалось активировать вашу способность бомбы. Попробуйте снова."
 	}
 
 	"BombHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your bomb range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности бомбы нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"BombHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your bomb range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность бомбы."
 	}
 
 	"BombHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your bomb range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность бомбы закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"BombMenu"
 	{
-		"ru"			"Bomb Ability Information"
+		"ru"			"Информация о способности бомбы"
 	}
 
 	"BombMenu2"
 	{
-		"ru"			"Bomb Ability"
+		"ru"			"Способность бомбы"
 	}
 
 	"Bury"
 	{
 		"#format"		"{1:t},{2:N},{3:.2f}"
-		"ru"			"{olive}{1}{mint} buried{olive} {2}{yellow} {3}{mint} feet into the ground!"
+		"ru"			"{olive}{1}{mint} закопал ноги{olive} {2}{yellow} {3}{mint} в землю!"
 	}
 
 	"Bury2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer buried into the ground!"
+		"ru"			"{olive}{1}{mint} больше не закопан в землю!"
 	}
 
 	"BuryAmmo"
 	{
-		"ru"			"You've used up all your bury range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности закапывания."
 	}
 
 	"BuryDetails"
 	{
-		"ru"			"You bury survivors."
+		"ru"			"Вы закапываете выживших."
 	}
 
 	"BuryHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bury range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности закапывания!"
 	}
 
 	"BuryHuman2"
 	{
-		"ru"			"Your bury range ability failed to activate. Try again."
+		"ru"			"Ваша способность закапывания не сработала. Попробуйте снова."
 	}
 
 	"BuryHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your bury range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности закапывания нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"BuryHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your bury range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность закапывания."
 	}
 
 	"BuryHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your bury range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность закапывания закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"BuryMenu"
 	{
-		"ru"			"Bury Ability Information"
+		"ru"			"Информация о способности закапывания"
 	}
 
 	"BuryMenu2"
 	{
-		"ru"			"Bury Ability"
+		"ru"			"Способность закапывания"
 	}
 
 	"Car"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} started a{yellow} car shower{mint}!"
+		"ru"			"{olive}{1}{mint} начал{yellow} автомобильный душ{mint}!"
 	}
 
 	"Car2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} car shower ended!"
+		"ru"			"Автомобильный душ {olive}{1}{mint} закончился!"
 	}
 
 	"CarAmmo"
 	{
-		"ru"			"You've used up all your car showers."
+		"ru"			"Вы израсходовали все свои автомобильные души."
 	}
 
 	"CarDetails"
 	{
-		"ru"			"You create car showers."
+		"ru"			"Вы создаёте падающие с неба автомобили."
 	}
 
 	"CarHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your car showers!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности автомобильного душа!"
 	}
 
 	"CarHuman2"
 	{
-		"ru"			"Your car shower failed to activate. Try again."
+		"ru"			"Не удалось активировать автомобильный душ. Попробуйте снова."
 	}
 
 	"CarHuman3"
 	{
-		"ru"			"You already activated your car shower."
+		"ru"			"Вы уже активировали автомобильный душ."
 	}
 
 	"CarHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your car shower still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности автомобильного душа нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"CarHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your car shower ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность автомобильного душа закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"CarMenu"
 	{
-		"ru"			"Car Ability Information"
+		"ru"			"Информация о способности автомобиля"
 	}
 
 	"CarMenu2"
 	{
-		"ru"			"Car Ability"
+		"ru"			"Способность автомобиля"
 	}
 
 	"Choke"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is choking{olive} {2}{mint} in the air!"
+		"ru"			"{olive}{1}{mint} душит{olive} {2}{mint} в воздухе!"
 	}
 
 	"Choke2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer being choked in the air!"
+		"ru"			"{olive}{1}{mint} больше не душат в воздухе!"
 	}
 
 	"ChokeAmmo"
 	{
-		"ru"			"You've used up all your choke range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности удушения."
 	}
 
 	"ChokeDetails"
 	{
-		"ru"			"You choke survivors in midair."
+		"ru"			"Вы душите выживших в воздухе."
 	}
 
 	"ChokeHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your choke range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности удушения!"
 	}
 
 	"ChokeHuman2"
 	{
-		"ru"			"Your choke range ability failed to activate. Try again."
+		"ru"			"Не удалось активировать вашу способность удушения. Попробуйте снова."
 	}
 
 	"ChokeHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your choke range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности удушения нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"ChokeHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your choke range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность удушения."
 	}
 
 	"ChokeHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your choke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность удушения закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"ChokeMenu"
 	{
-		"ru"			"Choke Ability Information"
+		"ru"			"Информация о способности удушения"
 	}
 
 	"ChokeMenu2"
 	{
-		"ru"			"Choke Ability"
+		"ru"			"Способность удушения"
 	}
 
 	"Clone"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} created a clone of itself!"
+		"ru"			"{olive}{1}{mint} создал клон самого себя!"
 	}
 
 	"CloneAmmo"
 	{
-		"ru"			"You've used up all your clones."
+		"ru"			"Вы израсходовали всех свох клонов."
 	}
 
 	"CloneDetails"
 	{
-		"ru"			"You create clones of yourself."
+		"ru"			"Вы создаёте клонов самого себя."
 	}
 
 	"CloneHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You created{olive} {1}{mint}/{olive}{2}{mint} clones!"
+		"ru"			"Вы создали{olive} {1}{mint}/{olive}{2}{mint} клонов!"
 	}
 
 	"CloneHuman2"
 	{
-		"ru"			"You failed to create a clone. Try again."
+		"ru"			"Вам не удалось создать клона. Попробуйте снова."
 	}
 
 	"CloneHuman3"
 	{
-		"ru"			"You cannot create clones as a clone."
+		"ru"			"Вы не можете создать клона будучи клоном."
 	}
 
 	"CloneHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your clone ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности клона нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"CloneHuman5"
 	{
-		"ru"			"One of your clones just died."
+		"ru"			"Один из ваших клонов только что умер."
 	}
 
 	"CloneHuman6"
 	{
 		"#format"		"{1:i}"
-		"ru"			"All your clones died and your clone ability needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность клона закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"CloneMenu"
 	{
-		"ru"			"Clone Ability Information"
+		"ru"			"Информация о способности клонирования"
 	}
 
 	"CloneMenu2"
 	{
-		"ru"			"Clone Ability"
+		"ru"			"Способность клонирования"
 	}
 
 	"Cloud"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is emitting clouds of smoke!"
+		"ru"			"{olive}{1}{mint} испускает клубы дыма!"
 	}
 
 	"Cloud2"
 	{
-		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} stopped emitting clouds of smoke!"
+		"#format"		"{1:s}"
+		"ru"			"{olive}{1}{mint} перестал выпускать клубы дыма!"
 	}
 
 	"CloudAmmo"
 	{
-		"ru"			"You've used up all your cloud ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы своей дымовой способности."
 	}
 
 	"CloudDetails"
 	{
-		"ru"			"You constantly emit clouds of smoke that damage survivors caught in them."
+		"ru"			"Вы постоянно испускаете клубы дыма, которые наносят урон попавшим в них выжившим."
 	}
 
 	"CloudHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your cloud ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей дымовой способности!"
 	}
 
 	"CloudHuman2"
 	{
-		"ru"			"Your cloud ability failed to activate. Try again."
+		"ru"			"Не удалось активировать вашу дымовую способность. Попробуйте снова."
 	}
 
 	"CloudHuman3"
 	{
-		"ru"			"You already activated your cloud ability."
+		"ru"			"Вы уже активировали свою дымовую способность."
 	}
 
 	"CloudHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your cloud ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей дымовой способности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"CloudHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your cloud ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша дымовая способность закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"CloudMenu"
 	{
-		"ru"			"Cloud Ability Information"
+		"ru"			"Информация о дымовой способности"
 	}
 
 	"CloudMenu2"
 	{
-		"ru"			"Cloud Ability"
+		"ru"			"Дымовая способность"
 	}
 
 	"Drop"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} dropped a gun!"
+		"ru"			"{olive}{1}{mint} уронил своё огнестрельное оружие!"
 	}
 
 	"Drop2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} dropped a melee weapon!"
+		"ru"			"{olive}{1}{mint} уронил своё холодное оружие!"
 	}
 
 	"DropDetails"
 	{
-		"ru"			"You drop a weapon upon death."
+		"ru"			"Вы роняете оружие после смерти."
 	}
 
 	"DropHuman"
 	{
-		"ru"			"You will drop a weapon when you die!"
+		"ru"			"Вы уроните своё оружие, когда умрёте!"
 	}
 
 	"DropHuman2"
 	{
-		"ru"			"You will already drop a weapon upon death."
+		"ru"			"Вы уже уронили своё оружие после смерти."
 	}
 
 	"DropMenu"
 	{
-		"ru"			"Drop Ability Information"
+		"ru"			"Информация о способности выпадения оружия"
 	}
 
 	"DropMenu2"
 	{
-		"ru"			"Drop Ability"
+		"ru"			"Способность выпадения оружия"
 	}
 
 	"Drug"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} drugged{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} наложил наркотический эффект на{olive} {2}{mint}!"
 	}
 
 	"Drug2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer drugged!"
+		"ru"			"{olive}{1}{mint} больше не под наркотическим эффектом!"
 	}
 
 	"DrugAmmo"
 	{
-		"ru"			"You've used up all your drug range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности наркотического эффекта."
 	}
 
 	"DrugDetails"
 	{
-		"ru"			"You drug survivors."
+		"ru"			"Вы накладываете наркотический эффект на выживших."
 	}
 
 	"DrugHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drug range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности наркотического эффекта!"
 	}
 
 	"DrugHuman2"
 	{
-		"ru"			"Your drug range ability failed to activate. Try again."
+		"ru"			"Не удалось активировать вашу способность наркотического эффекта. Попробуйте снова."
 	}
 
 	"DrugHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your drug range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности наркотического эффекта нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"DrugHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your drug range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность наркотического эффекта."
 	}
 
 	"DrugHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your drug range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность наркотического эффекта закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"DrugMenu"
 	{
-		"ru"			"Drug Ability Information"
+		"ru"			"Информация о способности наркотического эффекта"
 	}
 
 	"DrugMenu2"
 	{
-		"ru"			"Drug Ability"
+		"ru"			"Способность наркотического эффекта"
 	}
 
 	"Drunk"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} made{olive} {2}{mint} drunk!"
+		"ru"			"{olive}{1}{mint} опьянил{olive} {2}{mint}!"
 	}
 
 	"Drunk2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer drunk!"
+		"ru"			"{olive}{1}{mint} больше не опьянён!"
 	}
 
 	"DrunkAmmo"
 	{
-		"ru"			"You've used up all your drunk range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности опьянения."
 	}
 
 	"DrunkDetails"
 	{
-		"ru"			"You make survivors drunk."
+		"ru"			"Вы опьяняете выживших."
 	}
 
 	"DrunkHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your drunk range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности опьянения!"
 	}
 
 	"DrunkHuman2"
 	{
-		"ru"			"Your drunk range ability failed to activate. Try again."
+		"ru"			"Не удалось активировать вашу способность опьянения. Попробуйте снова."
 	}
 
 	"DrunkHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your drunk range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности опьянения нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"DrunkHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your drunk range ability on."
+		"ru"			"Поблизости нет выживших, на которых можно было бы использовать вашу способность опьянения."
 	}
 
 	"DrunkHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your drunk range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность опьянения закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"DrunkMenu"
 	{
-		"ru"			"Drunk Ability Information"
+		"ru"			"Информация о способности опьянения"
 	}
 
 	"DrunkMenu2"
 	{
-		"ru"			"Drunk Ability"
+		"ru"			"Способность опьянения"
 	}
 
 	"Electric"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is electrocuting{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} поражает током{olive} {2}{mint}!"
 	}
 
 	"Electric2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer being electrocuted!"
+		"ru"			"{olive}{1}{mint} больше поражён током!"
 	}
 
 	"ElectricAmmo"
 	{
-		"ru"			"You've used up all your electric range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей электрической способности."
 	}
 
 	"ElectricDetails"
 	{
-		"ru"			"You electrocute survivors."
+		"ru"			"Вы убиваете выживших электрическим током."
 	}
 
 	"ElectricHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your electric range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей электрической способности!"
 	}
 
 	"ElectricHuman2"
 	{
-		"ru"			"Your electric range ability failed to activate. Try again."
+		"ru"			"Ваша электрическая способность не сработала. Попробуйте снова."
 	}
 
 	"ElectricHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your electric range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей электрической способности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"ElectricHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your electric range ability on."
+		"ru"			"Поблизости нет выживших, на которых можно было бы использовать вашу электрическую способность."
 	}
 
 	"ElectricHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your electric range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша электрическая способность закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"ElectricMenu"
 	{
-		"ru"			"Electric Ability Information"
+		"ru"			"Информация о электрической способности"
 	}
 
 	"ElectricMenu2"
 	{
-		"ru"			"Electric Ability"
+		"ru"			"Электрическая способность"
 	}
 
 	"Enforce"
 	{
 		"#format"		"{1:t},{2:N},{3:i}"
-		"ru"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to only use their weapon slot{yellow} #{3}{mint}!"
+		"ru"			"{olive}{1}{mint} заставляет{olive} {2}{mint} использовать только слот оружия{yellow} #{3}{mint}!"
 	}
 
 	"Enforce2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} can use all weapon slots again!"
+		"ru"			"{olive}{1}{mint} может снова использовать все слоты для оружия!"
 	}
 
 	"EnforceAmmo"
 	{
-		"ru"			"You've used up all your enforce range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности принуждения."
 	}
 
 	"EnforceDetails"
 	{
-		"ru"			"You force survivors to only use a certain weapon slot."
+		"ru"			"Вы заставляете выживших использовать только определённый слот для оружия."
 	}
 
 	"EnforceHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your enforce range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности принуждения!"
 	}
 
 	"EnforceHuman2"
 	{
-		"ru"			"Your enforce range ability failed to activate. Try again."
+		"ru"			"Не удалось активировать вашу способность принуждения. Попробуйте снова."
 	}
 
 	"EnforceHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your enforce range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности принуждения нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"EnforceHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your enforce range ability on."
+		"ru"			"Поблизости нет выживших, на которых можно было бы использовать вашу способность принуждения."
 	}
 
 	"EnforceHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your enforce range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность принуждения закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"EnforceMenu"
 	{
-		"ru"			"Enforce Ability Information"
+		"ru"			"Информация о способности принуждения"
 	}
 
 	"EnforceMenu2"
 	{
-		"ru"			"Enforce Ability"
+		"ru"			"Способность принуждения"
 	}
 
 	"Fast"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} special speed activated!"
+		"ru"			"{olive}{1}{mint} активировал особую скорость!"
 	}
 
 	"Fast2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} special speed deactivated!"
+		"ru"			"Особая скорость {olive}{1}{mint} отключена!"
 	}
 
 	"FastAmmo"
 	{
-		"ru"			"You've used up all your fast ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы своей способности скорости."
 	}
 
 	"FastDetails"
 	{
-		"ru"			"You run really fast like the Flash."
+		"ru"			"Вы очень быстро передвигаетесь, как Флэш."
 	}
 
 	"FastHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fast ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности скорости!"
 	}
 
 	"FastHuman2"
 	{
-		"ru"			"Your fast ability failed to activate. Try again."
+		"ru"			"Ваша способность скорости не сработала. Попробуйте снова."
 	}
 
 	"FastHuman3"
 	{
-		"ru"			"You already activated your fast ability."
+		"ru"			"Вы уже активировали свою способность скорости."
 	}
 
 	"FastHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your fast ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности скорости нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"FastHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your fast ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность скорости закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"FastMenu"
 	{
-		"ru"			"Fast Ability Information"
+		"ru"			"Информация о способности скорости"
 	}
 
 	"FastMenu2"
 	{
-		"ru"			"Fast Ability"
+		"ru"			"Способность скорости"
 	}
 
 	"Fire"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} just created a fire underneath{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} только-что создал огонь под{olive} {2}{mint}!"
 	}
 
 	"Fire2"
 	{
-		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} rock created a fire."
+		"#format"		"{1:s}"
+		"ru"			"Камень {olive}{1}{mint} создал огонь."
 	}
 
 	"FireAmmo"
 	{
-		"ru"			"You've used up all your fire range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы способности огня."
 	}
 
 	"FireDetails"
 	{
-		"ru"			"You create fires."
+		"ru"			"Вы создаёте огонь."
 	}
 
 	"FireHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fire range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности огня!"
 	}
 
 	"FireHuman2"
 	{
-		"ru"			"Your fire range ability failed to activate. Try again."
+		"ru"			"Ваша способность огня не сработала. Попробуйте снова."
 	}
 
 	"FireHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your fire range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности огня нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"FireHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your fire range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность огня."
 	}
 
 	"FireHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your fire range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность огня закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"FireMenu"
 	{
-		"ru"			"Fire Ability Information"
+		"ru"			"Информация о способности огня"
 	}
 
 	"FireMenu2"
 	{
-		"ru"			"Fire Ability"
+		"ru"			"Способность огня"
 	}
 
 	"Fling"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} flung{olive} {2}{mint} into the air!"
+		"ru"			"{olive}{1}{mint} подбросил{olive} {2}{mint} в воздух!"
 	}
 
 	"FlingAmmo"
 	{
-		"ru"			"You've used up all your fling range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы способности броска."
 	}
 
 	"FlingDetails"
 	{
-		"ru"			"You fling survivors high into the air."
+		"ru"			"Вы подбрасываете выживших высоко в воздух."
 	}
 
 	"FlingHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fling range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности броска!"
 	}
 
 	"FlingHuman2"
 	{
-		"ru"			"Your fling range ability failed to activate. Try again."
+		"ru"			"Ваша способность броска не сработала. Попробуйте снова."
 	}
 
 	"FlingHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your fling range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности броска нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"FlingHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your fling range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность броска."
 	}
 
 	"FlingHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your fling range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность броска закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"FlingMenu"
 	{
-		"ru"			"Fling Ability Information"
+		"ru"			"Информация о способности броска"
 	}
 
 	"FlingMenu2"
 	{
-		"ru"			"Fling Ability"
+		"ru"			"Способность броска"
 	}
 
 	"Fly"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is flying!"
+		"ru"			"{olive}{1}{mint} летает!"
 	}
 
 	"Fly2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} stopped flying!"
+		"ru"			"{olive}{1}{mint} больше не летает!"
 	}
 
 	"FlyAmmo"
 	{
-		"ru"			"You've used up all your flight ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы способности полёта."
 	}
 
 	"FlyDetails"
 	{
-		"ru"			"You can fly around."
+		"ru"			"Вы можете летать."
 	}
 
 	"FlyHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your flight ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности полёта!"
 	}
 
 	"FlyHuman2"
 	{
-		"ru"			"Your flight ability failed to activate. Try again."
+		"ru"			"Не удалось активировать вашу способность полёта. Попробуйте снова."
 	}
 
 	"FlyHuman3"
 	{
-		"ru"			"You already activated your flight ability."
+		"ru"			"Вы уже активировали способность полёта."
 	}
 
 	"FlyHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your flight ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности полёта нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"FlyHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your flight ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность полёта закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"FlyHuman6"
 	{
-		"ru"			"The place you are in is too narrow for you to fly around."
+		"ru"			"Место, в котором вы находитесь, слишком узкое для полёта."
 	}
 
 	"FlyMenu"
 	{
-		"ru"			"Fly Ability Information"
+		"ru"			"Информация о способности летать"
 	}
 
 	"FlyMenu2"
 	{
-		"ru"			"Fly Ability"
+		"ru"			"Способность летать"
 	}
 
 	"Fragile"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is temporarily fragile to damage but can deal more damage and run faster!"
+		"ru"			"{olive}{1}{mint} временно уязвим к урону, но может нанести больший урон и быстрее бегать!"
 	}
 
 	"Fragile2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is no longer fragile to damage!"
+		"ru"			"{olive}{1}{mint} больше не уязвим к урону!"
 	}
 
 	"FragileAmmo"
 	{
-		"ru"			"You've used up all your fragility ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности уязвимости."
 	}
 
 	"FragileDetails"
 	{
-		"ru"			"You take more damage while dealing more damage and running faster."
+		"ru"			"Вы получаете больше урона, нанося больше урона и бегая быстрее."
 	}
 
 	"FragileHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your fragility ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности уязвимости!"
 	}
 
 	"FragileHuman2"
 	{
-		"ru"			"Your fragility ability failed to activate. Try again."
+		"ru"			"Ваша способность уязвимости не сработала. Попробуйте снова."
 	}
 
 	"FragileHuman3"
 	{
-		"ru"			"You already activated your fragility ability."
+		"ru"			"Вы уже активировали свою способность уязвимости."
 	}
 
 	"FragileHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your fragility ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности уязвимости нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"FragileHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your fragility ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность уязвимости закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"FragileMenu"
 	{
-		"ru"			"Fragile Ability Information"
+		"ru"			"Информация о способности уязвимости"
 	}
 
 	"FragileMenu2"
 	{
-		"ru"			"Fragile Ability"
+		"ru"			"Способность уязвимости"
 	}
 
 	"Ghost"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} disarmed{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} обезоружил{olive} {2}{mint}!"
 	}
 
 	"Ghost2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is cloaking itself!"
+		"ru"			"{olive}{1}{mint} стал невидим!"
 	}
 
 	"Ghost3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is visible again!"
+		"ru"			"{olive}{1}{mint} снова виден!"
 	}
 
 	"GhostAmmo"
 	{
-		"ru"			"You've used up all your cloaking ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности невидимости."
 	}
 
 	"GhostAmmo2"
 	{
-		"ru"			"You've used up all your disarming range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности обезоруживания."
 	}
 
 	"GhostDetails"
 	{
-		"ru"			"You cloak yourself and disarm survivors."
+		"ru"			"Вы входите в невидимость и обезоруживаете выживших."
 	}
 
 	"GhostHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your cloaking ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности невидимости!"
 	}
 
 	"GhostHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your disarming range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности обезоруживания!"
 	}
 
 	"GhostHuman3"
 	{
-		"ru"			"Your disarming range ability failed to activate. Try again."
+		"ru"			"Ваша способность обезоруживания не сработала. Попробуйте снова."
 	}
 
 	"GhostHuman4"
 	{
-		"ru"			"You already activated your cloaking ability."
+		"ru"			"Вы уже активировали свою способность невидимости."
 	}
 
 	"GhostHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your cloaking ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности невидимости нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"GhostHuman6"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your disarming range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности обезоруживания нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"GhostHuman7"
 	{
-		"ru"			"There are no survivors nearby to use your disarming range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность обезоруживания."
 	}
 
 	"GhostHuman8"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your cloaking ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность невидимости закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"GhostHuman9"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your disarming range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность обезоруживания закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"GhostMenu"
 	{
-		"ru"			"Ghost Ability Information"
+		"ru"			"Информация о способности призрак"
 	}
 
 	"GhostMenu2"
 	{
-		"ru"			"Ghost Ability"
+		"ru"			"Способность призрак"
 	}
 
 	"God"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is temporarily invincible!"
+		"ru"			"{olive}{1}{mint} временно неуязвим!"
 	}
 
 	"God2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is no longer invincible!"
+		"ru"			"{olive}{1}{mint} больше не неуязвим!"
 	}
 
 	"GodAmmo"
 	{
-		"ru"			"You've used up all your godlike ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы своей способности бога."
 	}
 
 	"GodDetails"
 	{
-		"ru"			"You gain temporary immunity to all types of damage."
+		"ru"			"Вы получаете временный иммунитет ко всем видам урона."
 	}
 
 	"GodHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your godlike ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности бога!"
 	}
 
 	"GodHuman2"
 	{
-		"ru"			"Your godlike ability failed to activate. Try again."
+		"ru"			"Ваша способность бога не сработала. Попробуйте снова."
 	}
 
 	"GodHuman3"
 	{
-		"ru"			"You already activated your godlike ability."
+		"ru"			"Вы уже активировали свою способность бога."
 	}
 
 	"GodHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your godlike ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности бога нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"GodHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your godlike ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность бога закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"GodMenu"
 	{
-		"ru"			"God Ability Information"
+		"ru"			"Информация о способности бога"
 	}
 
 	"GodMenu2"
 	{
-		"ru"			"God Ability"
+		"ru"			"Способность бога"
 	}
 
 	"Gravity"
 	{
 		"#format"		"{1:t},{2:N},{3:.2f}"
-		"ru"			"{olive}{1}{mint} changed{olive} {2}'s{mint} gravity to{yellow} {3}{mint}!"
+		"ru"			"{olive}{1}{mint} изменил гравитацию{olive} {2}{mint} на{yellow} {3}{mint}!"
 	}
 
 	"Gravity2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}'s{mint} gravity is back to normal!"
+		"ru"			"Гравитация {olive}{1}{mint} вернулась в норму!"
 	}
 
 	"Gravity3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} created a gravitational pull!"
+		"ru"			"{olive}{1}{mint} создал гравитационное притяжение!"
 	}
 
 	"Gravity4"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint}'s gravitational pull ended!"
+		"ru"			"Гравитационное притяжение {olive}{1}{mint} закончилось!"
 	}
 
 	"GravityAmmo"
 	{
-		"ru"			"You've used up all your gravitational pull ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности гравитационного притяжения."
 	}
 
 	"GravityAmmo2"
 	{
-		"ru"			"You've used up all your low gravity range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности слабой гравитации."
 	}
 
 	"GravityDetails"
 	{
-		"ru"			"You pull in or push away survivors and any other nearby infected, and change the survivors' gravity."
+		"ru"			"Вы притягиваете или отталкиваете выживших и других заражённых поблизости и изменяете гравитацию выживших."
 	}
 
 	"GravityHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your gravitational pull ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности гравитационного притяжения!"
 	}
 
 	"GravityHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your low gravity range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности низкой гравитации!"
 	}
 
 	"GravityHuman3"
 	{
-		"ru"			"Your low gravity range ability failed to activate. Try again."
+		"ru"			"Ваша способность низкой гравитации не сработала. Попробуйте снова."
 	}
 
 	"GravityHuman4"
 	{
-		"ru"			"You already activated your gravitational pull ability."
+		"ru"			"Вы уже активировали свою способность гравитационного притяжения."
 	}
 
 	"GravityHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your gravitational pull ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности гравитационного притяжения нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"GravityHuman6"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your low gravity range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности низкой гравитации нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"GravityHuman7"
 	{
-		"ru"			"There are no survivors nearby to use your low gravity range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность низкой гравитации."
 	}
 
 	"GravityHuman8"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your gravitational pull ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность гравитационного притяжения закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"GravityHuman9"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your low gravity range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность низкой гравитации закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"GravityMenu"
 	{
-		"ru"			"Gravity Ability Information"
+		"ru"			"Информация о способности гравитации"
 	}
 
 	"GravityMenu2"
 	{
-		"ru"			"Gravity Ability"
+		"ru"			"Способность гравитации"
 	}
 
 	"Heal"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} set{olive} {2}{mint} to temporary health who will die when their HP reaches 0!"
+		"ru"			"{olive}{1}{mint} сделал временое здоровье для{olive} {2}{mint}, но когда его здоровье достигнет 0, то он умрёт!"
 	}
 
 	"Heal2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is absorbing health from nearby infected!"
+		"ru"			"{olive}{1}{mint} поглощает здоровье у находящихся поблизости заражённых!"
 	}
 
 	"Heal3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is no longer absorbing health from nearby infected!"
+		"ru"			"{olive}{1}{mint} больше не поглощает здоровье у находящихся поблизости заражённых!"
 	}
 
 	"HealAmmo"
 	{
-		"ru"			"You've used up all your healing ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы своей лечебной способности."
 	}
 
 	"HealAmmo2"
 	{
-		"ru"			"You've used up all your bad-health range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности слабого здоровья."
 	}
 
 	"HealDetails"
 	{
-		"ru"			"You gain health from other nearby infected and set survivors to temporary health who will die when they reach 0 HP."
+		"ru"			"Вы получаете здоровье от других находящихся поблизости заражённых и делаете выжившим временное здоровье, которое спадёт, когда оно достигнет 0 ед."
 	}
 
 	"HealHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your healing ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей лечебной способности!"
 	}
 
 	"HealHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your bad-health range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности слабого здоровья!"
 	}
 
 	"HealHuman3"
 	{
-		"ru"			"Your bad-health range ability failed to activate. Try again."
+		"ru"			"Ваша способность слабого здоровья не сработала. Попробуйте снова."
 	}
 
 	"HealHuman4"
 	{
-		"ru"			"You already activated your healing ability."
+		"ru"			"Вы уже активировали свою лечебную способность."
 	}
 
 	"HealHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your healing ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей лечебной способности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"HealHuman6"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your bad-health range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности слабого здоровья нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"HealHuman7"
 	{
-		"ru"			"There are no survivors nearby to use your bad-health range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность слабого здоровья."
 	}
 
 	"HealHuman8"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your healing ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша лечебная способность закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"HealHuman9"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your bad-health range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность слабого здоровья закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"HealMenu"
 	{
-		"ru"			"Heal Ability Information"
+		"ru"			"Информация о лечебной способности"
 	}
 
 	"HealMenu2"
 	{
-		"ru"			"Heal Ability"
+		"ru"			"Лечебная способность"
 	}
 
 	"HitDetails"
 	{
-		"ru"			"You only take damage on certain parts of your body."
+		"ru"			"Вы получаете урон только определённым частям своего тела."
 	}
 
 	"HitMenu"
 	{
-		"ru"			"Hit Ability Information"
+		"ru"			"Информация о способности слабого места"
 	}
 
 	"HitMenu2"
 	{
-		"ru"			"Hit Ability"
+		"ru"			"Способность слабого места"
 	}
 
 	"Hurt"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is hurting{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} причиняет боль{olive} {2}{mint}!"
 	}
 
 	"Hurt2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer hurting!"
+		"ru"			"{olive}{1}{mint} больше испытывает боль!"
 	}
 
 	"HurtAmmo"
 	{
-		"ru"			"You've used up all your hurt range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности боли."
 	}
 
 	"HurtDetails"
 	{
-		"ru"			"You repeatedly hurt survivors."
+		"ru"			"Вы неоднократно причиняете боль выжившим."
 	}
 
 	"HurtHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hurt range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности боли!"
 	}
 
 	"HurtHuman2"
 	{
-		"ru"			"Your hurt range ability failed to activate. Try again."
+		"ru"			"Ваша способность боли не сработала. Попробуйте снова."
 	}
 
 	"HurtHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your hurt range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности боли нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"HurtHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your hurt range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность боли."
 	}
 
 	"HurtHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your hurt range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность боли закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"HurtMenu"
 	{
-		"ru"			"Hurt Ability Information"
+		"ru"			"Информация о способности боли"
 	}
 
 	"HurtMenu2"
 	{
-		"ru"			"Hurt Ability"
+		"ru"			"Способность боли"
 	}
 
 	"Hypno"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} hypnotized{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} гипнотизирует{olive} {2}{mint}!"
 	}
 
 	"Hypno2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer hypnotized!"
+		"ru"			"{olive}{1}{mint} больше не под гипнозом!"
 	}
 
 	"HypnoAmmo"
 	{
-		"ru"			"You've used up all your hypno range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности гипноза."
 	}
 
 	"HypnoDetails"
 	{
-		"ru"			"You hypnotize survivors to damage themselves or their teammates."
+		"ru"			"Вы гипнотизируете выживших, чтобы они навредили себе или своим товарищам по команде."
 	}
 
 	"HypnoHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your hypno range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности гипноза!"
 	}
 
 	"HypnoHuman2"
 	{
-		"ru"			"Your hypno range ability failed to activate. Try again."
+		"ru"			"Ваша способность гипноза не сработала. Попробуйте снова."
 	}
 
 	"HypnoHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your hypno range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности гипноза нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"HypnoHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your hypno range ability on."
+		"ru"			"Поблизости нет выживших, на которых можно было бы использовать вашу способность гипноза."
 	}
 
 	"HypnoHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your hypno range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность гипноза закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"HypnoMenu"
 	{
-		"ru"			"Hypno Ability Information"
+		"ru"			"Информация о гипно-способности"
 	}
 
 	"HypnoMenu2"
 	{
-		"ru"			"Hypno Ability"
+		"ru"			"Гипно-способность"
 	}
 
 	"Ice"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} froze{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} заморозил{olive} {2}{mint}!"
 	}
 
 	"Ice2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is unfrozen!"
+		"ru"			"{olive}{1}{mint} разморозился!"
 	}
 
 	"IceAmmo"
 	{
-		"ru"			"You've used up all your ice range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности льда."
 	}
 
 	"IceDetails"
 	{
-		"ru"			"You freeze survivors."
+		"ru"			"Вы замораживаете выживших."
 	}
 
 	"IceHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ice range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности льда!"
 	}
 
 	"IceHuman2"
 	{
-		"ru"			"Your ice range ability failed to activate. Try again."
+		"ru"			"Ваша способность льда не сработала. Попробуйте снова."
 	}
 
 	"IceHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your ice range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности льда нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"IceHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your ice range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность льда."
 	}
 
 	"IceHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your ice range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность льда закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"IceMenu"
 	{
-		"ru"			"Ice Ability Information"
+		"ru"			"Информация о способности льда"
 	}
 
 	"IceMenu2"
 	{
-		"ru"			"Ice Ability"
+		"ru"			"Способность льда"
 	}
 
 	"Idle"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} made{olive} {2}{mint} go idle!"
+		"ru"			"{olive}{1}{mint} отправил{olive} {2}{mint} в бездействие!"
 	}
 
 	"IdleAmmo"
 	{
-		"ru"			"You've used up all your idle range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности бездействия."
 	}
 
 	"IdleDetails"
 	{
-		"ru"			"You force survivors to go idle."
+		"ru"			"Вы заставляете выживших бездействовать."
 	}
 
 	"IdleHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your idle range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности бездействия!"
 	}
 
 	"IdleHuman2"
 	{
-		"ru"			"Your idle range ability failed to activate. Try again."
+		"ru"			"Ваша способность бездействия не сработала. Попробуйте снова."
 	}
 
 	"IdleHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your idle range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности бездействия нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"IdleHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your idle range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность бездействия."
 	}
 
 	"IdleHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your idle range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность бездействия закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"IdleMenu"
 	{
-		"ru"			"Idle Ability Information"
+		"ru"			"Информация о способности бездействия"
 	}
 
 	"IdleMenu2"
 	{
-		"ru"			"Idle Ability"
+		"ru"			"Способность бездействия"
 	}
 
 	"Invert"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} inverted{olive} {2}'s{mint} movement keys!"
+		"ru"			"{olive}{1}{mint} инвертировал клавиши передвижения{olive} {2}{mint}!"
 	}
 
 	"Invert2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}'s{mint} keys are no longer inverted!"
+		"ru"			"Клавиши {olive}{1}{mint} больше не инвертированы!"
 	}
 
 	"InvertAmmo"
 	{
-		"ru"			"You've used up all your invert range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности инвертирования."
 	}
 
 	"InvertDetails"
 	{
-		"ru"			"You invert the survivors' movement keys."
+		"ru"			"Вы инвертируете клавиши передвижения выживших."
 	}
 
 	"InvertHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your invert range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности инвертирования!"
 	}
 
 	"InvertHuman2"
 	{
-		"ru"			"Your invert range ability failed to activate. Try again."
+		"ru"			"Ваша способность инвертирования не сработала. Попробуйте снова."
 	}
 
 	"InvertHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your invert range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности инвертирования нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"InvertHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your invert range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность инвертирования."
 	}
 
 	"InvertHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your invert range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность инвертирования закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"InvertMenu"
 	{
-		"ru"			"Invert Ability Information"
+		"ru"			"Информация о способности инвертирования"
 	}
 
 	"InvertMenu2"
 	{
-		"ru"			"Invert Ability"
+		"ru"			"Способность инвертирования"
 	}
 
 	"Item"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} gave the survivors{yellow} items{mint}!"
+		"ru"			"{olive}{1}{mint} дал выжившим{yellow} предметы{mint}!"
 	}
 
 	"ItemDetails"
 	{
-		"ru"			"You give survivors items upon death."
+		"ru"			"После смерти вы даёте выжившим предметы."
 	}
 
 	"ItemHuman"
 	{
-		"ru"			"You will give survivors items when you die!"
+		"ru"			"Вы дадите выжившим предметы, когда умрёте!"
 	}
 
 	"ItemHuman2"
 	{
-		"ru"			"You will already give survivors items upon death."
+		"ru"			"Вы уже дадите выжившим предметы после смерти."
 	}
 
 	"ItemMenu"
 	{
-		"ru"			"Item Ability Information"
+		"ru"			"Информация о способности выпадения предметов"
 	}
 
 	"ItemMenu2"
 	{
-		"ru"			"Item Ability"
+		"ru"			"Способность выпадения предметов"
 	}
 
 	"Jump"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is forcing{olive} {2}{mint} to jump uncontrollably!"
+		"ru"			"{olive}{1}{mint} заставляет{olive} {2}{mint} бесконтрольно прыгать!"
 	}
 
 	"Jump2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer being forced to jump!"
+		"ru"			"{olive}{1}{mint} больше бесконтрольно не прыгает!"
 	}
 
 	"Jump3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} will jump periodically!"
+		"ru"			"{olive}{1}{mint} будет периодически прыгать!"
 	}
 
 	"JumpAmmo"
 	{
-		"ru"			"You've used up all your periodical jumping ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности периодического прыжка."
 	}
 
 	"JumpAmmo2"
 	{
-		"ru"			"You've used up all your jump range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности прыжка."
 	}
 
 	"JumpDetails"
 	{
-		"ru"			"You jump periodically or sporadically and make survivors jump uncontrollably."
+		"ru"			"Вы периодически или спорадически прыгаете и заставляете выживших прыгать безудержно."
 	}
 
 	"JumpHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your periodical jumping ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности периодического прыжка!"
 	}
 
 	"JumpHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your jump range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности прыжка!"
 	}
 
 	"JumpHuman3"
 	{
-		"ru"			"Your jump range ability failed to activate. Try again."
+		"ru"			"Ваша способность прыжка не сработала. Попробуйте снова."
 	}
 
 	"JumpHuman4"
 	{
-		"ru"			"You already activated your periodical jumping ability."
+		"ru"			"Вы уже активировали свою способность периодического прыжка."
 	}
 
 	"JumpHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your periodical jumping ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности периодического прыжка нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"JumpHuman6"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your jump range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности прыжка нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"JumpHuman7"
 	{
-		"ru"			"There are no survivors nearby to use your jump range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность прыжка."
 	}
 
 	"JumpHuman8"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your periodical jumping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность периодического прыжка закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"JumpHuman9"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your jump range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность прыжка закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"JumpMenu"
 	{
-		"ru"			"Jump Ability Information"
+		"ru"			"Информация о способности прыжка"
 	}
 
 	"JumpMenu2"
 	{
-		"ru"			"Jump Ability"
+		"ru"			"Способность прыжка"
 	}
 
 	"Kamikaze"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} just went kamikaze on{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} как камикадзе взорвал{olive} {2}{mint}!"
 	}
 
 	"KamikazeDetails"
 	{
-		"ru"			"You kill yourself along with a survivor victim."
+		"ru"			"Вы убиваете себя вместе с выжившим."
 	}
 
 	"KamikazeHuman"
 	{
-		"ru"			"You activated your kamikaze range ability!"
+		"ru"			"Вы активировали свою способность камикадзе!"
 	}
 
 	"KamikazeHuman2"
 	{
-		"ru"			"Your kamikaze range ability failed to activate. Try again."
+		"ru"			"Ваша способность камикадзе не сработала. Попробуйте снова."
 	}
 
 	"KamikazeHuman3"
 	{
-		"ru"			"There are no survivors nearby to use your kamikaze range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность камикадзе."
 	}
 
 	"KamikazeMenu"
 	{
-		"ru"			"Kamikaze Ability Information"
+		"ru"			"Информация о способности камикадзе"
 	}
 
 	"KamikazeMenu2"
 	{
-		"ru"			"Kamikaze Ability"
+		"ru"			"Способность камикадзе"
 	}
 
 	"Lag"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is making{olive} {2}{mint} lag!"
+		"ru"			"{olive}{1}{mint} создаёт задержку для{olive} {2}{mint}!"
 	}
 
 	"Lag2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer lagging!"
+		"ru"			"{olive}{1}{mint} больше не имеет задержек!"
 	}
 
 	"LagAmmo"
 	{
-		"ru"			"You've used up all your lag range ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности задержки."
 	}
 
 	"LagDetails"
 	{
-		"ru"			"You make survivors lag."
+		"ru"			"Вы создаёте задержку (лаги) в игре для выживших."
 	}
 
 	"LagHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lag range ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности задержки!"
 	}
 
 	"LagHuman2"
 	{
-		"ru"			"Your lag range ability failed to activate. Try again."
+		"ru"			"Ваша способность задержки не сработала. Попробуйте снова."
 	}
 
 	"LagHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your lag range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей способности задержки нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"LagHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your lag range ability on."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность задержки."
 	}
 
 	"LagHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your lag range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша способность задержки закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"LagMenu"
 	{
-		"ru"			"Lag Ability Information"
+		"ru"			"Информация о способности задержки"
 	}
 
 	"LagMenu2"
 	{
-		"ru"			"Lag Ability"
+		"ru"			"Способность задержки"
 	}
 
 	"Laser"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is shooting a laser at{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} стреляет лазером в{olive} {2}{mint}!"
 	}
 
 	"Laser2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is no longer shooting a laser!"
+		"ru"			"{olive}{1}{mint} больше не стреляет лазером!"
 	}
 
 	"LaserAmmo"
 	{
-		"ru"			"You've used up all your laser ability's ammo."
+		"ru"			"Вы израсходовали все боеприпасы своей лазерной способности."
 	}
 
 	"LaserDetails"
 	{
-		"ru"			"You shoot lasers at survivors."
+		"ru"			"Вы стреляете лазерами в выживших."
 	}
 
 	"LaserHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your laser ability!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей лазерной способности!"
 	}
 
 	"LaserHuman2"
 	{
-		"ru"			"Your laser ability failed to activate. Try again."
+		"ru"			"Ваша лазерная способность не сработала. Попробуйте снова."
 	}
 
 	"LaserHuman3"
 	{
-		"ru"			"You already activated your laser ability."
+		"ru"			"Вы уже активировали свою лазерную способность."
 	}
 
 	"LaserHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your laser ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			"Для вашей лазерной способности нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"LaserHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your laser ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			"Ваша лазерной способность закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}."
 	}
 
 	"LaserMenu"
 	{
-		"ru"			"Laser Ability Information"
+		"ru"			"Информация о лазерной способности"
 	}
 
 	"LaserMenu2"
 	{
-		"ru"			"Laser Ability"
+		"ru"			"Лазерная способность"
 	}
 
 	"Leech"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is{yellow} leeching health{mint} off of{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"Leech2"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is no longer{yellow} leeching health{mint} off of{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"LeechAmmo"
 	{
-		"ru"			"You've used up all your leech range ability's ammo."
+		"ru"			""
 	}
 
 	"LeechDetails"
 	{
-		"ru"			"You leech health off of survivors."
+		"ru"			""
 	}
 
 	"LeechHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your leech range ability!"
+		"ru"			""
 	}
 
 	"LeechHuman2"
 	{
-		"ru"			"Your leech range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"LeechHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your leech range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"LeechHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your leech range ability on."
+		"ru"			""
 	}
 
 	"LeechHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your leech range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"LeechMenu"
 	{
-		"ru"			"Leech Ability Information"
+		"ru"			""
 	}
 
 	"LeechMenu2"
 	{
-		"ru"			"Leech Ability"
+		"ru"			""
 	}
 
 	"Lightning"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} started a{yellow} lightning storm{mint}!"
+		"ru"			""
 	}
 
 	"Lightning2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} lightning storm ended!"
+		"ru"			""
 	}
 
 	"LightningAmmo"
 	{
-		"ru"			"You've used up all your lightning storms."
+		"ru"			""
 	}
 
 	"LightningDetails"
 	{
-		"ru"			"You create lightning storms."
+		"ru"			""
 	}
 
 	"LightningHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your lightning storms!"
+		"ru"			""
 	}
 
 	"LightningHuman2"
 	{
-		"ru"			"Your lightning storm failed to activate. Try again."
+		"ru"			""
 	}
 
 	"LightningHuman3"
 	{
-		"ru"			"You already activated your lightning storm."
+		"ru"			""
 	}
 
 	"LightningHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your lightning storm still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"LightningHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your lightning storm ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"LightningMenu"
 	{
-		"ru"			"Lightning Ability Information"
+		"ru"			""
 	}
 
 	"LightningMenu2"
 	{
-		"ru"			"Lightning Ability"
+		"ru"			""
 	}
 
 	"Medic"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is healing nearby special infected!"
+		"ru"			""
 	}
 
 	"Medic2"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} just healed{yellow} {2}{mint}!"
+		"ru"			""
 	}
 
 	"Medic3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} stopped healing nearby special infected!"
+		"ru"			""
 	}
 
 	"MedicAmmo"
 	{
-		"ru"			"You've used up all your medic ability's ammo."
+		"ru"			""
 	}
 
 	"MedicDetails"
 	{
-		"ru"			"You heal nearby special infected."
+		"ru"			""
 	}
 
 	"MedicHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your medic ability!"
+		"ru"			""
 	}
 
 	"MedicHuman2"
 	{
-		"ru"			"Your medic ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"MedicHuman3"
 	{
-		"ru"			"You already activated your medic ability."
+		"ru"			""
 	}
 
 	"MedicHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your medic ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"MedicHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your medic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"MedicMenu"
 	{
-		"ru"			"Medic Ability Information"
+		"ru"			""
 	}
 
 	"MedicMenu2"
 	{
-		"ru"			"Medic Ability"
+		"ru"			""
 	}
 
 	"Meteor"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} started a{yellow} meteor shower{mint}!"
+		"ru"			""
 	}
 
 	"Meteor2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} meteor shower ended!"
+		"ru"			""
 	}
 
 	"MeteorAmmo"
 	{
-		"ru"			"You've used up all your meteor showers."
+		"ru"			""
 	}
 
 	"MeteorDetails"
 	{
-		"ru"			"You create meteor showers."
+		"ru"			""
 	}
 
 	"MeteorHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your meteor showers!"
+		"ru"			""
 	}
 
 	"MeteorHuman2"
 	{
-		"ru"			"Your meteor shower failed to activate. Try again."
+		"ru"			""
 	}
 
 	"MeteorHuman3"
 	{
-		"ru"			"You already activated your meteor shower."
+		"ru"			""
 	}
 
 	"MeteorHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your meteor shower ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"MeteorHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your meteor shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"MeteorMenu"
 	{
-		"ru"			"Meteor Ability Information"
+		"ru"			""
 	}
 
 	"MeteorMenu2"
 	{
-		"ru"			"Meteor Ability"
+		"ru"			""
 	}
 
 	"Minion"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} summoned a{yellow} minion{mint}!"
+		"ru"			""
 	}
 
 	"MinionAmmo"
 	{
-		"ru"			"You've used up all your minions."
+		"ru"			""
 	}
 
 	"MinionDetails"
 	{
-		"ru"			"You spawn minions."
+		"ru"			""
 	}
 
 	"MinionHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You created{olive} {1}{mint}/{olive}{2}{mint} minions!"
+		"ru"			""
 	}
 
 	"MinionHuman2"
 	{
-		"ru"			"You failed to create a minion. Try again."
+		"ru"			""
 	}
 
 	"MinionHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your minion spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"MinionHuman4"
 	{
-		"ru"			"One of your minions just died."
+		"ru"			""
 	}
 
 	"MinionHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"All your minions died and your minion spawner ability needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"MinionMenu"
 	{
-		"ru"			"Minion Ability Information"
+		"ru"			""
 	}
 
 	"MinionMenu2"
 	{
-		"ru"			"Minion Ability"
+		"ru"			""
 	}
 
 	"Necro"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} resurrected nearby special infected!"
+		"ru"			""
 	}
 
 	"NecroAmmo"
 	{
-		"ru"			"You've used up all your necro ability's ammo."
+		"ru"			""
 	}
 
 	"NecroDetails"
 	{
-		"ru"			"You resurrect nearby special infected that die."
+		"ru"			""
 	}
 
 	"NecroHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your necro ability!"
+		"ru"			""
 	}
 
 	"NecroHuman2"
 	{
-		"ru"			"Your necro ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"NecroHuman3"
 	{
-		"ru"			"You already activated your necro ability."
+		"ru"			""
 	}
 
 	"NecroHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your necro ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"NecroHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your necro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"NecroMenu"
 	{
-		"ru"			"Necro Ability Information"
+		"ru"			""
 	}
 
 	"NecroMenu2"
 	{
-		"ru"			"Necro Ability"
+		"ru"			""
 	}
 
 	"Nullify"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} temporarily nullified all of{olive} {2}'s{mint} damage!"
+		"ru"			""
 	}
 
 	"Nullify2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}'s{mint} damage is no longer nullified!"
+		"ru"			""
 	}
 
 	"NullifyAmmo"
 	{
-		"ru"			"You've used up all your damage nullifier range ability's ammo."
+		"ru"			""
 	}
 
 	"NullifyDetails"
 	{
-		"ru"			"You nullify all of the survivors' damage."
+		"ru"			""
 	}
 
 	"NullifyHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your damage nullifier range ability!"
+		"ru"			""
 	}
 
 	"NullifyHuman2"
 	{
-		"ru"			"Your damage nullifier range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"NullifyHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your damage nullifier range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"NullifyHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your damage nullifier range ability on."
+		"ru"			""
 	}
 
 	"NullifyHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your damage nullifier range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"NullifyMenu"
 	{
-		"ru"			"Nullify Ability Information"
+		"ru"			""
 	}
 
 	"NullifyMenu2"
 	{
-		"ru"			"Nullify Ability"
+		"ru"			""
 	}
 
 	"Omni"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} omni ability activated!"
+		"ru"			""
 	}
 
 	"Omni2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} omni ability deactivated!"
+		"ru"			""
 	}
 
 	"OmniAmmo"
 	{
-		"ru"			"You've used up all your omni ability's ammo."
+		"ru"			""
 	}
 
 	"OmniDetails"
 	{
-		"ru"			"You have omni-level access to other nearby Mutant Tanks' abilities."
+		"ru"			""
 	}
 
 	"OmniHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your omni ability!"
+		"ru"			""
 	}
 
 	"OmniHuman2"
 	{
-		"ru"			"Your omni ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"OmniHuman3"
 	{
-		"ru"			"You already activated your omni ability."
+		"ru"			""
 	}
 
 	"OmniHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your omni ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"OmniHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your omni ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"OmniMenu"
 	{
-		"ru"			"Omni Ability Information"
+		"ru"			""
 	}
 
 	"OmniMenu2"
 	{
-		"ru"			"Omni Ability"
+		"ru"			""
 	}
 
 	"Panic"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} will start panic events periodically!"
+		"ru"			""
 	}
 
 	"Panic2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} started a{yellow} panic event{mint}!"
+		"ru"			""
 	}
 
 	"PanicAmmo"
 	{
-		"ru"			"You've used up all your panic ability's ammo."
+		"ru"			""
 	}
 
 	"PanicDetails"
 	{
-		"ru"			"You start panic events."
+		"ru"			""
 	}
 
 	"PanicHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your panic ability!"
+		"ru"			""
 	}
 
 	"PanicHuman2"
 	{
-		"ru"			"Your panic ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"PanicHuman3"
 	{
-		"ru"			"You already activated your panic ability."
+		"ru"			""
 	}
 
 	"PanicHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your panic ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"PanicHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your panic ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"PanicMenu"
 	{
-		"ru"			"Panic Ability Information"
+		"ru"			""
 	}
 
 	"PanicMenu2"
 	{
-		"ru"			"Panic Ability"
+		"ru"			""
 	}
 
 	"Pimp"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is pimp slapping{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"Pimp2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer being pimp slapped!"
+		"ru"			""
 	}
 
 	"PimpAmmo"
 	{
-		"ru"			"You've used up all your pimp slap range ability's ammo."
+		"ru"			""
 	}
 
 	"PimpDetails"
 	{
-		"ru"			"You pimp slap survivors."
+		"ru"			""
 	}
 
 	"PimpHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your pimp slap range ability!"
+		"ru"			""
 	}
 
 	"PimpHuman2"
 	{
-		"ru"			"Your pimp slap range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"PimpHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your pimp slap range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"PimpHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your pimp slap range ability on."
+		"ru"			""
 	}
 
 	"PimpHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your pimp slap range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"PimpMenu"
 	{
-		"ru"			"Pimp Ability Information"
+		"ru"			""
 	}
 
 	"PimpMenu2"
 	{
-		"ru"			"Pimp Ability"
+		"ru"			""
 	}
 
 	"Puke"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} puked on{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"PukeAmmo"
 	{
-		"ru"			"You've used up all your puke range ability's ammo."
+		"ru"			""
 	}
 
 	"PukeDetails"
 	{
-		"ru"			"You puke on survivors."
+		"ru"			""
 	}
 
 	"PukeHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your puke range ability!"
+		"ru"			""
 	}
 
 	"PukeHuman2"
 	{
-		"ru"			"Your puke range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"PukeHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your puke range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"PukeHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your puke range ability on."
+		"ru"			""
 	}
 
 	"PukeHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your puke range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"PukeMenu"
 	{
-		"ru"			"Puke Ability Information"
+		"ru"			""
 	}
 
 	"PukeMenu2"
 	{
-		"ru"			"Puke Ability"
+		"ru"			""
 	}
 
 	"Pyro"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} ignited itself!"
+		"ru"			""
 	}
 
 	"Pyro2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is burning and running really fast!"
+		"ru"			""
 	}
 
 	"Pyro3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is no longer burning and is back to normal speed!"
+		"ru"			""
 	}
 
 	"PyroAmmo"
 	{
-		"ru"			"You've used up all your pyro ability's ammo."
+		"ru"			""
 	}
 
 	"PyroDetails"
 	{
-		"ru"			"You ignite yourself and gain a speed boost when on fire."
+		"ru"			""
 	}
 
 	"PyroHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your pyro ability!"
+		"ru"			""
 	}
 
 	"PyroHuman2"
 	{
-		"ru"			"Your pyro ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"PyroHuman3"
 	{
-		"ru"			"You already activated your pyro ability."
+		"ru"			""
 	}
 
 	"PyroHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your pyro ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"PyroHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your pyro ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"PyroMenu"
 	{
-		"ru"			"Pyro Ability Information"
+		"ru"			""
 	}
 
 	"PyroMenu2"
 	{
-		"ru"			"Pyro Ability"
+		"ru"			""
 	}
 
 	"Quiet"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} silenced itself around{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"Quiet2"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is no longer quiet around{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"QuietAmmo"
 	{
-		"ru"			"You've used up all your quiet range ability's ammo."
+		"ru"			""
 	}
 
 	"QuietDetails"
 	{
-		"ru"			"You silence yourself around survivors."
+		"ru"			""
 	}
 
 	"QuietHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your quiet range ability!"
+		"ru"			""
 	}
 
 	"QuietHuman2"
 	{
-		"ru"			"Your quiet range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"QuietHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your quiet range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"QuietHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your quiet range ability on."
+		"ru"			""
 	}
 
 	"QuietHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your quiet range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"QuietMenu"
 	{
-		"ru"			"Quiet Ability Information"
+		"ru"			""
 	}
 
 	"QuietMenu2"
 	{
-		"ru"			"Quiet Ability"
+		"ru"			""
 	}
 
 	"Recoil"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} gave{olive} {2}{mint} strong recoil!"
+		"ru"			""
 	}
 
 	"Recoil2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} no longer has strong recoil!"
+		"ru"			""
 	}
 
 	"RecoilAmmo"
 	{
-		"ru"			"You've used up all your recoil range ability's ammo."
+		"ru"			""
 	}
 
 	"RecoilDetails"
 	{
-		"ru"			"You give survivors strong gun recoil."
+		"ru"			""
 	}
 
 	"RecoilHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your recoil range ability!"
+		"ru"			""
 	}
 
 	"RecoilHuman2"
 	{
-		"ru"			"Your recoil range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"RecoilHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your recoil range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"RecoilHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your recoil range ability on."
+		"ru"			""
 	}
 
 	"RecoilHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your recoil range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"RecoilMenu"
 	{
-		"ru"			"Recoil Ability Information"
+		"ru"			""
 	}
 
 	"RecoilMenu2"
 	{
-		"ru"			"Recoil Ability"
+		"ru"			""
 	}
 
 	"Regen"
 	{
 		"#format"		"{1:t},{2:.2f}"
-		"ru"			"{olive}{1}{mint} is regenerating health every{yellow} {2}{mint} second(s)!"
+		"ru"			""
 	}
 
 	"Regen2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} stopped regenerating health!"
+		"ru"			""
 	}
 
 	"RegenAmmo"
 	{
-		"ru"			"You've used up all your regen ability's ammo."
+		"ru"			""
 	}
 
 	"RegenDetails"
 	{
-		"ru"			"You regenerate health."
+		"ru"			""
 	}
 
 	"RegenHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your regen ability!"
+		"ru"			""
 	}
 
 	"RegenHuman2"
 	{
-		"ru"			"Your regen ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"RegenHuman3"
 	{
-		"ru"			"You already activated your regen ability."
+		"ru"			""
 	}
 
 	"RegenHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your regen ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"RegenHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your regen ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"RegenMenu"
 	{
-		"ru"			"Regen Ability Information"
+		"ru"			""
 	}
 
 	"RegenMenu2"
 	{
-		"ru"			"Regen Ability"
+		"ru"			""
 	}
 
 	"Respawn"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} just respawned itself!"
+		"ru"			""
 	}
 
 	"RespawnAmmo"
 	{
-		"ru"			"You've used up all your rock showers."
+		"ru"			""
 	}
 
 	"RespawnDetails"
 	{
-		"ru"			"You respawn upon death."
+		"ru"			""
 	}
 
 	"RespawnHuman"
 	{
-		"ru"			"You will respawn when you die!"
+		"ru"			""
 	}
 
 	"RespawnHuman2"
 	{
-		"ru"			"You will already respawn upon death."
+		"ru"			""
 	}
 
 	"RespawnHuman3"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your respawns!"
+		"ru"			""
 	}
 
 	"RespawnMenu"
 	{
-		"ru"			"Respawn Ability Information"
+		"ru"			""
 	}
 
 	"RespawnMenu2"
 	{
-		"ru"			"Respawn Ability"
+		"ru"			""
 	}
 
 	"Restart"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} caused{olive} {2}{mint} to restart with a different loadout!"
+		"ru"			""
 	}
 
 	"RestartAmmo"
 	{
-		"ru"			"You've used up all your restart range ability's ammo."
+		"ru"			""
 	}
 
 	"RestartDetails"
 	{
-		"ru"			"You force survivors to restart at the beginning of the map or near a teammate with a new loadout."
+		"ru"			""
 	}
 
 	"RestartHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your restart range ability!"
+		"ru"			""
 	}
 
 	"RestartHuman2"
 	{
-		"ru"			"Your restart range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"RestartHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your restart range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"RestartHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your restart range ability on."
+		"ru"			""
 	}
 
 	"RestartHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your restart range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"RestartMenu"
 	{
-		"ru"			"Restart Ability Information"
+		"ru"			""
 	}
 
 	"RestartMenu2"
 	{
-		"ru"			"Restart Ability"
+		"ru"			""
 	}
 
 	"Rock"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} started a{yellow} rock shower{mint}!"
+		"ru"			""
 	}
 
 	"Rock2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} rock shower ended!"
+		"ru"			""
 	}
 
 	"RockAmmo"
 	{
-		"ru"			"You've used up all your rock showers."
+		"ru"			""
 	}
 
 	"RockDetails"
 	{
-		"ru"			"You create rock showers."
+		"ru"			""
 	}
 
 	"RockHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rock showers!"
+		"ru"			""
 	}
 
 	"RockHuman2"
 	{
-		"ru"			"Your rock shower failed to activate. Try again."
+		"ru"			""
 	}
 
 	"RockHuman3"
 	{
-		"ru"			"You already activated your rock shower."
+		"ru"			""
 	}
 
 	"RockHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your rock shower ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"RockHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your rock shower ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"RockMenu"
 	{
-		"ru"			"Rock Ability Information"
+		"ru"			""
 	}
 
 	"RockMenu2"
 	{
-		"ru"			"Rock Ability"
+		"ru"			""
 	}
 
 	"Rocket"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} sent{olive} {2}{mint} into space!"
+		"ru"			""
 	}
 
 	"RocketAmmo"
 	{
-		"ru"			"You've used up all your rocket range ability's ammo."
+		"ru"			""
 	}
 
 	"RocketDetails"
 	{
-		"ru"			"You send survivors into space."
+		"ru"			""
 	}
 
 	"RocketHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rocket range ability!"
+		"ru"			""
 	}
 
 	"RocketHuman2"
 	{
-		"ru"			"Your rocket range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"RocketHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your rocket range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"RocketHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your rocket range ability on."
+		"ru"			""
 	}
 
 	"RocketHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your rocket range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"RocketMenu"
 	{
-		"ru"			"Rocket Ability Information"
+		"ru"			""
 	}
 
 	"RocketMenu2"
 	{
-		"ru"			"Rocket Ability"
+		"ru"			""
 	}
 
 	"Shake"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is shaking{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"Shake2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer shaking!"
+		"ru"			""
 	}
 
 	"ShakeAmmo"
 	{
-		"ru"			"You've used up all your shake range ability's ammo."
+		"ru"			""
 	}
 
 	"ShakeDetails"
 	{
-		"ru"			"You shake the survivors' screens."
+		"ru"			""
 	}
 
 	"ShakeHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shake range ability!"
+		"ru"			""
 	}
 
 	"ShakeHuman2"
 	{
-		"ru"			"Your shake range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"ShakeHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your shake range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"ShakeHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your shake range ability on."
+		"ru"			""
 	}
 
 	"ShakeHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your shake range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"ShakeMenu"
 	{
-		"ru"			"Shake Ability Information"
+		"ru"			""
 	}
 
 	"ShakeMenu2"
 	{
-		"ru"			"Shake Ability"
+		"ru"			""
 	}
 
 	"Shield"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} shield{yellow} activated{mint}!"
+		"ru"			""
 	}
 
 	"Shield2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} shield{yellow} deactivated{mint}!"
+		"ru"			""
 	}
 
 	"ShieldAmmo"
 	{
-		"ru"			"You've used up all your shields."
+		"ru"			""
 	}
 
 	"ShieldDetails"
 	{
-		"ru"			"You protect yourself with a shield and throw propane tanks or gas cans."
+		"ru"			""
 	}
 
 	"ShieldHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shields!"
+		"ru"			""
 	}
 
 	"ShieldHuman2"
 	{
-		"ru"			"Your shield failed to activate. Try again."
+		"ru"			""
 	}
 
 	"ShieldHuman3"
 	{
-		"ru"			"You already activated your shield."
+		"ru"			""
 	}
 
 	"ShieldHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your shield still needs another{yellow} {1} second(s){mint} to regenerate."
+		"ru"			""
 	}
 
 	"ShieldHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your shield broke and needs to regenerate for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"ShieldMenu"
 	{
-		"ru"			"Shield Ability Information"
+		"ru"			""
 	}
 
 	"ShieldMenu2"
 	{
-		"ru"			"Shield Ability"
+		"ru"			""
 	}
 
 	"ShieldOwner"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{1}'s Shield"
+		"ru"			""
 	}
 
 	"Shove"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is shoving{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"Shove2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer being shoved!"
+		"ru"			""
 	}
 
 	"ShoveAmmo"
 	{
-		"ru"			"You've used up all your shove range ability's ammo."
+		"ru"			""
 	}
 
 	"ShoveDetails"
 	{
-		"ru"			"You repeatedly shove survivors."
+		"ru"			""
 	}
 
 	"ShoveHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your shove range ability!"
+		"ru"			""
 	}
 
 	"ShoveHuman2"
 	{
-		"ru"			"Your shove range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"ShoveHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your shove range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"ShoveHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your shove range ability on."
+		"ru"			""
 	}
 
 	"ShoveHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your shove range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"ShoveMenu"
 	{
-		"ru"			"Shove Ability Information"
+		"ru"			""
 	}
 
 	"ShoveMenu2"
 	{
-		"ru"			"Shove Ability"
+		"ru"			""
 	}
 
 	"Slow"
 	{
 		"#format"		"{1:t},{2:N},{3:.2f}"
-		"ru"			"{olive}{1}{mint} slowed{olive} {2}{mint} down to{yellow} {3}{mint}!"
+		"ru"			""
 	}
 
 	"Slow2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} is no longer slowed down!"
+		"ru"			""
 	}
 
 	"SlowAmmo"
 	{
-		"ru"			"You've used up all your slow range ability's ammo."
+		"ru"			""
 	}
 
 	"SlowDetails"
 	{
-		"ru"			"You slow and slow survivors down."
+		"ru"			""
 	}
 
 	"SlowHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your slow range ability!"
+		"ru"			""
 	}
 
 	"SlowHuman2"
 	{
-		"ru"			"Your slow range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"SlowHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your slow range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"SlowHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your slow range ability on."
+		"ru"			""
 	}
 
 	"SlowHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your slow range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"SlowMenu"
 	{
-		"ru"			"Slow Ability Information"
+		"ru"			""
 	}
 
 	"SlowMenu2"
 	{
-		"ru"			"Slow Ability"
+		"ru"			""
 	}
 
 	"Smash"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} smashed{olive} {2}{mint} to death!"
+		"ru"			""
 	}
 
 	"SmashAmmo"
 	{
-		"ru"			"You've used up all your smash range ability's ammo."
+		"ru"			""
 	}
 
 	"SmashDetails"
 	{
-		"ru"			"You smash survivors to death."
+		"ru"			""
 	}
 
 	"SmashHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smash range ability!"
+		"ru"			""
 	}
 
 	"SmashHuman2"
 	{
-		"ru"			"Your smash range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"SmashHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your smash range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"SmashHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your smash range ability on."
+		"ru"			""
 	}
 
 	"SmashHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your smash range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"SmashMenu"
 	{
-		"ru"			"Smash Ability Information"
+		"ru"			""
 	}
 
 	"SmashMenu2"
 	{
-		"ru"			"Smash Ability"
+		"ru"			""
 	}
 
 	"Smite"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} smited{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"SmiteAmmo"
 	{
-		"ru"			"You've used up all your smite range ability's ammo."
+		"ru"			""
 	}
 
 	"SmiteDetails"
 	{
-		"ru"			"You smite survivors."
+		"ru"			""
 	}
 
 	"SmiteHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your smite range ability!"
+		"ru"			""
 	}
 
 	"SmiteHuman2"
 	{
-		"ru"			"Your smite range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"SmiteHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your smite range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"SmiteHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your smite range ability on."
+		"ru"			""
 	}
 
 	"SmiteHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your smite range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"SmiteMenu"
 	{
-		"ru"			"Smite Ability Information"
+		"ru"			""
 	}
 
 	"SmiteMenu2"
 	{
-		"ru"			"Smite Ability"
+		"ru"			""
 	}
 
 	"Spam"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is spamming rocks!"
+		"ru"			""
 	}
 
 	"Spam2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is no longer spamming rocks!"
+		"ru"			""
 	}
 
 	"SpamAmmo"
 	{
-		"ru"			"You've used up all your spam ability's ammo."
+		"ru"			""
 	}
 
 	"SpamDetails"
 	{
-		"ru"			"You spam rocks at survivors."
+		"ru"			""
 	}
 
 	"SpamHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your rock spammer ability!"
+		"ru"			""
 	}
 
 	"SpamHuman2"
 	{
-		"ru"			"Your rock spammer ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"SpamHuman3"
 	{
-		"ru"			"You already activated your rock spammer ability."
+		"ru"			""
 	}
 
 	"SpamHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your rock spammer ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"SpamHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your rock spammer ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"SpamMenu"
 	{
-		"ru"			"Spam Ability Information"
+		"ru"			""
 	}
 
 	"SpamMenu2"
 	{
-		"ru"			"Spam Ability"
+		"ru"			""
 	}
 
 	"Splash"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is splashing damage at nearby survivors!"
+		"ru"			""
 	}
 
 	"Splash2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is no longer splashing damage at nearby survivors!"
+		"ru"			""
 	}
 
 	"SplashAmmo"
 	{
-		"ru"			"You've used up all your splash ability's ammo."
+		"ru"			""
 	}
 
 	"SplashDetails"
 	{
-		"ru"			"You constantly deal splash damage to nearby survivors."
+		"ru"			""
 	}
 
 	"SplashHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your splash ability!"
+		"ru"			""
 	}
 
 	"SplashHuman2"
 	{
-		"ru"			"Your splash ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"SplashHuman3"
 	{
-		"ru"			"You already activated your splash ability."
+		"ru"			""
 	}
 
 	"SplashHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your splash ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"SplashHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your splash ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"SplashMenu"
 	{
-		"ru"			"Splash Ability Information"
+		"ru"			""
 	}
 
 	"SplashMenu2"
 	{
-		"ru"			"Splash Ability"
+		"ru"			""
 	}
 
 	"Splatter"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} will cover everyone's screens with splatters periodically!"
+		"ru"			""
 	}
 
 	"Splatter2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} covered everyone's screens with{yellow} splatters{mint}!"
+		"ru"			""
 	}
 
 	"SplatterAmmo"
 	{
-		"ru"			"You've used up all your splatter ability's ammo."
+		"ru"			""
 	}
 
 	"SplatterDetails"
 	{
-		"ru"			"You cover everyone's screens with splatters."
+		"ru"			""
 	}
 
 	"SplatterHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your splatter ability!"
+		"ru"			""
 	}
 
 	"SplatterHuman2"
 	{
-		"ru"			"Your splatter ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"SplatterHuman3"
 	{
-		"ru"			"You already activated your splatter ability."
+		"ru"			""
 	}
 
 	"SplatterHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your splatter ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"SplatterHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your splatter ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"SplatterMenu"
 	{
-		"ru"			"Splatter Ability Information"
+		"ru"			""
 	}
 
 	"SplatterMenu2"
 	{
-		"ru"			"Splatter Ability"
+		"ru"			""
 	}
 
 	"Throw"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} threw a car!"
+		"ru"			""
 	}
 
 	"Throw2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} threw a{yellow} special infected{mint}!"
+		"ru"			""
 	}
 
 	"Throw3"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} threw itself!"
+		"ru"			""
 	}
 
 	"Throw4"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} threw a Witch!"
+		"ru"			""
 	}
 
 	"ThrowAmmo"
 	{
-		"ru"			"You've used up all your throw ability's ammo."
+		"ru"			""
 	}
 
 	"ThrowDetails"
 	{
-		"ru"			"You throw cars, special infected, Witches, or yourself."
+		"ru"			""
 	}
 
 	"ThrowHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your throw ability!"
+		"ru"			""
 	}
 
 	"ThrowHuman2"
 	{
-		"ru"			"You already activated your throw ability."
+		"ru"			""
 	}
 
 	"ThrowHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your throw ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"ThrowHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your throw ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"ThrowMenu"
 	{
-		"ru"			"Throw Ability Information"
+		"ru"			""
 	}
 
 	"ThrowMenu2"
 	{
-		"ru"			"Throw Ability"
+		"ru"			""
 	}
 
 	"Track"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}'s{mint} rock is{yellow} tracking{mint} a survivor!"
+		"ru"			""
 	}
 
 	"TrackAmmo"
 	{
-		"ru"			"You've used up all your track ability's ammo."
+		"ru"			""
 	}
 
 	"TrackDetails"
 	{
-		"ru"			"You throw heat-seeking rocks that will track down the nearest survivors."
+		"ru"			""
 	}
 
 	"TrackHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your track ability!"
+		"ru"			""
 	}
 
 	"TrackHuman2"
 	{
-		"ru"			"You already activated your track ability."
+		"ru"			""
 	}
 
 	"TrackHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your track ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"TrackHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your track ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"TrackMenu"
 	{
-		"ru"			"Track Ability Information"
+		"ru"			""
 	}
 
 	"TrackMenu2"
 	{
-		"ru"			"Track Ability"
+		"ru"			""
 	}
 
 	"Ultimate"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} activated ultimate mode!"
+		"ru"			""
 	}
 
 	"Ultimate2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} deactivated ultimate mode!"
+		"ru"			""
 	}
 
 	"Ultimate3"
 	{
 		"#format"		"{1:.2f},{2:.2f}"
-		"ru"			"You have dealt {yellow}{1}{mint}/{yellow}{2}{mint} damage to the survivors to unlock ultimate mode."
+		"ru"			""
 	}
 
 	"Ultimate4"
 	{
-		"ru"			"You may now use ultimate mode!"
+		"ru"			""
 	}
 
 	"UltimateAmmo"
 	{
-		"ru"			"You've used up all your ultimate ability's ammo."
+		"ru"			""
 	}
 
 	"UltimateDetails"
 	{
-		"ru"			"You activate ultimate mode when low on health to gain temporary godmode and damage boost"
+		"ru"			""
 	}
 
 	"UltimateHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your ultimate ability!"
+		"ru"			""
 	}
 
 	"UltimateHuman2"
 	{
-		"ru"			"Your ultimate ability isn't ready yet."
+		"ru"			""
 	}
 
 	"UltimateHuman3"
 	{
-		"ru"			"You already activated your ultimate ability."
+		"ru"			""
 	}
 
 	"UltimateHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your ultimate ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"UltimateHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your ultimate ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"UltimateMenu"
 	{
-		"ru"			"Ultimate Ability Information"
+		"ru"			""
 	}
 
 	"UltimateMenu2"
 	{
-		"ru"			"Ultimate Ability"
+		"ru"			""
 	}
 
 	"Undead"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} increased its lifespan!"
+		"ru"			""
 	}
 
 	"Undead2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} is back to full health!"
+		"ru"			""
 	}
 
 	"UndeadAmmo"
 	{
-		"ru"			"You've used up all your undead ability's ammo."
+		"ru"			""
 	}
 
 	"UndeadDetails"
 	{
-		"ru"			"You cannot die."
+		"ru"			""
 	}
 
 	"UndeadHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your undead ability!"
+		"ru"			""
 	}
 
 	"UndeadHuman2"
 	{
-		"ru"			"Your undead ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"UndeadHuman3"
 	{
-		"ru"			"You already activated your undead ability."
+		"ru"			""
 	}
 
 	"UndeadHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your undead ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"UndeadHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your undead ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"UndeadMenu"
 	{
-		"ru"			"Undead Ability Information"
+		"ru"			""
 	}
 
 	"UndeadMenu2"
 	{
-		"ru"			"Undead Ability"
+		"ru"			""
 	}
 
 	"Vampire"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"VampireDetails"
 	{
-		"ru"			"You gain health from hurting survivors."
+		"ru"			""
 	}
 
 	"VampireMenu"
 	{
-		"ru"			"Vampire Ability Information"
+		"ru"			""
 	}
 
 	"VampireMenu2"
 	{
-		"ru"			"Vampire Ability"
+		"ru"			""
 	}
 
 	"Vision"
 	{
 		"#format"		"{1:t},{2:N},{3:i}"
-		"ru"			"{olive}{1}{mint} changed{olive} {2}'s{mint} vision to{yellow} {3}{mint} FOV!"
+		"ru"			""
 	}
 
 	"Vision2"
 	{
 		"#format"		"{1:N},{2:i}"
-		"ru"			"{olive}{1}'s{mint} vision changed back to{yellow} {2}{mint} FOV!"
+		"ru"			""
 	}
 
 	"VisionAmmo"
 	{
-		"ru"			"You've used up all your visual range ability's ammo."
+		"ru"			""
 	}
 
 	"VisionDetails"
 	{
-		"ru"			"You change the survivors' field of view."
+		"ru"			""
 	}
 
 	"VisionHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your visual range ability!"
+		"ru"			""
 	}
 
 	"VisionHuman2"
 	{
-		"ru"			"Your visual range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"VisionHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your visual range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"VisionHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your visual range ability on."
+		"ru"			""
 	}
 
 	"VisionHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your visual range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"VisionMenu"
 	{
-		"ru"			"Vision Ability Information"
+		"ru"			""
 	}
 
 	"VisionMenu2"
 	{
-		"ru"			"Vision Ability"
+		"ru"			""
 	}
 
 	"Warp"
 	{
 		"#format"		"{1:t},{2:N},{3:N}"
-		"ru"			"{olive}{1}{mint} warped{olive} {2}{mint} to{olive} {3}{mint}!"
+		"ru"			""
 	}
 
 	"Warp2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} will warp to a survivor periodically!"
+		"ru"			""
 	}
 
 	"Warp3"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} warped to{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"WarpAmmo"
 	{
-		"ru"			"You've used up all your periodical warping ability's ammo."
+		"ru"			""
 	}
 
 	"WarpAmmo2"
 	{
-		"ru"			"You've used up all your warp range ability's ammo."
+		"ru"			""
 	}
 
 	"WarpDetails"
 	{
-		"ru"			"You warp to survivors and warp survivors to random teammates."
+		"ru"			""
 	}
 
 	"WarpHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your periodical warping ability!"
+		"ru"			""
 	}
 
 	"WarpHuman2"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your warp range ability!"
+		"ru"			""
 	}
 
 	"WarpHuman3"
 	{
-		"ru"			"Your warp range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"WarpHuman4"
 	{
-		"ru"			"You already activated your periodical warping ability."
+		"ru"			""
 	}
 
 	"WarpHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your periodical warping ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"WarpHuman6"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your warp range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"WarpHuman7"
 	{
-		"ru"			"There are no survivors nearby to use your warp range ability on."
+		"ru"			""
 	}
 
 	"WarpHuman8"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your periodical warping ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"WarpHuman9"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your warp range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"WarpMenu"
 	{
-		"ru"			"Warp Ability Information"
+		"ru"			""
 	}
 
 	"WarpMenu2"
 	{
-		"ru"			"Warp Ability"
+		"ru"			""
 	}
 
 	"Whirl"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} is making{olive} {2}{mint} whirl."
+		"ru"			""
 	}
 
 	"Whirl2"
 	{
 		"#format"		"{1:N}"
-		"ru"			"{olive}{1}{mint} stopped whirling."
+		"ru"			""
 	}
 
 	"WhirlAmmo"
 	{
-		"ru"			"You've used up all your whirl range ability's ammo."
+		"ru"			""
 	}
 
 	"WhirlDetails"
 	{
-		"ru"			"You make survivors' screens whirl."
+		"ru"			""
 	}
 
 	"WhirlHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your whirl range ability!"
+		"ru"			""
 	}
 
 	"WhirlHuman2"
 	{
-		"ru"			"Your whirl range ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"WhirlHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your whirl range ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"WhirlHuman4"
 	{
-		"ru"			"There are no survivors nearby to use your whirl range ability on."
+		"ru"			""
 	}
 
 	"WhirlHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your whirl range ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"WhirlMenu"
 	{
-		"ru"			"Whirl Ability Information"
+		"ru"			""
 	}
 
 	"WhirlMenu2"
 	{
-		"ru"			"Whirl Ability"
+		"ru"			""
 	}
 
 	"Witch"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} converted some common infected into{olive} Witch minions{mint}!"
+		"ru"			""
 	}
 
 	"WitchAmmo"
 	{
-		"ru"			"You've used up all your witch spawner ability's ammo."
+		"ru"			""
 	}
 
 	"WitchDetails"
 	{
-		"ru"			"You convert nearby common infected into Witch minions."
+		"ru"			""
 	}
 
 	"WitchHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your witch spawner ability!"
+		"ru"			""
 	}
 
 	"WitchHuman2"
 	{
-		"ru"			"Your witch spawner ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"WitchHuman3"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your witch spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"WitchHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your witch spawner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"WitchMenu"
 	{
-		"ru"			"Witch Ability Information"
+		"ru"			""
 	}
 
 	"WitchMenu2"
 	{
-		"ru"			"Witch Ability"
+		"ru"			""
 	}
 
 	"Xiphos"
 	{
 		"#format"		"{1:t},{2:N}"
-		"ru"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"Xiphos2"
 	{
 		"#format"		"{1:N},{2:t}"
-		"ru"			"{olive}{1}{mint} stole some health from{olive} {2}{mint}!"
+		"ru"			""
 	}
 
 	"XiphosDetails"
 	{
-		"ru"			"You can steal health from survivors and vice-versa."
+		"ru"			""
 	}
 
 	"XiphosMenu"
 	{
-		"ru"			"Xiphos Ability Information"
+		"ru"			""
 	}
 
 	"XiphosMenu2"
 	{
-		"ru"			"Xiphos Ability"
+		"ru"			""
 	}
 
 	"Yell"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} yelled at the survivors!"
+		"ru"			""
 	}
 
 	"Yell2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} stopped yelling!"
+		"ru"			""
 	}
 
 	"YellAmmo"
 	{
-		"ru"			"You've used up all your yell ability's ammo."
+		"ru"			""
 	}
 
 	"YellDetails"
 	{
-		"ru"			"You yell to deafen survivors."
+		"ru"			""
 	}
 
 	"YellHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your yell ability!"
+		"ru"			""
 	}
 
 	"YellHuman2"
 	{
-		"ru"			"Your yell ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"YellHuman3"
 	{
-		"ru"			"You already activated your yell ability."
+		"ru"			""
 	}
 
 	"YellHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your yell ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"YellHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your yell ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"YellMenu"
 	{
-		"ru"			"Yell Ability Information"
+		"ru"			""
 	}
 
 	"YellMenu2"
 	{
-		"ru"			"Yell Ability"
+		"ru"			""
 	}
 
 	"Zombie"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} will spawn zombies periodically!"
+		"ru"			""
 	}
 
 	"Zombie2"
 	{
 		"#format"		"{1:t}"
-		"ru"			"{olive}{1}{mint} spawned {yellow} zombies{mint}!"
+		"ru"			""
 	}
 
 	"ZombieAmmo"
 	{
-		"ru"			"You've used up all your zombie spawner ability's ammo."
+		"ru"			""
 	}
 
 	"ZombieDetails"
 	{
-		"ru"			"You spawn zombies."
+		"ru"			""
 	}
 
 	"ZombieHuman"
 	{
 		"#format"		"{1:i},{2:i}"
-		"ru"			"You activated{olive} {1}{mint}/{olive}{2}{mint} of your zombie spawner ability!"
+		"ru"			""
 	}
 
 	"ZombieHuman2"
 	{
-		"ru"			"Your zombie spawner ability failed to activate. Try again."
+		"ru"			""
 	}
 
 	"ZombieHuman3"
 	{
-		"ru"			"You already activated your zombie spawner ability."
+		"ru"			""
 	}
 
 	"ZombieHuman4"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your zombie spawner ability still needs another{yellow} {1} second(s){mint} to recharge."
+		"ru"			""
 	}
 
 	"ZombieHuman5"
 	{
 		"#format"		"{1:i}"
-		"ru"			"Your zombie spawner ability ended and needs to recharge for{yellow} {1} second(s){mint}."
+		"ru"			""
 	}
 
 	"ZombieMenu"
 	{
-		"ru"			"Zombie Ability Information"
+		"ru"			""
 	}
 
 	"ZombieMenu2"
 	{
-		"ru"			"Zombie Ability"
+		"ru"			""
 	}
 
 	"Tank #1 Name"
 	{
-		"ru"			"Absorber Tank"
+		"ru"			""
 	}
 
 	"Tank #1"
 	{
-		"ru"			"{mint}This Tank can absorb most of the damage it receives."
+		"ru"			""
 	}
 
 	"Tank #2 Name"
 	{
-		"ru"			"Acidic Tank"
+		"ru"			""
 	}
 
 	"Tank #2"
 	{
-		"ru"			"{mint}This Tank can create acid puddles underneath survivors."
+		"ru"			""
 	}
 
 	"Tank #3 Name"
 	{
-		"ru"			"Aimless Tank"
+		"ru"			""
 	}
 
 	"Tank #3"
 	{
-		"ru"			"{mint}This Tank can prevent survivors from aiming."
+		"ru"			""
 	}
 
 	"Tank #4 Name"
 	{
-		"ru"			"Ammo Tank"
+		"ru"			""
 	}
 
 	"Tank #4"
 	{
-		"ru"			"{mint}This Tank can steal some or all of your ammunition."
+		"ru"			""
 	}
 
 	"Tank #5 Name"
 	{
-		"ru"			"Blind Tank"
+		"ru"			""
 	}
 
 	"Tank #5"
 	{
-		"ru"			"{mint}This Tank can blind survivors."
+		"ru"			""
 	}
 
 	"Tank #6 Name"
 	{
-		"ru"			"Bomber Tank"
+		"ru"			""
 	}
 
 	"Tank #6"
 	{
-		"ru"			"{mint}This Tank can cause explosions and is immune to explosive damage."
+		"ru"			""
 	}
 
 	"Tank #7 Name"
 	{
-		"ru"			"Boomer Tank"
+		"ru"			""
 	}
 
 	"Tank #7"
 	{
-		"ru"			"{mint}This Tank can spawn Boomers behind it and throw some at survivors too."
+		"ru"			""
 	}
 
 	"Tank #8 Name"
 	{
-		"ru"			"Bulletproof Tank"
+		"ru"			""
 	}
 
 	"Tank #8"
 	{
-		"ru"			"{mint}This Tank is immune to bullet damage."
+		"ru"			""
 	}
 
 	"Tank #9 Name"
 	{
-		"ru"			"Burier Tank"
+		"ru"			""
 	}
 
 	"Tank #9"
 	{
-		"ru"			"{mint}This Tank can bury survivors."
+		"ru"			""
 	}
 
 	"Tank #10 Name"
 	{
-		"ru"			"Car Tank"
+		"ru"			""
 	}
 
 	"Tank #10"
 	{
-		"ru"			"{mint}This Tank can throw cars at survivors. The cars disappear after 30 seconds."
+		"ru"			""
 	}
 
 	"Tank #11 Name"
 	{
-		"ru"			"Charger Tank"
+		"ru"			""
 	}
 
 	"Tank #11"
 	{
-		"ru"			"{mint}This Tank can spawn Chargers behind it and throw some at survivors too."
+		"ru"			""
 	}
 
 	"Tank #12 Name"
 	{
-		"ru"			"Choker Tank"
+		"ru"			""
 	}
 
 	"Tank #12"
 	{
-		"ru"			"{mint}This Tank can choke survivors in the air."
+		"ru"			""
 	}
 
 	"Tank #13 Name"
 	{
-		"ru"			"Clone Tank"
+		"ru"			""
 	}
 
 	"Tank #13"
 	{
-		"ru"			"{mint}This Tank can spawn clones behind it and throw some at survivors too."
+		"ru"			""
 	}
 
 	"Tank #14 Name"
 	{
-		"ru"			"Cloudy Tank"
+		"ru"			""
 	}
 
 	"Tank #14"
 	{
-		"ru"			"{mint}This Tank can emit clouds of smoke that damage survivors caught in them."
+		"ru"			""
 	}
 
 	"Tank #15 Name"
 	{
-		"ru"			"Dropper Tank"
+		"ru"			""
 	}
 
 	"Tank #15"
 	{
-		"ru"			"{mint}This Tank can drop a random weapon upon death."
+		"ru"			""
 	}
 
 	"Tank #16 Name"
 	{
-		"ru"			"Drugger Tank"
+		"ru"			""
 	}
 
 	"Tank #16"
 	{
-		"ru"			"{mint}This Tank can drug survivors."
+		"ru"			""
 	}
 
 	"Tank #17 Name"
 	{
-		"ru"			"Drunk Tank"
+		"ru"			""
 	}
 
 	"Tank #17"
 	{
-		"ru"			"{mint}This Tank can make survivors drunk."
+		"ru"			""
 	}
 
 	"Tank #18 Name"
 	{
-		"ru"			"Electric Tank"
+		"ru"			""
 	}
 
 	"Tank #18"
 	{
-		"ru"			"{mint}This Tank can electrocute survivors."
+		"ru"			""
 	}
 
 	"Tank #19 Name"
 	{
-		"ru"			"Enforcer Tank"
+		"ru"			""
 	}
 
 	"Tank #19"
 	{
-		"ru"			"{mint}This Tank can force survivors to equip a specific weapon slot for a certain period of time."
+		"ru"			""
 	}
 
 	"Tank #20 Name"
 	{
-		"ru"			"Fast Tank"
+		"ru"			""
 	}
 
 	"Tank #20"
 	{
-		"ru"			"{mint}This Tank can run really fast like the Flash."
+		"ru"			""
 	}
 
 	"Tank #21 Name"
 	{
-		"ru"			"Fireproof Tank"
+		"ru"			""
 	}
 
 	"Tank #21"
 	{
-		"ru"			"{mint}This Tank can start fires and is immune to fire damage."
+		"ru"			""
 	}
 
 	"Tank #22 Name"
 	{
-		"ru"			"Flinger Tank"
+		"ru"			""
 	}
 
 	"Tank #22"
 	{
-		"ru"			"{mint}This Tank can fling survivors away or into the air."
+		"ru"			""
 	}
 
 	"Tank #23 Name"
 	{
-		"ru"			"Flying Tank"
+		"ru"			""
 	}
 
 	"Tank #23"
 	{
-		"ru"			"{mint}This Tank flies around looking for victims."
+		"ru"			""
 	}
 
 	"Tank #24 Name"
 	{
-		"ru"			"Fragile Tank"
+		"ru"			""
 	}
 
 	"Tank #24"
 	{
-		"ru"			"{mint}This Tank takes extra damage while dealing more damage and running faster."
+		"ru"			""
 	}
 
 	"Tank #25 Name"
 	{
-		"ru"			"Ghost Tank"
+		"ru"			""
 	}
 
 	"Tank #25"
 	{
-		"ru"			"{mint}This Tank can cloak itself and disarm survivors."
+		"ru"			""
 	}
 
 	"Tank #26 Name"
 	{
-		"ru"			"Godly Tank"
+		"ru"			""
 	}
 
 	"Tank #26"
 	{
-		"ru"			"{mint}This Tank can gain temporary invincibility."
+		"ru"			""
 	}
 
 	"Tank #27 Name"
 	{
-		"ru"			"Gravity Tank"
+		"ru"			""
 	}
 
 	"Tank #27"
 	{
-		"ru"			"{mint}This Tank can pull survivors and infected towards it and lower survivors' gravity."
+		"ru"			""
 	}
 
 	"Tank #28 Name"
 	{
-		"ru"			"Healthy Tank"
+		"ru"			""
 	}
 
 	"Tank #28"
 	{
-		"ru"			"{mint}This Tank can give survivors temporary health, and it can absorb health from nearby infected."
+		"ru"			""
 	}
 
 	"Tank #29 Name"
 	{
-		"ru"			"Hitter Tank"
+		"ru"			""
 	}
 
 	"Tank #29"
 	{
-		"ru"			"{mint}This Tank can only be damaged by headshots."
+		"ru"			""
 	}
 
 	"Tank #30 Name"
 	{
-		"ru"			"Hunter Tank"
+		"ru"			""
 	}
 
 	"Tank #30"
 	{
-		"ru"			"{mint}This Tank can spawn Hunters behind it and throw some at survivors too."
+		"ru"			""
 	}
 
 	"Tank #31 Name"
 	{
-		"ru"			"Hurtful Tank"
+		"ru"			""
 	}
 
 	"Tank #31"
 	{
-		"ru"			"{mint}This Tank can constantly hurt survivors for a certain period of time."
+		"ru"			""
 	}
 
 	"Tank #32 Name"
 	{
-		"ru"			"Hypnotizer Tank"
+		"ru"			""
 	}
 
 	"Tank #32"
 	{
-		"ru"			"{mint}This Tank can hypnotize survivors to hurt themselves or their teammates."
+		"ru"			""
 	}
 
 	"Tank #33 Name"
 	{
-		"ru"			"Icy Tank"
+		"ru"			""
 	}
 
 	"Tank #33"
 	{
-		"ru"			"{mint}This Tank can freeze survivors."
+		"ru"			""
 	}
 
 	"Tank #34 Name"
 	{
-		"ru"			"Idler Tank"
+		"ru"			""
 	}
 
 	"Tank #34"
 	{
-		"ru"			"{mint}This Tank can make survivors go idle. (This doesn't affect bots.)"
+		"ru"			""
 	}
 
 	"Tank #35 Name"
 	{
-		"ru"			"Inverter Tank"
+		"ru"			""
 	}
 
 	"Tank #35"
 	{
-		"ru"			"{mint}This Tank can invert survivors' movement keys."
+		"ru"			""
 	}
 
 	"Tank #36 Name"
 	{
-		"ru"			"Item Tank"
+		"ru"			""
 	}
 
 	"Tank #36"
 	{
-		"ru"			"{mint}This Tank can give survivors items upon death."
+		"ru"			""
 	}
 
 	"Tank #37 Name"
 	{
-		"ru"			"Jockey Tank"
+		"ru"			""
 	}
 
 	"Tank #37"
 	{
-		"ru"			"{mint}This Tank can spawn Jockeys behind it and throw some at survivors too."
+		"ru"			""
 	}
 
 	"Tank #38 Name"
 	{
-		"ru"			"Jumper Tank"
+		"ru"			""
 	}
 
 	"Tank #38"
 	{
-		"ru"			"{mint}This Tank can jump periodically and make survivors jump uncontrollably."
+		"ru"			""
 	}
 
 	"Tank #39 Name"
 	{
-		"ru"			"Kamikaze Tank"
+		"ru"			""
 	}
 
 	"Tank #39"
 	{
-		"ru"			"{mint}This Tank can kill itself along with a survivor victim."
+		"ru"			""
 	}
 
 	"Tank #40 Name"
 	{
-		"ru"			"Lagger Tank"
+		"ru"			""
 	}
 
 	"Tank #40"
 	{
-		"ru"			"{mint}This Tank can make survivors lag."
+		"ru"			""
 	}
 
 	"Tank #41 Name"
 	{
-		"ru"			"Laser Tank"
+		"ru"			""
 	}
 
 	"Tank #41"
 	{
-		"ru"			"{mint}This Tank can shoot lasers at survivors."
+		"ru"			""
 	}
 
 	"Tank #42 Name"
 	{
-		"ru"			"Leecher Tank"
+		"ru"			""
 	}
 
 	"Tank #42"
 	{
-		"ru"			"{mint}This Tank can leech off health from survivors."
+		"ru"			""
 	}
 
 	"Tank #43 Name"
 	{
-		"ru"			"Lightning Tank"
+		"ru"			""
 	}
 
 	"Tank #43"
 	{
-		"ru"			"{mint}This Tank creates lightning storms."
+		"ru"			""
 	}
 
 	"Tank #44 Name"
 	{
-		"ru"			"Medic Tank"
+		"ru"			""
 	}
 
 	"Tank #44"
 	{
-		"ru"			"{mint}This Tank can heal nearby special infected upon death."
+		"ru"			""
 	}
 
 	"Tank #45 Name"
 	{
-		"ru"			"Meteor Tank"
+		"ru"			""
 	}
 
 	"Tank #45"
 	{
-		"ru"			"{mint}This Tank can start meteor showers with meteorites that burn and explode after a few seconds."
+		"ru"			""
 	}
 
 	"Tank #46 Name"
 	{
-		"ru"			"Necromancer Tank"
+		"ru"			""
 	}
 
 	"Tank #46"
 	{
-		"ru"			"{mint}This Tank can resurrect dead special infected."
+		"ru"			""
 	}
 
 	"Tank #47 Name"
 	{
-		"ru"			"Nullifier Tank"
+		"ru"			""
 	}
 
 	"Tank #47"
 	{
-		"ru"			"{mint}This Tank can nullify survivors' damage to protect itself from damage."
+		"ru"			""
 	}
 
 	"Tank #48 Name"
 	{
-		"ru"			"Omni Tank"
+		"ru"			""
 	}
 
 	"Tank #48"
 	{
-		"ru"			"{mint}This Tank can access other nearby Mutant Tanks' abilities."
+		"ru"			""
 	}
 
 	"Tank #49 Name"
 	{
-		"ru"			"Panic Tank"
+		"ru"			""
 	}
 
 	"Tank #49"
 	{
-		"ru"			"{mint}This Tank can start panic events with hordes of zombies."
+		"ru"			""
 	}
 
 	"Tank #50 Name"
 	{
-		"ru"			"Pet Tank"
+		"ru"			""
 	}
 
 	"Tank #50"
 	{
-		"ru"			"{mint}This Tank is loyal to the survivors and loves to give hugs."
+		"ru"			""
 	}
 
 	"Tank #51 Name"
 	{
-		"ru"			"Pimp Tank"
+		"ru"			""
 	}
 
 	"Tank #51"
 	{
-		"ru"			"{mint}This Tank can pimp slap survivors repeatedly to show them who's boss."
+		"ru"			""
 	}
 
 	"Tank #52 Name"
 	{
-		"ru"			"Platinum Tank"
+		"ru"			""
 	}
 
 	"Tank #52"
 	{
-		"ru"			"{mint}This Tank is immune to melee damage."
+		"ru"			""
 	}
 
 	"Tank #53 Name"
 	{
-		"ru"			"Puke Tank"
+		"ru"			""
 	}
 
 	"Tank #53"
 	{
-		"ru"			"{mint}This Tank can puke on survivors."
+		"ru"			""
 	}
 
 	"Tank #54 Name"
 	{
-		"ru"			"Pyromaniac Tank"
+		"ru"			""
 	}
 
 	"Tank #54"
 	{
-		"ru"			"{mint}This Tank gains a speed boost when set on fire."
+		"ru"			""
 	}
 
 	"Tank #55 Name"
 	{
-		"ru"			"Quiet Tank"
+		"ru"			""
 	}
 
 	"Tank #55"
 	{
-		"ru"			"{mint}This Tank can silence itself from survivors."
+		"ru"			""
 	}
 
 	"Tank #56 Name"
 	{
-		"ru"			"Recoil Tank"
+		"ru"			""
 	}
 
 	"Tank #56"
 	{
-		"ru"			"{mint}This Tank can give survivors high gun recoil."
+		"ru"			""
 	}
 
 	"Tank #57 Name"
 	{
-		"ru"			"Regenerative Tank"
+		"ru"			""
 	}
 
 	"Tank #57"
 	{
-		"ru"			"{mint}This Tank regenerates health every second."
+		"ru"			""
 	}
 
 	"Tank #58 Name"
 	{
-		"ru"			"Respawner Tank"
+		"ru"			""
 	}
 
 	"Tank #58"
 	{
-		"ru"			"{mint}This Tank can respawn upon death."
+		"ru"			""
 	}
 
 	"Tank #59 Name"
 	{
-		"ru"			"Restarter Tank"
+		"ru"			""
 	}
 
 	"Tank #59"
 	{
-		"ru"			"{mint}This Tank can force survivors to restart with a new loadout."
+		"ru"			""
 	}
 
 	"Tank #60 Name"
 	{
-		"ru"			"Rock Tank"
+		"ru"			""
 	}
 
 	"Tank #60"
 	{
-		"ru"			"{mint}This Tank can start rock showers."
+		"ru"			""
 	}
 
 	"Tank #61 Name"
 	{
-		"ru"			"Rocketeer Tank"
+		"ru"			""
 	}
 
 	"Tank #61"
 	{
-		"ru"			"{mint}This Tank can send survivors into space."
+		"ru"			""
 	}
 
 	"Tank #62 Name"
 	{
-		"ru"			"Self-throwing Tank"
+		"ru"			""
 	}
 
 	"Tank #62"
 	{
-		"ru"			"{mint}This Tank can throw itself towards survivors."
+		"ru"			""
 	}
 
 	"Tank #63 Name"
 	{
-		"ru"			"Shaker Tank"
+		"ru"			""
 	}
 
 	"Tank #63"
 	{
-		"ru"			"{mint}This Tank can shake survivors' screens."
+		"ru"			""
 	}
 
 	"Tank #64 Name"
 	{
-		"ru"			"Shield Tank"
+		"ru"			""
 	}
 
 	"Tank #64"
 	{
-		"ru"			"{mint}This Tank spawns with a shield and throws propane tanks or gas cans which survivors can use to break the shield."
+		"ru"			""
 	}
 
 	"Tank #65 Name"
 	{
-		"ru"			"Shover Tank"
+		"ru"			""
 	}
 
 	"Tank #65"
 	{
-		"ru"			"{mint}This Tank can shove survivors around."
+		"ru"			""
 	}
 
 	"Tank #66 Name"
 	{
-		"ru"			"Slow Tank"
+		"ru"			""
 	}
 
 	"Tank #66"
 	{
-		"ru"			"{mint}This Tank can slow survivors down."
+		"ru"			""
 	}
 
 	"Tank #67 Name"
 	{
-		"ru"			"Smasher Tank"
+		"ru"			""
 	}
 
 	"Tank #67"
 	{
-		"ru"			"{mint}This Tank can smash survivors to death."
+		"ru"			""
 	}
 
 	"Tank #68 Name"
 	{
-		"ru"			"Smiter Tank"
+		"ru"			""
 	}
 
 	"Tank #68"
 	{
-		"ru"			"{mint}This Tank can smite survivors for an instant kill."
+		"ru"			""
 	}
 
 	"Tank #69 Name"
 	{
-		"ru"			"Smoker Tank"
+		"ru"			""
 	}
 
 	"Tank #69"
 	{
-		"ru"			"{mint}This Tank can spawn Smokers behind it and throw some at survivors too."
+		"ru"			""
 	}
 
 	"Tank #70 Name"
 	{
-		"ru"			"Spammer Tank"
+		"ru"			""
 	}
 
 	"Tank #70"
 	{
-		"ru"			"{mint}This Tank can spam rocks at survivors."
+		"ru"			""
 	}
 
 	"Tank #71 Name"
 	{
-		"ru"			"Special Tank"
+		"ru"			""
 	}
 
 	"Tank #71"
 	{
-		"ru"			"{mint}This Tank can spawn random special infected behind it and throw some at survivors too."
+		"ru"			""
 	}
 
 	"Tank #72 Name"
 	{
-		"ru"			"Spitter Tank"
+		"ru"			""
 	}
 
 	"Tank #72"
 	{
-		"ru"			"{mint}This Tank can spawn Spitters behind it and throw some at survivors too."
+		"ru"			""
 	}
 
 	"Tank #73 Name"
 	{
-		"ru"			"Splasher Tank"
+		"ru"			""
 	}
 
 	"Tank #73"
 	{
-		"ru"			"{mint}This Tank can release a splash of damage within a certain radius."
+		"ru"			""
 	}
 
 	"Tank #74 Name"
 	{
-		"ru"			"Splatter Tank"
+		"ru"			""
 	}
 
 	"Tank #74"
 	{
-		"ru"			"{mint}This Tank can cover everyone's screens with splatters."
+		"ru"			""
 	}
 
 	"Tank #75 Name"
 	{
-		"ru"			"Thrower Tank"
+		"ru"			""
 	}
 
 	"Tank #75"
 	{
-		"ru"			"{mint}This Tank can throw cars, special infected, Tanks, Witches, and itself!"
+		"ru"			""
 	}
 
 	"Tank #76 Name"
 	{
-		"ru"			"Tracker Tank"
+		"ru"			""
 	}
 
 	"Tank #76"
 	{
-		"ru"			"{mint}This Tank throws rocks which can track nearby survivors."
+		"ru"			""
 	}
 
 	"Tank #77 Name"
 	{
-		"ru"			"Ultimate Tank"
+		"ru"			""
 	}
 
 	"Tank #77"
 	{
-		"ru"			"{mint}This Tank gains temporary godmode and damage boost when low on health."
+		"ru"			""
 	}
 
 	"Tank #78 Name"
 	{
-		"ru"			"Undead Tank"
+		"ru"			""
 	}
 
 	"Tank #78"
 	{
-		"ru"			"{mint}This Tank regains full HP when close to dying."
+		"ru"			""
 	}
 
 	"Tank #79 Name"
 	{
-		"ru"			"Vampire Tank"
+		"ru"			""
 	}
 
 	"Tank #79"
 	{
-		"ru"			"{mint}This Tank can steal health from survivors."
+		"ru"			""
 	}
 
 	"Tank #80 Name"
 	{
-		"ru"			"Visual Tank"
+		"ru"			""
 	}
 
 	"Tank #80"
 	{
-		"ru"			"{mint}This Tank can change the FOV of survivors."
+		"ru"			""
 	}
 
 	"Tank #81 Name"
 	{
-		"ru"			"Warper Tank"
+		"ru"			""
 	}
 
 	"Tank #81"
 	{
-		"ru"			"{mint}This Tank can warp to a random survivor."
+		"ru"			""
 	}
 
 	"Tank #82 Name"
 	{
-		"ru"			"Whirler Tank"
+		"ru"			""
 	}
 
 	"Tank #82"
 	{
-		"ru"			"{mint}This Tank can make survivors whirl."
+		"ru"			""
 	}
 
 	"Tank #83 Name"
 	{
-		"ru"			"Witch Tank"
+		"ru"			""
 	}
 
 	"Tank #83"
 	{
-		"ru"			"{mint}This Tank can convert nearby common infected into Witches and throw some at survivors too."
+		"ru"			""
 	}
 
 	"Tank #84 Name"
 	{
-		"ru"			"Xiphos Tank"
+		"ru"			""
 	}
 
 	"Tank #84"
 	{
-		"ru"			"{mint}This Tank can steal health from survivors and vice-versa."
+		"ru"			""
 	}
 
 	"Tank #85 Name"
 	{
-		"ru"			"Yeller Tank"
+		"ru"			""
 	}
 
 	"Tank #85"
 	{
-		"ru"			"{mint}This Tank can yell to defean survivors."
+		"ru"			""
 	}
 
 	"Tank #86 Name"
 	{
-		"ru"			"Zombie Tank"
+		"ru"			""
 	}
 
 	"Tank #86"
 	{
-		"ru"			"{mint}This Tank can create a mob of zombies within the area."
+		"ru"			""
 	}
 
 	"Tank #87 Name"
 	{
-		"ru"			"Armageddon Tank"
+		"ru"			""
 	}
 
 	"Tank #87"
 	{
-		"ru"			"{mint}This Tank is immune to explosives, can pull survivors and infected towards it, and can start meteor showers."
+		"ru"			""
 	}
 
 	"Tank #88 Name"
 	{
-		"ru"			"Boss Tank"
+		"ru"			""
 	}
 
 	"Tank #88"
 	{
-		"ru"			"{mint}Fire immunity, fast, cloak itself, disarm survivors, pull survivors in and change their gravity, jump periodically, start meteor showers, spawn with a shield, smite survivors, warp to survivors, and spawn Witches/zombies."
+		"ru"			""
 	}
 
 	"Tank #89 Name"
 	{
-		"ru"			"Cobalt Tank"
+		"ru"			""
 	}
 
 	"Tank #89"
 	{
-		"ru"			"{mint}This Tank is immune to fire damage and can run really fast."
+		"ru"			""
 	}
 
 	"Tank #90 Name"
 	{
-		"ru"			"Distraction Tank"
+		"ru"			""
 	}
 
 	"Tank #90"
 	{
-		"ru"			"{mint}This Tank can jump periodically, make survivors jump uncontrollably, and warp to survivors."
+		"ru"			""
 	}
 
 	"Tank #91 Name"
 	{
-		"ru"			"Feedback Tank"
+		"ru"			""
 	}
 
 	"Tank #91"
 	{
-		"ru"			"{mint}This Tank pushes survivors away."
+		"ru"			""
 	}
 
 	"Tank #92 Name"
 	{
-		"ru"			"Flash Tank"
+		"ru"			""
 	}
 
 	"Tank #92"
 	{
-		"ru"			"{mint}This Tank can run really fast, throw electricity at survivors, and slow down time around itself, all while having temporary invincibility."
+		"ru"			""
 	}
 
 	"Tank #93 Name"
 	{
-		"ru"			"Goliath Tank"
+		"ru"			""
 	}
 
 	"Tank #93"
 	{
-		"ru"			"{mint}Fire immunity, moves slowly, give survivors temporary health, absorbs health from nearby infected, spawns with a shield, and smites survivors."
+		"ru"			""
 	}
 
 	"Tank #94 Name"
 	{
-		"ru"			"Hallucination Tank"
+		"ru"			""
 	}
 
 	"Tank #94"
 	{
-		"ru"			"{mint}Fire immunity, cloaks itself, and warps to survivors."
+		"ru"			""
 	}
 
 	"Tank #95 Name"
 	{
-		"ru"			"Meme Tank"
+		"ru"			""
 	}
 
 	"Tank #95"
 	{
-		"ru"			"{mint}Fire immunity, absorbs damage, runs fast, cloaks itself, pulls survivors in and changes their gravity, jumps high, starts meteor showers, smites survivors, spams rocks, warps to survivors, and spawns Witches/zombies."
+		"ru"			""
 	}
 
 	"Tank #96 Name"
 	{
-		"ru"			"Mirage Tank"
+		"ru"			""
 	}
 
 	"Tank #96"
 	{
-		"ru"			"{mint}This Tank is immune to fire damage, runs fast, and warps to survivors."
+		"ru"			""
 	}
 
 	"Tank #97 Name"
 	{
-		"ru"			"Poltergeist Tank"
+		"ru"			""
 	}
 
 	"Tank #97"
 	{
-		"ru"			"{mint}This Tank is immune to fire damage, runs fast, cloaks itself, and warps to survivors."
+		"ru"			""
 	}
 
 	"Tank #98 Name"
 	{
-		"ru"			"Psychotic Tank"
+		"ru"			""
 	}
 
 	"Tank #98"
 	{
-		"ru"			"{mint}This Tank can give survivors temporary health, absorb health from nearby infected, start meteor showers, spawn with a shield, and warp to survivors."
+		"ru"			""
 	}
 
 	"Tank #99 Name"
 	{
-		"ru"			"Reverse-Flash Tank"
+		"ru"			""
 	}
 
 	"Tank #99"
 	{
-		"ru"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
+		"ru"			""
 	}
 
 	"Tank #100 Name"
 	{
-		"ru"			"Spawner Tank"
+		"ru"			""
 	}
 
 	"Tank #100"
 	{
-		"ru"			"{mint}This Tank spawns zombies behind clouds of smoke within the area."
+		"ru"			""
 	}
 
 	"Tank #101 Name"
 	{
-		"ru"			"Zoom Tank"
+		"ru"			""
 	}
 
 	"Tank #101"
 	{
-		"ru"			"{mint}This Tank is immune to fire damage, runs really fast, and warps to survivors."
+		"ru"			""
 	}
 
 	"Tank #102 Name"
 	{
-		"ru"			"Trap Tank"
+		"ru"			""
 	}
 
 	"Tank #102"
 	{
-		"ru"			"{mint}This Tank is not what it seems."
+		"ru"			""
 	}
 
 	"Tank #103 Name"
 	{
-		"ru"			"Dread Tank"
+		"ru"			""
 	}
 
 	"Tank #103"
 	{
-		"ru"			"{mint}This Tank can partially blind survivors."
+		"ru"			""
 	}
 
 	"Tank #104 Name"
 	{
-		"ru"			"Rabid Tank"
+		"ru"			""
 	}
 
 	"Tank #104"
 	{
-		"ru"			"{mint}This Tank can partially drug and hurt survivors."
+		"ru"			""
 	}
 
 	"Tank #105 Name"
 	{
-		"ru"			"Tremor Tank"
+		"ru"			""
 	}
 
 	"Tank #105"
 	{
-		"ru"			"{mint}This Tank can hurl rocks at survivors."
+		"ru"			""
 	}
 
 	"Tank #106 Name"
 	{
-		"ru"			"Psyk0tik Tank"
+		"ru"			""
 	}
 
 	"Tank #106"
 	{
-		"ru"			"{mint}This Tank does extra damage and runs really fast while cloaking itself and slowing survivors down."
+		"ru"			""
 	}
 
 	"Tank #107 Name"
 	{
-		"ru"			"Apocalyptic Tank"
+		"ru"			""
 	}
 
 	"Tank #107"
 	{
-		"ru"			"{mint}This Tank is immune to fire damage, runs a little faster, starts meteor showers, panic events, and rock showers."
+		"ru"			""
 	}
 
 	"Tank #108 Name"
 	{
-		"ru"			"Darth Vader Tank"
+		"ru"			""
 	}
 
 	"Tank #108"
 	{
-		"ru"			"{mint}It's Darth Vader... And he is... A Mutant Tank with the Force!"
+		"ru"			""
 	}
 
 	"Tank #109 Name"
 	{
-		"ru"			"Drug Addict Tank"
+		"ru"			""
 	}
 
 	"Tank #109"
 	{
-		"ru"			"{mint}This Tank has a contagious addiction."
+		"ru"			""
 	}
 
 	"Tank #110 Name"
 	{
-		"ru"			"Grim Reaper Tank"
+		"ru"			""
 	}
 
 	"Tank #110"
 	{
-		"ru"			"{mint}This Tank runs a little faster, buries survivors, cloaks itself, and warps to survivors."
+		"ru"			""
 	}
 
 	"Tank #111 Name"
 	{
-		"ru"			"Horde Tank"
+		"ru"			""
 	}
 
 	"Tank #111"
 	{
-		"ru"			"{mint}This Tank can start panic events and puke on survivors to help prolong them."
+		"ru"			""
 	}
 
 	"Tank #112 Name"
 	{
-		"ru"			"Hulk Tank"
+		"ru"			""
 	}
 
 	"Tank #112"
 	{
-		"ru"			"{mint}Meet the Incredible Hulk! This Tank has most of the abilities of the Hulk!"
+		"ru"			""
 	}
 
 	"Tank #113 Name"
 	{
-		"ru"			"Ninja Tank"
+		"ru"			""
 	}
 
 	"Tank #113"
 	{
-		"ru"			"{mint}This Tank can teleport, move around silently, and cloak itself. Be very careful!"
+		"ru"			""
 	}
 
 	"Tank #114 Name"
 	{
-		"ru"			"Zen Tank"
+		"ru"			""
 	}
 
 	"Tank #114"
 	{
-		"ru"			"{mint}This Tank is too busy meditating to care about you."
+		"ru"			""
 	}
 
 	"Tank #115 Name"
 	{
-		"ru"			"The Boss (1st Form)"
+		"ru"			""
 	}
 
 	"Tank #115"
 	{
-		"ru"			"{mint}This Tank throws explosive rocks and periodically warps to survivors."
+		"ru"			""
 	}
 
 	"Tank #116 Name"
 	{
-		"ru"			"Steel Overlord (2nd Form)"
+		"ru"			""
 	}
 
 	"Tank #116"
 	{
-		"ru"			"{mint}This Tank runs a little faster, is immune to melee, is a bit stronger than usual, throws explosive rocks, can change survivors' gravity, and periodically warps to survivors."
+		"ru"			""
 	}
 
 	"Tank #117 Name"
 	{
-		"ru"			"Night Stalker (3rd Form)"
+		"ru"			""
 	}
 
 	"Tank #117"
 	{
-		"ru"			"{mint}This Tank runs a little faster, is immune to fire, is a bit weaker than usual, throws explosive rocks, can blind survivors, can go invisible, and periodically warps to survivors."
+		"ru"			""
 	}
 
 	"Tank #118 Name"
 	{
-		"ru"			"Spirit of Fire (4th Form)"
+		"ru"			""
 	}
 
 	"Tank #118"
 	{
-		"ru"			"{mint}This Tank runs a little faster, is immune to fire, is stronger than usual, throws explosive rocks, create fires, give survivors temporary health, jump periodically, and periodically warps to survivors."
+		"ru"			""
 	}
 
 	"Tank #119 Name"
 	{
-		"ru"			"Randomizer Tank"
+		"ru"			""
 	}
 
 	"Tank #119"
 	{
-		"ru"			"{mint}This Tank randomly switches into different Mutant Tank types and deals increased damage. Be careful..."
+		"ru"			""
 	}
 
 	"Tank #120 Name"
 	{
-		"ru"			"Shapeshifter Tank"
+		"ru"			""
 	}
 
 	"Tank #120"
 	{
-		"ru"			"{mint}This Tank can shapeshift into different Mutant Tank types. Don't underestimate it..."
+		"ru"			""
 	}
 
 	"Tank #121 Name"
 	{
-		"ru"			"Mudman Tank"
+		"ru"			""
 	}
 
 	"Tank #121"
 	{
-		"ru"			"{mint}This Tank is as annoying as any mudman."
+		"ru"			""
 	}
 
 	"Tank #122 Name"
 	{
-		"ru"			"Endgame Tank"
+		"ru"			""
 	}
 
 	"Tank #122"
 	{
-		"ru"			"{mint}Goodbye everyone!"
+		"ru"			""
 	}
 
 	"Tank #123 Name"
 	{
-		"ru"			"Playful Tank"
+		"ru"			""
 	}
 
 	"Tank #123"
 	{
-		"ru"			"{mint}This Tank doesn't do any damage. It just wants to play!"
+		"ru"			""
 	}
 
 	"Tank #124 Name"
 	{
-		"ru"			"Annoying Tank"
+		"ru"			""
 	}
 
 	"Tank #124"
 	{
-		"ru"			"{mint}This Tank just won't go away."
+		"ru"			""
 	}
 
-	// This is actually a valid Steam32ID, so don't uncomment this; it's just an example.
+	// На самом деле это действительный Steam32ID, поэтому не комментируйте его; это просто пример.
 	// --
 	// "STEAM_0:1:23456789 Name"
 	// {
-	//	"ru"			"Tank"
+	//	"ru"			"Танк"
 	// }
 	//
 	// "STEAM_0:1:23456789"
 	// {
-	//	"ru"			"{mint}This Tank is controlled by someone."
+	//	"ru"			"{mint}Этот Танк кем-то управляется."
 	// }
 	// --
-	// Add Tank Note phrases for your own Mutant Tanks below!
+	// Добавьте ниже переводимые фразы для ваших собственных танков-мутантов!
 }
