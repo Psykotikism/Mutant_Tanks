@@ -684,6 +684,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Extras Delay"				"3.0"
 
 			// Spawn this many Tanks on non-finale maps periodically.
@@ -702,6 +708,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Regular Delay"				"10.0"
 
 			// Spawn Tanks on non-finale maps every time this many seconds passes.
@@ -709,6 +721,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Regular Interval"			"300.0"
 
 			// How many waves of Tanks can spawn before the regular wave spawner stops.
@@ -1409,6 +1427,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0.0"
 
 			// The mode of the Mutant Tank's spawn status.
@@ -1820,6 +1842,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Random Duration"			"999999.0"
 
 			// The Mutant Tank switches to a random type every time this many seconds passes.
@@ -1828,6 +1856,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Random Interval"			"5.0"
 		}
 		"Transform"
@@ -1838,6 +1872,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Transform Delay"			"10.0"
 
 			// The Mutant Tank's transformations last this long.
@@ -1846,6 +1886,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Transform Duration"			"10.0"
 
 			// The types that the Mutant Tank can transform into.
@@ -2143,6 +2189,12 @@
 			// OFF: -1.0
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Attack Interval"			"-1.0"
 
 			// The Mutant Tank's claw attacks do this much damage.
@@ -2151,6 +2203,11 @@
 			// OFF: -1.0
 			// Minimum: 0.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 damage
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Claw Damage"				"-1.0"
 
 			// The Mutant Tank's rock throws do this much damage.
@@ -2159,6 +2216,11 @@
 			// OFF: -1.0
 			// Minimum: 0.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 damage
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Rock Damage"				"-1.0"
 
 			// Set the Mutant Tank's run speed.
@@ -2177,6 +2239,12 @@
 			// OFF: -1.0
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Throw Interval"			"-1.0"
 		}
 		"Immunities"
@@ -2284,6 +2352,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -2342,6 +2414,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Absorb Duration"			"5"
 
 			// The explosive damage received by the Mutant Tank is divided by this value.
@@ -2451,6 +2528,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -2496,7 +2577,7 @@
 			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Display a message whenever the abilities activate/deactivate.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
@@ -2508,6 +2589,16 @@
 			// 1: Display message only when "Acid Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			// 4: Display message only when "Acid Rock Break" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "hit,ability" - 3
+			// "rock" - 4
+			// "hit,rock" - 5
+			// "ability,rock" - 6
+			// "hit,ability,rock"/"all" - 7
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -2704,6 +2795,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -2760,6 +2855,12 @@
 			// 0: OFF
 			// 1: Display message only when "Aimless Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -2783,6 +2884,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Aimless Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -2904,6 +3011,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -2960,6 +3071,12 @@
 			// 0: OFF
 			// 1: Display message only when "Ammo Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -3104,6 +3221,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -3160,6 +3281,12 @@
 			// 0: OFF
 			// 1: Display message only when "Blind Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -3183,6 +3310,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Blind Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -3314,6 +3447,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -3359,7 +3496,7 @@
 			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Display a message whenever the abilities activate/deactivate.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
@@ -3371,6 +3508,16 @@
 			// 1: Display message only when "Bomb Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			// 4: Display message only when "Bomb Rock Break" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "hit,ability" - 3
+			// "rock" - 4
+			// "hit,rock" - 5
+			// "ability,rock" - 6
+			// "hit,ability,rock"/"all" - 7
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -3531,6 +3678,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -3587,6 +3738,12 @@
 			// 0: OFF
 			// 1: Display message only when "Bury Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The amount of temporary health given to survivors recovering from the Mutant Tank's bury ability.
@@ -3617,6 +3774,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Bury Duration"				"5.0"
 
 			// The Mutant Tank buries survivors this deep into the ground.
@@ -3624,6 +3787,10 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "shortest" - 0.1 height
+			// "tallest" - 999999.0 height
 			"Bury Height"				"50.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -3739,6 +3906,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"500.0"
 
 			// The ability is only effective toward human survivors.
@@ -3786,6 +3957,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Car Duration"				"5"
 
 			// The Mutant Tank's car shower drops a car every time this many seconds passes.
@@ -3802,6 +3978,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Car Lifetime"				"30.0"
 
 			// The Mutant Tank create car showers with these cars.
@@ -3903,6 +4085,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -3959,6 +4145,12 @@
 			// 0: OFF
 			// 1: Display message only when "Choke Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -3982,6 +4174,10 @@
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Choke Damage"				"5.0"
 
 			// The Mutant Tank chokes survivors in the air after this many seconds passes upon triggering the ability.
@@ -3989,6 +4185,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Choke Delay"				"1.0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -3997,6 +4199,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Choke Duration"			"5"
 
 			// The Mutant Tank brings survivors this high up into the air.
@@ -4004,6 +4211,10 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "shortest" - 0.1 height
+			// "tallest" - 999999.0 height
 			"Choke Height"				"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -4111,6 +4322,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"150.0"
 
 			// The ability is only effective toward human survivors.
@@ -4171,6 +4386,13 @@
 			// --
 			// Minimum: 0.0 (Until death)
 			// Maximum: 999999.0 (Longest)
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever"/"death" - 999999 seconds
 			"Clone Lifetime"			"0.0"
 
 			// The Mutant Tank's clone will be treated as a real Mutant Tank.
@@ -4280,6 +4502,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -4295,6 +4522,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -4342,6 +4573,10 @@
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Cloud Damage"				"5.0"
 		}
 	}
@@ -4388,6 +4623,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -4552,6 +4791,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -4608,6 +4851,12 @@
 			// 0: OFF
 			// 1: Display message only when "Drug Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -4631,6 +4880,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Drug Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -4660,6 +4914,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Drug Interval"				"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -4761,6 +5021,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -4817,6 +5081,12 @@
 			// 0: OFF
 			// 1: Display message only when "Drunk Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -4840,6 +5110,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Drunk Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -4894,6 +5169,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Drunk Speed Interval"			"1.5"
 
 			// The Mutant Tank causes the survivors to turn at a random direction every time this many seconds passes.
@@ -4901,6 +5182,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Drunk Turn Interval"			"0.5"
 		}
 	}
@@ -4975,6 +5262,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -5031,6 +5322,12 @@
 			// 0: OFF
 			// 1: Display message only when "Electric Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -5054,6 +5351,10 @@
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Electric Damage"			"5.0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -5062,6 +5363,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Electric Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -5091,6 +5397,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Electric Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -5192,6 +5504,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -5248,6 +5564,12 @@
 			// 0: OFF
 			// 1: Display message only when "Enforce Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -5271,6 +5593,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Enforce Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -5402,6 +5730,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -5450,6 +5782,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Fast Duration"				"5"
 
 			// The Mutant Tank's special speed.
@@ -5534,6 +5871,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -5579,7 +5920,7 @@
 			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Display a message whenever the abilities activate/deactivate.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
@@ -5591,6 +5932,16 @@
 			// 1: Display message only when "Fire Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
 			// 4: Display message only when "Fire Rock Break" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "hit,ability" - 3
+			// "rock" - 4
+			// "hit,rock" - 5
+			// "ability,rock" - 6
+			// "hit,ability,rock"/"all" - 7
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -5754,6 +6105,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -5810,6 +6165,12 @@
 			// 0: OFF
 			// 1: Display message only when "Fling Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -5992,6 +6353,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"150.0"
 
 			// The ability is only effective toward human survivors.
@@ -6040,6 +6405,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Fly Duration"				"30"
 
 			// The Mutant Tank's flight ability is this fast.
@@ -6139,6 +6509,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -6204,6 +6578,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Fragile Duration"			"5"
 
 			// The explosive damage received by the Mutant Tank is multiplied by this value.
@@ -6334,6 +6713,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -6350,6 +6734,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -6409,6 +6797,16 @@
 			// 1: Display message only when "Ghost Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
 			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "hit,ability" - 3
+			// "rock" - 4
+			// "hit,rock" - 5
+			// "ability,rock" - 6
+			// "hit,ability,rock"/"all" - 7
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -6439,6 +6837,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Ghost Fade Delay"			"5"
 
 			// The limit of the Mutant Tank's ghost fade effect.
@@ -6626,6 +7029,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -6674,6 +7081,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"God Duration"				"5"
 		}
 	}
@@ -6758,6 +7170,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -6805,7 +7221,7 @@
 			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Display a message whenever the abilities activate/deactivate.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
@@ -6817,6 +7233,16 @@
 			// 1: Display message only when "Gravity Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
 			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "hit,ability" - 3
+			// "rock" - 4
+			// "hit,rock" - 5
+			// "ability,rock" - 6
+			// "hit,ability,rock"/"all" - 7
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -6841,6 +7267,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Gravity Duration"			"5"
 
 			// The Mutant Tank's gravity force.
@@ -6983,6 +7414,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -6999,6 +7435,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -7046,7 +7486,7 @@
 			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Display a message whenever the abilities activate/deactivate.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
@@ -7058,6 +7498,16 @@
 			// 1: Display message only when "Heal Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
 			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "hit,ability" - 3
+			// "rock" - 4
+			// "hit,rock" - 5
+			// "ability,rock" - 6
+			// "hit,ability,rock"/"all" - 7
 			"Ability Message"			"0"
 
 			// The distance between an infected and the Mutant Tank needed to trigger the ability.
@@ -7120,6 +7570,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Heal Interval"				"5.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -7221,6 +7677,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -7339,6 +7799,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -7395,6 +7859,12 @@
 			// 0: OFF
 			// 1: Display message only when "Hurt Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -7418,6 +7888,10 @@
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Hurt Damage"				"5.0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -7426,6 +7900,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Hurt Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -7455,6 +7934,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Hurt Interval"				"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -7556,6 +8041,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -7612,6 +8101,12 @@
 			// 0: OFF
 			// 1: Display message only when "Hypno Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The bullet damage reflected towards survivors by the Mutant Tank is divided by this value.
@@ -7645,6 +8140,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Hypno Duration"			"5.0"
 
 			// The explosive damage reflected towards survivors by the Mutant Tank is divided by this value.
@@ -7804,6 +8305,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -7860,6 +8365,12 @@
 			// 0: OFF
 			// 1: Display message only when "Ice Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -7883,6 +8394,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Ice Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -8006,6 +8523,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -8062,6 +8583,12 @@
 			// 0: OFF
 			// 1: Display message only when "Idle Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -8199,6 +8726,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -8255,6 +8786,12 @@
 			// 0: OFF
 			// 1: Display message only when "Invert Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -8278,6 +8815,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Invert Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -8379,6 +8922,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -8523,6 +9070,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -8582,6 +9133,16 @@
 			// 1: Display message only when "Jump Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
 			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "hit,ability" - 3
+			// "rock" - 4
+			// "hit,rock" - 5
+			// "ability,rock" - 6
+			// "hit,ability,rock"/"all" - 7
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -8606,6 +9167,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Jump Duration"				"5"
 
 			// The Mutant Tank and survivors jump this high off a surface.
@@ -8613,6 +9179,10 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "shortest" - 0.1 height
+			// "tallest" - 999999.0 height
 			"Jump Height"				"300.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -8642,6 +9212,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Jump Interval"				"1.0"
 
 			// The mode of the Mutant Tank's jumping ability.
@@ -8699,6 +9275,10 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "shortest" - 0.1 height
+			// "tallest" - 999999.0 height
 			"Jump Sporadic Height"			"750.0"
 		}
 	}
@@ -8759,6 +9339,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -8815,6 +9399,12 @@
 			// 0: OFF
 			// 1: Display message only when "Kamikaze Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// Removes the death model of the survivor when killed.
@@ -8959,6 +9549,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -9015,6 +9609,12 @@
 			// 0: OFF
 			// 1: Display message only when "Lag Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -9038,6 +9638,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Lag Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -9160,6 +9765,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -9207,6 +9816,10 @@
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Laser Damage"				"5.0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -9215,6 +9828,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Laser Duration"			"5"
 
 			// The Mutant Tank shoots lasers at survivors every time this many seconds passes.
@@ -9223,6 +9841,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Laser Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -9309,6 +9933,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -9365,6 +9993,12 @@
 			// 0: OFF
 			// 1: Display message only when "Leech Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -9388,6 +10022,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Leech Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -9417,6 +10056,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Leech Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -9520,6 +10165,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -9567,6 +10216,10 @@
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Lightning Damage"			"5.0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -9575,6 +10228,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Lightning Duration"			"5"
 
 			// The Mutant Tank's lightning storm strikes every time this many seconds passes.
@@ -9583,6 +10241,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Lightning Interval"			"1.0"
 		}
 	}
@@ -9643,6 +10307,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -9658,6 +10327,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -9739,6 +10412,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Medic Interval"			"5.0"
 
 			// The special infected's max health.
@@ -9842,6 +10521,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"500.0"
 
 			// The ability is only effective toward human survivors.
@@ -9890,6 +10573,10 @@
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Meteor Damage"				"5.0"
 
 			// The Mutant Tank's ability effects last this long.
@@ -9899,6 +10586,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Meteor Duration"			"5"
 
 			// The Mutant Tank's meteor shower drops a meteorite every time this many seconds passes.
@@ -9915,6 +10607,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Meteor Lifetime"				"15.0"
 
 			// The mode of the Mutant Tank's meteor shower ability.
@@ -9995,6 +10693,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"150.0"
 
 			// The ability is only effective toward human survivors.
@@ -10048,6 +10750,13 @@
 			// --
 			// Minimum: 0.0 (Until death)
 			// Maximum: 999999.0 (Longest)
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever"/"death" - 999999 seconds
 			"Minion Lifetime"			"0.0"
 
 			// Remove all minions spawned by the Mutant Tank when it dies.
@@ -10139,6 +10848,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -10154,6 +10868,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10279,6 +10997,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10335,6 +11057,12 @@
 			// 0: OFF
 			// 1: Display message only when "Nullify Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -10358,6 +11086,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Nullify Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -10472,6 +11206,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10519,6 +11257,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Omni Duration"				"5"
 
 			// The mode of the Mutant Tank's omni ability.
@@ -10598,6 +11341,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -10613,6 +11361,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10660,6 +11412,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Panic Interval"			"5.0"
 		}
 	}
@@ -10734,6 +11492,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -10790,6 +11552,12 @@
 			// 0: OFF
 			// 1: Display message only when "Pimp Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -10813,6 +11581,10 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Pimp Damage"				"5"
 
 			// The Mutant Tank's ability effects last this long.
@@ -10821,6 +11593,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Pimp Duration"				"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -10850,6 +11627,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Pimp Interval"				"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -10954,6 +11737,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -11010,6 +11797,12 @@
 			// 0: OFF
 			// 1: Display message only when "Puke Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -11175,6 +11968,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -11230,6 +12027,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Pyro Duration"				"5"
 
 			// The mode of the Mutant Tank's damage and speed boosts.
@@ -11322,6 +12124,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -11378,6 +12184,12 @@
 			// 0: OFF
 			// 1: Display message only when "Quiet Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -11401,6 +12213,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Quiet Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -11523,6 +12341,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -11579,6 +12401,12 @@
 			// 0: OFF
 			// 1: Display message only when "Recoil Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -11602,6 +12430,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Recoil Duration"			"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -11709,6 +12543,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -11724,6 +12563,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -11781,6 +12624,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Regen Interval"			"1.0"
 
 			// The Mutant Tank stops regenerating health at this value.
@@ -11842,6 +12691,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -11981,6 +12834,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -12037,6 +12894,12 @@
 			// 0: OFF
 			// 1: Display message only when "Restart Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -12192,6 +13055,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"500.0"
 
 			// The ability is only effective toward human survivors.
@@ -12239,6 +13106,10 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Rock Damage"				"5"
 
 			// The Mutant Tank's ability effects last this long.
@@ -12248,6 +13119,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Rock Duration"				"5"
 
 			// The Mutant Tank's rock shower drops a rock every time this many seconds passes.
@@ -12343,6 +13219,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -12399,6 +13279,12 @@
 			// 0: OFF
 			// 1: Display message only when "Rocket Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// Removes the death model of the survivor when killed.
@@ -12428,6 +13314,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Rocket Delay"				"1.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -12552,6 +13444,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -12608,6 +13504,12 @@
 			// 0: OFF
 			// 1: Display message only when "Shake Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -12666,6 +13568,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Shake Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -12695,6 +13602,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Shake Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -12790,6 +13703,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -12805,6 +13723,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -12861,6 +13783,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Shield Delay"				"5"
 
 			// Display the Mutant Tank's shield's health.
@@ -13024,6 +13951,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -13080,6 +14011,12 @@
 			// 0: OFF
 			// 1: Display message only when "Shove Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -13138,6 +14075,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Shove Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -13167,6 +14109,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Shove Interval"			"1.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -13268,6 +14216,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -13324,6 +14276,12 @@
 			// 0: OFF
 			// 1: Display message only when "Slow Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -13347,6 +14305,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Slow Duration"				"5.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -13477,6 +14441,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -13533,6 +14501,12 @@
 			// 0: OFF
 			// 1: Display message only when "Smash Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// Removes the death model of the survivor when killed.
@@ -13677,6 +14651,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -13733,6 +14711,12 @@
 			// 0: OFF
 			// 1: Display message only when "Smite Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// Removes the death model of the survivor when killed.
@@ -13878,6 +14862,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"150.0"
 
 			// The ability is only effective toward human survivors.
@@ -13925,6 +14913,10 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Spam Damage"				"5"
 
 			// The Mutant Tank's ability effects last this long.
@@ -13934,6 +14926,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Spam Duration"				"5"
 
 			// The Mutant Tank's rock spammer throws a rock every time this many seconds passes.
@@ -14010,6 +15007,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -14025,6 +15027,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -14072,6 +15078,10 @@
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Splash Damage"				"5.0"
 
 			// The Mutant Tank deals splash damage to nearby survivors every time this many seconds passes.
@@ -14080,6 +15090,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Splash Interval"			"5.0"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -14153,6 +15169,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -14168,6 +15189,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -14215,6 +15240,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Splatter Interval"			"5.0"
 
 			// The type of the Mutant Tank's splatter.
@@ -14308,6 +15339,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"500.0"
 
 			// The ability is only effective toward human survivors.
@@ -14344,10 +15379,10 @@
 			// Maximum: 15
 			// --
 			// 0: OFF
-			// 1: Display message only when "Ability Enabled" is set to "1".
-			// 2: Display message only when "Ability Enabled" is set to "2".
-			// 4: Display message only when "Ability Enabled" is set to "3".
-			// 8: Display message only when "Ability Enabled" is set to "4".
+			// 1: Display message only when "Ability Enabled" includes option "1".
+			// 2: Display message only when "Ability Enabled" includes option "2".
+			// 4: Display message only when "Ability Enabled" includes option "4".
+			// 8: Display message only when "Ability Enabled" includes option "8".
 			"Ability Message"			"0"
 
 			// Cars thrown by the Mutant Tank will disappear after this many seconds.
@@ -14356,6 +15391,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Throw Car Lifetime"				"10.0"
 
 			// The Mutant Tank throws these cars.
@@ -14399,6 +15440,13 @@
 			// --
 			// Minimum: 0.0 (Until death)
 			// Maximum: 999999.0 (Longest)
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever"/"death" - 999999 seconds
 			"Throw Infected Lifetime"		"0.0"
 
 			// The Mutant Tank throws these special infected.
@@ -14439,6 +15487,10 @@
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Throw Witch Damage"			"5.0"
 
 			// Witches thrown by the Mutant Tank die after this many seconds.
@@ -14446,6 +15498,13 @@
 			// --
 			// Minimum: 0.0 (Until death)
 			// Maximum: 999999.0 (Longest)
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever"/"death" - 999999 seconds
 			"Throw Witch Lifetime"			"0.0"
 
 			// Remove all Witches thrown by the Mutant Tank when it dies.
@@ -14521,6 +15580,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -14653,6 +15716,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -14720,6 +15787,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Ultimate Duration"			"5"
 
 			// The Mutant Tank can activate ultimate mode when its health is equal to or below this value.
@@ -14794,6 +15866,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -14884,6 +15960,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -15004,6 +16084,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -15060,6 +16144,12 @@
 			// 0: OFF
 			// 1: Display message only when "Vision Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -15083,6 +16173,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Vision Duration"			"5"
 
 			// The Mutant Tank sets survivors' fields of view to this value.
@@ -15215,6 +16310,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -15231,6 +16331,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -15278,7 +16382,7 @@
 			// "attack,hurt,range" - 7
 			"Ability Effect"			"0"
 
-			// Display a message whenever the ability activates/deactivates.
+			// Display a message whenever the abilities activate/deactivate.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Add up numbers together for different results.
@@ -15290,6 +16394,16 @@
 			// 1: Display message only when "Warp Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is set to "1" or "3".
 			// 4: Display message only when "Ability Enabled" is set to "2" or "3".
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "hit,ability" - 3
+			// "rock" - 4
+			// "hit,rock" - 5
+			// "ability,rock" - 6
+			// "hit,ability,rock"/"all" - 7
 			"Ability Message"			"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -15334,6 +16448,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Warp Interval"				"5.0"
 
 			// The mode of the Mutant Tank's warp ability.
@@ -15444,6 +16564,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -15500,6 +16624,12 @@
 			// 0: OFF
 			// 1: Display message only when "Whirl Hit" is enabled.
 			// 2: Display message only when "Ability Enabled" is enabled.
+			// --
+			// Keywords:
+			// "none"/"off" - 0
+			// "hit" - 1
+			// "ability" - 2
+			// "both"/"all"/"hit,ability" - 3
 			"Ability Message"			"0"
 
 			// The axis of the Mutant Tank's whirl effect.
@@ -15537,6 +16667,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Whirl Duration"			"5"
 
 			// Enable the Mutant Tank's claw/rock attack.
@@ -15661,6 +16796,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -15715,6 +16854,10 @@
 			// --
 			// Minimum: 1.0
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
 			"Witch Damage"				"5.0"
 
 			// Witches spawned by the Mutant Tank die after this many seconds.
@@ -15722,6 +16865,13 @@
 			// --
 			// Minimum: 0.0 (Until death)
 			// Maximum: 999999.0 (Longest)
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever"/"death" - 999999 seconds
 			"Witch Lifetime"			"0.0"
 
 			// The distance between a common infected and the Mutant Tank needed to trigger the ability.
@@ -15787,6 +16937,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -15918,6 +17072,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -15965,6 +17123,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Yell Duration"				"5"
 
 			// The distance between a survivor and the Mutant Tank needed to trigger the ability.
@@ -16037,6 +17200,11 @@
 			// --
 			// Minimum: 1
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Duration"			"5"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -16052,6 +17220,10 @@
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0 (Farthest)
+			// --
+			// Keywords:
+			// "disabled"/"false"/"off"/"no" - 0.0 range
+			// "farthest" - 999999.0 range
 			"Open Areas Only"			"0"
 
 			// The ability is only effective toward human survivors.
@@ -16106,6 +17278,12 @@
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Zombie Interval"			"5.0"
 
 			// The mode of the Mutant Tank's zombie mob spawn ability.

@@ -1917,7 +1917,7 @@ Examples:
 
 **KasperH** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
 
-**Blueberry** - For Russian translations.
+**Blueberry** - For Russian translations and suggesting ideas.
 
 **yuzumi** - For simplified Chinese translations and suggesting ideas.
 
