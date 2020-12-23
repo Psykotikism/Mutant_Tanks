@@ -1996,6 +1996,14 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 	{
 		return curVal;
 	}
+	else if (StrEqual(value, "min", false))
+	{
+		return min;
+	}
+	else if (StrEqual(value, "max", false))
+	{
+		return max;
+	}
 	else if (StrContains(key, "chance", false) != -1 && min == 0.0 && max == 100.0)
 	{
 		if (StrEqual(value, "never", false))
@@ -2019,13 +2027,62 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 			return max;
 		}
 	}
-	else if (StrContains(key, "range", false) != -1 && min == 1.0 && max == 999999.0)
+	else if ((min == -1.0 || min == 1.0) && max == 999999.0)
 	{
-		if (StrEqual(value, "closest", false))
+		if (min == -1.0 && StrContains(key, "damage", false) != -1 && (StrEqual(value, "nodmg", false) || StrEqual(value, "friendly", false) || StrEqual(value, "harmless", false)))
+		{
+			return 0.0;
+		}
+		else if ((StrContains(key, "damage", false) != -1 && StrEqual(value, "weakest", false)) || (StrContains(key, "range", false) != -1 && StrEqual(value, "closest", false)))
+		{
+			return min;
+		}
+		else if ((StrContains(key, "damage", false) != -1 && StrEqual(value, "strongest", false)) || (StrContains(key, "range", false) != -1 && StrEqual(value, "farthest", false)))
+		{
+			return max;
+		}
+	}
+	else if (StrContains(key, "open", false) == 0 && min == 0.0 && max == 999999.0)
+	{
+		if (StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
 		{
 			return min;
 		}
 		else if (StrEqual(value, "farthest", false))
+		{
+			return max;
+		}
+	}
+	else if ((StrContains(key, "delay", false) != -1 || StrContains(key, "duration", false) != -1 || StrContains(key, "interval", false) != -1 || StrContains(key, "lifetime", false) != -1) && (min == -1.0 || min == 0.0 || min == 0.1) && max == 999999.0)
+	{
+		if (min == 0.0 && (StrEqual(value, "never", false) || StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false)))
+		{
+			return min;
+		}
+		else if (StrEqual(value, "milli", false) || StrEqual(value, "millisecond", false))
+		{
+			return (min == 0.1) ? min : 0.1;
+		}
+		else if (StrEqual(value, "second", false))
+		{
+			return 1.0;
+		}
+		else if (StrEqual(value, "minute", false))
+		{
+			return 60.0;
+		}
+		else if (StrEqual(value, "forever", false))
+		{
+			return max;
+		}
+	}
+	else if (StrContains(key, "height", false) != -1 && min == 0.1 && max == 999999.0)
+	{
+		if (StrEqual(value, "shortest", false))
+		{
+			return min;
+		}
+		else if (StrEqual(value, "tallest", false))
 		{
 			return max;
 		}
@@ -2172,6 +2229,14 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 	{
 		return curVal;
 	}
+	else if (StrEqual(value, "min", false))
+	{
+		return min;
+	}
+	else if (StrEqual(value, "max", false))
+	{
+		return max;
+	}
 	else if (min == 0 && max == 1)
 	{
 		if (StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
@@ -2228,7 +2293,64 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 		{
 			return 6;
 		}
-		else if (StrEqual(value, "attack,hurt,range", false))
+		else if (StrEqual(value, "attack,hurt,range", false) || StrEqual(value, "all", false))
+		{
+			return max;
+		}
+	}
+	else if (StrContains(key, "message", false) != -1 && min == 0 && (max == 3 || max == 7))
+	{
+		if (StrEqual(value, "none", false) || StrEqual(value, "off", false))
+		{
+			return min;
+		}
+		else if (StrEqual(value, "hit", false))
+		{
+			return 1;
+		}
+		else if (StrEqual(value, "ability", false))
+		{
+			return 2;
+		}
+		else if ((max == 3 && (StrEqual(value, "both", false) || StrEqual(value, "all", false))) || StrEqual(value, "hit,ability", false))
+		{
+			return (max == 3) ? max : 3;
+		}
+		else if (max == 7)
+		{
+			if (StrEqual(value, "rock", false))
+			{
+				return 4;
+			}
+			else if (StrEqual(value, "hit,rock", false))
+			{
+				return 5;
+			}
+			else if (StrEqual(value, "ability,rock", false))
+			{
+				return 6;
+			}
+			else if (StrEqual(value, "hit,ability,rock", false) || StrEqual(value, "all", false))
+			{
+				return max;
+			}
+		}
+	}
+	else if ((StrContains(key, "delay", false) != -1 || StrContains(key, "duration", false) != -1 || StrContains(key, "interval", false) != -1 || StrContains(key, "lifetime", false) != -1) && (min == 0 || min == 1) && max == 999999)
+	{
+		if (min == 0 && (StrEqual(value, "never", false) || StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false)))
+		{
+			return min;
+		}
+		else if (StrEqual(value, "second", false))
+		{
+			return (min == 1) ? min : 1;
+		}
+		else if (StrEqual(value, "minute", false))
+		{
+			return 60;
+		}
+		else if (StrEqual(value, "forever", false))
 		{
 			return max;
 		}
