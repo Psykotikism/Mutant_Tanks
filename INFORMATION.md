@@ -653,6 +653,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"600"
 
 			// Human-controlled Mutant Tanks are exempted from cooldowns when using the "sm_mutanttank" command to switch their current Mutant Tank type.
@@ -2330,6 +2336,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -2337,6 +2347,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -2513,6 +2529,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -2520,6 +2540,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -2780,6 +2806,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -2787,6 +2817,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -2996,6 +3032,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -3003,6 +3043,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -3206,6 +3252,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -3213,6 +3263,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -3432,6 +3488,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -3439,6 +3499,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -3663,6 +3729,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -3670,6 +3740,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -3884,6 +3960,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -3891,6 +3971,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -4070,6 +4156,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -4077,6 +4167,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -4307,6 +4403,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -4314,6 +4414,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -4487,6 +4593,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -4494,6 +4604,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
@@ -4776,6 +4892,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -4783,6 +4903,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -5006,6 +5132,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -5013,6 +5143,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -5247,6 +5383,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -5254,6 +5394,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -5489,6 +5635,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -5496,6 +5646,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -5708,6 +5864,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -5715,6 +5875,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -5856,6 +6022,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -5863,6 +6033,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -6090,6 +6266,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -6097,6 +6277,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -6331,6 +6517,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -6338,6 +6528,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -6487,6 +6683,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -6494,6 +6694,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -6698,6 +6904,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -6705,6 +6915,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
@@ -7007,6 +7223,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -7014,6 +7234,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -7147,6 +7373,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -7154,6 +7384,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -7399,6 +7635,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -7406,6 +7646,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
@@ -7784,6 +8030,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -7791,6 +8041,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -8026,6 +8282,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -8033,6 +8293,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -8290,6 +8556,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -8297,6 +8567,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -8508,6 +8784,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -8515,6 +8795,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -8711,6 +8997,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -8718,6 +9008,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -9047,6 +9343,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -9054,6 +9354,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -9534,6 +9840,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -9541,6 +9851,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -9743,6 +10059,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -9750,6 +10070,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -9918,6 +10244,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -9925,6 +10255,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -10143,6 +10479,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -10150,6 +10490,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -10292,6 +10638,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -10299,6 +10649,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
@@ -10499,6 +10855,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -10506,6 +10866,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -10678,6 +11044,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -10685,6 +11055,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -10833,6 +11209,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -10840,6 +11220,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
@@ -10982,6 +11368,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -10989,6 +11379,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -11184,6 +11580,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -11191,6 +11591,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -11326,6 +11732,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -11333,6 +11743,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
@@ -11477,6 +11893,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -11484,6 +11904,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -11722,6 +12148,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -11729,6 +12159,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -11946,6 +12382,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -11953,6 +12393,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -12109,6 +12555,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -12116,6 +12566,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -12326,6 +12782,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -12333,6 +12793,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -12528,6 +12994,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -12535,6 +13005,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
@@ -12683,6 +13159,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// The ability can only activate in open areas.
@@ -12819,6 +13299,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -12826,6 +13310,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -13033,6 +13523,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -13040,6 +13534,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -13204,6 +13704,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -13211,6 +13715,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -13429,6 +13939,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -13436,6 +13950,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -13688,6 +14208,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -13695,6 +14219,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
@@ -13936,6 +14466,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -13943,6 +14477,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -14201,6 +14741,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -14208,6 +14752,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -14426,6 +14976,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -14433,6 +14987,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -14636,6 +15196,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -14643,6 +15207,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -14840,6 +15410,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -14847,6 +15421,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -14992,6 +15572,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -14999,6 +15583,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
@@ -15154,6 +15744,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -15161,6 +15755,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
@@ -15324,6 +15924,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -15331,6 +15935,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -15565,6 +16175,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -15572,6 +16186,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -15701,6 +16321,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -15708,6 +16332,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -15851,6 +16481,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -15858,6 +16492,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -16069,6 +16709,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -16076,6 +16720,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -16295,6 +16945,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -16302,6 +16956,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.
@@ -16549,6 +17209,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -16556,6 +17220,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -16781,6 +17451,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -16788,6 +17462,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The ability can only activate in open areas.
@@ -17050,6 +17730,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -17057,6 +17741,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The mode of how human-controlled Mutant Tanks activate their abilities.
@@ -17185,6 +17875,10 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "none"/"off" - 0 ammo
+			// "infinite" - 999999 ammo
 			"Human Ammo"				"5"
 
 			// Human-controlled Mutant Tanks must wait this long before using their abilities again.
@@ -17192,6 +17886,12 @@
 			// --
 			// Minimum: 0
 			// Maximum: 999999
+			// --
+			// Keywords:
+			// "never"/"disabled"/"false"/"off"/"no" - 0 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
 			"Human Cooldown"			"30"
 
 			// The Mutant Tank's ability effects last this long.

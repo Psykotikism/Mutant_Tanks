@@ -1919,7 +1919,7 @@ Examples:
 
 **Blueberry** - For Russian translations and suggesting ideas.
 
-**yuzumi** - For simplified Chinese translations and suggesting ideas.
+**yuzumi** - For Simplified Chinese translations and suggesting ideas.
 
 **Mi.Cura, 3aljiyavslgazana** - For reporting issues, suggesting ideas, testing features, and overall support.
 
