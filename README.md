@@ -31,7 +31,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 13. Create all kinds of combinations of abilities.
 14. Supports multiple languages.
 15. Chat color tags for translation files.
-16. Detects idle or bugged (no behavior) Tanks.
+16. Detects idle or bugged Tanks.
 17. Toggle damage scaling based on difficulty.
 18. Fully customizable reward system.
 

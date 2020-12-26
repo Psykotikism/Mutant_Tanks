@@ -26,6 +26,7 @@
 - Fixed the `Boss` feature not carrying over bosses' stats to their evolution stages.
 - Fixed the `Randomization` feature only changing the Tank once.
 - Fixed the `Transformation` feature disabling itself after the first transformation ends. (Thanks to Mi.Cura for testing and reporting!)
+- Fixed Tank spawns exceeding the limits set by the `Finale Amount`, `Finale Waves`, and `Regular Amount` settings.
 
 #### Config Files
 - Fixed the config parser storing previous values.
@@ -77,6 +78,7 @@
 	- Fixed clones being detected by the `Finale Amount` and `Finale Waves` settings.
 	- Fixed clones not being replaced when they have a different Mutant Tank type from the Tank. (Thanks to 3aljiyavslgazana for testing and reporting!)
 	- Fixed rare cases where Mutant Tanks are counted as clones. (Thanks to Mi.Cura for testing and reporting!)
+	- Fixed clone count not supporting kicked clones.
 	- Fixed the ability not being optional.
 
 - Drug
@@ -125,6 +127,7 @@
 
 - Minion
 	- Fixed minions being replaced even when the `Minion Replace` setting is set to `0`.
+	- Fixed minion count not supporting kicked minions.
 
 - Omni
 	- Fixed type changes not being tracked properly. (Thanks to Mi.Cura for testing and reporting!)
@@ -488,6 +491,7 @@
 	- The `Shield Type` setting now allows combinations of options.
 	- Added the `Shield Throw Chance` setting.
 	- Human-controlled Tanks are now put into thirdperson for `1.5` seconds after toggling the shield.
+	- Added a sound effect.
 
 - Shove
 	- Incapacitated or ledge-hanging survivors are no longer affected.
