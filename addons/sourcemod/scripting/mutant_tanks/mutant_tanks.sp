@@ -1422,7 +1422,10 @@ public void OnClientDisconnect(int client)
 {
 	if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsValidClient(client, MT_CHECK_FAKECLIENT))
 	{
-		g_esGeneral.g_iTankCount--;
+		if (!bIsCustomTank(client))
+		{
+			g_esGeneral.g_iTankCount--;
+		}
 
 		vCalculateDeath(client);
 	}
@@ -8002,7 +8005,6 @@ static void vMutateTank(int tank)
 		}
 
 		g_esGeneral.g_iChosenType = 0;
-		g_esGeneral.g_iTankCount++;
 
 		vTankSpawn(tank);
 
@@ -8197,7 +8199,7 @@ public void vTankSpawnFrame(DataPack pack)
 			}
 			case 0:
 			{
-				if (!g_esGeneral.g_bCloneInstalled || (g_esGeneral.g_bCloneInstalled && !MT_IsTankClone(iTank)))
+				if (!bIsCustomTank(iTank))
 				{
 					static int iHumanCount, iSpawnHealth, iExtraHealthNormal, iExtraHealthBoost, iExtraHealthBoost2, iExtraHealthBoost3, iNoBoost, iBoost,
 						iBoost2, iBoost3, iNegaNoBoost, iNegaBoost, iNegaBoost2, iNegaBoost3, iFinalNoHealth, iFinalHealth, iFinalHealth2, iFinalHealth3;
@@ -8249,6 +8251,8 @@ public void vTankSpawnFrame(DataPack pack)
 						MT_PrintToChat(iTank, "%s %t", MT_TAG2, "AbilityButtons3");
 						MT_PrintToChat(iTank, "%s %t", MT_TAG2, "AbilityButtons4");
 					}
+
+					g_esGeneral.g_iTankCount++;
 				}
 
 				g_esPlayer[iTank].g_iTankHealth = GetEntProp(iTank, Prop_Data, "m_iMaxHealth");
@@ -8377,6 +8381,11 @@ static bool bIsCoreAdminImmune(int survivor, int tank)
 	iGlobalFlags = g_esGeneral.g_iImmunityFlags;
 	return (iTypeFlags != 0 && ((iTypePlayerFlags != 0 && ((iTypeFlags & iTypePlayerFlags) || (iTypePlayerFlags & iTypeFlags))) || (iPlayerFlags != 0 && ((iTypeFlags & iPlayerFlags) || (iPlayerFlags & iTypeFlags))) || (iAdminFlags != 0 && ((iTypeFlags & iAdminFlags) || (iAdminFlags & iTypeFlags)))))
 		|| (iGlobalFlags != 0 && ((iTypePlayerFlags != 0 && ((iGlobalFlags & iTypePlayerFlags) || (iTypePlayerFlags & iGlobalFlags))) || (iPlayerFlags != 0 && ((iGlobalFlags & iPlayerFlags) || (iPlayerFlags & iGlobalFlags))) || (iAdminFlags != 0 && ((iGlobalFlags & iAdminFlags) || (iAdminFlags & iGlobalFlags)))));
+}
+
+static bool bIsCustomTank(int tank)
+{
+	return g_esGeneral.g_bCloneInstalled && MT_IsTankClone(tank);
 }
 
 static bool bIsCustomTankSupported(int tank)
@@ -8773,7 +8782,7 @@ static int iGetTankCount(bool manual, bool include = false)
 			{
 				if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 				{
-					if (!include && g_esGeneral.g_bCloneInstalled && MT_IsTankClone(iTank))
+					if (!include && bIsCustomTank(iTank))
 					{
 						continue;
 					}
@@ -8887,7 +8896,10 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 	}
 	else if (bIsTankSupported(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		g_esGeneral.g_iTankCount--;
+		if (!bIsCustomTank(pThis))
+		{
+			g_esGeneral.g_iTankCount--;
+		}
 
 		if (bIsCustomTankSupported(pThis))
 		{

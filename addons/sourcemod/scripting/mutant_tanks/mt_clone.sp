@@ -167,6 +167,17 @@ public void OnClientPutInServer(int client)
 	vRemoveClone(client);
 }
 
+public void OnClientDisconnect(int client)
+{
+	if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_bCloned)
+	{
+		g_esPlayer[g_esPlayer[client].g_iOwner].g_iCount--;
+		g_esPlayer[client].g_iOwner = 0;
+
+		vRemoveClone(client);
+	}
+}
+
 public void OnClientDisconnect_Post(int client)
 {
 	vRemoveClone(client);

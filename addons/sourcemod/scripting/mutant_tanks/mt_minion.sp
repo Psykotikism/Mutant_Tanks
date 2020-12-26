@@ -134,6 +134,17 @@ public void OnClientPutInServer(int client)
 	vRemoveMinion(client);
 }
 
+public void OnClientDisconnect(int client)
+{
+	if (bIsSpecialInfected(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_bMinion)
+	{
+		g_esPlayer[g_esPlayer[client].g_iOwner].g_iCount--;
+		g_esPlayer[client].g_iOwner = 0;
+
+		vRemoveMinion(client);
+	}
+}
+
 public void OnClientDisconnect_Post(int client)
 {
 	vRemoveMinion(client);
@@ -681,8 +692,8 @@ static void vMinion(int tank)
 						TeleportEntity(iSpecial, flHitPosition, NULL_VECTOR, NULL_VECTOR);
 
 						g_esPlayer[iSpecial].g_bMinion = true;
-						g_esPlayer[tank].g_iCount++;
 						g_esPlayer[iSpecial].g_iOwner = tank;
+						g_esPlayer[tank].g_iCount++;
 
 						if (g_esCache[tank].g_flMinionLifetime > 0.0)
 						{

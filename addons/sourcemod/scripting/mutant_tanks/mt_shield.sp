@@ -45,6 +45,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
 
+#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
+
 #define MT_CONFIG_SECTION "shieldability"
 #define MT_CONFIG_SECTION2 "shield ability"
 #define MT_CONFIG_SECTION3 "shield_ability"
@@ -430,30 +432,29 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker) && g_esPlayer[victim].g_bActivated && damage >= 0.5)
 	{
-		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker) && g_esPlayer[victim].g_bActivated)
+		if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
+			vShieldAbility(victim, false);
+
+			return Plugin_Continue;
+		}
+
+		if (((damagetype & DMG_BULLET) && g_esCache[victim].g_iShieldType & MT_SHIELD_BULLET) || (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT)
+			|| (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE) || ((damagetype & DMG_BURN) && g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE)
+			|| (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE))
+		{
+			g_esPlayer[victim].g_flHealth -= damage;
+			if (g_esCache[victim].g_flShieldHealth == 0.0 || g_esPlayer[victim].g_flHealth < 1.0)
 			{
 				vShieldAbility(victim, false);
-
-				return Plugin_Continue;
 			}
-
-			if (((damagetype & DMG_BULLET) && g_esCache[victim].g_iShieldType & MT_SHIELD_BULLET) || (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT)
-				|| (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE) || ((damagetype & DMG_BURN) && g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE)
-				|| (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE))
-			{
-				g_esPlayer[victim].g_flHealth -= damage;
-				if (g_esCache[victim].g_flShieldHealth == 0.0 || g_esPlayer[victim].g_flHealth < 1.0)
-				{
-					vShieldAbility(victim, false);
-				}
-			}
-
-			return Plugin_Handled;
 		}
+
+		EmitSoundToAll(SOUND_METAL, victim);
+
+		return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
