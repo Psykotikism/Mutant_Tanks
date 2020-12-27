@@ -1,5 +1,5 @@
 Readme **languages:**
-  - [Русский](https://github.com/Blueberryy/Mutant_Tanks/blob/master/README_RU.md)
+  - [English](https://github.com/Blueberryy/Mutant_Tanks/blob/master/README.md)
 
 # Mutant Tanks
 
