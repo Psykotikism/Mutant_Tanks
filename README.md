@@ -1901,6 +1901,8 @@ Examples:
 
 **Ernecio** - For the [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) and [[L4D1 & L4D2] Improved Flying Tank](https://forums.alliedmods.net/showthread.php?t=325719) plugin.
 
+**Luckylock** - For the [[L4D & L4D2] Tank Rock Lag Compensation](https://forums.alliedmods.net/showthread.php?t=315345) plugin.
+
 **Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
 
 **epz (epzminion)** - For help with gamedata signatures, offsets, addresses, and invaluable input.

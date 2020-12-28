@@ -8,6 +8,7 @@
 - Fixed some potential errors caused by invalid weapon slots.
 - Fixed the SourceMod admin menu plugin not being optional.
 - Fixed rare cases where non-Mutant Tanks are counted as Mutant Tanks.
+- Fixed Tank rocks not breaking when hitting special and common infected.
 
 #### Core Plugin
 - Fixed log files being created even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
@@ -429,6 +430,7 @@
 - Ghost
 	- Rocks thrown by Tanks are now affected by the fade feature. (Requested by 3aljiyavslgazana.)
 	- Incapacitated or ledge-hanging survivors are no longer affected.
+	- Special infected by the fade feature are now reverted back to normal upon death. (Requested by 3aljiyavslgazana.)
 
 - God
 	- Added the `Immunity Flags` setting.
@@ -440,6 +442,9 @@
 - Hypno
 	- Updated method for hurting teammates to bypass plugins that block friendly-fire.
 	- Incapacitated or ledge-hanging survivors are no longer affected.
+
+- Ice
+	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Idle
 	- Applied a new idle fix method. (Thanks to Lux for the code!)
@@ -516,6 +521,7 @@
 	- Added the `Throw Witch Damage` setting.
 	- Added the `Throw Witch Lifetime` setting.
 	- Added the `Throw Witch Remove` setting.
+	- Thrown Witches now use default speed when set on fire. (Requested by 3aljiyavslgazana.)
 
 - Track
 	- Added the `Track Glow` setting.
