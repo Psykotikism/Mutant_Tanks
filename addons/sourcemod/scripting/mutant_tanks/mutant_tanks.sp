@@ -6633,11 +6633,11 @@ static void vChooseReward(int survivor, int tank, int priority)
 				iAmmo = GetEntProp(survivor, Prop_Send, "m_iAmmo", _, iGetWeaponOffset(sWeapon));
 			}
 
-			if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_REFILL) && !(iType & MT_REWARD_REFILL) && (g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor)) && -1 < iAmmo <= 10)
+			if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_REFILL) && !(iType & MT_REWARD_REFILL) && (g_esPlayer[survivor].g_bLastLife || bIsPlayerDisabled(survivor)) && -1 < iAmmo <= 10)
 			{
 				iType |= MT_REWARD_REFILL;
 			}
-			else if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_HEALTH) && !(iType & MT_REWARD_HEALTH) && (g_esPlayer[survivor].g_bLastLife || bIsPlayerIncapacitated(survivor)))
+			else if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_HEALTH) && !(iType & MT_REWARD_HEALTH) && (g_esPlayer[survivor].g_bLastLife || bIsPlayerDisabled(survivor)))
 			{
 				iType |= MT_REWARD_HEALTH;
 			}
@@ -6708,7 +6708,7 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 
 			if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
 			{
-				if ((type & MT_REWARD_HEALTH) && GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerIncapacitated(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")) && !g_esPlayer[survivor].g_bRewardedHealth)
+				if ((type & MT_REWARD_HEALTH) && GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")) && !g_esPlayer[survivor].g_bRewardedHealth)
 				{
 					vSaveCaughtSurvivor(survivor);
 					vCheatCommand(survivor, "give", "health");
@@ -6740,7 +6740,7 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 
 				if ((type & MT_REWARD_REFILL) && !g_esPlayer[survivor].g_bRewardedRefill)
 				{
-					if (GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerIncapacitated(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")))
+					if (GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")))
 					{
 						vSaveCaughtSurvivor(survivor);
 						vCheatCommand(survivor, "give", "health");
