@@ -1917,9 +1917,9 @@ Examples:
 
 **hmmmmm (SlidyBat)** - For showing how to pick a random character out of a dynamic string.
 
-**KasperH** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
+**KasperH (Ladis)** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
 
-**Blueberry** - For Russian translations and suggesting ideas.
+**Blueberry (Kleiner)** - For Russian translations and suggesting ideas.
 
 **yuzumi** - For Simplified Chinese translations and suggesting ideas.
 

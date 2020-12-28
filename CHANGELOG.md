@@ -430,7 +430,7 @@
 - Ghost
 	- Rocks thrown by Tanks are now affected by the fade feature. (Requested by 3aljiyavslgazana.)
 	- Incapacitated or ledge-hanging survivors are no longer affected.
-	- Special infected by the fade feature are now reverted back to normal upon death. (Requested by 3aljiyavslgazana.)
+	- Special infected affected by the fade feature are now reverted back to normal upon death. (Requested by 3aljiyavslgazana.)
 
 - God
 	- Added the `Immunity Flags` setting.
