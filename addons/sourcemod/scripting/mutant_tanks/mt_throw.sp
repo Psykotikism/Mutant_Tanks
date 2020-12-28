@@ -353,10 +353,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public Action StartTouch(int car, int other)
+public Action StartTouch(int thrown, int other)
 {
-	TeleportEntity(car, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-	SDKUnhook(car, SDKHook_StartTouch, StartTouch);
+	TeleportEntity(thrown, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+	SDKUnhook(thrown, SDKHook_StartTouch, StartTouch);
 }
 
 public void MT_OnPluginCheck(ArrayList &list)
@@ -1029,7 +1029,6 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 							NormalizeVector(flVelocity, flVelocity);
 							ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
-
 							TeleportEntity(iSpecial, flPos, NULL_VECTOR, flVelocity);
 
 							if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_RANGE)
@@ -1050,7 +1049,6 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 					NormalizeVector(flVelocity, flVelocity);
 					ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
-
 					TeleportEntity(iTank, flPos, NULL_VECTOR, flVelocity);
 
 					if (g_esCache[iTank].g_iThrowMessage & MT_MESSAGE_SPECIAL)
@@ -1081,6 +1079,8 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							DispatchSpawn(iWitch);
 							TeleportEntity(iWitch, NULL_VECTOR, NULL_VECTOR, flVelocity);
 							ActivateEntity(iWitch);
+
+							SDKHook(iWitch, SDKHook_StartTouch, StartTouch);
 
 							if (g_esCache[iTank].g_flThrowWitchLifetime > 0.0)
 							{
