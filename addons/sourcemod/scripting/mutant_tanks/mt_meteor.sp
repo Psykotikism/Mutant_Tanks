@@ -757,17 +757,12 @@ static void vMeteor2(int tank, int pos = -1)
 
 static void vMeteor3(int tank, int rock, int pos = -1)
 {
-	if (!bIsValidEntity(rock))
+	if (!MT_IsTankSupported(tank) || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[tank].g_iTankType) || !MT_IsCustomTankSupported(tank) || !bIsValidEntity(rock))
 	{
 		return;
 	}
 
 	MT_DetonateTankRock(rock);
-
-	if (!MT_IsTankSupported(tank) || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[tank].g_iTankType) || !MT_IsCustomTankSupported(tank))
-	{
-		return;
-	}
 
 	switch (g_esCache[tank].g_iMeteorMode)
 	{
@@ -892,15 +887,8 @@ public Action tTimerDestroyMeteor(Handle timer, DataPack pack)
 	static int iMeteor, iTank;
 	iMeteor = EntRefToEntIndex(pack.ReadCell());
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (iMeteor == INVALID_ENT_REFERENCE || !bIsValidEntity(iMeteor))
+	if (!MT_IsTankSupported(iTank) || iMeteor == INVALID_ENT_REFERENCE || !bIsValidEntity(iMeteor))
 	{
-		return Plugin_Stop;
-	}
-
-	if (!MT_IsTankSupported(iTank))
-	{
-		MT_DetonateTankRock(iMeteor);
-
 		return Plugin_Stop;
 	}
 
