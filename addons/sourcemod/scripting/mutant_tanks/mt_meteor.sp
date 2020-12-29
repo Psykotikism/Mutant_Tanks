@@ -770,7 +770,7 @@ static void vMeteor3(int tank, int rock, int pos = -1)
 		return;
 	}
 
-	RemoveEntity(rock);
+	MT_DetonateTankRock(rock);
 	CreateTimer(3.0, tTimerStopRockSound, _, TIMER_FLAG_NO_MAPCHANGE);
 
 	switch (g_esCache[tank].g_iMeteorMode)

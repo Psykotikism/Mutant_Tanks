@@ -1192,7 +1192,7 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 
 			static float flPos[3];
 			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			RemoveEntity(iRock);
+			MT_DetonateTankRock(iRock);
 
 			NormalizeVector(flVelocity, flVelocity);
 			ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);

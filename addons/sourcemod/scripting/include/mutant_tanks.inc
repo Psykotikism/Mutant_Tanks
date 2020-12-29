@@ -31,6 +31,7 @@ public SharedPlugin __pl_mutanttanks =
 public void __pl_mutanttanks_SetNTVOptional()
 {
 	MarkNativeAsOptional("MT_CanTypeSpawn");
+	MarkNativeAsOptional("MT_DetonateTankRock");
 	MarkNativeAsOptional("MT_DoesTypeRequireHumans");
 	MarkNativeAsOptional("MT_GetAccessFlags");
 	MarkNativeAsOptional("MT_GetCombinationSetting");
@@ -383,6 +384,14 @@ forward Action MT_OnTypeChosen(int &type, int tank);
  * @error			Type is 0 or less.
  **/
 native bool MT_CanTypeSpawn(int type);
+
+/**
+ * Detonates a Tank rock on the next frame.
+ *
+ * @param rock			Entity index of the rock.
+ * @error			Invalid entity index.
+ **/
+native void MT_DetonateTankRock(int rock);
 
 /**
  * Returns if a certain Mutant Tank type requires human-controlled survivors to be present to be effective.
