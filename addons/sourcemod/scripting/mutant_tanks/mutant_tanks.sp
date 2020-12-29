@@ -2365,18 +2365,8 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 					}
 				}
 
-				char sIndex[5];
-				for (int iIndex = 1; iIndex <= MT_MAXTYPES; iIndex++)
-				{
-					IntToString(iIndex, sIndex, sizeof(sIndex));
-					if (StrEqual(sInfo[iStartPos], sIndex))
-					{
-						g_esGeneral.g_sSection = sIndex;
-						g_esGeneral.g_iSection = iIndex;
-
-						break;
-					}
-				}
+				strcopy(g_esGeneral.g_sSection, sizeof(esGeneral::g_sSection), sInfo[iStartPos]);
+				g_esGeneral.g_iSection = StringToInt(sInfo[iStartPos]);
 			}
 
 			vParseConfig(param1);
@@ -3223,7 +3213,7 @@ static void vTankMenu(int admin, int item = 0)
 		iCount++;
 	}
 
-	static char sMenuItem[46], sTankName[33];
+	static char sIndex[5], sMenuItem[46], sTankName[33];
 	for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 	{
 		if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly))
@@ -3234,7 +3224,8 @@ static void vTankMenu(int admin, int item = 0)
 		vGetTranslatedName(sTankName, sizeof(sTankName), _, iIndex);
 		SetGlobalTransTarget(admin);
 		FormatEx(sMenuItem, sizeof(sMenuItem), "%T", "MTTankItem", admin, sTankName, iIndex);
-		mTankMenu.AddItem(g_esTank[iIndex].g_sTankName, sMenuItem, ((g_esPlayer[admin].g_iTankType != iIndex) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED));
+		IntToString(iIndex, sIndex, sizeof(sIndex));
+		mTankMenu.AddItem(sIndex, sMenuItem, ((g_esPlayer[admin].g_iTankType != iIndex) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED));
 		iCount++;
 	}
 
@@ -3279,19 +3270,10 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			}
 			else
 			{
-				for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
+				int iIndex = StringToInt(sInfo);
+				if (g_esTank[iIndex].g_iTankEnabled == 1 && bHasCoreAdminAccess(param1, iIndex) && g_esTank[iIndex].g_iMenuEnabled == 1 && bIsTypeAvailable(iIndex, param1) && !bAreHumansRequired(iIndex) && bCanTypeSpawn(iIndex) && !bIsAreaNarrow(param1, g_esTank[iIndex].g_flOpenAreasOnly))
 				{
-					if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(param1, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, param1) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(param1, g_esTank[iIndex].g_flOpenAreasOnly))
-					{
-						continue;
-					}
-
-					if (StrEqual(sInfo, g_esTank[iIndex].g_sTankName, false))
-					{
-						vQueueTank(param1, iIndex, false);
-
-						break;
-					}
+					vQueueTank(param1, iIndex, false);
 				}
 			}
 
@@ -4749,11 +4731,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 				static char sIndex[5], sRealType[5];
 				static int iIndex, iRealType;
-				iIndex = iClamp(StringToInt(g_esGeneral.g_sCurrentSection[iStartPos]), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-				iRealType = iClamp(iFindSectionType(g_esGeneral.g_sCurrentSection, iIndex), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
+				iIndex = StringToInt(g_esGeneral.g_sCurrentSection[iStartPos]);
+				iRealType = iFindSectionType(g_esGeneral.g_sCurrentSection, iIndex);
 				IntToString(iIndex, sIndex, sizeof(sIndex));
 				IntToString(iRealType, sRealType, sizeof(sRealType));
-				if (StrEqual(sIndex, g_esGeneral.g_sCurrentSection[iStartPos]) || StrEqual(sRealType, sIndex) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1)
+				if (g_esGeneral.g_iMinType <= iIndex <= g_esGeneral.g_iMaxType && (StrEqual(sIndex, g_esGeneral.g_sCurrentSection[iStartPos]) || StrEqual(sRealType, sIndex) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1))
 				{
 					g_esTank[iIndex].g_iTankEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankEnabled", "Tank Enabled", "Tank_Enabled", "tenabled", g_esTank[iIndex].g_iTankEnabled, value, 0, 1);
 					g_esTank[iIndex].g_flTankChance = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankChance", "Tank Chance", "Tank_Chance", "chance", g_esTank[iIndex].g_flTankChance, value, 0.0, 100.0);
@@ -5457,11 +5439,11 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 
 								static char sIndex[5], sRealType[5];
 								static int iIndex, iRealType;
-								iIndex = iClamp(StringToInt(g_esGeneral.g_sCurrentSubSection[iStartPos]), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-								iRealType = iClamp(iFindSectionType(g_esGeneral.g_sCurrentSubSection, iIndex), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
+								iIndex = StringToInt(g_esGeneral.g_sCurrentSubSection[iStartPos]);
+								iRealType = iFindSectionType(g_esGeneral.g_sCurrentSubSection, iIndex);
 								IntToString(iIndex, sIndex, sizeof(sIndex));
 								IntToString(iRealType, sRealType, sizeof(sRealType));
-								if (StrEqual(sIndex, g_esGeneral.g_sCurrentSubSection[iStartPos]) || StrEqual(sRealType, sIndex) || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1)
+								if (g_esGeneral.g_iMinType <= iIndex <= g_esGeneral.g_iMaxType && (StrEqual(sIndex, g_esGeneral.g_sCurrentSubSection[iStartPos]) || StrEqual(sRealType, sIndex) || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1))
 								{
 									if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 									{

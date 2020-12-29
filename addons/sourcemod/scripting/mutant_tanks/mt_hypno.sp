@@ -338,31 +338,36 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			if (!bIsPlayerIncapacitated(victim) && g_esPlayer[attacker].g_bAffected)
 			{
-				if (damagetype & DMG_BULLET)
+				static bool bChanged;
+				bChanged = false;
+				if (g_esCache[victim].g_flHypnoBulletDivisor > 1.0 && (damagetype & DMG_BULLET))
 				{
 					damage /= g_esCache[victim].g_flHypnoBulletDivisor;
 				}
-				else if ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA))
+				else if (g_esCache[victim].g_flHypnoExplosiveDivisor > 1.0 && ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)))
 				{
 					damage /= g_esCache[victim].g_flHypnoExplosiveDivisor;
 				}
-				else if (damagetype & DMG_BURN)
+				else if (g_esCache[victim].g_flHypnoFireDivisor > 1.0 && (damagetype & DMG_BURN))
 				{
 					damage /= g_esCache[victim].g_flHypnoFireDivisor;
 				}
-				else if (damagetype & DMG_SLASH || (damagetype & DMG_CLUB))
+				else if (g_esCache[victim].g_flHypnoMeleeDivisor > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
 				{
 					damage /= g_esCache[victim].g_flHypnoMeleeDivisor;
 				}
 
-				static int iTarget;
-				iTarget = (g_esCache[victim].g_iHypnoMode == 1) ? iGetRandomSurvivor(victim) : attacker;
-				if (iTarget > 0)
+				if (bChanged)
 				{
-					static char sDamageType[32];
-					IntToString(damagetype, sDamageType, sizeof(sDamageType));
-					vDamagePlayer(iTarget, victim, damage, sDamageType);
-					EmitSoundToAll(SOUND_METAL, victim);
+					static int iTarget;
+					iTarget = (g_esCache[victim].g_iHypnoMode == 1) ? iGetRandomSurvivor(victim) : attacker;
+					if (iTarget > 0)
+					{
+						static char sDamageType[32];
+						IntToString(damagetype, sDamageType, sizeof(sDamageType));
+						vDamagePlayer(iTarget, victim, damage, sDamageType);
+						EmitSoundToAll(SOUND_METAL, victim);
+					}
 				}
 
 				return Plugin_Handled;
@@ -550,14 +555,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iHypnoAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iHypnoAbility, value, 0, 1);
 		g_esPlayer[admin].g_iHypnoEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iHypnoEffect, value, 0, 7);
 		g_esPlayer[admin].g_iHypnoMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iHypnoMessage, value, 0, 3);
-		g_esPlayer[admin].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esPlayer[admin].g_flHypnoBulletDivisor, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esPlayer[admin].g_flHypnoBulletDivisor, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flHypnoChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esPlayer[admin].g_flHypnoChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_flHypnoDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoDuration", "Hypno Duration", "Hypno_Duration", "duration", g_esPlayer[admin].g_flHypnoDuration, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esPlayer[admin].g_flHypnoExplosiveDivisor, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flHypnoFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esPlayer[admin].g_flHypnoFireDivisor, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esPlayer[admin].g_flHypnoExplosiveDivisor, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flHypnoFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esPlayer[admin].g_flHypnoFireDivisor, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_iHypnoHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoHit", "Hypno Hit", "Hypno_Hit", "hit", g_esPlayer[admin].g_iHypnoHit, value, 0, 1);
 		g_esPlayer[admin].g_iHypnoHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoHitMode", "Hypno Hit Mode", "Hypno_Hit_Mode", "hitmode", g_esPlayer[admin].g_iHypnoHitMode, value, 0, 2);
-		g_esPlayer[admin].g_flHypnoMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoMeleeDivisor", "Hypno Melee Divisor", "Hypno_Melee_Divisor", "melee", g_esPlayer[admin].g_flHypnoMeleeDivisor, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flHypnoMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoMeleeDivisor", "Hypno Melee Divisor", "Hypno_Melee_Divisor", "melee", g_esPlayer[admin].g_flHypnoMeleeDivisor, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_iHypnoMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esPlayer[admin].g_iHypnoMode, value, 0, 1);
 		g_esPlayer[admin].g_flHypnoRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esPlayer[admin].g_flHypnoRange, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flHypnoRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esPlayer[admin].g_flHypnoRangeChance, value, 0.0, 100.0);
@@ -586,14 +591,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iHypnoAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iHypnoAbility, value, 0, 1);
 		g_esAbility[type].g_iHypnoEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iHypnoEffect, value, 0, 7);
 		g_esAbility[type].g_iHypnoMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iHypnoMessage, value, 0, 3);
-		g_esAbility[type].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esAbility[type].g_flHypnoBulletDivisor, value, 0.1, 999999.0);
+		g_esAbility[type].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esAbility[type].g_flHypnoBulletDivisor, value, 1.0, 999999.0);
 		g_esAbility[type].g_flHypnoChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esAbility[type].g_flHypnoChance, value, 0.0, 100.0);
 		g_esAbility[type].g_flHypnoDuration = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoDuration", "Hypno Duration", "Hypno_Duration", "duration", g_esAbility[type].g_flHypnoDuration, value, 0.1, 999999.0);
-		g_esAbility[type].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esAbility[type].g_flHypnoExplosiveDivisor, value, 0.1, 999999.0);
-		g_esAbility[type].g_flHypnoFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esAbility[type].g_flHypnoFireDivisor, value, 0.1, 999999.0);
+		g_esAbility[type].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esAbility[type].g_flHypnoExplosiveDivisor, value, 1.0, 999999.0);
+		g_esAbility[type].g_flHypnoFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esAbility[type].g_flHypnoFireDivisor, value, 1.0, 999999.0);
 		g_esAbility[type].g_iHypnoHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoHit", "Hypno Hit", "Hypno_Hit", "hit", g_esAbility[type].g_iHypnoHit, value, 0, 1);
 		g_esAbility[type].g_iHypnoHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoHitMode", "Hypno Hit Mode", "Hypno_Hit_Mode", "hitmode", g_esAbility[type].g_iHypnoHitMode, value, 0, 2);
-		g_esAbility[type].g_flHypnoMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoMeleeDivisor", "Hypno Melee Divisor", "Hypno_Melee_Divisor", "melee", g_esAbility[type].g_flHypnoMeleeDivisor, value, 0.1, 999999.0);
+		g_esAbility[type].g_flHypnoMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoMeleeDivisor", "Hypno Melee Divisor", "Hypno_Melee_Divisor", "melee", g_esAbility[type].g_flHypnoMeleeDivisor, value, 1.0, 999999.0);
 		g_esAbility[type].g_iHypnoMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esAbility[type].g_iHypnoMode, value, 0, 1);
 		g_esAbility[type].g_flHypnoRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esAbility[type].g_flHypnoRange, value, 1.0, 999999.0);
 		g_esAbility[type].g_flHypnoRangeChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esAbility[type].g_flHypnoRangeChance, value, 0.0, 100.0);

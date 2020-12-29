@@ -328,30 +328,39 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Continue;
 			}
 
-			switch (g_esCache[victim].g_iFragileMode)
+			static bool bChanged;
+			bChanged = false;
+			if (g_esCache[victim].g_flFragileBulletMultiplier > 1.0 && (damagetype & DMG_BULLET))
 			{
-				case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", MT_GetRunSpeed(victim) + g_esCache[victim].g_flFragileSpeedBoost);
-				case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", g_esCache[victim].g_flFragileSpeedBoost);
-			}
-
-			if (damagetype & DMG_BULLET)
-			{
+				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileBulletMultiplier;
 			}
-			else if ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA))
+			else if (g_esCache[victim].g_flFragileExplosiveMultiplier > 1.0 && ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)))
 			{
+				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileExplosiveMultiplier;
 			}
-			else if (damagetype & DMG_BURN)
+			else if (g_esCache[victim].g_flFragileFireMultiplier > 1.0 && (damagetype & DMG_BURN))
 			{
+				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileFireMultiplier;
 			}
-			else if (damagetype & DMG_SLASH || (damagetype & DMG_CLUB))
+			else if (g_esCache[victim].g_flFragileMeleeMultiplier > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
 			{
+				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileMeleeMultiplier;
 			}
 
-			return Plugin_Changed;
+			if (bChanged)
+			{
+				switch (g_esCache[victim].g_iFragileMode)
+				{
+					case 0: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", MT_GetRunSpeed(victim) + g_esCache[victim].g_flFragileSpeedBoost);
+					case 1: SetEntPropFloat(victim, Prop_Send, "m_flLaggedMovementValue", g_esCache[victim].g_flFragileSpeedBoost);
+				}
+
+				return Plugin_Changed;
+			}
 		}
 		else if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && g_esPlayer[attacker].g_bActivated && bIsSurvivor(victim))
 		{
@@ -605,6 +614,17 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	}
 }
 
+public void MT_OnPluginEnd()
+{
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTank].g_bActivated)
+		{
+			SetEntPropFloat(iTank, Prop_Send, "m_flLaggedMovementValue", 1.0);
+		}
+	}
+}
+
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "bot_player_replace"))
@@ -816,6 +836,8 @@ static void vReset2(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_iDuration = -1;
+
+	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", MT_GetRunSpeed(tank));
 
 	if (g_esCache[tank].g_iFragileMessage == 1)
 	{

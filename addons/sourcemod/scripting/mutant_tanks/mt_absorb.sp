@@ -323,24 +323,33 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			EmitSoundToAll(SOUND_METAL, victim);
 
-			if (damagetype & DMG_BULLET)
+			static bool bChanged;
+			bChanged = false;
+			if (g_esCache[victim].g_flAbsorbBulletDivisor > 1.0 && (damagetype & DMG_BULLET))
 			{
+				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbBulletDivisor;
 			}
-			else if ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA))
+			else if (g_esCache[victim].g_flAbsorbExplosiveDivisor > 1.0 && ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)))
 			{
+				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbExplosiveDivisor;
 			}
-			else if (damagetype & DMG_BURN)
+			else if (g_esCache[victim].g_flAbsorbFireDivisor > 1.0 && (damagetype & DMG_BURN))
 			{
+				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbFireDivisor;
 			}
-			else if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
+			else if (g_esCache[victim].g_flAbsorbMeleeDivisor > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
 			{
+				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbMeleeDivisor;
 			}
 
-			return Plugin_Changed;
+			if (bChanged)
+			{
+				return Plugin_Changed;
+			}
 		}
 	}
 
@@ -479,12 +488,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
 		g_esPlayer[admin].g_iAbsorbAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iAbsorbAbility, value, 0, 1);
 		g_esPlayer[admin].g_iAbsorbMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iAbsorbMessage, value, 0, 1);
-		g_esPlayer[admin].g_flAbsorbBulletDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_esPlayer[admin].g_flAbsorbBulletDivisor, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flAbsorbBulletDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_esPlayer[admin].g_flAbsorbBulletDivisor, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flAbsorbChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbChance", "Absorb Chance", "Absorb_Chance", "chance", g_esPlayer[admin].g_flAbsorbChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iAbsorbDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_esPlayer[admin].g_iAbsorbDuration, value, 1, 999999);
-		g_esPlayer[admin].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esPlayer[admin].g_flAbsorbExplosiveDivisor, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esPlayer[admin].g_flAbsorbFireDivisor, value, 0.1, 999999.0);
-		g_esPlayer[admin].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esPlayer[admin].g_flAbsorbMeleeDivisor, value, 0.1, 999999.0);
+		g_esPlayer[admin].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esPlayer[admin].g_flAbsorbExplosiveDivisor, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esPlayer[admin].g_flAbsorbFireDivisor, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esPlayer[admin].g_flAbsorbMeleeDivisor, value, 1.0, 999999.0);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
@@ -510,12 +519,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
 		g_esAbility[type].g_iAbsorbAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iAbsorbAbility, value, 0, 1);
 		g_esAbility[type].g_iAbsorbMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iAbsorbMessage, value, 0, 1);
-		g_esAbility[type].g_flAbsorbBulletDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_esAbility[type].g_flAbsorbBulletDivisor, value, 0.1, 999999.0);
+		g_esAbility[type].g_flAbsorbBulletDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbBulletDivisor", "Absorb Bullet Divisor", "Absorb_Bullet_Divisor", "bullet", g_esAbility[type].g_flAbsorbBulletDivisor, value, 1.0, 999999.0);
 		g_esAbility[type].g_flAbsorbChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbChance", "Absorb Chance", "Absorb_Chance", "chance", g_esAbility[type].g_flAbsorbChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iAbsorbDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_esAbility[type].g_iAbsorbDuration, value, 1, 999999);
-		g_esAbility[type].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esAbility[type].g_flAbsorbExplosiveDivisor, value, 0.1, 999999.0);
-		g_esAbility[type].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esAbility[type].g_flAbsorbFireDivisor, value, 0.1, 999999.0);
-		g_esAbility[type].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbility[type].g_flAbsorbMeleeDivisor, value, 0.1, 999999.0);
+		g_esAbility[type].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esAbility[type].g_flAbsorbExplosiveDivisor, value, 1.0, 999999.0);
+		g_esAbility[type].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esAbility[type].g_flAbsorbFireDivisor, value, 1.0, 999999.0);
+		g_esAbility[type].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbility[type].g_flAbsorbMeleeDivisor, value, 1.0, 999999.0);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
