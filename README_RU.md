@@ -1,13 +1,13 @@
-**Языки** файла readme:
-  - [English](https://github.com/Psykotikism/Mutant_Tanks/blob/v8.80/README.md)
+# Mutant Tanks (Танки-мутанты)
 
-# Mutant Tanks(Танки-мутанты)
+## Языки
+ - [English](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md)
 
 ## Лицензия
 > Следующая лицензия помещается в исходный код каждого плагина и включаемого файла.
 
 Mutant Tanks: SourceMod плагин L4D/L4D2
-Все права защищены (C) 2020  Альфред "Crasher_3637/Psyk0tik" Лагос
+Все права защищены (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
 
 Эта программа является бесплатным программным обеспечением: вы можете распространять и/или изменять её в соответствии с условиями Стандартной общественной лицензии GNU, опубликованной Free Software Foundation, либо версии 3 Лицензии, либо (по вашему выбору) любой более поздней версии.
 
@@ -113,7 +113,7 @@ mt_pluginenabled "1"
 ```
 
 ## Настройки KeyValues
-> Просмотрите файл [INFORMATION.md](https://github.com/Blueberryy/Mutant_Tanks/blob/master/INFORMATION.md) для получения информации о каждой доступной настройке. (Более 1400 вариантов для настройки!)
+> Просмотрите файл [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) для получения информации о каждой доступной настройке. (Более 1400 вариантов для настройки!)
 
 ### Пользовательские файлы конфигурации
 > Mutant Tanks имеет функции, позволяющие создавать и выполнять собственные файлы конфигурации.
@@ -917,6 +917,14 @@ Native'ы:
  * @error			Тип 0 или меньше.
  **/
 native bool MT_CanTypeSpawn(int type);
+
+/**
+ * Взрывает камень Танка на следующем кадре.
+ *
+ * @param rock			Индекс энтити камня.
+ * @error			Недействительный индекс энтити.
+ **/
+native void MT_DetonateTankRock(int rock);
 
 /**
  * Возвращается, если для эффективности определённого типа танка-мутанта требуется присутствие Выживших, контролируемых человеком.

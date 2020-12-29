@@ -1,7 +1,7 @@
-Readme **languages:**
-  - [Русский](https://github.com/Psykotikism/Mutant_Tanks/blob/v8.80/README_RU.md)
-
 # Mutant Tanks
+
+## Languages
+ - [Русский](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md)
 
 ## License
 > The following license is placed inside the source code of each plugin and include file.
@@ -113,7 +113,7 @@ mt_pluginenabled "1"
 ```
 
 ## KeyValues Settings
-> View the INFORMATION.md file for information about each available setting. (Over 1,400 to customize!)
+> View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,400 to customize!)
 
 ### Custom Configuration Files
 > Mutant Tanks has features that allow for creating and executing custom configuration files.
@@ -917,6 +917,14 @@ Natives:
  * @error			Type is 0 or less.
  **/
 native bool MT_CanTypeSpawn(int type);
+
+/**
+ * Detonates a Tank rock on the next frame.
+ *
+ * @param rock			Entity index of the rock.
+ * @error			Invalid entity index.
+ **/
+native void MT_DetonateTankRock(int rock);
 
 /**
  * Returns if a certain Mutant Tank type requires human-controlled survivors to be present to be effective.

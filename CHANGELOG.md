@@ -187,6 +187,7 @@
 #### General
 - Provided full support for competitive game modes. (Thanks to What for bringing up the subject!)
 - Decreased Mutant Tank type limit back to 500.
+- All Tank rocks affected by Mutant Tanks are now destroyed properly. (Thanks to Luckylock for the code!)
 
 #### Core Plugin
 - Added command aliases for `sm_tank` and `sm_tank2`.
@@ -376,6 +377,7 @@
 - Added the `MT_GetSpawnType` native to allow developers to check what spawn type a Mutant Tank has.
 - Added the `MT_TankMaxHealth` native to allow developers to get/set the Tank's max health.
 - Added the `MT_OnRewardSurvivor` forward to allow developers to give custom rewards to survivors.
+- Added the `MT_DetonateTankRock` native to allow developers to manually detonate Tank rocks.
 - The `MT_OnChangeType` forward now has two more parameters.
 - Updated all natives to have self-contained validity checks.
 
