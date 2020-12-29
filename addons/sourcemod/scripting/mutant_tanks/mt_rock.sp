@@ -726,8 +726,6 @@ static void vReset2(int tank)
 
 	g_esPlayer[tank].g_bActivated = false;
 
-	CreateTimer(3.0, tTimerStopRockSound, _, TIMER_FLAG_NO_MAPCHANGE);
-
 	if (g_esCache[tank].g_iRockMessage == 1)
 	{
 		static char sTankName[33];
@@ -928,15 +926,4 @@ public Action tTimerRock(Handle timer, DataPack pack)
 	}
 
 	return Plugin_Continue;
-}
-
-public Action tTimerStopRockSound(Handle timer)
-{
-	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
-	{
-		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
-		{
-			StopSound(iPlayer, SNDCHAN_BODY, SOUND_ROCK);
-		}
-	}
 }

@@ -3354,8 +3354,6 @@ public void OnEntityDestroyed(int entity)
 
 				vCombineAbilitiesForward(iThrower, MT_COMBO_ROCKBREAK, _, entity);
 			}
-
-			StopSound(entity, SNDCHAN_BODY, SOUND_MISSILE);
 		}
 		else if (StrEqual(sClassname, "infected") || StrEqual(sClassname, "witch"))
 		{
