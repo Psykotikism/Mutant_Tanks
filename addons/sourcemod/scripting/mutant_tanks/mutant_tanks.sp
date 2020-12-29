@@ -4143,7 +4143,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iMasterControl = 0;
 		g_esGeneral.g_iSpawnMode = 1;
 		g_esGeneral.g_iLimitExtras = 1;
-		g_esGeneral.g_flExtrasDelay = 3.0;
+		g_esGeneral.g_flExtrasDelay = 0.1;
 		g_esGeneral.g_iRegularAmount = 0;
 		g_esGeneral.g_flRegularDelay = 10.0;
 		g_esGeneral.g_flRegularInterval = 300.0;
