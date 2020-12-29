@@ -199,7 +199,10 @@
 - Mutant Tank stats are now properly copied when passing Tanks between players.
 - Added sound effects for bullet and melee immunities.
 - Added the `sm_mt_reload` command to let admins reload all config files.
-- Added the `@mutants` target filter to let admins target Mutant Tanks.
+- Added the following target filters to let admins target Mutant Tanks:
+	- `@mutants`
+	- `@mtanks`
+	- `@psytanks`
 - Tanks will no longer activate their passive abilities on finale maps once the rescue vehicle leaves.
 - Idle Tanks will no longer glow through walls even when the `Glow Type` setting is set to `1`.
 - Idle Tanks will no longer turn into different types when the `Spawn Type` setting is set to `1`, `2`, or `3`.
@@ -473,6 +476,9 @@
 
 - Nullify
 	- Added a sound effect.
+
+- Pyro
+	- Added the `Pyro Reignite` setting.
 
 - Regen
 	- The ability now contributes to the Tank's overall health.

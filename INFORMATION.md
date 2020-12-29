@@ -696,7 +696,7 @@
 			// "second" - 1 second
 			// "minute" - 1 minute
 			// "forever" - 999999 seconds
-			"Extras Delay"				"3.0"
+			"Extras Delay"				"0.1"
 
 			// Spawn this many Tanks on non-finale maps periodically.
 			// Note: Leave this off if you have a Multi-Tanks plugin installed that handles the limit.
@@ -12490,6 +12490,14 @@
 			// Mutant Tank's damage = Pyro damage boost
 			// Mutant Tank's speed = Pyro speed boost
 			"Pyro Mode"				"0"
+
+			// The Mutant Tank will be reignited if it is extinguished while the ability is still activated.
+			// Note: This setting will automatically deactivate the ability if set to "0".
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Pyro Reignite"				"1"
 
 			// The Mutant Tank's speed boost value when on fire.
 			// Note: This setting can be overridden for specific players.

@@ -1485,11 +1485,11 @@ Example:
 }
 
 // Custom format
-mutanttanks // 2nd format
+mutant_tanks // 3rd format
 {
 	Settings // 4th format
 	{
-		game_modes // 3rd format
+		GameModes // 2nd format
 		{
 			"Game Mode Types"			0 // original format
 		}
