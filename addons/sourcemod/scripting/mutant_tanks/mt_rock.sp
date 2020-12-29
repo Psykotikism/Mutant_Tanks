@@ -37,8 +37,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-#define SOUND_ROCK "player/tank/attack/thrown_missile_loop_1.wav"
-
 #define MT_CONFIG_SECTION "rockability"
 #define MT_CONFIG_SECTION2 "rock ability"
 #define MT_CONFIG_SECTION3 "rock_ability"
@@ -131,8 +129,6 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	PrecacheSound(SOUND_ROCK, true);
-
 	vReset();
 }
 

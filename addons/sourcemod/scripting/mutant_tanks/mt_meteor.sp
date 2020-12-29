@@ -41,12 +41,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-#define MODEL_CONCRETE_CHUNK "models/props_debris/concrete_chunk01a.mdl"
-#define MODEL_TREE_TRUNK "models/props_foliage/tree_trunk.mdl"
 #define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
-
-#define SOUND_ROCK "player/tank/attack/thrown_missile_loop_1.wav"
 
 #define MT_CONFIG_SECTION "meteorability"
 #define MT_CONFIG_SECTION2 "meteor ability"
@@ -159,10 +155,6 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	PrecacheModel(MODEL_GASCAN, true);
-
-	PrecacheSound(SOUND_ROCK, true);
-
 	vReset();
 }
 

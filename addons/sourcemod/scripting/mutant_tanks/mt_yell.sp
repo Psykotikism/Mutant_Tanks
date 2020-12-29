@@ -177,7 +177,7 @@ public void OnMapStart()
 
 	vReset();
 
-	AddNormalSoundHook(SoundHook);
+	AddNormalSoundHook(YellSoundHook);
 }
 
 public void OnClientPutInServer(int client)
@@ -194,7 +194,7 @@ public void OnMapEnd()
 {
 	vReset();
 
-	RemoveNormalSoundHook(SoundHook);
+	RemoveNormalSoundHook(YellSoundHook);
 }
 
 public Action cmdYellInfo(int client, int args)
@@ -337,7 +337,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-public Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
+public Action YellSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
 	if (MT_IsCorePluginEnabled() && StrContains(sample, "player", false) != -1)
 	{

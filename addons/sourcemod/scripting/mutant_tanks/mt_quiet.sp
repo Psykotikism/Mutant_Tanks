@@ -152,7 +152,7 @@ public void OnMapStart()
 {
 	vReset();
 
-	AddNormalSoundHook(SoundHook);
+	AddNormalSoundHook(QuietSoundHook);
 }
 
 public void OnClientPutInServer(int client)
@@ -171,7 +171,7 @@ public void OnMapEnd()
 {
 	vReset();
 
-	RemoveNormalSoundHook(SoundHook);
+	RemoveNormalSoundHook(QuietSoundHook);
 }
 
 public Action cmdQuietInfo(int client, int args)
@@ -324,7 +324,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
+public Action QuietSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
 	if (MT_IsCorePluginEnabled() && StrContains(sample, "player/tank", false) != -1)
 	{

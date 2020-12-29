@@ -162,8 +162,6 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	PrecacheModel(MODEL_GASCAN, true);
-
 	switch (bIsValidGame())
 	{
 		case true: PrecacheSound(SOUND_EXPLODE2, true);

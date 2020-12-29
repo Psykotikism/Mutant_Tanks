@@ -1416,6 +1416,7 @@ public void OnMapStart()
 
 	vReset();
 	vToggleLogging(1);
+	AddNormalSoundHook(RockSoundHook);
 }
 
 public void OnClientPutInServer(int client)
@@ -1744,6 +1745,7 @@ public void OnMapEnd()
 
 	vReset();
 	vToggleLogging(0);
+	RemoveNormalSoundHook(RockSoundHook);
 }
 
 public void OnPluginEnd()
@@ -3716,6 +3718,18 @@ public Action SetTransmit(int entity, int client)
 		{
 			return Plugin_Handled;
 		}
+	}
+
+	return Plugin_Continue;
+}
+
+public Action RockSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
+{
+	if (g_esGeneral.g_bPluginEnabled && StrEqual(sample, SOUND_MISSILE, false))
+	{
+		numClients = 0;
+
+		return Plugin_Changed;
 	}
 
 	return Plugin_Continue;

@@ -37,8 +37,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-#define SOUND_ROCK "player/tank/attack/thrown_missile_loop_1.wav"
-
 #define MT_CONFIG_SECTION "spamability"
 #define MT_CONFIG_SECTION2 "spam ability"
 #define MT_CONFIG_SECTION3 "spam_ability"
@@ -128,8 +126,6 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	PrecacheSound(SOUND_ROCK, true);
-
 	vReset();
 }
 

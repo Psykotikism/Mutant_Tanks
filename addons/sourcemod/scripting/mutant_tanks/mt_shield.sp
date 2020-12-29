@@ -184,7 +184,6 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	PrecacheModel(MODEL_GASCAN, true);
 	PrecacheModel(MODEL_SHIELD, true);
 
 	vReset();
