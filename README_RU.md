@@ -1,147 +1,147 @@
-Readme **languages:**
+**Языки** файла readme:
   - [English](https://github.com/Blueberryy/Mutant_Tanks/blob/master/README.md)
 
-# Mutant Tanks
+# Mutant Tanks(Танки-мутанты)
 
-## License
-> The following license is placed inside the source code of each plugin and include file.
+## Лицензия
+> Следующая лицензия помещается в исходный код каждого плагина и включаемого файла.
 
-Mutant Tanks: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+Mutant Tanks: SourceMod плагин L4D/L4D2
+Все права защищены (C) 2020  Альфред "Crasher_3637/Psyk0tik" Лагос
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+Эта программа является бесплатным программным обеспечением: вы можете распространять и/или изменять её в соответствии с условиями Стандартной общественной лицензии GNU, опубликованной Free Software Foundation, либо версии 3 Лицензии, либо (по вашему выбору) любой более поздней версии.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+Эта программа распространяется в надежде, что она будет полезна, но БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ; даже без подразумеваемых гарантий ТОВАРНОЙ ПРИГОДНОСТИ или ПРИГОДНОСТИ ДЛЯ КОНКРЕТНОЙ ЦЕЛИ. Подробнее см. Стандартную общественную лицензию GNU.
 
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Вы должны были получить копию Стандартной общественной лицензии GNU вместе с этой программой. Если нет, см. <http://www.gnu.org/licenses/>.
 
-## About
-Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, Last Boss Extended, and Super Tanks to grant Tanks unique powers and abilities that enhance the player experience.
+## Описание
+Первоначально расширенная версия Super Tanks, Mutant Tanks сочетает в себе Last Boss, Last Boss Extended и Super Tanks, чтобы предоставить танкам уникальные силы и способности, которые улучшают игровой опыт.
 
-## Features
-1. Fully compatible with all game modes.
-2. Fully customizable Mutant Tanks.
-3. Flexible config file.
-4. Auto-reload the config file when changes are made mid-game.
-5. Supports custom configurations for different scenarios/setups.
-6. Store up to 500 Mutant Tank types.
-7. Administration system designed for access and immunity to Mutant Tanks.
-8. Custom target filters for targeting survivors, special infected, and Mutant Tanks.
-9. Over 1,400 optional settings to configure.
-10. Over 70 unique abilities to choose from.
-11. Choose which abilities to install.
-12. Add custom abilities and features through the use of forwards and natives.
-13. Create all kinds of combinations of abilities.
-14. Supports multiple languages.
-15. Chat color tags for translation files.
-16. Detects idle or bugged Tanks.
-17. Toggle damage scaling based on difficulty.
-18. Fully customizable reward system.
+## Особенности
+1. Полностью совместим со всеми режимами игры.
+2. Полностью настраиваемые танки-мутанты.
+3. Гибкий конфигурационный файл.
+4. Автоматическая перезагрузка файл конфигурации при внесении изменений во время игры.
+5. Поддерживает пользовательские конфигурации для различных сценариев/настроек.
+6. Можно создать до 500 типов танков-мутантов.
+7. Система администрирования, разработанная для доступа и иммунитету к танкам-мутантам.
+8. Пользовательские целевые фильтры для Выживших, особых заражённых и танков-мутантов.
+9. Более 1,400 дополнительных настроек для настройки.
+10. Более 70 уникальных способностей на выбор.
+11. Выбор способностей для установки.
+12. Добавляйте собственные способности и функции с помощью forwards и natives.
+13. Создавайте всевозможные комбинации способностей.
+14. Поддерживает несколько языков.
+15. Цветовые теги чата для файлов перевода.
+16. Обнаруживает неработающие или неисправные Танки.
+17. Переключение увеличения/уменьшения урона в зависимости от сложности.
+18. Полностью настраиваемая система наград.
 
-### Requirements
-1. `SourceMod 1.11.0.6511` or higher
-2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
+### Требования
+1. `SourceMod 1.11.0.6511` или выше
+2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
-4. Patience & competence
+4. Терпение и знания
 
-### Notes
-1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
-2. I will not help you with installing or troubleshooting problems on your part.
-3. If you get errors from SourceMod itself, that is your problem, not mine.
-4. MAKE SURE YOU MEET ALL THE REQUIREMENTS AND FOLLOW THE INSTALLATION GUIDE PROPERLY.
+### Примечание
+1. Я не предоставляю поддержку для выделенного/локальных серверов, но плагин и его модули должны работать на них должным образом.
+2. Я не буду помогать вам с установкой или устранением неполадок с вашей стороны.
+3. Если вы получаете ошибки от самого SourceMod, это ваша проблема, а не моя.
+4. УБЕДИТЕСЬ, ЧТО ВЫ СОБЛЮДАЕТЕ ВСЕ ТРЕБОВАНИЯ И ПРАВИЛЬНО СЛЕДУЕТЕ РУКОВОДСТВУ ПО УСТАНОВКЕ.
 
-### Installation
-1. Delete files from old versions of the plugin.
-2. Extract the folder inside the `mutant_tanks.zip` file.
-3. Place all the contents into their respective folders.
-4. If prompted to replace or merge anything, click yes.
-5. Load up Mutant Tanks by restarting the server.
-6. Customize Mutant Tanks in `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
+### Установка
+1. Удалите файлы из старых версий плагина.
+2. Распакуйте папку внутри файла `mutant_tanks.zip`.
+3. Поместите всё содержимое в соответствующие папки.
+4. Если будет предложено заменить или объединить что-либо, нажмите «Да».
+5. Загрузите плагин, перезапустив сервер.
+6. Настройте плагин в `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
 
-### Uninstalling/Upgrading to Newer Versions
-1. Delete `mutant_tanks` folder from:
- - `addons/sourcemod/plugins` folder (`mutant_tanks.smx` and all of its modules)
- - `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
-2. Delete `mutant_tanks.txt` from `addons/sourcemod/gamedata` folder.
-3. Delete `mutant_tanks.inc` and `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
-4. Delete `mutant_tanks.phrases.txt` from `addons/sourcemod/translations` folder.
-5. Backup `mutant_tanks` folder in `addons/sourcemod/data` folder.
-6. Follow the Installation guide above. (Only for upgrading to newer versions.)
+### Удаление/обновление до более новых версий
+1. Удалите папку `mutant_tanks` из папки:
+ - `addons/sourcemod/plugins` (`mutant_tanks.smx` и все его модули)
+ - `addons/sourcemod/scripting` (`mutant_tanks.sp` и все его модули)
+2. Удалите `mutant_tanks.txt` из папки `addons/sourcemod/gamedata`.
+3. Удалите `mutant_tanks.inc` и `mt_clone.inc` из папки `addons/sourcemod/scripting/include`.
+4. Удалите `mutant_tanks.phrases.txt` из папки `addons/sourcemod/translations`.
+5. Создайте копию папки `mutant_tanks` в папке `addons/sourcemod/data`.
+6. Следуйте руководству по установке выше. (Только для обновления до более новых версий.)
 
-### Disabling
-1. Move `mutant_tanks` folder (`mutant_tanks.smx` and all of its modules) to `plugins/disabled` folder.
-2. Unload Mutant Tanks by restarting the server. (Using `sm plugins unload` will take too long.)
+### Отключение
+1. Переместите папку `mutant_tanks` (`mutant_tanks.smx` и все его модули) в папку `plugins/disabled`.
+2. Отключите плагин, перезапустив сервер. (Используя `sm plugins unload` займёт слишком много времени.)
 
-## ConVar Settings
+## Настройка переменных
 ```
-// Disable Mutant Tanks in these game modes.
-// Separate by commas.
-// Empty: None
-// Not empty: Disabled only in these game modes.
+// Отключить танков-мутантов в этих режимах игры.
+// Через запятую.
+// Пусто: Нет
+// Не пусто: Отключено только в этих режимах игры.
 // -
-// Default: ""
+// По умолчанию: ""
 mt_disabledgamemodes ""
 
-// Enable Mutant Tanks in these game modes.
-// Separate by commas.
-// Empty: All
-// Not empty: Enabled only in these game modes.
+// Включить танков-мутантов в этих режимах игры.
+// Через запятую.
+// Пусто: Все
+// Не пусто: Включить только в этих режимах игры.
 // -
-// Default: ""
+// По умолчанию: ""
 mt_enabledgamemodes ""
 
-// Enable Mutant Tanks in these game mode types.
-// 0 OR 15: All game mode types.
-// 1: Co-Op modes only.
-// 2: Versus modes only.
-// 4: Survival modes only.
-// 8: Scavenge modes only. (Only available in Left 4 Dead 2.)
+// Включить танков-мутантов в этих типах режима игры.
+// 0 ИЛИ 15: Все типы игровых режимов.
+// 1: Только в режиме совместной игры.
+// 2: Только в режиме сражения.
+// 4: Только в режиме выживания.
+// 8: Только в режиме сбор. (Доступно только в Left 4 Dead 2.)
 // -
-// Default: "0"
-// Minimum: "0.000000"
-// Maximum: "15.000000"
+// По умолчанию: "0"
+// Минимум: "0.000000"
+// Максимум: "15.000000"
 mt_gamemodetypes "0"
 
-// Enable Mutant Tanks.
-// 0: OFF
-// 1: ON
+// Включить танки-мутанты.
+// 0: ВЫКЛЮЧЕНЫ
+// 1: ВКЛЮЧЕНЫ
 // -
-// Default: "1"
-// Minimum: "0.000000"
-// Maximum: "1.000000"
+// По умолчанию: "1"
+// Минимум: "0.000000"
+// Максимум: "1.000000"
 mt_pluginenabled "1"
 ```
 
-## KeyValues Settings
-> View the INFORMATION.md file for information about each available setting. (Over 1,400 to customize!)
+## Настройки KeyValues
+> Просмотрите файл [INFORMATION.md](https://github.com/Blueberryy/Mutant_Tanks/blob/master/INFORMATION.md) для получения информации о каждой доступной настройке. (Более 1400 вариантов для настройки!)
 
-### Custom Configuration Files
-> Mutant Tanks has features that allow for creating and executing custom configuration files.
+### Пользовательские файлы конфигурации
+> Mutant Tanks имеет функции, позволяющие создавать и выполнять собственные файлы конфигурации.
 
-By default, Mutant Tanks can create and execute the following types of configurations:
-1. Difficulty - Files are created/executed based on the current game difficulty. (Example: If the current `z_difficulty` is set to Impossible (Expert mode), then `impossible.cfg` is executed (or created if it doesn't exist already).
-2. Map - Files are created/executed based on the current map. (Example: If the current map is `c1m1_hotel`, then `c1m1_hotel.cfg` is executed (or created if it doesn't exist already).
-3. Game mode - Files are created/executed based on the current game mode. (Example: If the current game mode is Versus, then `versus.cfg` is executed (or created if it doesn't exist already).
-4. Daily - Files are created/executed based on the current day. (Example: If the current day is Friday, then `friday.cfg` is executed (or created if it doesn't exist already).
-5. Player (survivor/infected/all) count - Files are created/executed based on the current number of human players. (Example: If the current number is 8, then `8.cfg` is executed (or created if it doesn't exist already).
-6. Finale stages - Files are created/executed based on the finale stages called by the game. (Example: If the finale starts, then `finale_start.cfg` is executed (or created if it doesn't exist already)).
+По умолчанию Mutant Tanks может создавать и выполнять следующие типы конфигураций:
+1. Сложность - файлы создаются/выполняются в зависимости от текущей сложности игры. (Пример: если для текущего параметра `z_difficulty` установлено значение Impossible (экспертный режим), то выполняется `impossible.cfg` (или создаётся, если он ещё не существует).
+2. Карта - файлы создаются/выполняются на основе текущей карты. (Пример: если текущая карта - `c1m1_hotel`, то выполняется `c1m1_hotel.cfg` (или создёется, если он ещё не существует).
+3. Игровой режим - файлы создаются/запускаются на основе текущего игрового режима. (Пример: если текущий режим игры - Versus (сражение), то выполняется `versus.cfg` (или создаётся, если он ещё не существует).
+4. Ежедневно - файлы создаются/выполняются в зависимости от текущего дня. (Пример: если текущий день пятница, то выполняется `friday.cfg` (или создаётся, если он ещё не существует).
+5. Количество игроков (выживших/заражённых/всех) - файлы создаются/выполняются на основе текущего количества игроков. (Пример: если текущее число 8, то выполняется `8.cfg` (или создаётся, если он ещё не существует).
+6. Финальные этапы - файлы создаются/исполняются на основе финальных этапов, называемых игрой(спасение и т.п.). (Пример: если начинается финальный этап, то выполняется `finale_start.cfg` (или создаётся, если он ещё не существует)).
 
-#### Features
-1. Create custom config files (can be based on difficulty, map, game mode, day, player (survivor/infected/all) count, or finale stage).
-2. Execute custom config files (can be based on difficulty, map, game mode, day, player (survivor/infected/all) count, or finale stage).
-3. Automatically generate config files for up to 66 players, all difficulties specified by `z_difficulty`, maps installed on the server, game modes specified by `sv_gametypes` and `mp_gamemode`, days of the `week`, and all possible `finale stages`.
+#### Особенности
+1. Создавайте собственные файлы конфигурации (могут зависеть от сложности, карты, игрового режима, дня, количества игроков (выживших/заражённых/всех) или финальной стадии).
+2. Выполнение пользовательских файлов конфигурации (может зависеть от сложности, карты, режима игры, дня, количества игроков (выживших/заражённых/всех) или финальной стадии).
+3. Автоматическая генерация файла конфигурации для 66 игроков, все сложности, указанные в `z_difficulty`, карты, установленные на сервере, режимы игры, указанные в параметрах `sv_gametypes` и `mp_gamemode`, `week` и все возможные `finale stages`.
 
-## Questions You May Have
-> If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140). Read the INFORMATION.md file to learn about every setting/feature available. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
+## Вопросы, которые могут возникнуть
+> Если у вас есть какие-либо вопросы, которые не рассмотрены ниже, не стесняйтесь писать мне или оставлять сообщения в этом [обсуждении](https://forums.alliedmods.net/showthread.php?t=302140). Прочтите файл INFORMATION.md, чтобы узнать обо всех доступных настройках/функциях. Посетите [вики](https://github.com/Psykotikism/Mutant_Tanks/wiki) для получения дополнительной информации, включая примеры и руководство.
 
-### Main Features
-1. How do I make my own Mutant Tank?
+### Основные особенности
+1. Как создать собственного танка-мутанта?
 
-- Create an entry.
+- Создайте запись.
 
-Examples:
+Примеры:
 
-This is okay:
+Этот будет работать:
 
 ```
 "Mutant Tanks"
@@ -150,19 +150,19 @@ This is okay:
 	{
 		"General"
 		{
-			"Tank Name"				"Test Tank" // Tank has a name.
-			"Tank Enabled"				"1" // Tank is enabled.
-			"Tank Chance"				"100.0" // Tank has 100% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can spawn.
-			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255,0,0,255" // Tank has red skin.
-			"Glow Color"				"255,255,0" // Tank has a yellow glow outline.
+			"Tank Name"				"Тестовый танк" // Имя танка.
+			"Tank Enabled"				"1" // Танк включен.
+			"Tank Chance"				"100.0" // Танк имеет 100% шанс появления.
+			"Spawn Enabled"				"1" // Танк может возродиться.
+			"Menu Enabled"				"1" // Танка можно создать с помощью команды "sm_tank".
+			"Skin Color"				"255,0,0,255" // У танка красный облик.
+			"Glow Color"				"255,255,0" // Танк имеет жёлтый светящийся контур.
 		}
 	}
 }
 ```
 
-This is not okay:
+Этот не будет работать:
 
 ```
 "Mutant Tanks"
@@ -171,19 +171,19 @@ This is not okay:
 	{
 		"General"
 		{
-			// "Tank Enabled" is missing so this entry is disabled.
-			"Tank Name"				"Test Tank" // Tank has a name.
-			"Tank Chance"				"47.0" // Tank has 47% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can spawn.
-			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255,0,0,255" // Tank has red skin.
-			"Glow Color"				"255,255,0" // Tank has a yellow glow outline.
+			// "Tank Enabled" отсутствует, поэтому эта запись отключена.
+			"Tank Name"				"Тестовый танк" // Имя танка.
+			"Tank Chance"				"47.0" // Танк имеет 47% шанс появления.
+			"Spawn Enabled"				"1" // Танк может возродиться.
+			"Menu Enabled"				"1" // Танка можно создать с помощью команды "sm_tank".
+			"Skin Color"				"255,0,0,255" // У танка красный облик.
+			"Glow Color"				"255,255,0" // Танк имеет жёлтый светящийся контур.
 		}
 	}
 }
 ```
 
-This is okay:
+Этот будет работать:
 
 ```
 "Mutant Tanks"
@@ -192,19 +192,19 @@ This is okay:
 	{
 		"General"
 		{
-			// Since "Tank Name" is missing, the default name for this entry will be "Tank"
-			"Tank Enabled"				"1" // Tank is enabled.
-			"Tank Chance"				"12.3" // Tank has 12.3% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can spawn.
-			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255,0,0,255" // Tank has red skin.
-			"Glow Color"				"255,255,0" // Tank has a yellow glow outline.
+			// Поскольку "Tank Name" отсутствует, по умолчанию для этой записи будет использоваться имя "Танк".
+			"Tank Enabled"				"1" // Танк включен.
+			"Tank Chance"				"12.3" // Танк имеет 12.3% шанс появления.
+			"Spawn Enabled"				"1" // Танк может возродиться.
+			"Menu Enabled"				"1" // Танка можно создать с помощью команды "sm_tank".
+			"Skin Color"				"255,0,0,255" // У танка красный облик.
+			"Glow Color"				"255,255,0" // Танк имеет жёлтый светящийся контур.
 		}
 	}
 }
 ```
 
-This is not okay:
+Этот не будет работать:
 
 ```
 "Mutant Tanks"
@@ -213,21 +213,21 @@ This is not okay:
 	{
 		"General"
 		{
-			"Tank Name"				"Test Tank" // Tank has a name.
-			"Tank Enabled"				"1" // Tank is enabled.
-			"Tank Chance"				"59.0" // Tank has 59% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can spawn.
-			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255 0 0 255" // The values should be separated by commas not white spaces.
-			"Glow Color"				"255 255 0" // The values should be separated by commas not white spaces.
+			"Tank Name"				"Тестовый танк" // Имя танка.
+			"Tank Enabled"				"1" // Танк включен.
+			"Tank Chance"				"59.0" // Танк имеет 59% шанс появления.
+			"Spawn Enabled"				"1" // Танк может возродиться.
+			"Menu Enabled"				"1" // Танка можно создать с помощью команды "sm_tank".
+			"Skin Color"				"255 0 0 255" // Значения следует разделять запятыми, а не пробелами.
+			"Glow Color"				"255 255 0" // Значения следует разделять запятыми, а не пробелами.
 		}
 	}
 }
 ```
 
-- Adding the entry to the roster.
+- Добавление записи в реестр.
 
-Here's our final entry:
+Вот наша последняя запись:
 
 ```
 "Mutant Tanks"
@@ -236,23 +236,23 @@ Here's our final entry:
 	{
 		"General"
 		{
-			"Tank Name"				"Test Tank" // Named "Test Tank".
-			"Tank Enabled"				"1" // Entry is enabled.
-			"Tank Chance"				"9.5" // Tank has 9.5% chance of spawning.
-			"Spawn Enabled"				"1" // Tank can spawn.
-			"Menu Enabled"				"1" // Tank can be spawned through the "sm_tank" command.
-			"Skin Color"				"255,0,0,255" // Tank has red skin.
-			"Glow Color"				"255,255,0" // Tank has a yellow glow outline.
+			"Tank Name"				"Тестовый танк" // Назван «Тестовый танк».
+			"Tank Enabled"				"1" // Запись разрешена.
+			"Tank Chance"				"9.5" // Танк имеет 9.5% шанс появления.
+			"Spawn Enabled"				"1" // Танк может возродиться.
+			"Menu Enabled"				"1" // Танка можно создать с помощью команды "sm_tank".
+			"Skin Color"				"255,0,0,255" // У танка красный облик.
+			"Glow Color"				"255,255,0" // Танк имеет жёлтый светящийся контур.
 		}
 		"Immunities"
 		{
-			"Fire Immunity"				"1" // Immune to fire.
+			"Fire Immunity"				"1" // Невосприимчив к огню.
 		}
 	}
 }
 ```
 
-To make sure that this entry can be chosen, we must change the value in the `Type Range` setting.
+Чтобы убедиться, что эта запись может быть выбрана, мы должны изменить значение в настройке `Type Range`.
 
 ```
 "Mutant Tanks"
@@ -261,15 +261,15 @@ To make sure that this entry can be chosen, we must change the value in the `Typ
 	{
 		"General"
 		{
-			"Type Range"				"1-24" // Determines what entry to start and stop at when reading the entire config file.
+			"Type Range"				"1-24" // Определяет, с какой записи начинать и останавливаться при чтении всего файла конфигурации.
 		}
 	}
 }
 ```
 
-Now, assuming that `Tank #25` is our highest entry, we just raise the maximum value of `Type Range` by 1, so we get 25 entries to choose from. Once the plugin starts reading the config file, when it gets to `Tank #25` it will stop reading the rest.
+Теперь, предполагая, что `Tank #25` - наша самая конечная запись, мы просто увеличиваем максимальное значение `Type Range` на 1, так что мы получаем 25 записей на выбор. Как только плагин начнет читать файл конфигурации, когда он дойдет до `Tank #25`, он перестанет читать остальные.
 
-- Advanced Entry Examples
+- Расширенные примеры записи
 
 ```
 "Mutant Tanks"
@@ -278,14 +278,14 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			"Type Range"				"1-5" // Check "Tank #1" to "Tank #5"
+			"Type Range"				"1-5" // От "Tank #1" до "Tank #5"
 		}
 	}
-	"Tank #5" // Checked by the plugin.
+	"Tank #5" // Проверено плагином.
 	{
 		"General"
 		{
-			"Tank Name"				"Leaper Tank"
+			"Tank Name"				"Прыгающий танк"
 			"Tank Enabled"				"1"
 			"Tank Chance"				"75.2"
 			"Spawn Enabled"				"1"
@@ -295,15 +295,15 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 		}
 		"Enhancements"
 		{
-			"Extra Health"				"50" // Tank's base health + 50
+			"Extra Health"				"50" // Базовое здоровье танка + 50
 		}
 		"Jump Ability"
 		{
-			"Ability Enabled"			"2" // The Tank jumps periodically.
-			"Ability Message"			"3" // Notify players when the Tank is jumping periodically.
-			"Jump Height"				"300.0" // How high off the ground the Tank can jump.
-			"Jump Interval"				"1.0" // How often the Tank jumps.
-			"Jump Mode"				"0" // The Tank's jumping method.
+			"Ability Enabled"			"2" // Танк периодически прыгает.
+			"Ability Message"			"3" // Уведомлять игроков, когда Танк периодически прыгает.
+			"Jump Height"				"300.0" // Насколько высоко от земли может прыгнуть Танк.
+			"Jump Interval"				"1.0" // Как часто Танк прыгает.
+			"Jump Mode"				"0" // Метод прыжков Танка.
 		}
 	}
 }
@@ -316,25 +316,25 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			"Type Range"				"1-11" // Only check for the first 11 Tank types. ("Tank #1" to "Tank #11")
+			"Type Range"				"1-11" // Проверяnm только первые 11 типов Танков. ("Tank #1" до "Tank #11")
 		}
 	}
-	"Tank #13" // This will not be checked by the plugin.
+	"Tank #13" // Этот не будет проверяться плагином.
 	{
 		"General"
 		{
-			"Tank Name"				"Invisible Tank"
+			"Tank Name"				"Невидимый танк"
 			"Tank Enabled"				"1"
 			"Tank Chance"				"38.2"
 			"Spawn Enabled"				"1"
 			"Menu Enabled"				"1"
 			"Skin Color"				"255,255,255,255"
 			"Glow Color"				"255,255,255"
-			"Glow Enabled"				"0" // No glow outline.
+			"Glow Enabled"				"0" // Нет светящегося контура.
 		}
 		"Immunities"
 		{
-			"Fire Immunity"				"1" // Immune to fire.
+			"Fire Immunity"				"1" // Невосприимчив к огню.
 		}
 		"Ghost Ability"
 		{
@@ -345,7 +345,7 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 			"Ghost Fade Rate"			"0.1"
 		}
 	}
-	"Tank #10" // Checked by the plugin.
+	"Tank #10" // Проверено плагином.
 	{
 		"General"
 		{
@@ -353,120 +353,120 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 		}
 		"Enhancements"
 		{
-			"Run Speed"				"1.5" // How fast the Tank moves.
+			"Run Speed"				"1.5" // Как быстро движется Танк.
 		}
 	}
 }
 ```
 
-2. Can you add more abilities or features?
+2. Можете ли вы добавить больше способностей или функций?
 
-- Mutant Tanks already uses a lot of files, so there's no room for anymore abilities or features as of `v8.80`.
+- Mutant Tanks уже использует много файлов, так что нет места для новых способностей или функций в версии `v8.80`.
 
-3. How do I enable/disable the plugin in certain game modes?
+3. Как включить/отключить плагин в определённых режимах игры?
 
-You have 2 options:
+У вас есть 2 варианта:
 
-- Enable/disable in certain game mode types. (You must add numbers up together in `Game Mode Types`.)
-- Enable/disable in specific game modes. (You must specify the game modes in `Enabled Game Modes` and `Disabled Game Modes`.)
+- Включение/отключение в определённых типах игровых режимов. (Вы должны сложить числа в `Game Mode Types`.)
+- Включение/отключение в определённых игровых режимах. (Вы должны указать режимы игры в `Enabled Game Modes` и `Disabled Game Modes`.)
 
-Here are some scenarios and their outcomes:
+Вот несколько сценариев и их результаты:
 
-Scenario 1:
-
-```
-"Game Mode Types" "0" // The plugin is enabled in all game mode types.
-"Enabled Game Modes" "" // The plugin is enabled in all game modes.
-"Disabled Game Modes" "coop" // The plugin is disabled in "coop" mode.
-
-Outcome: The plugin works in every game mode except "coop" mode.
-```
-
-Scenario 2:
+Сценарий 1:
 
 ```
-"Game Mode Types" "1" // The plugin is enabled in every Campaign-based game mode.
-"Enabled Game Modes" "coop" // The plugin is enabled in only "coop" mode.
-"Disabled Game Modes" "" // The plugin is not disabled in any game modes.
+"Game Mode Types" "0" // Плагин включен во всех типах игровых режимов.
+"Enabled Game Modes" "" // Плагин включен во всех режимах игры.
+"Disabled Game Modes" "coop" // Плагин отключен в режиме "совместной игры".
 
-Outcome: The plugin works only in "coop" mode.
+Результат: Плагин работает во всех режимах игры, кроме режима «совместной игры».
 ```
 
-Scenario 3:
+Сценарий 2:
 
 ```
-"Game Mode Types" "5" // The plugin is enabled in every Campaign-based and Survival-based game mode.
-"Enabled Game Modes" "coop,versus" // The plugin is enabled in only "coop" and "versus" mode.
-"Disabled Game Modes" "coop" // The plugin is disabled in "coop" mode.
+"Game Mode Types" "1" // Плагин доступен во всех режимах игры на основе кампании.
+"Enabled Game Modes" "coop" // Плагин работает только в режиме «совместной игры».
+"Disabled Game Modes" "" // Плагин не отключается ни в одном игровом режиме.
 
-Outcome: The plugin works only in "coop" mode.
+Результат: Плагин работает только в режиме «совместной игры».
 ```
 
-4. How come some Mutant Tanks aren't showing up?
-
-It may be due to one or more of the following:
-
-- The `Tank Enabled` setting for that Mutant Tank may be set to 0 or doesn't exists at all which defaults to 0.
-- The `Spawn Enabled` setting for that Mutant Tank may be set to 0.
-- You have created a new Mutant Tank and didn't raise the maximum value of `Type Range`.
-- You have misspelled one of the settings.
-- You are still using the `Tank Character` setting which is no longer used since `v8.16`.
-- You didn't set up the Mutant Tank properly.
-- You are missing quotation marks.
-- You are missing curly braces.
-- You have more than 500 Mutant Tanks in your config file.
-- You didn't format your config file properly.
-- The Mutant Tanks requires X human-controlled survivors around and there are none.
-- The Mutant Tank needs to be in an open area to spawn and it's currently in a narrow place.
-- The number of Mutant Tanks currently alive with the same type has reached or exceeded the limit set by the `Type Limit`.
-- The Mutant Tank can only spawn on regular maps.
-- The Mutant Tank can only spawn on finale maps.
-
-5. How do I kill the Tanks depending on what abilities they have?
-
-The following abilities require different strategies:
-
-- Absorb Ability: The Mutant Tank takes way less damage. Conserve your ammo and maintain distance between you and the Mutant Tank.
-- God Ability: The Mutant Tank will have god mode temporarily and will not take any damage at all until the effect ends. Maintain distance between you and the Mutant Tank.
-- Bullet Immunity: Forget your guns. Just spam your grenade launcher at it, slash it with an axe or crowbar, or burn it to death.
-- Explosive Immunity: Forget explosives and just focus on gunfire, melee weapons, and molotovs/gascans.
-- Fire Immunity: No more barbecued Tanks. Just keep shooting
-- Melee Immunity: No more Gordon Freeman players (immune to melee weapons including crowbar).
-- Nullify Hit: The Mutant Tank can mark players as useless, which means as long as that player is nullified, they will not do any damage.
-- Shield Ability: If set to be weak to explosives, wait for the Tank to throw propane tanks at you and then throw it back at the Tank. Then shoot the propane tank to deactivate the Tank's shield. If set to be weak to fire, wait for the Tank to throw gascans at you and then throw it back at the Tank. Then shoot the gascan to deactivate the Tank's shield. If set to be weak to bullets, just keep shooting the Tank. If set to be weak to melee hits, just keep slashing at the Tank.
-
-Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information on each ability's strengths and weaknesses.
-
-6. How can I change the amount of Tanks that spawn on each finale wave?
-
-Here's an example:
+Сценарий 3:
 
 ```
-"Finale Waves" "1,2,3,4,5,6,7,8,9,10" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, 4 Tanks on the 3rd wave, etc.
+"Game Mode Types" "5" // Плагин доступен во всех режимах игры на основе кампании и выживания.
+"Enabled Game Modes" "coop,versus" // Плагин работает только в режиме «совместной игры» и «сражение».
+"Disabled Game Modes" "coop" // Плагин отключен в режиме «совместной игры».
+
+Результат: Плагин работает только в режиме «совместной игры».
 ```
 
-7. How can I change the amount of Tanks that can spawn on finale maps?
+4. Почему некоторые танки-мутанты не появляются?
 
-Set the value in `Finale Amount`.
+Это может быть связано с одной или несколькими из следующих причин:
 
-8. How can I decide whether to display each Tank's health?
+- Параметр `Tank Enabled` для этого танка-мутанта установлен на 0 или вообще не существует, по умолчанию 0.
+- Параметр `Spawn Enabled` для этого танка-мутанта установлен на 0.
+- Вы создали нового танка-мутанта и не повысили максимальное значение параметра `Type Range`.
+- Вы неправильно написали одну из настроек.
+- Вы всё ещё используете настройку `Tank Character`, которая больше не используется с версии `v8.16`.
+- Вы неправильно настроили плагин.
+- Вам не хватает кавычек.
+- Вам не хватает фигурных скобок.
+- В вашем файле конфигурации более 500 танков-мутантов.
+- Вы неправильно отформатировали файл конфигурации.
+- Танки-мутанты требуют X выживших, контролируемых людьми, и их нет.
+- Танк-мутант должен находиться на открытой местности, чтобы появиться, и в настоящее время он находится в узком месте.
+- Количество живых танков-мутантов того же типа достигло или превысило лимит, установленный параметром `Type Limit`.
+- Танк-мутант может появиться только на обычных картах.
+- Танк-мутант может появиться только на финальных картах.
 
-Set the value in `Display Health`.
+5. Как убить Танков в зависимости от того, какими способностями они обладают?
 
-9. Why do some Tanks spawn with different props?
+Следующие способности требуют разных стратегий:
 
-Each prop has X out of 100.0% chance to appear on Mutant Tanks when they spawn. Configure the chances for each prop in the `Props Chance` setting.
+- Поглощающая способность: Танк-мутант получает намного меньше урона. Сохраняйте боеприпасы и сохраняйте дистанцию между вами и танком-мутантом.
+- Способность бога: Танк-мутант временно будет иметь режим бога и не получит никакого урона, пока эффект не закончится. Сохраняйте дистанцию между вами и танком-мутантом.
+- Иммунитет к пулям: Забудьте о своём огнестрельном оружии. Просто спамьте по нему из гранатомета, порежьте его топором или ломом или сожгите до смерти.
+- Иммунитет к взрывам: Забудьте о взрывчатке и просто сосредоточьтесь на стрельбе, холодном оружии и молотовых/газовых канистрах.
+- Иммунитет к огню: Больше никаких танков, приготовленных на гриле. Просто продолжай стрелять
+- Иммунитет к урону в ближнем бою: Больше никаких игроков-Гордонов Фрименов (иммунитет к холодному оружию, включая лом).
+- Аннулированное попадание: Танк-мутант может отмечать игроков в качестве бесполезных, что означает, что пока этот игрок аннулирован, он не будет наносить никакого урона.
+- Способность щит: Если установлена слабость к взрывчатке, дождитесь, пока Танк бросит в вас баллоны с пропаном, а затем бросьте его обратно в Танка. Затем выстрелите в баллон с пропаном, чтобы отключить щит танка. Если установлена слабость к огоню, дождитесь, пока Танк бросит в вас канистры с бензином, а затем бросьте его обратно в Танка. Затем выстрелите в канистру, чтобы отключить щит танка. Если установлена слабость к пулям, просто продолжайте стрелять по танку. Если установлена слабость к ударам в ближнем бою, просто продолжайте рубить Танка.
 
-10. Why are the Tanks spawning with more than the extra health given to them?
+Посетите [вики](https://github.com/Psykotikism/Mutant_Tanks/wiki) для получения дополнительной информации о сильных и слабых сторонах каждой способности.
 
-Since `v8.10`, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
+6. Как я могу изменить количество Танков, которые появляются на каждой финальной волне?
 
-11. How do I add more Mutant Tanks?
+Вот пример:
 
-- Add a new entry in the config file.
-- Raise the maximum value of the `Type Range` setting.
+```
+"Finale Waves" "1,2,3,4,5,6,7,8,9,10" // Создать 2 Танка на 1 волне, 3 Танка на 2 волне, 4 Танка на 3 волне и т.д.
+```
 
-Example:
+7. Как я могу изменить количество Танков, которые могут появляться на финальных картах?
+
+Установите значение в `Finale Amount`.
+
+8. Как я могу решить, нужно ли отображать здоровье каждого Танка?
+
+Установите значение в `Display Health`.
+
+9. Почему у некоторых Танков появляются разные объекты?
+
+У каждого объекта есть X шанс из 100.0% появиться на танках-мутантах при их появлении. Настройте шансы для каждого объекта в настройке `Props Chance`.
+
+10. Почему появляются Танки с большим запасом здоровья, чем положено им?
+
+Начиная с версии `v8.10`, дополнительное здоровье, данное Танкам, теперь умножается на количество живых, не бездействующих Выживших людей, присутствующих при появлении Танка.
+
+11. Как добавить больше танков-мутантов?
+
+- Добавьте новую запись в файл конфигурации.
+- Увеличьте максимальное значение параметра `Type Range`.
+
+Пример:
 
 ```
 "Mutant Tanks"
@@ -475,24 +475,24 @@ Example:
 	{
 		"General"
 		{
-			"Type Range"				"1-69" // The plugin will check for 69 entries when loading the config file.
+			"Type Range"				"1-69" // Плагин проверит 69 записей при загрузке файла конфигурации.
 		}
 	}
 	"Tank #69"
 	{
 		"General"
 		{
-			"Tank Enabled"				"1" // Tank #69 is enabled and can be chosen.
+			"Tank Enabled"				"1" // Танк #69 включен и может быть выбран.
 		}
 	}
 }
 ```
 
-12. How do I filter out certain Mutant Tanks that I made without deleting them?
+12. Как мне отфильтровать определённых танков-мутантов, которые я сделал, не удаляя их?
 
-Enable/disable them with the `Tank Enabled` setting.
+Включите/отключите их с помощью настройки `Tank Enabled`.
 
-Example:
+Пример:
 
 ```
 "Mutant Tanks"
@@ -501,60 +501,60 @@ Example:
 	{
 		"General"
 		{
-			"Tank Enabled"				"1" // Tank #1 can be chosen.
-			"Tank Chance"				"100.0" // Tank #1 has a chance to spawn.
+			"Tank Enabled"				"1" // Танк #1 можно выбрать.
+			"Tank Chance"				"100.0" // Танк #1 имеет шанс появиться.
 		}
 	}
 	"Tank #2"
 	{
 		"General"
 		{
-			"Tank Enabled"				"0" // Tank #2 cannot be chosen.
-			"Tank Chance"				"0.0" // Tank #2 has no chance to spawn but can still be spawned through the menu.
+			"Tank Enabled"				"0" // Танк #2 нельзя выбрать.
+			"Tank Chance"				"0.0" // Танк #2 не имеет шанса появиться, но всё ещё может быть вызван через меню.
 		}
 	}
 	"Tank #3"
 	{
 		"General"
 		{
-			"Tank Enabled"				"0" // Tank #3 cannot be chosen.
-			"Tank Chance"				"0.0" // Tank #3 has no chance to spawn but can still be spawned through the menu.
+			"Tank Enabled"				"0" // Танк #3 нельзя выбрать.
+			"Tank Chance"				"0.0" // Танк #3 не имеет шанса появиться, но всё ещё может быть вызван через меню.
 		}
 	}
 	"Tank #4"
 	{
 		"General"
 		{
-			"Tank Enabled"				"1" // Tank #4 can be chosen.
-			"Tank Chance"				"100.0" // Tank #4 has a chance to spawn.
+			"Tank Enabled"				"1" // Танк #4 можно выбрать.
+			"Tank Chance"				"100.0" // Танк #4 имеет шанс появиться.
 		}
 	}
 }
 ```
 
-13. Can I create temporary Tanks without removing or replacing them?
+13. Могу ли я создавать временных Танков, не удаляя и не заменяя их?
 
-Yes, you can do that with custom configs.
+Да, вы можете сделать это с помощью пользовательских конфигураций.
 
-Example:
+Пример:
 
 ```
-// Settings for addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg
+// Настройки для addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg
 "Mutant Tanks"
 {
 	"Plugin Settings"
 	{
 		"Custom"
 		{
-			"Enable Custom Configs"			"1" // Enable custom configs
-			"Execute Config Types"			"1" // 1: Difficulty configs (easy, normal, hard, impossible)
+			"Enable Custom Configs"			"1" // Включить пользовательские конфигурации
+			"Execute Config Types"			"1" // 1: Конфигурация сложности (легко, нормально, сложно, невозможно)
 		}
 	}
 	"Tank #69"
 	{
 		"General"
 		{
-			"Tank Name"				"Psyk0tik Tank"
+			"Tank Name"				"Танк «Psyk0tik»"
 			"Tank Enabled"				"1"
 			"Tank Chance"				"2.53"
 			"Spawn Enabled"				"1"
@@ -573,14 +573,14 @@ Example:
 	}
 }
 
-// Settings for addons/sourcemod/data/mutant_tanks/difficulty_configs/impossible.cfg
+// Настройки для addons/sourcemod/data/mutant_tanks/difficulty_configs/impossible.cfg
 "Mutant Tanks"
 {
 	"Tank #69"
 	{
 		"General"
 		{
-			"Tank Name"				"Idiot Tank"
+			"Tank Name"				"Танк-идиот"
 			"Tank Enabled"				"1"
 			"Tank Chance"				"1.0"
 			"Spawn Enabled"				"1"
@@ -599,17 +599,17 @@ Example:
 	}
 }
 
-Output: When the current difficulty is Expert mode (impossible), the Idiot Tank will spawn instead of Psyk0tik Tank as long as custom configs is being used.
+Результат: Когда текущая сложность - экспертный режим (невозможно), Танк-идиот будет появляться вместо Танка «Psyk0tik», пока используются эта пользовательская конфигурация.
 
-These are basically temporary Tanks that you can create for certain situations, like if there's 5 players on the server, the map is c1m1_hotel, or even if the day is Thursday, etc.
+В основном это временные танки, которые вы можете создать для определённых ситуаций, например, если на сервере 5 игроков, карта - c1m1_hotel, или даже если день недели четверг и т.д.
 ```
 
-14. How can I move the Mutant Tanks category around on the admin menu?
+14. Как мне переместить категорию танков-мутантов в меню администратора?
 
-- You have to open up `addons/sourcemod/configs/adminmenu_sorting.txt` and add the `MutantTanks` category.
-- This also allows you to sort each item in the category.
+- Вы должны открыть `addons/sourcemod/configs/adminmenu_sorting.txt` и добавить категорию `MutantTanks`.
+- Это также позволит вам сортировать каждый элемент в категории.
 
-Example:
+Пример:
 
 ```
 "Menu"
@@ -656,606 +656,606 @@ Example:
 }
 ```
 
-15. How can I disable the `MutantTanks` category for some admins?
+15. Как я могу отключить категорию `MutantTanks` для некоторых админов?
 
-You can use the `mt_adminmenu` override to restrict the category to certain admin flags/groups.
+Вы можете использовать переопределение `mt_adminmenu`, чтобы ограничить категорию определёнными флагами/группами администратора.
 
-16. Are there any developer/tester features available in the plugin?
+16. Доступны ли в плагине какие-либо функции разработчика/тестировщика?
 
-Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Mutant Tank.
+Да, есть forward'ы, native'ы, stock'и, целевые фильтры для каждого особого заражённого и команда администратора, которая позволяет разработчикам/тестерам создавать и тестировать каждого танка-мутанта.
 
-Forwards:
+Forward'ы:
 
 ```
 /**
- * Called every second to trigger a Mutant Tank's ability.
- * Use this forward for any passive abilities.
+ * Вызывается каждую секунду для активации способности танка-мутанта.
+ * Используйте этот forward для любых пассивных способностей.
  *
- * @param tank			Client index of the Tank.
+ * @param tank			Клиентский индекс Танка.
  **/
 forward void MT_OnAbilityActivated(int tank);
 
 /**
- * Called before the config file is read.
- * Use this forward to store the different formats of the ability's section name.
+ * Вызывается перед чтением файла конфигурации.
+ * Используйте этот forward для хранения различных форматов имени раздела способности.
  *
- * @param list			List to store the first format.
- * @param list2			List to store the second format.
- * @param list3			List to store the third format.
- * @param list4			List to store the fourth format.
+ * @param list			Список для хранения первого формата.
+ * @param list2			Список для хранения второго формата.
+ * @param list3			Список для хранения третьего формата.
+ * @param list4			Список для хранения четвёртого формата.
  **/
 forward void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4);
 
 /**
- * Called when a human-controlled Mutant Tank presses a button.
- * Use this forward to trigger abilities manually.
+ * Вызывается, когда управляемый человеком танк-мутант нажимает кнопку.
+ * Используйте этот forward, чтобы активировать способности вручную.
  *
- * @param tank			Client index of the Tank.
- * @param button		Button pressed.
+ * @param tank			Клиентский индекс Танка.
+ * @param button		Нажатая кнопка.
  **/
 forward void MT_OnButtonPressed(int tank, int button);
 
 /**
- * Called when a human-controlled Mutant Tank releases a button.
- * Use this forward to trigger abilities manually.
+ * Вызывается, когда управляемый человеком танк-мутант отпускает кнопку.
+ * Используйте этот forward, чтобы активировать способности вручную.
  *
- * @param tank			Client index of the Tank.
- * @param button		Button released.
+ * @param tank			Клиентский индекс Танка.
+ * @param button		Отпущенная кнопка.
  **/
 forward void MT_OnButtonReleased(int tank, int button);
 
 /**
- * Called when a Mutant Tank changes types.
- * Use this forward to trigger any features/abilities/settings when a Mutant Tank changes types.
+ * Вызывается, когда танк-мутант меняет свой тип.
+ * Используйте этот forward, чтобы активировать любые функции/способности/настройки, когда танк-мутант меняет свой тип.
  *
- * @param tank			Client index of the Tank.
- * @param oldType		The Tank's previous Mutant Tank type.
- * @param newType		The Tank's new Mutant Tank type.
- * @param revert		True if reverting to a normal Tank, false otherwise.
+ * @param tank			Клиентский индекс Танка.
+ * @param oldType		Предыдущий тип танка-мутанта.
+ * @param newType		Следующий тип танка-мутанта.
+ * @param revert		True при возврате к обычному танку, в противном случае - false.
  **/
 forward void MT_OnChangeType(int tank, int oldType, int newType, bool revert);
 
 /**
- * Called when a Mutant Tank's abilities are combined.
- * Use this forward to trigger any combinations.
+ * Вызывается при объединении способностей танка-мутанта.
+ * Используйте этот forward, чтобы вызвать любые комбинации.
  *
- * @param tank			Client index of the Tank.
- * @param type			0 = Main/range abilities, 1 = Hit abilities, 2 = Rock throw abilities, 3 = Rock break abilities,
- *					4 = Post-spawn abilities, 5 = Upon-death abilities, 6 = Upon-incap abilities
- * @param random		Random value to check against for chance to trigger combination.
- * @param combo			String containing the list of abilities to combine.
- * @param survivor		Client index of the survivor, if any.
- * @param weapon		Entity index of the weapon, if any.
- * @param classname		String containing the weapon classname, if any.
+ * @param tank			Клиентский индекс Танка.
+ * @param type			0 = Основные/дальнобойные способности, 1 = Способности удара, 2 = Способности броска камня, 3 = Способности разбивания камня,
+ *					4 = Способности после возрождения, 5 = Способности после смерти, 6 = Способности после выхода из строя
+ * @param random		Случайное значение для проверки на шанс срабатывания комбинации.
+ * @param combo			Строка, содержащая список способностей для объединения.
+ * @param survivor		Клиентский индекс Выжившего, если таковой имеется.
+ * @param weapon		Индекс энтити оружия, если таковой имеется.
+ * @param classname		Строка, содержащая имя класса оружия, если есть.
  **/
 forward void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname);
 
 /**
- * Called when the config file is about to load.
- * Use this forward to set default values for settings for the plugin.
+ * Вызывается, когда файл конфигурации загружается.
+ * Используйте этот forward, чтобы установить значения по умолчанию для настроек плагина.
  *
- * @param mode			1 = Load general settings, 2 = 1 + load type settings, 3 = Load admin settings
+ * @param mode			1 = Загрузить общие настройки, 2 = 1 + настройки типа нагрузки, 3 = Загрузить настройки администратора
  **/
 forward void MT_OnConfigsLoad(int mode);
 
 /**
- * Called when the config file is loaded.
- * Use this forward to load settings for the plugin.
+ * Вызывается при загрузке файла конфигурации.
+ * Используйте этот forward для загрузки настроек плагина.
  *
- * @param subsection		The subsection the config parser is currently on.
- * @param key			The key the config parser is currently on.
- * @param value			The value the config parser is currently on.
- * @param type			The Mutant Tank type the config parser is currently on. (Used for Mutant Tank-specific settings.)
- * @param admin			Client index of an admin. (Used for admin-specific settings.)
- * @param mode			1 = Load general settings, 2 = 1 + load type settings, 3 = Load admin settings
+ * @param subsection		Подраздел, в котором работает анализатор конфигурации.
+ * @param key			Ключ, на котором в настоящее время работает анализатор конфигурации.
+ * @param value			Значение, которое анализатор конфигурации использует в настоящее время.
+ * @param type			Тип танка-мутанта, на котором сейчас работает анализатор конфигурации. (Используется для специфических настроек танков-мутантов.)
+ * @param admin			Клиентский индекс админа. (Используется для настроек, специфичных для администратора.)
+ * @param mode			1 = Загрузить общие настройки, 2 = 1 + настройки типа нагрузки, 3 = Загрузить настройки администратора
  **/
 forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode);
 
 /**
- * Called when the Tank is passed on to another player or bot.
- * Use this forward to copy over any stats for the Tank's new owner.
+ * Вызывается, когда Танк передается другому игроку или боту.
+ * Используйте этот forward, чтобы скопировать любую статистику нового владельца Танка.
  *
- * @param oldTank		Client index of the previous owner.
- * @param newTank		Client index of the new owner.
+ * @param oldTank		Клиентский индекс предыдущего владельца.
+ * @param newTank		Клиентский индекс нового владельца.
  **/
 forward void MT_OnCopyStats(int oldTank, int newTank);
 
 /**
- * Called when a player uses the "sm_st_info" command.
- * Use this forward to add menu items.
+ * Вызывается, когда игрок использует команду "sm_st_info".
+ * Используйте этот forward, чтобы добавить пункты меню.
  *
- * @param menu			Handle to the menu.
+ * @param menu			Добавить в меню.
  **/
 forward void MT_OnDisplayMenu(Menu menu);
 
 /**
- * Called when an event hooked by the core plugin is fired.
- * Use this forward to trigger something on any of those events.
+ * Вызывается при срабатывании события, перехваченного основным плагином.
+ * Используйте этот forward, чтобы вызвать что-то при любом из этих событий.
  *
- * @param event			Handle to the event.
- * @param name			String containing the name of the event.
- * @param dontBroadcast		True if event was not broadcast to clients, false otherwise.
+ * @param event			Добавить в событие.
+ * @param name			Строка, содержащая название события.
+ * @param dontBroadcast		True, если событие не транслировалось клиентам, иначе - false.
  **/
 forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast);
 
 /**
- * Called when the core plugin is hooking/unhooking events.
- * Use this forward to hook/unhook events.
+ * Вызывается, когда основной плагин подключает/отключает события.
+ * Используйте этот forward, чтобы перехватить/отцепить события
  *
- * @param hooked		True if event was hooked, false otherwise.
+ * @param hooked		True, если событие было перехвачено, иначе - false.
  **/
 forward void MT_OnHookEvent(bool hooked);
 
 /**
- * Called when a message is about to be logged.
- * Use this forward to intercept a message.
+ * Вызывается, когда сообщение будет записано в журнал.
+ * Используйте этот forward, чтобы перехватить сообщение.
  *
- * @param type			Type of message being logged.
- * @param message		Buffer containing the message.
+ * @param type			Тип регистрируемого сообщения.
+ * @param message		Буфер, содержащий сообщение.
  *
- * @return			Plugin_Handled to prevent the message from being logged, Plugin_Continue to allow.
+ * @return			Plugin_Handled, чтобы сообщение не регистрировалось, Plugin_Continue, чтобы разрешить.
  **/
 forward Action MT_OnLogMessage(int type, const char[] message);
 
 /**
- * Called when an item from the "Mutant Tanks Information" menu is displayed.
- * Use this forward to translate an item. The menu callback will redraw the item after this forward is called if the buffer isn't empty.
+ * Вызывается, когда отображается элемент из меню "Mutant Tanks Information".
+ * Используйте этот forward, чтобы перевести элемент. Обратный вызов меню перерисовывает элемент после вызова этого forward'а, если буфер не пуст.
  *
- * @param client		Client index of the player the item is being displayed to.
- * @param info			String containing the name of the item.
- * @param buffer		String to store the translated item.
- * @param size			Size of the buffer.
+ * @param client		Клиентский индекс игрока, которому отображается элемент.
+ * @param info			Строка, содержащая имя элемента.
+ * @param buffer		Строка для хранения переведённого элемента.
+ * @param size			Размер буфера.
  **/
 forward void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size);
 
 /**
- * Called when a player selects an item from the "Mutant Tanks Information" menu.
- * Use this forward to do anything when an item is selected.
+ * Вызывается, когда игрок выбирает элемент в меню "Mutant Tanks Information".
+ * Используйте этот forward, чтобы делать что-либо, когда элемент выбран.
  *
- * @param client		Client index of the player selecting the item.
- * @param info			String containing the name of the item.
+ * @param client		Клиентский индекс игрока, выбирающего элемент.
+ * @param info			Строка, содержащая имя элемента.
  **/
 forward void MT_OnMenuItemSelected(int client, const char[] info);
 
 /**
- * Called before the config file is read.
- * Use this forward to officially register an ability's plugin.
+ * Вызывается перед чтением файла конфигурации.
+ * Используйте этот forward, чтобы официально зарегистрировать плагин способности.
  *
- * @param list			List to store plugin's name in.
+ * @param list			Список для хранения названий.
  **/
 forward void MT_OnPluginCheck(ArrayList &list);
 
 /**
- * Called when the core plugin is unloaded/reloaded.
- * Use this forward to get rid of any modifications to Tanks or survivors.
+ * Вызывается при выгрузке/перезагрузке основного плагина.
+ * Используйте этот forward, чтобы избавиться от любых модификаций Танков или Выживших.
  **/
 forward void MT_OnPluginEnd();
 
 /**
- * Called after a Mutant Tank spawns.
- * Use this forward for any post-spawn actions.
- * If you plan on using this to activate an ability, use MT_OnAbilityActivated() instead.
+ * Вызывается после появления танка-мутанта.
+ * Используйте этот forward для любых действий после появления.
+ * Если вы планируете использовать это для активации способности, используйте вместо этого MT_OnAbilityActivated().
  *
- * @param tank			Client index of the Tank.
+ * @param tank			Клиентский индекс Танка.
  **/
 forward void MT_OnPostTankSpawn(int tank);
 
 /**
- * Called when timers have been reset.
- * Use this forward for resetting repeating timers that use intervals set by config files. 
+ * Вызывается при сбросе таймера.
+ * Используйте этот forward для сброса повторяющихся таймеров, которые используют интервалы, установленные в файлах конфигурации.
  *
- * @param mode			0 = No client index required, 1 = Client index required
- * @param tank			Client index of a Tank.
+ * @param mode			0 = Индекс клиента не требуется, 1 = Требуется индекс клиента
+ * @param tank			Клиентский индекс Танка.
  **/
 forward void MT_OnResetTimers(int mode, int tank);
 
 /**
- * Called when a survivor is rewarded or their reward ends.
- * Use this forward to reward survivors or to reset their rewards.
+ * Вызывается, когда Выживший получает награду или его награда заканчивается.
+ * Используйте этот forward, чтобы дать награду Выжившим или сбросить их награды.
  *
- * @param survivor		Client index of the survivor.
- * @param tank			Client index of the Tank.
- * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
- *					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
- * @param priority		1 = Killer, 2 = Assistant who did most damage, 3 = Teammate who helped
- * @param duration		The duration of the reward.
- * @param apply			True if the reward is given, false otherwise.
+ * @param survivor		Клиентский индекс Выжившего.
+ * @param tank			Клиентский индекс Танка.
+ * @param type			1 = Здоровье, 2 = Усилитель урона, 4 = Скорость, 8 = Боеприпасы, 16 = Предмет, 32 = Режим бога, 64 = Пополнение здоровья и боеприпасов, 128 = Возрождение,
+ *					255 = Все восемь наград, 256-2147483647 = Зарезервировано для сторонних плагинов
+ * @param priority		1 = Убийца, 2 = Помощник в убийстве, который причинил наибольший ущерб, 3 = Товарищ по команде, который помог
+ * @param duration		Срок действия награды.
+ * @param apply			True, если награда дана, в противном случае - false.
  **/
 forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply);
 
 /**
- * Called when a Mutant Tank's rock breaks.
- * Use this forward for any after-effects.
+ * Вызывается, когда камень танка-мутанта ломается.
+ * Используйте этот forward для любых последствий.
  *
- * @param tank			Client index of the Tank.
- * @param rock			Entity index of the rock.
+ * @param tank			Клиентский индекс Танка.
+ * @param rock			Индекс энтити камня.
  **/
 forward void MT_OnRockBreak(int tank, int rock);
 
 /**
- * Called when a Mutant Tank throws a rock.
- * Use this forward for any throwing abilities.
+ * Вызывается, когда танк-мутант бросает камень.
+ * Используйте этот forward для любых метательных способностей.
  *
- * @param tank			Client index of the Tank.
- * @param rock			Entity index of the rock.
+ * @param tank			Клиентский индекс Танка.
+ * @param rock			Индекс энтити камня.
  **/
 forward void MT_OnRockThrow(int tank, int rock);
 
 /**
- * Called when all settings are cached.
- * Use this forward to cache settings for each player.
+ * Вызывается, когда все настройки в кэше.
+ * Используйте этот forward, чтобы кэшировать настройки для каждого игрока.
  *
- * @param tank			Client index of the Tank.
- * @param apply			True if player is a Tank and has access to the Mutant Tank type, and needs settings to be applied, false otherwise.
- * @param type			Mutant Tank type, 0 otherwise.
+ * @param tank			Клиентский индекс Танка.
+ * @param apply			True, если игрок является Танком и имеет доступ к типу танка-мутанта и требует применения настроек, иначе - false.
+ * @param type			Тип танка-мутанта, иначе 0.
  **/
 forward void MT_OnSettingsCached(int tank, bool apply, int type);
 
 /**
- * Called when a Mutant Tank type has been chosen.
- * Use this forward to check or change the chosen type.
+ * Вызывается при выборе типа танка-мутанта.
+ * Используйте этот forward, чтобы проверить или изменить выбранный тип.
  *
- * @param type			Type chosen.
- * @param tank			Client index of the Tank if the type chosen is being applied directly, 0 otherwise.
+ * @param type			Выбраннный тип.
+ * @param tank			Клиентский индекс Танка, если выбранный тип применяется напрямую, в противном случае - 0.
  *
- * @return			Plugin_Handled to choose another type, Plugin_Stop to prevent the Tank from mutating,
- *					Plugin_Changed to change the chosen type, Plugin_Continue to allow.
+ * @return			Plugin_Handled, чтобы выбрать другой тип, Plugin_Stop, чтобы предотвратить мутацию Танка,
+ *					Plugin_Changed, чтобы изменить выбранный тип, Plugin_Continue, чтобы разрешить.
  */
 forward Action MT_OnTypeChosen(int &type, int tank);
 ```
 
-Natives:
+Native'ы:
 
-- Core plugin
+- Основной плагин
 
 ```
 /**
- * Returns if a certain Mutant Tank type can spawn.
+ * Возвращается, если может появиться определённый тип танка-мутанта.
  *
- * @param type			Mutant Tank type.
- * @return			True if the type can spawn, false otherwise.
- * @error			Type is 0 or less.
+ * @param type			Тип танка-мутанта.
+ * @return			True, если тип может появляться, иначе - false.
+ * @error			Тип 0 или меньше.
  **/
 native bool MT_CanTypeSpawn(int type);
 
 /**
- * Returns if a certain Mutant Tank type requires human-controlled survivors to be present to be effective.
+ * Возвращается, если для эффективности определённого типа танка-мутанта требуется присутствие Выживших, контролируемых человеком.
  *
- * @param type			Mutant Tank type.
- * @return			True if the type requires human-controlled survivors to be present, false otherwise.
- * @error			Type is 0 or less.
+ * @param type			Тип танка-мутанта.
+ * @return			True, если тип требует присутствия выживших, контролируемых человеком, в противном случае - false.
+ * @error			Тип 0 или меньше.
  **/
 native bool MT_DoesTypeRequireHumans(int type);
 
 /**
- * Returns the current access flags set by the core plugin.
+ * Возвращает текущие флаги доступа, установленные основным плагином.
  *
- * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
- * @param type			Mutant Tank type. (Optional)
- * @param admin			Client index of an admin. (Optional)
- * @return			The current access flags.
- * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
+ * @param mode			1 = Глобальные флаги, 2 = Типовые флаги, 3 = Флаги глобального администратора, 4 = Флаги администратора для конкретных типов
+ * @param type			Тип танка-мутанта. (Необязательно)
+ * @param admin			Клиентский индекс админа. (Необязательно)
+ * @return			Текущие флаги доступа.
+ * @error			Неверный индекс клиента, клиент не в игре, клиент - бот или тип 0 или меньше.
  **/
 native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
 
 /**
- * Returns the value of a combination setting based on a position.
+ * Возвращает значение настройки комбинации на основе позиции.
  *
- * @param tank			Client index of the Tank.
- * @param type			1 = Chance, 2 = Damage, 3 = Delay, 4 = Duration, 5 = Interval, 6 = Min radius, 7 = Max radius,
- *					8 = Range, 9 = Range Chance, 10 = Death range, 11 = Death range chance, 12 = Rock chance, 13 = Speed
- * @param pos			The position in the setting's array to retrieve the value from. (0-9)
- * @return			The value stored in the setting.
- * @error			Invalid client index or client is not in-game.
+ * @param tank			Клиентский индекс Танка.
+ * @param type			1 = Шанс, 2 = Урон, 3 = Задержка, 4 = Продолжительность, 5 = Интервал, 6 = Мин. радиус, 7 = Макс. радиус,
+ *					8 = Радиус, 9 = Шанс радиуса, 10 = Радиус смерти, 11 = Шанс радиуса смерти, 12 = Шанс камня, 13 = Скорость
+ * @param pos			Позиция в массиве параметров, из которой нужно получить значение. (0-9)
+ * @return			Значение, сохранённое в настройке.
+ * @error			Неверный индекс клиента или клиента нет в игре.
  **/
 native float MT_GetCombinationSetting(int tank, int type, int pos);
 
 /**
- * Returns the current finale wave.
+ * Возвращает текущую финальную волну.
  *
- * @return			The current finale wave.
+ * @return			Текущая финальная волна.
  **/
 native int MT_GetCurrentFinaleWave();
 
 /**
- * Returns a Mutant Tank's glow outline range.
+ * Возвращает диапазон светящегося контура танка-мутанта.
  *
- * @param tank			Client index of the Tank.
- * @param mode			True if looking for max range, false otherwise.
- * @return			The glow outline range of the Tank.
- * @error			Invalid client index or client is not in-game.
+ * @param tank			Клиентский индекс Танка.
+ * @param mode			True, если ищется максимальный диапазон, в противном случае - false.
+ * @return			Диапазон светящегося контура танка.
+ * @error			Неверный индекс клиента или клиента нет в игре.
  **/
 native int MT_GetGlowRange(int tank, bool mode);
 
 /**
- * Returns a Mutant Tank's glow outline type.
+ * Возвращает тип светящегося контура танка-мутанта.
  *
- * @param tank			Client index of the Tank.
- * @return			The glow outline type of the Tank.
- * @error			Invalid client index or client is not in-game.
+ * @param tank			Клиентский индекс Танка.
+ * @return			Тип светящегося контура танка.
+ * @error			Неверный индекс клиента или клиента нет в игре.
  **/
 native int MT_GetGlowType(int tank);
 
 /**
- * Returns the current immunity flags set by the core plugin.
+ * Возвращает текущие флаги иммунитета, установленные основным плагином.
  *
- * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
- * @param type			Mutant Tank type. (Optional)
- * @param admin			Client index of an admin. (Optional)
- * @return			The current immunity flags.
- * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
+ * @param mode			1 = Глобальные флаги, 2 = Типовые флаги, 3 = Флаги глобального администратора, 4 = Флаги администратора для конкретных типов
+ * @param type			Тип танка-мутанта. (Необязательно)
+ * @param admin			Клиентский индекс админа. (Необязательно)
+ * @return			Текущие флаги иммунитета.
+ * @error			Неверный индекс клиента, клиент не в игре, клиент - бот или тип 0 или меньше.
  **/
 native int MT_GetImmunityFlags(int mode, int type = 0, int admin = -1);
 
 /**
- * Returns the maximum value of the "Type Range" setting.
+ * Возвращает максимальное значение параметра "Type Range".
  *
- * @return			The maximum value of the "Type Range" setting.
+ * @return			Максимальное значение параметра "Type Range".
  **/
 native int MT_GetMaxType();
 
 /**
- * Returns the minimum value of the "Type Range" setting.
+ * Возвращает минимальное значение параметра "Type Range".
  *
- * @return			The minimum value of the "Type Range" setting.
+ * @return			Минимальное значение параметра "Type Range".
  **/
 native int MT_GetMinType();
 
 /**
- * Returns the RGBA colors given to a Mutant Tank's props.
+ * Возвращает RGBA цвет, присвоенный объектам танка-мутанта.
  *
- * @param tank			Client index of the Tank.
- * @param type			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color, 4 = Rock color,
- *					5 = Tire color, 6 = Propane tank color, 7 = Flashlight color, 8 = Crown color
- * @param red			Red color reference.
- * @param green			Green color reference.
- * @param blue			Blue color reference.
- * @param alpha			Alpha color reference.
- * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 8.
+ * @param tank			Клиентский индекс Танка.
+ * @param type			1 = Светлый цвет, 2 = Цвет кислородного баллона, 3 = Цвет пламени кислородного баллона, 4 = Цвет камня,
+ *					5 = Цвет шин, 6 = Цвет баллона с пропаном, 7 = Цвет фонарика, 8 = Цвет короны
+ * @param red			Отсылка красного цвета.
+ * @param green			Отсылка зелёного цвета.
+ * @param blue			Отсылка синего цвета.
+ * @param alpha			Отсылка альфа-цвета.
+ * @error			Неверный индекс клиента, клиент не в игре, или тип меньше 1 или больше 8.
  **/
 native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
 /**
- * Returns a Mutant Tank's run speed.
+ * Возвращает скорость бега танка-мутанта.
  *
- * @param tank			Client index of the Tank.
- * @return			The run speed of the Tank.
- * @error			Invalid client index or client is not in-game.
+ * @param tank			Клиентский индекс Танка.
+ * @return			Скорость бега Танка.
+ * @error			Неверный индекс клиента или клиента нет в игре.
  **/
 native float MT_GetRunSpeed(int tank);
 
 /**
- * Returns the scaled damage based on difficulty.
+ * Возвращает увеличиваемый урон в зависимости от сложности.
  *
- * @param damage		Base damage to scale.
- * @return			The scaled damage based on difficulty.
+ * @param damage		Базовый увеличиваемый урон.
+ * @return			Увеличиваемый урон в зависимости от сложности.
  **/
 native float MT_GetScaledDamage(float damage);
 
 /**
- * Returns a Mutant Tank's spawn type.
+ * Возвращает тип возрождения танка-мутанта.
  *
- * @param tank			Client index of the Tank.
- * @return			The spawn type of the Tank.
- *					0 = Normal, 1 = Boss, 2 = Randomized, 3 = Transformation, 4 = Combined abilities
- * @error			Invalid client index, client is not in-game, or client is human.
+ * @param tank			Клиентский индекс Танка.
+ * @return			Тип возрождения Танка.
+ *					0 = Обычный, 1 = Босс, 2 = Случайно, 3 = Трансформация, 4 = Комбинированные способности
+ * @error			Неверный индекс клиента, клиент не в игре или клиент - человек.
  **/
 native int MT_GetSpawnType(int tank);
 
 /**
- * Returns the RGB colors given to a Mutant Tank.
+ * Возвращает RGB цвет, данные танку-мутанту.
  *
- * @param tank			Client index of the Tank.
- * @param type			1 = Skin color, 2 = Glow outline color
- * @param red			Red color reference.
- * @param green			Green color reference.
- * @param blue			Blue color reference.
- * @param alpha			Alpha color reference.
- * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 2.
+ * @param tank			Клиентский индекс Танка.
+ * @param type			1 = Цвет кожи, 2 = Цвет светящегося контура
+ * @param red			Отсылка красного цвета.
+ * @param green			Отсылка зелёного цвета.
+ * @param blue			Отсылка синего цвета.
+ * @param alpha			Отсылка альфа-цвета.
+ * @error			Неверный индекс клиента, клиент не в игре или тип меньше 1 или больше 2.
  **/
 native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
 /**
- * Returns the custom name given to a Mutant Tank.
+ * Возвращает индивидуальное имя, данное танку-мутанту.
  *
- * @param tank			Client index of the Tank.
- * @param buffer		Buffer to store the custom name in.
- * @error			Invalid client index or client is not in-game.
+ * @param tank			Клиентский индекс Танка.
+ * @param buffer		Буфер для хранения пользовательского имени.
+ * @error			Неверный индекс клиента или клиента нет в игре.
  **/
 native void MT_GetTankName(int tank, char[] buffer);
 
 /**
- * Returns the type of a Mutant Tank.
+ * Возвращает тип танка-мутанта.
  *
- * @param tank			Client index of the Tank.
- * @return			The Tank's Mutant Tank type.
- * @error			Invalid client index or client is not in-game.
+ * @param tank			Клиентский индекс Танка.
+ * @return			Тип танка-мутанта.
+ * @error			Неверный индекс клиента или клиента нет в игре.
  **/
 native int MT_GetTankType(int tank);
 
 /**
- * Returns if a human player has access to a Mutant Tank type.
+ * Возвращает, если игрок-человек имеет доступ к типу танка-мутанта.
  *
- * @param admin			Client index of the admin.
- * @return			True if the human player has access, false otherwise.
- * @error			Invalid client index, client is not in-game, or client is a bot.
+ * @param admin			Клиентский индекс админа.
+ * @return			True, если доступ есть у игрока-человека, в противном случае - false.
+ * @error			Неверный индекс клиента, клиент не в игре или клиент является ботом.
  **/
 native bool MT_HasAdminAccess(int admin);
 
 /**
- * Returns if a certain Mutant Tank type has a chance of spawning.
+ * Возвращает, если у определённого типа танка-мутанта есть шанс на появление.
  *
- * @param type			Mutant Tank type.
- * @return			True if the type has a chance of spawning, false otherwise.
- * @error			Type is 0 or less.
+ * @param type			Тип танка-мутанта.
+ * @return			True, если у типа есть шанс появления, в противном случае - false.
+ * @error			Тип 0 или меньше.
  **/
 native bool MT_HasChanceToSpawn(int type);
 
 /**
- * Hooks/unhooks any entity to/from the core plugin's SetTransmit callback.
+ * Перехватывает/отключает любую энтити от обратного вызова SetTransmit основного плагина.
  *
- * @param entity		Entity index of the entity.
- * @param mode			True if hooking entity, false otherwise.
- * @error			Invalid entity index.
+ * @param entity		Индекс энтити.
+ * @param mode			True, если подключаемая энтити, иначе false.
+ * @error			Недействительный индекс энтити.
  **/
 native void MT_HideEntity(int entity, bool mode);
 
 /**
- * Returns if a human survivor is immune to a Mutant Tank's attacks.
+ * Возвращает, если Выживший человек невосприимчив к атакам танка-мутанта.
  *
- * @param survivor		Client index of the survivor.
- * @param tank			Client index of the Tank.
- * @return			True if the human survivor is immune, false otherwise.
- * @error			Invalid survivor index, survivor is not in-game, survivor is dead, survivor is a bot, survivor is idle,
- *					invalid Tank index, or Tank is not in-game.
+ * @param survivor		Клиентский индекс Выжившего.
+ * @param tank			Клиентский индекс Танка.
+ * @return			True, если Выживший человек имеет иммунитет, в противном случае - false.
+ * @error			Неверный индекс Выжившего, Выживший не в игре, Выживший мёртв, Выживший - бот, Выживший бездействует,
+ *					недействительный индекс танка или танк не в игре.
  **/
 native bool MT_IsAdminImmune(int survivor, int tank);
 
 /**
- * Returns if the core plugin is enabled.
+ * Возвращает, если основной плагин включен.
  *
- * @return			True if core plugin is enabled, false otherwise.
+ * @return			True, если основной плагин включен, иначе - false.
  **/
 native bool MT_IsCorePluginEnabled();
 
 /**
- * Returns if a custom Tank is allowed to be a Mutant Tank.
+ * Возвращает, если пользовательскому танку разрешено быть танком-мутантом.
  *
- * @param tank			Client index of the Tank.
- * @return			True if the custom Tank is allowed to be a Mutant Tank, false otherwise.
- * @error			Invalid client index, client is not in-game, or client is dead.
+ * @param tank			Клиентский индекс Танка.
+ * @return			True, если пользовательскому танку разрешено быть танком-мутантом, иначе - false.
+ * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
  **/
 native bool MT_IsCustomTankSupported(int tank);
 
 /**
- * Returns if a certain Mutant Tank type is only available on finale maps.
+ * Возвращается, если определённый тип танка-мутанта доступен только на финальных картах.
  *
- * @param type			Mutant Tank type.
- * @return			True if the type is available, false otherwise.
- * @error			Type is 0 or less.
+ * @param type			Тип танка-мутанта.
+ * @return			True, если тип доступен, в противном случае - false.
+ * @error			Тип 0 или меньше.
  **/
 native bool MT_IsFinaleType(int type);
 
 /**
- * Returns if a Mutant Tank type has a glow outline.
+ * Возвращается, если у танка-мутанта есть светящийся контур.
  *
- * @param tank			Client index of the Tank.
- * @return			True if the Tank has a glow outline, false otherwise.
- * @error			Invalid client index or client is not in-game.
+ * @param tank			Клиентский индекс Танка.
+ * @return			True, если Танк имеет светящийся контур, иначе - false.
+ * @error			Неверный индекс клиента или клиента нет в игре.
  **/
 native bool MT_IsGlowEnabled(int tank);
 
 /**
- * Returns if a Mutant Tank type's glow outline is flashing.
+ * Возвращается, если мигает светящийся контур танка-мутанта.
  *
- * @param tank			Client index of the Tank.
- * @return			True if the Tank's glow outline is flashing, false otherwise.
- * @error			Invalid client index or client is not in-game.
+ * @param tank			Клиентский индекс Танка.
+ * @return			True, если светящийся контур Танка мигает, иначе - false.
+ * @error			Неверный индекс клиента или клиента нет в игре.
  **/
 native bool MT_IsGlowFlashing(int tank);
 
 /**
- * Returns if a certain Mutant Tank type is only available on non-finale maps.
+ * Возвращается, если определённый тип танка-мутанта доступен только на нефинальных картах.
  *
- * @param type			Mutant Tank type.
- * @return			True if the type is available, false otherwise.
- * @error			Type is 0 or less.
+ * @param type			Тип танка-мутанта.
+ * @return			True, если тип доступен, в противном случае - false.
+ * @error			Тип 0 или меньше.
  **/
 native bool MT_IsNonFinaleType(int type);
 
 /**
- * Returns if a Tank is idle.
+ * Возвращается, если Танк бездействует.
  *
- * @param tank			Client index of the Tank.
- * @param type			Idle mode of the Tank. 0 = Both, 1 = Idle (waiting for survivors), 2 = Bugged (no behavior)
- * @return			True if the Tank is idle, false otherwise.
- * @error			Invalid client index, client is not in-game, client is dead, or type is less than 0 or greater than 2.
+ * @param tank			Клиентский индекс Танка.
+ * @param type			Режим бездействия Танка. 0 = Оба, 1 = Бездействие (ожидание Выживших), 2 = Ошибка(забагался, застрял и т.п.) (нет поведения)
+ * @return			True, если Танк простаивает, иначе - false.
+ * @error			Неверный индекс клиента, клиент не в игре, клиент мёртв или тип меньше 0 или больше 2.
  **/
 native bool MT_IsTankIdle(int tank, int type = 0);
 
 /**
- * Returns if a Tank is allowed to be a Mutant Tank.
+ * Возвращается, если Танку разрешено быть танком-мутантом.
  *
- * @param tank			Client index of the Tank.
- * @param flags			Checks to run.
- *					MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
- *					MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
- *					Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE
- * @return			True if the Tank is allowed to be a Mutant Tank, false otherwise.
- * @error			Invalid client index, client is not in-game, or client is dead.
+ * @param tank			Клиентский индекс Танка.
+ * @param flags			Проверяет на запуск.
+ *					MT_CHECK_INDEX = Индекс клиента, MT_CHECK_CONNECTED = Соединение, MT_CHECK_INGAME = Статус в игре,
+ *					MT_CHECK_ALIVE = Состояние здоровья, MT_CHECK_INKICKQUEUE = Статус исключения из игры, MT_CHECK_FAKECLIENT = проверка бота
+ *					По умолчанию: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE
+ * @return			True, если Танку разрешено быть Танком-мутантом, в противном случае - false.
+ * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
  **/
 native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE);
 
 /**
- * Returns if a certain Mutant Tank type is enabled.
+ * Возвращается, если включен определённый тип танка-мутанта.
  *
- * @param type			Mutant Tank type.
- * @return			True if the type is enabled, false otherwise.
- * @error			Type is 0 or less.
+ * @param type			Тип танка-мутанта.
+ * @return			True, если тип включен, иначе - false.
+ * @error			Тип 0 или меньше.
  **/
 native bool MT_IsTypeEnabled(int type);
 
 /**
- * Logs a message.
+ * Записывает сообщение.
  *
- * @param type			Type of message to be logged.
- * @param message		Buffer containing the message.
- * @param ...			Variable number of format parameters.
+ * @param type			Тип сообщения, которое нужно зарегистрировать.
+ * @param message		Буфер, содержащий сообщение.
+ * @param ...			Переменное количество параметров формата.
  **/
 native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ...);
 
 /**
- * Sets a Tank's Mutant Tank type.
+ * Устанавливает танк Тип танка-мутанта.
  *
- * @param tank			Client index of the Tank.
- * @param type			Mutant Tank type.
- * @param mode			True if the Tank should transform physically into the new Mutant Tank type, false otherwise.
- * @error			Invalid client index, client is not in-game, client is dead, or type is 0 or less.
+ * @param tank			Клиентский индекс Танка.
+ * @param type			Тип танка-мутанта.
+ * @param mode			True, если Танк должен физически трансформироваться в новый тип Танка-мутанта, в противном случае - false.
+ * @error			Неверный индекс клиента, клиент не в игре, клиент мёртв или тип 0 или меньше.
  **/
 native void MT_SetTankType(int tank, int type, bool mode);
 
 /**
- * Spawns a Tank with the specified Mutant Tank type.
+ * Создаёт Танка с указанным типом танка-мутанта.
  *
- * @param tank			Client index of the Tank.
- * @param type			Mutant Tank type.
- * @error			Invalid client index, client is not in-game, or type is 0 or less.
+ * @param tank			Клиентский индекс Танка.
+ * @param type			Тип танка-мутанта.
+ * @error			Неверный индекс клиента, клиент не в игре, или тип 0 или меньше.
  **/
 native void MT_SpawnTank(int tank, int type);
 
 /**
- * Get or set a Tank's max health.
+ * Получить или установить максимальное здоровье танка.
  *
- * @param tank			Client index of the Tank.
- * @param mode			1 = Get the Tank's max health, 2 = Get the Tank's stored max health,
- *					3 = Set the Tank's max health without storing it, 4 = Set the Tank's max health and store it
- * @param newHealth		The Tank's new max health.
+ * @param tank			Клиентский индекс Танка.
+ * @param mode			1 = Получить максимальное здоровье танка, 2 = Получить максимальное сохранённое здоровье танка,
+ *					3 = Установить максимальное здоровье танка, не сохраняя его, 4 = Установить максимальное здоровье танка и сохранить его
+ * @param newHealth		Новое максимальное здоровье танка.
  **/
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
 ```
 
-- Clone ability
+- Способность клонирования
 
 ```
 /**
- * Returns if the clone can use abilities.
+ * Возвращается, если клон может использовать способности.
  *
- * @param tank			Client index of the Tank.
- * @return			True if clone can use abilities, false otherwise.
+ * @param tank			Клиентский индекс Танка.
+ * @return			True, если клон может использовать способности, иначе - false.
  **/
 native bool MT_IsCloneSupported(int tank);
 
 /**
- * Returns if a Tank is a clone.
+ * Возвращается, если Танк является клоном.
  *
- * @param tank			Client index of the Tank.
- * @return			True if the Tank is a clone, false otherwise.
- * @error			Invalid client index.
+ * @param tank			Клиентский индекс Танка.
+ * @return			True, если Танк является клоном, иначе - false.
+ * @error			Неверный индекс клиента.
  **/
 native bool MT_IsTankClone(int tank);
 ```
 
-Stocks:
+Stock'и:
 
 ```
 stock void MT_PrintToChat(int client, const char[] message, any ...)
@@ -1326,7 +1326,7 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 }
 ```
 
-Target filters:
+Фильтры цели:
 
 ```
 @smokers
@@ -1344,138 +1344,138 @@ Target filters:
 @psytanks
 ```
 
-Commands:
+Команды:
 
 ```
-// Requires "z" (Root) flag.
-sm_tank - Spawn a Mutant Tank.
-sm_mt_tank - Spawn a Mutant Tank.
+// Требуется флаг "z" (Root).
+sm_tank - Создать танка-мутанта.
+sm_mt_tank - Создать танка-мутанта.
 
-Valid inputs:
+Допустимые входы:
 
-1. sm_tank <type 1*-500*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is "500" though.)
-2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The plugin will attempt to match the name with any of the Mutant Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
+1. sm_tank <напишите 1*-500*> <количество: 1-32> <0: создать на прицеле|1: создать автоматически> *Минимальные и максимальные значения определяются "Type Range". (Минимальное значение, которое вы можете установить, - 1, а максимальное значение, которое вы можете установить, - это "500".)
+2. sm_tank <напишите название*> <количество: 1-32> <0: создать на прицеле|1: создать автоматически> *Плагин попытается сопоставить имя с любым из имён типов танков-мутантов. (Допускаются частичные имена. Если найдено более одного совпадения, выбирается случайное совпадение. Если найдено 0 совпадений, команда отменяет запрос.)
 
-The command has 4 functions.
+У команды 4 функции.
 
-If you are not a Tank:
+Если ты не Танк:
 
-1. When facing a non-Tank entity, a Mutant Tank will spawn with the chosen type.
-2. When facing a Tank, it will switch to the chosen type.
+1. При столкновении с энтити, не являющейся Танком, появляется танк-мутант выбранного типа.
+2. Когда вы столкнётесь с Танком, он переключится на выбранный тип.
 
-If you are a Tank:
+Если вы Танк:
 
-1. When holding down the +speed (default: LSHIFT) button, a Mutant Tank will spawn into the chosen type.
-2. When not holding down the +speed button, you will transform into the chosen type.
+1. Если удерживать нажатой кнопку +speed (по умолчанию: ЛЕВЫЙ SHIFT), танк-мутант появится в выбранном типе.
+2. Если не удерживать кнопку +speed, вы превратитесь в выбранный тип.
 ```
 
 ```
-// Accessible by the developer and admins with "z" (Root) flag only.
-sm_mt_config - View a section of a config file.
-sm_mt_list - View a list of installed abilities.
-sm_mt_reload - Reload the config file.
-sm_tank2 - Spawn a Mutant Tank.
-sm_mt_tank2 - Spawn a Mutant Tank.
+// Доступно разработчику и администраторам только с флагом "z" (Root).
+sm_mt_config - Просмотр раздела файла конфигурации.
+sm_mt_list - Просмотр списка установленных способностей.
+sm_mt_reload - Перезагрузка файла конфигурации.
+sm_tank2 - Создать танка-мутанта.
+sm_mt_tank2 - Создать танка-мутанта.
 
-// Accessible by all players.
-sm_mutanttank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
-sm_mt_version - Find out the current version of Mutant Tanks.
-sm_mt_info - View information about Mutant Tanks.
-sm_mt_absorb - View information about the Absorb ability.
-sm_mt_acid - View information about the Acid ability.
-sm_mt_aimless - View information about the Aimless ability.
-sm_mt_ammo - View information about the Ammo ability.
-sm_mt_blind - View information about the Blind ability.
-sm_mt_bomb - View information about the Bomb ability.
-sm_mt_bury - View information about the Bury ability.
-sm_mt_car - View information about the Car ability.
-sm_mt_choke - View information about the Choke ability.
-sm_mt_clone - View information about the Clone ability.
-sm_mt_cloud - View information about the Cloud ability.
-sm_mt_drop - View information about the Drop ability.
-sm_mt_drug - View information about the Drug ability.
-sm_mt_drunk - View information about the Drunk ability.
-sm_mt_electric - View information about the Electric ability.
-sm_mt_enforce - View information about the Enforce ability.
-sm_mt_fast - View information about the Fast ability.
-sm_mt_fire - View information about the Fire ability.
-sm_mt_fling - View information about the Fling ability.
-sm_mt_fly - View information about the Fly ability.
-sm_mt_fragile - View information about the Fragile ability.
-sm_mt_ghost - View information about the Ghost ability.
-sm_mt_god - View information about the God ability.
-sm_mt_gravity - View information about the Gravity ability.
-sm_mt_heal - View information about the Heal ability.
-sm_mt_hit - View information about the Hit ability.
-sm_mt_hurt - View information about the Hurt ability.
-sm_mt_hypno - View information about the Hypno ability.
-sm_mt_ice - View information about the Ice ability.
-sm_mt_idle - View information about the Idle ability.
-sm_mt_invert - View information about the Invert ability.
-sm_mt_item - View information about the Item ability.
-sm_mt_jump - View information about the Jump ability.
-sm_mt_kamikaze - View information about the Kamikaze ability.
-sm_mt_lag - View information about the Lag ability.
-sm_mt_laser - View information about the Laser ability.
-sm_mt_leech - View information about the Leech ability.
-sm_mt_lightning - View information about the Lightning ability.
-sm_mt_medic - View information about the Medic ability.
-sm_mt_meteor - View information about the Meteor ability.
-sm_mt_minion - View information about the Minion ability.
-sm_mt_necro - View information about the Necro ability.
-sm_mt_nullify - View information about the Nullify ability.
-sm_mt_omni - View information about the Omni ability.
-sm_mt_panic - View information about the Panic ability.
-sm_mt_pimp - View information about the Pimp ability.
-sm_mt_puke - View information about the Puke ability.
-sm_mt_pyro - View information about the Pyro ability.
-sm_mt_quiet - View information about the Quiet ability.
-sm_mt_recoil - View information about the Recoil ability.
-sm_mt_regen - View information about the Regen ability.
-sm_mt_respawn - View information about the Respawn ability.
-sm_mt_restart - View information about the Restart ability.
-sm_mt_rock - View information about the Rock ability.
-sm_mt_rocket - View information about the Rocket ability.
-sm_mt_shake - View information about the Shake ability.
-sm_mt_shield - View information about the Shield ability.
-sm_mt_shove - View information about the Shove ability.
-sm_mt_slow - View information about the Slow ability.
-sm_mt_smash - View information about the Smash ability.
-sm_mt_smite - View information about the Smite ability.
-sm_mt_spam - View information about the Spam ability.
-sm_mt_splash - View information about the Splash ability.
-sm_mt_splatter - View information about the Splatter ability.
-sm_mt_throw - View information about the Throw ability.
-sm_mt_track - View information about the Track ability.
-sm_mt_ultimate - View information about the Ultimate ability.
-sm_mt_undead - View information about the Undead ability.
-sm_mt_vampire - View information about the Vampire ability.
-sm_mt_vision - View information about the Vision ability.
-sm_mt_warp - View information about the Warp ability.
-sm_mt_whirl - View information about the Whirl ability.
-sm_mt_witch - View information about the Witch ability.
-sm_mt_xiphos - View information about the Xiphos ability.
-sm_mt_yell - View information about the Yell ability.
-sm_mt_zombie - View information about the Zombie ability.
+// Доступны всем игрокам.
+sm_mutanttank - Выберать танка-мутанта. (Эта команда работает только в том случае, если параметр "Spawn Mode" в разделе "Plugin Settings/Human Support" установлен на 0.)
+sm_mt_version - Узнать текущую версию плагина.
+sm_mt_info - Просмотр информации о танках-мутантах.
+sm_mt_absorb - Просмотр информации о способности поглощения.
+sm_mt_acid - Просмотр информации о кислотной способности.
+sm_mt_aimless - Просмотр информации о способности бесприцельности.
+sm_mt_ammo - Просмотр информации о способности боеприпасов.
+sm_mt_blind - Просмотр информации о способности ослепления.
+sm_mt_bomb - Просмотр информации о способности бомбы.
+sm_mt_bury - Просмотр информации о способности закапывания.
+sm_mt_car - Просмотр информации о способности автомобиля.
+sm_mt_choke - Просмотр информации о способности удушения.
+sm_mt_clone - Просмотр информации о способности клонирования.
+sm_mt_cloud - Просмотр информации о дымовой способности.
+sm_mt_drop - Просмотр информации о способности выпадения оружия.
+sm_mt_drug - Просмотр информации о способности наркотического эффекта.
+sm_mt_drunk - Просмотр информации о способности опьянения.
+sm_mt_electric - Просмотр информации о электрической способности.
+sm_mt_enforce - Просмотр информации о способности принуждения.
+sm_mt_fast - Просмотр информации о способности скорости.
+sm_mt_fire - Просмотр информации о способности огня.
+sm_mt_fling - Просмотр информации о способности броска.
+sm_mt_fly - Просмотр информации о способности летать.
+sm_mt_fragile - Просмотр информации о способности уязвимости.
+sm_mt_ghost - Просмотр информации о способности «призрак».
+sm_mt_god - Просмотр информации о способности бога.
+sm_mt_gravity - Просмотр информации о способности гравитации.
+sm_mt_heal - Просмотр информации о лечебной способности.
+sm_mt_hit - Просмотр информации о способности слабого места.
+sm_mt_hurt - Просмотр информации о способности боли.
+sm_mt_hypno - Просмотр информации о гипно-способности.
+sm_mt_ice - Просмотр информации о способности льда.
+sm_mt_idle - Просмотр информации о способности бездействия.
+sm_mt_invert - Просмотр информации о способности инвертирования.
+sm_mt_item - Просмотр информации о способности выпадения предметов.
+sm_mt_jump - Просмотр информации о способности прыжка.
+sm_mt_kamikaze - Просмотр информации о способности камикадзе.
+sm_mt_lag - Просмотр информации о способности задержки.
+sm_mt_laser - Просмотр информации о лазерной способности.
+sm_mt_leech - Просмотр информации о способности кровопийцы.
+sm_mt_lightning - Просмотр информации о способности грозового шторма.
+sm_mt_medic - Просмотр информации о способности медика.
+sm_mt_meteor - Просмотр информации о способности метеоритного дождя.
+sm_mt_minion - Просмотр информации о способности миньонов.
+sm_mt_necro - Просмотр информации о некро-способности.
+sm_mt_nullify - Просмотр информации о способности аннулирования.
+sm_mt_omni - Просмотр информации о омни-способности.
+sm_mt_panic - Просмотр информации о способности орды.
+sm_mt_pimp - Просмотр информации о способности пощёчины.
+sm_mt_puke - Просмотр информации о способности рвоты.
+sm_mt_pyro - Просмотр информации о способности поджигателя.
+sm_mt_quiet - Просмотр информации о способности скрытности.
+sm_mt_recoil - Просмотр информации о способности отдачи.
+sm_mt_regen - Просмотр информации о способности регенерации.
+sm_mt_respawn - Просмотр информации о способности возрождения.
+sm_mt_restart - Просмотр информации о способности перезапуска.
+sm_mt_rock - Просмотр информации о способности камнепада.
+sm_mt_rocket - Просмотр информации о ракетной способности.
+sm_mt_shake - Просмотр информации о способности дрожания.
+sm_mt_shield - Просмотр информации о способности «щит».
+sm_mt_shove - Просмотр информации о способности толчка.
+sm_mt_slow - Просмотр информации о способности замедления.
+sm_mt_smash - Просмотр информации о способности сокрушения.
+sm_mt_smite - Просмотр информации о способности поражения.
+sm_mt_spam - Просмотр информации о способности спама.
+sm_mt_splash - Просмотр информации о способности всплеска.
+sm_mt_splatter - Просмотр информации о способности опрыскивания.
+sm_mt_throw - Просмотр информации о метательной способности.
+sm_mt_track - Просмотр информации о способности самонаведения.
+sm_mt_ultimate - Просмотр информации о способности «Ультимэйт».
+sm_mt_undead - Просмотр информации о способности нежити.
+sm_mt_vampire - Просмотр информации о способности вампира.
+sm_mt_vision - Просмотр информации о способности видимости.
+sm_mt_warp - Просмотр информации о способности варпа.
+sm_mt_whirl - Просмотр информации о способности вихря.
+sm_mt_witch - Просмотр информации о способности ведьмы.
+sm_mt_xiphos - Просмотр информации о способности «Ксифос».
+sm_mt_yell - Просмотр информации о способности крика.
+sm_mt_zombie - Просмотр информации о способности зомби.
 ```
 
-### Configuration Formatting
-1. How many config formats are there?
+### Форматирование конфигурации
+1. Сколько существует форматов конфигурации?
 
-At the moment, there are 4 different formats.
+На данный момент существует 4 разных формата.
 
-2. Do I need to edit my current config file from version 8.57 and below?
+2. Нужно ли мне редактировать текущий файл конфигурации, начиная с версии 8.57 и ниже?
 
-No, all plugins still read the original format properly.
+Нет, все плагины по-прежнему правильно читают исходный формат.
 
-3. Which config format should I use?
+3. Какой формат конфигурации я должен использовать?
 
-Whichever one you want. You are free to combine all of them as well, it doesn't matter. For consistency and to avoid confusion, this file and any other file with config examples will use the original format.
+Какой хотите. Вы также можете комбинировать их все, это не имеет значения. Для согласованности и во избежание путаницы этот файл и любой другой файл с примерами конфигурации будут использовать исходный формат.
 
-Example:
+Пример:
 
 ```
-// Original format
+// Исходный формат
 "Mutant Tanks"
 {
 	"Plugin Settings"
@@ -1487,29 +1487,29 @@ Example:
 	}
 }
 
-// Custom format
-mutanttanks // 2nd format
+// Пользовательский формат
+mutant_tanks // 3-й формат
 {
-	Settings // 4th format
+	Settings // 4-й формат
 	{
-		game_modes // 3rd format
+		GameModes // 2-й формат
 		{
-			"Game Mode Types"			0 // original format
+			"Game Mode Types"			0 // исходный формат
 		}
 	}
 }
 ```
 
-4. Is it possible to configure more than one type in one section?
+4. Можно ли настроить более одного типа в одном разделе?
 
-Yes, you can either apply global settings for all types to use or specify certain types to use them.
+Да, вы можете применить глобальные настройки для всех типов или указать определённые типы для их использования.
 
-Example:
+Пример:
 
 ```
 "Mutant Tanks"
 {
-	// Applies to every type.
+	// Применимо ко всем типам.
 	"All"
 	{
 		"Health"
@@ -1517,7 +1517,7 @@ Example:
 			"Extra Health"				"1000"
 		}
 	}
-	// Applies to types 1 and 10.
+	// Применяется к типам 1 и 10.
 	"1,10"
 	{
 		"Health"
@@ -1525,7 +1525,7 @@ Example:
 			"Extra Health"				"1000"
 		}
 	}
-	// Applies to types 11 through 20.
+	// Применяется к типам с 11 по 20.
 	"11-20"
 	{
 		"Health"
@@ -1533,7 +1533,7 @@ Example:
 			"Extra Health"				"1000"
 		}
 	}
-	// Applies to types 21 through 30 and types 31 through 40.
+	// Применяется к типам с 21 по 30 и с 31 по 40.
 	"21-30,31-40"
 	{
 		"Health"
@@ -1544,23 +1544,23 @@ Example:
 }
 ```
 
-5. Is it possible to configure more than one ability in one section?
+5. Можно ли настроить более одной способности в одном разделе?
 
-Yes, you can either apply global settings for all abilities to use or specify certain abilities to use them.
+Да, вы можете применить глобальные настройки для всех способностей или указать определённые способности для их использования.
 
-Example:
+Пример:
 
 ```
 "Mutant Tanks"
 {
 	"Tank #1"
 	{
-		// Applies to every ability.
+		// Применяется ко всем способностям.
 		"All"
 		{
 			"Ability Enabled"			"1"
 		}
-		// Applies to Absorb and Acid abilities.
+		// Применяется к способностям поглощения и кислотной.
 		"Absorb,Acid"
 		{
 			"Ability Enabled"			"1"
@@ -1569,38 +1569,38 @@ Example:
 }
 ```
 
-### Administration System
-1. How does the system work?
+### Система администрирования
+1. Как работает эта система?
 
-The administration system is designed for the usage and effectiveness of each Mutant Tank type. Basically, it controls and determines what kind of Mutant Tanks players can use or be immune from.
+Система администрирования предназначена для использования и эффективности каждого типа танка-мутанта. По сути, она контролирует и определяет, какие танки-мутанты могут использовать игроки или которых нельзя использовать.
 
-2. Why create an entirely new administration system instead of using SourceMod's own system?
+2. Зачем создавать совершенно новую систему администрирования вместо использования собственной системы SourceMod?
 
-At first, using SM's own system was the goal, but that system has certain limitations that I wanted to get rid of for this project. For example, in SM's system, assigning multiple flags to an override command requires admins to have all of those flags. In this system, admins only need one of those flags, which makes the system flexible for filtering multiple admin flags.
+Сначала целью было использование собственной системы SM, но эта система имеет определённые ограничения, от которых я хотел избавиться в этом проекте. Например, в системе SM присвоение нескольких флагов команде переопределения требует, чтобы администраторы имели все эти флаги. В этой системе администраторам нужен только один из этих флагов, что делает систему гибкой для фильтрации нескольких флагов администратора.
 
-Example:
+Пример:
 
 ```
-// SM's system
-"sm_tank"			"abc" // Admins need all three flags to use the command.
+// Система SM
+"sm_tank"			"abc" // Администраторам нужны все три флага для использования команды.
 
-// MT's system
-"Access Flags"			"abc" // Admins only need one of these flags to access a Mutant Tank type.
+// Система МТ
+"Access Flags"			"abc" // Администраторам нужен только один из этих флагов для доступа к типу танка-мутанта.
 ```
 
-3. What are the admin flags used for?
+3. Для чего используются флаги администратора?
 
-The flags are used for two things:
-- Accessibility - What Mutant Tank types admins can access.
-- Immunity - What Mutant Tank types admins are immune to.
+Флаги используются для двух целей:
+- Доступность - К каким типам танков-мутантов имеют доступ администраторы.
+- Иммунитет - К каким типам танков-мутантов администраторы имеют иммунитет.
 
-4. What other features does the system have?
+4. Какие ещё функции есть в системе?
 
-Currently, the system allows admins to each have a favorite/custom/personalized Mutant Tank type.
+В настоящее время система позволяет администраторам иметь свой избранный/настраиваемый/персонализированный тип танка-мутанта.
 
-Each custom admin setting will override its corresponding Mutant Tank type-specific setting or general setting. This is a powerful feature because each admin can have his/her own custom-made Mutant Tank type without tampering with the Mutant Tank type settings or general settings.
+Каждый пользовательский параметр администратора будет иметь приоритет над соответствующими настройками для конкретного типа танка-мутанта или общими настройками. Это мощная функция, потому что каждый администратор может иметь свой собственный тип танка-мутанта, не изменяя настройки типа танка-мутанта или общие настройки.
 
-Example:
+Пример:
 
 ```
 "Mutant Tanks"
@@ -1609,115 +1609,115 @@ Example:
 	{
 		"General"
 		{
-			"Tank Name"				"Awesome Player" // Admin-controlled Tanks will have this name.
+			"Tank Name"				"Отличный игрок" // Это имя будет иметь Танки под управлением админа.
 		}
 	}
 	"Tank #1"
 	{
 		"General"
 		{
-			"Tank Name"				"Awesome AI" // AI Tanks will have this name.
+			"Tank Name"				"Потрясающий ИИ" // Танки-боты будут иметь это имя.
 		}
 	}
 }
 ```
 
-5. How does the override feature work?
+5. Как работает функция переопределения?
 
-It will sound complicated but here is the simplest way to explain it:
+Это будет звучать сложно, но вот самый простой способ объяснить это:
 
-Ability Overrides
-
-```
-If a player's ability flags have one of the access flags required for an ability or vice-versa, the player will have access to the ability.
-If a player's ability flags have one of the immunity flags required for an ability or vice-versa, the player will have immunity from the ability.
-
-OR
-
-If a player's type flags have one of the access flags required for an ability or vice-versa, the player will have access to the ability.
-If a player's type flags have one of the immunity flags required for an ability or vice-versa, the player will have immunity from the ability.
-
-OR
-
-If a player's general MT flags have one of the access flags required for an ability or vice-versa, the player will have access to the ability.
-If a player's general MT flags have one of the immunity flags required for an ability or vice-versa, the player will have immunity from the ability.
-
-OR
-
-If a player's SM flags have one of the access flags required for an ability or vice-versa, the player will have access to the ability.
-If a player's SM flags have one of the immunity flags required for an ability or vice-versa, the player will have immunity from the ability.
-
-Note: If all 4 of these return false, the player will not have access to nor immunity from that ability.
-```
-
-Type Overrides
+Переопределения способностей
 
 ```
-If a player's ability flags have one of the access flags required for a type or vice-versa, the player will have access to the ability of the type.
-If a player's ability flags have one of the immunity flags required for a type or vice-versa, the player will have immunity from the ability of the type.
+Если у флагов способностей игрока есть один из флагов доступа, необходимых для способности, или наоборот, у игрока будет доступ к способности.
+Если флаги способностей игрока имеют один из флагов иммунитета, необходимых для способности, или наоборот, игрок будет иметь иммунитет от способности.
 
-OR
+ИЛИ
 
-If a player's type flags have one of the access flags required for a type or vice-versa, the player will have access to the type.
-If a player's type flags have one of the immunity flags required for a type or vice-versa, the player will have immunity from the type.
+Если флаги типа игрока имеют один из флагов доступа, необходимых для способности, или наоборот, игрок будет иметь доступ к этой способности.
+Если флаги типа игрока имеют один из флагов иммунитета, требуемых для способности, или наоборот, у игрока будет иммунитет от способности.
 
-OR
+ИЛИ
 
-If a player's general MT flags have one of the access flags required for a type or vice-versa, the player will have access to the type.
-If a player's general MT flags have one of the immunity flags required for a type or vice-versa, the player will have immunity from the type.
+Если общие флаги МТ игрока имеют один из флагов доступа, необходимых для способности, или наоборот, у игрока будет доступ к этой способности.
+Если общие флаги МТ игрока имеют один из флагов иммунитета, необходимых для способности, или наоборот, у игрока будет иммунитет от способности.
 
-OR
+ИЛИ
 
-If a player's SM flags have one of the access flags required for a type or vice-versa, the player will have access to the type.
-If a player's SM flags have one of the immunity flags required for a type or vice-versa, the player will have immunity from the type.
+Если флаги SM игрока имеют один из флагов доступа, необходимых для способности, или наоборот, игрок получит доступ к этой способности.
+Если флаги SM игрока имеют один из флагов иммунитета, необходимых для способности, или наоборот, игрок будет иметь иммунитет от способности.
 
-Note: If all 4 of these return false, the player will not have access to nor immunity from that type.
+Примечание: Если все 4 из них вернут своё значание на false, у игрока не будет доступа к этой способности или иммунитета от неё.
 ```
 
-Global Overrides
+Переопределения типа
 
 ```
-If a player's ability flags have one of the access flags required globally or vice-versa, the player will have access to all abilities that require those flags.
-If a player's ability flags have one of the immunity flags required globally or vice-versa, the player will have immunity from all abilities that require those flags.
+Если флаги способностей игрока имеют один из флагов доступа, необходимых для определённого типа, или наоборот, игрок будет иметь доступ к способности этого типа.
+Если на флагах способностей игрока есть один из флагов иммунитета, необходимых для определённого типа, или наоборот, игрок будет иметь иммунитет от способности этого типа.
 
-OR
+ИЛИ
 
-If a player's type flags have one of the access flags required globally or vice-versa, the player will have access to all types that require those flags.
-If a player's type flags have one of the immunity flags required globally or vice-versa, the player will have immunity from all types that require those flags.
+Если флаги типа игрока имеют один из флагов доступа, необходимых для типа, или наоборот, игрок будет иметь доступ к типу.
+Если флаги типа игрока имеют один из флагов иммунитета, требуемых для определённого типа, или наоборот, игрок будет иметь иммунитет от этого типа.
 
-OR
+ИЛИ
 
-If a player's general MT flags have one of the access flags required globally or vice-versa, the player will have access to all types and abilities that require those flags.
-If a player's general MT flags have one of the immunity flags required globally or vice-versa, the player will have immunity from all types and abilities that require those flags.
+Если общие флаги МТ игрока имеют один из флагов доступа, необходимых для типа, или наоборот, игрок будет иметь доступ к типу.
+Если общие флаги МТ игрока имеют один из флагов иммунитета, требуемых для определённого типа, или наоборот, игрок будет иметь иммунитет от этого типа.
 
-OR
+ИЛИ
 
-If a player's SM flags have one of the access flags required globally or vice-versa, the player will have access to all types and abilities that require those flags.
-If a player's SM flags have one of the immunity flags required globally or vice-versa, the player will have immunity from all types and abilities that require those flags.
+Если флаги SM игрока имеют один из флагов доступа, требуемых для типа, или наоборот, игрок будет иметь доступ к типу.
+Если флаги SM игрока имеют один из флагов иммунитета, необходимых для определённого типа, или наоборот, игрок будет иметь иммунитет от этого типа.
 
-Note: If all 4 of these return false, the player will not have access to nor immunity from anything.
+Примечание: Если все 4 из них вернут своё значание на false, у игрока не будет доступа к этому типу или иммунитета от него.
 ```
 
-6. What is the `Allow Developer` setting for?
+Глобальные переопределения
 
-The setting allows the developer (Psyk0tik/Crasher_3637) to access certain features of the project on your server. These features include:
-- Access to all Mutant Tanks. (Allows the developer to see what Mutant Tanks your config has.)
-- Immunity from all Mutant Tanks. (Allows the developer to test each Mutant Tank without having to deal with each ability's effects.)
-- Ability to spawn Mutant Tanks. (Allows the developer to spawn each Mutant Tank for testing.)
-- Check which abilities are installed. (Allows the developer to check which abilities to test for.)
+```
+Если флаги способностей игрока имеют один из флагов доступа, требуемых глобально, или наоборот, игрок будет иметь доступ ко всем способностям, для которых требуются эти флаги.
+Если флаги способностей игрока имеют один из флагов иммунитета, требуемых глобально, или наоборот, игрок будет иметь иммунитет ко всем способностям, требующим этих флагов.
 
-In short, this setting does not give the developer access to other features or plugins, thus avoiding the potential to cause trouble on your server. Disable the setting if you are not confident with trusting the developer. This setting was added to help server owners give the developer temporary access in case the developer needs to help server owners debug problems.
+ИЛИ
 
-### Human Support
-1. How do I enable human support?
+Если флаги типа игрока имеют один из флагов доступа, требуемых глобально, или наоборот, игрок будет иметь доступ ко всем типам, которым требуются эти флаги.
+Если флаги типа игрока имеют один из флагов иммунитета, требуемых глобально, или наоборот, игрок будет иметь иммунитет от всех типов, которым требуются эти флаги.
 
-Set `Human Support` to 1 or 2.
+ИЛИ
 
-2. Can players use the abilities automatically/manually?
+Если общие флаги МТ игрока имеют один из флагов доступа, требуемых глобально, или наоборот, игрок будет иметь доступ ко всем типам и способностям, для которых требуются эти флаги.
+Если общие флаги МТ игрока имеют один из флагов иммунитета, требуемых глобально, или наоборот, игрок будет иметь иммунитет ко всем типам и способностям, которые требуют этих флагов.
 
-Yes, just set `Human Ability` to 1 or 2 for EACH ability.
+ИЛИ
 
-Example:
+Если флаги SM игрока имеют один из флагов доступа, требуемых глобально, или наоборот, игрок будет иметь доступ ко всем типам и способностям, для которых требуются эти флаги.
+Если флаги SM игрока имеют один из флагов иммунитета, требуемых глобально, или наоборот, игрок будет иметь иммунитет ко всем типам и способностям, которые требуют этих флагов.
+
+Примечание: Если все 4 из них вернут своё значание на false, у игрока не будет доступа или иммунитета от чего-либо.
+```
+
+6. Для чего нужен параметр `Allow Developer`?
+
+Этот параметр позволяет разработчику (Psyk0tik/Crasher_3637) получить доступ к определённым функциям проекта на вашем сервере. Эти функции включают:
+- Доступ ко всем танкам-мутантам. (Позволяет разработчику видеть, какие танки-мутанты есть в вашей конфигурации.)
+- Иммунитет от всех танков-мутантов. (Позволяет разработчику тестировать каждого танка-мутанта, не разбираясь с эффектами каждой способности.)
+- Возможность создавать танков-мутантов. (Позволяет разработчику создавать танка-мутанта для тестирования.)
+- Проверить, какие способности установлены. (Позволяет разработчику проверить, какие способности можно протестировать.)
+
+Короче говоря, этот параметр не даёт разработчику доступа к другим функциям или плагинам, что позволяет избежать потенциальных проблем на вашем сервере. Отключите этот параметр, если вы не уверены, что доверяете разработчику. Этот параметр был добавлен, чтобы помочь владельцам серверов предоставить разработчику временный доступ на случай, если разработчику потребуется помочь владельцам серверов наладить проблемы.
+
+### Человеческая поддержка
+1. Как включить поддержку человека?
+
+Установите "Human Support" на 1 или 2.
+
+2. Могут ли игроки использовать способности автоматически/вручную?
+
+Да, просто установите `Human Ability` на 1 или 2 для КАЖДОЙ способности.
+
+Пример:
 
 ```
 "Mutant Tanks"
@@ -1732,32 +1732,32 @@ Example:
 }
 ```
 
-3. How can players use the abilities manually?
+3. Как игроки могут использовать способности вручную?
 
-There are 4 buttons that players can use when they spawn as Mutant Tanks.
+Есть 4 кнопки, которые игроки могут использовать, когда появляются в качестве танков-мутантов.
 
 ```
-+use (default: E) - Main ability
-+reload (default: R) - Sub/range ability
-+zoom (default: Mouse3/Scroll wheel) - Special ability
-+duck (default: CTRL) - Upon-death ability
++use (по умолчанию: E) - Основная способность
++reload (по умолчанию: R) - Дальнобойная способность
++zoom (по умолчанию: Mouse3/Колесо мыши) - Особая способность
++duck (по умолчанию: CTRL) - Способность после смерти
 ```
 
-Whatever each button activates is entirely up to your configuration settings.
+Что бы ни активировала каждая кнопка, это полностью зависит от настроек пользователя.
 
-4. How do I change the buttons or add extra buttons?
+4. Как мне изменить кнопки или добавить дополнительные кнопки?
 
-Edit lines 90-93 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Отредактируйте строки 90-93 файла `mutant_tanks.inc` и перекомпилируйте каждый плагин способности.
 
-5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
+5. Что произойдёт, если у танка-мутанта есть несколько способностей, которые активируются одной и той же кнопкой?
 
-All related abilities may or may not activate at the same time, depending on your configuration settings. It is recommended to not stack many abilities for human-controlled Mutant Tanks.
+Все соответствующие способности могут активироваться или не активироваться одновременно, в зависимости от настроек. Рекомендуется не ставить многие способности на одного танка, который управляется человеком.
 
-6. How do I limit the usage of abilities for each player?
+6. Как мне ограничить использование способностей для каждого игрока?
 
-Set the `Human Ammo` setting for each ability to whatever value you want.
+Установите параметр `Human Ammo` для каждой способности на любое желаемое значение.
 
-Example:
+Пример:
 
 ```
 "Mutant Tanks"
@@ -1772,11 +1772,11 @@ Example:
 }
 ```
 
-7. Can I add a cooldown to the usage of abilities for each player?
+7. Могу ли я добавить время восстановления способностей для каждого игрока?
 
-Yes, just set the `Human Cooldown` setting for each ability to whatever value you want.
+Да, просто установите параметр `Human Cooldown` для каждой способности на любое желаемое значение.
 
-Example:
+Пример:
 
 ```
 "Mutant Tanks"
@@ -1791,167 +1791,169 @@ Example:
 }
 ```
 
-8. What is the `Human Duration` setting for in some of the abilities?
+8. Что означает настройка `Human Duration` в некоторых способностях?
 
-That setting is a special duration for players, but they only apply if the `Human Mode` setting is set to 0.
+Этот параметр является особой продолжительностью для игроков, но он применяется только в том случае, если параметр `Human Mode` установлен на 0.
 
-Furthermore, there are some duration settings for abilities that will also affect players. Read the `INFORMATION.md` file for more details.
+Кроме того, есть некоторые настройки продолжительности способностей, которые также влияют на игроков. Прочтите файл `INFORMATION.md` для получения более подробной информации.
 
-9. What is the `Human Mode` setting for in some of the abilities?
+9. Для чего нужен параметр `Human Mode` в некоторых способностях?
 
-That setting is a special mode setting for players, which can determine how some abilities are activated. Read the `INFORMATION.md` file for more details.
+Этот параметр представляет собой специальный параметр режима для игроков, который может определять, как активируются некоторые способности. Прочтите файл `INFORMATION.md` для получения более подробной информации.
 
-10. Is there any way players can view information about this feature in-game?
+10. Есть ли способ просмотреть информацию об этой функции в игре?
 
-Yes, each ability has a `sm_mt_<ability name here>` command that players can use anytime to view information about abilities.
+Да, у каждой способности есть команда `sm_mt_<название способности тут(на английском)>`, которую игроки могут использовать в любое время для просмотра информации о способностях.
 
-The commands will each provide a menu that players can use to display certain information in chat.
+Каждая команда предоставляет меню, которое игроки могут использовать для отображения определённой информации в чате.
 
-The information displayed in chat will be more detailed and accurate when the player is playing as a Mutant Tank.
+Информация, отображаемая в чате, будет более подробной и точной, когда игрок играет за танка-мутанта.
 
-11. Is there any way players can change their current Mutant Tank type in the middle of a fight?
+11. Есть ли способ изменить свой текущий тип танка-мутанта прямо посреди боя?
 
-Yes, players can use the `sm_mutanttank` command if the `Spawn Mode` setting under the `Human Support` section under the `Plugin Settings` section is set to 0. There will be a cooldown though to prevent abuse.
+Да, игроки могут использовать команду `sm_mutanttank`, если параметр `Spawn Mode` в секции `Human Support` в разделе `Plugin Settings` установлен на 0. Однако будет время восстановления, чтобы предотвратить злоупотребления.
 
-12. Is there any way to exempt admins from the cooldown mentioned in question #11?
+12. Есть ли способ освободить админов от перезарядки способности, упомянутой в вопросе #11?
 
-Yes, assign admins the `mt_admin` override.
+Да, назначьте администраторам переопределение `mt_admin`.
 
-Example:
+Пример:
 
 ```
 Overrides
 {
-	"mt_admin"		"z" // All admins with the "z" (Root) flag are exempted from cooldowns.
+	"mt_admin"		"z" // Все админы с флагом "z" (Root) освобождаются от перезарядки.
 }
 ```
 
-### Configuration
-1. How do I enable the custom configurations features?
+### Конфигурация
+1. Как включить функции пользовательской конфигурации?
 
-Set `Enable Custom Configs` to 1.
+Установите для параметра `Enable Custom Configs` значение 1.
 
-2. How do I tell the plugin to only create certain custom config files?
+2. Как сообщить плагину, что нужно создавать только определённые настраиваемые файлы конфигурации?
 
-Set the values in `Create Config Types`.
+Установите значения в `Create Config Types`.
 
-Examples:
-
-```
-"Create Config Types" "7" // Creates the folders and config files for each difficulty, map, and game mode.
-"Create Config Types" "8" // Creates the folder and config files for each day.
-"Create Config Types" "31" // Creates the folders and config files for each difficulty, map, game mode, day, and player count.
-"Create Config Types" "255" // Creates the folders and config files for each difficulty, map, game mode, day, player (survivor/infected/all) count, and finale stage.
-```
-
-3. How do I tell the plugin to only execute certain custom config files?
-
-Set the values in `Execute Config Types`.
-
-Examples:
+Примеры:
 
 ```
-"Execute Config Types" "7" // Executes the config file for the current difficulty, map, and game mode.
-"Execute Config Types" "8" // Executes the config file for the current day.
-"Execute Config Types" "31" // Executes the config file for the current difficulty, map, game mode, day, and player count.
-"Execute Config Types" "255" // Executes the config file for the current difficulty, map, game mode, day, player (survivor/infected/all) count, and finale stage.
+"Create Config Types" "7" // Создаёт папки и файлы конфигурации для каждой сложности, карты и режима игры.
+"Create Config Types" "8" // Создаёт папку и файлы конфигурации на каждый день.
+"Create Config Types" "31" // Создаёт папки и файлы конфигурации для каждой сложности, карты, режима игры, дня и количества игроков.
+"Create Config Types" "255" // Создаёт папки и файлы конфигурации для каждой сложности, карты, режима игры, дня, количества игроков (выживших/заражённых/всех) и финальной стадии.
 ```
 
-## Credits
-**Machine** - For the [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) plugin.
+3. Как сообщить плагину, чтобы он выполнял только определённые настраиваемые файлы конфигурации?
 
-**NgBUCKWANGS** - For the mapname.cfg code in his [[L4D2] ABM](https://forums.alliedmods.net/showthread.php?t=291562) plugin.
+Установите значения в `Execute Config Types`.
 
-**Spirit_12** - For the L4D signatures for the gamedata file.
+Примеры:
 
-**honorcode23** - For the [[L4D & L4D2] New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475) plugin.
+```
+"Execute Config Types" "7" // Выполняет файл конфигурации для текущей сложности, карты и игрового режима.
+"Execute Config Types" "8" // Выполняет файл конфигурации на текущий день.
+"Execute Config Types" "31" // Выполняет файл конфигурации для текущей сложности, карты, режима игры, дня и количества игроков.
+"Execute Config Types" "255" // Выполняет конфигурационный файл для текущей сложности, карты, режима игры, дня, количества игроков (выживших/заражённых/всех) и финальной стадии.
+```
 
-**panxiaohai** - For the [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), and [[L4D & L4D2] Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537) plugins.
+## Благодарности
+**Machine** - За плагин [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858).
 
-**strontiumdog** - For the [[ANY] Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [[ANY] Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [[ANY] Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), and [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324) plugins.
+**NgBUCKWANGS** - За код mapname.cfg в его плагине [[L4D2] ABM](https://forums.alliedmods.net/showthread.php?t=291562).
 
-**Hipster** - For the [[ANY] Admin Smite](https://forums.alliedmods.net/showthread.php?t=118534) plugin.
+**Spirit_12** - За подписи L4D для файла gamedata.
 
-**Marcus101RR** - For the code to set a player's weapon's ammo.
+**honorcode23** - За плагин [[L4D & L4D2] New Custom Commands](https://forums.alliedmods.net/showthread.php?t=133475).
 
-**AtomicStryker** - For the [[L4D & L4D2] SM Respawn Command](https://forums.alliedmods.net/showthread.php?t=96249) and [[L4D & L4D2] Boomer Splash Damage](https://forums.alliedmods.net/showthread.php?t=98794) plugins.
+**panxiaohai** - За плагины [[L4D & L4D2] We Can Not Survive Alone](https://forums.alliedmods.net/showthread.php?t=167389), [[L4D & L4D2] Melee Weapon Tank](https://forums.alliedmods.net/showthread.php?t=166356), и [[L4D & L4D2] Tank's Power](https://forums.alliedmods.net/showthread.php?t=134537).
 
-**ivailosp and V10** - For the [[L4D] Away](https://forums.alliedmods.net/showthread.php?t=85537) and [[L4D2] Away](https://forums.alliedmods.net/showthread.php?t=222590) plugins.
+**strontiumdog** - За плагины [[ANY] Evil Admin: Mirror Damage](https://forums.alliedmods.net/showthread.php?t=79321), [[ANY] Evil Admin: Pimp Slap](https://forums.alliedmods.net/showthread.php?t=79322), [[ANY] Evil Admin: Rocket](https://forums.alliedmods.net/showthread.php?t=79617), и [Evil Admin: Vision](https://forums.alliedmods.net/showthread.php?t=79324).
 
-**mi123645** - For the [[L4D(2)] 4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409) plugin.
+**Hipster** - За плагин [[ANY] Admin Smite](https://forums.alliedmods.net/showthread.php?t=118534).
 
-**Farbror Godis** - For the [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146) plugin.
+**Marcus101RR** - За код, который позволяет установить боеприпасы оружия игрока.
 
-**GoD-Tony** - For the [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478) plugin.
+**AtomicStryker** - За плагины [[L4D & L4D2] SM Respawn Command](https://forums.alliedmods.net/showthread.php?t=96249) и [[L4D & L4D2] Boomer Splash Damage](https://forums.alliedmods.net/showthread.php?t=98794).
 
-**Phil25** - For the [[TF2] Roll the Dice Revamped (RTD)](https://forums.alliedmods.net/showthread.php?t=278579) plugin.
+**ivailosp and V10** - За плагины [[L4D] Away](https://forums.alliedmods.net/showthread.php?t=85537) и [[L4D2] Away](https://forums.alliedmods.net/showthread.php?t=222590).
 
-**Chaosxk** - For the [[ANY] Spin my screen](https://forums.alliedmods.net/showthread.php?t=283120) plugin.
+**mi123645** - За плагин [[L4D(2)] 4+ Survivor AFK Fix](https://forums.alliedmods.net/showthread.php?t=132409).
 
-**ztar** - For the [[L4D2] LAST BOSS](https://forums.alliedmods.net/showthread.php?t=129013?t=129013) plugin.
+**Farbror Godis** - За плагин [[ANY] Curse](https://forums.alliedmods.net/showthread.php?t=280146).
 
-**IxAvnoMonvAxI** - For the [[L4D2] Last Boss Extended](https://forums.alliedmods.net/showpost.php?p=1463486&postcount=2) plugin.
+**GoD-Tony** - За плагин [Toggle Weapon Sounds](https://forums.alliedmods.net/showthread.php?t=183478).
 
-**Uncle Jessie** - For the Tremor Tank in his [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
+**Phil25** - За плагин [[TF2] Roll the Dice Revamped (RTD)](https://forums.alliedmods.net/showthread.php?t=278579).
 
-**Drixevel** - For the [[ANY] Force Active Weapon](https://forums.alliedmods.net/showthread.php?t=293645) plugin.
+**Chaosxk** - За плагин [[ANY] Spin my screen](https://forums.alliedmods.net/showthread.php?t=283120).
 
-**pRED** - For the [[ANY] SM Super Commands](https://forums.alliedmods.net/showthread.php?t=57448) plugin.
+**ztar** - За плагин [[L4D2] LAST BOSS](https://forums.alliedmods.net/showthread.php?t=129013?t=129013).
 
-**sheo** - For the [[L4D2] Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?t=239809) plugin.
+**IxAvnoMonvAxI** - За плагин [[L4D2] Last Boss Extended](https://forums.alliedmods.net/showpost.php?p=1463486&postcount=2).
 
-**nico-op** - For the [[L4D/L4D2] Infected Health Gauge (Tank & Witch & Special)](https://forums.alliedmods.net/showthread.php?t=125747) plugin.
+**Uncle Jessie** - За танк-тремор в его [Last Boss Extended revision](https://forums.alliedmods.net/showpost.php?p=2570108&postcount=73).
 
-**Ernecio** - For the [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) and [[L4D1 & L4D2] Improved Flying Tank](https://forums.alliedmods.net/showthread.php?t=325719) plugin.
+**Drixevel** - За плагин [[ANY] Force Active Weapon](https://forums.alliedmods.net/showthread.php?t=293645).
 
-**Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
+**pRED** - За плагин [[ANY] SM Super Commands](https://forums.alliedmods.net/showthread.php?t=57448).
 
-**epz (epzminion)** - For help with gamedata signatures, offsets, addresses, and invaluable input.
+**sheo** - За плагин [[L4D2] Fix Frozen Tanks](https://forums.alliedmods.net/showthread.php?t=239809).
 
-**Lux** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) plugins.
+**nico-op** - За плагин [[L4D/L4D2] Infected Health Gauge (Tank & Witch & Special)](https://forums.alliedmods.net/showthread.php?t=125747).
 
-**Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
+**Ernecio** - За плагин [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) и [[L4D1 & L4D2] Improved Flying Tank](https://forums.alliedmods.net/showthread.php?t=325719).
 
-**exvel** - For the [Colors](https://forums.alliedmods.net/showthread.php?t=96831) include.
+**Luckylock** - За плагин [[L4D & L4D2] Tank Rock Lag Compensation](https://forums.alliedmods.net/showthread.php?t=315345).
 
-**Impact** - For the [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254) include.
+**Silvers (Silvershot)** - За его плагины в которых хорошие отсылки, помог с подписями игровых данных и помог оптимизировать/исправить различные части кода.
 
-**hmmmmm (SlidyBat)** - For showing how to pick a random character out of a dynamic string.
+**epz (epzminion)** - За помощь с подписями, смещениями, адресами игровых данных и бесценным вводом.
 
-**KasperH** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
+**Lux** - За помощь в оптимизации/исправлении различных частей кода, кода для определения вида от третьего лица и за плагин [Left4Fix](https://github.com/LuxLuma/Left-4-fix).
 
-**Blueberry** - For Russian translations and suggesting ideas.
+**Milo|** - За плагины [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) и [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720).
 
-**yuzumi** - For Simplified Chinese translations and suggesting ideas.
+**exvel** - За include [Colors](https://forums.alliedmods.net/showthread.php?t=96831).
 
-**Mi.Cura, 3aljiyavslgazana** - For reporting issues, suggesting ideas, testing features, and overall support.
+**Impact** - За include [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254).
 
-**emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
+**hmmmmm (SlidyBat)** - За демонстрации того, как выбрать случайный символ из динамической строки.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush** - For reporting issues and suggesting ideas.
+**KasperH (Ladis)** - За перевод на венгерский, сообщения о проблемах, предложения идей и общую поддержку.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai** - For reporting issues.
+**Blueberry (Kleiner)** - За русский перевод и предложения идей.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType** - For suggesting ideas.
+**yuzumi** - За перевод на упрощённый китайский и предложения идей.
 
-**Marttt** - For helping with many things and the pull requests.
+**Mi.Cura, 3aljiyavslgazana** - За сообщения о проблемах, предложения идей, тестирование и общую поддержку.
 
-**Dragokas** - For reporting issues, suggesting ideas, and providing fixes.
+**emsit** - За сообщения о проблемах, помощи с частями кода и предложения идей.
 
-**login101** - For providing some source code for the `Lightning` ability.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush** - За сообщения о проблемах и предложения идей.
 
-**peachie** - For the love and support behind the scenes.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai** - За сообщения о проблемах.
 
-**Angelace113** - For the default colors (before `v8.12`), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (`v8.66`), helping to set up the wiki pages, and overall support.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType** - За предложения идей.
 
-**Sipow** - For the default colors (before `v8.12`), suggesting ideas, and overall support.
+**Marttt** - За помощь во многих вещах и pull request'ы.
 
-**Oliver** - For helping to test the Reward system, Combination feature, and overall support.
+**Dragokas** - За сообщения о проблемах, предложения идей и предоставления исправлений.
 
-**SourceMod Team** - For continually updating/improving SourceMod.
+**login101** - За предоставление некоторого исходного кода для способности `грозовой шторм`.
 
-# 3rd-Party Revisions Notice
-If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
+**peachie** - За любовь и поддержку за кулисами.
 
-# Final Words
-Enjoy all my hard work and have fun with it!
+**Angelace113** - За цвета по умолчанию (до версии `v8.12`), тестирование каждого типа Танка, предложение идей, помощь в преобразовании плагинов для использования структур перечисления (`v8.66`), помощь в настройке страниц вики и общую поддержку.
+
+**Sipow** - За цвета по умолчанию (до версии `v8.12`), предложение идей и общую поддержку.
+
+**Oliver** - За помощь в тестировании системы наград, функции комбинации и общую поддержку.
+
+**Команда SourceMod** - За постоянное обновление/улучшение SourceMod.
+
+# Уведомление о сторонних изменениях
+Если вы хотите поделиться своими собственными версиями этого плагина, переименуйте файлы, чтобы не было путаницы для пользователей.
+
+# Заключительные слова
+Наслаждайтесь всей моей тяжёлой работой и получайте от неё удовольствие!
