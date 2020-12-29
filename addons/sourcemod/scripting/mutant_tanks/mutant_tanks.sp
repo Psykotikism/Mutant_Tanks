@@ -313,6 +313,7 @@ enum struct esGeneral
 	GlobalForward g_gfTypeChosenForward;
 
 	Handle g_hRegularWavesTimer;
+	Handle g_hSDKDetonateRock;
 	Handle g_hSDKFirstContainedResponder;
 	Handle g_hSDKGetName;
 	Handle g_hSDKIsInStasis;
@@ -1251,6 +1252,18 @@ public void OnPluginStart()
 			if (g_esGeneral.g_hSDKLeaveStasis == null)
 			{
 				vLogMessage(MT_LOG_SERVER, "%s Your \"Tank::LeaveStasis\" signature is outdated.", MT_TAG);
+			}
+
+			StartPrepSDKCall(SDKCall_Entity);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTankRock::Detonate"))
+			{
+				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: CTankRock::Detonate", MT_TAG);
+			}
+
+			g_esGeneral.g_hSDKDetonateRock = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKDetonateRock == null)
+			{
+				vLogMessage(MT_LOG_SERVER, "%s Your \"CTankRock::Detonate\" signature is outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
@@ -3612,6 +3625,11 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		{
 			if (bIsTankSupported(victim) && bHasCoreAdminAccess(victim))
 			{
+				if (StrEqual(sClassname, "tank_rock"))
+				{
+					SDKCall(g_esGeneral.g_hSDKDetonateRock, inflictor);
+				}
+
 				static bool bBlockBullets, bBlockExplosives, bBlockFire, bBlockMelee;
 				bBlockBullets = (damagetype & DMG_BULLET) && g_esCache[victim].g_iBulletImmunity == 1;
 				bBlockExplosives = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iExplosiveImmunity == 1;
@@ -3650,6 +3668,11 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					if (damagetype & DMG_BURN)
 					{
 						ExtinguishEntity(victim);
+					}
+
+					if (StrEqual(sClassname, "tank_rock"))
+					{
+						SDKCall(g_esGeneral.g_hSDKDetonateRock, inflictor);
 					}
 
 					return Plugin_Handled;
@@ -8905,6 +8928,11 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 		{
 			vCombineAbilitiesForward(pThis, MT_COMBO_UPONDEATH);
 		}
+	}
+	else if (bIsSpecialInfected(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		SetEntityRenderMode(pThis, RENDER_NORMAL);
+		SetEntityRenderColor(pThis, 255, 255, 255, 255);
 	}
 
 	return MRES_Ignored;
