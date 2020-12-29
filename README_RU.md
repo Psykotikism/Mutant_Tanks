@@ -1,5 +1,5 @@
 **Языки** файла readme:
-  - [English](https://github.com/Blueberryy/Mutant_Tanks/blob/master/README.md)
+  - [English](https://github.com/Psykotikism/Mutant_Tanks/blob/v8.80/README.md)
 
 # Mutant Tanks(Танки-мутанты)
 
