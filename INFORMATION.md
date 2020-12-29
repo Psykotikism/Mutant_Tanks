@@ -2404,7 +2404,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Bullet damage/1.0 = Bullet damage)
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Absorb Bullet Divisor"			"20.0"
 
@@ -2443,7 +2443,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Explosive damage/1.0 = Explosive damage)
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Absorb Explosive Divisor"		"20.0"
 
@@ -2453,7 +2453,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Fire damage/1.0 = Fire damage)
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Absorb Fire Divisor"			"200.0"
 
@@ -2463,7 +2463,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Melee damage/1.0 = Melee damage)
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Absorb Melee Divisor"			"200.0"
 		}
@@ -8381,7 +8381,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Bullet damage/1.0 = Bullet damage)
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Hypno Bullet Divisor"			"20.0"
 
@@ -8420,7 +8420,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Explosive damage/1.0 = Explosive damage)
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Hypno Explosive Divisor"		"20.0"
 
@@ -8430,7 +8430,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Fire damage/1.0 = Fire damage)
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Hypno Fire Divisor"			"200.0"
 
@@ -8461,7 +8461,7 @@
 			// Note: Use the value "1.0" to disable this setting. (Melee damage/1.0 = Melee damage)
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: 0.1
+			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Hypno Melee Divisor"			"200.0"
 

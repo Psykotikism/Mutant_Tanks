@@ -32,6 +32,7 @@
 #### Config Files
 - Fixed the config parser storing previous values.
 - Fixed the config parser not reading config files properly.
+- Fixed the config parser not reading the settings of disabled types.
 
 #### Settings
 - Fixed the `Requires Humans` setting not working in some config formats.
@@ -59,6 +60,9 @@
 - Fixed all abilities not resetting when the Tank is passed between two players.
 - Fixed some settings of multiple abilities having the wrong limits.
 - Fixed abilities activating when the Tank is dying, which caused the Tank being stuck in a looped dying animation.
+
+- Absorb
+	- Fixed the ability bypassing damage immunity settings. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Blind
 	- Fixed the ability being enabled by default. (Thanks to Mi.Cura and Tank Rush for reporting!)
@@ -100,6 +104,9 @@
 
 - Fire
 	- Fixed the sound effect not playing in L4D1 due to the file not existing.
+
+- Fragile
+	- Fixed the ability bypassing damage immunity settings. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Ghost
 	- Fixed the range ability checking for the wrong ammo count.
@@ -390,6 +397,8 @@
 
 - Absorb
 	- Added the `Immunity Flags` setting.
+	- Changed the minimum value of the divisor settings from `0.1` to `1.0`.
+	- Divisor settings will not take effect unless their values are greater than `1.0`.
 
 - Blind
 	- Added a sound effect for L4D1.
@@ -431,6 +440,7 @@
 
 - Fragile
 	- Added the `Immunity Flags` setting.
+	- Multiplier settings will not take effect unless their values are greater than `1.0`.
 
 - Ghost
 	- Rocks thrown by Tanks are now affected by the fade feature. (Requested by 3aljiyavslgazana.)
@@ -447,6 +457,8 @@
 - Hypno
 	- Updated method for hurting teammates to bypass plugins that block friendly-fire.
 	- Incapacitated or ledge-hanging survivors are no longer affected.
+	- Changed the minimum value of the divisor settings from `0.1` to `1.0`.
+	- Divisor settings will not take effect unless their values are greater than `1.0`.
 
 - Ice
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
