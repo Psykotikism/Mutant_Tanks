@@ -1,3 +1,6 @@
+Readme **languages:**
+  - [Русский](https://github.com/Psykotikism/Mutant_Tanks/blob/v8.80/README_RU.md)
+
 # Mutant Tanks
 
 ## License
