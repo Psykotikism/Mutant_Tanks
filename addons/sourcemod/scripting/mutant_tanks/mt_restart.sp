@@ -898,7 +898,7 @@ static void vRestartHit(int survivor, int tank, float random, float chance, int 
 				{
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
-						if (bIsSurvivor(iSurvivor) && g_esPlayer[iSurvivor].g_bRecorded)
+						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iSurvivor].g_bRecorded)
 						{
 							bTeleport = false;
 

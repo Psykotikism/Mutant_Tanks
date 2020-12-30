@@ -919,7 +919,7 @@ static void vStopBury(int survivor, int tank)
 	float flAngles[3];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !g_esPlayer[iSurvivor].g_bAffected && iSurvivor != survivor)
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && !g_esPlayer[iSurvivor].g_bAffected && iSurvivor != survivor)
 		{
 			bTeleport = false;
 

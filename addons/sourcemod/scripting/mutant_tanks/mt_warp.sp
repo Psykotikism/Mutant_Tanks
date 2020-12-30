@@ -981,9 +981,9 @@ static void vWarpHit(int survivor, int tank, float random, float chance, int ena
 			{
 				static char sTankName[33];
 				static float flCurrentOrigin[3], flCurrentAngles[3];
-				for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 				{
-					if (bIsSurvivor(iPlayer) && !bIsPlayerDisabled(iPlayer) && iPlayer != survivor)
+					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && iSurvivor != survivor)
 					{
 						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))
 						{
@@ -998,15 +998,15 @@ static void vWarpHit(int survivor, int tank, float random, float chance, int ena
 							}
 						}
 
-						GetClientAbsOrigin(iPlayer, flCurrentOrigin);
-						GetClientEyeAngles(iPlayer, flCurrentAngles);
+						GetClientAbsOrigin(iSurvivor, flCurrentOrigin);
+						GetClientEyeAngles(iSurvivor, flCurrentAngles);
 						TeleportEntity(survivor, flCurrentOrigin, flCurrentAngles, view_as<float>({0.0, 0.0, 0.0}));
 
 						if (g_esCache[tank].g_iWarpMessage & messages)
 						{
 							MT_GetTankName(tank, sTankName);
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Warp", sTankName, survivor, iPlayer);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp", LANG_SERVER, sTankName, survivor, iPlayer);
+							MT_PrintToChatAll("%s %t", MT_TAG2, "Warp", sTankName, survivor, iSurvivor);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Warp", LANG_SERVER, sTankName, survivor, iSurvivor);
 						}
 
 						break;
