@@ -1901,28 +1901,27 @@ public Action cmdMTConfig(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	bool bHuman = bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
+	if (bHuman && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 	{
-		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
-		{
-			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
-
-			return Plugin_Handled;
-		}
-	}
-	else
-	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
 		return Plugin_Handled;
 	}
 
 	if (args < 1)
 	{
-		switch (IsVoteInProgress())
+		if (bHuman)
 		{
-			case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-			case false: vPathMenu(client);
+			switch (IsVoteInProgress())
+			{
+				case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+				case false: vPathMenu(client);
+			}
+		}
+		else
+		{
+			MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 		}
 
 		return Plugin_Handled;
@@ -1934,7 +1933,21 @@ public Action cmdMTConfig(int client, int args)
 		g_esGeneral.g_iSection = StringToInt(g_esGeneral.g_sSection);
 	}
 
-	BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+	switch (args)
+	{
+		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+		case 2:
+		{
+			char sFilename[PLATFORM_MAX_PATH];
+			GetCmdArg(2, sFilename, sizeof(sFilename));
+			BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
+			if (!FileExists(g_esGeneral.g_sChosenPath, true))
+			{
+				BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+			}
+		}
+	}
+
 	vParseConfig(client);
 
 	return Plugin_Handled;
@@ -1972,106 +1985,115 @@ static void vParseConfig(int client)
 
 public void SMCParseStart2(SMCParser smc)
 {
-	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
-	{
-		g_esGeneral.g_csState2 = ConfigState_None;
-		g_esGeneral.g_iIgnoreLevel2 = 0;
+	g_esGeneral.g_csState2 = ConfigState_None;
+	g_esGeneral.g_iIgnoreLevel2 = 0;
 
-		MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t", MT_TAG2, "StartParsing");
+	switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t", MT_TAG2, "StartParsing");
+		case false: vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG2, "StartParsing");
 	}
 }
 
 public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quotes)
 {
-	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	if (g_esGeneral.g_iIgnoreLevel2)
 	{
-		if (g_esGeneral.g_iIgnoreLevel2)
+		g_esGeneral.g_iIgnoreLevel2++;
+
+		return SMCParse_Continue;
+	}
+
+	bool bHuman = bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
+	if (g_esGeneral.g_csState2 == ConfigState_None)
+	{
+		if (StrEqual(name, MT_CONFIG_SECTION_MAIN, false) || StrEqual(name, MT_NAME, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN2, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN3, false))
 		{
-			g_esGeneral.g_iIgnoreLevel2++;
+			g_esGeneral.g_csState2 = ConfigState_Start;
 
-			return SMCParse_Continue;
-		}
-
-		if (g_esGeneral.g_csState2 == ConfigState_None)
-		{
-			if (StrEqual(name, MT_CONFIG_SECTION_MAIN, false) || StrEqual(name, MT_NAME, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN2, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN3, false))
+			switch (bHuman)
 			{
-				g_esGeneral.g_csState2 = ConfigState_Start;
-
-				MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
+				case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
 			}
-			else
-			{
-				g_esGeneral.g_iIgnoreLevel2++;
-			}
-		}
-		else if (g_esGeneral.g_csState2 == ConfigState_Start)
-		{
-			if ((StrEqual(name, MT_CONFIG_SECTION_SETTINGS, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS2, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS3, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS4, false)) && StrContains(name, g_esGeneral.g_sSection, false) != -1)
-			{
-				g_esGeneral.g_csState2 = ConfigState_Settings;
-
-				MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-			}
-			else if (g_esGeneral.g_iSection > 0 && (StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1))
-			{
-				static char sName[33];
-				strcopy(sName, sizeof(sName), name);
-				static int iStartPos;
-				iStartPos = 0;
-				for (int iPos = 0; iPos < sizeof(sName); iPos++)
-				{
-					if (IsCharNumeric(sName[iPos]))
-					{
-						iStartPos = iPos;
-
-						break;
-					}
-				}
-
-				static char sIndex[5], sType[5];
-				static int iIndex;
-				iIndex = iFindSectionType(name, g_esGeneral.g_iSection);
-				IntToString(iIndex, sIndex, sizeof(sIndex));
-				IntToString(g_esGeneral.g_iSection, sType, sizeof(sType));
-				if (StrContains(name, sType) != -1 && (StrEqual(sType, sName[iStartPos]) || StrEqual(sType, sIndex) || StrContains(name, "all", false) != -1))
-				{
-					g_esGeneral.g_csState2 = ConfigState_Type;
-
-					MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-				}
-				else
-				{
-					g_esGeneral.g_iIgnoreLevel2++;
-				}
-			}
-			else if (StrEqual(name, g_esGeneral.g_sSection, false) && (StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1))
-			{
-				g_esGeneral.g_csState2 = ConfigState_Type;
-
-				MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-			}
-			else if ((StrContains(name, "STEAM_", false) == 0 || strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']')) && StrContains(name, g_esGeneral.g_sSection, false) != -1)
-			{
-				g_esGeneral.g_csState2 = ConfigState_Admin;
-
-				MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-			}
-			else
-			{
-				g_esGeneral.g_iIgnoreLevel2++;
-			}
-		}
-		else if (g_esGeneral.g_csState2 == ConfigState_Settings || g_esGeneral.g_csState2 == ConfigState_Type || g_esGeneral.g_csState2 == ConfigState_Admin)
-		{
-			g_esGeneral.g_csState2 = ConfigState_Specific;
-
-			MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%20s \"%s\"\n%20s {") : ("%20s %s\n%20s {"), "", name, "");
 		}
 		else
 		{
 			g_esGeneral.g_iIgnoreLevel2++;
 		}
+	}
+	else if (g_esGeneral.g_csState2 == ConfigState_Start)
+	{
+		if ((StrEqual(name, MT_CONFIG_SECTION_SETTINGS, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS2, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS3, false) || StrEqual(name, MT_CONFIG_SECTION_SETTINGS4, false)) && StrContains(name, g_esGeneral.g_sSection, false) != -1)
+		{
+			g_esGeneral.g_csState2 = ConfigState_Settings;
+
+			switch (bHuman)
+			{
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+				case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+			}
+		}
+		else if (g_esGeneral.g_iSection > 0 && (StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1))
+		{
+			char sName[33], sIndex[5], sType[5];
+			strcopy(sName, sizeof(sName), name);
+			int iIndex = iFindSectionType(name, g_esGeneral.g_iSection), iStartPos = iGetConfigSectionNumber(sName, sizeof(sName));
+			IntToString(iIndex, sIndex, sizeof(sIndex));
+			IntToString(g_esGeneral.g_iSection, sType, sizeof(sType));
+			if (StrContains(name, sType) != -1 && (StrEqual(sType, sName[iStartPos]) || StrEqual(sType, sIndex) || StrContains(name, "all", false) != -1))
+			{
+				g_esGeneral.g_csState2 = ConfigState_Type;
+
+				switch (bHuman)
+				{
+					case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+					case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+				}
+			}
+			else
+			{
+				g_esGeneral.g_iIgnoreLevel2++;
+			}
+		}
+		else if (StrEqual(name, g_esGeneral.g_sSection, false) && (StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1))
+		{
+			g_esGeneral.g_csState2 = ConfigState_Type;
+
+			switch (bHuman)
+			{
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+				case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+			}
+		}
+		else if ((StrContains(name, "STEAM_", false) == 0 || strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']')) && StrContains(name, g_esGeneral.g_sSection, false) != -1)
+		{
+			g_esGeneral.g_csState2 = ConfigState_Admin;
+
+			switch (bHuman)
+			{
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+				case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+			}
+		}
+		else
+		{
+			g_esGeneral.g_iIgnoreLevel2++;
+		}
+	}
+	else if (g_esGeneral.g_csState2 == ConfigState_Settings || g_esGeneral.g_csState2 == ConfigState_Type || g_esGeneral.g_csState2 == ConfigState_Admin)
+	{
+		g_esGeneral.g_csState2 = ConfigState_Specific;
+
+		switch (bHuman)
+		{
+			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%20s \"%s\"\n%20s {") : ("%20s %s\n%20s {"), "", name, "");
+			case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("%20s \"%s\"\n%20s {") : ("%20s %s\n%20s {"), "", name, "");
+		}
+	}
+	else
+	{
+		g_esGeneral.g_iIgnoreLevel2++;
 	}
 
 	return SMCParse_Continue;
@@ -2079,19 +2101,21 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 
 public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
-	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	if (g_esGeneral.g_iIgnoreLevel2)
 	{
-		if (g_esGeneral.g_iIgnoreLevel2)
-		{
-			return SMCParse_Continue;
-		}
+		return SMCParse_Continue;
+	}
 
-		if (g_esGeneral.g_csState2 == ConfigState_Specific)
+	if (g_esGeneral.g_csState2 == ConfigState_Specific)
+	{
+		static char sKey[64], sValue[384];
+		FormatEx(sKey, sizeof(sKey), (key_quotes ? "\"%s\"" : "%s"), key);
+		FormatEx(sValue, sizeof(sValue), (value_quotes ? "\"%s\"" : "%s"), value);
+
+		switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 		{
-			static char sKey[64], sValue[384];
-			FormatEx(sKey, sizeof(sKey), ((key_quotes) ? ("\"%s\"") : ("%s")), key);
-			FormatEx(sValue, sizeof(sValue), ((value_quotes) ? ("\"%s\"") : ("%s")), value);
-			MT_PrintToChat(g_esGeneral.g_iParserViewer, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
+			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
+			case false: vLogMessage(MT_LOG_SERVER, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
 		}
 	}
 
@@ -2100,53 +2124,75 @@ public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] val
 
 public SMCResult SMCEndSection2(SMCParser smc)
 {
-	if (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	if (g_esGeneral.g_iIgnoreLevel2)
 	{
-		if (g_esGeneral.g_iIgnoreLevel2)
+		g_esGeneral.g_iIgnoreLevel2--;
+
+		return SMCParse_Continue;
+	}
+
+	bool bHuman = bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
+	if (g_esGeneral.g_csState2 == ConfigState_Specific)
+	{
+		if (StrContains(MT_CONFIG_SECTION_SETTINGS, g_esGeneral.g_sSection, false) != -1 || StrContains(MT_CONFIG_SECTION_SETTINGS2, g_esGeneral.g_sSection, false) != -1 || StrContains(MT_CONFIG_SECTION_SETTINGS3, g_esGeneral.g_sSection, false) != -1 || StrContains(MT_CONFIG_SECTION_SETTINGS4, g_esGeneral.g_sSection, false) != -1)
 		{
-			g_esGeneral.g_iIgnoreLevel2--;
+			g_esGeneral.g_csState2 = ConfigState_Settings;
 
-			return SMCParse_Continue;
-		}
-
-		if (g_esGeneral.g_csState2 == ConfigState_Specific)
-		{
-			if (StrEqual(g_esGeneral.g_sSection, MT_CONFIG_SECTION_SETTINGS, false) || StrEqual(g_esGeneral.g_sSection, MT_CONFIG_SECTION_SETTINGS2, false) || StrEqual(g_esGeneral.g_sSection, MT_CONFIG_SECTION_SETTINGS3, false) || StrEqual(g_esGeneral.g_sSection, MT_CONFIG_SECTION_SETTINGS4, false))
+			switch (bHuman)
 			{
-				g_esGeneral.g_csState2 = ConfigState_Settings;
-
-				MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
-			}
-			else if (g_esGeneral.g_iSection > 0 && (StrContains(g_esGeneral.g_sSection, "Tank#", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank #", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank_#", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank", false) != -1 || g_esGeneral.g_sSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sSection[0]) || StrContains(g_esGeneral.g_sSection, "all", false) != -1 || StrContains(g_esGeneral.g_sSection, ",") != -1 || StrContains(g_esGeneral.g_sSection, "-") != -1))
-			{
-				g_esGeneral.g_csState2 = ConfigState_Type;
-
-				MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
-			}
-			else if (StrContains(g_esGeneral.g_sSection, "all", false) != -1 || StrContains(g_esGeneral.g_sSection, ",") != -1 || StrContains(g_esGeneral.g_sSection, "-") != -1)
-			{
-				g_esGeneral.g_csState2 = ConfigState_Type;
-
-				MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
-			}
-			else if (StrContains(g_esGeneral.g_sSection, "STEAM_", false) == 0 || strncmp("0:", g_esGeneral.g_sSection, 2) == 0 || strncmp("1:", g_esGeneral.g_sSection, 2) == 0 || (!strncmp(g_esGeneral.g_sSection, "[U:", 3) && g_esGeneral.g_sSection[strlen(g_esGeneral.g_sSection) - 1] == ']'))
-			{
-				g_esGeneral.g_csState2 = ConfigState_Admin;
-
-				MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, "%20s }", "");
 			}
 		}
-		else if (g_esGeneral.g_csState2 == ConfigState_Settings || g_esGeneral.g_csState2 == ConfigState_Type || g_esGeneral.g_csState2 == ConfigState_Admin)
+		else if (g_esGeneral.g_iSection > 0 && (StrContains(g_esGeneral.g_sSection, "Tank#", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank #", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank_#", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank", false) != -1 || g_esGeneral.g_sSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sSection[0]) || StrContains(g_esGeneral.g_sSection, "all", false) != -1 || StrContains(g_esGeneral.g_sSection, ",") != -1 || StrContains(g_esGeneral.g_sSection, "-") != -1))
 		{
-			g_esGeneral.g_csState2 = ConfigState_Start;
+			g_esGeneral.g_csState2 = ConfigState_Type;
 
-			MT_PrintToChat(g_esGeneral.g_iParserViewer, "%10s }", "");
+			switch (bHuman)
+			{
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, "%20s }", "");
+			}
 		}
-		else if (g_esGeneral.g_csState2 == ConfigState_Start)
+		else if (StrContains(g_esGeneral.g_sSection, "all", false) != -1 || StrContains(g_esGeneral.g_sSection, ",") != -1 || StrContains(g_esGeneral.g_sSection, "-") != -1)
 		{
-			g_esGeneral.g_csState2 = ConfigState_None;
+			g_esGeneral.g_csState2 = ConfigState_Type;
 
-			MT_PrintToChat(g_esGeneral.g_iParserViewer, "}");
+			switch (bHuman)
+			{
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, "%20s }", "");
+			}
+		}
+		else if (StrContains(g_esGeneral.g_sSection, "STEAM_", false) == 0 || strncmp("0:", g_esGeneral.g_sSection, 2) == 0 || strncmp("1:", g_esGeneral.g_sSection, 2) == 0 || (!strncmp(g_esGeneral.g_sSection, "[U:", 3) && g_esGeneral.g_sSection[strlen(g_esGeneral.g_sSection) - 1] == ']'))
+		{
+			g_esGeneral.g_csState2 = ConfigState_Admin;
+
+			switch (bHuman)
+			{
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, "%20s }", "");
+			}
+		}
+	}
+	else if (g_esGeneral.g_csState2 == ConfigState_Settings || g_esGeneral.g_csState2 == ConfigState_Type || g_esGeneral.g_csState2 == ConfigState_Admin)
+	{
+		g_esGeneral.g_csState2 = ConfigState_Start;
+
+		switch (bHuman)
+		{
+			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%10s }", "");
+			case false: vLogMessage(MT_LOG_SERVER, "%10s }", "");
+		}
+	}
+	else if (g_esGeneral.g_csState2 == ConfigState_Start)
+	{
+		g_esGeneral.g_csState2 = ConfigState_None;
+
+		switch (bHuman)
+		{
+			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "}");
+			case false: vLogMessage(MT_LOG_SERVER, "}");
 		}
 	}
 
@@ -2155,10 +2201,14 @@ public SMCResult SMCEndSection2(SMCParser smc)
 
 public void SMCParseEnd2(SMCParser smc, bool halted, bool failed)
 {
-	if (bIsValidClient(g_esGeneral.g_iParserViewer))
+	switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
-		MT_PrintToChat(g_esGeneral.g_iParserViewer, "\n\n\n\n\n\n%s %t", MT_TAG2, "CompletedParsing");
-		MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t", MT_TAG2, "CheckConsole");
+		case true:
+		{
+			MT_PrintToChat(g_esGeneral.g_iParserViewer, "\n\n\n\n\n\n%s %t", MT_TAG2, "CompletedParsing");
+			MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t", MT_TAG2, "CheckConsole");
+		}
+		case false: vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG2, "CompletedParsing");
 	}
 
 	g_esGeneral.g_bUsedParser = false;
@@ -2350,33 +2400,19 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			char sInfo[PLATFORM_MAX_PATH];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			if (StrContains(sInfo, "Plugin", false) == 0 || StrContains(sInfo, MT_CONFIG_SECTION_SETTINGS4, false) == 0 || StrContains(sInfo, "STEAM_", false) == 0 || (!strncmp(sInfo, "[U:", 3) && sInfo[strlen(sInfo) - 1] == ']') || StrContains(sInfo, "all", false) != -1 || StrContains(sInfo, ",") != -1 || StrContains(sInfo, "-") != -1)
+
+			switch (StrContains(sInfo, "Plugin", false) == 0 || StrContains(sInfo, MT_CONFIG_SECTION_SETTINGS4, false) == 0 || StrContains(sInfo, "STEAM_", false) == 0 || (!strncmp(sInfo, "[U:", 3) && sInfo[strlen(sInfo) - 1] == ']') || StrContains(sInfo, "all", false) != -1 || StrContains(sInfo, ",") != -1 || StrContains(sInfo, "-") != -1)
 			{
-				g_esGeneral.g_sSection = sInfo;
-			}
-			else
-			{
-				int iStartPos = 0;
-				for (int iPos = 0; iPos < sizeof(sInfo); iPos++)
+				case true: g_esGeneral.g_sSection = sInfo;
+				case false:
 				{
-					if (IsCharNumeric(sInfo[iPos]))
-					{
-						iStartPos = iPos;
-
-						break;
-					}
+					int iStartPos = iGetConfigSectionNumber(sInfo, sizeof(sInfo));
+					strcopy(g_esGeneral.g_sSection, sizeof(esGeneral::g_sSection), sInfo[iStartPos]);
+					g_esGeneral.g_iSection = StringToInt(sInfo[iStartPos]);
 				}
-
-				strcopy(g_esGeneral.g_sSection, sizeof(esGeneral::g_sSection), sInfo[iStartPos]);
-				g_esGeneral.g_iSection = StringToInt(sInfo[iStartPos]);
 			}
 
 			vParseConfig(param1);
-
-			if (bIsValidClient(param1, MT_CHECK_INGAME))
-			{
-				vConfigMenu(param1, menu.Selection);
-			}
 		}
 		case MenuAction_Display:
 		{
@@ -2643,7 +2679,7 @@ static void vConfig(bool manual)
 	{
 		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_DIFFICULTY) && g_esGeneral.g_cvMTDifficulty != null)
 		{
-			static char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
+			char sDifficulty[11], sDifficultyConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTDifficulty.GetString(sDifficulty, sizeof(sDifficulty));
 			BuildPath(Path_SM, sDifficultyConfig, sizeof(sDifficultyConfig), "data/mutant_tanks/difficulty_configs/%s.cfg", sDifficulty);
 			if (FileExists(sDifficultyConfig, true))
@@ -2660,7 +2696,7 @@ static void vConfig(bool manual)
 
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP)
 		{
-			static char sMap[128];
+			char sMap[128];
 			GetCurrentMap(sMap, sizeof(sMap));
 			if (IsMapValid(sMap))
 			{
@@ -2681,7 +2717,7 @@ static void vConfig(bool manual)
 
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE)
 		{
-			static char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
+			char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
 			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
 			if (FileExists(sModeConfig, true))
@@ -2698,10 +2734,9 @@ static void vConfig(bool manual)
 
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_DAY)
 		{
-			static char sDay[9], sDayNumber[2], sDayConfig[PLATFORM_MAX_PATH];
+			char sDay[9], sDayNumber[2], sDayConfig[PLATFORM_MAX_PATH];
 			FormatTime(sDayNumber, sizeof(sDayNumber), "%w", GetTime());
-			static int iDayNumber;
-			iDayNumber = StringToInt(sDayNumber);
+			int iDayNumber = StringToInt(sDayNumber);
 
 			switch (iDayNumber)
 			{
@@ -2729,9 +2764,8 @@ static void vConfig(bool manual)
 
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_PLAYERCOUNT)
 		{
-			static char sCountConfig[PLATFORM_MAX_PATH];
-			static int iCount;
-			iCount = iGetPlayerCount();
+			char sCountConfig[PLATFORM_MAX_PATH];
+			int iCount = iGetPlayerCount();
 			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/playercount_configs/%i.cfg", iCount);
 			if (FileExists(sCountConfig, true))
 			{
@@ -2753,9 +2787,8 @@ static void vConfig(bool manual)
 
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_SURVIVORCOUNT)
 		{
-			static char sCountConfig[PLATFORM_MAX_PATH];
-			static int iCount;
-			iCount = iGetHumanCount();
+			char sCountConfig[PLATFORM_MAX_PATH];
+			int iCount = iGetHumanCount();
 			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/survivorcount_configs/%i.cfg", iCount);
 			if (FileExists(sCountConfig, true))
 			{
@@ -2777,9 +2810,8 @@ static void vConfig(bool manual)
 
 		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_INFECTEDCOUNT)
 		{
-			static char sCountConfig[PLATFORM_MAX_PATH];
-			static int iCount;
-			iCount = iGetHumanCount(true);
+			char sCountConfig[PLATFORM_MAX_PATH];
+			int iCount = iGetHumanCount(true);
 			BuildPath(Path_SM, sCountConfig, sizeof(sCountConfig), "data/mutant_tanks/infectedcount_configs/%i.cfg", iCount);
 			if (FileExists(sCountConfig, true))
 			{
@@ -2846,13 +2878,10 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	static char sCmd[12], sType[33];
+	char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	static int iType, iAmount, iMode;
-	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-	iAmount = iClamp(GetCmdArgInt(2), 1, 127);
-	iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iAmount = iClamp(GetCmdArgInt(2), 1, 127), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 127 || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -2863,7 +2892,7 @@ public Action cmdTank(int client, int args)
 
 	if (IsCharNumeric(sType[0]) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), _, iType);
 		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
 
@@ -2911,13 +2940,10 @@ public Action cmdTank2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	static char sCmd[12], sType[33];
+	char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	static int iType, iAmount, iMode;
-	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-	iAmount = iClamp(GetCmdArgInt(2), 1, 127);
-	iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iAmount = iClamp(GetCmdArgInt(2), 1, 127), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 127 || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -2928,7 +2954,7 @@ public Action cmdTank2(int client, int args)
 
 	if (IsCharNumeric(sType[0]) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), _, iType);
 		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
 
@@ -2974,13 +3000,10 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	static char sCmd[12], sType[33];
+	char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	static int iType, iAmount, iMode;
-	iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
-	iAmount = iClamp(GetCmdArgInt(2), 1, 127);
-	iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iAmount = iClamp(GetCmdArgInt(2), 1, 127), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 127 || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -2991,7 +3014,7 @@ public Action cmdMutantTank(int client, int args)
 
 	if (IsCharNumeric(sType[0]) && (g_esTank[iType].g_iTankEnabled == 0 || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
-		static char sTankName[33];
+		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), _, iType);
 		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "TankDisabled", sTankName, iType);
 
@@ -4729,22 +4752,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			}
 			else if (StrContains(g_esGeneral.g_sCurrentSection, "Tank#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSection, "Tank #", false) == 0 || StrContains(g_esGeneral.g_sCurrentSection, "Tank_#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSection, "Tank", false) == 0 || g_esGeneral.g_sCurrentSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSection[0]) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1 || StrContains(g_esGeneral.g_sCurrentSection, ",") != -1 || StrContains(g_esGeneral.g_sCurrentSection, "-") != -1)
 			{
-				static int iStartPos;
-				iStartPos = 0;
-				for (int iPos = 0; iPos < sizeof(esGeneral::g_sCurrentSection); iPos++)
-				{
-					if (IsCharNumeric(g_esGeneral.g_sCurrentSection[iPos]))
-					{
-						iStartPos = iPos;
-
-						break;
-					}
-				}
-
-				static char sIndex[5], sRealType[5];
-				static int iIndex, iRealType;
-				iIndex = StringToInt(g_esGeneral.g_sCurrentSection[iStartPos]);
-				iRealType = iFindSectionType(g_esGeneral.g_sCurrentSection, iIndex);
+				char sIndex[5], sRealType[5];
+				int iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSection, sizeof(esGeneral::g_sCurrentSection)), iIndex = StringToInt(g_esGeneral.g_sCurrentSection[iStartPos]), iRealType = iFindSectionType(g_esGeneral.g_sCurrentSection, iIndex);
 				IntToString(iIndex, sIndex, sizeof(sIndex));
 				IntToString(iRealType, sRealType, sizeof(sRealType));
 				if (g_esGeneral.g_iMinType <= iIndex <= g_esGeneral.g_iMaxType && (StrEqual(sIndex, g_esGeneral.g_sCurrentSection[iStartPos]) || StrEqual(sRealType, sIndex) || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1))
@@ -5437,22 +5446,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							else if (StrContains(g_esGeneral.g_sCurrentSubSection, "Tank#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank #", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank_#", false) == 0 || StrContains(g_esGeneral.g_sCurrentSubSection, "Tank", false) == 0
 								|| g_esGeneral.g_sCurrentSubSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sCurrentSubSection[0]) || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1 || StrContains(g_esGeneral.g_sCurrentSubSection, ",") != -1 || StrContains(g_esGeneral.g_sCurrentSubSection, "-") != -1)
 							{
-								static int iStartPos;
-								iStartPos = 0;
-								for (int iPos = 0; iPos < sizeof(esGeneral::g_sCurrentSubSection); iPos++)
-								{
-									if (IsCharNumeric(g_esGeneral.g_sCurrentSubSection[iPos]))
-									{
-										iStartPos = iPos;
-
-										break;
-									}
-								}
-
-								static char sIndex[5], sRealType[5];
-								static int iIndex, iRealType;
-								iIndex = StringToInt(g_esGeneral.g_sCurrentSubSection[iStartPos]);
-								iRealType = iFindSectionType(g_esGeneral.g_sCurrentSubSection, iIndex);
+								char sIndex[5], sRealType[5];
+								int iStartPos = iGetConfigSectionNumber(g_esGeneral.g_sCurrentSubSection, sizeof(esGeneral::g_sCurrentSubSection)), iIndex = StringToInt(g_esGeneral.g_sCurrentSubSection[iStartPos]), iRealType = iFindSectionType(g_esGeneral.g_sCurrentSubSection, iIndex);
 								IntToString(iIndex, sIndex, sizeof(sIndex));
 								IntToString(iRealType, sRealType, sizeof(sRealType));
 								if (g_esGeneral.g_iMinType <= iIndex <= g_esGeneral.g_iMaxType && (StrEqual(sIndex, g_esGeneral.g_sCurrentSubSection[iStartPos]) || StrEqual(sRealType, sIndex) || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1))
@@ -5659,7 +5654,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				if (bIsTankSupported(iAttacker, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[iAttacker].g_iAnnounceKill == 1)
 				{
-					int iOption = iGetMessage(g_esCache[iAttacker].g_iKillMessage);
+					int iOption = iGetMessageType(g_esCache[iAttacker].g_iKillMessage);
 					if (iOption > 0)
 					{
 						char sPhrase[32], sTankName[33];
@@ -6516,7 +6511,7 @@ static void vCalculateDeath(int tank, int survivor = 0)
 			case 1: vAnnounceDeath(tank);
 			case 2:
 			{
-				int iOption = iGetMessage(g_esCache[tank].g_iDeathMessage);
+				int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
 				if (iOption > 0)
 				{
 					char sPhrase[32];
@@ -7715,7 +7710,7 @@ static void vAnnounceArrival(int tank, const char[] name)
 {
 	if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_SPAWN)
 	{
-		int iOption = iGetMessage(g_esCache[tank].g_iArrivalMessage), iTimestamp = RoundToNearest(GetGameTime() * 10.0);
+		int iOption = iGetMessageType(g_esCache[tank].g_iArrivalMessage), iTimestamp = RoundToNearest(GetGameTime() * 10.0);
 		if (iOption > 0)
 		{
 			char sPhrase[32];
@@ -7741,7 +7736,7 @@ static void vAnnounceArrival(int tank, const char[] name)
 
 static void vAnnounceDeath(int tank)
 {
-	int iOption = iGetMessage(g_esCache[tank].g_iDeathMessage);
+	int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
 	if (iOption > 0)
 	{
 		char sPhrase[32], sTankName[33];
@@ -8718,7 +8713,20 @@ static int iFindSectionType(const char[] section, int type)
 	return 0;
 }
 
-static int iGetMessage(int setting)
+static int iGetConfigSectionNumber(const char[] section, int size)
+{
+	for (int iPos = 0; iPos < size; iPos++)
+	{
+		if (IsCharNumeric(section[iPos]))
+		{
+			return iPos;
+		}
+	}
+
+	return -1;
+}
+
+static int iGetMessageType(int setting)
 {
 	static int iMessageCount, iMessages[10], iFlag;
 	iMessageCount = 0;
