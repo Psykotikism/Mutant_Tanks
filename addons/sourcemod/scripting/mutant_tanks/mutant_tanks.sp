@@ -1894,13 +1894,6 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 
 public Action cmdMTConfig(int client, int args)
 {
-	if (g_esGeneral.g_bUsedParser)
-	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "StillParsing");
-
-		return Plugin_Handled;
-	}
-
 	bool bHuman = bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
 	if (bHuman && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
 	{
@@ -1948,7 +1941,11 @@ public Action cmdMTConfig(int client, int args)
 		}
 	}
 
-	vParseConfig(client);
+	switch (g_esGeneral.g_bUsedParser)
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "StillParsing");
+		case false: vParseConfig(client);
+	}
 
 	return Plugin_Handled;
 }
@@ -2221,9 +2218,6 @@ public void SMCParseEnd2(SMCParser smc, bool halted, bool failed)
 
 static void vPathMenu(int admin, int item = 0)
 {
-	g_esGeneral.g_bUsedParser = true;
-	g_esGeneral.g_iParserViewer = admin;
-
 	Menu mPathMenu = new Menu(iPathMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
 	mPathMenu.SetTitle("File Path Menu");
 
@@ -2305,9 +2299,6 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 static void vConfigMenu(int admin, int item = 0)
 {
-	g_esGeneral.g_bUsedParser = true;
-	g_esGeneral.g_iParserViewer = admin;
-
 	Menu mConfigMenu = new Menu(iConfigMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
 	mConfigMenu.SetTitle("Config Parser Menu");
 
@@ -2412,7 +2403,16 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 				}
 			}
 
-			vParseConfig(param1);
+			switch (g_esGeneral.g_bUsedParser)
+			{
+				case true: MT_PrintToChat(param1, "%s %t", MT_TAG2, "StillParsing");
+				case false: vParseConfig(param1);
+			}
+
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
+			{
+				vConfigMenu(param1, menu.Selection);
+			}
 		}
 		case MenuAction_Display:
 		{
