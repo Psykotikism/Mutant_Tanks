@@ -1991,7 +1991,7 @@ public void SMCParseStart2(SMCParser smc)
 	switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t", MT_TAG2, "StartParsing");
-		case false: vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG2, "StartParsing");
+		case false: vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "StartParsing", LANG_SERVER);
 	}
 }
 
@@ -2208,7 +2208,7 @@ public void SMCParseEnd2(SMCParser smc, bool halted, bool failed)
 			MT_PrintToChat(g_esGeneral.g_iParserViewer, "\n\n\n\n\n\n%s %t", MT_TAG2, "CompletedParsing");
 			MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t", MT_TAG2, "CheckConsole");
 		}
-		case false: vLogMessage(MT_LOG_SERVER, "%s %t", MT_TAG2, "CompletedParsing");
+		case false: vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "CompletedParsing", LANG_SERVER);
 	}
 
 	g_esGeneral.g_bUsedParser = false;
