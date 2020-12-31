@@ -79,6 +79,9 @@
 - Car
 	- Fixed cars giving players accelerated velocity when standing on them.
 
+- Choke
+	- Fixed survivors being launched too high up into the air regardless of the `Choke Height` setting's value.
+
 - Clone
 	- Fixed clones spawning uncontrollably. (Thanks to 3aljiyavslgazana for testing and reporting!)
 	- Fixed clones being detected by the `Finale Amount` and `Finale Waves` settings.
@@ -186,6 +189,7 @@
 
 - Xiphos
 	- Fixed survivors receiving full health per hit.
+	- Fixed survivors receiving health while Tank is in dying animation.
 
 - Yell
 	- Fixed messages providing the wrong information. (Thanks to Mi.Cura for reporting!)
