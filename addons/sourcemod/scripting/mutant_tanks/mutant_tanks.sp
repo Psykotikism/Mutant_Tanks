@@ -1469,15 +1469,10 @@ public void OnConfigsExecuted()
 	g_esGeneral.g_iTankCount = 0;
 
 	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
+	vPluginStatus();
+	vResetTimers();
 
-	char sMap[128];
-	GetCurrentMap(sMap, sizeof(sMap));
-	if (IsMapValid(sMap))
-	{
-		vPluginStatus();
-		vResetTimers();
-		CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
-	}
+	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 	if (g_esGeneral.g_iConfigEnable == 1)
 	{
@@ -1656,6 +1651,8 @@ public void OnConfigsExecuted()
 			}
 		}
 
+		char sMap[128];
+		GetCurrentMap(sMap, sizeof(sMap));
 		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && IsMapValid(sMap))
 		{
 			char sMapConfig[PLATFORM_MAX_PATH];
@@ -3600,13 +3597,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		}
 
-		if (bIsSurvivor(attacker) && (bIsDeveloper(attacker, 4) || g_esPlayer[attacker].g_bRewardedDamage))
-		{
-			damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 2.5;
-
-			return Plugin_Changed;
-		}
-		else if (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5))
+		if (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5))
 		{
 			damage *= 0.5;
 
@@ -3665,7 +3656,16 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 			if (bIsSurvivor(attacker))
 			{
-				return Plugin_Continue;
+				switch (bIsDeveloper(attacker, 4) || g_esPlayer[attacker].g_bRewardedDamage)
+				{
+					case true:
+					{
+						damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 2.5;
+
+						return Plugin_Changed;
+					}
+					case false: return Plugin_Continue;
+				}
 			}
 			else if ((bIsTankSupported(attacker) && victim != attacker) || (bIsTankSupported(iTank) && victim != iTank) || (bIsTankSupported(iTank2) && victim != iTank2))
 			{

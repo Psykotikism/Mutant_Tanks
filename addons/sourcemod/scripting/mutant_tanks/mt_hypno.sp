@@ -342,18 +342,22 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				bChanged = false;
 				if (g_esCache[victim].g_flHypnoBulletDivisor > 1.0 && (damagetype & DMG_BULLET))
 				{
+					bChanged = true;
 					damage /= g_esCache[victim].g_flHypnoBulletDivisor;
 				}
 				else if (g_esCache[victim].g_flHypnoExplosiveDivisor > 1.0 && ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)))
 				{
+					bChanged = true;
 					damage /= g_esCache[victim].g_flHypnoExplosiveDivisor;
 				}
 				else if (g_esCache[victim].g_flHypnoFireDivisor > 1.0 && (damagetype & DMG_BURN))
 				{
+					bChanged = true;
 					damage /= g_esCache[victim].g_flHypnoFireDivisor;
 				}
 				else if (g_esCache[victim].g_flHypnoMeleeDivisor > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
 				{
+					bChanged = true;
 					damage /= g_esCache[victim].g_flHypnoMeleeDivisor;
 				}
 

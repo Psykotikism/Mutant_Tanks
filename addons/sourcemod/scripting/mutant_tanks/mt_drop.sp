@@ -964,19 +964,16 @@ public Action tTimerRenderWeapon(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iWeapon, iTank;
-	iWeapon = EntRefToEntIndex(pack.ReadCell());
-	iTank = GetClientOfUserId(pack.ReadCell());
+	int iWeapon = EntRefToEntIndex(pack.ReadCell()), iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsCorePluginEnabled() || iWeapon == INVALID_ENT_REFERENCE || !bIsValidEntity(iWeapon) || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iDropAbility == 0 || !g_esPlayer[iTank].g_bActivated)
 	{
 		return Plugin_Stop;
 	}
 
-	static int iRed, iGreen, iBlue, iAlpha;
-	iRed = 0, iGreen = 0, iBlue = 0, iAlpha = 0;
+	int iRed = 0, iGreen = 0, iBlue = 0, iAlpha = 0;
 	GetEntityRenderColor(iTank, iRed, iGreen, iBlue, iAlpha);
 	SetEntityRenderMode(iWeapon, GetEntityRenderMode(iTank));
-	SetEntityRenderColor(iWeapon, iRed, iGreen, iBlue, iAlpha);
+	SetEntityRenderColor(iWeapon, _, _, _, iAlpha);
 
 	return Plugin_Continue;
 }

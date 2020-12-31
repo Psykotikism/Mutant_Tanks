@@ -883,12 +883,11 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	}
 
 	int iMessage = pack.ReadCell(), iPos = pack.ReadCell();
-	float flVelocity[3];
-	flVelocity[0] = 0.0;
-	flVelocity[1] = 0.0;
-	flVelocity[2] = g_esCache[iTank].g_flChokeHeight;
 
-	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	float flOrigin[3];
+	GetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
+	flOrigin[2] += g_esCache[iTank].g_flChokeHeight;
+	SetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
 	SetEntityGravity(iSurvivor, 0.1);
 
 	DataPack dpChokeDamage;
