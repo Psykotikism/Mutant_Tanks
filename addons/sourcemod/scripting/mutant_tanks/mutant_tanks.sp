@@ -1050,7 +1050,7 @@ public any aNative_LogMessage(Handle plugin, int numParams)
 		int iSize = 0, iResult = FormatNativeString(0, 2, 3, sizeof(sBuffer), iSize, sBuffer);
 		if (iResult == SP_ERROR_NONE)
 		{
-			vLogMessage(iType, sBuffer);
+			vLogMessage(iType, _, sBuffer);
 		}
 	}
 }
@@ -1233,64 +1233,64 @@ public void OnPluginStart()
 				StartPrepSDKCall(SDKCall_Player);
 				if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseEntity::IsInStasis"))
 				{
-					vLogMessage(MT_LOG_SERVER, "%s Failed to load offset: CBaseEntity::IsInStasis", MT_TAG);
+					vLogMessage(MT_LOG_SERVER, _, "%s Failed to load offset: CBaseEntity::IsInStasis", MT_TAG);
 				}
 
 				PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 				g_esGeneral.g_hSDKIsInStasis = EndPrepSDKCall();
 				if (g_esGeneral.g_hSDKIsInStasis == null)
 				{
-					vLogMessage(MT_LOG_SERVER, "%s Your \"CBaseEntity::IsInStasis\" offsets are outdated.", MT_TAG);
+					vLogMessage(MT_LOG_SERVER, _, "%s Your \"CBaseEntity::IsInStasis\" offsets are outdated.", MT_TAG);
 				}
 
 				g_esGeneral.g_iMeleeOffset = gdMutantTanks.GetOffset("HiddenMelee");
 				if (g_esGeneral.g_iMeleeOffset == -1)
 				{
-					vLogMessage(MT_LOG_SERVER, "%s Failed to load offset: HiddenMelee", MT_TAG);
+					vLogMessage(MT_LOG_SERVER, _, "%s Failed to load offset: HiddenMelee", MT_TAG);
 				}
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "Tank::LeaveStasis"))
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
 			}
 
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_esGeneral.g_hSDKLeaveStasis = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKLeaveStasis == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Your \"Tank::LeaveStasis\" signature is outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Your \"Tank::LeaveStasis\" signature is outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Entity);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTankRock::Detonate"))
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: CTankRock::Detonate", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: CTankRock::Detonate", MT_TAG);
 			}
 
 			g_esGeneral.g_hSDKDetonateRock = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKDetonateRock == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Your \"CTankRock::Detonate\" signature is outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Your \"CTankRock::Detonate\" signature is outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::RoundRespawn"))
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: CTerrorPlayer::RoundRespawn", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: CTerrorPlayer::RoundRespawn", MT_TAG);
 			}
 
 			g_esGeneral.g_hSDKRespawnPlayer = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKRespawnPlayer == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
 			}
 
 			g_esGeneral.g_iIntentionOffset = gdMutantTanks.GetOffset("Tank::GetIntentionInterface");
 			if (g_esGeneral.g_iIntentionOffset == -1)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Failed to load offset: Tank::GetIntentionInterface", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Failed to load offset: Tank::GetIntentionInterface", MT_TAG);
 			}
 
 			int iOffset = gdMutantTanks.GetOffset("Action<Tank>::FirstContainedResponder");
@@ -1300,7 +1300,7 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKFirstContainedResponder = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKFirstContainedResponder == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Your \"Action<Tank>::FirstContainedResponder\" offsets are outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Your \"Action<Tank>::FirstContainedResponder\" offsets are outdated.", MT_TAG);
 			}
 
 			iOffset = gdMutantTanks.GetOffset("TankIdle::GetName");
@@ -1310,37 +1310,37 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKGetName = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKGetName == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
 			}
 
 			g_esGeneral.g_ddLauncherDirectionDetour = DynamicDetour.FromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
 			if (g_esGeneral.g_ddLauncherDirectionDetour == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
 			}
 
 			g_esGeneral.g_ddTankRockDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankRock::Create");
 			if (g_esGeneral.g_ddTankRockDetour == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: CTankRock::Create", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: CTankRock::Create", MT_TAG);
 			}
 
 			g_esGeneral.g_ddEnterStasis = DynamicDetour.FromConf(gdMutantTanks, "Tank::EnterStasis");
 			if (g_esGeneral.g_ddEnterStasis == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: Tank::EnterStasis", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: Tank::EnterStasis", MT_TAG);
 			}
 
 			g_esGeneral.g_ddLeaveStasis = DynamicDetour.FromConf(gdMutantTanks, "Tank::LeaveStasis");
 			if (g_esGeneral.g_ddLeaveStasis == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
 			}
 
 			g_esGeneral.g_ddEventKilled = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::Event_Killed");
 			if (g_esGeneral.g_ddEventKilled == null)
 			{
-				vLogMessage(MT_LOG_SERVER, "%s Failed to find signature: CTerrorPlayer::Event_Killed", MT_TAG);
+				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: CTerrorPlayer::Event_Killed", MT_TAG);
 			}
 
 			delete gdMutantTanks;
@@ -1969,14 +1969,14 @@ static void vParseConfig(int client)
 		{
 			char sSmcError[64];
 			smcParser.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
-			vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
+			vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
 		}
 
 		delete smcParser;
 	}
 	else
 	{
-		vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
+		vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
 	}
 }
 
@@ -1988,7 +1988,7 @@ public void SMCParseStart2(SMCParser smc)
 	switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t", MT_TAG2, "StartParsing");
-		case false: vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "StartParsing", LANG_SERVER);
+		case false: vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "StartParsing", LANG_SERVER);
 	}
 }
 
@@ -2011,7 +2011,7 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 			switch (bHuman)
 			{
 				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
-				case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
+				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("\"%s\"\n{") : ("%s\n{"), name);
 			}
 		}
 		else
@@ -2028,7 +2028,7 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 			switch (bHuman)
 			{
 				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-				case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
 			}
 		}
 		else if (g_esGeneral.g_iSection > 0 && (StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1))
@@ -2045,7 +2045,7 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 				switch (bHuman)
 				{
 					case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-					case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+					case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
 				}
 			}
 			else
@@ -2060,7 +2060,7 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 			switch (bHuman)
 			{
 				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-				case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
 			}
 		}
 		else if ((StrContains(name, "STEAM_", false) == 0 || strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']')) && StrContains(name, g_esGeneral.g_sSection, false) != -1)
@@ -2070,7 +2070,7 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 			switch (bHuman)
 			{
 				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-				case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
 			}
 		}
 		else
@@ -2085,7 +2085,7 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 		switch (bHuman)
 		{
 			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%20s \"%s\"\n%20s {") : ("%20s %s\n%20s {"), "", name, "");
-			case false: vLogMessage(MT_LOG_SERVER, (opt_quotes) ? ("%20s \"%s\"\n%20s {") : ("%20s %s\n%20s {"), "", name, "");
+			case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%20s \"%s\"\n%20s {") : ("%20s %s\n%20s {"), "", name, "");
 		}
 	}
 	else
@@ -2112,7 +2112,7 @@ public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] val
 		switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 		{
 			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
-			case false: vLogMessage(MT_LOG_SERVER, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
+			case false: vLogMessage(MT_LOG_SERVER, false, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
 		}
 	}
 
@@ -2138,7 +2138,7 @@ public SMCResult SMCEndSection2(SMCParser smc)
 			switch (bHuman)
 			{
 				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
-				case false: vLogMessage(MT_LOG_SERVER, "%20s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, false, "%20s }", "");
 			}
 		}
 		else if (g_esGeneral.g_iSection > 0 && (StrContains(g_esGeneral.g_sSection, "Tank#", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank #", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank_#", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank", false) != -1 || g_esGeneral.g_sSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sSection[0]) || StrContains(g_esGeneral.g_sSection, "all", false) != -1 || StrContains(g_esGeneral.g_sSection, ",") != -1 || StrContains(g_esGeneral.g_sSection, "-") != -1))
@@ -2148,7 +2148,7 @@ public SMCResult SMCEndSection2(SMCParser smc)
 			switch (bHuman)
 			{
 				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
-				case false: vLogMessage(MT_LOG_SERVER, "%20s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, false, "%20s }", "");
 			}
 		}
 		else if (StrContains(g_esGeneral.g_sSection, "all", false) != -1 || StrContains(g_esGeneral.g_sSection, ",") != -1 || StrContains(g_esGeneral.g_sSection, "-") != -1)
@@ -2158,7 +2158,7 @@ public SMCResult SMCEndSection2(SMCParser smc)
 			switch (bHuman)
 			{
 				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
-				case false: vLogMessage(MT_LOG_SERVER, "%20s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, false, "%20s }", "");
 			}
 		}
 		else if (StrContains(g_esGeneral.g_sSection, "STEAM_", false) == 0 || strncmp("0:", g_esGeneral.g_sSection, 2) == 0 || strncmp("1:", g_esGeneral.g_sSection, 2) == 0 || (!strncmp(g_esGeneral.g_sSection, "[U:", 3) && g_esGeneral.g_sSection[strlen(g_esGeneral.g_sSection) - 1] == ']'))
@@ -2168,7 +2168,7 @@ public SMCResult SMCEndSection2(SMCParser smc)
 			switch (bHuman)
 			{
 				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
-				case false: vLogMessage(MT_LOG_SERVER, "%20s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, false, "%20s }", "");
 			}
 		}
 	}
@@ -2179,7 +2179,7 @@ public SMCResult SMCEndSection2(SMCParser smc)
 		switch (bHuman)
 		{
 			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%10s }", "");
-			case false: vLogMessage(MT_LOG_SERVER, "%10s }", "");
+			case false: vLogMessage(MT_LOG_SERVER, false, "%10s }", "");
 		}
 	}
 	else if (g_esGeneral.g_csState2 == ConfigState_Start)
@@ -2189,7 +2189,7 @@ public SMCResult SMCEndSection2(SMCParser smc)
 		switch (bHuman)
 		{
 			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "}");
-			case false: vLogMessage(MT_LOG_SERVER, "}");
+			case false: vLogMessage(MT_LOG_SERVER, false, "}");
 		}
 	}
 
@@ -2205,7 +2205,7 @@ public void SMCParseEnd2(SMCParser smc, bool halted, bool failed)
 			MT_PrintToChat(g_esGeneral.g_iParserViewer, "\n\n\n\n\n\n%s %t", MT_TAG2, "CompletedParsing");
 			MT_PrintToChat(g_esGeneral.g_iParserViewer, "%s %t", MT_TAG2, "CheckConsole");
 		}
-		case false: vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "CompletedParsing", LANG_SERVER);
+		case false: vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "CompletedParsing", LANG_SERVER);
 	}
 
 	g_esGeneral.g_bUsedParser = false;
@@ -2323,7 +2323,7 @@ static void vConfigMenu(int admin, int item = 0)
 			{
 				char sSmcError[64];
 				smcConfig.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
-				vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
+				vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
 
 				delete smcConfig;
 				delete mConfigMenu;
@@ -2335,7 +2335,7 @@ static void vConfigMenu(int admin, int item = 0)
 		}
 		else
 		{
-			vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
+			vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
 
 			delete mConfigMenu;
 
@@ -2666,7 +2666,7 @@ static void vConfig(bool manual)
 		g_esGeneral.g_iFileTimeNew[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
 		if (g_esGeneral.g_iFileTimeOld[0] != g_esGeneral.g_iFileTimeNew[0] || manual)
 		{
-			vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, g_esGeneral.g_sSavePath);
+			vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, g_esGeneral.g_sSavePath);
 			vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 			vPluginStatus();
 			vResetTimers();
@@ -2687,7 +2687,7 @@ static void vConfig(bool manual)
 				g_esGeneral.g_iFileTimeNew[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 				if (g_esGeneral.g_iFileTimeOld[1] != g_esGeneral.g_iFileTimeNew[1] || manual)
 				{
-					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDifficultyConfig);
+					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDifficultyConfig);
 					vCustomConfig(sDifficultyConfig);
 					g_esGeneral.g_iFileTimeOld[1] = g_esGeneral.g_iFileTimeNew[1];
 				}
@@ -2707,7 +2707,7 @@ static void vConfig(bool manual)
 					g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
 					if (g_esGeneral.g_iFileTimeOld[2] != g_esGeneral.g_iFileTimeNew[2] || manual)
 					{
-						vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sMapConfig);
+						vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sMapConfig);
 						vCustomConfig(sMapConfig);
 						g_esGeneral.g_iFileTimeOld[2] = g_esGeneral.g_iFileTimeNew[2];
 					}
@@ -2725,7 +2725,7 @@ static void vConfig(bool manual)
 				g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
 				if (g_esGeneral.g_iFileTimeOld[3] != g_esGeneral.g_iFileTimeNew[3] || manual)
 				{
-					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sModeConfig);
+					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sModeConfig);
 					vCustomConfig(sModeConfig);
 					g_esGeneral.g_iFileTimeOld[3] = g_esGeneral.g_iFileTimeNew[3];
 				}
@@ -2755,7 +2755,7 @@ static void vConfig(bool manual)
 				g_esGeneral.g_iFileTimeNew[4] = GetFileTime(sDayConfig, FileTime_LastChange);
 				if (g_esGeneral.g_iFileTimeOld[4] != g_esGeneral.g_iFileTimeNew[4] || manual)
 				{
-					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDayConfig);
+					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sDayConfig);
 					vCustomConfig(sDayConfig);
 					g_esGeneral.g_iFileTimeOld[4] = g_esGeneral.g_iFileTimeNew[4];
 				}
@@ -2772,7 +2772,7 @@ static void vConfig(bool manual)
 				g_esGeneral.g_iFileTimeNew[5] = GetFileTime(sCountConfig, FileTime_LastChange);
 				if (g_esGeneral.g_iFileTimeOld[5] != g_esGeneral.g_iFileTimeNew[5] || manual)
 				{
-					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
+					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
 					vCustomConfig(sCountConfig);
 					g_esGeneral.g_iFileTimeOld[5] = g_esGeneral.g_iFileTimeNew[5];
 					g_esGeneral.g_iPlayerCount[0] = iCount;
@@ -2795,7 +2795,7 @@ static void vConfig(bool manual)
 				g_esGeneral.g_iFileTimeNew[6] = GetFileTime(sCountConfig, FileTime_LastChange);
 				if (g_esGeneral.g_iFileTimeOld[6] != g_esGeneral.g_iFileTimeNew[6] || manual)
 				{
-					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
+					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
 					vCustomConfig(sCountConfig);
 					g_esGeneral.g_iFileTimeOld[6] = g_esGeneral.g_iFileTimeNew[6];
 					g_esGeneral.g_iPlayerCount[1] = iCount;
@@ -2818,7 +2818,7 @@ static void vConfig(bool manual)
 				g_esGeneral.g_iFileTimeNew[7] = GetFileTime(sCountConfig, FileTime_LastChange);
 				if (g_esGeneral.g_iFileTimeOld[7] != g_esGeneral.g_iFileTimeNew[7] || manual)
 				{
-					vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
+					vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ReloadingConfig", LANG_SERVER, sCountConfig);
 					vCustomConfig(sCountConfig);
 					g_esGeneral.g_iFileTimeOld[7] = g_esGeneral.g_iFileTimeNew[7];
 					g_esGeneral.g_iPlayerCount[2] = iCount;
@@ -4109,14 +4109,14 @@ static void vLoadConfigs(const char[] savepath, int mode)
 		{
 			char sSmcError[64];
 			smcLoader.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
-			vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, savepath, sSmcError);
+			vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, savepath, sSmcError);
 		}
 
 		delete smcLoader;
 	}
 	else
 	{
-		vLogMessage(MT_LOG_SERVER, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, savepath);
+		vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, savepath);
 	}
 }
 
@@ -5661,7 +5661,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						FormatEx(sPhrase, sizeof(sPhrase), "Kill%i", iOption);
 						vGetTranslatedName(sTankName, sizeof(sTankName), iAttacker);
 						MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, iVictim);
-						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iVictim);
+						vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iVictim);
 					}
 				}
 			}
@@ -5948,7 +5948,7 @@ static void vHookEventForward(bool mode)
 	Call_Finish();
 }
 
-static void vLogMessage(int type, const char[] message, any ...)
+static void vLogMessage(int type, bool timestamp = true, const char[] message, any ...)
 {
 	if (g_esGeneral.g_iLogMessages & type)
 	{
@@ -5965,9 +5965,9 @@ static void vLogMessage(int type, const char[] message, any ...)
 			case Plugin_Handled: return;
 			case Plugin_Continue:
 			{
-				static char sBuffer[255], sMessage[255], sTime[32];
+				static char sBuffer[255], sMessage[255];
 				SetGlobalTransTarget(LANG_SERVER);
-				VFormat(sBuffer, sizeof(sBuffer), message, 3);
+				VFormat(sBuffer, sizeof(sBuffer), message, 4);
 
 				ReplaceString(sBuffer, sizeof(sBuffer), "{default}", "");
 				ReplaceString(sBuffer, sizeof(sBuffer), "\x01", "");
@@ -5979,11 +5979,19 @@ static void vLogMessage(int type, const char[] message, any ...)
 				ReplaceString(sBuffer, sizeof(sBuffer), "\x05", "");
 				ReplaceString(sBuffer, sizeof(sBuffer), "{percent}", "%%");
 
-				FormatTime(sTime, sizeof(sTime), "%Y-%m-%d - %H:%M:%S", GetTime());
-				FormatEx(sMessage, sizeof(sMessage), "[%s] %s", sTime, sBuffer);
+				switch (timestamp)
+				{
+					case true:
+					{
+						static char sTime[32];
+						FormatTime(sTime, sizeof(sTime), "%Y-%m-%d - %H:%M:%S", GetTime());
+						FormatEx(sMessage, sizeof(sMessage), "[%s] %s", sTime, sBuffer);
+						vSaveMessage(sMessage);
+					}
+					case false: vSaveMessage(sBuffer);
+				}
 
 				PrintToServer(sBuffer);
-				vSaveMessage(sMessage);
 			}
 		}
 	}
@@ -6519,14 +6527,14 @@ static void vCalculateDeath(int tank, int survivor = 0)
 					{
 						FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
 						MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, survivor, sTankName, iAssistant, flPercentage);
-						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, survivor, sTankName, iAssistant, flPercentage);
+						vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, survivor, sTankName, iAssistant, flPercentage);
 						vVocalizeDeath(survivor, iAssistant, tank);
 					}
 					else if (flPercentage >= 1.0)
 					{
 						FormatEx(sPhrase, sizeof(sPhrase), "Assist%i", iOption);
 						MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, iAssistant, flPercentage);
-						vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iAssistant, flPercentage);
+						vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iAssistant, flPercentage);
 						vVocalizeDeath(0, iAssistant, tank);
 					}
 					else
@@ -7650,7 +7658,7 @@ static void vAnnounce(int tank, const char[] oldname, const char[] name, int mod
 			if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_BOSS)
 			{
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Evolved", oldname, name, g_esPlayer[tank].g_iBossStageCount + 1);
-				vLogMessage(MT_LOG_CHANGE, "%s %T", MT_TAG, "Evolved", LANG_SERVER, oldname, name, g_esPlayer[tank].g_iBossStageCount + 1);
+				vLogMessage(MT_LOG_CHANGE, _, "%s %T", MT_TAG, "Evolved", LANG_SERVER, oldname, name, g_esPlayer[tank].g_iBossStageCount + 1);
 			}
 		}
 		case 2:
@@ -7658,7 +7666,7 @@ static void vAnnounce(int tank, const char[] oldname, const char[] name, int mod
 			if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_RANDOM)
 			{
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Randomized", oldname, name);
-				vLogMessage(MT_LOG_CHANGE, "%s %T", MT_TAG, "Randomized", LANG_SERVER, oldname, name);
+				vLogMessage(MT_LOG_CHANGE, _, "%s %T", MT_TAG, "Randomized", LANG_SERVER, oldname, name);
 			}
 		}
 		case 3:
@@ -7666,7 +7674,7 @@ static void vAnnounce(int tank, const char[] oldname, const char[] name, int mod
 			if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_TRANSFORM)
 			{
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Transformed", oldname, name);
-				vLogMessage(MT_LOG_CHANGE, "%s %T", MT_TAG, "Transformed", LANG_SERVER, oldname, name);
+				vLogMessage(MT_LOG_CHANGE, _, "%s %T", MT_TAG, "Transformed", LANG_SERVER, oldname, name);
 			}
 		}
 		case 4:
@@ -7674,7 +7682,7 @@ static void vAnnounce(int tank, const char[] oldname, const char[] name, int mod
 			if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_REVERT)
 			{
 				MT_PrintToChatAll("%s %t", MT_TAG2, "Untransformed", oldname, name);
-				vLogMessage(MT_LOG_CHANGE, "%s %T", MT_TAG, "Untransformed", LANG_SERVER, oldname, name);
+				vLogMessage(MT_LOG_CHANGE, _, "%s %T", MT_TAG, "Untransformed", LANG_SERVER, oldname, name);
 			}
 		}
 		case 5:
@@ -7697,7 +7705,7 @@ static void vAnnounce(int tank, const char[] oldname, const char[] name, int mod
 
 		bool bExists = TranslationPhraseExists(sTankNote);
 		MT_PrintToChatAll("%s %t", MT_TAG3, (bExists ? sTankNote : "NoNote"));
-		vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, (bExists ? sTankNote : "NoNote"), LANG_SERVER);
+		vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sTankNote : "NoNote"), LANG_SERVER);
 	}
 
 	if (bIsValidGame() && g_esCache[tank].g_iGlowEnabled == 1)
@@ -7716,7 +7724,7 @@ static void vAnnounceArrival(int tank, const char[] name)
 			char sPhrase[32];
 			FormatEx(sPhrase, sizeof(sPhrase), "Arrival%i", iOption);
 			MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, name);
-			vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, name);
+			vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, name);
 		}
 
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
@@ -7743,7 +7751,7 @@ static void vAnnounceDeath(int tank)
 		FormatEx(sPhrase, sizeof(sPhrase), "Death%i", iOption);
 		vGetTranslatedName(sTankName, sizeof(sTankName), tank);
 		MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName);
-		vLogMessage(MT_LOG_LIFE, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName);
+		vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName);
 	}
 }
 
