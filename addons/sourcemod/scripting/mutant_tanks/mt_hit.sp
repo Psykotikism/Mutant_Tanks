@@ -16,8 +16,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Hit Ability v8.79"
-
 public Plugin myinfo =
 {
 	name = "[MT] Hit Ability",
@@ -43,11 +41,18 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "hitability"
+#define MT_CONFIG_SECTION2 "hit ability"
+#define MT_CONFIG_SECTION3 "hit_ability"
+#define MT_CONFIG_SECTION4 "hit"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_HIT "Hit Ability"
 
 enum struct esPlayer
 {
 	float g_flHitDamageMultiplier;
+	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
 	int g_iHitAbility;
@@ -63,6 +68,7 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 enum struct esAbility
 {
 	float g_flHitDamageMultiplier;
+	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
 	int g_iHitAbility;
@@ -77,6 +83,7 @@ esAbility g_esAbility[MT_MAXTYPES + 1];
 enum struct esCache
 {
 	float g_flHitDamageMultiplier;
+	float g_flOpenAreasOnly;
 
 	int g_iHitAbility;
 	int g_iHitGroup;
@@ -97,7 +104,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -121,7 +128,7 @@ public Action cmdHitInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
@@ -161,7 +168,7 @@ public int iHitMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vHitMenu(param1, menu.Selection);
 			}
@@ -169,34 +176,24 @@ public int iHitMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pHit = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "HitMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pHit.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
-			char sMenuOption[PLATFORM_MAX_PATH];
-
-			switch (param2)
+			if (param2 >= 0)
 			{
-				case 0:
-				{
-					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+				char sMenuOption[PLATFORM_MAX_PATH];
 
-					return RedrawMenuItem(sMenuOption);
-				}
-				case 1:
+				switch (param2)
 				{
-					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-
-					return RedrawMenuItem(sMenuOption);
+					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
 				}
-				case 2:
-				{
-					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
 
-					return RedrawMenuItem(sMenuOption);
-				}
+				return RedrawMenuItem(sMenuOption);
 			}
 		}
 	}
@@ -227,18 +224,22 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action TraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
 	{
-		if (MT_IsTankSupported(victim) && bIsCloneAllowed(victim) && g_esCache[victim].g_iHitAbility == 1 && bIsSurvivor(attacker))
+		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esCache[victim].g_iHitAbility == 1 && bIsSurvivor(attacker))
 		{
-			if (MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (g_esCache[victim].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags) || g_esCache[victim].g_iHumanAbility == 0)
+			if (bIsAreaNarrow(victim, g_esCache[victim].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (g_esCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags) || g_esCache[victim].g_iHumanAbility == 0)
 			{
 				return Plugin_Continue;
 			}
 
 			damage *= g_esCache[victim].g_flHitDamageMultiplier;
 
-			return bCanHitGroup(victim, hitgroup) ? Plugin_Changed : Plugin_Handled;
+			static int iBit, iFlag;
+			iBit = hitgroup - 1;
+			iFlag = (1 << iBit);
+
+			return !!(g_esCache[victim].g_iHitGroup & iFlag) ? Plugin_Changed : Plugin_Handled;
 		}
 	}
 
@@ -254,10 +255,10 @@ public void MT_OnPluginCheck(ArrayList &list)
 
 public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
 {
-	list.PushString("hitability");
-	list2.PushString("hit ability");
-	list3.PushString("hit_ability");
-	list4.PushString("hit");
+	list.PushString(MT_CONFIG_SECTION);
+	list2.PushString(MT_CONFIG_SECTION2);
+	list3.PushString(MT_CONFIG_SECTION3);
+	list4.PushString(MT_CONFIG_SECTION4);
 }
 
 public void MT_OnConfigsLoad(int mode)
@@ -271,6 +272,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
+				g_esAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esAbility[iIndex].g_iRequiresHumans = 1;
 				g_esAbility[iIndex].g_iHitAbility = 0;
 				g_esAbility[iIndex].g_flHitDamageMultiplier = 1.5;
@@ -286,6 +288,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
+					g_esPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iHitAbility = 0;
 					g_esPlayer[iPlayer].g_flHitDamageMultiplier = 0.0;
@@ -300,13 +303,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
-		g_esPlayer[admin].g_iHitAbility = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iHitAbility, value, 0, 1);
-		g_esPlayer[admin].g_flHitDamageMultiplier = flGetKeyValue(subsection, "Hit Ability", "Hit Ability", "Hit_Ability", "hit", key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_esPlayer[admin].g_flHitDamageMultiplier, value, 1.0, 999999.0);
-		g_esPlayer[admin].g_iHitGroup = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esPlayer[admin].g_iHitGroup, value, 1, 127);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 1);
+		g_esPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iHitAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iHitAbility, value, 0, 1);
+		g_esPlayer[admin].g_flHitDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_esPlayer[admin].g_flHitDamageMultiplier, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_iHitGroup = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esPlayer[admin].g_iHitGroup, value, 1, 127);
 
-		if (StrEqual(subsection, "hitability", false) || StrEqual(subsection, "hit ability", false) || StrEqual(subsection, "hit_ability", false) || StrEqual(subsection, "hit", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -321,13 +325,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
-		g_esAbility[type].g_iHitAbility = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iHitAbility, value, 0, 1);
-		g_esAbility[type].g_flHitDamageMultiplier = flGetKeyValue(subsection, "Hit Ability", "Hit Ability", "Hit_Ability", "hit", key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_esAbility[type].g_flHitDamageMultiplier, value, 1.0, 999999.0);
-		g_esAbility[type].g_iHitGroup = iGetKeyValue(subsection, "hitability", "hit ability", "hit_ability", "hit", key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esAbility[type].g_iHitGroup, value, 1, 127);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iHitAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iHitAbility, value, 0, 1);
+		g_esAbility[type].g_flHitDamageMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HitDamageMultiplier", "Hit Damage Multiplier", "Hit_Damage_Multiplier", "dmgmulti", g_esAbility[type].g_flHitDamageMultiplier, value, 1.0, 999999.0);
+		g_esAbility[type].g_iHitGroup = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HitGroup", "Hit Group", "Hit_Group", "group", g_esAbility[type].g_iHitGroup, value, 1, 127);
 
-		if (StrEqual(subsection, "hitability", false) || StrEqual(subsection, "hit ability", false) || StrEqual(subsection, "hit_ability", false) || StrEqual(subsection, "hit", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -348,15 +353,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iHitAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHitAbility, g_esAbility[type].g_iHitAbility);
 	g_esCache[tank].g_iHitGroup = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHitGroup, g_esAbility[type].g_iHitGroup);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
+	g_esCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flOpenAreasOnly, g_esAbility[type].g_flOpenAreasOnly);
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
-}
-
-static bool bCanHitGroup(int tank, int hitgroup)
-{
-	static int iBit, iFlag;
-	iBit = hitgroup - 1;
-	iFlag = (1 << iBit);
-
-	return !!(g_esCache[tank].g_iHitGroup & iFlag);
 }

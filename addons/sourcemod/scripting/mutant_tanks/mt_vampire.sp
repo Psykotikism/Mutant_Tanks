@@ -16,8 +16,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#file "Vampire Ability v8.79"
-
 public Plugin myinfo =
 {
 	name = "[MT] Vampire Ability",
@@ -43,10 +41,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+#define MT_CONFIG_SECTION "vampireability"
+#define MT_CONFIG_SECTION2 "vampire ability"
+#define MT_CONFIG_SECTION3 "vampire_ability"
+#define MT_CONFIG_SECTION4 "vampire"
+#define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
+
 #define MT_MENU_VAMPIRE "Vampire Ability"
 
 enum struct esPlayer
 {
+	float g_flOpenAreasOnly;
 	float g_flVampireChance;
 
 	int g_iAccessFlags;
@@ -63,6 +68,7 @@ esPlayer g_esPlayer[MAXPLAYERS + 1];
 
 enum struct esAbility
 {
+	float g_flOpenAreasOnly;
 	float g_flVampireChance;
 
 	int g_iAccessFlags;
@@ -78,6 +84,7 @@ esAbility g_esAbility[MT_MAXTYPES + 1];
 
 enum struct esCache
 {
+	float g_flOpenAreasOnly;
 	float g_flVampireChance;
 
 	int g_iHumanAbility;
@@ -100,7 +107,7 @@ public void OnPluginStart()
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 			{
 				OnClientPutInServer(iPlayer);
 			}
@@ -124,7 +131,7 @@ public Action cmdVampireInfo(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
@@ -164,7 +171,7 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
 			}
 
-			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_INKICKQUEUE))
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vVampireMenu(param1, menu.Selection);
 			}
@@ -172,34 +179,24 @@ public int iVampireMenuHandler(Menu menu, MenuAction action, int param1, int par
 		case MenuAction_Display:
 		{
 			char sMenuTitle[PLATFORM_MAX_PATH];
-			Panel panel = view_as<Panel>(param2);
+			Panel pVampire = view_as<Panel>(param2);
 			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "VampireMenu", param1);
-			panel.SetTitle(sMenuTitle);
+			pVampire.SetTitle(sMenuTitle);
 		}
 		case MenuAction_DisplayItem:
 		{
-			char sMenuOption[PLATFORM_MAX_PATH];
-
-			switch (param2)
+			if (param2 >= 0)
 			{
-				case 0:
-				{
-					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+				char sMenuOption[PLATFORM_MAX_PATH];
 
-					return RedrawMenuItem(sMenuOption);
-				}
-				case 1:
+				switch (param2)
 				{
-					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
-
-					return RedrawMenuItem(sMenuOption);
+					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
 				}
-				case 2:
-				{
-					FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
 
-					return RedrawMenuItem(sMenuOption);
-				}
+				return RedrawMenuItem(sMenuOption);
 			}
 		}
 	}
@@ -230,27 +227,28 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage >= 0.5)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
 		{
-			if (MT_IsTankSupported(attacker) && bIsCloneAllowed(attacker) && g_esCache[attacker].g_iVampireAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[attacker].g_flVampireChance && bIsSurvivor(victim))
+			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && g_esCache[attacker].g_iVampireAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[attacker].g_flVampireChance && bIsSurvivor(victim))
 			{
-				if (MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (g_esCache[victim].g_iRequiresHumans == 1 && iGetHumanCount() == 0) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
+				if (bIsAreaNarrow(attacker, g_esCache[attacker].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[attacker].g_iTankType) || (g_esCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 				{
 					return Plugin_Continue;
 				}
 
 				if (!MT_IsTankSupported(attacker, MT_CHECK_FAKECLIENT) || g_esCache[attacker].g_iHumanAbility == 1)
 				{
-					static int iDamage, iHealth, iNewHealth, iFinalHealth;
+					static int iDamage, iHealth, iMaxHealth, iNewHealth, iFinalHealth;
 					iDamage = RoundToNearest(damage);
-					iHealth = GetClientHealth(attacker);
+					iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth");
+					iMaxHealth = MT_TankMaxHealth(attacker, 1);
 					iNewHealth = iHealth + iDamage;
 					iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-					//SetEntityHealth(attacker, iFinalHealth);
+					MT_TankMaxHealth(attacker, 3, iMaxHealth + iDamage);
 					SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
 
 					vEffect(victim, attacker, g_esCache[attacker].g_iVampireEffect, 1);
@@ -259,7 +257,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					{
 						static char sTankName[33];
 						MT_GetTankName(attacker, sTankName);
-						MT_LogMessage(MT_LOG_ABILITY, "%s %t", MT_TAG2, "Vampire", sTankName, victim);
+						MT_PrintToChatAll("%s %t", MT_TAG2, "Vampire", sTankName, victim);
+						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Vampire", LANG_SERVER, sTankName, victim);
 					}
 				}
 			}
@@ -278,10 +277,10 @@ public void MT_OnPluginCheck(ArrayList &list)
 
 public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
 {
-	list.PushString("vampireability");
-	list2.PushString("vampire ability");
-	list3.PushString("vampire_ability");
-	list4.PushString("vampire");
+	list.PushString(MT_CONFIG_SECTION);
+	list2.PushString(MT_CONFIG_SECTION2);
+	list3.PushString(MT_CONFIG_SECTION3);
+	list4.PushString(MT_CONFIG_SECTION4);
 }
 
 public void MT_OnConfigsLoad(int mode)
@@ -295,6 +294,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iAccessFlags = 0;
 				g_esAbility[iIndex].g_iImmunityFlags = 0;
 				g_esAbility[iIndex].g_iHumanAbility = 0;
+				g_esAbility[iIndex].g_flOpenAreasOnly = 0.0;
 				g_esAbility[iIndex].g_iRequiresHumans = 0;
 				g_esAbility[iIndex].g_iVampireAbility = 0;
 				g_esAbility[iIndex].g_iVampireEffect = 0;
@@ -311,6 +311,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iAccessFlags = 0;
 					g_esPlayer[iPlayer].g_iImmunityFlags = 0;
 					g_esPlayer[iPlayer].g_iHumanAbility = 0;
+					g_esPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
 					g_esPlayer[iPlayer].g_iRequiresHumans = 0;
 					g_esPlayer[iPlayer].g_iVampireAbility = 0;
 					g_esPlayer[iPlayer].g_iVampireEffect = 0;
@@ -326,14 +327,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
-		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 1);
-		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 1);
-		g_esPlayer[admin].g_iVampireAbility = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esPlayer[admin].g_iVampireAbility, value, 0, 1);
-		g_esPlayer[admin].g_iVampireEffect = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iVampireEffect, value, 0, 1);
-		g_esPlayer[admin].g_iVampireMessage = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iVampireMessage, value, 0, 1);
-		g_esPlayer[admin].g_flVampireChance = flGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esPlayer[admin].g_flVampireChance, value, 0.0, 100.0);
+		g_esPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esPlayer[admin].g_iHumanAbility, value, 0, 1);
+		g_esPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esPlayer[admin].g_iVampireAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esPlayer[admin].g_iVampireAbility, value, 0, 1);
+		g_esPlayer[admin].g_iVampireEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esPlayer[admin].g_iVampireEffect, value, 0, 1);
+		g_esPlayer[admin].g_iVampireMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iVampireMessage, value, 0, 1);
+		g_esPlayer[admin].g_flVampireChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esPlayer[admin].g_flVampireChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "vampireability", false) || StrEqual(subsection, "vampire ability", false) || StrEqual(subsection, "vampire_ability", false) || StrEqual(subsection, "vampire", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -348,14 +350,15 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 	if (mode < 3 && type > 0)
 	{
-		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
-		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 1);
-		g_esAbility[type].g_iVampireAbility = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "enabled", g_esAbility[type].g_iVampireAbility, value, 0, 1);
-		g_esAbility[type].g_iVampireEffect = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iVampireEffect, value, 0, 1);
-		g_esAbility[type].g_iVampireMessage = iGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iVampireMessage, value, 0, 1);
-		g_esAbility[type].g_flVampireChance = flGetKeyValue(subsection, "vampireability", "vampire ability", "vampire_ability", "vampire", key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esAbility[type].g_flVampireChance, value, 0.0, 100.0);
+		g_esAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esAbility[type].g_iHumanAbility, value, 0, 1);
+		g_esAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esAbility[type].g_iVampireAbility = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esAbility[type].g_iVampireAbility, value, 0, 1);
+		g_esAbility[type].g_iVampireEffect = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esAbility[type].g_iVampireEffect, value, 0, 1);
+		g_esAbility[type].g_iVampireMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iVampireMessage, value, 0, 1);
+		g_esAbility[type].g_flVampireChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esAbility[type].g_flVampireChance, value, 0.0, 100.0);
 
-		if (StrEqual(subsection, "vampireability", false) || StrEqual(subsection, "vampire ability", false) || StrEqual(subsection, "vampire_ability", false) || StrEqual(subsection, "vampire", false))
+		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
 		{
 			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 			{
@@ -374,6 +377,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flVampireChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flVampireChance, g_esAbility[type].g_flVampireChance);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
+	g_esCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flOpenAreasOnly, g_esAbility[type].g_flOpenAreasOnly);
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esCache[tank].g_iVampireAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iVampireAbility, g_esAbility[type].g_iVampireAbility);
 	g_esCache[tank].g_iVampireEffect = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iVampireEffect, g_esAbility[type].g_iVampireEffect);

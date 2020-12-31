@@ -1,8 +1,9 @@
 # Mutant Tanks
-Originally an extended version of [[L4D2] Super Tanks](https://forums.alliedmods.net/showthread.php?t=165858) by [Machine](https://forums.alliedmods.net/member.php?u=74752), Mutant Tanks takes Tank fights to the next level by enabling full customization of different Tank types to make gameplay more interesting.
+## Languages
+ - [Русский](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md)
 
 ## License
-> The following license is also placed inside the source code of each plugin and include file.
+> The following license is placed inside the source code of each plugin and include file.
 
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
 Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
@@ -14,34 +15,36 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## About
-> Mutant Tanks makes fighting Tanks great again!
-
-Mutant Tanks will enhance and intensify Tank fights by making each Tank that spawns unique and different in its own way.
-
-### What makes Mutant Tanks worth installing?
-Mutant Tanks enhances the experience and fun that players get from Tank fights by 1,000. This plugin gives server owners an arsenal of Mutant Tanks to test players' skills with and create a unique experience in every Tank fight.
+Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, Last Boss Extended, and Super Tanks to grant Tanks unique powers and abilities that enhance the player experience.
 
 ## Features
-1. Enable/disable the plugin in all game modes.
-2. Supports custom configurations whether per difficulty, per map, per game mode, per day, per player count, or per finale stage.
-3. Fully customize all Mutant Tanks.
-4. Store up to 1,000 Mutant Tank types.
-5. Four different formats for the config file.
-6. Auto-reload the config file when you change settings mid-game.
-7. Choose which abilities to install.
-8. Add your own abilities and features through the use of forwards and natives.
-9. Custom target filters for targeting survivors and special infected.
-10. Supports multiple languages.
-11. Chat color tags for translation files.
-12. Administration system designed for access to and immunity from Mutant Tanks.
+1. Fully compatible with all game modes.
+2. Fully customizable Mutant Tanks.
+3. Flexible config file.
+4. Auto-reload the config file when changes are made mid-game.
+5. Supports custom configurations for different scenarios/setups.
+6. Store up to 500 Mutant Tank types.
+7. Administration system designed for access and immunity to Mutant Tanks.
+8. Custom target filters for targeting survivors, special infected, and Mutant Tanks.
+9. Over 1,400 optional settings to configure.
+10. Over 70 unique abilities to choose from.
+11. Choose which abilities to install.
+12. Add custom abilities and features through the use of forwards and natives.
+13. Create all kinds of combinations of abilities.
+14. Supports multiple languages.
+15. Chat color tags for translation files.
+16. Detects idle or bugged Tanks.
+17. Toggle damage scaling based on difficulty.
+18. Fully customizable reward system.
 
 ### Requirements
-1. You must have at least `SourceMod 1.11.0.6511` or higher.
-2. Required: [DHooks](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Required: [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
+1. `SourceMod 1.11.0.6511` or higher
+2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
+3. [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
+4. Patience & competence
 
 ### Notes
-1. I do not provide support for listen servers but the plugin and its modules should still work properly on them.
+1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
 2. I will not help you with installing or troubleshooting problems on your part.
 3. If you get errors from SourceMod itself, that is your problem, not mine.
 4. MAKE SURE YOU MEET ALL THE REQUIREMENTS AND FOLLOW THE INSTALLATION GUIDE PROPERLY.
@@ -59,15 +62,14 @@ Mutant Tanks enhances the experience and fun that players get from Tank fights b
  - `addons/sourcemod/plugins` folder (`mutant_tanks.smx` and all of its modules)
  - `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
 2. Delete `mutant_tanks.txt` from `addons/sourcemod/gamedata` folder.
-3. Delete `mutant_tanks.inc` from `addons/sourcemod/scripting/include` folder.
-4. Delete `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
-5. Delete `mutant_tanks.phrases.txt` from `addons/sourcemod/translations` folder.
-6. Backup `mutant_tanks` folder in `addons/sourcemod/data` folder.
+3. Delete `mutant_tanks.inc` and `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
+4. Delete `mutant_tanks.phrases.txt` from `addons/sourcemod/translations` folder.
+5. Backup `mutant_tanks` folder in `addons/sourcemod/data` folder.
 6. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
 ### Disabling
 1. Move `mutant_tanks` folder (`mutant_tanks.smx` and all of its modules) to `plugins/disabled` folder.
-2. Unload Mutant Tanks by restarting the server.
+2. Unload Mutant Tanks by restarting the server. (Using `sm plugins unload` will take too long.)
 
 ## ConVar Settings
 ```
@@ -110,7 +112,7 @@ mt_pluginenabled "1"
 ```
 
 ## KeyValues Settings
-> View the INFORMATION.md file for information about each available setting.
+> View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,400 to customize!)
 
 ### Custom Configuration Files
 > Mutant Tanks has features that allow for creating and executing custom configuration files.
@@ -120,16 +122,16 @@ By default, Mutant Tanks can create and execute the following types of configura
 2. Map - Files are created/executed based on the current map. (Example: If the current map is `c1m1_hotel`, then `c1m1_hotel.cfg` is executed (or created if it doesn't exist already).
 3. Game mode - Files are created/executed based on the current game mode. (Example: If the current game mode is Versus, then `versus.cfg` is executed (or created if it doesn't exist already).
 4. Daily - Files are created/executed based on the current day. (Example: If the current day is Friday, then `friday.cfg` is executed (or created if it doesn't exist already).
-5. Player count - Files are created/executed based on the current number of human players. (Example: If the current number is 8, then `8.cfg` is executed (or created if it doesn't exist already).
+5. Player (survivor/infected/all) count - Files are created/executed based on the current number of human players. (Example: If the current number is 8, then `8.cfg` is executed (or created if it doesn't exist already).
 6. Finale stages - Files are created/executed based on the finale stages called by the game. (Example: If the finale starts, then `finale_start.cfg` is executed (or created if it doesn't exist already)).
 
 #### Features
-1. Create custom config files (can be based on difficulty, map, game mode, day, player count, or finale stage).
-2. Execute custom config files (can be based on difficulty, map, game mode, day, player count, or finale stage).
+1. Create custom config files (can be based on difficulty, map, game mode, day, player (survivor/infected/all) count, or finale stage).
+2. Execute custom config files (can be based on difficulty, map, game mode, day, player (survivor/infected/all) count, or finale stage).
 3. Automatically generate config files for up to 66 players, all difficulties specified by `z_difficulty`, maps installed on the server, game modes specified by `sv_gametypes` and `mp_gamemode`, days of the `week`, and all possible `finale stages`.
 
 ## Questions You May Have
-> If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140).
+> If you have any questions that aren't addressed below, feel free to message me or post on this [thread](https://forums.alliedmods.net/showthread.php?t=302140). Read the INFORMATION.md file to learn about every setting/feature available. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 
 ### Main Features
 1. How do I make my own Mutant Tank?
@@ -139,6 +141,7 @@ By default, Mutant Tanks can create and execute the following types of configura
 Examples:
 
 This is okay:
+
 ```
 "Mutant Tanks"
 {
@@ -159,6 +162,7 @@ This is okay:
 ```
 
 This is not okay:
+
 ```
 "Mutant Tanks"
 {
@@ -179,6 +183,7 @@ This is not okay:
 ```
 
 This is okay:
+
 ```
 "Mutant Tanks"
 {
@@ -199,6 +204,7 @@ This is okay:
 ```
 
 This is not okay:
+
 ```
 "Mutant Tanks"
 {
@@ -221,6 +227,7 @@ This is not okay:
 - Adding the entry to the roster.
 
 Here's our final entry:
+
 ```
 "Mutant Tanks"
 {
@@ -353,24 +360,14 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 
 2. Can you add more abilities or features?
 
-- That depends on whether it's doable/possible and if I want to add it.
-- If it's from another plugin, it would depend on whether the code is too long, and if it is, I most likely won't go through all that effort for just 1 ability.
-- Post on the AM thread or PM me.
+- Mutant Tanks already uses a lot of files, so there's no room for anymore abilities or features as of `v8.80`.
 
 3. How do I enable/disable the plugin in certain game modes?
 
 You have 2 options:
 
-- Enable/disable in certain game mode types.
-- Enable/disable in specific game modes.
-
-For option 1:
-
-You must add numbers up together in `Game Mode Types`.
-
-For option 2:
-
-You must specify the game modes in `Enabled Game Modes` and `Disabled Game Modes`.
+- Enable/disable in certain game mode types. (You must add numbers up together in `Game Mode Types`.)
+- Enable/disable in specific game modes. (You must specify the game modes in `Enabled Game Modes` and `Disabled Game Modes`.)
 
 Here are some scenarios and their outcomes:
 
@@ -412,12 +409,17 @@ It may be due to one or more of the following:
 - The `Spawn Enabled` setting for that Mutant Tank may be set to 0.
 - You have created a new Mutant Tank and didn't raise the maximum value of `Type Range`.
 - You have misspelled one of the settings.
-- You are still using the `Tank Character` setting which is no longer used since v8.16.
+- You are still using the `Tank Character` setting which is no longer used since `v8.16`.
 - You didn't set up the Mutant Tank properly.
 - You are missing quotation marks.
 - You are missing curly braces.
-- You have more than 1,000 Mutant Tanks in your config file.
+- You have more than 500 Mutant Tanks in your config file.
 - You didn't format your config file properly.
+- The Mutant Tanks requires X human-controlled survivors around and there are none.
+- The Mutant Tank needs to be in an open area to spawn and it's currently in a narrow place.
+- The number of Mutant Tanks currently alive with the same type has reached or exceeded the limit set by the `Type Limit`.
+- The Mutant Tank can only spawn on regular maps.
+- The Mutant Tank can only spawn on finale maps.
 
 5. How do I kill the Tanks depending on what abilities they have?
 
@@ -432,12 +434,14 @@ The following abilities require different strategies:
 - Nullify Hit: The Mutant Tank can mark players as useless, which means as long as that player is nullified, they will not do any damage.
 - Shield Ability: If set to be weak to explosives, wait for the Tank to throw propane tanks at you and then throw it back at the Tank. Then shoot the propane tank to deactivate the Tank's shield. If set to be weak to fire, wait for the Tank to throw gascans at you and then throw it back at the Tank. Then shoot the gascan to deactivate the Tank's shield. If set to be weak to bullets, just keep shooting the Tank. If set to be weak to melee hits, just keep slashing at the Tank.
 
+Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information on each ability's strengths and weaknesses.
+
 6. How can I change the amount of Tanks that spawn on each finale wave?
 
 Here's an example:
 
 ```
-"Finale Waves" "2,3,4" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, and 4 Tanks on the 3rd wave.
+"Finale Waves" "1,2,3,4,5,6,7,8,9,10" // Spawn 2 Tanks on the 1st wave, 3 Tanks on the 2nd wave, 4 Tanks on the 3rd wave, etc.
 ```
 
 7. How can I change the amount of Tanks that can spawn on finale maps?
@@ -454,7 +458,7 @@ Each prop has X out of 100.0% chance to appear on Mutant Tanks when they spawn. 
 
 10. Why are the Tanks spawning with more than the extra health given to them?
 
-Since v8.10, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
+Since `v8.10`, extra health given to Tanks is now multiplied by the number of alive non-idle human survivors present when the Tank spawns.
 
 11. How do I add more Mutant Tanks?
 
@@ -601,8 +605,8 @@ These are basically temporary Tanks that you can create for certain situations, 
 
 14. How can I move the Mutant Tanks category around on the admin menu?
 
-- You have to open up addons/sourcemod/configs/adminmenu_sorting.txt.
-- Enter the `MutantTanks` category.
+- You have to open up `addons/sourcemod/configs/adminmenu_sorting.txt` and add the `MutantTanks` category.
+- This also allows you to sort each item in the category.
 
 Example:
 
@@ -641,20 +645,26 @@ Example:
 
 	"MutantTanks"
 	{
-		"item"		"sm_tank"
+		"item"		"sm_mt_tank"
 		"item"		"sm_mt_config"
 		"item"		"sm_mt_info"
 		"item"		"sm_mt_list"
+		"item"		"sm_mt_reload"
 		"item"		"sm_mt_version"
 	}
 }
 ```
 
-15. Are there any developer/tester features available in the plugin?
+15. How can I disable the `MutantTanks` category for some admins?
+
+You can use the `mt_adminmenu` override to restrict the category to certain admin flags/groups.
+
+16. Are there any developer/tester features available in the plugin?
 
 Yes, there are forwards, natives, stocks, target filters for each special infected, and an admin command that allows developers/testers to spawn and test each Mutant Tank.
 
 Forwards:
+
 ```
 /**
  * Called every second to trigger a Mutant Tank's ability.
@@ -698,9 +708,26 @@ forward void MT_OnButtonReleased(int tank, int button);
  * Use this forward to trigger any features/abilities/settings when a Mutant Tank changes types.
  *
  * @param tank			Client index of the Tank.
+ * @param oldType		The Tank's previous Mutant Tank type.
+ * @param newType		The Tank's new Mutant Tank type.
  * @param revert		True if reverting to a normal Tank, false otherwise.
  **/
-forward void MT_OnChangeType(int tank, bool revert);
+forward void MT_OnChangeType(int tank, int oldType, int newType, bool revert);
+
+/**
+ * Called when a Mutant Tank's abilities are combined.
+ * Use this forward to trigger any combinations.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			0 = Main/range abilities, 1 = Hit abilities, 2 = Rock throw abilities, 3 = Rock break abilities,
+ *					4 = Post-spawn abilities, 5 = Upon-death abilities, 6 = Upon-incap abilities
+ * @param random		Random value to check against for chance to trigger combination.
+ * @param combo			String containing the list of abilities to combine.
+ * @param survivor		Client index of the survivor, if any.
+ * @param weapon		Entity index of the weapon, if any.
+ * @param classname		String containing the weapon classname, if any.
+ **/
+forward void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname);
 
 /**
  * Called when the config file is about to load.
@@ -722,6 +749,15 @@ forward void MT_OnConfigsLoad(int mode);
  * @param mode			1 = Load general settings, 2 = 1 + load type settings, 3 = Load admin settings
  **/
 forward void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode);
+
+/**
+ * Called when the Tank is passed on to another player or bot.
+ * Use this forward to copy over any stats for the Tank's new owner.
+ *
+ * @param oldTank		Client index of the previous owner.
+ * @param newTank		Client index of the new owner.
+ **/
+forward void MT_OnCopyStats(int oldTank, int newTank);
 
 /**
  * Called when a player uses the "sm_st_info" command.
@@ -753,8 +789,8 @@ forward void MT_OnHookEvent(bool hooked);
  * Called when a message is about to be logged.
  * Use this forward to intercept a message.
  *
- * @param message		Buffer containing the message.
  * @param type			Type of message being logged.
+ * @param message		Buffer containing the message.
  *
  * @return			Plugin_Handled to prevent the message from being logged, Plugin_Continue to allow.
  **/
@@ -813,6 +849,20 @@ forward void MT_OnPostTankSpawn(int tank);
 forward void MT_OnResetTimers(int mode, int tank);
 
 /**
+ * Called when a survivor is rewarded or their reward ends.
+ * Use this forward to reward survivors or to reset their rewards.
+ *
+ * @param survivor		Client index of the survivor.
+ * @param tank			Client index of the Tank.
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
+ *					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
+ * @param priority		1 = Killer, 2 = Assistant who did most damage, 3 = Teammate who helped
+ * @param duration		The duration of the reward.
+ * @param apply			True if the reward is given, false otherwise.
+ **/
+forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply);
+
+/**
  * Called when a Mutant Tank's rock breaks.
  * Use this forward for any after-effects.
  *
@@ -854,22 +904,33 @@ forward Action MT_OnTypeChosen(int &type, int tank);
 ```
 
 Natives:
+
+- Core plugin
+
 ```
 /**
  * Returns if a certain Mutant Tank type can spawn.
  *
  * @param type			Mutant Tank type.
  * @return			True if the type can spawn, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_CanTypeSpawn(int type);
+
+/**
+ * Detonates a Tank rock on the next frame.
+ *
+ * @param rock			Entity index of the rock.
+ * @error			Invalid entity index.
+ **/
+native void MT_DetonateTankRock(int rock);
 
 /**
  * Returns if a certain Mutant Tank type requires human-controlled survivors to be present to be effective.
  *
  * @param type			Mutant Tank type.
  * @return			True if the type requires human-controlled survivors to be present, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_DoesTypeRequireHumans(int type);
 
@@ -880,9 +941,21 @@ native bool MT_DoesTypeRequireHumans(int type);
  * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
  * @return			The current access flags.
- * @error			Invalid client index or type is 0.
+ * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
 native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
+
+/**
+ * Returns the value of a combination setting based on a position.
+ *
+ * @param tank			Client index of the Tank.
+ * @param type			1 = Chance, 2 = Damage, 3 = Delay, 4 = Duration, 5 = Interval, 6 = Min radius, 7 = Max radius,
+ *					8 = Range, 9 = Range Chance, 10 = Death range, 11 = Death range chance, 12 = Rock chance, 13 = Speed
+ * @param pos			The position in the setting's array to retrieve the value from. (0-9)
+ * @return			The value stored in the setting.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native float MT_GetCombinationSetting(int tank, int type, int pos);
 
 /**
  * Returns the current finale wave.
@@ -892,13 +965,32 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
 native int MT_GetCurrentFinaleWave();
 
 /**
+ * Returns a Mutant Tank's glow outline range.
+ *
+ * @param tank			Client index of the Tank.
+ * @param mode			True if looking for max range, false otherwise.
+ * @return			The glow outline range of the Tank.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native int MT_GetGlowRange(int tank, bool mode);
+
+/**
+ * Returns a Mutant Tank's glow outline type.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			The glow outline type of the Tank.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native int MT_GetGlowType(int tank);
+
+/**
  * Returns the current immunity flags set by the core plugin.
  *
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
  * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
  * @return			The current immunity flags.
- * @error			Invalid client index or type is 0.
+ * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
 native int MT_GetImmunityFlags(int mode, int type = 0, int admin = -1);
 
@@ -921,12 +1013,12 @@ native int MT_GetMinType();
  *
  * @param tank			Client index of the Tank.
  * @param type			1 = Light color, 2 = Oxygen tank color, 3 = Oxygen tank flames color, 4 = Rock color,
- *				5 = Tire color, 6 = Propane tank color
+ *					5 = Tire color, 6 = Propane tank color, 7 = Flashlight color, 8 = Crown color
  * @param red			Red color reference.
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
- * @error			Invalid client index.
+ * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 8.
  **/
 native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
@@ -935,9 +1027,27 @@ native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue
  *
  * @param tank			Client index of the Tank.
  * @return			The run speed of the Tank.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native float MT_GetRunSpeed(int tank);
+
+/**
+ * Returns the scaled damage based on difficulty.
+ *
+ * @param damage		Base damage to scale.
+ * @return			The scaled damage based on difficulty.
+ **/
+native float MT_GetScaledDamage(float damage);
+
+/**
+ * Returns a Mutant Tank's spawn type.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			The spawn type of the Tank.
+ *					0 = Normal, 1 = Boss, 2 = Randomized, 3 = Transformation, 4 = Combined abilities
+ * @error			Invalid client index, client is not in-game, or client is human.
+ **/
+native int MT_GetSpawnType(int tank);
 
 /**
  * Returns the RGB colors given to a Mutant Tank.
@@ -948,7 +1058,7 @@ native float MT_GetRunSpeed(int tank);
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
- * @error			Invalid client index.
+ * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 2.
  **/
 native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
 
@@ -957,7 +1067,7 @@ native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue
  *
  * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom name in.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native void MT_GetTankName(int tank, char[] buffer);
 
@@ -966,7 +1076,7 @@ native void MT_GetTankName(int tank, char[] buffer);
  *
  * @param tank			Client index of the Tank.
  * @return			The Tank's Mutant Tank type.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native int MT_GetTankType(int tank);
 
@@ -975,6 +1085,7 @@ native int MT_GetTankType(int tank);
  *
  * @param admin			Client index of the admin.
  * @return			True if the human player has access, false otherwise.
+ * @error			Invalid client index, client is not in-game, or client is a bot.
  **/
 native bool MT_HasAdminAccess(int admin);
 
@@ -983,7 +1094,7 @@ native bool MT_HasAdminAccess(int admin);
  *
  * @param type			Mutant Tank type.
  * @return			True if the type has a chance of spawning, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_HasChanceToSpawn(int type);
 
@@ -1002,16 +1113,10 @@ native void MT_HideEntity(int entity, bool mode);
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
  * @return			True if the human survivor is immune, false otherwise.
+ * @error			Invalid survivor index, survivor is not in-game, survivor is dead, survivor is a bot, survivor is idle,
+ *					invalid Tank index, or Tank is not in-game.
  **/
 native bool MT_IsAdminImmune(int survivor, int tank);
-
-/**
- * Returns if the clone can use abilities.
- *
- * @param tank				Client index of the Tank.
- * @return				True if clone can use abilities, false otherwise.
- **/
-native bool MT_IsCloneSupported(int tank);
 
 /**
  * Returns if the core plugin is enabled.
@@ -1021,11 +1126,20 @@ native bool MT_IsCloneSupported(int tank);
 native bool MT_IsCorePluginEnabled();
 
 /**
+ * Returns if a custom Tank is allowed to be a Mutant Tank.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the custom Tank is allowed to be a Mutant Tank, false otherwise.
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native bool MT_IsCustomTankSupported(int tank);
+
+/**
  * Returns if a certain Mutant Tank type is only available on finale maps.
  *
  * @param type			Mutant Tank type.
  * @return			True if the type is available, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_IsFinaleType(int type);
 
@@ -1034,27 +1148,37 @@ native bool MT_IsFinaleType(int type);
  *
  * @param tank			Client index of the Tank.
  * @return			True if the Tank has a glow outline, false otherwise.
- * @error			Invalid client index.
+ * @error			Invalid client index or client is not in-game.
  **/
 native bool MT_IsGlowEnabled(int tank);
+
+/**
+ * Returns if a Mutant Tank type's glow outline is flashing.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the Tank's glow outline is flashing, false otherwise.
+ * @error			Invalid client index or client is not in-game.
+ **/
+native bool MT_IsGlowFlashing(int tank);
 
 /**
  * Returns if a certain Mutant Tank type is only available on non-finale maps.
  *
  * @param type			Mutant Tank type.
  * @return			True if the type is available, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_IsNonFinaleType(int type);
 
 /**
- * Returns if a Tank is in stasis (idle).
+ * Returns if a Tank is idle.
  *
  * @param tank			Client index of the Tank.
- * @return			True if the Tank is in stasis, false otherwise.
- * @error			Invalid client index.
+ * @param type			Idle mode of the Tank. 0 = Both, 1 = Idle (waiting for survivors), 2 = Bugged (no behavior)
+ * @return			True if the Tank is idle, false otherwise.
+ * @error			Invalid client index, client is not in-game, client is dead, or type is less than 0 or greater than 2.
  **/
-native bool MT_IsTankIdle(int tank);
+native bool MT_IsTankIdle(int tank, int type = 0);
 
 /**
  * Returns if a Tank is allowed to be a Mutant Tank.
@@ -1063,18 +1187,18 @@ native bool MT_IsTankIdle(int tank);
  * @param flags			Checks to run.
  *					MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
  *					MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
- *				Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE
+ *					Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE
  * @return			True if the Tank is allowed to be a Mutant Tank, false otherwise.
- * @error			Invalid client index.
+ * @error			Invalid client index, client is not in-game, or client is dead.
  **/
-native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_INKICKQUEUE);
+native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE);
 
 /**
  * Returns if a certain Mutant Tank type is enabled.
  *
  * @param type			Mutant Tank type.
  * @return			True if the type is enabled, false otherwise.
- * @error			Type is 0.
+ * @error			Type is 0 or less.
  **/
 native bool MT_IsTypeEnabled(int type);
 
@@ -1082,11 +1206,10 @@ native bool MT_IsTypeEnabled(int type);
  * Logs a message.
  *
  * @param type			Type of message to be logged.
- * @param message		Buffer to store the message.
- * @param size			Size of the buffer.
+ * @param message		Buffer containing the message.
  * @param ...			Variable number of format parameters.
  **/
-native void MT_LogMessage(int type = MT_LOG_CUSTOM, char[] message, int size, any ...);
+native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ...);
 
 /**
  * Sets a Tank's Mutant Tank type.
@@ -1094,6 +1217,7 @@ native void MT_LogMessage(int type = MT_LOG_CUSTOM, char[] message, int size, an
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
  * @param mode			True if the Tank should transform physically into the new Mutant Tank type, false otherwise.
+ * @error			Invalid client index, client is not in-game, client is dead, or type is 0 or less.
  **/
 native void MT_SetTankType(int tank, int type, bool mode);
 
@@ -1102,9 +1226,40 @@ native void MT_SetTankType(int tank, int type, bool mode);
  *
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
- * @error			Invalid client index or type is 0.
+ * @error			Invalid client index, client is not in-game, or type is 0 or less.
  **/
 native void MT_SpawnTank(int tank, int type);
+
+/**
+ * Get or set a Tank's max health.
+ *
+ * @param tank			Client index of the Tank.
+ * @param mode			1 = Get the Tank's max health, 2 = Get the Tank's stored max health,
+ *					3 = Set the Tank's max health without storing it, 4 = Set the Tank's max health and store it
+ * @param newHealth		The Tank's new max health.
+ **/
+native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
+```
+
+- Clone ability
+
+```
+/**
+ * Returns if the clone can use abilities.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if clone can use abilities, false otherwise.
+ **/
+native bool MT_IsCloneSupported(int tank);
+
+/**
+ * Returns if a Tank is a clone.
+ *
+ * @param tank			Client index of the Tank.
+ * @return			True if the Tank is a clone, false otherwise.
+ * @error			Invalid client index.
+ **/
+native bool MT_IsTankClone(int tank);
 ```
 
 Stocks:
@@ -1131,6 +1286,7 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 	ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
 	ReplaceString(sMessage, sizeof(sMessage), "{yellow}", "\x04");
 	ReplaceString(sMessage, sizeof(sMessage), "{olive}", "\x05");
+	ReplaceString(sMessage, sizeof(sMessage), "{percent}", "%%");
 
 	PrintToChat(client, sMessage);
 }
@@ -1162,16 +1318,17 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 		ReplaceString(sBuffer, sizeof(sBuffer), "{mint}", "");
 		ReplaceString(sBuffer, sizeof(sBuffer), "{yellow}", "");
 		ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
+		ReplaceString(sBuffer, sizeof(sBuffer), "{percent}", "%%");
 
 		switch (client == 0)
 		{
-			case true: PrintToServer("%s", sBuffer);
-			case false: PrintToConsole(client, "%s", sBuffer);
+			case true: PrintToServer(sBuffer);
+			case false: PrintToConsole(client, sBuffer);
 		}
 	}
 	else
 	{
-		MT_PrintToChat(client, "%s", sBuffer);
+		MT_PrintToChat(client, sBuffer);
 	}
 }
 ```
@@ -1189,6 +1346,9 @@ Target filters:
 @tanks
 @special
 @infected
+@mutants
+@mtanks
+@psytanks
 ```
 
 Commands:
@@ -1196,10 +1356,11 @@ Commands:
 ```
 // Requires "z" (Root) flag.
 sm_tank - Spawn a Mutant Tank.
+sm_mt_tank - Spawn a Mutant Tank.
 
 Valid inputs:
 
-1. sm_tank <type 1*-1000*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is "1000" though.)
+1. sm_tank <type 1*-500*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is "500" though.)
 2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The plugin will attempt to match the name with any of the Mutant Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
 
 The command has 4 functions.
@@ -1219,11 +1380,13 @@ If you are a Tank:
 // Accessible by the developer and admins with "z" (Root) flag only.
 sm_mt_config - View a section of a config file.
 sm_mt_list - View a list of installed abilities.
-sm_mt_version - View a list of installed abilities.
+sm_mt_reload - Reload the config file.
 sm_tank2 - Spawn a Mutant Tank.
+sm_mt_tank2 - Spawn a Mutant Tank.
 
 // Accessible by all players.
 sm_mutanttank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mt_version - Find out the current version of Mutant Tanks.
 sm_mt_info - View information about Mutant Tanks.
 sm_mt_absorb - View information about the Absorb ability.
 sm_mt_acid - View information about the Acid ability.
@@ -1244,6 +1407,7 @@ sm_mt_enforce - View information about the Enforce ability.
 sm_mt_fast - View information about the Fast ability.
 sm_mt_fire - View information about the Fire ability.
 sm_mt_fling - View information about the Fling ability.
+sm_mt_fly - View information about the Fly ability.
 sm_mt_fragile - View information about the Fragile ability.
 sm_mt_ghost - View information about the Ghost ability.
 sm_mt_god - View information about the God ability.
@@ -1261,6 +1425,7 @@ sm_mt_kamikaze - View information about the Kamikaze ability.
 sm_mt_lag - View information about the Lag ability.
 sm_mt_laser - View information about the Laser ability.
 sm_mt_leech - View information about the Leech ability.
+sm_mt_lightning - View information about the Lightning ability.
 sm_mt_medic - View information about the Medic ability.
 sm_mt_meteor - View information about the Meteor ability.
 sm_mt_minion - View information about the Minion ability.
@@ -1330,11 +1495,11 @@ Example:
 }
 
 // Custom format
-mutanttanks // 2nd format
+mutant_tanks // 3rd format
 {
 	Settings // 4th format
 	{
-		game_modes // 3rd format
+		GameModes // 2nd format
 		{
 			"Game Mode Types"			0 // original format
 		}
@@ -1359,7 +1524,6 @@ Example:
 			"Extra Health"				"1000"
 		}
 	}
-
 	// Applies to types 1 and 10.
 	"1,10"
 	{
@@ -1368,7 +1532,6 @@ Example:
 			"Extra Health"				"1000"
 		}
 	}
-
 	// Applies to types 11 through 20.
 	"11-20"
 	{
@@ -1377,13 +1540,37 @@ Example:
 			"Extra Health"				"1000"
 		}
 	}
-
 	// Applies to types 21 through 30 and types 31 through 40.
 	"21-30,31-40"
 	{
 		"Health"
 		{
 			"Extra Health"				"1000"
+		}
+	}
+}
+```
+
+5. Is it possible to configure more than one ability in one section?
+
+Yes, you can either apply global settings for all abilities to use or specify certain abilities to use them.
+
+Example:
+
+```
+"Mutant Tanks"
+{
+	"Tank #1"
+	{
+		// Applies to every ability.
+		"All"
+		{
+			"Ability Enabled"			"1"
+		}
+		// Applies to Absorb and Acid abilities.
+		"Absorb,Acid"
+		{
+			"Ability Enabled"			"1"
 		}
 	}
 }
@@ -1567,7 +1754,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 36-39 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines 90-93 of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
@@ -1642,7 +1829,7 @@ Example:
 ```
 Overrides
 {
-	"mt_admin"		"z" // All admins with the Root (z) flag are exempted from cooldowns.
+	"mt_admin"		"z" // All admins with the "z" (Root) flag are exempted from cooldowns.
 }
 ```
 
@@ -1661,7 +1848,7 @@ Examples:
 "Create Config Types" "7" // Creates the folders and config files for each difficulty, map, and game mode.
 "Create Config Types" "8" // Creates the folder and config files for each day.
 "Create Config Types" "31" // Creates the folders and config files for each difficulty, map, game mode, day, and player count.
-"Create Config Types" "63" // Creates the folders and config files for each difficulty, map, game mode, day, player count, and finale stage.
+"Create Config Types" "255" // Creates the folders and config files for each difficulty, map, game mode, day, player (survivor/infected/all) count, and finale stage.
 ```
 
 3. How do I tell the plugin to only execute certain custom config files?
@@ -1674,7 +1861,7 @@ Examples:
 "Execute Config Types" "7" // Executes the config file for the current difficulty, map, and game mode.
 "Execute Config Types" "8" // Executes the config file for the current day.
 "Execute Config Types" "31" // Executes the config file for the current difficulty, map, game mode, day, and player count.
-"Execute Config Types" "63" // Executes the config file for the current difficulty, map, game mode, day, player count, and finale stage.
+"Execute Config Types" "255" // Executes the config file for the current difficulty, map, game mode, day, player (survivor/infected/all) count, and finale stage.
 ```
 
 ## Credits
@@ -1722,13 +1909,15 @@ Examples:
 
 **nico-op** - For the [[L4D/L4D2] Infected Health Gauge (Tank & Witch & Special)](https://forums.alliedmods.net/showthread.php?t=125747) plugin.
 
-**Ernecio** - For the [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) plugin.
+**Ernecio** - For the [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) and [[L4D1 & L4D2] Improved Flying Tank](https://forums.alliedmods.net/showthread.php?t=325719) plugin.
+
+**Luckylock** - For the [[L4D & L4D2] Tank Rock Lag Compensation](https://forums.alliedmods.net/showthread.php?t=315345) plugin.
 
 **Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
 
-**epz** - For help with gamedata signatures, offsets, addresses, and invaluable input.
+**epz (epzminion)** - For help with gamedata signatures, offsets, addresses, and invaluable input.
 
-**Lux** - For helping to optimize/fix various parts of the code and code for detecting thirdperson view.
+**Lux** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) plugins.
 
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
@@ -1736,89 +1925,42 @@ Examples:
 
 **Impact** - For the [AutoExecConfig](https://forums.alliedmods.net/showthread.php?t=204254) include.
 
-**hmmmmm** - For showing me how to pick a random character out of a dynamic string.
+**hmmmmm (SlidyBat)** - For showing how to pick a random character out of a dynamic string.
 
-**Mi.Cura** - For reporting issues, suggesting ideas, and overall support.
+**KasperH (Ladis)** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
 
-**KasperH** - For Hungarian translations, reporting issues, suggesting ideas, and overall support.
+**Blueberry (Kleiner)** - For Russian translations and suggesting ideas.
+
+**yuzumi** - For Simplified Chinese translations and suggesting ideas.
+
+**Mi.Cura, 3aljiyavslgazana** - For reporting issues, suggesting ideas, testing features, and overall support.
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
-**ReCreator** - For reporting issues and suggesting ideas.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush** - For reporting issues and suggesting ideas.
 
-**SilentBr** - For reporting issues and suggesting ideas.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai** - For reporting issues.
 
-**Princess LadyRain** - For reporting issues.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType** - For suggesting ideas.
 
-**Nekrob** - For reporting issues.
-
-**fig101** - For reporting issues.
-
-**BloodyBlade** - For reporting issues.
-
-**user2000** - For reporting issues.
-
-**MedicDTI** - For reporting issues.
-
-**ben12398** - For reporting issues.
-
-**AK978** - For reporting issues.
-
-**ricksfishin** - For reporting issues.
-
-**Voevoda** - For reporting issues.
-
-**ur5efj** - For reporting issues.
-
-**Zytheus** - For reporting issues and suggesting ideas.
-
-**huwong** - For reporting issues and suggesting ideas.
-
-**Tank Rush** - For reporting issues and suggesting ideas.
-
-**Electr000999** - For suggesting ideas.
-
-**foquaxticity** - For suggesting ideas.
-
-**foxhound27** - For suggesting ideas.
-
-**sxslmk** - For suggesting ideas.
-
-**Neptunia** - For suggesting ideas.
-
-**yuzumi** - For suggesting ideas.
-
-**FatalOE71** - For suggesting ideas.
-
-**zaviier** - For suggesting ideas.
-
-**RDiver** - For suggesting ideas.
-
-**Marttt** - For helping me with many things and the pull requests.
+**Marttt** - For helping with many things and the pull requests.
 
 **Dragokas** - For reporting issues, suggesting ideas, and providing fixes.
 
-**BHaType** - For suggesting ideas.
+**login101** - For providing some source code for the `Lightning` ability.
 
-**Angelace113** - For the default colors (before v8.12), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (v8.66), helping to set up the wiki pages, and overall support.
+**peachie** - For the love and support behind the scenes.
 
-**Sipow** - For the default colors (before v8.12), suggesting ideas, and overall support.
+**Angelace113** - For the default colors (before `v8.12`), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (`v8.66`), helping to set up the wiki pages, and overall support.
 
-**SourceMod Team** - For the blind, drug, and ice source codes, and for miscellaneous reasons.
+**Sipow** - For the default colors (before `v8.12`), suggesting ideas, and overall support.
 
-# Contact Me
-If you wish to contact me for any questions, concerns, suggestions, or criticism, I can be found here:
-- [AlliedModders Forum](https://forums.alliedmods.net/member.php?u=181166) (Use this for just reporting bugs/issues or giving suggestions/ideas.)
-- [Steam](https://steamcommunity.com/profiles/76561198056665335) (Use this for getting to know me or wanting to be friends with me.)
-- Psyk0tik#6898 on Discord (Use this for pitching in new/better code.)
+**Oliver** - For helping to test the Reward system, Combination feature, and overall support.
+
+**SourceMod Team** - For continually updating/improving SourceMod.
 
 # 3rd-Party Revisions Notice
-If you would like to share your own revisions of this plugin, please rename the files! I do not want to create confusion for end-users and it will avoid conflict and negative feedback on the official versions of my work. If you choose to keep the same file names for your revisions, it will cause users to assume that the official versions are the source of any problems your revisions may have. This is to protect you (the reviser) and me (the developer)! Thank you!
+If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
 
-# Donate (PayPal only)
-- [Donate to SourceMod](https://www.sourcemod.net/donate.php)
-- Donate to me at alfred_llagas3637@yahoo.com
-
-
-
-Thank you very much and have fun! :D
+# Final Words
+Enjoy all my hard work and have fun with it!
