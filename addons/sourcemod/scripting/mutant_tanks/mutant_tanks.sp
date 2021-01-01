@@ -1892,7 +1892,7 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 public Action cmdMTConfig(int client, int args)
 {
 	bool bHuman = bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
-	if (bHuman && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
+	if (bHuman && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client, -1))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -2596,7 +2596,7 @@ public Action cmdMTList(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
+	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client, -1))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -2912,7 +2912,7 @@ public Action cmdTank2(int client, int args)
 
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
-		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
+		if (!CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client, -1))
 		{
 			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -2972,16 +2972,16 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (g_esGeneral.g_iSpawnMode == 1 && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	if (g_esGeneral.g_iSpawnMode == 1 && !CheckCommandAccess(client, "sm_tank", ADMFLAG_ROOT) && !CheckCommandAccess(client, "sm_mt_tank", ADMFLAG_ROOT) && !bIsDeveloper(client, -1))
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
 		return Plugin_Handled;
 	}
