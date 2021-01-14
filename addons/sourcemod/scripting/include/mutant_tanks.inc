@@ -88,10 +88,10 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_MAX_HEALTH_REDUCTION -65535
 
 // Buttons
-#define MT_MAIN_KEY IN_RELOAD|IN_USE
-#define MT_SUB_KEY IN_DUCK|IN_USE
-#define MT_SPECIAL_KEY IN_RELOAD|IN_ZOOM
-#define MT_SPECIAL_KEY2 IN_DUCK|IN_ZOOM
+#define MT_MAIN_KEY IN_USE
+#define MT_SUB_KEY IN_RELOAD
+#define MT_SPECIAL_KEY IN_ZOOM
+#define MT_SPECIAL_KEY2 IN_DUCK
 
 // Client check flags
 #define MT_CHECK_INDEX (1 << 0) // check 0 < client <= MaxClients
