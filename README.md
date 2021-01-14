@@ -1,10 +1,10 @@
 # Mutant Tanks
+
 ## Languages
  - [Русский](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md)
 
 ## License
 > The following license is placed inside the source code of each plugin and include file.
-
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
 Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
 
@@ -37,19 +37,19 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 17. Toggle damage scaling based on difficulty.
 18. Fully customizable reward system.
 
-### Requirements
+## Requirements
 1. `SourceMod 1.11.0.6511` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
 4. Patience & competence
 
-### Notes
+## Notes
 1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
 2. I will not help you with installing or troubleshooting problems on your part.
 3. If you get errors from SourceMod itself, that is your problem, not mine.
 4. MAKE SURE YOU MEET ALL THE REQUIREMENTS AND FOLLOW THE INSTALLATION GUIDE PROPERLY.
 
-### Installation
+## Installation
 1. Delete files from old versions of the plugin.
 2. Extract the folder inside the `mutant_tanks.zip` file.
 3. Place all the contents into their respective folders.
@@ -57,7 +57,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 5. Load up Mutant Tanks by restarting the server.
 6. Customize Mutant Tanks in `addons/sourcemod/data/mutant_tanks/mutant_tanks.cfg`
 
-### Uninstalling/Upgrading to Newer Versions
+## Uninstalling/Upgrading to Newer Versions
 1. Delete `mutant_tanks` folder from:
  - `addons/sourcemod/plugins` folder (`mutant_tanks.smx` and all of its modules)
  - `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
@@ -67,7 +67,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 5. Backup `mutant_tanks` folder in `addons/sourcemod/data` folder.
 6. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
-### Disabling
+## Disabling
 1. Move `mutant_tanks` folder (`mutant_tanks.smx` and all of its modules) to `plugins/disabled` folder.
 2. Unload Mutant Tanks by restarting the server. (Using `sm plugins unload` will take too long.)
 
@@ -114,7 +114,7 @@ mt_pluginenabled "1"
 ## KeyValues Settings
 > View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,400 to customize!)
 
-### Custom Configuration Files
+## Custom Configuration Files
 > Mutant Tanks has features that allow for creating and executing custom configuration files.
 
 By default, Mutant Tanks can create and execute the following types of configurations:
@@ -125,7 +125,7 @@ By default, Mutant Tanks can create and execute the following types of configura
 5. Player (survivor/infected/all) count - Files are created/executed based on the current number of human players. (Example: If the current number is 8, then `8.cfg` is executed (or created if it doesn't exist already).
 6. Finale stages - Files are created/executed based on the finale stages called by the game. (Example: If the finale starts, then `finale_start.cfg` is executed (or created if it doesn't exist already)).
 
-#### Features
+### Features
 1. Create custom config files (can be based on difficulty, map, game mode, day, player (survivor/infected/all) count, or finale stage).
 2. Execute custom config files (can be based on difficulty, map, game mode, day, player (survivor/infected/all) count, or finale stage).
 3. Automatically generate config files for up to 66 players, all difficulties specified by `z_difficulty`, maps installed on the server, game modes specified by `sv_gametypes` and `mp_gamemode`, days of the `week`, and all possible `finale stages`.

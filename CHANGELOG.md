@@ -2211,8 +2211,8 @@ Files:
 
 Bug fixes:
 
-1. Fixed the Witch Tank not spawning Witches. (Thanks ReCreator!)
-2. Fixed the Shield Tank not propelling its propane tanks forward. (Thanks ReCreator!)
+1. Fixed the `Witch Tank` not spawning Witches. (Thanks ReCreator!)
+2. Fixed the `Shield Tank` not propelling its propane tanks forward. (Thanks ReCreator!)
 
 Changes:
 
@@ -2255,7 +2255,7 @@ Files:
 
 Bug fixes:
 
-1. Fixed the Shove and Smoker Tanks' attachprops convars not working properly.
+1. Fixed the `Shove` and `Smoker Tanks`' attachprops convars not working properly.
 
 Files:
 
@@ -2265,7 +2265,7 @@ Files:
 
 Bug fixes:
 
-1. Fixed the Ghost Tank and Gravity Tank convars being switched.
+1. Fixed the `Ghost Tank` and `Gravity Tank` convars being switched.
 
 Changes:
 
@@ -2303,14 +2303,14 @@ Bug fixes:
 
 Bug fixes:
 
-1. Fixed the Meteor Tank's meteor shower not working after a certain amount of time.
+1. Fixed the `Meteor Tank`'s meteor shower not working after a certain amount of time.
 
 Changes:
 
 1. Added a check to destroy all effects when a Tank dies.
-2. Added a check for Bomber Tank's explosion to not damage any infected including the Bomber Tank.
-3. Added a check for Fire Tank's fires to not damage any infected including the Fire Tank.
-4. Added a check for Meteor Tank's meteor showers to not damage any infected including the Meteor Tank.
+2. Added a check for `Bomber Tank`'s explosion to not damage any infected including the `Bomber Tank`.
+3. Added a check for `Fire Tank`'s fires to not damage any infected including the `Fire Tank`.
+4. Added a check for `Meteor Tank`'s meteor showers to not damage any infected including the `Meteor Tank`.
 5. Converted some code to new syntax.
 6. Removed unnecessary code.
 7. Optimized some code.
@@ -2329,10 +2329,10 @@ Bug fixes:
 
 Bug fixes:
 
-1. Fixed the Common Tank not spawning any common infected.
-2. Fixed the Gravity Tank's gravity force not stopping upon death.
-3. Fixed the Hypno Tank's effect instantly killing survivors (Now it sets survivors to 1 HP).
-4. Fixed the Meteor Tank's meteor shower not working.
+1. Fixed the `Common Tank` not spawning any common infected.
+2. Fixed the `Gravity Tank`'s gravity force not stopping upon death.
+3. Fixed the `Hypno Tank`'s effect instantly killing survivors (Now it sets survivors to 1 HP).
+4. Fixed the `Meteor Tank`'s meteor shower not working.
 5. Fixed the special infected thrower Tanks not throwing any special infected.
 
 ## Version 8.0 (June 18, 2018)
@@ -2344,9 +2344,9 @@ Bug fixes:
 
 ## Version 7.0 (November 24, 2017)
 
-1. Disabled Ice Tank for L4D1 version.
+1. Disabled `Ice Tank` for L4D1 version.
 2. Only 28/40 are available for the L4D1 version now.
-3. Fixed Shield Tank and other Super Tank types with shields not having their shields shattered by explosions.
+3. Fixed `Shield Tank` and other Super Tank types with shields not having their shields shattered by explosions.
 
 ## Version 6.5 (November 24, 2017)
 
@@ -2362,7 +2362,7 @@ Bug fixes:
 
 ## Version 5.5 (October 23, 2017)
 
-1. Applied another fix for the negative HP bug for Boss, Goliath, Psychotic, and Psykotik Tanks.
+1. Applied another fix for the negative HP bug for `Boss`, `Goliath`, `Psychotic`, and `Psykotik Tanks`.
 
 ## Version 5.0 (October 22, 2017)
 
@@ -2370,19 +2370,19 @@ Bug fixes:
 
 ## Version 4.5 (October 21, 2017)
 
-1. Fixed a bug that caused Boss, Goliath, Psychotic, and Psykotik Tanks to have negative HP.
+1. Fixed a bug that caused `Boss`, `Goliath`, `Psychotic`, and `Psykotik Tanks` to have negative HP.
 
 ## Version 4.0 (October 21, 2017)
 
 1. Added 8 new combinations of Super Tanks.
-- Boss Tank
-- Meme Tank
-- Mirage Tank
-- Poltergeist Tank
-- Psykotik Tank
-- Sipow Tank
-- Spykotik Tank
-- Spypsy Tank
+- `Boss Tank`
+- `Meme Tank`
+- `Mirage Tank`
+- `Poltergeist Tank`
+- `Psykotik Tank`
+- `Sipow Tank`
+- `Spykotik Tank`
+- `Spypsy Tank`
 2. Fixed some bugs due to missing code.
 
 ## Version 3.0 (October 20, 2017)
@@ -2392,8 +2392,8 @@ Bug fixes:
 ## Version 2.0 (October 19, 2017)
 
 1. Removed the screen color effect when getting hit by certain Super Tank types.
-2. Redesigned and recolored Trap Tank.
-3. Recolored Bitch Tank, Distraction Tank, and Minion Tank.
+2. Redesigned and recolored `Trap Tank`.
+3. Recolored `Bitch Tank`, `Distraction Tank`, and `Minion Tank`.
 
 ## Version 1.0 (October 18, 2017)
 
