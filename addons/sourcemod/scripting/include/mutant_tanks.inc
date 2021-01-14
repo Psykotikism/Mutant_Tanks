@@ -88,10 +88,10 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_MAX_HEALTH_REDUCTION -65535
 
 // Buttons
-#define MT_MAIN_KEY IN_USE
-#define MT_SUB_KEY IN_RELOAD
-#define MT_SPECIAL_KEY IN_ZOOM
-#define MT_SPECIAL_KEY2 IN_DUCK
+#define MT_MAIN_KEY IN_RELOAD|IN_USE
+#define MT_SUB_KEY IN_DUCK|IN_USE
+#define MT_SPECIAL_KEY IN_RELOAD|IN_ZOOM
+#define MT_SPECIAL_KEY2 IN_DUCK|IN_ZOOM
 
 // Client check flags
 #define MT_CHECK_INDEX (1 << 0) // check 0 < client <= MaxClients
@@ -1391,7 +1391,6 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 		{
 			SetGlobalTransTarget(iPlayer);
 			VFormat(sBuffer, sizeof(sBuffer), message, 2);
-
 			MT_PrintToChat(iPlayer, sBuffer);
 		}
 	}
@@ -1723,8 +1722,8 @@ stock bool bIsValidEntRef(int ref)
 
 stock bool bIsValidGame(bool l4d2 = true)
 {
-	EngineVersion evEngine = GetEngineVersion();
-	return l4d2 ? evEngine == Engine_Left4Dead2 : evEngine == Engine_Left4Dead;
+	EngineVersion evEngine = l4d2 ? Engine_Left4Dead2 : Engine_Left4Dead;
+	return GetEngineVersion() == evEngine;
 }
 
 stock bool bIsWitch(int witch)
