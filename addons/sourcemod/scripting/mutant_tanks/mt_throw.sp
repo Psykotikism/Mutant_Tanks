@@ -926,7 +926,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 						static float flPos[3];
 						GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-						MT_DetonateTankRock(iRock);
+						RemoveEntity(iRock);
 
 						NormalizeVector(flVelocity, flVelocity);
 						ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
@@ -1017,7 +1017,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						{
 							static float flPos[3];
 							GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-							MT_DetonateTankRock(iRock);
+							RemoveEntity(iRock);
 
 							g_esPlayer[iSpecial].g_bThrown = true;
 							g_esPlayer[iSpecial].g_iOwner = iTank;
@@ -1045,7 +1045,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 				{
 					static float flPos[3];
 					GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-					MT_DetonateTankRock(iRock);
+					RemoveEntity(iRock);
 
 					NormalizeVector(flVelocity, flVelocity);
 					ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
@@ -1069,7 +1069,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 						{
 							static float flPos[3];
 							GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-							MT_DetonateTankRock(iRock);
+							RemoveEntity(iRock);
 
 							NormalizeVector(flVelocity, flVelocity);
 							ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
