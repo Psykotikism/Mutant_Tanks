@@ -1157,46 +1157,45 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 	flVector = GetVectorLength(flVelocity);
 	if (flVector > 500.0)
 	{
-		static int iThrowable;
-		iThrowable = CreateEntityByName("prop_physics");
-		if (bIsValidEntity(iThrowable))
+		static int iTypeCount, iTypes[4], iFlag;
+		iTypeCount = 0;
+		for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
 		{
-			static int iTypeCount, iTypes[4], iFlag;
-			iTypeCount = 0;
-			for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
+			iFlag = (1 << iBit);
+			if (!(g_esCache[iTank].g_iShieldType & iFlag))
 			{
-				iFlag = (1 << iBit);
-				if (!(g_esCache[iTank].g_iShieldType & iFlag))
-				{
-					continue;
-				}
-
-				iTypes[iTypeCount] = iFlag;
-				iTypeCount++;
+				continue;
 			}
 
-			switch (iTypes[GetRandomInt(0, iTypeCount - 1)])
+			iTypes[iTypeCount] = iFlag;
+			iTypeCount++;
+		}
+
+		static int iChosen;
+		iChosen = iTypes[GetRandomInt(0, iTypeCount - 1)];
+		if (iChosen == 2 || iChosen == 4)
+		{
+			static int iThrowable;
+			iThrowable = CreateEntityByName("prop_physics");
+			if (bIsValidEntity(iThrowable))
 			{
-				case 2: SetEntityModel(iThrowable, MODEL_PROPANETANK);
-				case 4: SetEntityModel(iThrowable, MODEL_GASCAN);
-				default:
+				switch (iChosen)
 				{
-					RemoveEntity(iThrowable);
-
-					return Plugin_Stop;
+					case 2: SetEntityModel(iThrowable, MODEL_PROPANETANK);
+					case 4: SetEntityModel(iThrowable, MODEL_GASCAN);
 				}
+
+				static float flPos[3];
+				GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+				RemoveEntity(iRock);
+
+				NormalizeVector(flVelocity, flVelocity);
+				ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
+
+				TeleportEntity(iThrowable, flPos, NULL_VECTOR, NULL_VECTOR);
+				DispatchSpawn(iThrowable);
+				TeleportEntity(iThrowable, NULL_VECTOR, NULL_VECTOR, flVelocity);
 			}
-
-			static float flPos[3];
-			GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
-			RemoveEntity(iRock);
-
-			NormalizeVector(flVelocity, flVelocity);
-			ScaleVector(flVelocity, g_cvMTTankThrowForce.FloatValue * 1.4);
-
-			TeleportEntity(iThrowable, flPos, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(iThrowable);
-			TeleportEntity(iThrowable, NULL_VECTOR, NULL_VECTOR, flVelocity);
 		}
 
 		return Plugin_Stop;
