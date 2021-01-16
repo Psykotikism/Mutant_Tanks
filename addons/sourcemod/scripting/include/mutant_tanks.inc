@@ -1276,7 +1276,7 @@ stock void vRemoveWeapons(int survivor)
 	for (int iSlot = 0; iSlot < 5; iSlot++)
 	{
 		iWeapon = GetPlayerWeaponSlot(survivor, iSlot);
-		if (iWeapon > 0)
+		if (iWeapon > MaxClients)
 		{
 			RemovePlayerItem(survivor, iWeapon);
 			RemoveEntity(iWeapon);
@@ -1457,7 +1457,7 @@ stock bool bHasIdlePlayer(int survivor)
 		{
 			static int iIdler;
 			iIdler = GetClientOfUserId(iSpectatorUserId);
-			return iIdler > 0 && bIsValidClient(iIdler, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && GetClientTeam(iIdler) != 2;
+			return bIsValidClient(iIdler, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && GetClientTeam(iIdler) != 2;
 		}
 	}
 

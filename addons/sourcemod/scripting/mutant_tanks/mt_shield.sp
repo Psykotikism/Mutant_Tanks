@@ -440,9 +440,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			return Plugin_Continue;
 		}
 
-		if (((damagetype & DMG_BULLET) && g_esCache[victim].g_iShieldType & MT_SHIELD_BULLET) || (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT)
-			|| (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE) || ((damagetype & DMG_BURN) && g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE)
-			|| (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE))
+		if (((damagetype & DMG_BULLET) && (g_esCache[victim].g_iShieldType & MT_SHIELD_BULLET)) || (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT)
+			|| (damagetype & DMG_PLASMA)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE)) || ((damagetype & DMG_BURN) && (g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE))
+			|| (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE)))
 		{
 			g_esPlayer[victim].g_flHealth -= damage;
 			if (g_esCache[victim].g_flShieldHealth == 0.0 || g_esPlayer[victim].g_flHealth < 1.0)
@@ -1181,11 +1181,9 @@ public Action tTimerShieldThrow(Handle timer, DataPack pack)
 				case 4: SetEntityModel(iThrowable, MODEL_GASCAN);
 				default:
 				{
-					switch (GetRandomInt(1, 2))
-					{
-						case 1: SetEntityModel(iThrowable, MODEL_PROPANETANK);
-						case 2: SetEntityModel(iThrowable, MODEL_GASCAN);
-					}
+					RemoveEntity(iThrowable);
+
+					return Plugin_Stop;
 				}
 			}
 
