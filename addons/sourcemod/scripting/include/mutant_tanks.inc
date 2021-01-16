@@ -1457,7 +1457,7 @@ stock bool bHasIdlePlayer(int survivor)
 		{
 			static int iIdler;
 			iIdler = GetClientOfUserId(iSpectatorUserId);
-			return bIsValidClient(iIdler, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && GetClientTeam(iIdler) != 2;
+			return iIdler > 0 && bIsValidClient(iIdler, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && GetClientTeam(iIdler) != 2;
 		}
 	}
 
