@@ -1867,7 +1867,15 @@ public void vMTListMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject obj
 	switch (action)
 	{
 		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTAbilitiesMenu", param);
-		case TopMenuAction_SelectOption: vListAbilities(param);
+		case TopMenuAction_SelectOption:
+		{
+			vListAbilities(param);
+
+			if (bIsValidClient(param, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
+			{
+				g_esGeneral.g_tmMTMenu.Display(param, TopMenuPosition_LastCategory);
+			}
+		}
 	}
 }
 
@@ -1876,7 +1884,15 @@ public void vMTReloadMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject o
 	switch (action)
 	{
 		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTReloadMenu", param);
-		case TopMenuAction_SelectOption: vReloadConfig(param);
+		case TopMenuAction_SelectOption:
+		{
+			vReloadConfig(param);
+
+			if (bIsValidClient(param, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
+			{
+				g_esGeneral.g_tmMTMenu.Display(param, TopMenuPosition_LastCategory);
+			}
+		}
 	}
 }
 
@@ -1885,7 +1901,15 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 	switch (action)
 	{
 		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTVersionMenu", param);
-		case TopMenuAction_SelectOption: MT_PrintToChat(param, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
+		case TopMenuAction_SelectOption:
+		{
+			MT_PrintToChat(param, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
+
+			if (bIsValidClient(param, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
+			{
+				g_esGeneral.g_tmMTMenu.Display(param, TopMenuPosition_LastCategory);
+			}
+		}
 	}
 }
 
@@ -2251,6 +2275,11 @@ static void vPathMenu(int admin, int item = 0)
 		MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoItems");
 
 		delete mPathMenu;
+
+		if (g_esPlayer[admin].g_bAdminMenu && bIsValidClient(admin, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
+		{
+			g_esGeneral.g_tmMTMenu.Display(admin, TopMenuPosition_LastCategory);
+		}
 	}
 }
 
@@ -2369,6 +2398,11 @@ static void vConfigMenu(int admin, int item = 0)
 		MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoItems");
 
 		delete mConfigMenu;
+
+		if (g_esPlayer[admin].g_bAdminMenu && bIsValidClient(admin, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
+		{
+			g_esGeneral.g_tmMTMenu.Display(admin, TopMenuPosition_LastCategory);
+		}
 	}
 }
 
@@ -3262,6 +3296,11 @@ static void vTankMenu(int admin, int item = 0)
 		MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoItems");
 
 		delete mTankMenu;
+
+		if (g_esPlayer[admin].g_bAdminMenu && bIsValidClient(admin, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
+		{
+			g_esGeneral.g_tmMTMenu.Display(admin, TopMenuPosition_LastCategory);
+		}
 	}
 }
 
@@ -3641,6 +3680,9 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				{
 					if (bBlockBullets || bBlockMelee)
 					{
+						static float flTankPos[3];
+						GetClientAbsOrigin(victim, flTankPos);
+						vPushNearbyEntities(victim, flTankPos);
 						EmitSoundToAll(SOUND_METAL, victim);
 					}
 

@@ -359,6 +359,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					bChanged = true;
 					damage /= g_esCache[victim].g_flHypnoMeleeDivisor;
+
+					static float flTankPos[3];
+					GetClientAbsOrigin(victim, flTankPos);
+					vPushNearbyEntities(victim, flTankPos);
 				}
 
 				if (bChanged)

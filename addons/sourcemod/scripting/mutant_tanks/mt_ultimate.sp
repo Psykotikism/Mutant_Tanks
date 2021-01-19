@@ -396,6 +396,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		{
 			EmitSoundToAll(SOUND_METAL, victim);
 
+			if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
+			{
+				static float flTankPos[3];
+				GetClientAbsOrigin(victim, flTankPos);
+				vPushNearbyEntities(victim, flTankPos);
+			}
+
 			return Plugin_Handled;
 		}
 	}

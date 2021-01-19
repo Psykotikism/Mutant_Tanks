@@ -72,7 +72,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_NAME "Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.80"
+#define MT_VERSION "8.81"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 // Chat tags
@@ -84,8 +84,8 @@ public void __pl_mutanttanks_SetNTVOptional()
 // Constants
 #define MT_MAXABILITIES 100
 #define MT_MAXTYPES 500
-#define MT_MAXHEALTH 65535
-#define MT_MAX_HEALTH_REDUCTION -65535
+#define MT_MAXHEALTH 1000000
+#define MT_MAX_HEALTH_REDUCTION -1000000
 
 // Buttons
 #define MT_MAIN_KEY IN_USE
