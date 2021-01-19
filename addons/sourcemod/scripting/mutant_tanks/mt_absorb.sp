@@ -321,8 +321,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Continue;
 			}
 
-			EmitSoundToAll(SOUND_METAL, victim);
-
 			static bool bChanged;
 			bChanged = false;
 			if (g_esCache[victim].g_flAbsorbBulletDivisor > 1.0 && (damagetype & DMG_BULLET))
@@ -344,6 +342,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbMeleeDivisor;
+
+				static float flTankPos[3];
+				GetClientAbsOrigin(victim, flTankPos);
+				vPushNearbyEntities(victim, flTankPos);
+				EmitSoundToAll(SOUND_METAL, victim);
 			}
 
 			if (bChanged)
