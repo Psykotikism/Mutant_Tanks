@@ -4,8 +4,9 @@
 > This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples.
 
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
-- Maximum Tank health: 65,535 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
+- Maximum Tank health: 1,000,000 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
 - Maximum types: 500 (Increase/decrease the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins, but expect potential server lag.)
+- Most of the settings below can be overridden for each player.
 
 ## Sections
 - Plugin Settings
@@ -544,13 +545,13 @@
 		"Health"
 		{
 			// Base health given to all Mutant Tanks.
-			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Tank's health limit on any difficulty is 1,000,000.
 			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
 			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// Minimum: 0 (OFF)
-			// Maximum: 65535
+			// Maximum: 1000000
 			"Base Health"				"0"
 
 			// Display Mutant Tanks' names and health.
@@ -582,13 +583,13 @@
 			"Display Health Type"			"1"
 
 			// Extra health given to the Mutant Tank.
-			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Tank's health limit on any difficulty is 1,000,000.
 			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
 			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
-			// Minimum: -65535
-			// Maximum: 65535
+			// Minimum: -1000000
+			// Maximum: 1000000
 			// --
 			// Positive numbers: Current health + Extra health
 			// Negative numbers: Current health - Extra health
@@ -1467,7 +1468,7 @@
 			// Character limit for each health stage: 6
 			// --
 			// Minimum value for each health stage: 1
-			// Maximum value for each health stage: 65535
+			// Maximum value for each health stage: 1000000
 			// --
 			// 1st number = Amount of health of the boss to make it evolve/Amount of health given to Stage 2 boss. (The "Boss Stages" setting must be set to "1" or higher.)
 			// 2nd number = Amount of health of the boss to make it evolve/Amount of health given to Stage 3 boss. (The "Boss Stages" setting must be set to "2" or higher.)
@@ -2098,14 +2099,14 @@
 		"Health"
 		{
 			// Base health given to all Mutant Tanks.
-			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Tank's health limit on any difficulty is 1,000,000.
 			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0 (OFF)
-			// Maximum: 65535
+			// Maximum: 1000000
 			"Base Health"				"0"
 
 			// Display the Mutant Tank's name and health.
@@ -2139,14 +2140,14 @@
 			"Display Health Type"			"0"
 
 			// Extra health given to the Mutant Tank.
-			// Note: Tank's health limit on any difficulty is 65,535.
+			// Note: Tank's health limit on any difficulty is 1,000,000.
 			// Note: Disable this setting if it conflicts with other plugins.
 			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: -65535
-			// Maximum: 65535
+			// Minimum: -1000000
+			// Maximum: 1000000
 			// --
 			// Positive numbers: Current health + Extra health
 			// Negative numbers: Current health - Extra health
@@ -3828,7 +3829,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0.0 (OFF)
-			// Maximum: 65535.0
+			// Maximum: 1000000.0
 			"Bury Buffer"				"100.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -4486,7 +4487,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
-			// Maximum: 65535
+			// Maximum: 1000000
 			"Clone Health"				"1000"
 
 			// Clones created by the Mutant Tank die after this many seconds.
@@ -7773,7 +7774,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1.0
-			// Maximum: 65535.0
+			// Maximum: 1000000.0
 			"Heal Buffer"				"100.0"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
@@ -7856,8 +7857,8 @@
 			// The Mutant Tank receives this much health from nearby common infected.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: -65535
-			// Maximum: 65535
+			// Minimum: -1000000
+			// Maximum: 1000000
 			// --
 			// Positive numbers: Current health + Health from commons
 			// Negative numbers: Current health - Health from commons
@@ -7866,8 +7867,8 @@
 			// The Mutant Tank receives this much health from other nearby special infected.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: -65535
-			// Maximum: 65535
+			// Minimum: -1000000
+			// Maximum: 1000000
 			// --
 			// Positive numbers: Current health + Health from specials
 			// Negative numbers: Current health - Health from specials
@@ -7876,8 +7877,8 @@
 			// The Mutant Tank receives this much health from other nearby Tanks.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: -65535
-			// Maximum: 65535
+			// Minimum: -1000000
+			// Maximum: 1000000
 			// --
 			// Positive numbers: Current health + Health from Tanks
 			// Negative numbers: Current health - Health from Tanks
@@ -10749,8 +10750,8 @@
 			// The Mutant Tank gives special infected this much health each time.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: -65535
-			// Maximum: 65535
+			// Minimum: -1000000
+			// Maximum: 1000000
 			// --
 			// Positive numbers: Current health + Medic health
 			// Negative numbers: Current health - Medic health
@@ -10783,7 +10784,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
-			// Maximum: 65535
+			// Maximum: 1000000
 			// --
 			// 1st number = Smoker's maximum health.
 			// 2nd number = Boomer's maximum health.
@@ -13097,8 +13098,8 @@
 			// The Mutant Tank regenerates this much health each time.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Minimum: -65535
-			// Maximum: 65535
+			// Minimum: -1000000
+			// Maximum: 1000000
 			// --
 			// Positive numbers: Current health + Regen health
 			// Negative numbers: Current health - Regen health
@@ -13122,8 +13123,8 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
-			// Maximum: 65535
-			"Regen Limit"				"65535"
+			// Maximum: 1000000
+			"Regen Limit"				"1000000"
 		}
 	}
 }
@@ -16438,7 +16439,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 1
-			// Maximum: 65535
+			// Maximum: 1000000
 			"Ultimate Health Limit"			"100"
 
 			// The Mutant Tank regenerates up to this much percentage of its original health upon activating ultimate mode.
@@ -17686,7 +17687,7 @@
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Minimum: 0 (OFF, use the value set by the game.)
-			// Maximum: 65535
+			// Maximum: 1000000
 			"Xiphos Max Health"			"100"
 		}
 	}
@@ -18059,7 +18060,6 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
-
 		// Each Mutant Tank type can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above.
 		"Tank #1"
 		{
@@ -18077,7 +18077,6 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
-
 		// Each ability can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above.
 		"Absorb Ability"
 		{
@@ -18095,7 +18094,6 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
-
 		// Note: Admins can each have their own personalized/custom Mutant Tanks by using the same settings above in the "Tank Settings" and "X Ability" sections.
 	}
 }

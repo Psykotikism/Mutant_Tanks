@@ -1939,7 +1939,7 @@ Examples:
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush** - For reporting issues and suggesting ideas.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai** - For reporting issues.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, Maku** - For reporting issues.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType** - For suggesting ideas.
 
