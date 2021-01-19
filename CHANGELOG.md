@@ -1,5 +1,50 @@
 # Changelog
 
+## Version 8.81 (January 20, 2021)
+
+### Bug Fixes
+
+#### Abilities
+- Meteor
+	- Fixed the random crashes caused when rocks explode. (Thanks to 3aljiyavslgazana, Mi.Cura, and Maku for reporting!)
+
+- Shield
+	- Fixed the Tank throwing gas cans or propane tanks even when the `Shield Type` setting is not blast-based nor fire-based. (Thanks to Mi.Cura for letting me test on his servers!)
+
+### Changes
+
+#### General
+- Increased maximum Tank health from 65,535 to 1,000,000. (Might cause bugs with other plugins and game stats when set higher than 65,535.) [Thanks to 3aljiyavslgazana for suggesting!]
+
+#### Core Plugin
+- Added a pushback effect when players use their melee weapons against Tanks with melee immunity. (Thanks to Marttt for suggesting!)
+- All admin menu items provided by Mutant Tanks will now return to the admin menu when appropriate. (Thanks to Marttt for suggesting!)
+
+#### Abilities
+- Absorb
+	- Added a pushback effect when players use their melee weapons against Tanks with melee absorption.
+
+- God
+	- Added a pushback effect when players use their melee weapons against Tanks with godmode.
+
+- Hypno
+	- Added a pushback effect when players use their melee weapons against Tanks while hypnotized.
+
+- Nullify
+	- Added a pushback effect when players use their melee weapons against Tanks while nullified.
+
+- Shield
+	- Added a pushback effect when players use their melee weapons against Tanks with shields.
+
+- Ultimate
+	- Added a pushback effect when players use their melee weapons against Tanks with godmode.
+
+### Files
+
+#### Updates
+- Updated config files.
+- Updated include file.
+
 ## Version 8.80 (December 31, 2020)
 
 ### Bug fixes
