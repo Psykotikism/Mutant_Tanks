@@ -340,7 +340,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileExplosiveMultiplier;
 			}
-			else if (g_esCache[victim].g_flFragileFireMultiplier > 1.0 && (damagetype & DMG_BURN))
+			else if (g_esCache[victim].g_flFragileFireMultiplier > 1.0 && ((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN)))
 			{
 				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileFireMultiplier;

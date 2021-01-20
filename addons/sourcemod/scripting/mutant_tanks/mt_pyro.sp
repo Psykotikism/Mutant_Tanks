@@ -326,7 +326,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				return Plugin_Continue;
 			}
 
-			if (g_esCache[victim].g_iPyroAbility == 1 && ((damagetype & DMG_BURN) || bIsPlayerBurning(victim)))
+			if (g_esCache[victim].g_iPyroAbility == 1 && ((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN) || bIsPlayerBurning(victim)))
 			{
 				if (!g_esPlayer[victim].g_bActivated)
 				{

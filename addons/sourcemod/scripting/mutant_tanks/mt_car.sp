@@ -849,6 +849,7 @@ public Action tTimerCar(Handle timer, DataPack pack)
 				flAngles2[iIndex] = GetRandomFloat(flMinRadius, flMaxRadius);
 			}
 
+			SetEntPropEnt(iCar, Prop_Send, "m_hOwnerEntity", iTank);
 			SetEntityRenderColor(iCar, iCarColor[0], iCarColor[1], iCarColor[2], 255);
 
 			static float flVelocity[3];
