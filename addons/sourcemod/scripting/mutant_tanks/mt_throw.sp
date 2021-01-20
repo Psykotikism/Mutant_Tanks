@@ -922,6 +922,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							iCarColor[iPos] = GetRandomInt(0, 255);
 						}
 
+						SetEntPropEnt(iCar, Prop_Send, "m_hOwnerEntity", iTank);
 						SetEntityRenderColor(iCar, iCarColor[0], iCarColor[1], iCarColor[2], 255);
 
 						static float flPos[3];
