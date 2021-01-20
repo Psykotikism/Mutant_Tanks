@@ -4,8 +4,8 @@
 > This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples.
 
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
-- Maximum Tank health: 1,000,000 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs.)
-- Maximum types: 500 (Increase/decrease the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins, but expect potential server lag.)
+- Maximum Tank health: 1,000,000 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs with higher values.)
+- Maximum types: 500 (Increase/decrease the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins, but expect potential server lag with higher values.)
 - Most of the settings below can be overridden for each player.
 
 ## Sections
@@ -510,6 +510,12 @@
 			// 0: OFF, let the game determine Mutant Tanks' initial behavior.
 			// 1: ON, force Mutant Tanks to attack immediately.
 			"Aggressive Tanks"			"0"
+
+			// Survivors will be credited when damaging Mutant Tanks with fire.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Credit Igniters"			"1"
 
 			// (Versus modes only) The stasis mode of Mutant Tanks in competitive game modes.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -2219,6 +2225,19 @@
 			// "strongest" - 999999.0 damage
 			"Claw Damage"				"-1.0"
 
+			// The Mutant Tank's hittables do this much damage.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 damage
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
+			"Hittable Damage"			"-1.0"
+
 			// The Mutant Tank's rock throws do this much damage.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2278,6 +2297,13 @@
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Fire Immunity"				"0"
+
+			// Give the Mutant Tank hittable immunity.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Hittable Immunity"			"0"
 
 			// Give the Mutant Tank melee immunity.
 			// Note: This setting can be overridden for specific players.

@@ -20,9 +20,17 @@
 - Added a pushback effect when players use their melee weapons against Tanks with melee immunity. (Thanks to Marttt for suggesting!)
 - All admin menu items provided by Mutant Tanks will now return to the admin menu when appropriate. (Thanks to Marttt for suggesting!)
 
+#### Settings
+- Added the `Hittable Damage` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to Marttt for the code!)
+- Added the `Credit Igniters` setting under the `Plugin Settings/Competitive` section. (Thanks to axelnieves2012 for the code!)
+- Added the `Hittable Immunity` setting under the `Tank #/Immunities` and `STEAM_ID/Immunities` sections. (Thanks to Marttt for the code!)
+
 #### Abilities
 - Absorb
 	- Added a pushback effect when players use their melee weapons against Tanks with melee absorption.
+
+- Car
+	- All cars are now owned by Tanks. (Requested by Marttt.)
 
 - God
 	- Added a pushback effect when players use their melee weapons against Tanks with godmode.
@@ -35,6 +43,9 @@
 
 - Shield
 	- Added a pushback effect when players use their melee weapons against Tanks with shields.
+
+- Throw
+	- All cars are now owned by Tanks. (Requested by Marttt.)
 
 - Ultimate
 	- Added a pushback effect when players use their melee weapons against Tanks with godmode.
@@ -337,9 +348,9 @@
 - The `Finale Waves` and `Finale Types` settings now support up to `10` waves. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Added a new option for the `Announce Death` setting.
 - Changed the default value of the `Regular Limit` setting from `2` to `999999`.
-- Changed the default value of the `Death Revert` setting under `Plugin Settings/General` from `0` to `1`.
-- Added the `Attack Interval` setting under `Tank #/Enhancements` section. (Thanks to epz for the code!)
-- Added the `Regular Delay` setting under `Plugin Settings/Waves` section. (Requested by Tank Rush.)
+- Changed the default value of the `Death Revert` setting under the `Plugin Settings/General` from `0` to `1`.
+- Added the `Attack Interval` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to epz for the code!)
+- Added the `Regular Delay` setting under the `Plugin Settings/Waves` section. (Requested by Tank Rush.)
 - Removed the `Rename Players` setting. (Too many bugs with special characters in people's names.)
 - Added the `Extras Delay` settings under `Plugin Settings/Waves` section.
 - Added the `Open Areas Only` setting to determine which types or abilities are only for open areas.
@@ -662,7 +673,7 @@ Changes:
 10. All the default Mutant Tanks that come with the main config file are now off by default. Users can enable them as needed.
 11. `DHooks` and `Left 4 DHooks` are now mandatory.
 12. The core plugin now constantly checks if Tanks are idle or not moving (no action). Use the `Idle Check` setting to determine the interval between each check.
-13. Added the `Idle Check Mode` setting under `Plugin Settings/General` section.
+13. Added the `Idle Check Mode` setting under the `Plugin Settings/General` section.
 14. Changed the default value of the `Idle Check` setting from `0.0` to `10.0`.
 15. Changed the default value of the `Props Attached` setting from `126` to `78` for L4D1 to disable huge props.
 16. Changed the default value of the `Detect Plugins` setting from `0` to `1`.
@@ -707,7 +718,7 @@ Changes:
 2. The `Drop` ability now supports the two new melee weapons from `The Last Stand` update.
 3. Changed the minimum value of the `Drop` ability's `Drop Weapon Scale` from `1.0` to `0.1`.
 4. Set a fixed default size (`1.5`) for weapons attached to Tanks by the `Drop` ability.
-5. Added the `Idle Check` setting under `Plugin Settings/General` section.
+5. Added the `Idle Check` setting under the `Plugin Settings/General` section.
 6. Added the `MT_IsTankIdle` native which allows developers to check if a Tank is idle.
 7. Idle Tanks will no longer activate their passive abilities.
 8. Moved the following settings to the `Plugin Settings/Health` section:
@@ -1027,7 +1038,7 @@ Changes:
 5. The `Finale Types` setting now takes in type ranges. Example: `1-10,11-20,21-30` (Requested by Neptunia.)
 6. Added the `Rock Model` setting under the following sections (Requested by Mi.Cura.):
 - `Tank #/Props`: Determines what model a Tank's rocks should look like.
-- `STEAM_ID/Props`: Overrides the setting under `Props` for specific players.
+- `STEAM_ID/Props`: Overrides the setting under the `Props` for specific players.
 7. Added more particle and sound effects for the `Electric ability`.
 8. Common infected are now immune to Tank abilities. They should no longer die from running into fires or explosions caused by certain abilities.
 9. The rocks from the `Rock` and `Spam` abilities are now colored based on the Tank's `Rock Color` setting. (Thanks to epz for the detour idea and gamedata info!)
@@ -1212,7 +1223,7 @@ Changes:
 14. Added deprecated messages for old/deleted natives/forwards.
 15. Added an administration system designed for the usage and effectiveness of each Super Tank type.
 16. The administration system can now override any Super Tank type for each admin (View the `INFORMATION.md` file for details).
-17. Added the `Allow Developer` setting under `Plugin Settings/Administration`.
+17. Added the `Allow Developer` setting under the `Plugin Settings/Administration`.
 18. Improved health display.
 19. The `sm_tank` and `sm_supertank` commands now use separate callbacks.
 20. Added the `sm_tank2` and `sm_st_list` commands.
@@ -1311,7 +1322,7 @@ Changes:
 
 1. Added the `ST_IsGlowEnabled` native.
 2. Added the `ST_GetRunSpeed` native.
-3. Added the `Death Revert` setting under `Plugin Settings/General`. (Requested by Mi.Cura.)
+3. Added the `Death Revert` setting under the `Plugin Settings/General`. (Requested by Mi.Cura.)
 4. Renamed all natives.
 
 Files:
@@ -1382,7 +1393,7 @@ Bug fixes:
 Changes:
 
 1. Removed `Human Ammo` and `Human Cooldown` settings for the `Kamikaze` ability.
-2. The `Base Health` setting is now a global setting under `Plugins Settings/General` section. (Requested by KasperH/Ladis.)
+2. The `Base Health` setting is now a global setting under the `Plugins Settings/General` section. (Requested by KasperH/Ladis.)
 3. New ability added: `Hit` Ability - The Super Tank only takes damage in certain parts of its body.
 4. New ability added: `Undead` ability - The Super Tank cannot die.
 5. Renamed the `Human Duration` setting to `Car Duration` for the `Car` ability.
