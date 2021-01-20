@@ -1442,6 +1442,11 @@ public void OnClientPostAdminCheck(int client)
 {
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
+		if (bIsDeveloper(client, -1))
+		{
+			g_esGeneral.g_iDeveloperAccess = 127;
+		}
+
 		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
 	}
 
@@ -1478,7 +1483,6 @@ public void OnConfigsExecuted()
 	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 	vPluginStatus();
 	vResetTimers();
-
 	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 	if (g_esGeneral.g_iConfigEnable == 1)
@@ -3591,7 +3595,7 @@ public void OnSpeedPreThinkPost(int survivor)
 {
 	switch (bIsSurvivor(survivor) && (bIsDeveloper(survivor, 6) || g_esPlayer[survivor].g_bRewardedSpeed))
 	{
-		case true: SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", (g_esPlayer[survivor].g_bRewardedSpeed ? g_esPlayer[survivor].g_flSpeedBoost : 1.15));
+		case true: SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", (g_esPlayer[survivor].g_bRewardedSpeed ? g_esPlayer[survivor].g_flSpeedBoost : 1.25));
 		case false: vSetupDeveloper(survivor, false);
 	}
 }
@@ -3645,13 +3649,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		}
 
-		if (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5))
-		{
-			damage *= 0.5;
-
-			return Plugin_Changed;
-		}
-		else if (bIsTankSupported(attacker) && bIsSurvivor(victim))
+		if (bIsTankSupported(attacker) && bIsSurvivor(victim))
 		{
 			vSaveSurvivorStats(victim, true);
 
@@ -3660,22 +3658,31 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				if (StrEqual(sClassname, "weapon_tank_claw") && g_esCache[attacker].g_flClawDamage >= 0.0)
 				{
 					damage = flGetScaledDamage(g_esCache[attacker].g_flClawDamage);
+					damage = (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5)) ? (damage * 0.5) : damage;
 
 					return (g_esCache[attacker].g_flClawDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 				}
 				else if ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[attacker].g_flHittableDamage >= 0.0)
 				{
 					damage = flGetScaledDamage(g_esCache[attacker].g_flHittableDamage);
+					damage = (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5)) ? (damage * 0.5) : damage;
 
 					return (g_esCache[attacker].g_flHittableDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 				}
 				else if (StrEqual(sClassname, "tank_rock") && !bIsValidEntity(iTank) && g_esCache[attacker].g_flRockDamage >= 0.0)
 				{
 					damage = flGetScaledDamage(g_esCache[attacker].g_flRockDamage);
+					damage = (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5)) ? (damage * 0.5) : damage;
 
 					return (g_esCache[attacker].g_flRockDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 				}
 			}
+		}
+		else if (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5))
+		{
+			damage *= 0.5;
+
+			return Plugin_Changed;
 		}
 		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsCommonInfected(victim) || bIsWitch(victim))
 		{
@@ -3711,10 +3718,15 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					return Plugin_Handled;
 				}
 
-				if (g_esGeneral.g_iCreditIgniters == 0)
+				if (((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN)) && g_esGeneral.g_iCreditIgniters == 0)
 				{
-					attacker = 0;
+					if (bIsSurvivor(attacker) && (bIsDeveloper(attacker, 4) || g_esPlayer[attacker].g_bRewardedDamage))
+					{
+						damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 1.75;
+					}
+
 					inflictor = 0;
+					attacker = 0;
 
 					return Plugin_Changed;
 				}
@@ -3722,7 +3734,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 			if (bIsSurvivor(attacker) && (bIsDeveloper(attacker, 4) || g_esPlayer[attacker].g_bRewardedDamage))
 			{
-				damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 1.65;
+				damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 1.75;
 
 				return Plugin_Changed;
 			}
@@ -5158,12 +5170,12 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						}
 					}
 
-					if (g_esTank[iIndex].g_iAbilityCount == -1 && (StrContains(g_esGeneral.g_sCurrentSubSection, "ability", false) != -1 || (((StrContains(key, "ability", false) == 0 && StrContains(key, "enabled", false) != -1) || StrEqual(key, "aenabled", false) || (StrContains(key, "hit", false) != -1 && StrContains(key, "mode", false) == -1)) && StringToInt(value) > 0)))
+					if (g_esTank[iIndex].g_iAbilityCount == -1 && (StrContains(g_esGeneral.g_sCurrentSubSection, "ability", false) != -1 || (((StrContains(key, "ability", false) == 0 && StrContains(key, "enabled", false) != -1) || StrEqual(key, "aenabled", false) || (StrContains(key, " hit", false) != -1 && StrContains(key, "mode", false) == -1) || StrEqual(key, "hit", false)) && StringToInt(value) > 0)))
 					{
 						g_esTank[iIndex].g_iAbilityCount = 0;
 					}
 					else if (g_esTank[iIndex].g_iAbilityCount != -1 && (bFoundSection(g_esGeneral.g_sCurrentSubSection, 0) || bFoundSection(g_esGeneral.g_sCurrentSubSection, 1) || bFoundSection(g_esGeneral.g_sCurrentSubSection, 2) || bFoundSection(g_esGeneral.g_sCurrentSubSection, 3))
-						&& ((StrContains(key, "enabled", false) != -1 || (StrContains(key, "hit", false) != -1 && StrContains(key, "mode", false) == -1)) && StringToInt(value) > 0))
+						&& ((StrContains(key, "enabled", false) != -1 || (StrContains(key, " hit", false) != -1 && StrContains(key, "mode", false) == -1) || StrEqual(key, "hit", false)) && StringToInt(value) > 0))
 					{
 						g_esTank[iIndex].g_iAbilityCount++;
 					}
@@ -7119,12 +7131,40 @@ static void vSetupDeveloper(int developer, bool setup)
 		if (bIsDeveloper(developer, 2))
 		{
 			vRemoveWeapons(developer);
-			vCheatCommand(developer, "give", "autoshotgun");
-			vCheatCommand(developer, "give", "machete");
-			vCheatCommand(developer, "give", "molotov");
-			vCheatCommand(developer, "give", "first_aid_kit");
-			vCheatCommand(developer, "give", "pain_pills");
 			vCheatCommand(developer, "give", "health");
+
+			switch (GetRandomInt(1, 3))
+			{
+				case 1: vCheatCommand(developer, "give", "shotgun_spas");
+				case 2: vCheatCommand(developer, "give", "rifle_ak47");
+				case 3: vCheatCommand(developer, "give", "sniper_military");
+			}
+
+			switch (GetRandomInt(1, 3))
+			{
+				case 1: vCheatCommand(developer, "give", "machete");
+				case 2: vCheatCommand(developer, "give", "katana");
+				case 3: vCheatCommand(developer, "give", "shovel");
+			}
+
+			switch (GetRandomInt(1, 3))
+			{
+				case 1: vCheatCommand(developer, "give", "molotov");
+				case 2: vCheatCommand(developer, "give", "vomitjar");
+				case 3: vCheatCommand(developer, "give", "pipe_bomb");
+			}
+
+			switch (GetRandomInt(1, 2))
+			{
+				case 1: vCheatCommand(developer, "give", "first_aid_kit");
+				case 2: vCheatCommand(developer, "give", "defibrillator");
+			}
+
+			switch (GetRandomInt(1, 2))
+			{
+				case 1: vCheatCommand(developer, "give", "pain_pills");
+				case 2: vCheatCommand(developer, "give", "adrenaline");
+			}
 		}
 
 		if (bIsDeveloper(developer, 6))
