@@ -2048,8 +2048,8 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
+				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 			}
 		}
 		else if (g_esGeneral.g_iSection > 0 && (StrContains(name, "Tank#", false) != -1 || StrContains(name, "Tank #", false) != -1 || StrContains(name, "Tank_#", false) != -1 || StrContains(name, "Tank", false) != -1 || name[0] == '#' || IsCharNumeric(name[0]) || StrContains(name, "all", false) != -1 || StrContains(name, ",") != -1 || StrContains(name, "-") != -1))
@@ -2065,8 +2065,8 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 
 				switch (bHuman)
 				{
-					case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-					case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+					case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
+					case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 				}
 			}
 			else
@@ -2080,8 +2080,8 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
+				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 			}
 		}
 		else if ((StrContains(name, "STEAM_", false) == 0 || strncmp("0:", name, 2) == 0 || strncmp("1:", name, 2) == 0 || (!strncmp(name, "[U:", 3) && name[strlen(name) - 1] == ']')) && StrContains(name, g_esGeneral.g_sSection, false) != -1)
@@ -2090,8 +2090,8 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
-				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%10s \"%s\"\n%10s {") : ("%10s %s\n%10s {"), "", name, "");
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
+				case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%7s \"%s\"\n%7s {") : ("%7s %s\n%7s {"), "", name, "");
 			}
 		}
 		else
@@ -2105,8 +2105,8 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 
 		switch (bHuman)
 		{
-			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%20s \"%s\"\n%20s {") : ("%20s %s\n%20s {"), "", name, "");
-			case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%20s \"%s\"\n%20s {") : ("%20s %s\n%20s {"), "", name, "");
+			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, (opt_quotes) ? ("%15s \"%s\"\n%15s {") : ("%15s %s\n%15s {"), "", name, "");
+			case false: vLogMessage(MT_LOG_SERVER, false, (opt_quotes) ? ("%15s \"%s\"\n%15s {") : ("%15s %s\n%15s {"), "", name, "");
 		}
 	}
 	else
@@ -2132,8 +2132,8 @@ public SMCResult SMCKeyValues2(SMCParser smc, const char[] key, const char[] val
 
 		switch (bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 		{
-			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
-			case false: vLogMessage(MT_LOG_SERVER, false, "%30s %30s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
+			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%23s %39s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
+			case false: vLogMessage(MT_LOG_SERVER, false, "%23s %39s %s", "", sKey, (value[0] == '\0') ? "\"\"" : sValue);
 		}
 	}
 
@@ -2158,8 +2158,8 @@ public SMCResult SMCEndSection2(SMCParser smc)
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
-				case false: vLogMessage(MT_LOG_SERVER, false, "%20s }", "");
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%15s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
 			}
 		}
 		else if (g_esGeneral.g_iSection > 0 && (StrContains(g_esGeneral.g_sSection, "Tank#", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank #", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank_#", false) != -1 || StrContains(g_esGeneral.g_sSection, "Tank", false) != -1 || g_esGeneral.g_sSection[0] == '#' || IsCharNumeric(g_esGeneral.g_sSection[0]) || StrContains(g_esGeneral.g_sSection, "all", false) != -1 || StrContains(g_esGeneral.g_sSection, ",") != -1 || StrContains(g_esGeneral.g_sSection, "-") != -1))
@@ -2168,8 +2168,8 @@ public SMCResult SMCEndSection2(SMCParser smc)
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
-				case false: vLogMessage(MT_LOG_SERVER, false, "%20s }", "");
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%15s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
 			}
 		}
 		else if (StrContains(g_esGeneral.g_sSection, "all", false) != -1 || StrContains(g_esGeneral.g_sSection, ",") != -1 || StrContains(g_esGeneral.g_sSection, "-") != -1)
@@ -2178,8 +2178,8 @@ public SMCResult SMCEndSection2(SMCParser smc)
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
-				case false: vLogMessage(MT_LOG_SERVER, false, "%20s }", "");
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%15s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
 			}
 		}
 		else if (StrContains(g_esGeneral.g_sSection, "STEAM_", false) == 0 || strncmp("0:", g_esGeneral.g_sSection, 2) == 0 || strncmp("1:", g_esGeneral.g_sSection, 2) == 0 || (!strncmp(g_esGeneral.g_sSection, "[U:", 3) && g_esGeneral.g_sSection[strlen(g_esGeneral.g_sSection) - 1] == ']'))
@@ -2188,8 +2188,8 @@ public SMCResult SMCEndSection2(SMCParser smc)
 
 			switch (bHuman)
 			{
-				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%20s }", "");
-				case false: vLogMessage(MT_LOG_SERVER, false, "%20s }", "");
+				case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%15s }", "");
+				case false: vLogMessage(MT_LOG_SERVER, false, "%15s }", "");
 			}
 		}
 	}
@@ -2199,8 +2199,8 @@ public SMCResult SMCEndSection2(SMCParser smc)
 
 		switch (bHuman)
 		{
-			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%10s }", "");
-			case false: vLogMessage(MT_LOG_SERVER, false, "%10s }", "");
+			case true: MT_PrintToChat(g_esGeneral.g_iParserViewer, "%7s }", "");
+			case false: vLogMessage(MT_LOG_SERVER, false, "%7s }", "");
 		}
 	}
 	else if (g_esGeneral.g_csState2 == ConfigState_Start)
@@ -3069,6 +3069,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 			{
 				g_esGeneral.g_iDeveloperAccess = amount;
 
+				vSetupDeveloper(admin, true);
 				MT_PrintToChat(admin, "%s %s\x03, your current access level for testing has been set to\x04 %i\x03.", MT_TAG4, MT_AUTHOR, amount);
 
 				return;
@@ -3583,8 +3584,8 @@ public void OnSpeedPreThinkPost(int survivor)
 {
 	switch (bIsSurvivor(survivor) && (bIsDeveloper(survivor, 6) || g_esPlayer[survivor].g_bRewardedSpeed))
 	{
-		case true: SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", (g_esPlayer[survivor].g_bRewardedSpeed ? g_esPlayer[survivor].g_flSpeedBoost : 1.25));
-		case false: vSetupDeveloper(survivor);
+		case true: SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", (g_esPlayer[survivor].g_bRewardedSpeed ? g_esPlayer[survivor].g_flSpeedBoost : 1.15));
+		case false: vSetupDeveloper(survivor, false);
 	}
 }
 
@@ -3696,18 +3697,11 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				}
 			}
 
-			if (bIsSurvivor(attacker))
+			if (bIsSurvivor(attacker) && (bIsDeveloper(attacker, 4) || g_esPlayer[attacker].g_bRewardedDamage))
 			{
-				switch (bIsDeveloper(attacker, 4) || g_esPlayer[attacker].g_bRewardedDamage)
-				{
-					case true:
-					{
-						damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 2.5;
+				damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 1.65;
 
-						return Plugin_Changed;
-					}
-					case false: return Plugin_Continue;
-				}
+				return Plugin_Changed;
 			}
 			else if ((bIsTankSupported(attacker) && victim != attacker) || (bIsTankSupported(iTank) && victim != iTank) || (bIsTankSupported(iTank2) && victim != iTank2))
 			{
@@ -5664,7 +5658,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				else if (bIsSurvivor(iBot))
 				{
 					vCopySurvivorStats(iPlayer, iBot);
-					vSetupDeveloper(iPlayer);
+					vSetupDeveloper(iPlayer, false);
 				}
 			}
 		}
@@ -7084,7 +7078,7 @@ static void vSaveCaughtSurvivor(int survivor)
 	}
 }
 
-static void vSetupDeveloper(int developer, bool setup = false)
+static void vSetupDeveloper(int developer, bool setup)
 {
 	if (setup && bIsHumanSurvivor(developer) && bIsDeveloper(developer, 2))
 	{
