@@ -3677,6 +3677,12 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					return (g_esCache[attacker].g_flRockDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 				}
 			}
+			else if (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5))
+			{
+				damage *= 0.5;
+
+				return Plugin_Changed;
+			}
 		}
 		else if (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5))
 		{
