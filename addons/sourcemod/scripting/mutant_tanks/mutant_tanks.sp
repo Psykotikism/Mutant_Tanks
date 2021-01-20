@@ -3663,7 +3663,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 					return (g_esCache[attacker].g_flClawDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 				}
-				else if ((damagetype & DMG_CRUSH) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[attacker].g_flHittableDamage >= 0.0)
+				else if ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[attacker].g_flHittableDamage >= 0.0)
 				{
 					damage = flGetScaledDamage(g_esCache[attacker].g_flHittableDamage);
 
@@ -3690,7 +3690,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				bBlockBullets = (damagetype & DMG_BULLET) && g_esCache[victim].g_iBulletImmunity == 1;
 				bBlockExplosives = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iExplosiveImmunity == 1;
 				bBlockFire = ((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN)) && g_esCache[victim].g_iFireImmunity == 1;
-				bBlockHittables = (damagetype & DMG_CRUSH) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1;
+				bBlockHittables = (damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1;
 				bBlockMelee = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1;
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
