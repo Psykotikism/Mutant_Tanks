@@ -109,22 +109,22 @@
 
 	"AbilityButtons"
 	{
-		"chi"			"{yellow}+使用键 (默认: E):{olive} 触发你的主要能力."
+		"chi"			"{olive}+use (默认: E):{mint} 触发你的主要能力."
 	}
 
 	"AbilityButtons2"
 	{
-		"chi"			"{yellow}+换弹键 (默认: R):{olive} 触发你的 能力."
+		"chi"			"{olive}+reload (默认: R):{mint} 触发你的 能力."
 	}
 
 	"AbilityButtons3"
 	{
-		"chi"			"{yellow}+瞄镜键 (默认: 中键/滚轮):{olive} 触发你的特殊能力."
+		"chi"			"{olive}+zoom (默认: 中键/滚轮):{mint} 触发你的特殊能力."
 	}
 
 	"AbilityButtons4"
 	{
-		"chi"			"{yellow}+蹲伏键 (默认: CTRL):{olive} 触发你的临终能力."
+		"chi"			"{olive}+duck (默认: CTRL):{mint} 触发你的临终能力."
 	}
 
 	"Cooldown"

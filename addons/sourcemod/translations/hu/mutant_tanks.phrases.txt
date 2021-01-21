@@ -109,22 +109,22 @@
 
 	"AbilityButtons"
 	{
-		"hu"			"{yellow}+használat (alapért.: E):{olive} Aktiválja a fő képességedet."
+		"hu"			"{olive}+use (alapért.: E):{mint} Aktiválja a fő képességedet."
 	}
 
 	"AbilityButtons2"
 	{
-		"hu"			"{yellow}+újratöltés (alapért.: R):{olive} Aktiválja a távolsági képességedet."
+		"hu"			"{olive}+reload (alapért.: R):{mint} Aktiválja a távolsági képességedet."
 	}
 
 	"AbilityButtons3"
 	{
-		"hu"			"{yellow}+közelítés (alapért.: Egér3/Görgő):{olive} Aktiválja a speciális képességedet."
+		"hu"			"{olive}+zoom (alapért.: Egér3/Görgő):{mint} Aktiválja a speciális képességedet."
 	}
 
 	"AbilityButtons4"
 	{
-		"hu"			"{yellow}+guggolás (alapért.: CTRL):{olive} Aktiválja a halál utáni képességedet."
+		"hu"			"{olive}+duck (alapért.: CTRL):{mint} Aktiválja a halál utáni képességedet."
 	}
 
 	"Cooldown"
