@@ -1822,14 +1822,14 @@ Yes, players can use the `sm_mutanttank` command if the `Spawn Mode` setting und
 
 12. Is there any way to exempt admins from the cooldown mentioned in question #11?
 
-Yes, assign admins the `mt_admin` override.
+Yes, assign admins the `mt_adminversus` override.
 
 Example:
 
 ```
 Overrides
 {
-	"mt_admin"		"z" // All admins with the "z" (Root) flag are exempted from cooldowns.
+	"mt_adminversus"		"z" // All admins with the "z" (Root) flag are exempted from cooldowns.
 }
 ```
 
