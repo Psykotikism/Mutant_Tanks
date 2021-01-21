@@ -83,6 +83,7 @@ enum struct esPlayer
 	int g_iTankType;
 	int g_iThrowAbility;
 	int g_iThrowCarOptions;
+	int g_iThrowCarOwner;
 	int g_iThrowInfectedAmount;
 	int g_iThrowInfectedOptions;
 	int g_iThrowInfectedRemove;
@@ -112,6 +113,7 @@ enum struct esAbility
 	int g_iRequiresHumans;
 	int g_iThrowAbility;
 	int g_iThrowCarOptions;
+	int g_iThrowCarOwner;
 	int g_iThrowInfectedAmount;
 	int g_iThrowInfectedOptions;
 	int g_iThrowInfectedRemove;
@@ -138,6 +140,7 @@ enum struct esCache
 	int g_iRequiresHumans;
 	int g_iThrowAbility;
 	int g_iThrowCarOptions;
+	int g_iThrowCarOwner;
 	int g_iThrowInfectedAmount;
 	int g_iThrowInfectedOptions;
 	int g_iThrowInfectedRemove;
@@ -436,6 +439,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iThrowMessage = 0;
 				g_esAbility[iIndex].g_flThrowCarLifetime = 10.0;
 				g_esAbility[iIndex].g_iThrowCarOptions = 0;
+				g_esAbility[iIndex].g_iThrowCarOwner = 1;
 				g_esAbility[iIndex].g_flThrowChance = 33.3;
 				g_esAbility[iIndex].g_iThrowInfectedAmount = 2;
 				g_esAbility[iIndex].g_flThrowInfectedLifetime = 0.0;
@@ -465,6 +469,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iThrowMessage = 0;
 					g_esPlayer[iPlayer].g_flThrowCarLifetime = 0.0;
 					g_esPlayer[iPlayer].g_iThrowCarOptions = 0;
+					g_esPlayer[iPlayer].g_iThrowCarOwner = 0;
 					g_esPlayer[iPlayer].g_flThrowChance = 0.0;
 					g_esPlayer[iPlayer].g_iThrowInfectedAmount = 0;
 					g_esPlayer[iPlayer].g_flThrowInfectedLifetime = 0.0;
@@ -494,6 +499,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iThrowMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esPlayer[admin].g_iThrowMessage, value, 0, 15);
 		g_esPlayer[admin].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esPlayer[admin].g_flThrowCarLifetime, value, 0.1, 999999.0);
 		g_esPlayer[admin].g_iThrowCarOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esPlayer[admin].g_iThrowCarOptions, value, 0, 7);
+		g_esPlayer[admin].g_iThrowCarOwner = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esPlayer[admin].g_iThrowCarOwner, value, 0, 1);
 		g_esPlayer[admin].g_flThrowChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esPlayer[admin].g_flThrowChance, value, 0.0, 100.0);
 		g_esPlayer[admin].g_iThrowInfectedAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedAmount", "Throw Infected Amount", "Throw_Infected_Amount", "infamount", g_esPlayer[admin].g_iThrowInfectedAmount, value, 1, 32);
 		g_esPlayer[admin].g_flThrowInfectedLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedLifetime", "Throw Infected Lifetime", "Throw_Infected_Lifetime", "inflifetime", g_esPlayer[admin].g_flThrowInfectedLifetime, value, 0.0, 999999.0);
@@ -529,6 +535,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iThrowMessage = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esAbility[type].g_iThrowMessage, value, 0, 15);
 		g_esAbility[type].g_flThrowCarLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowCarLifetime", "Throw Car Lifetime", "Throw_Car_Lifetime", "carlifetime", g_esAbility[type].g_flThrowCarLifetime, value, 0.1, 999999.0);
 		g_esAbility[type].g_iThrowCarOptions = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowCarOptions", "Throw Car Options", "Throw_Car_Options", "caroptions", g_esAbility[type].g_iThrowCarOptions, value, 0, 7);
+		g_esAbility[type].g_iThrowCarOwner = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowCarOwner", "Throw Car Owner", "Throw_Car_Owner", "carowner", g_esAbility[type].g_iThrowCarOwner, value, 0, 1);
 		g_esAbility[type].g_flThrowChance = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowChance", "Throw Chance", "Throw_Chance", "chance", g_esAbility[type].g_flThrowChance, value, 0.0, 100.0);
 		g_esAbility[type].g_iThrowInfectedAmount = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedAmount", "Throw Infected Amount", "Throw_Infected_Amount", "infamount", g_esAbility[type].g_iThrowInfectedAmount, value, 1, 32);
 		g_esAbility[type].g_flThrowInfectedLifetime = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ThrowInfectedLifetime", "Throw Infected Lifetime", "Throw_Infected_Lifetime", "inflifetime", g_esAbility[type].g_flThrowInfectedLifetime, value, 0.0, 999999.0);
@@ -569,6 +576,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iRequiresHumans, g_esAbility[type].g_iRequiresHumans);
 	g_esCache[tank].g_iThrowAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowAbility, g_esAbility[type].g_iThrowAbility);
 	g_esCache[tank].g_iThrowCarOptions = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowCarOptions, g_esAbility[type].g_iThrowCarOptions);
+	g_esCache[tank].g_iThrowCarOwner = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowCarOwner, g_esAbility[type].g_iThrowCarOwner);
 	g_esCache[tank].g_iThrowInfectedAmount = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowInfectedAmount, g_esAbility[type].g_iThrowInfectedAmount);
 	g_esCache[tank].g_iThrowInfectedOptions = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowInfectedOptions, g_esAbility[type].g_iThrowInfectedOptions);
 	g_esCache[tank].g_iThrowInfectedRemove = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iThrowInfectedRemove, g_esAbility[type].g_iThrowInfectedRemove);
@@ -922,8 +930,12 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 							iCarColor[iPos] = GetRandomInt(0, 255);
 						}
 
-						SetEntPropEnt(iCar, Prop_Send, "m_hOwnerEntity", iTank);
 						SetEntityRenderColor(iCar, iCarColor[0], iCarColor[1], iCarColor[2], 255);
+
+						if (g_esCache[iTank].g_iThrowCarOwner == 1)
+						{
+							SetEntPropEnt(iCar, Prop_Send, "m_hOwnerEntity", iTank);
+						}
 
 						static float flPos[3];
 						GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
