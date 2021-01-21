@@ -4115,6 +4115,15 @@
 			// 4: Car that looks like a Sixth Generation Chevrolet Impala.
 			"Car Options"				"0"
 
+			// Set the Mutant Tank as the owner of its cars.
+			// Note: This setting is only used for compatibility with Marttt's "Replace Cars Into Car Alarms" plugin. Disable this setting if you do not use that plugin.
+			// Link: https://forums.alliedmods.net/showthread.php?t=329806
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Car Owner"				"1"
+
 			// The radius of the Mutant Tank's car shower.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".
 			// Note: This setting can be overridden for specific players.
@@ -16059,6 +16068,15 @@
 			// 2: Car that looks like a Chevrolet Impala SS.
 			// 4: Car that looks like a Sixth Generation Chevrolet Impala.
 			"Throw Car Options"			"0"
+
+			// Set the Mutant Tank as the owner of its thrown cars.
+			// Note: This setting is only used for compatibility with Marttt's "Replace Cars Into Car Alarms" plugin. Disable this setting if you do not use that plugin.
+			// Link: https://forums.alliedmods.net/showthread.php?t=329806
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Throw Car Owner"			"1"
 
 			// The Mutant Tank has this many chances out of 100.0% to trigger the ability.
 			// Note: This is ignored when the "Combo Ability" setting is set to "1".

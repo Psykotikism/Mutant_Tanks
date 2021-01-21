@@ -1,5 +1,33 @@
 # Changelog
 
+## Version 8.82 (February 1, 2021)
+
+### Bug Fixes
+
+#### Config Files
+- Fixed grouped sections and the `all` section not being read properly.
+
+### Changes
+
+#### Core Plugin
+- Restricted the following commands to admins with `z` (Root) flag:
+	- `sm_mt_config`
+	- `sm_mt_list`
+	- `sm_mt_tank2`/`sm_tank2`
+- Renamed the `mt_admin` override command to `mt_adminversus` for clarity.
+
+#### Abilities
+- Car
+	- Added the `Car Owner` setting. (Requested by 3aljiyavslgazana.)
+
+- Throw
+	- Added the `Throw Car Owner` setting. (Requested by 3aljiyavslgazana.)
+
+### Files
+
+#### Updates
+- Updated include file.
+
 ## Version 8.81 (January 20, 2021)
 
 ### Bug Fixes
