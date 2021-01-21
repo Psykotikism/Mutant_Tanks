@@ -324,7 +324,7 @@
 
 	"Death2"
 	{
-		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!"
+		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}-ot!"
 	}
 
 	"Death3"
@@ -2049,7 +2049,7 @@
 
 	"Gravity4"
 	{
-		"hu"			"{olive}{1}{mint}gravitációs vonzása véget ért!"
+		"hu"			"{olive}{1}{mint} gravitációs vonzása véget ért!"
 	}
 
 	"GravityAmmo"
@@ -3409,12 +3409,12 @@
 
 	"Quiet"
 	{
-		"hu"			"{olive}{1}{mint} lenémította magát{olive} {2}{mint}körül!"
+		"hu"			"{olive}{1}{mint} lenémította magát{olive} {2}{mint} körül!"
 	}
 
 	"Quiet2"
 	{
-		"hu"			"{olive}{1}{mint} többé már nem csendes{olive} {2}{mint}körül!"
+		"hu"			"{olive}{1}{mint} többé már nem csendes{olive} {2}{mint} körül!"
 	}
 
 	"QuietAmmo"
