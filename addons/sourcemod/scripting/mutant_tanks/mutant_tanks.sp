@@ -2758,7 +2758,7 @@ static void vConfig(bool manual)
 			}
 		}
 
-		if (g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE)
+		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_GAMEMODE) && g_esGeneral.g_cvMTGameMode != null)
 		{
 			char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
