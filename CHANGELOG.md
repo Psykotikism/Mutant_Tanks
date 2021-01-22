@@ -4,6 +4,9 @@
 
 ### Bug Fixes
 
+#### Core Plugin
+- Fixed the `sm_mt_mutanttank` command being available to non-Tank players.
+
 #### Config Files
 - Fixed grouped sections and the `all` section not being read properly.
 
@@ -18,7 +21,14 @@
 	- `sm_mt_config`
 	- `sm_mt_list`
 	- `sm_mt_tank2`/`sm_tank2`
+	- `sm_mt_version`
 - Renamed the `mt_admin` override command to `mt_adminversus` for clarity.
+- The following commands are now available only to the developer for testing purposes:
+	- `sm_mt_config2` - Same function as `sm_mt_config`
+	- `sm_mt_list2` - Same function as `sm_mt_list`
+	- `sm_mt_tank2`/`sm_tank2` - Same function as `sm_mt_tank`/`sm_tank`
+	- `sm_mt_version2` - Same function as `sm_mt_version`
+- The `sm_mt_config`/`sm_mt_config2` command's menu now displays the names of Mutant Tank types. 
 
 #### Abilities
 - Car

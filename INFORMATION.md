@@ -658,7 +658,7 @@
 		"Human Support"
 		{
 			// Human-controlled Mutant Tanks must wait this long before changing their current Mutant Tank type.
-			// Note: Players with the "mt_admin" override will be immune to this cooldown.
+			// Note: Players with the "mt_adminversus" override will be immune to this cooldown.
 			// --
 			// Minimum: 0
 			// Maximum: 999999
