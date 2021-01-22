@@ -104,7 +104,7 @@
 
 	"Buttons"
 	{
-		"hu"			"Gomb(ok)"
+		"hu"			"Gombok"
 	}
 
 	"AbilityButtons"

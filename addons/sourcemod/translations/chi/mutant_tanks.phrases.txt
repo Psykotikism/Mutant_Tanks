@@ -104,7 +104,7 @@
 
 	"Buttons"
 	{
-		"chi"			"触发按键"
+		"chi"			"纽扣"
 	}
 
 	"AbilityButtons"

@@ -107,7 +107,7 @@
 
 	"Buttons"
 	{
-		"en"			"Button(s)"
+		"en"			"Buttons"
 	}
 
 	"AbilityButtons"
