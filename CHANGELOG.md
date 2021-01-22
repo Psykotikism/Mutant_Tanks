@@ -7,6 +7,10 @@
 #### Config Files
 - Fixed grouped sections and the `all` section not being read properly.
 
+#### Abilities
+- Fire
+	- Fixed other Tanks being ignited. (Thanks to 3aljiyavslgazana for reporting!)
+
 ### Changes
 
 #### Core Plugin
@@ -26,7 +30,9 @@
 ### Files
 
 #### Updates
+- Updated config files.
 - Updated include file.
+- Updated translation file.
 
 ## Version 8.81 (January 20, 2021)
 
