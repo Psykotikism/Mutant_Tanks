@@ -25,15 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad;
+bool g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Fling Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Fling Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	g_bLateLoad = late;
@@ -159,7 +164,7 @@ public void OnPluginStart()
 		return;
 	}
 
-	switch (bIsValidGame())
+	switch (g_bSecondGame)
 	{
 		case true:
 		{
@@ -844,7 +849,7 @@ static void vFlingHit(int survivor, int tank, float random, float chance, int en
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
 
-				switch (bIsValidGame())
+				switch (g_bSecondGame)
 				{
 					case true:
 					{
@@ -898,7 +903,7 @@ static void vFlingRange(int tank, int value, float random, int pos = -1)
 			return;
 		}
 
-		if (!bIsValidGame())
+		if (!g_bSecondGame)
 		{
 			vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
 		}
@@ -917,7 +922,7 @@ static void vFlingRange(int tank, int value, float random, int pos = -1)
 				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRange)
 				{
-					switch (bIsValidGame())
+					switch (g_bSecondGame)
 					{
 						case true: vFling(iSurvivor, tank);
 						case false: SDKCall(g_esGeneral.g_hSDKPukePlayer, iSurvivor, tank, true);

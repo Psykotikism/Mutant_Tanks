@@ -24,13 +24,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
+bool g_bSecondGame;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Medic Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Medic Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	return APLRes_Success;
@@ -837,7 +844,7 @@ static int iGetHealth(int tank, int infected)
 		case 2: return g_esCache[tank].g_iMedicHealth[iClass - 1];
 		case 3: return g_esCache[tank].g_iMedicHealth[iClass - 1];
 		case 4: return g_esCache[tank].g_iMedicHealth[iClass - 1];
-		case 5: return bIsValidGame() ? g_esCache[tank].g_iMedicHealth[iClass - 1] : g_esCache[tank].g_iMedicHealth[iClass + 1];
+		case 5: return g_bSecondGame ? g_esCache[tank].g_iMedicHealth[iClass - 1] : g_esCache[tank].g_iMedicHealth[iClass + 1];
 		case 6: return g_esCache[tank].g_iMedicHealth[iClass - 1];
 		case 8: return g_esCache[tank].g_iMedicHealth[iClass - 2];
 	}
@@ -856,7 +863,7 @@ static int iGetMaxHealth(int tank, int infected)
 		case 2: return g_esCache[tank].g_iMedicMaxHealth[iClass - 1];
 		case 3: return g_esCache[tank].g_iMedicMaxHealth[iClass - 1];
 		case 4: return g_esCache[tank].g_iMedicMaxHealth[iClass - 1];
-		case 5: return bIsValidGame() ? g_esCache[tank].g_iMedicMaxHealth[iClass - 1] : g_esCache[tank].g_iMedicMaxHealth[iClass + 1];
+		case 5: return g_bSecondGame ? g_esCache[tank].g_iMedicMaxHealth[iClass - 1] : g_esCache[tank].g_iMedicMaxHealth[iClass + 1];
 		case 6: return g_esCache[tank].g_iMedicMaxHealth[iClass - 1];
 		case 8: return g_esCache[tank].g_iMedicMaxHealth[iClass - 2];
 	}

@@ -29,7 +29,8 @@ bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
 	{
 		strcopy(error, err_max, "\"[MT] Nullify Ability\" only supports Left 4 Dead 1 & 2.");
 

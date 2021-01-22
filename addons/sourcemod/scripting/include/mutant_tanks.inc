@@ -1198,7 +1198,7 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 
 stock void vExternalView(int player, float time)
 {
-	if (bIsValidGame() && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") != 99999.3)
+	if (GetEngineVersion() == Engine_Left4Dead2 && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") != 99999.3)
 	{
 		SetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView", GetGameTime() + time);
 	}
@@ -1590,7 +1590,7 @@ stock bool bIsInfectedGhost(int infected)
 
 stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
 {
-	return bIsInfected(jockey, flags) && bIsValidGame() && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
+	return bIsInfected(jockey, flags) && GetEngineVersion() == Engine_Left4Dead2 && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
 }
 
 stock bool bIsPlayerBurning(int player)
@@ -1665,7 +1665,7 @@ stock bool bIsSurvivorCaught(int survivor)
 	static int iSpecial;
 	iSpecial = GetEntPropEnt(survivor, Prop_Send, "m_pounceAttacker");
 	iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_tongueOwner") : iSpecial;
-	if (bIsValidGame())
+	if (GetEngineVersion() == Engine_Left4Dead2)
 	{
 		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_pummelAttacker") : iSpecial;
 		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_carryAttacker") : iSpecial;
@@ -1677,7 +1677,8 @@ stock bool bIsSurvivorCaught(int survivor)
 
 stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	return bIsInfected(tank, flags) && (bIsValidGame() ? GetEntProp(tank, Prop_Send, "m_zombieClass") == 8 : GetEntProp(tank, Prop_Send, "m_zombieClass") == 5);
+	int iClass = (GetEngineVersion() == Engine_Left4Dead2) ? 8 : 5;
+	return bIsInfected(tank, flags) && GetEntProp(tank, Prop_Send, "m_zombieClass") == iClass;
 }
 
 stock bool bIsTankStasis(int tank)
@@ -1695,7 +1696,7 @@ stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGA
 		}
 	}
 
-	return bIsPlayerIncapacitated(tank) || (bIsValidGame() && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0;
+	return bIsPlayerIncapacitated(tank) || (GetEngineVersion() == Engine_Left4Dead2 && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0;
 }
 
 stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
@@ -1718,12 +1719,6 @@ stock bool bIsValidEntity(int entity)
 stock bool bIsValidEntRef(int ref)
 {
 	return ref && EntRefToEntIndex(ref) != INVALID_ENT_REFERENCE;
-}
-
-stock bool bIsValidGame(bool l4d2 = true)
-{
-	EngineVersion evEngine = l4d2 ? Engine_Left4Dead2 : Engine_Left4Dead;
-	return GetEngineVersion() == evEngine;
 }
 
 stock bool bIsWitch(int witch)
@@ -2490,6 +2485,7 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, i
 
 stock int iGetWeaponOffset(const char[] weapon)
 {
+	EngineVersion evEngine = GetEngineVersion();
 	if (StrEqual(weapon, "weapon_rifle") || StrEqual(weapon, "weapon_rifle_ak47") || StrEqual(weapon, "weapon_rifle_desert") || StrEqual(weapon, "weapon_rifle_sg552"))
 	{
 		return 3;
@@ -2504,7 +2500,7 @@ stock int iGetWeaponOffset(const char[] weapon)
 	}
 	else if (StrEqual(weapon, "weapon_pumpshotgun"))
 	{
-		return bIsValidGame() ? 7 : 6;
+		return (evEngine == Engine_Left4Dead2) ? 7 : 6;
 	}
 	else if (StrEqual(weapon, "weapon_shotgun_spas"))
 	{
@@ -2512,11 +2508,11 @@ stock int iGetWeaponOffset(const char[] weapon)
 	}
 	else if (StrEqual(weapon, "weapon_autoshotgun"))
 	{
-		return bIsValidGame() ? 8 : 6;
+		return (evEngine == Engine_Left4Dead2) ? 8 : 6;
 	}
 	else if (StrEqual(weapon, "weapon_hunting_rifle"))
 	{
-		return bIsValidGame() ? 9 : 2;
+		return (evEngine == Engine_Left4Dead2) ? 9 : 2;
 	}
 	else if (StrEqual(weapon, "weapon_sniper_military") || StrEqual(weapon, "weapon_sniper_scout") || StrEqual(weapon, "weapon_sniper_awp"))
 	{
