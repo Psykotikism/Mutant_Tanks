@@ -2485,7 +2485,7 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, i
 
 stock int iGetWeaponOffset(const char[] weapon)
 {
-	EngineVersion evEngine = GetEngineVersion();
+	bool bSecondGame = GetEngineVersion() == Engine_Left4Dead2;
 	if (StrEqual(weapon, "weapon_rifle") || StrEqual(weapon, "weapon_rifle_ak47") || StrEqual(weapon, "weapon_rifle_desert") || StrEqual(weapon, "weapon_rifle_sg552"))
 	{
 		return 3;
@@ -2500,7 +2500,7 @@ stock int iGetWeaponOffset(const char[] weapon)
 	}
 	else if (StrEqual(weapon, "weapon_pumpshotgun"))
 	{
-		return (evEngine == Engine_Left4Dead2) ? 7 : 6;
+		return bSecondGame ? 7 : 6;
 	}
 	else if (StrEqual(weapon, "weapon_shotgun_spas"))
 	{
@@ -2508,11 +2508,11 @@ stock int iGetWeaponOffset(const char[] weapon)
 	}
 	else if (StrEqual(weapon, "weapon_autoshotgun"))
 	{
-		return (evEngine == Engine_Left4Dead2) ? 8 : 6;
+		return bSecondGame ? 8 : 6;
 	}
 	else if (StrEqual(weapon, "weapon_hunting_rifle"))
 	{
-		return (evEngine == Engine_Left4Dead2) ? 9 : 2;
+		return bSecondGame ? 9 : 2;
 	}
 	else if (StrEqual(weapon, "weapon_sniper_military") || StrEqual(weapon, "weapon_sniper_scout") || StrEqual(weapon, "weapon_sniper_awp"))
 	{
