@@ -3720,7 +3720,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					return Plugin_Handled;
 				}
 
-				if (((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN)) && g_esGeneral.g_iCreditIgniters == 0)
+				if (bIsSurvivor(attacker) && ((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN)) && g_esGeneral.g_iCreditIgniters == 0)
 				{
 					if (bIsSurvivor(attacker) && (bIsDeveloper(attacker, 4) || g_esPlayer[attacker].g_bRewardedDamage))
 					{
