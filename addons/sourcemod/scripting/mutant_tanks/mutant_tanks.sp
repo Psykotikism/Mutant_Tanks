@@ -1176,11 +1176,14 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
-	RegConsoleCmd("sm_mt_config", cmdMTConfig, "View a section of the config file.");
+	RegAdminCmd("sm_mt_config", cmdMTConfig, ADMFLAG_ROOT, "View a section of the config file.");
+	RegConsoleCmd("sm_mt_config2", cmdMTConfig2, "View a section of the config file.");
 	RegConsoleCmd("sm_mt_info", cmdMTInfo, "View information about Mutant Tanks.");
-	RegConsoleCmd("sm_mt_list", cmdMTList, "View a list of installed abilities.");
+	RegAdminCmd("sm_mt_list", cmdMTList, ADMFLAG_ROOT, "View a list of installed abilities.");
+	RegConsoleCmd("sm_mt_list2", cmdMTList2, "View a list of installed abilities.");
 	RegAdminCmd("sm_mt_reload", cmdMTReload, ADMFLAG_ROOT, "Reload the config file.");
-	RegConsoleCmd("sm_mt_version", cmdMTVersion, "Find out the current version of Mutant Tanks.");
+	RegAdminCmd("sm_mt_version", cmdMTVersion, ADMFLAG_ROOT, "Find out the current version of Mutant Tanks.");
+	RegConsoleCmd("sm_mt_version2", cmdMTVersion2, "Find out the current version of Mutant Tanks.");
 	RegAdminCmd("sm_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Mutant Tank.");
 	RegAdminCmd("sm_mt_tank", cmdTank, ADMFLAG_ROOT, "Spawn a Mutant Tank.");
 	RegConsoleCmd("sm_tank2", cmdTank2, "Spawn a Mutant Tank.");
@@ -1192,6 +1195,7 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTGameModeTypes = CreateConVar("mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", _, true, 0.0, true, 15.0);
 	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", _, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_NOTIFY|FCVAR_DONTRECORD);
+
 	AutoExecConfig(true, "mutant_tanks");
 
 	g_esGeneral.g_cvMTDifficulty = FindConVar("z_difficulty");
@@ -1933,10 +1937,60 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 
 public Action cmdMTConfig(int client, int args)
 {
-	bool bHuman = bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
-	if (bHuman && !CheckCommandAccess(client, "sm_mt_config", ADMFLAG_ROOT, true) && !bIsDeveloper(client, -1))
+	if (args < 1)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
+		if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+		{
+			switch (IsVoteInProgress())
+			{
+				case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+				case false: vPathMenu(client);
+			}
+		}
+		else
+		{
+			MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+		}
+
+		return Plugin_Handled;
+	}
+
+	GetCmdArg(1, g_esGeneral.g_sSection, sizeof(esGeneral::g_sSection));
+	if (IsCharNumeric(g_esGeneral.g_sSection[0]))
+	{
+		g_esGeneral.g_iSection = StringToInt(g_esGeneral.g_sSection);
+	}
+
+	switch (args)
+	{
+		case 1: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+		case 2:
+		{
+			char sFilename[PLATFORM_MAX_PATH];
+			GetCmdArg(2, sFilename, sizeof(sFilename));
+			BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
+			if (!FileExists(g_esGeneral.g_sChosenPath, true))
+			{
+				BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+			}
+		}
+	}
+
+	switch (g_esGeneral.g_bUsedParser)
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "StillParsing");
+		case false: vParseConfig(client);
+	}
+
+	return Plugin_Handled;
+}
+
+public Action cmdMTConfig2(int client, int args)
+{
+	bool bHuman = bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
+	if (bHuman && !bIsDeveloper(client, -1))
+	{
+		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
 
 		return Plugin_Handled;
 	}
@@ -2661,9 +2715,23 @@ public Action cmdMTList(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && !CheckCommandAccess(client, "sm_mt_list", ADMFLAG_ROOT, true) && !bIsDeveloper(client, -1))
+	vListAbilities(client);
+
+	return Plugin_Handled;
+}
+
+public Action cmdMTList2(int client, int args)
+{
+	if (!g_esGeneral.g_bPluginEnabled)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && !bIsDeveloper(client, -1))
+	{
+		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
 
 		return Plugin_Handled;
 	}
@@ -2913,6 +2981,20 @@ public Action cmdMTVersion(int client, int args)
 	return Plugin_Handled;
 }
 
+public Action cmdMTVersion2(int client, int args)
+{
+	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && !bIsDeveloper(client, -1))
+	{
+		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
+
+		return Plugin_Handled;
+	}
+
+	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
+
+	return Plugin_Handled;
+}
+
 public Action cmdTank(int client, int args)
 {
 	if (!g_esGeneral.g_bPluginEnabled)
@@ -2977,9 +3059,9 @@ public Action cmdTank2(int client, int args)
 
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
-		if (!CheckCommandAccess(client, "sm_tank2", ADMFLAG_ROOT, true) && !CheckCommandAccess(client, "sm_mt_tank2", ADMFLAG_ROOT, true) && !bIsDeveloper(client, -1))
+		if (!bIsDeveloper(client, -1))
 		{
-			MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
+			MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
 
 			return Plugin_Handled;
 		}
@@ -3044,7 +3126,7 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (g_esGeneral.g_iSpawnMode == 1 && !CheckCommandAccess(client, "sm_mutanttank", ADMFLAG_ROOT, true) && !bIsDeveloper(client, -1))
+	if (!bIsTank(client) || (g_esGeneral.g_iSpawnMode == 1 && !CheckCommandAccess(client, "sm_mutanttank", ADMFLAG_ROOT, true) && !bIsDeveloper(client, -1)))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -3158,7 +3240,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 						case true: vSpawnTank(admin, g_esGeneral.g_iChosenType, amount, mode);
 						case false:
 						{
-							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT) || bIsDeveloper(admin)))
+							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin)))
 							{
 								vChangeTank(admin, amount, mode);
 							}
@@ -3208,7 +3290,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 		}
 		case false:
 		{
-			switch (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT) || bIsDeveloper(admin))
+			switch (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin))
 			{
 				case true: vChangeTank(admin, amount, mode);
 				case false: MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoCommandAccess");
