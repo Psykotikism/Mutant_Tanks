@@ -2384,13 +2384,26 @@ static void vConfigMenu(int admin, int item = 0)
 		iListSize = (g_esGeneral.g_alSections.Length > 0) ? g_esGeneral.g_alSections.Length : 0;
 		if (iListSize > 0)
 		{
-			static char sSection[PLATFORM_MAX_PATH];
+			static char sSection[PLATFORM_MAX_PATH], sDisplay[PLATFORM_MAX_PATH];
+			static int iStartPos, iIndex;
+			iStartPos = 0;
+			iIndex = 0;
 			for (int iPos = 0; iPos < iListSize; iPos++)
 			{
 				g_esGeneral.g_alSections.GetString(iPos, sSection, sizeof(sSection));
 				if (sSection[0] != '\0')
 				{
-					mConfigMenu.AddItem(sSection, sSection);
+					switch (StrContains(sSection, "Plugin", false) == 0 || StrContains(sSection, MT_CONFIG_SECTION_SETTINGS4, false) == 0 || StrContains(sSection, "STEAM_", false) == 0 || (!strncmp(sSection, "[U:", 3) && sSection[strlen(sSection) - 1] == ']') || StrContains(sSection, "all", false) != -1 || StrContains(sSection, ",") != -1 || StrContains(sSection, "-") != -1)
+					{
+						case true: mConfigMenu.AddItem(sSection, sSection);
+						case false:
+						{
+							iStartPos = iGetConfigSectionNumber(sSection, sizeof(sSection)), iIndex = StringToInt(sSection[iStartPos]);
+							FormatEx(sDisplay, sizeof(sDisplay), "%s (%s)", g_esTank[iIndex].g_sTankName, sSection);
+							mConfigMenu.AddItem(sSection, sDisplay);
+						}
+					}
+
 					iCount++;
 				}
 			}
@@ -5516,7 +5529,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 static void vReadAdminSettings(int admin, int type, const char[] key, const char[] value)
 {
-	if (g_esGeneral.g_iMinType <= type <= g_esGeneral.g_iMaxType)
+	if (1 <= type <= MT_MAXTYPES)
 	{
 		if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
 		{
@@ -5531,7 +5544,7 @@ static void vReadAdminSettings(int admin, int type, const char[] key, const char
 
 static void vReadTankSettings(int type, const char[] sub, const char[] key, const char[] value)
 {
-	if (g_esGeneral.g_iMinType <= type <= g_esGeneral.g_iMaxType)
+	if (1 <= type <= MT_MAXTYPES)
 	{
 		g_esTank[type].g_iTankEnabled = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "TankEnabled", "Tank Enabled", "Tank_Enabled", "tenabled", g_esTank[type].g_iTankEnabled, value, 0, 1);
 		g_esTank[type].g_flTankChance = flGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "TankChance", "Tank Chance", "Tank_Chance", "chance", g_esTank[type].g_flTankChance, value, 0.0, 100.0);
@@ -7178,18 +7191,24 @@ static void vSetupDeveloper(int developer, bool setup)
 			vRemoveWeapons(developer);
 			vCheatCommand(developer, "give", "health");
 
-			switch (GetRandomInt(1, 3))
+			switch (GetRandomInt(1, 6))
 			{
 				case 1: vCheatCommand(developer, "give", "shotgun_spas");
 				case 2: vCheatCommand(developer, "give", "rifle_ak47");
 				case 3: vCheatCommand(developer, "give", "sniper_military");
+				case 4: vCheatCommand(developer, "give", "autoshotgun");
+				case 5: vCheatCommand(developer, "give", "rifle");
+				case 6: vCheatCommand(developer, "give", "hunting_rifle");
 			}
 
-			switch (GetRandomInt(1, 3))
+			switch (GetRandomInt(1, 6))
 			{
 				case 1: vCheatCommand(developer, "give", "machete");
 				case 2: vCheatCommand(developer, "give", "katana");
 				case 3: vCheatCommand(developer, "give", "shovel");
+				case 4: vCheatCommand(developer, "give", "baseball_bat");
+				case 5: vCheatCommand(developer, "give", "fireaxe");
+				case 6: vCheatCommand(developer, "give", "pitchfork");
 			}
 
 			switch (GetRandomInt(1, 3))
