@@ -25,13 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
+bool g_bSecondGame;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Track Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Track Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	return APLRes_Success;
@@ -576,7 +583,7 @@ static void vReset()
 
 static void vSetGlow(int rock, int color, int flashing, int min, int max, int type)
 {
-	if (!bIsValidGame())
+	if (!g_bSecondGame)
 	{
 		return;
 	}

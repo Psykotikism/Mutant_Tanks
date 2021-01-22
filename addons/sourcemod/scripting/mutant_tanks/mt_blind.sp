@@ -25,15 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad;
+bool g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Blind Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Blind Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	g_bLateLoad = late;
@@ -160,7 +165,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	switch (bIsValidGame())
+	switch (g_bSecondGame)
 	{
 		case true: PrecacheSound(SOUND_GROAN2, true);
 		case false: PrecacheSound(SOUND_GROAN1, true);
@@ -828,7 +833,7 @@ static void vBlindHit(int survivor, int tank, float random, float chance, int en
 
 				vEffect(survivor, tank, g_esCache[tank].g_iBlindEffect, flags);
 
-				switch (bIsValidGame())
+				switch (g_bSecondGame)
 				{
 					case true: EmitSoundToAll(SOUND_GROAN2, survivor);
 					case false: EmitSoundToAll(SOUND_GROAN1, survivor);

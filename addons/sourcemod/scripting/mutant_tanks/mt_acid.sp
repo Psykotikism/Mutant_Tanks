@@ -25,15 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad;
+bool g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Acid Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Acid Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	g_bLateLoad = late;
@@ -164,7 +169,7 @@ public void OnPluginStart()
 		return;
 	}
 
-	switch (bIsValidGame())
+	switch (g_bSecondGame)
 	{
 		case true:
 		{
@@ -752,7 +757,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
 	vRemoveAcid(tank);
 
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && bIsValidGame() && g_esCache[tank].g_iAcidAbility == 1)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_bSecondGame && g_esCache[tank].g_iAcidAbility == 1)
 	{
 		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
 		{
@@ -775,7 +780,7 @@ public void MT_OnRockBreak(int tank, int rock)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iAcidRockBreak == 1 && g_esCache[tank].g_iComboAbility == 0 && bIsValidGame())
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iAcidRockBreak == 1 && g_esCache[tank].g_iComboAbility == 0 && g_bSecondGame)
 	{
 		vAcidRockBreak(tank, rock, GetRandomFloat(0.1, 100.0));
 	}
@@ -872,7 +877,7 @@ static void vAcidHit(int survivor, int tank, float random, float chance, int ena
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
 
-				switch (bIsValidGame())
+				switch (g_bSecondGame)
 				{
 					case true:
 					{
@@ -928,7 +933,7 @@ static void vAcidRange(int tank, int value, float random, int pos = -1)
 			return;
 		}
 
-		switch (bIsValidGame())
+		switch (g_bSecondGame)
 		{
 			case true: vAcid(tank, tank);
 			case false:

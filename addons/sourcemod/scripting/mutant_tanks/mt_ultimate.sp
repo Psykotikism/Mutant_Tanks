@@ -25,15 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad;
+bool g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Ultimate Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Ultimate Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	g_bLateLoad = late;
@@ -166,7 +171,7 @@ public void OnMapStart()
 	PrecacheSound(SOUND_ELECTRICITY, true);
 	PrecacheSound(SOUND_EXPLOSION, true);
 
-	if (bIsValidGame())
+	if (g_bSecondGame)
 	{
 		PrecacheSound(SOUND_GROWL2, true);
 		PrecacheSound(SOUND_SMASH2, true);
@@ -785,7 +790,7 @@ static void vUltimate(int tank, int pos = -1)
 		EmitSoundToAll(SOUND_ELECTRICITY, tank);
 		EmitSoundToAll(SOUND_EXPLOSION, tank);
 
-		if (bIsValidGame())
+		if (g_bSecondGame)
 		{
 			EmitSoundToAll(SOUND_GROWL2, tank);
 			EmitSoundToAll(SOUND_SMASH2, tank);

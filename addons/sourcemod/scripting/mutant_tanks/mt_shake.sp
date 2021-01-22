@@ -25,15 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad;
+bool g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Shake Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Shake Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	g_bLateLoad = late;
@@ -165,7 +170,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	PrecacheSound((bIsValidGame() ? SOUND_SMASH2 : SOUND_SMASH1), true);
+	PrecacheSound((g_bSecondGame ? SOUND_SMASH2 : SOUND_SMASH1), true);
 
 	vReset();
 }
@@ -839,7 +844,7 @@ static void vShakeHit(int survivor, int tank, float random, float chance, int en
 				dpShake.WriteCell(GetTime());
 
 				vEffect(survivor, tank, g_esCache[tank].g_iShakeEffect, flags);
-				EmitSoundToClient(survivor, (bIsValidGame() ? SOUND_SMASH2 : SOUND_SMASH1));
+				EmitSoundToClient(survivor, (g_bSecondGame ? SOUND_SMASH2 : SOUND_SMASH1));
 
 				if (g_esCache[tank].g_iShakeMessage & messages)
 				{

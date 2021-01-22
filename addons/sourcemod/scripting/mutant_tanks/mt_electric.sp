@@ -25,15 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad;
+bool g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Electric Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Electric Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	g_bLateLoad = late;
@@ -169,7 +174,7 @@ public void OnMapStart()
 	iPrecacheParticle(PARTICLE_ELECTRICITY2);
 	iPrecacheParticle(PARTICLE_ELECTRICITY3);
 
-	switch (bIsValidGame())
+	switch (g_bSecondGame)
 	{
 		case true:
 		{
@@ -854,8 +859,8 @@ static void vGetRandomParticle(char[] buffer, int size)
 		case 1: strcopy(buffer, size, PARTICLE_ELECTRICITY);
 		case 2: strcopy(buffer, size, PARTICLE_ELECTRICITY2);
 		case 3: strcopy(buffer, size, PARTICLE_ELECTRICITY3);
-		case 4, 6: strcopy(buffer, size, (bIsValidGame() ? PARTICLE_ELECTRICITY4 : PARTICLE_ELECTRICITY6));
-		case 5, 7: strcopy(buffer, size, (bIsValidGame() ? PARTICLE_ELECTRICITY5 : PARTICLE_ELECTRICITY7));
+		case 4, 6: strcopy(buffer, size, (g_bSecondGame ? PARTICLE_ELECTRICITY4 : PARTICLE_ELECTRICITY6));
+		case 5, 7: strcopy(buffer, size, (g_bSecondGame ? PARTICLE_ELECTRICITY5 : PARTICLE_ELECTRICITY7));
 	}
 }
 

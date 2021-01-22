@@ -32,17 +32,22 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad;
+bool g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		char sMessage[64];
-		FormatEx(sMessage, sizeof(sMessage), "\"%s\" only supports Left 4 Dead 1 & 2.", MT_NAME);
-		strcopy(error, err_max, sMessage);
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			char sMessage[64];
+			FormatEx(sMessage, sizeof(sMessage), "\"%s\" only supports Left 4 Dead 1 & 2.", MT_NAME);
+			strcopy(error, err_max, sMessage);
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	CreateNative("MT_CanTypeSpawn", aNative_CanTypeSpawn);
@@ -438,7 +443,6 @@ enum struct esPlayer
 	bool g_bSpit;
 	bool g_bStasis;
 	bool g_bThirdPerson;
-	bool g_bThirdPerson2;
 	bool g_bTransformed;
 	bool g_bTriggered;
 
@@ -1236,7 +1240,7 @@ public void OnPluginStart()
 		case true: LogError("Unable to load the \"mutant_tanks\" gamedata file.");
 		case false:
 		{
-			if (bIsValidGame())
+			if (g_bSecondGame)
 			{
 				StartPrepSDKCall(SDKCall_Player);
 				if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseEntity::IsInStasis"))
@@ -1403,10 +1407,18 @@ public void OnMapStart()
 	iPrecacheParticle(PARTICLE_SMOKE);
 	iPrecacheParticle(PARTICLE_SPIT);
 
-	switch (bIsValidGame())
+	switch (g_bSecondGame)
 	{
-		case true: PrecacheSound(SOUND_EXPLOSION2, true);
-		case false: PrecacheSound(SOUND_EXPLOSION1, true);
+		case true:
+		{
+			PrecacheSound(SOUND_EXPLOSION2, true);
+			PrecacheSound(SOUND_SPIT, true);
+		}
+		case false:
+		{
+			PrecacheSound(SOUND_EXPLOSION1, true);
+			PrecacheModel(MODEL_TANK_L4D1, true);
+		}
 	}
 
 	PrecacheSound(SOUND_ELECTRICITY, true);
@@ -1415,12 +1427,6 @@ public void OnMapStart()
 	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
 	g_iBossHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
 	PrecacheModel(SPRITE_EXPLODE, true);
-
-	switch (bIsValidGame())
-	{
-		case true: PrecacheSound(SOUND_SPIT, true);
-		case false: PrecacheModel(MODEL_TANK_L4D1, true);
-	}
 
 	vReset();
 	vToggleLogging(1);
@@ -1512,7 +1518,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_MAP)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"));
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (g_bSecondGame ? "l4d2_map_configs/" : "l4d_map_configs/"));
 			CreateDirectory(sSMPath, 511);
 
 			char sMapName[128];
@@ -1529,7 +1535,7 @@ public void OnConfigsExecuted()
 					for (int iPos = 0; iPos < iMapCount; iPos++)
 					{
 						alMaps.GetString(iPos, sMapName, sizeof(sMapName));
-						vCreateConfigFile((bIsValidGame() ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapName);
+						vCreateConfigFile((g_bSecondGame ? "l4d2_map_configs/" : "l4d_map_configs/"), sMapName);
 					}
 				}
 
@@ -1540,7 +1546,7 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_GAMEMODE)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"));
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (g_bSecondGame ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"));
 			CreateDirectory(sSMPath, 511);
 
 			char sGameType[2049], sTypes[64][32];
@@ -1551,7 +1557,7 @@ public void OnConfigsExecuted()
 			{
 				if (StrContains(sGameType, sTypes[iMode]) != -1 && sTypes[iMode][0] != '\0')
 				{
-					vCreateConfigFile((bIsValidGame() ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode]);
+					vCreateConfigFile((g_bSecondGame ? "l4d2_gamemode_configs/" : "l4d_gamemode_configs/"), sTypes[iMode]);
 				}
 			}
 		}
@@ -1625,11 +1631,11 @@ public void OnConfigsExecuted()
 		if (g_esGeneral.g_iConfigCreate & MT_CONFIG_FINALE)
 		{
 			char sSMPath[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_finale_configs/" : "l4d_finale_configs/"));
+			BuildPath(Path_SM, sSMPath, sizeof(sSMPath), "data/mutant_tanks/%s", (g_bSecondGame ? "l4d2_finale_configs/" : "l4d_finale_configs/"));
 			CreateDirectory(sSMPath, 511);
 
 			char sEvent[32];
-			int iAmount = bIsValidGame() ? 11 : 8;
+			int iAmount = g_bSecondGame ? 11 : 8;
 			for (int iType = 0; iType < iAmount; iType++)
 			{
 				switch (iType)
@@ -1647,7 +1653,7 @@ public void OnConfigsExecuted()
 					case 10: sEvent = "gauntlet_finale_start";
 				}
 
-				vCreateConfigFile((bIsValidGame() ? "l4d2_finale_configs/" : "l4d_finale_configs/"), sEvent);
+				vCreateConfigFile((g_bSecondGame ? "l4d2_finale_configs/" : "l4d_finale_configs/"), sEvent);
 			}
 		}
 
@@ -1668,7 +1674,7 @@ public void OnConfigsExecuted()
 		if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_MAP) && IsMapValid(sMap))
 		{
 			char sMapConfig[PLATFORM_MAX_PATH];
-			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
+			BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (g_bSecondGame ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
 			if (FileExists(sMapConfig, true))
 			{
 				vCustomConfig(sMapConfig);
@@ -1680,7 +1686,7 @@ public void OnConfigsExecuted()
 		{
 			char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
+			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (g_bSecondGame ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
 			if (FileExists(sModeConfig, true))
 			{
 				vCustomConfig(sModeConfig);
@@ -2757,7 +2763,7 @@ static void vConfig(bool manual)
 			if (IsMapValid(sMap))
 			{
 				static char sMapConfig[PLATFORM_MAX_PATH];
-				BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
+				BuildPath(Path_SM, sMapConfig, sizeof(sMapConfig), "data/mutant_tanks/%s/%s.cfg", (g_bSecondGame ? "l4d2_map_configs" : "l4d_map_configs"), sMap);
 				if (FileExists(sMapConfig, true))
 				{
 					g_esGeneral.g_iFileTimeNew[2] = GetFileTime(sMapConfig, FileTime_LastChange);
@@ -2775,7 +2781,7 @@ static void vConfig(bool manual)
 		{
 			char sMode[64], sModeConfig[PLATFORM_MAX_PATH];
 			g_esGeneral.g_cvMTGameMode.GetString(sMode, sizeof(sMode));
-			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (bIsValidGame() ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
+			BuildPath(Path_SM, sModeConfig, sizeof(sModeConfig), "data/mutant_tanks/%s/%s.cfg", (g_bSecondGame ? "l4d2_gamemode_configs" : "l4d_gamemode_configs"), sMode);
 			if (FileExists(sModeConfig, true))
 			{
 				g_esGeneral.g_iFileTimeNew[3] = GetFileTime(sModeConfig, FileTime_LastChange);
@@ -3257,7 +3263,7 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 
 	switch (amount)
 	{
-		case 1: vCheatCommand(admin, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
+		case 1: vCheatCommand(admin, g_bSecondGame ? "z_spawn_old" : "z_spawn", sParameter);
 		default:
 		{
 			for (int iAmount = 0; iAmount <= amount; iAmount++)
@@ -3266,7 +3272,7 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 				{
 					if (bIsValidClient(admin))
 					{
-						vCheatCommand(admin, bIsValidGame() ? "z_spawn_old" : "z_spawn", sParameter);
+						vCheatCommand(admin, g_bSecondGame ? "z_spawn_old" : "z_spawn", sParameter);
 
 						g_esGeneral.g_bForceSpawned = true;
 						g_esGeneral.g_iChosenType = type;
@@ -3407,7 +3413,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 			SDKHook(entity, SDKHook_OnTakeDamage, OnTakePlayerDamage);
 			SDKHook(entity, SDKHook_OnTakeDamage, OnTakePropDamage);
 		}
-		else if (StrEqual(classname, "inferno") || StrEqual(classname, "pipe_bomb_projectile") || (bIsValidGame() && (StrEqual(classname, "fire_cracker_blast") || StrEqual(classname, "grenade_launcher_projectile"))))
+		else if (StrEqual(classname, "inferno") || StrEqual(classname, "pipe_bomb_projectile") || (g_bSecondGame && (StrEqual(classname, "fire_cracker_blast") || StrEqual(classname, "grenade_launcher_projectile"))))
 		{
 			SDKHook(entity, SDKHook_SpawnPost, OnSpawnPost);
 		}
@@ -3594,7 +3600,7 @@ public void OnPropSpawnPost(int entity)
 {
 	static char sModel[45];
 	GetEntPropString(entity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-	if (StrEqual(sModel, MODEL_JETPACK) || StrEqual(sModel, MODEL_PROPANETANK) || StrEqual(sModel, MODEL_GASCAN) || (bIsValidGame() && StrEqual(sModel, MODEL_FIREWORKCRATE)))
+	if (StrEqual(sModel, MODEL_JETPACK) || StrEqual(sModel, MODEL_PROPANETANK) || StrEqual(sModel, MODEL_GASCAN) || (g_bSecondGame && StrEqual(sModel, MODEL_FIREWORKCRATE)))
 	{
 		SDKHook(entity, SDKHook_OnTakeDamage, OnTakePropDamage);
 	}
@@ -4339,7 +4345,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_flTransformDelay = 10.0;
 			g_esTank[iIndex].g_flTransformDuration = 10.0;
 			g_esTank[iIndex].g_iSpawnType = 0;
-			g_esTank[iIndex].g_iPropsAttached = bIsValidGame() ? 510 : 462;
+			g_esTank[iIndex].g_iPropsAttached = g_bSecondGame ? 510 : 462;
 			g_esTank[iIndex].g_iBodyEffects = 0;
 			g_esTank[iIndex].g_iRockEffects = 0;
 			g_esTank[iIndex].g_iRockModel = 2;
@@ -5459,7 +5465,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_now_it"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
- 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidGame())
+ 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_bSecondGame)
 			{
 				vRemoveGlow(iTank);
 			}
@@ -5467,7 +5473,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_no_longer_it"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
- 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidGame() && !bIsPlayerIncapacitated(iTank) && g_esCache[iTank].g_iGlowEnabled == 1)
+ 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_bSecondGame && !bIsPlayerIncapacitated(iTank) && g_esCache[iTank].g_iGlowEnabled == 1)
 			{
 				vSetGlow(iTank);
 			}
@@ -5927,7 +5933,7 @@ static void vExecuteFinaleConfigs(const char[] filename)
 	if ((g_esGeneral.g_iConfigExecute & MT_CONFIG_FINALE) && g_esGeneral.g_iConfigEnable == 1)
 	{
 		static char sFilePath[PLATFORM_MAX_PATH], sFinaleConfig[PLATFORM_MAX_PATH];
-		BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "data/mutant_tanks/%s", (bIsValidGame() ? "l4d2_finale_configs/" : "l4d_finale_configs/"));
+		BuildPath(Path_SM, sFinaleConfig, sizeof(sFinaleConfig), "data/mutant_tanks/%s", (g_bSecondGame ? "l4d2_finale_configs/" : "l4d_finale_configs/"));
 		FormatEx(sFilePath, sizeof(sFilePath), "%s%s.cfg", sFinaleConfig, filename);
 		if (FileExists(sFilePath, true))
 		{
@@ -6034,7 +6040,7 @@ static void vHookEvents(bool hook)
 		HookEvent("revive_success", vEventHandler);
 		HookEvent("weapon_fire", vEventHandler);
 
-		if (bIsValidGame())
+		if (g_bSecondGame)
 		{
 			HookEvent("finale_vehicle_incoming", vEventHandler);
 			HookEvent("finale_bridge_lowering", vEventHandler);
@@ -6071,7 +6077,7 @@ static void vHookEvents(bool hook)
 		UnhookEvent("revive_success", vEventHandler);
 		UnhookEvent("weapon_fire", vEventHandler);
 
-		if (bIsValidGame())
+		if (g_bSecondGame)
 		{
 			UnhookEvent("finale_vehicle_incoming", vEventHandler);
 			UnhookEvent("finale_bridge_lowering", vEventHandler);
@@ -6262,7 +6268,7 @@ static void vSurvivorReactions(int tank)
 					}
 				}
 				case 2: FakeClientCommand(iSurvivor, "vocalize PlayerYellRun #%i", iTimestamp);
-				case 3: FakeClientCommand(iSurvivor, "vocalize %s #%i", (bIsValidGame() ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
+				case 3: FakeClientCommand(iSurvivor, "vocalize %s #%i", (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
 				case 4: FakeClientCommand(iSurvivor, "vocalize PlayerBackUp #%i", iTimestamp);
 				case 5: FakeClientCommand(iSurvivor, "vocalize PlayerEmphaticGo #%i", iTimestamp);
 			}
@@ -6288,7 +6294,7 @@ static void vSurvivorReactions(int tank)
 		iExplosion = EntIndexToEntRef(iExplosion);
 		vDeleteEntity(iExplosion, 2.0);
 
-		EmitSoundToAll((bIsValidGame() ? SOUND_EXPLOSION2 : SOUND_EXPLOSION1), iExplosion, 0, 75, 0, 1.0, 100, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
+		EmitSoundToAll((g_bSecondGame ? SOUND_EXPLOSION2 : SOUND_EXPLOSION1), iExplosion, 0, 75, 0, 1.0, 100, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
 	}
 
 	vPushNearbyEntities(tank, flTankPos);
@@ -6312,7 +6318,7 @@ static void vRegularSpawn()
 	{
 		if (bIsValidClient(iTank, MT_CHECK_INGAME))
 		{
-			vCheatCommand(iTank, bIsValidGame() ? "z_spawn_old" : "z_spawn", "tank auto");
+			vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "tank auto");
 
 			break;
 		}
@@ -6424,7 +6430,7 @@ static void vRemoveProps(int tank, int mode = 1)
 
 	g_esPlayer[tank].g_iFlashlight = INVALID_ENT_REFERENCE;
 
-	if (bIsValidGame())
+	if (g_bSecondGame)
 	{
 		vRemoveGlow(tank);
 	}
@@ -6488,7 +6494,6 @@ static void vResetCore(int client)
 	g_esPlayer[client].g_iLastButtons = 0;
 	g_esPlayer[client].g_bStasis = false;
 	g_esPlayer[client].g_bThirdPerson = false;
-	g_esPlayer[client].g_bThirdPerson2 = false;
 
 	vResetDamage(client);
 }
@@ -6587,7 +6592,7 @@ static void vResetTank(int tank)
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	vResetSpeed(tank, true);
 
-	if (bIsValidGame())
+	if (g_bSecondGame)
 	{
 		vRemoveGlow(tank);
 	}
@@ -7018,7 +7023,7 @@ static void vGiveWeapons(int survivor)
 				SetEntProp(iSlot, Prop_Send, "m_upgradeBitVec", g_esPlayer[survivor].g_iWeaponInfo[2]);
 			}
 
-			if (bIsValidGame())
+			if (g_bSecondGame)
 			{
 				SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", g_esPlayer[survivor].g_iWeaponInfo[3]);
 			}
@@ -7091,14 +7096,14 @@ static void vSaveWeapons(int survivor)
 			g_esPlayer[survivor].g_iWeaponInfo[2] = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
 		}
 
-		if (bIsValidGame())
+		if (g_bSecondGame)
 		{
 			g_esPlayer[survivor].g_iWeaponInfo[3] = GetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded");
 		}
 	}
 
 	int iSlot2 = 0;
-	if (bIsValidGame())
+	if (g_bSecondGame)
 	{
 		if (bIsPlayerIncapacitated(survivor))
 		{
@@ -7169,7 +7174,7 @@ static void vSaveCaughtSurvivor(int survivor)
 {
 	int iSpecial = GetEntPropEnt(survivor, Prop_Send, "m_pounceAttacker");
 	iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_tongueOwner") : iSpecial;
-	if (bIsValidGame())
+	if (g_bSecondGame)
 	{
 		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_pummelAttacker") : iSpecial;
 		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_carryAttacker") : iSpecial;
@@ -7290,7 +7295,7 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 	vCacheSettings(tank);
 	vSetTankModel(tank);
 
-	if (bIsValidGame())
+	if (g_bSecondGame)
 	{
 		vRemoveGlow(tank);
 	}
@@ -7606,7 +7611,7 @@ static void vSetProps(int tank)
 					AcceptEntityInput(g_esPlayer[tank].g_iRock[iRock], "Enable");
 					AcceptEntityInput(g_esPlayer[tank].g_iRock[iRock], "DisableCollision");
 
-					if (bIsValidGame())
+					if (g_bSecondGame)
 					{
 						switch (iRock)
 						{
@@ -7675,7 +7680,7 @@ static void vSetProps(int tank)
 					AcceptEntityInput(g_esPlayer[tank].g_iTire[iTire], "Enable");
 					AcceptEntityInput(g_esPlayer[tank].g_iTire[iTire], "DisableCollision");
 
-					if (bIsValidGame())
+					if (g_bSecondGame)
 					{
 						SetEntPropFloat(g_esPlayer[tank].g_iTire[iTire], Prop_Data, "m_flModelScale", 1.5);
 					}
@@ -7729,7 +7734,7 @@ static void vSetProps(int tank)
 				AcceptEntityInput(g_esPlayer[tank].g_iPropaneTank, "Enable");
 				AcceptEntityInput(g_esPlayer[tank].g_iPropaneTank, "DisableCollision");
 
-				if (bIsValidGame())
+				if (g_bSecondGame)
 				{
 					SetEntPropFloat(g_esPlayer[tank].g_iPropaneTank, Prop_Data, "m_flModelScale", 1.1);
 				}
@@ -7814,14 +7819,14 @@ static void vSetTankModel(int tank)
 		{
 			case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
 			case 2: SetEntityModel(tank, MODEL_TANK_DLC);
-			case 4: SetEntityModel(tank, (bIsValidGame() ? MODEL_TANK_MAIN : MODEL_TANK_L4D1));
+			case 4: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_MAIN : MODEL_TANK_L4D1));
 			default:
 			{
 				switch (GetRandomInt(1, sizeof(iModels)))
 				{
 					case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
 					case 2: SetEntityModel(tank, MODEL_TANK_DLC);
-					case 3: SetEntityModel(tank, (bIsValidGame() ? MODEL_TANK_MAIN : MODEL_TANK_L4D1));
+					case 3: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_MAIN : MODEL_TANK_L4D1));
 				}
 			}
 		}
@@ -7888,7 +7893,7 @@ static void vAnnounce(int tank, const char[] oldname, const char[] name, int mod
 		vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sTankNote : "NoNote"), LANG_SERVER);
 	}
 
-	if (bIsValidGame() && g_esCache[tank].g_iGlowEnabled == 1)
+	if (g_bSecondGame && g_esCache[tank].g_iGlowEnabled == 1)
 	{
 		vSetGlow(tank);
 	}
@@ -7914,7 +7919,7 @@ static void vAnnounceArrival(int tank, const char[] name)
 				switch (GetRandomInt(1, 3))
 				{
 					case 1: FakeClientCommand(iSurvivor, "vocalize PlayerYellRun #%i", iTimestamp);
-					case 2: FakeClientCommand(iSurvivor, "vocalize %s #%i", (bIsValidGame() ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
+					case 2: FakeClientCommand(iSurvivor, "vocalize %s #%i", (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
 					case 3: FakeClientCommand(iSurvivor, "vocalize PlayerBackUp #%i", iTimestamp);
 				}
 			}
@@ -8125,7 +8130,7 @@ static void vParticleEffects(int tank)
 			CreateTimer(1.5, tTimerSmokeEffect, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 		}
 
-		if (bIsValidGame() && (g_esCache[tank].g_iBodyEffects & MT_PARTICLE_SPIT) && !g_esPlayer[tank].g_bSpit)
+		if (g_bSecondGame && (g_esCache[tank].g_iBodyEffects & MT_PARTICLE_SPIT) && !g_esPlayer[tank].g_bSpit)
 		{
 			g_esPlayer[tank].g_bSpit = true;
 
@@ -8742,12 +8747,12 @@ static bool bIsTankIdle(int tank, int type = 0)
 
 static bool bIsTankInStasis(int tank)
 {
-	return g_esPlayer[tank].g_bStasis || (bIsValidGame() && ((g_esGeneral.g_hSDKIsInStasis != null && SDKCall(g_esGeneral.g_hSDKIsInStasis, tank)) || bIsTankStasis(tank)));
+	return g_esPlayer[tank].g_bStasis || (g_bSecondGame && ((g_esGeneral.g_hSDKIsInStasis != null && SDKCall(g_esGeneral.g_hSDKIsInStasis, tank)) || bIsTankStasis(tank)));
 }
 
 static bool bIsTankInThirdPerson(int tank)
 {
-	return g_esPlayer[tank].g_bThirdPerson || g_esPlayer[tank].g_bThirdPerson2 || bIsTankThirdPerson(tank);
+	return g_esPlayer[tank].g_bThirdPerson || bIsTankThirdPerson(tank);
 }
 
 static bool bIsTypeAvailable(int type, int tank = 0)
@@ -9216,18 +9221,6 @@ public void vViewQuery(QueryCookie cookie, int client, ConVarQueryResult result,
 	}
 }
 
-public void vViewQuery2(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue)
-{
-	if (bIsValidClient(client))
-	{
-		switch (result)
-		{
-			case ConVarQuery_Okay: g_esPlayer[client].g_bThirdPerson2 = (StrEqual(cvarName, "c_thirdpersonshoulder") && (StringToInt(cvarValue) == 1 || StrEqual(cvarValue, "1", false))) ? true : false;
-			default: g_esPlayer[client].g_bThirdPerson2 = false;
-		}
-	}
-}
-
 public Action tTimerAnnounce(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -9361,7 +9354,6 @@ public Action tTimerCheckView(Handle timer, int userid)
 	}
 
 	QueryClientConVar(iTank, "z_view_distance", vViewQuery);
-	QueryClientConVar(iTank, "c_thirdpersonshoulder", vViewQuery2);
 
 	return Plugin_Continue;
 }
@@ -9664,7 +9656,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 		IgniteEntity(iRock, 120.0);
 	}
 
-	if (bIsValidGame() && (g_esCache[iTank].g_iRockEffects & MT_ROCK_SPIT))
+	if (g_bSecondGame && (g_esCache[iTank].g_iRockEffects & MT_ROCK_SPIT))
 	{
 		EmitSoundToAll(SOUND_SPIT, iTank);
 		vAttachParticle(iRock, PARTICLE_SPIT, 0.75);

@@ -25,15 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad;
+bool g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Heal Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Heal Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	g_bLateLoad = late;
@@ -702,7 +707,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			SetEntProp(iSurvivor, Prop_Send, "m_currentReviveCount", 0);
 			SetEntProp(iSurvivor, Prop_Send, "m_isGoingToDie", 0);
 
-			if (bIsValidGame())
+			if (g_bSecondGame)
 			{
 				SetEntProp(iSurvivor, Prop_Send, "m_bIsOnThirdStrike", 0);
 			}
@@ -1000,7 +1005,7 @@ static void vHealHit(int survivor, int tank, float random, float chance, int ena
 				SetEntProp(survivor, Prop_Send, "m_currentReviveCount", g_cvMTMaxIncapCount.IntValue);
 				SetEntProp(survivor, Prop_Send, "m_isGoingToDie", 1);
 
-				if (bIsValidGame())
+				if (g_bSecondGame)
 				{
 					SetEntProp(survivor, Prop_Send, "m_bIsOnThirdStrike", 1);
 				}
@@ -1105,7 +1110,7 @@ static void vResetGlow(int tank)
 
 static void vSetGlow(int tank, int color, int flashing, int min, int max, int type)
 {
-	if (!bIsValidGame())
+	if (!g_bSecondGame)
 	{
 		return;
 	}
@@ -1228,7 +1233,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 				MT_TankMaxHealth(iTank, 3, iMaxHealth + g_esCache[iTank].g_iHealCommon);
 				SetEntProp(iTank, Prop_Data, "m_iHealth", iRealHealth);
 
-				if (bIsValidGame())
+				if (g_bSecondGame)
 				{
 					SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 185, 0));
 					SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
@@ -1262,7 +1267,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 
 					if (iHealType < 2)
 					{
-						if (bIsValidGame())
+						if (g_bSecondGame)
 						{
 							SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 220, 0));
 							SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
@@ -1292,7 +1297,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 					MT_TankMaxHealth(iTank, 3, iMaxHealth + g_esCache[iTank].g_iHealTank);
 					SetEntProp(iTank, Prop_Data, "m_iHealth", iRealHealth);
 
-					if (bIsValidGame())
+					if (g_bSecondGame)
 					{
 						SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 255, 0));
 						SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
@@ -1307,7 +1312,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 		}
 	}
 
-	if (iHealType == 0 && bIsValidGame())
+	if (iHealType == 0 && g_bSecondGame)
 	{
 		vResetGlow(iTank);
 	}

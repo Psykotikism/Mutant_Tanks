@@ -25,13 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
+bool g_bSecondGame;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Panic Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Panic Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	return APLRes_Success;
@@ -633,7 +640,7 @@ static void vPanic2(int tank, int pos = -1)
 
 static void vPanic3(int tank)
 {
-	switch (bIsValidGame())
+	switch (g_bSecondGame)
 	{
 		case true:
 		{

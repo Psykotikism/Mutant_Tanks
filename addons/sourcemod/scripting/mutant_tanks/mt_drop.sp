@@ -24,13 +24,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
+bool g_bSecondGame;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Drop Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Drop Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	return APLRes_Success;
@@ -175,10 +182,10 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_mt_drop", cmdDropInfo, "View information about the Drop ability.");
 
 	g_esGeneral.g_cvMTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
-	g_esGeneral.g_cvMTAutoShotgunAmmo = bIsValidGame() ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
+	g_esGeneral.g_cvMTAutoShotgunAmmo = g_bSecondGame ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
 	g_esGeneral.g_cvMTGrenadeLauncherAmmo = FindConVar("ammo_grenadelauncher_max");
 	g_esGeneral.g_cvMTHuntingRifleAmmo = FindConVar("ammo_huntingrifle_max");
-	g_esGeneral.g_cvMTShotgunAmmo = bIsValidGame() ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
+	g_esGeneral.g_cvMTShotgunAmmo = g_bSecondGame ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
 	g_esGeneral.g_cvMTSMGAmmo = FindConVar("ammo_smg_max");
 	g_esGeneral.g_cvMTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
 }
@@ -190,7 +197,7 @@ public void OnMapStart()
 		PrecacheGeneric(g_sMeleeScripts[iPos], true);
 	}
 
-	switch (bIsValidGame())
+	switch (g_bSecondGame)
 	{
 		case true:
 		{
@@ -634,7 +641,7 @@ static void vDropWeapon(int tank, int value, float random, int pos = -1)
 		}
 
 		static char sWeapon[32];
-		strcopy(sWeapon, sizeof(sWeapon), (bIsValidGame() ? g_sWeaponClasses2[g_esPlayer[tank].g_iWeaponIndex] : g_sWeaponClasses[g_esPlayer[tank].g_iWeaponIndex]));
+		strcopy(sWeapon, sizeof(sWeapon), (g_bSecondGame ? g_sWeaponClasses2[g_esPlayer[tank].g_iWeaponIndex] : g_sWeaponClasses[g_esPlayer[tank].g_iWeaponIndex]));
 
 		static float flPos[3], flAngles[3];
 		GetClientEyePosition(tank, flPos);
@@ -705,7 +712,7 @@ static void vDropWeapon(int tank, int value, float random, int pos = -1)
 				}
 			}
 		}
-		else if (g_esCache[tank].g_iDropMode != 1 && bIsValidGame())
+		else if (g_esCache[tank].g_iDropMode != 1 && g_bSecondGame)
 		{
 			static int iDrop;
 			iDrop = CreateEntityByName("weapon_melee");
@@ -772,10 +779,10 @@ static int iGetNamedWeapon(int tank)
 
 	static char sName[32], sSet[2][20];
 	static int iSize;
-	iSize = bIsValidGame() ? sizeof(g_sWeaponClasses2) : sizeof(g_sWeaponClasses);
+	iSize = g_bSecondGame ? sizeof(g_sWeaponClasses2) : sizeof(g_sWeaponClasses);
 	for (int iPos = 0; iPos < iSize; iPos++)
 	{
-		strcopy(sName, sizeof(sName), (bIsValidGame() ? g_sWeaponClasses2[iPos] : g_sWeaponClasses[iPos]));
+		strcopy(sName, sizeof(sName), (g_bSecondGame ? g_sWeaponClasses2[iPos] : g_sWeaponClasses[iPos]));
 		if (StrContains(sName, "weapon_") != -1)
 		{
 			ExplodeString(sName, "eapon_", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -805,7 +812,7 @@ static int iGetRandomWeapon(int tank)
 		case 2: iDropValue = GetRandomInt(19, 30);
 	}
 
-	return bIsValidGame() ? iDropValue : GetRandomInt(0, 5);
+	return g_bSecondGame ? iDropValue : GetRandomInt(0, 5);
 }
 
 public void vDropFrame(int userid)
@@ -835,7 +842,7 @@ public void vDropFrame(int userid)
 	{
 		static float flPos[3], flAngles[3], flScale;
 
-		SetEntityModel(g_esPlayer[iTank].g_iWeapon, (bIsValidGame() ? g_sWeaponModelsWorld2[iWeapon] : g_sWeaponModelsWorld[iWeapon]));
+		SetEntityModel(g_esPlayer[iTank].g_iWeapon, (g_bSecondGame ? g_sWeaponModelsWorld2[iWeapon] : g_sWeaponModelsWorld[iWeapon]));
 		TeleportEntity(g_esPlayer[iTank].g_iWeapon, flPos, flAngles, NULL_VECTOR);
 		DispatchSpawn(g_esPlayer[iTank].g_iWeapon);
 		vSetEntityParent(g_esPlayer[iTank].g_iWeapon, iTank, true);
@@ -851,7 +858,7 @@ public void vDropFrame(int userid)
 		SetVariantString(sPosition);
 		AcceptEntityInput(g_esPlayer[iTank].g_iWeapon, "SetParentAttachment");
 
-		switch (bIsValidGame())
+		switch (g_bSecondGame)
 		{
 			case true:
 			{
@@ -926,7 +933,7 @@ public void vDropFrame(int userid)
 
 		SetEntProp(g_esPlayer[iTank].g_iWeapon, Prop_Send, "m_CollisionGroup", 2);
 
-		if (bIsValidGame())
+		if (g_bSecondGame)
 		{
 			SetEntPropFloat(g_esPlayer[iTank].g_iWeapon, Prop_Send, "m_flModelScale", flScale);
 		}

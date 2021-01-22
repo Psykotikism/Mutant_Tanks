@@ -25,15 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad;
+bool g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Bomb Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Bomb Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	g_bLateLoad = late;
@@ -165,7 +170,7 @@ public void OnMapStart()
 {
 	PrecacheSound(SOUND_HIT, true);
 
-	switch (bIsValidGame())
+	switch (g_bSecondGame)
 	{
 		case true: PrecacheSound(SOUND_BOMB2, true);
 		case false: PrecacheSound(SOUND_BOMB1, true);
@@ -702,7 +707,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 		GetClientAbsOrigin(tank, flPos);
 		vSpawnBreakProp(tank, flPos, 10.0, MODEL_PROPANETANK);
 
-		switch (bIsValidGame())
+		switch (g_bSecondGame)
 		{
 			case true: EmitSoundToAll(SOUND_BOMB2, tank);
 			case false: EmitSoundToAll(SOUND_BOMB1, tank);
@@ -851,7 +856,7 @@ static void vBombRange(int tank, int value, float random, int pos = -1)
 		GetClientAbsOrigin(tank, flPos);
 		vSpawnBreakProp(tank, flPos, 10.0, MODEL_PROPANETANK);
 
-		switch (bIsValidGame())
+		switch (g_bSecondGame)
 		{
 			case true: EmitSoundToAll(SOUND_BOMB2, tank);
 			case false: EmitSoundToAll(SOUND_BOMB1, tank);
@@ -869,7 +874,7 @@ static void vBombRockBreak(int tank, int rock, float random, int pos = -1)
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flPos);
 		vSpawnBreakProp(tank, flPos, 10.0, MODEL_PROPANETANK);
 
-		switch (bIsValidGame())
+		switch (g_bSecondGame)
 		{
 			case true: EmitSoundToAll(SOUND_BOMB2, tank);
 			case false: EmitSoundToAll(SOUND_BOMB1, tank);

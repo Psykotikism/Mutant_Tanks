@@ -25,15 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad;
+bool g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Kamikaze Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Kamikaze Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	g_bLateLoad = late;
@@ -148,7 +153,7 @@ public void OnMapStart()
 {
 	iPrecacheParticle(PARTICLE_BLOOD);
 
-	if (bIsValidGame())
+	if (g_bSecondGame)
 	{
 		PrecacheSound(SOUND_GROWL2, true);
 		PrecacheSound(SOUND_SMASH2, true);
@@ -585,7 +590,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveKamikaze(iPlayer);
 		}
-		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsValidGame())
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_bSecondGame)
 		{
 			int iBody = -1;
 			while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
@@ -697,7 +702,7 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "KamikazeHuman");
 			}
 
-			EmitSoundToAll((bIsValidGame()) ? SOUND_SMASH2 : SOUND_SMASH1, survivor);
+			EmitSoundToAll((g_bSecondGame) ? SOUND_SMASH2 : SOUND_SMASH1, survivor);
 			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
 			ForcePlayerSuicide(survivor);
 			vEffect(survivor, tank, g_esCache[tank].g_iKamikazeEffect, flags);
@@ -707,7 +712,7 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 				RequestFrame(vRemoveBody, GetClientUserId(survivor));
 			}
 
-			EmitSoundToAll((bIsValidGame()) ? SOUND_GROWL2 : SOUND_GROWL1, survivor);
+			EmitSoundToAll((g_bSecondGame) ? SOUND_GROWL2 : SOUND_GROWL1, survivor);
 			vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
 			ForcePlayerSuicide(tank);
 

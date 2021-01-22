@@ -25,15 +25,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad;
+bool g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Smash Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Smash Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	g_bLateLoad = late;
@@ -157,7 +162,7 @@ public void OnMapStart()
 {
 	iPrecacheParticle(PARTICLE_BLOOD);
 
-	if (bIsValidGame())
+	if (g_bSecondGame)
 	{
 		PrecacheSound(SOUND_GROWL2, true);
 		PrecacheSound(SOUND_SMASH2, true);
@@ -613,7 +618,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		{
 			vRemoveSmash(iPlayer);
 		}
-		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsValidGame())
+		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_bSecondGame)
 		{
 			int iBody = -1;
 			while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
@@ -710,7 +715,7 @@ static void vSmash(int survivor, int tank)
 		return;
 	}
 
-	if (bIsValidGame())
+	if (g_bSecondGame)
 	{
 		EmitSoundToAll(SOUND_SMASH2, survivor);
 		EmitSoundToAll(SOUND_GROWL2, tank);

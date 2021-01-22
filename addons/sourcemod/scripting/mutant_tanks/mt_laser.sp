@@ -24,13 +24,20 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
+bool g_bSecondGame;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (!bIsValidGame(false) && !bIsValidGame())
+	switch (GetEngineVersion())
 	{
-		strcopy(error, err_max, "\"[MT] Laser Ability\" only supports Left 4 Dead 1 & 2.");
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Laser Ability\" only supports Left 4 Dead 1 & 2.");
 
-		return APLRes_SilentFailure;
+			return APLRes_SilentFailure;
+		}
 	}
 
 	return APLRes_Success;
@@ -133,7 +140,7 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	switch (bIsValidGame())
+	switch (g_bSecondGame)
 	{
 		case true: g_iLaserSprite = PrecacheModel("materials/sprites/laserbeam.vmt", true);
 		case false: g_iLaserSprite = PrecacheModel("materials/sprites/laser.vmt", true);
