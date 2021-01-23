@@ -2366,7 +2366,7 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
-				vConfigMenu(param1, g_esPlayer[param1].g_bAdminMenu);
+				vConfigMenu(param1);
 			}
 		}
 		case MenuAction_Display:
@@ -5530,6 +5530,14 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				CreateTimer(10.0, tTimerKillStuckTank, iPlayerId, TIMER_FLAG_NO_MAPCHANGE);
 
 				vCombineAbilitiesForward(iPlayer, MT_COMBO_UPONINCAP);
+			}
+		}
+		else if (StrEqual(name, "player_jump"))
+		{
+			int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
+			if (bIsHumanSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 6))
+			{
+				SetEntPropFloat(iSurvivor, Prop_Data, "m_flGravity", 0.75);
 			}
 		}
 		else if (StrEqual(name, "player_now_it"))
