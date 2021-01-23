@@ -334,7 +334,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbExplosiveDivisor;
 			}
-			else if (g_esCache[victim].g_flAbsorbFireDivisor > 1.0 && ((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN)))
+			else if (g_esCache[victim].g_flAbsorbFireDivisor > 1.0 && (damagetype & DMG_BURN))
 			{
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbFireDivisor;

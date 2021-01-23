@@ -3787,7 +3787,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				static bool bBlockBullets, bBlockExplosives, bBlockFire, bBlockHittables, bBlockMelee;
 				bBlockBullets = (damagetype & DMG_BULLET) && g_esCache[victim].g_iBulletImmunity == 1;
 				bBlockExplosives = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && g_esCache[victim].g_iExplosiveImmunity == 1;
-				bBlockFire = ((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN)) && g_esCache[victim].g_iFireImmunity == 1;
+				bBlockFire = (damagetype & DMG_BURN) && g_esCache[victim].g_iFireImmunity == 1;
 				bBlockHittables = (damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[victim].g_iHittableImmunity == 1;
 				bBlockMelee = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1;
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
@@ -3809,7 +3809,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					return Plugin_Handled;
 				}
 
-				if (bIsSurvivor(attacker) && ((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN)) && g_esGeneral.g_iCreditIgniters == 0)
+				if (bIsSurvivor(attacker) && (damagetype & DMG_BURN) && g_esGeneral.g_iCreditIgniters == 0)
 				{
 					if (bIsSurvivor(attacker) && (bIsDeveloper(attacker, 4) || g_esPlayer[attacker].g_bRewardedDamage))
 					{
@@ -3836,9 +3836,9 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					return Plugin_Continue;
 				}
 
-				if (StrEqual(sClassname, "tank_rock") || ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA) || (damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN)))
+				if (StrEqual(sClassname, "tank_rock") || ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA) || (damagetype & DMG_BURN)))
 				{
-					if ((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN))
+					if (damagetype & DMG_BURN)
 					{
 						ExtinguishEntity(victim);
 					}
@@ -3866,7 +3866,7 @@ public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float 
 			attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity");
 			if (attacker == -1 || (0 < attacker <= MaxClients && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID)))
 			{
-				if ((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN))
+				if (damagetype & DMG_BURN)
 				{
 					ExtinguishEntity(victim);
 				}
@@ -3878,7 +3878,7 @@ public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float 
 		{
 			if (g_esGeneral.g_iTeamID[inflictor] == 3 && (!IsClientInGame(attacker) || GetClientUserId(attacker) != g_esPlayer[attacker].g_iUserID || GetClientTeam(attacker) != 3))
 			{
-				if ((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN))
+				if (damagetype & DMG_BURN)
 				{
 					ExtinguishEntity(victim);
 				}

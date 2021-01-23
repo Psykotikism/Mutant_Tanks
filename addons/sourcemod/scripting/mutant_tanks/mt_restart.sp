@@ -177,7 +177,6 @@ public void OnPluginStart()
 	}
 
 	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-
 	g_esGeneral.g_hSDKGetLastKnownArea = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKGetLastKnownArea == null)
 	{
