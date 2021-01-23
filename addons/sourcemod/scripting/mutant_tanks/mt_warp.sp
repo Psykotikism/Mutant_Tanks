@@ -186,6 +186,8 @@ public void OnPluginStart()
 		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::GetLastKnownArea\" offsets are outdated.", MT_TAG);
 	}
 
+	delete gdMutantTanks;
+
 	if (g_bLateLoad)
 	{
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
