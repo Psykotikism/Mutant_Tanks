@@ -1,18 +1,18 @@
 # Changelog
 
-## Version 8.82 (February 1, 2021)
+## Version 8.82 (January 25, 2021)
 
 ### Bug Fixes
+
+#### General
+- Fixed melee damage being counted as burn damage in certain cases.
+- Fixed friendly-fire burn damage not being blocked. (Thanks to 3aljiyavslgazana for reporting!)
 
 #### Core Plugin
 - Fixed the `sm_mt_mutanttank` command being available to non-Tank players.
 
 #### Config Files
 - Fixed grouped sections and the `all` section not being read properly.
-
-#### Abilities
-- Fire
-	- Fixed other Tanks being ignited. (Thanks to 3aljiyavslgazana for reporting!)
 
 ### Changes
 
@@ -37,10 +37,14 @@
 - Throw
 	- Added the `Throw Car Owner` setting. (Requested by 3aljiyavslgazana.)
 
+- Warp
+	- Tanks can no longer teleport to survivors who are inside saferooms or spawn areas. (Requested by 3aljiyavslgazana.)
+
 ### Files
 
 #### Updates
 - Updated config files.
+- Updated gamedata file.
 - Updated include file.
 - Updated translation file.
 
