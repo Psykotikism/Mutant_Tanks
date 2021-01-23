@@ -268,7 +268,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					damage /= 20.0;
 				}
-				else if ((damagetype & DMG_BURN) || (damagetype & DMG_SLOWBURN))
+				else if (damagetype & DMG_BURN)
 				{
 					damage /= 200.0;
 				}

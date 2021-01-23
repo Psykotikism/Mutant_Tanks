@@ -55,6 +55,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_WARP "Warp Ability"
 
+enum struct esGeneral
+{
+	Handle g_hSDKGetLastKnownArea;
+
+	int g_iAttributeFlagsOffset;
+}
+
+esGeneral g_esGeneral;
+
 enum struct esPlayer
 {
 	bool g_bActivated;
@@ -149,6 +158,33 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_warp", cmdWarpInfo, "View information about the Warp ability.");
+
+	GameData gdMutantTanks = new GameData("mutant_tanks");
+	if (gdMutantTanks == null)
+	{
+		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+
+		return;
+	}
+
+	g_esGeneral.g_iAttributeFlagsOffset = gdMutantTanks.GetOffset("WitchLocomotion::IsAreaTraversable::m_attributeFlags");
+	if (g_esGeneral.g_iAttributeFlagsOffset == -1)
+	{
+		MT_LogMessage(MT_LOG_SERVER, "%s Failed to load offset: WitchLocomotion::IsAreaTraversable::m_attributeFlags", MT_TAG);
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::GetLastKnownArea"))
+	{
+		SetFailState("Failed to load offset: CTerrorPlayer::GetLastKnownArea");
+	}
+
+	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+	g_esGeneral.g_hSDKGetLastKnownArea = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKGetLastKnownArea == null)
+	{
+		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::GetLastKnownArea\" offsets are outdated.", MT_TAG);
+	}
 
 	if (g_bLateLoad)
 	{
@@ -1049,6 +1085,24 @@ static void vWarpRange(int tank)
 	}
 }
 
+static bool bIsInsideSaferoom(int survivor)
+{
+	if (g_esGeneral.g_hSDKGetLastKnownArea != null)
+	{
+		int iArea = SDKCall(g_esGeneral.g_hSDKGetLastKnownArea, survivor);
+		if (iArea)
+		{
+			int iAttributeFlags = LoadFromAddress(view_as<Address>(iArea + g_esGeneral.g_iAttributeFlagsOffset), NumberType_Int32);
+			if ((iAttributeFlags & 2048))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 public Action tTimerCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -1143,7 +1197,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 		{
 			static int iSurvivor;
 			iSurvivor = iGetRandomSurvivor(iTank);
-			if (bIsSurvivor(iSurvivor))
+			if (bIsSurvivor(iSurvivor) && !bIsInsideSaferoom(iSurvivor))
 			{
 				vWarp2(iTank, iSurvivor);
 			}
