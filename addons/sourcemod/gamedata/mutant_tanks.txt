@@ -91,6 +91,11 @@
 	{
 		"Offsets"
 		{
+			"Action<Tank>::FirstContainedResponder"
+			{
+				"windows"	"1"
+				"linux"		"2"
+			}
 			"CTerrorPlayer::Deafen"
 			{
 				"windows"	"491"
@@ -121,10 +126,10 @@
 				"windows"	"35"
 				"linux"		"36"
 			}
-			"Action<Tank>::FirstContainedResponder"
+			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
-				"windows"	"1"
-				"linux"		"2"
+				"windows"	"300"
+				"linux"		"304"
 			}
 			"m_flow"
 			{
@@ -212,6 +217,11 @@
 	{
 		"Offsets"
 		{
+			"Action<Tank>::FirstContainedResponder"
+			{
+				"windows"	"1"
+				"linux"		"2"
+			}
 			"CBaseEntity::IsInStasis"
 			{
 				"windows"	"39"
@@ -247,10 +257,10 @@
 				"windows"	"40"
 				"linux"		"41"
 			}
-			"Action<Tank>::FirstContainedResponder"
+			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
-				"windows"	"1"
-				"linux"		"2"
+				"windows"	"296"
+				"linux"		"300"
 			}
 			"m_flow"
 			{
