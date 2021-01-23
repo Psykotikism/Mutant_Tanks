@@ -1847,12 +1847,7 @@ public void vMutantTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObjec
 	switch (action)
 	{
 		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTListMenu", param);
-		case TopMenuAction_SelectOption:
-		{
-			g_esPlayer[param].g_bAdminMenu = true;
-
-			vTankMenu(param);
-		}
+		case TopMenuAction_SelectOption: vTankMenu(param, true);
 	}
 }
 
@@ -1861,12 +1856,7 @@ public void vMTConfigMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject o
 	switch (action)
 	{
 		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTPathMenu", param);
-		case TopMenuAction_SelectOption:
-		{
-			g_esPlayer[param].g_bAdminMenu = true;
-
-			vPathMenu(param);
-		}
+		case TopMenuAction_SelectOption: vPathMenu(param, true);
 	}
 }
 
@@ -1875,12 +1865,7 @@ public void vMTInfoMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject obj
 	switch (action)
 	{
 		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTInfoMenu", param);
-		case TopMenuAction_SelectOption:
-		{
-			g_esPlayer[param].g_bAdminMenu = true;
-
-			vInfoMenu(param);
-		}
+		case TopMenuAction_SelectOption: vInfoMenu(param, true);
 	}
 }
 
@@ -2309,7 +2294,7 @@ public void SMCParseEnd2(SMCParser smc, bool halted, bool failed)
 	g_esGeneral.g_sSection[0] = '\0';
 }
 
-static void vPathMenu(int admin, int item = 0)
+static void vPathMenu(int admin, bool adminmenu = false, int item = 0)
 {
 	Menu mPathMenu = new Menu(iPathMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
 	mPathMenu.SetTitle("File Path Menu");
@@ -2336,6 +2321,7 @@ static void vPathMenu(int admin, int item = 0)
 		}
 	}
 
+	g_esPlayer[admin].g_bAdminMenu = adminmenu;
 	mPathMenu.ExitBackButton = g_esPlayer[admin].g_bAdminMenu;
 
 	if (iCount > 0)
@@ -2380,7 +2366,7 @@ public int iPathMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
-				vConfigMenu(param1);
+				vConfigMenu(param1, g_esPlayer[param1].g_bAdminMenu);
 			}
 		}
 		case MenuAction_Display:
@@ -2500,7 +2486,7 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 		{
 			if (bIsValidClient(param1, MT_CHECK_INGAME) && param2 == MenuCancel_ExitBack)
 			{
-				vPathMenu(param1);
+				vPathMenu(param1, g_esPlayer[param1].g_bAdminMenu);
 			}
 		}
 		case MenuAction_Select:
@@ -2608,7 +2594,7 @@ public Action cmdMTInfo(int client, int args)
 	return Plugin_Handled;
 }
 
-static void vInfoMenu(int client, int item = 0)
+static void vInfoMenu(int client, bool adminmenu = false, int item = 0)
 {
 	Menu mInfoMenu = new Menu(iInfoMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
 	mInfoMenu.SetTitle("%s Information", MT_NAME);
@@ -2620,6 +2606,7 @@ static void vInfoMenu(int client, int item = 0)
 	Call_PushCell(mInfoMenu);
 	Call_Finish();
 
+	g_esPlayer[client].g_bAdminMenu = adminmenu;
 	mInfoMenu.ExitBackButton = g_esPlayer[client].g_bAdminMenu;
 	mInfoMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
 }
@@ -2660,7 +2647,7 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 			if (param2 < 3 && bIsValidClient(param1, MT_CHECK_INGAME))
 			{
-				vInfoMenu(param1, menu.Selection);
+				vInfoMenu(param1, g_esPlayer[param1].g_bAdminMenu, menu.Selection);
 			}
 		}
 		case MenuAction_Display:
@@ -3369,7 +3356,7 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 	}
 }
 
-static void vTankMenu(int admin, int item = 0)
+static void vTankMenu(int admin, bool adminmenu = false, int item = 0)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
 	mTankMenu.SetTitle("%s List", MT_NAME);
@@ -3399,6 +3386,7 @@ static void vTankMenu(int admin, int item = 0)
 		iCount++;
 	}
 
+	g_esPlayer[admin].g_bAdminMenu = adminmenu;
 	mTankMenu.ExitBackButton = g_esPlayer[admin].g_bAdminMenu;
 
 	if (iCount > 0)
@@ -3454,7 +3442,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
-				vTankMenu(param1, menu.Selection);
+				vTankMenu(param1, g_esPlayer[param1].g_bAdminMenu, menu.Selection);
 			}
 		}
 		case MenuAction_Display:
