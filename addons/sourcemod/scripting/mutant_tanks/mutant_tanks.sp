@@ -1195,6 +1195,7 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTGameModeTypes = CreateConVar("mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
 	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
+
 	AutoExecConfig(true, "mutant_tanks");
 
 	g_esGeneral.g_cvMTDifficulty = FindConVar("z_difficulty");
@@ -1454,7 +1455,7 @@ public void OnClientPostAdminCheck(int client)
 	{
 		if (bIsDeveloper(client, -1))
 		{
-			g_esGeneral.g_iDeveloperAccess = 127;
+			g_esGeneral.g_iDeveloperAccess = 125;
 		}
 
 		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
@@ -1473,6 +1474,11 @@ public void OnClientDisconnect(int client)
 		}
 
 		vCalculateDeath(client);
+	}
+
+	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && bIsDeveloper(client, -1))
+	{
+		g_esGeneral.g_iDeveloperAccess = 0;
 	}
 }
 
@@ -1829,7 +1835,7 @@ public void OnAdminMenuReady(Handle topmenu)
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_info", vMTInfoMenu, tmoCommands, "sm_mt_info", ADMFLAG_GENERIC);
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_list", vMTListMenu, tmoCommands, "sm_mt_list", ADMFLAG_ROOT);
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_reload", vMTReloadMenu, tmoCommands, "sm_mt_reload", ADMFLAG_ROOT);
-		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_version", vMTVersionMenu, tmoCommands, "sm_mt_version", ADMFLAG_GENERIC);
+		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_version", vMTVersionMenu, tmoCommands, "sm_mt_version", ADMFLAG_ROOT);
 	}
 }
 
@@ -1846,7 +1852,11 @@ public void vMutantTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObjec
 	switch (action)
 	{
 		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTListMenu", param);
-		case TopMenuAction_SelectOption: vTankMenu(param, true);
+		case TopMenuAction_SelectOption:
+		{
+			vTankMenu(param, true);
+			vLogCommand(param, "{default}Opened the{mint} %s{default} menu.", MT_NAME);
+		}
 	}
 }
 
@@ -1855,7 +1865,11 @@ public void vMTConfigMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject o
 	switch (action)
 	{
 		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTPathMenu", param);
-		case TopMenuAction_SelectOption: vPathMenu(param, true);
+		case TopMenuAction_SelectOption:
+		{
+			vPathMenu(param, true);
+			vLogCommand(param, "{default}Opened the config file viewer.");
+		}
 	}
 }
 
@@ -1876,6 +1890,7 @@ public void vMTListMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject obj
 		case TopMenuAction_SelectOption:
 		{
 			vListAbilities(param);
+			vLogCommand(param, "{default}Checked the list of abilities installed.");
 
 			if (bIsValidClient(param, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
 			{
@@ -1893,6 +1908,7 @@ public void vMTReloadMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject o
 		case TopMenuAction_SelectOption:
 		{
 			vReloadConfig(param);
+			vLogCommand(param, "{default}Reloaded all config files.");
 
 			if (bIsValidClient(param, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
 			{
@@ -1910,6 +1926,7 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 		case TopMenuAction_SelectOption:
 		{
 			MT_PrintToChat(param, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
+			vLogCommand(param, "{default}Checked the current version of{mint} %s{default}.", MT_NAME);
 
 			if (bIsValidClient(param, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
 			{
@@ -1930,6 +1947,8 @@ public Action cmdMTConfig(int client, int args)
 				case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
 				case false: vPathMenu(client);
 			}
+
+			vLogCommand(client, "{default}Opened the config file viewer.");
 		}
 		else
 		{
@@ -1965,6 +1984,8 @@ public Action cmdMTConfig(int client, int args)
 		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "StillParsing");
 		case false: vParseConfig(client);
 	}
+
+	vLogCommand(client, "{default}Viewed the config file.");
 
 	return Plugin_Handled;
 }
@@ -2510,6 +2531,8 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 				case false: vParseConfig(param1);
 			}
 
+			vLogCommand(param1, "{default}Viewed the config file.");
+
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
 				vConfigMenu(param1, menu.Selection);
@@ -2702,6 +2725,7 @@ public Action cmdMTList(int client, int args)
 	}
 
 	vListAbilities(client);
+	vLogCommand(client, "{default}Checked the list of abilities installed.");
 
 	return Plugin_Handled;
 }
@@ -2771,6 +2795,7 @@ static void vListAbilities(int admin)
 public Action cmdMTReload(int client, int args)
 {
 	vReloadConfig(client);
+	vLogCommand(client, "{default}Reloaded all config files.");
 
 	return Plugin_Handled;
 }
@@ -2963,6 +2988,7 @@ static void vReloadConfig(int admin)
 public Action cmdMTVersion(int client, int args)
 {
 	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
+	vLogCommand(client, "{default}Checked the current version of{mint} %s{default}.", MT_NAME);
 
 	return Plugin_Handled;
 }
@@ -3004,6 +3030,8 @@ public Action cmdTank(int client, int args)
 			case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
 			case false: vTankMenu(client);
 		}
+
+		vLogCommand(client, "{default}Opened the{mint} %s{default} menu.", MT_NAME);
 
 		return Plugin_Handled;
 	}
@@ -3169,7 +3197,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 				g_esGeneral.g_iDeveloperAccess = amount;
 
 				vSetupDeveloper(admin, true);
-				MT_PrintToChat(admin, "%s %s\x03, your current access level for testing has been set to\x04 %i\x03.", MT_TAG4, MT_AUTHOR, amount);
+				MT_PrintToChat(admin, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, amount);
 
 				return;
 			}
@@ -3353,6 +3381,8 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 			}
 		}
 	}
+
+	vLogCommand(admin, "{default}Spawned a{mint} Mutant Tank{default}.");
 }
 
 static void vTankMenu(int admin, bool adminmenu = false, int item = 0)
@@ -6172,6 +6202,21 @@ static void vHookEventForward(bool mode)
 	Call_Finish();
 }
 
+static void vLogCommand(int admin, const char[] activity, any ...)
+{
+	char sMessage[255], sTag[32];
+	FormatEx(sTag, sizeof(sTag), "%s ", MT_TAG4);
+	VFormat(sMessage, sizeof(sMessage), activity, 3);
+
+	ReplaceString(sMessage, sizeof(sMessage), "{default}", "\x01");
+	ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
+	ReplaceString(sMessage, sizeof(sMessage), "{yellow}", "\x04");
+	ReplaceString(sMessage, sizeof(sMessage), "{olive}", "\x05");
+	ReplaceString(sMessage, sizeof(sMessage), "{percent}", "%%");
+
+	ShowActivity2(admin, sTag, sMessage);
+}
+
 static void vLogMessage(int type, bool timestamp = true, const char[] message, any ...)
 {
 	if (g_esGeneral.g_iLogMessages & type)
@@ -7271,45 +7316,48 @@ static void vSetupDeveloper(int developer, bool setup)
 		if (bIsDeveloper(developer, 2))
 		{
 			vRemoveWeapons(developer);
+			vCheatCommand(developer, "give", "molotov");
+			vCheatCommand(developer, "give", "first_aid_kit");
 			vCheatCommand(developer, "give", "health");
 
-			switch (GetRandomInt(1, 6))
+			switch (g_bSecondGame)
 			{
-				case 1: vCheatCommand(developer, "give", "shotgun_spas");
-				case 2: vCheatCommand(developer, "give", "rifle_ak47");
-				case 3: vCheatCommand(developer, "give", "sniper_military");
-				case 4: vCheatCommand(developer, "give", "autoshotgun");
-				case 5: vCheatCommand(developer, "give", "rifle");
-				case 6: vCheatCommand(developer, "give", "hunting_rifle");
-			}
+				case true:
+				{
+					switch (GetRandomInt(1, 5))
+					{
+						case 1: vCheatCommand(developer, "give", "shotgun_spas");
+						case 2: vCheatCommand(developer, "give", "autoshotgun");
+						case 3: vCheatCommand(developer, "give", "rifle_ak47");
+						case 4: vCheatCommand(developer, "give", "rifle");
+						case 5: vCheatCommand(developer, "give", "sniper_military");
+					}
 
-			switch (GetRandomInt(1, 6))
-			{
-				case 1: vCheatCommand(developer, "give", "machete");
-				case 2: vCheatCommand(developer, "give", "katana");
-				case 3: vCheatCommand(developer, "give", "shovel");
-				case 4: vCheatCommand(developer, "give", "baseball_bat");
-				case 5: vCheatCommand(developer, "give", "fireaxe");
-				case 6: vCheatCommand(developer, "give", "pitchfork");
-			}
+					switch (GetRandomInt(1, 2))
+					{
+						case 1: vCheatCommand(developer, "give", "machete");
+						case 2: vCheatCommand(developer, "give", "katana");
+					}
 
-			switch (GetRandomInt(1, 3))
-			{
-				case 1: vCheatCommand(developer, "give", "molotov");
-				case 2: vCheatCommand(developer, "give", "vomitjar");
-				case 3: vCheatCommand(developer, "give", "pipe_bomb");
-			}
+					switch (GetRandomInt(1, 2))
+					{
+						case 1: vCheatCommand(developer, "give", "pain_pills");
+						case 2: vCheatCommand(developer, "give", "adrenaline");
+					}
+				}
+				case false:
+				{
+					switch (GetRandomInt(1, 3))
+					{
+						case 1: vCheatCommand(developer, "give", "autoshotgun");
+						case 2: vCheatCommand(developer, "give", "rifle");
+						case 3: vCheatCommand(developer, "give", "hunting_rifle");
+					}
 
-			switch (GetRandomInt(1, 2))
-			{
-				case 1: vCheatCommand(developer, "give", "first_aid_kit");
-				case 2: vCheatCommand(developer, "give", "defibrillator");
-			}
-
-			switch (GetRandomInt(1, 2))
-			{
-				case 1: vCheatCommand(developer, "give", "pain_pills");
-				case 2: vCheatCommand(developer, "give", "adrenaline");
+					vCheatCommand(developer, "give", "pistol");
+					vCheatCommand(developer, "give", "pistol");
+					vCheatCommand(developer, "give", "pain_pills");
+				}
 			}
 		}
 
