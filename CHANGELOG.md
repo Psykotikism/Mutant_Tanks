@@ -7,7 +7,7 @@
 #### General
 - Fixed melee damage being counted as burn damage in certain cases.
 - Fixed friendly-fire burn damage not being blocked. (Thanks to 3aljiyavslgazana for reporting!)
-- Fixed unauthorized admin menu usages.
+- Fixed some menus allowing unauthorized access to the admin menu.
 
 #### Core Plugin
 - Fixed the `sm_mt_mutanttank` command being available to non-Tank players.
