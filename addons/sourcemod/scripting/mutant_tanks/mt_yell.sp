@@ -140,13 +140,15 @@ public void OnPluginStart()
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 
-		return;
+		delete gdMutantTanks;
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::Deafen"))
 	{
 		SetFailState("Failed to load offset: CTerrorPlayer::Deafen");
+
+		delete gdMutantTanks;
 	}
 
 	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
@@ -156,7 +158,7 @@ public void OnPluginStart()
 	g_hSDKDeafenPlayer = EndPrepSDKCall();
 	if (g_hSDKDeafenPlayer == null)
 	{
-		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::Deafen\" offsets are outdated.", MT_TAG);
+		LogError("%s Your \"CTerrorPlayer::Deafen\" offsets are outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;

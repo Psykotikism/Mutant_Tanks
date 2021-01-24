@@ -1241,7 +1241,12 @@ public void OnPluginStart()
 
 	switch (gdMutantTanks == null)
 	{
-		case true: LogError("Unable to load the \"mutant_tanks\" gamedata file.");
+		case true:
+		{
+			SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+
+			delete gdMutantTanks;
+		}
 		case false:
 		{
 			if (g_bSecondGame)
@@ -1249,64 +1254,64 @@ public void OnPluginStart()
 				StartPrepSDKCall(SDKCall_Player);
 				if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseEntity::IsInStasis"))
 				{
-					vLogMessage(MT_LOG_SERVER, _, "%s Failed to load offset: CBaseEntity::IsInStasis", MT_TAG);
+					LogError("%s Failed to load offset: CBaseEntity::IsInStasis", MT_TAG);
 				}
 
 				PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 				g_esGeneral.g_hSDKIsInStasis = EndPrepSDKCall();
 				if (g_esGeneral.g_hSDKIsInStasis == null)
 				{
-					vLogMessage(MT_LOG_SERVER, _, "%s Your \"CBaseEntity::IsInStasis\" offsets are outdated.", MT_TAG);
+					LogError("%s Your \"CBaseEntity::IsInStasis\" offsets are outdated.", MT_TAG);
 				}
 
 				g_esGeneral.g_iMeleeOffset = gdMutantTanks.GetOffset("HiddenMelee");
 				if (g_esGeneral.g_iMeleeOffset == -1)
 				{
-					vLogMessage(MT_LOG_SERVER, _, "%s Failed to load offset: HiddenMelee", MT_TAG);
+					LogError("%s Failed to load offset: HiddenMelee", MT_TAG);
 				}
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "Tank::LeaveStasis"))
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
+				LogError("%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
 			}
 
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_esGeneral.g_hSDKLeaveStasis = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKLeaveStasis == null)
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Your \"Tank::LeaveStasis\" signature is outdated.", MT_TAG);
+				LogError("%s Your \"Tank::LeaveStasis\" signature is outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Entity);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTankRock::Detonate"))
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: CTankRock::Detonate", MT_TAG);
+				LogError("%s Failed to find signature: CTankRock::Detonate", MT_TAG);
 			}
 
 			g_esGeneral.g_hSDKDetonateRock = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKDetonateRock == null)
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Your \"CTankRock::Detonate\" signature is outdated.", MT_TAG);
+				LogError("%s Your \"CTankRock::Detonate\" signature is outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::RoundRespawn"))
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: CTerrorPlayer::RoundRespawn", MT_TAG);
+				LogError("%s Failed to find signature: CTerrorPlayer::RoundRespawn", MT_TAG);
 			}
 
 			g_esGeneral.g_hSDKRespawnPlayer = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKRespawnPlayer == null)
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
+				LogError("%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
 			}
 
 			g_esGeneral.g_iIntentionOffset = gdMutantTanks.GetOffset("Tank::GetIntentionInterface");
 			if (g_esGeneral.g_iIntentionOffset == -1)
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Failed to load offset: Tank::GetIntentionInterface", MT_TAG);
+				LogError("%s Failed to load offset: Tank::GetIntentionInterface", MT_TAG);
 			}
 
 			int iOffset = gdMutantTanks.GetOffset("Action<Tank>::FirstContainedResponder");
@@ -1316,7 +1321,7 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKFirstContainedResponder = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKFirstContainedResponder == null)
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Your \"Action<Tank>::FirstContainedResponder\" offsets are outdated.", MT_TAG);
+				LogError("%s Your \"Action<Tank>::FirstContainedResponder\" offsets are outdated.", MT_TAG);
 			}
 
 			iOffset = gdMutantTanks.GetOffset("TankIdle::GetName");
@@ -1326,37 +1331,37 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKGetName = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKGetName == null)
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
+				LogError("%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
 			}
 
 			g_esGeneral.g_ddLauncherDirectionDetour = DynamicDetour.FromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
 			if (g_esGeneral.g_ddLauncherDirectionDetour == null)
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
+				LogError("%s Failed to find signature: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
 			}
 
 			g_esGeneral.g_ddTankRockDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankRock::Create");
 			if (g_esGeneral.g_ddTankRockDetour == null)
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: CTankRock::Create", MT_TAG);
+				LogError("%s Failed to find signature: CTankRock::Create", MT_TAG);
 			}
 
 			g_esGeneral.g_ddEnterStasis = DynamicDetour.FromConf(gdMutantTanks, "Tank::EnterStasis");
 			if (g_esGeneral.g_ddEnterStasis == null)
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: Tank::EnterStasis", MT_TAG);
+				LogError("%s Failed to find signature: Tank::EnterStasis", MT_TAG);
 			}
 
 			g_esGeneral.g_ddLeaveStasis = DynamicDetour.FromConf(gdMutantTanks, "Tank::LeaveStasis");
 			if (g_esGeneral.g_ddLeaveStasis == null)
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
+				LogError("%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
 			}
 
 			g_esGeneral.g_ddEventKilled = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::Event_Killed");
 			if (g_esGeneral.g_ddEventKilled == null)
 			{
-				vLogMessage(MT_LOG_SERVER, _, "%s Failed to find signature: CTerrorPlayer::Event_Killed", MT_TAG);
+				LogError("%s Failed to find signature: CTerrorPlayer::Event_Killed", MT_TAG);
 			}
 
 			delete gdMutantTanks;
@@ -2067,14 +2072,14 @@ static void vParseConfig(int client)
 		{
 			char sSmcError[64];
 			smcParser.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
-			vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
+			LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
 		}
 
 		delete smcParser;
 	}
 	else
 	{
-		vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
+		LogError("%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
 	}
 }
 
@@ -2427,7 +2432,7 @@ static void vConfigMenu(int admin, int item = 0)
 			{
 				char sSmcError[64];
 				smcConfig.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
-				vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
+				LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, g_esGeneral.g_sChosenPath, sSmcError);
 
 				delete smcConfig;
 				delete mConfigMenu;
@@ -2439,7 +2444,7 @@ static void vConfigMenu(int admin, int item = 0)
 		}
 		else
 		{
-			vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
+			LogError("%s %T", MT_TAG, "FailedParsing", LANG_SERVER, g_esGeneral.g_sChosenPath);
 
 			delete mConfigMenu;
 
@@ -4296,14 +4301,14 @@ static void vLoadConfigs(const char[] savepath, int mode)
 		{
 			char sSmcError[64];
 			smcLoader.GetErrorString(smcError, sSmcError, sizeof(sSmcError));
-			vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, savepath, sSmcError);
+			LogError("%s %T", MT_TAG, "ErrorParsing", LANG_SERVER, savepath, sSmcError);
 		}
 
 		delete smcLoader;
 	}
 	else
 	{
-		vLogMessage(MT_LOG_SERVER, _, "%s %T", MT_TAG, "FailedParsing", LANG_SERVER, savepath);
+		LogError("%s %T", MT_TAG, "FailedParsing", LANG_SERVER, savepath);
 	}
 }
 

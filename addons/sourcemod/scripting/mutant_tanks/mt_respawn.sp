@@ -121,13 +121,15 @@ public void OnPluginStart()
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 
-		return;
+		delete gdMutantTanks;
 	}
 
 	g_ddEventKilled = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::Event_Killed");
 	if (g_ddEventKilled == null)
 	{
 		SetFailState("Failed to find signature: CTerrorPlayer::Event_Killed");
+
+		delete gdMutantTanks;
 	}
 
 	delete gdMutantTanks;

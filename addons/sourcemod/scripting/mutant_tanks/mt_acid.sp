@@ -166,7 +166,7 @@ public void OnPluginStart()
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 
-		return;
+		delete gdMutantTanks;
 	}
 
 	switch (g_bSecondGame)
@@ -177,6 +177,8 @@ public void OnPluginStart()
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CSpitterProjectile::Create"))
 			{
 				SetFailState("Failed to find signature: CSpitterProjectile::Create");
+
+				delete gdMutantTanks;
 			}
 
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
@@ -190,7 +192,7 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKAcidPlayer = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKAcidPlayer == null)
 			{
-				MT_LogMessage(MT_LOG_SERVER, "%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
+				LogError("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
 			}
 		}
 		case false:
@@ -199,6 +201,8 @@ public void OnPluginStart()
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon"))
 			{
 				SetFailState("Failed to find signature: CTerrorPlayer::OnVomitedUpon");
+
+				delete gdMutantTanks;
 			}
 
 			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
@@ -207,7 +211,7 @@ public void OnPluginStart()
 			g_esGeneral.g_hSDKPukePlayer = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKPukePlayer == null)
 			{
-				MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
+				LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
 			}
 		}
 	}
