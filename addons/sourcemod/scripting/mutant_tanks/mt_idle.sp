@@ -154,59 +154,67 @@ public void OnPluginStart()
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 
-		return;
+		delete gdMutantTanks;
 	}
 
 	g_esGeneral.g_ddIdlePlayerDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::GoAwayFromKeyboard");
 	if (g_esGeneral.g_ddIdlePlayerDetour == null)
 	{
 		SetFailState("Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard");
+
+		delete gdMutantTanks;
 	}
 
 	g_esGeneral.g_ddSpecPlayerDetour = DynamicDetour.FromConf(gdMutantTanks, "SurvivorBot::SetHumanSpectator");
 	if (g_esGeneral.g_ddSpecPlayerDetour == null)
 	{
 		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
+
+		delete gdMutantTanks;
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::GoAwayFromKeyboard"))
 	{
 		SetFailState("Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard");
+
+		delete gdMutantTanks;
 	}
 
 	g_esGeneral.g_hSDKIdlePlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKIdlePlayer == null)
 	{
-		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", MT_TAG);
+		LogError("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", MT_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "SurvivorBot::SetHumanSpectator"))
 	{
 		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
+
+		delete gdMutantTanks;
 	}
 
 	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-
 	g_esGeneral.g_hSDKSpecPlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKSpecPlayer == null)
 	{
-		MT_LogMessage(MT_LOG_SERVER, "%s Your \"SurvivorBot::SetHumanSpectator\" signature is outdated.", MT_TAG);
+		LogError("%s Your \"SurvivorBot::SetHumanSpectator\" signature is outdated.", MT_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::SetObserverTarget"))
 	{
 		SetFailState("Failed to load offset: CTerrorPlayer::SetObserverTarget");
+
+		delete gdMutantTanks;
 	}
 
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-
 	g_esGeneral.g_hSDKObservePlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKObservePlayer == null)
 	{
-		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::SetObserverTarget\" offsets are outdated.", MT_TAG);
+		LogError("%s Your \"CTerrorPlayer::SetObserverTarget\" offsets are outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;

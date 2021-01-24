@@ -161,38 +161,42 @@ public void OnPluginStart()
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 
-		return;
+		delete gdMutantTanks;
 	}
 
 	g_esGeneral.g_iFlowOffset = gdMutantTanks.GetOffset("m_flow");
 	if (g_esGeneral.g_iFlowOffset == -1)
 	{
-		MT_LogMessage(MT_LOG_SERVER, "%s Failed to load offset: m_flow", MT_TAG);
+		LogError("%s Failed to load offset: m_flow", MT_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::GetLastKnownArea"))
 	{
 		SetFailState("Failed to load offset: CTerrorPlayer::GetLastKnownArea");
+
+		delete gdMutantTanks;
 	}
 
 	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 	g_esGeneral.g_hSDKGetLastKnownArea = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKGetLastKnownArea == null)
 	{
-		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::GetLastKnownArea\" offsets are outdated.", MT_TAG);
+		LogError("%s Your \"CTerrorPlayer::GetLastKnownArea\" offsets are outdated.", MT_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::RoundRespawn"))
 	{
 		SetFailState("Failed to find signature: CTerrorPlayer::RoundRespawn");
+
+		delete gdMutantTanks;
 	}
 
 	g_esGeneral.g_hSDKRespawnPlayer = EndPrepSDKCall();
 	if (g_esGeneral.g_hSDKRespawnPlayer == null)
 	{
-		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
+		LogError("%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;

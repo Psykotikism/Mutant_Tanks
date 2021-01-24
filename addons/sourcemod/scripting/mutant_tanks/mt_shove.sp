@@ -154,13 +154,15 @@ public void OnPluginStart()
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 
-		return;
+		delete gdMutantTanks;
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnStaggered"))
 	{
 		SetFailState("Failed to find signature: CTerrorPlayer::OnStaggered");
+
+		delete gdMutantTanks;
 	}
 
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
@@ -169,7 +171,7 @@ public void OnPluginStart()
 	g_hSDKShovePlayer = EndPrepSDKCall();
 	if (g_hSDKShovePlayer == null)
 	{
-		MT_LogMessage(MT_LOG_SERVER, "%s Your \"CTerrorPlayer::OnStaggered\" signature is outdated.", MT_TAG);
+		LogError("%s Your \"CTerrorPlayer::OnStaggered\" signature is outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
