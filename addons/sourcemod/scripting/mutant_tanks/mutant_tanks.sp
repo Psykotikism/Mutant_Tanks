@@ -1102,7 +1102,7 @@ public any aNative_SpawnTank(Handle plugin, int numParams)
 	int iTank = GetNativeCell(1), iType = iClamp(GetNativeCell(2), 1, MT_MAXTYPES);
 	if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		vQueueTank(iTank, iType);
+		vQueueTank(iTank, iType, _, false);
 	}
 }
 
@@ -3119,7 +3119,7 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vTank(client, sType, false, iAmount, iMode);
+	vTank(client, sType, false, _, iAmount, iMode);
 
 	return Plugin_Handled;
 }
@@ -3181,7 +3181,7 @@ public Action cmdTank2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vTank(client, sType, false, iAmount, iMode);
+	vTank(client, sType, false, _, iAmount, iMode);
 
 	return Plugin_Handled;
 }
@@ -3241,12 +3241,12 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vTank(client, sType, false, iAmount, iMode);
+	vTank(client, sType, false, _, iAmount, iMode);
 
 	return Plugin_Handled;
 }
 
-static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int mode = 0)
+static void vTank(int admin, char[] type, bool spawn = true, bool log = true, int amount = 1, int mode = 0)
 {
 	int iType = StringToInt(type);
 
@@ -3313,7 +3313,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 				{
 					switch (spawn)
 					{
-						case true: vSpawnTank(admin, g_esGeneral.g_iChosenType, amount, mode);
+						case true: vSpawnTank(admin, g_esGeneral.g_iChosenType, log, amount, mode);
 						case false:
 						{
 							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin)))
@@ -3361,7 +3361,7 @@ static void vTank(int admin, char[] type, bool spawn = true, int amount = 1, int
 						}
 					}
 				}
-				case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, amount, mode);
+				case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, false, amount, mode);
 			}
 		}
 		case false:
@@ -3399,21 +3399,21 @@ static void vChangeTank(int admin, int amount, int mode)
 			}
 			else
 			{
-				vSpawnTank(admin, g_esGeneral.g_iChosenType, amount, mode);
+				vSpawnTank(admin, g_esGeneral.g_iChosenType, _, amount, mode);
 			}
 		}
-		case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, amount, mode);
+		case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, _, amount, mode);
 	}
 }
 
-static void vQueueTank(int admin, int type, bool mode = true)
+static void vQueueTank(int admin, int type, bool mode = true, bool log = true)
 {
 	char sType[5];
 	IntToString(type, sType, sizeof(sType));
-	vTank(admin, sType, mode);
+	vTank(admin, sType, mode, log);
 }
 
-static void vSpawnTank(int admin, int type, int amount, int mode)
+static void vSpawnTank(int admin, int type, bool log = true, int amount, int mode)
 {
 	char sParameter[32];
 	sParameter = (mode == 0) ? "tank" : "tank auto";
@@ -3444,8 +3444,11 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 		}
 	}
 
-	vLogCommand(admin, "{default}Spawned a{mint} Mutant Tank{default}.");
-	vLogMessage(MT_LOG_SERVER, _, "%s %N: Spawned a Mutant Tank.", MT_TAG, admin);
+	if (log)
+	{
+		vLogCommand(admin, "{default}Spawned a{mint} Mutant Tank{default}.");
+		vLogMessage(MT_LOG_SERVER, _, "%s %N: Spawned a Mutant Tank.", MT_TAG, admin);
+	}
 }
 
 static void vTankMenu(int admin, bool adminmenu = false, int item = 0)
@@ -8447,7 +8450,7 @@ public int iFavoriteMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		{
 			switch (param2)
 			{
-				case 0: vQueueTank(param1, g_esPlayer[param1].g_iFavoriteType, false);
+				case 0: vQueueTank(param1, g_esPlayer[param1].g_iFavoriteType, false, false);
 				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "FavoriteUnused");
 			}
 		}
