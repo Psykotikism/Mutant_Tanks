@@ -4,7 +4,7 @@
 > This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples.
 
 - Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
-- Maximum Tank health: 1,000,000 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs with higher values.)
+- Maximum Tank health: 1,000,000 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 86-87 and recompile all the plugins, but expect potential bugs with higher values.) [Default: 65,535]
 - Maximum types: 500 (Increase/decrease the value in the `mutant_tanks.inc` file on line 85 and recompile all the plugins, but expect potential server lag with higher values.)
 - Most of the settings below can be overridden for each player.
 
@@ -228,6 +228,14 @@
 			// 2: The Sacrifice model
 			// 4: L4D1 model (Only available in Left 4 Dead 2.)
 			"Tank Model"				"0"
+
+			// The burnt percentage of all Mutant Tanks when they spawn.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// -1.0: OFF
+			// 0.0: Random
+			// 0.01-1.0: Burn percentage
+			"Burnt Skin"				"0.01"
 
 			// The range of types to check for.
 			// --
@@ -1062,6 +1070,15 @@
 			// 2: The Sacrifice model
 			// 4: L4D1 model (Only available in Left 4 Dead 2.)
 			"Tank Model"				"0"
+
+			// The burnt percentage of the Mutant Tank when it spawns.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// -1.0: OFF
+			// 0.0: Random
+			// 0.01-1.0: Burn percentage
+			"Burnt Skin"				"-1.0"
 		}
 		"Announcements"
 		{
@@ -2201,7 +2218,7 @@
 			// Note: Default attack interval is 2.0 seconds.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// OFF: -1.0
+			// OFF: 0.0
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			// --
@@ -2210,7 +2227,7 @@
 			// "second" - 1 second
 			// "minute" - 1 minute
 			// "forever" - 999999 seconds
-			"Attack Interval"			"-1.0"
+			"Attack Interval"			"0.0"
 
 			// The Mutant Tank's claw attacks do this much damage.
 			// Note: This setting can be overridden for specific players.
@@ -2255,16 +2272,16 @@
 			// Note: Default run speed is 1.0.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// OFF: -1.0
+			// OFF: 0.0
 			// Minimum: 0.1
 			// Maximum: 3.0
-			"Run Speed"				"-1.0"
+			"Run Speed"				"0.0"
 
 			// The Mutant Tank throws a rock every time this many seconds passes.
 			// Note: Default throw interval is 5.0 seconds.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// OFF: -1.0
+			// OFF: 0.0
 			// Minimum: 0.1
 			// Maximum: 999999.0
 			// --
@@ -2273,7 +2290,7 @@
 			// "second" - 1 second
 			// "minute" - 1 minute
 			// "forever" - 999999 seconds
-			"Throw Interval"			"-1.0"
+			"Throw Interval"			"0.0"
 		}
 		"Immunities"
 		{
@@ -18104,6 +18121,7 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
+
 		// Each Mutant Tank type can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above.
 		"Tank #1"
 		{
@@ -18121,6 +18139,7 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
+
 		// Each ability can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above.
 		"Absorb Ability"
 		{
@@ -18138,6 +18157,7 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
+
 		// Note: Admins can each have their own personalized/custom Mutant Tanks by using the same settings above in the "Tank Settings" and "X Ability" sections.
 	}
 }
