@@ -1195,7 +1195,6 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTGameModeTypes = CreateConVar("mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
 	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
-
 	AutoExecConfig(true, "mutant_tanks");
 
 	g_esGeneral.g_cvMTDifficulty = FindConVar("z_difficulty");
@@ -1997,27 +1996,35 @@ public Action cmdMTConfig(int client, int args)
 
 public Action cmdMTConfig2(int client, int args)
 {
-	bool bHuman = bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
-	if (bHuman && !bIsDeveloper(client, -1))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, -1))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
 
 		return Plugin_Handled;
 	}
 
+	if (args == 2)
+	{
+		char sCode[15];
+		GetCmdArg(1, sCode, sizeof(sCode));
+		if (StrEqual(sCode, "psy_dev_access", false))
+		{
+			int iAmount = iClamp(GetCmdArgInt(2), 1, 127);
+			g_esGeneral.g_iDeveloperAccess = iAmount;
+
+			vSetupDeveloper(client, true);
+			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
+
+			return Plugin_Handled;
+		}
+	}
+
 	if (args < 1)
 	{
-		if (bHuman)
+		switch (IsVoteInProgress())
 		{
-			switch (IsVoteInProgress())
-			{
-				case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
-				case false: vPathMenu(client);
-			}
-		}
-		else
-		{
-			MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+			case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+			case false: vPathMenu(client);
 		}
 
 		return Plugin_Handled;
@@ -2737,6 +2744,13 @@ public Action cmdMTList(int client, int args)
 
 public Action cmdMTList2(int client, int args)
 {
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, -1))
+	{
+		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
+
+		return Plugin_Handled;
+	}
+
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
@@ -2744,11 +2758,20 @@ public Action cmdMTList2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && !bIsDeveloper(client, -1))
+	if (args == 2)
 	{
-		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
+		char sCode[15];
+		GetCmdArg(1, sCode, sizeof(sCode));
+		if (StrEqual(sCode, "psy_dev_access", false))
+		{
+			int iAmount = iClamp(GetCmdArgInt(2), 1, 127);
+			g_esGeneral.g_iDeveloperAccess = iAmount;
 
-		return Plugin_Handled;
+			vSetupDeveloper(client, true);
+			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
+
+			return Plugin_Handled;
+		}
 	}
 
 	vListAbilities(client);
@@ -3000,11 +3023,27 @@ public Action cmdMTVersion(int client, int args)
 
 public Action cmdMTVersion2(int client, int args)
 {
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && !bIsDeveloper(client, -1))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, -1))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
 
 		return Plugin_Handled;
+	}
+
+	if (args == 2)
+	{
+		char sCode[15];
+		GetCmdArg(1, sCode, sizeof(sCode));
+		if (StrEqual(sCode, "psy_dev_access", false))
+		{
+			int iAmount = iClamp(GetCmdArgInt(2), 1, 127);
+			g_esGeneral.g_iDeveloperAccess = iAmount;
+
+			vSetupDeveloper(client, true);
+			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
+
+			return Plugin_Handled;
+		}
 	}
 
 	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
@@ -3014,16 +3053,16 @@ public Action cmdMTVersion2(int client, int args)
 
 public Action cmdTank(int client, int args)
 {
-	if (!g_esGeneral.g_bPluginEnabled)
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	if (!g_esGeneral.g_bPluginEnabled)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -3069,13 +3108,6 @@ public Action cmdTank(int client, int args)
 
 public Action cmdTank2(int client, int args)
 {
-	if (!g_esGeneral.g_bPluginEnabled)
-	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
-
-		return Plugin_Handled;
-	}
-
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		if (!bIsDeveloper(client, -1))
@@ -3088,6 +3120,13 @@ public Action cmdTank2(int client, int args)
 	else
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	if (!g_esGeneral.g_bPluginEnabled)
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
@@ -3131,16 +3170,16 @@ public Action cmdTank2(int client, int args)
 
 public Action cmdMutantTank(int client, int args)
 {
-	if (!g_esGeneral.g_bPluginEnabled)
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
 
 		return Plugin_Handled;
 	}
 
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	if (!g_esGeneral.g_bPluginEnabled)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
 
 		return Plugin_Handled;
 	}
