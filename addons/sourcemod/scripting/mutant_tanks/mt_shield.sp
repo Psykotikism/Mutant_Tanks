@@ -458,6 +458,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 		EmitSoundToAll(SOUND_METAL, victim);
 
+		if (damagetype & DMG_BURN)
+		{
+			ExtinguishEntity(victim);
+			SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 1.0);
+		}
+
 		if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
 		{
 			static float flTankPos[3];
