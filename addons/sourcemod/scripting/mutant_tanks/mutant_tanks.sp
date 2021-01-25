@@ -3866,18 +3866,22 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				bBlockMelee = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1;
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
-					if (bBlockBullets || bBlockMelee)
-					{
-						static float flTankPos[3];
-						GetClientAbsOrigin(victim, flTankPos);
-						vPushNearbyEntities(victim, flTankPos);
-						EmitSoundToAll(SOUND_METAL, victim);
-					}
-
 					if (bBlockFire)
 					{
 						ExtinguishEntity(victim);
 						SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 1.0);
+					}
+
+					if (bBlockBullets || bBlockMelee)
+					{
+						EmitSoundToAll(SOUND_METAL, victim);
+
+						if (bBlockMelee)
+						{
+							static float flTankPos[3];
+							GetClientAbsOrigin(victim, flTankPos);
+							vPushNearbyEntities(victim, flTankPos);
+						}
 					}
 
 					return Plugin_Handled;

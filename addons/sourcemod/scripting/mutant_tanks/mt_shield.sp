@@ -445,9 +445,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			return Plugin_Continue;
 		}
 
-		if (((damagetype & DMG_BULLET) && (g_esCache[victim].g_iShieldType & MT_SHIELD_BULLET)) || (((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT)
-			|| (damagetype & DMG_PLASMA)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE)) || ((damagetype & DMG_BURN) && (g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE))
-			|| (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE)))
+		static bool bBulletDamage, bExplosiveDamage, bFireDamage, bMeleeDamage;
+		bBulletDamage = (damagetype & DMG_BULLET) && (g_esCache[victim].g_iShieldType & MT_SHIELD_BULLET);
+		bExplosiveDamage = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE);
+		bFireDamage = (damagetype & DMG_BURN) && (g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE);
+		bMeleeDamage = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE);
+		if (bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
 		{
 			g_esPlayer[victim].g_flHealth -= damage;
 			if (g_esCache[victim].g_flShieldHealth == 0.0 || g_esPlayer[victim].g_flHealth < 1.0)
@@ -1073,6 +1076,7 @@ static void vShieldAbility(int tank, bool shield)
 
 						vShield(tank);
 						ExtinguishEntity(tank);
+						SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 1.0);
 
 						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 						{
