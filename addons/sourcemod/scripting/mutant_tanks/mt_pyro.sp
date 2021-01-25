@@ -837,6 +837,7 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_iDuration = -1;
 
 	ExtinguishEntity(tank);
+	SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 1.0);
 	SetEntPropFloat(tank, Prop_Send, "m_flLaggedMovementValue", MT_GetRunSpeed(tank));
 
 	if (g_esCache[tank].g_iPyroMessage == 1)

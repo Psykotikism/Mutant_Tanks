@@ -1195,6 +1195,7 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTGameModeTypes = CreateConVar("mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
 	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
+
 	AutoExecConfig(true, "mutant_tanks");
 
 	g_esGeneral.g_cvMTDifficulty = FindConVar("z_difficulty");
@@ -3914,6 +3915,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					if (damagetype & DMG_BURN)
 					{
 						ExtinguishEntity(victim);
+						SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 1.0);
 					}
 
 					if (StrEqual(sClassname, "tank_rock"))
@@ -3942,6 +3944,7 @@ public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float 
 				if (damagetype & DMG_BURN)
 				{
 					ExtinguishEntity(victim);
+					SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 1.0);
 				}
 
 				return Plugin_Handled;
@@ -3954,6 +3957,7 @@ public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float 
 				if (damagetype & DMG_BURN)
 				{
 					ExtinguishEntity(victim);
+					SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 1.0);
 				}
 
 				return Plugin_Handled;
@@ -6385,6 +6389,7 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 			g_esPlayer[tank].g_iBossStageCount = stage;
 
 			ExtinguishEntity(tank);
+			SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 1.0);
 			vResetSpeed(tank, true);
 			vSurvivorReactions(tank);
 			vSetColor(tank, type, false);
@@ -6754,6 +6759,7 @@ static void vSaveSurvivorStats(int survivor, bool override = false)
 static void vResetTank(int tank)
 {
 	ExtinguishEntity(tank);
+	SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 1.0);
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	vResetSpeed(tank, true);
