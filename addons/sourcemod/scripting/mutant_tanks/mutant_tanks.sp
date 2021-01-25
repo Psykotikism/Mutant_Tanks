@@ -1200,7 +1200,6 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTGameModeTypes = CreateConVar("mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
 	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
-
 	AutoExecConfig(true, "mutant_tanks");
 
 	g_esGeneral.g_cvMTBurnMax = FindConVar("z_burn_max");
@@ -1867,6 +1866,7 @@ public void vMutantTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObjec
 		{
 			vTankMenu(param, true);
 			vLogCommand(param, "{default}Opened the{mint} %s{default} menu.", MT_NAME);
+			vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the %s menu.", MT_TAG, param, MT_NAME);
 		}
 	}
 }
@@ -1880,6 +1880,7 @@ public void vMTConfigMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject o
 		{
 			vPathMenu(param, true);
 			vLogCommand(param, "{default}Opened the config file viewer.");
+			vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the config file viewer.", MT_TAG, param);
 		}
 	}
 }
@@ -1902,6 +1903,7 @@ public void vMTListMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject obj
 		{
 			vListAbilities(param);
 			vLogCommand(param, "{default}Checked the list of abilities installed.");
+			vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the list of abilities installed.", MT_TAG, param);
 
 			if (bIsValidClient(param, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
 			{
@@ -1920,6 +1922,7 @@ public void vMTReloadMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject o
 		{
 			vReloadConfig(param);
 			vLogCommand(param, "{default}Reloaded all config files.");
+			vLogMessage(MT_LOG_SERVER, _, "%s %N: Reloaded all config files.", MT_TAG, param);
 
 			if (bIsValidClient(param, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
 			{
@@ -1938,6 +1941,7 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 		{
 			MT_PrintToChat(param, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
 			vLogCommand(param, "{default}Checked the current version of{mint} %s{default}.", MT_NAME);
+			vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, param, MT_NAME);
 
 			if (bIsValidClient(param, MT_CHECK_INGAME) && g_esGeneral.g_tmMTMenu != null)
 			{
@@ -1960,6 +1964,7 @@ public Action cmdMTConfig(int client, int args)
 			}
 
 			vLogCommand(client, "{default}Opened the config file viewer.");
+			vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the config file viewer.", MT_TAG, client);
 		}
 		else
 		{
@@ -1997,6 +2002,7 @@ public Action cmdMTConfig(int client, int args)
 	}
 
 	vLogCommand(client, "{default}Viewed the config file.");
+	vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the config file.", MT_TAG, client);
 
 	return Plugin_Handled;
 }
@@ -2551,6 +2557,7 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 			}
 
 			vLogCommand(param1, "{default}Viewed the config file.");
+			vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the config file.", MT_TAG, param1);
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME))
 			{
@@ -2745,6 +2752,7 @@ public Action cmdMTList(int client, int args)
 
 	vListAbilities(client);
 	vLogCommand(client, "{default}Checked the list of abilities installed.");
+	vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the list of abilities installed.", MT_TAG, client);
 
 	return Plugin_Handled;
 }
@@ -2831,6 +2839,7 @@ public Action cmdMTReload(int client, int args)
 {
 	vReloadConfig(client);
 	vLogCommand(client, "{default}Reloaded all config files.");
+	vLogMessage(MT_LOG_SERVER, _, "%s %N: Reloaded all config files.", MT_TAG, client);
 
 	return Plugin_Handled;
 }
@@ -3024,6 +3033,7 @@ public Action cmdMTVersion(int client, int args)
 {
 	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
 	vLogCommand(client, "{default}Checked the current version of{mint} %s{default}.", MT_NAME);
+	vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, client, MT_NAME);
 
 	return Plugin_Handled;
 }
@@ -3083,6 +3093,7 @@ public Action cmdTank(int client, int args)
 		}
 
 		vLogCommand(client, "{default}Opened the{mint} %s{default} menu.", MT_NAME);
+		vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the %s menu.", MT_TAG, client, MT_NAME);
 
 		return Plugin_Handled;
 	}
@@ -3434,6 +3445,7 @@ static void vSpawnTank(int admin, int type, int amount, int mode)
 	}
 
 	vLogCommand(admin, "{default}Spawned a{mint} Mutant Tank{default}.");
+	vLogMessage(MT_LOG_SERVER, _, "%s %N: Spawned a Mutant Tank.", MT_TAG, admin);
 }
 
 static void vTankMenu(int admin, bool adminmenu = false, int item = 0)
