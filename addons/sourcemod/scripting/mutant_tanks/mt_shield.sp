@@ -464,7 +464,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		if (damagetype & DMG_BURN)
 		{
 			ExtinguishEntity(victim);
-			SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 1.0);
 		}
 
 		if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
@@ -1076,7 +1075,6 @@ static void vShieldAbility(int tank, bool shield)
 
 						vShield(tank);
 						ExtinguishEntity(tank);
-						SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 1.0);
 
 						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 						{
