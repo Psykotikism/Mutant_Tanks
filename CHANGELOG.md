@@ -16,6 +16,7 @@
 
 #### Config Files
 - Fixed grouped sections and the `all` section not being read properly.
+- Fixed disabled Mutant Tank types not having their settings read.
 
 #### Abilities
 - Shield
@@ -39,6 +40,7 @@
 	- `sm_mt_tank2`/`sm_tank2` - Same function as `sm_mt_tank`/`sm_tank`
 	- `sm_mt_version2` - Same function as `sm_mt_version`
 - The `sm_mt_config`/`sm_mt_config2` command's menu now displays the names of Mutant Tank types. 
+- Players will now be informed if they do not do enough damage to Tanks to earn rewards.
 
 #### Abilities
 - Car
