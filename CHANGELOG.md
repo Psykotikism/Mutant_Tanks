@@ -8,12 +8,18 @@
 - Fixed melee damage being counted as burn damage in certain cases.
 - Fixed friendly-fire burn damage not being blocked. (Thanks to 3aljiyavslgazana for reporting!)
 - Fixed some menus allowing unauthorized access to the admin menu.
+- Fixed Tanks not being extinguished properly in certain cases.
 
 #### Core Plugin
 - Fixed the `sm_mt_mutanttank` command being available to non-Tank players.
+- Fixed players being pushed back when shooting at Tanks with bullet immunity.
 
 #### Config Files
 - Fixed grouped sections and the `all` section not being read properly.
+
+#### Abilities
+- Shield
+	- Fixed Tanks taking fire damage in certain cases while shield is up. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 ### Changes
 
