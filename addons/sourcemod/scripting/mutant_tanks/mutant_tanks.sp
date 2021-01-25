@@ -6867,15 +6867,23 @@ static void vCalculateDeath(int tank, int survivor = 0)
 		}
 
 		float flRandom = GetRandomFloat(0.1, 100.0);
-		if (g_esCache[tank].g_iRewardEnabled[1] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[1] && flPercentage >= g_esCache[tank].g_flRewardPercentage[1])
+		if (g_esCache[tank].g_iRewardEnabled[1] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[1])
 		{
-			vChooseReward(iAssistant, tank, 1);
+			switch (flPercentage >= g_esCache[tank].g_flRewardPercentage[1])
+			{
+				case true: vChooseReward(iAssistant, tank, 1);
+				case false: MT_PrintToChat(iAssistant, "%s %t", MT_TAG3, "RewardNone", sTankName);
+			}
 		}
 
 		flPercentage = (float(g_esPlayer[survivor].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
-		if (bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[tank].g_iRewardEnabled[0] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[0] && flPercentage >= g_esCache[tank].g_flRewardPercentage[0])
+		if (bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[tank].g_iRewardEnabled[0] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[0])
 		{
-			vChooseReward(survivor, tank, 0);
+			switch (flPercentage >= g_esCache[tank].g_flRewardPercentage[0])
+			{
+				case true: vChooseReward(survivor, tank, 0);
+				case false: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardNone", sTankName);
+			}
 		}
 
 		if (g_esCache[tank].g_iRewardEnabled[2] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[2])
