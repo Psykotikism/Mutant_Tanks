@@ -269,6 +269,7 @@ enum struct esGeneral
 	ConfigState g_csState;
 	ConfigState g_csState2;
 
+	ConVar g_cvMTBurnMax;
 	ConVar g_cvMTDifficulty;
 	ConVar g_cvMTDisabledGameModes;
 	ConVar g_cvMTEnabledGameModes;
@@ -283,6 +284,7 @@ enum struct esGeneral
 	DynamicDetour g_ddLeaveStasis;
 	DynamicDetour g_ddTankRockDetour;
 
+	float g_flBurntSkin;
 	float g_flDamageBoostReward[3];
 	float g_flDifficultyDamage[4];
 	float g_flExtrasDelay;
@@ -460,6 +462,7 @@ enum struct esPlayer
 
 	float g_flAttackDelay;
 	float g_flAttackInterval;
+	float g_flBurntSkin;
 	float g_flClawDamage;
 	float g_flComboChance[10];
 	float g_flComboDamage[10];
@@ -577,6 +580,7 @@ enum struct esTank
 	char g_sTankName[33];
 
 	float g_flAttackInterval;
+	float g_flBurntSkin;
 	float g_flClawDamage;
 	float g_flComboChance[10];
 	float g_flComboDamage[10];
@@ -682,6 +686,7 @@ enum struct esCache
 	char g_sTankName[33];
 
 	float g_flAttackInterval;
+	float g_flBurntSkin;
 	float g_flClawDamage;
 	float g_flComboChance[10];
 	float g_flComboDamage[10];
@@ -1198,6 +1203,7 @@ public void OnPluginStart()
 
 	AutoExecConfig(true, "mutant_tanks");
 
+	g_esGeneral.g_cvMTBurnMax = FindConVar("z_burn_max");
 	g_esGeneral.g_cvMTDifficulty = FindConVar("z_difficulty");
 	g_esGeneral.g_cvMTGameMode = FindConVar("mp_gamemode");
 	g_esGeneral.g_cvMTGameTypes = FindConVar("sv_gametypes");
@@ -3869,7 +3875,6 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					if (bBlockFire)
 					{
 						ExtinguishEntity(victim);
-						SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 1.0);
 					}
 
 					if (bBlockBullets || bBlockMelee)
@@ -3919,7 +3924,6 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					if (damagetype & DMG_BURN)
 					{
 						ExtinguishEntity(victim);
-						SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 1.0);
 					}
 
 					if (StrEqual(sClassname, "tank_rock"))
@@ -3948,7 +3952,6 @@ public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float 
 				if (damagetype & DMG_BURN)
 				{
 					ExtinguishEntity(victim);
-					SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 1.0);
 				}
 
 				return Plugin_Handled;
@@ -3961,7 +3964,6 @@ public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float 
 				if (damagetype & DMG_BURN)
 				{
 					ExtinguishEntity(victim);
-					SetEntPropFloat(victim, Prop_Send, "m_burnPercent", 1.0);
 				}
 
 				return Plugin_Handled;
@@ -4012,14 +4014,16 @@ static void vCacheSettings(int tank)
 	vGetSettingValue(bAccess, true, g_esCache[tank].g_sItemReward3, sizeof(esCache::g_sItemReward3), g_esTank[iType].g_sItemReward3, g_esGeneral.g_sItemReward3);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sItemReward3, sizeof(esCache::g_sItemReward3), g_esPlayer[tank].g_sItemReward3, g_esCache[tank].g_sItemReward3);
 	vGetSettingValue(bAccess, bHuman, g_esCache[tank].g_sTankName, sizeof(esCache::g_sTankName), g_esPlayer[tank].g_sTankName, g_esTank[iType].g_sTankName);
-	g_esCache[tank].g_flAttackInterval = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flAttackInterval, g_esTank[iType].g_flAttackInterval, 1);
+	g_esCache[tank].g_flAttackInterval = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flAttackInterval, g_esTank[iType].g_flAttackInterval);
+	g_esCache[tank].g_flBurntSkin = flGetSettingValue(bAccess, true, g_esTank[iType].g_flBurntSkin, g_esGeneral.g_flBurntSkin, 1);
+	g_esCache[tank].g_flBurntSkin = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flBurntSkin, g_esCache[tank].g_flBurntSkin, 1);
 	g_esCache[tank].g_flClawDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flClawDamage, g_esTank[iType].g_flClawDamage, 1);
 	g_esCache[tank].g_flHittableDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flHittableDamage, g_esTank[iType].g_flHittableDamage, 1);
 	g_esCache[tank].g_flRandomDuration = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRandomDuration, g_esTank[iType].g_flRandomDuration);
 	g_esCache[tank].g_flRandomInterval = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRandomInterval, g_esTank[iType].g_flRandomInterval);
 	g_esCache[tank].g_flRockDamage = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRockDamage, g_esTank[iType].g_flRockDamage, 1);
-	g_esCache[tank].g_flRunSpeed = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRunSpeed, g_esTank[iType].g_flRunSpeed, 1);
-	g_esCache[tank].g_flThrowInterval = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flThrowInterval, g_esTank[iType].g_flThrowInterval, 1);
+	g_esCache[tank].g_flRunSpeed = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRunSpeed, g_esTank[iType].g_flRunSpeed);
+	g_esCache[tank].g_flThrowInterval = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flThrowInterval, g_esTank[iType].g_flThrowInterval);
 	g_esCache[tank].g_flTransformDelay = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flTransformDelay, g_esTank[iType].g_flTransformDelay);
 	g_esCache[tank].g_flTransformDuration = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flTransformDuration, g_esTank[iType].g_flTransformDuration);
 	g_esCache[tank].g_iAnnounceArrival = iGetSettingValue(bAccess, true, g_esTank[iType].g_iAnnounceArrival, g_esGeneral.g_iAnnounceArrival);
@@ -4376,6 +4380,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iIdleCheckMode = 2;
 		g_esGeneral.g_iLogMessages = 0;
 		g_esGeneral.g_iTankModel = 0;
+		g_esGeneral.g_flBurntSkin = -1.0;
 		g_esGeneral.g_iMinType = 1;
 		g_esGeneral.g_iMaxType = MT_MAXTYPES;
 		g_esGeneral.g_iRequiresHumans = 0;
@@ -4455,6 +4460,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iTankEnabled = 0;
 			g_esTank[iIndex].g_flTankChance = 100.0;
 			g_esTank[iIndex].g_iTankModel = 0;
+			g_esTank[iIndex].g_flBurntSkin = -1.0;
 			g_esTank[iIndex].g_iTankNote = 0;
 			g_esTank[iIndex].g_iSpawnEnabled = 1;
 			g_esTank[iIndex].g_iMenuEnabled = 1;
@@ -4500,12 +4506,12 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iBodyEffects = 0;
 			g_esTank[iIndex].g_iRockEffects = 0;
 			g_esTank[iIndex].g_iRockModel = 2;
-			g_esTank[iIndex].g_flAttackInterval = -1.0;
+			g_esTank[iIndex].g_flAttackInterval = 0.0;
 			g_esTank[iIndex].g_flClawDamage = -1.0;
 			g_esTank[iIndex].g_flHittableDamage = -1.0;
 			g_esTank[iIndex].g_flRockDamage = -1.0;
-			g_esTank[iIndex].g_flRunSpeed = -1.0;
-			g_esTank[iIndex].g_flThrowInterval = -1.0;
+			g_esTank[iIndex].g_flRunSpeed = 0.0;
+			g_esTank[iIndex].g_flThrowInterval = 0.0;
 			g_esTank[iIndex].g_iBulletImmunity = 0;
 			g_esTank[iIndex].g_iExplosiveImmunity = 0;
 			g_esTank[iIndex].g_iFireImmunity = 0;
@@ -4586,6 +4592,7 @@ public void SMCParseStart(SMCParser smc)
 			{
 				g_esPlayer[iPlayer].g_sTankName[0] = '\0';
 				g_esPlayer[iPlayer].g_iTankModel = 0;
+				g_esPlayer[iPlayer].g_flBurntSkin = -1.0;
 				g_esPlayer[iPlayer].g_iTankNote = 0;
 				g_esPlayer[iPlayer].g_iDeathRevert = 0;
 				g_esPlayer[iPlayer].g_iDetectPlugins = 0;
@@ -4625,12 +4632,12 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_iBodyEffects = 0;
 				g_esPlayer[iPlayer].g_iRockEffects = 0;
 				g_esPlayer[iPlayer].g_iRockModel = 0;
-				g_esPlayer[iPlayer].g_flAttackInterval = -1.0;
+				g_esPlayer[iPlayer].g_flAttackInterval = 0.0;
 				g_esPlayer[iPlayer].g_flClawDamage = -1.0;
 				g_esPlayer[iPlayer].g_flHittableDamage = -1.0;
 				g_esPlayer[iPlayer].g_flRockDamage = -1.0;
-				g_esPlayer[iPlayer].g_flRunSpeed = -1.0;
-				g_esPlayer[iPlayer].g_flThrowInterval = -1.0;
+				g_esPlayer[iPlayer].g_flRunSpeed = 0.0;
+				g_esPlayer[iPlayer].g_flThrowInterval = 0.0;
 				g_esPlayer[iPlayer].g_iBulletImmunity = 0;
 				g_esPlayer[iPlayer].g_iExplosiveImmunity = 0;
 				g_esPlayer[iPlayer].g_iFireImmunity = 0;
@@ -4796,6 +4803,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_iLogMessages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "LogMessages", "Log Messages", "Log_Messages", "log", g_esGeneral.g_iLogMessages, value, 0, 31);
 				g_esGeneral.g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGeneral.g_iRequiresHumans, value, 0, 32);
 				g_esGeneral.g_iTankModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esGeneral.g_iTankModel, value, 0, 7);
+				g_esGeneral.g_flBurntSkin = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esGeneral.g_flBurntSkin, value, -1.0, 1.0);
 				g_esGeneral.g_iAnnounceArrival = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esGeneral.g_iAnnounceArrival, value, 0, 31);
 				g_esGeneral.g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esGeneral.g_iAnnounceDeath, value, 0, 2);
 				g_esGeneral.g_iAnnounceKill = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceKill", "Announce Kill", "Announce_Kill", "kill", g_esGeneral.g_iAnnounceKill, value, 0, 1);
@@ -5036,6 +5044,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						if (StrEqual(sSteamID32, g_esGeneral.g_sCurrentSection, false) || StrEqual(sSteam3ID, g_esGeneral.g_sCurrentSection, false))
 						{
 							g_esPlayer[iPlayer].g_iTankModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esPlayer[iPlayer].g_iTankModel, value, 0, 7);
+							g_esPlayer[iPlayer].g_flBurntSkin = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esPlayer[iPlayer].g_flBurntSkin, value, -1.0, 1.0);
 							g_esPlayer[iPlayer].g_iTankNote = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankNote", "Tank Note", "Tank_Note", "note", g_esPlayer[iPlayer].g_iTankNote, value, 0, 1);
 							g_esPlayer[iPlayer].g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esPlayer[iPlayer].g_iDeathRevert, value, 0, 1);
 							g_esPlayer[iPlayer].g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esPlayer[iPlayer].g_iDetectPlugins, value, 0, 1);
@@ -5065,12 +5074,12 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_iPropsAttached = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_PROPS, key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esPlayer[iPlayer].g_iPropsAttached, value, 0, 511);
 							g_esPlayer[iPlayer].g_iBodyEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_PARTICLES, key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_esPlayer[iPlayer].g_iBodyEffects, value, 0, 127);
 							g_esPlayer[iPlayer].g_iRockEffects = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_PARTICLES, key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esPlayer[iPlayer].g_iRockEffects, value, 0, 15);
-							g_esPlayer[iPlayer].g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esPlayer[iPlayer].g_flAttackInterval, value, -1.0, 999999.0);
+							g_esPlayer[iPlayer].g_flAttackInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esPlayer[iPlayer].g_flAttackInterval, value, 0.0, 999999.0);
 							g_esPlayer[iPlayer].g_flClawDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esPlayer[iPlayer].g_flClawDamage, value, -1.0, 999999.0);
 							g_esPlayer[iPlayer].g_flHittableDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esPlayer[iPlayer].g_flHittableDamage, value, -1.0, 999999.0);
 							g_esPlayer[iPlayer].g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esPlayer[iPlayer].g_flRockDamage, value, -1.0, 999999.0);
-							g_esPlayer[iPlayer].g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esPlayer[iPlayer].g_flRunSpeed, value, -1.0, 3.0);
-							g_esPlayer[iPlayer].g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esPlayer[iPlayer].g_flThrowInterval, value, -1.0, 999999.0);
+							g_esPlayer[iPlayer].g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esPlayer[iPlayer].g_flRunSpeed, value, 0.0, 3.0);
+							g_esPlayer[iPlayer].g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esPlayer[iPlayer].g_flThrowInterval, value, 0.0, 999999.0);
 							g_esPlayer[iPlayer].g_iBulletImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_IMMUNE, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esPlayer[iPlayer].g_iBulletImmunity, value, 0, 1);
 							g_esPlayer[iPlayer].g_iExplosiveImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_IMMUNE, key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esPlayer[iPlayer].g_iExplosiveImmunity, value, 0, 1);
 							g_esPlayer[iPlayer].g_iFireImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_IMMUNE, key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_esPlayer[iPlayer].g_iFireImmunity, value, 0, 1);
@@ -5714,6 +5723,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_iTankEnabled = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "TankEnabled", "Tank Enabled", "Tank_Enabled", "tenabled", g_esTank[type].g_iTankEnabled, value, 0, 1);
 		g_esTank[type].g_flTankChance = flGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "TankChance", "Tank Chance", "Tank_Chance", "chance", g_esTank[type].g_flTankChance, value, 0.0, 100.0);
 		g_esTank[type].g_iTankModel = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esTank[type].g_iTankModel, value, 0, 7);
+		g_esTank[type].g_flBurntSkin = flGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esTank[type].g_flBurntSkin, value, -1.0, 1.0);
 		g_esTank[type].g_iTankNote = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "TankNote", "Tank Note", "Tank_Note", "note", g_esTank[type].g_iTankNote, value, 0, 1);
 		g_esTank[type].g_iSpawnEnabled = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_esTank[type].g_iSpawnEnabled, value, 0, 1);
 		g_esTank[type].g_iMenuEnabled = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "MenuEnabled", "Menu Enabled", "Menu_Enabled", "menu", g_esTank[type].g_iMenuEnabled, value, 0, 1);
@@ -5750,12 +5760,12 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_iPropsAttached = iGetKeyValue(sub, MT_CONFIG_SECTIONS_PROPS, key, "PropsAttached", "Props Attached", "Props_Attached", "attached", g_esTank[type].g_iPropsAttached, value, 0, 511);
 		g_esTank[type].g_iBodyEffects = iGetKeyValue(sub, MT_CONFIG_SECTIONS_PARTICLES, key, "BodyEffects", "Body Effects", "Body_Effects", "body", g_esTank[type].g_iBodyEffects, value, 0, 127);
 		g_esTank[type].g_iRockEffects = iGetKeyValue(sub, MT_CONFIG_SECTIONS_PARTICLES, key, "RockEffects", "Rock Effects", "Rock_Effects", "rock", g_esTank[type].g_iRockEffects, value, 0, 15);
-		g_esTank[type].g_flAttackInterval = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esTank[type].g_flAttackInterval, value, -1.0, 999999.0);
+		g_esTank[type].g_flAttackInterval = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "AttackInterval", "Attack Interval", "Attack_Interval", "attack", g_esTank[type].g_flAttackInterval, value, 0.0, 999999.0);
 		g_esTank[type].g_flClawDamage = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "ClawDamage", "Claw Damage", "Claw_Damage", "claw", g_esTank[type].g_flClawDamage, value, -1.0, 999999.0);
 		g_esTank[type].g_flHittableDamage = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "HittableDamage", "Hittable Damage", "Hittable_Damage", "hittable", g_esTank[type].g_flHittableDamage, value, -1.0, 999999.0);
 		g_esTank[type].g_flRockDamage = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esTank[type].g_flRockDamage, value, -1.0, 999999.0);
-		g_esTank[type].g_flRunSpeed = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTank[type].g_flRunSpeed, value, -1.0, 3.0);
-		g_esTank[type].g_flThrowInterval = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esTank[type].g_flThrowInterval, value, -1.0, 999999.0);
+		g_esTank[type].g_flRunSpeed = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTank[type].g_flRunSpeed, value, 0.0, 3.0);
+		g_esTank[type].g_flThrowInterval = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esTank[type].g_flThrowInterval, value, 0.0, 999999.0);
 		g_esTank[type].g_iBulletImmunity = iGetKeyValue(sub, MT_CONFIG_SECTIONS_IMMUNE, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esTank[type].g_iBulletImmunity, value, 0, 1);
 		g_esTank[type].g_iExplosiveImmunity = iGetKeyValue(sub, MT_CONFIG_SECTIONS_IMMUNE, key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esTank[type].g_iExplosiveImmunity, value, 0, 1);
 		g_esTank[type].g_iFireImmunity = iGetKeyValue(sub, MT_CONFIG_SECTIONS_IMMUNE, key, "FireImmunity", "Fire Immunity", "Fire_Immunity", "fire", g_esTank[type].g_iFireImmunity, value, 0, 1);
@@ -6108,6 +6118,11 @@ static void vPluginStatus()
 	{
 		g_esGeneral.g_bPluginEnabled = true;
 
+		if (g_esGeneral.g_cvMTBurnMax != null)
+		{
+			g_esGeneral.g_cvMTBurnMax.FloatValue = 1.0;
+		}
+
 		vHookEvents(true);
 
 		if (!g_esGeneral.g_ddLauncherDirectionDetour.Enable(Hook_Pre, mreLaunchDirectionPre))
@@ -6138,6 +6153,11 @@ static void vPluginStatus()
 	else if (g_esGeneral.g_bPluginEnabled && (!bPluginAllowed || !bPluginEnabled))
 	{
 		g_esGeneral.g_bPluginEnabled = false;
+
+		if (g_esGeneral.g_cvMTBurnMax != null)
+		{
+			g_esGeneral.g_cvMTBurnMax.FloatValue = 0.85;
+		}
 
 		vHookEvents(false);
 
@@ -6392,8 +6412,6 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 		{
 			g_esPlayer[tank].g_iBossStageCount = stage;
 
-			ExtinguishEntity(tank);
-			SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 1.0);
 			vResetSpeed(tank, true);
 			vSurvivorReactions(tank);
 			vSetColor(tank, type, false);
@@ -6763,7 +6781,6 @@ static void vSaveSurvivorStats(int survivor, bool override = false)
 static void vResetTank(int tank)
 {
 	ExtinguishEntity(tank);
-	SetEntPropFloat(tank, Prop_Send, "m_burnPercent", 1.0);
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	vResetSpeed(tank, true);
@@ -6867,7 +6884,7 @@ static void vCalculateDeath(int tank, int survivor = 0)
 		}
 
 		float flRandom = GetRandomFloat(0.1, 100.0);
-		if (g_esCache[tank].g_iRewardEnabled[1] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[1])
+		if (bIsSurvivor(iAssistant, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[tank].g_iRewardEnabled[1] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[1])
 		{
 			switch (flPercentage >= g_esCache[tank].g_flRewardPercentage[1])
 			{
@@ -8007,17 +8024,26 @@ static void vSetTankModel(int tank)
 		{
 			case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
 			case 2: SetEntityModel(tank, MODEL_TANK_DLC);
-			case 4: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_MAIN : MODEL_TANK_L4D1));
+			case 4: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
 			default:
 			{
 				switch (GetRandomInt(1, sizeof(iModels)))
 				{
 					case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
 					case 2: SetEntityModel(tank, MODEL_TANK_DLC);
-					case 3: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_MAIN : MODEL_TANK_L4D1));
+					case 3: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
 				}
 			}
 		}
+	}
+
+	if (g_esCache[tank].g_flBurntSkin >= 0.01)
+	{
+		SetEntPropFloat(tank, Prop_Send, "m_burnPercent", g_esCache[tank].g_flBurntSkin);
+	}
+	else if (g_esCache[tank].g_flBurntSkin == 0.0)
+	{
+		SetEntPropFloat(tank, Prop_Send, "m_burnPercent", GetRandomFloat(0.01, 1.0));
 	}
 }
 
