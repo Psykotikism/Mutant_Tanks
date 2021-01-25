@@ -8,7 +8,7 @@
 - Fixed melee damage being counted as burn damage in certain cases.
 - Fixed friendly-fire burn damage not being blocked. (Thanks to 3aljiyavslgazana for reporting!)
 - Fixed some menus allowing unauthorized access to the admin menu.
-- Fixed Tanks not being extinguished properly in certain cases.
+- Fixed Tanks automatically having burnt skin when being extinguished.
 
 #### Core Plugin
 - Fixed the `sm_mt_mutanttank` command being available to non-Tank players.
@@ -18,6 +18,9 @@
 - Fixed grouped sections and the `all` section not being read properly.
 - Fixed disabled Mutant Tank types not having their settings read.
 
+#### Settings
+- Fixed the `Tank Model` setting's third option using the L4D2 model instead of the L4D1 model.
+
 #### Abilities
 - Shield
 	- Fixed Tanks taking fire damage in certain cases while shield is up. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -26,6 +29,7 @@
 
 #### General
 - Added logging for all admin commands. (Thanks to Mi.Cura for the idea!)
+- The hidden `z_burn_max` convar will now be automatically set to `1.0` while Mutant Tanks is running.
 
 #### Core Plugin
 - Restricted the following commands to admins with `z` (Root) flag:
@@ -41,6 +45,12 @@
 	- `sm_mt_version2` - Same function as `sm_mt_version`
 - The `sm_mt_config`/`sm_mt_config2` command's menu now displays the names of Mutant Tank types. 
 - Players will now be informed if they do not do enough damage to Tanks to earn rewards.
+
+#### Settings
+- Added the `Burnt Skin` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Thanks to Marttt for the code!)
+- Changed the minimum value of the `Attack Interval` setting from `-1.0` to `0.0`.
+- Changed the minimum value of the `Run Speed` setting from `-1.0` to `0.0`.
+- Changed the minimum value of the `Throw Interval` setting from `-1.0` to `0.0`.
 
 #### Abilities
 - Car
