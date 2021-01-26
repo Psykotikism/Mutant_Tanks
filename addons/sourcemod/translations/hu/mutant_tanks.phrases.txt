@@ -4429,7 +4429,7 @@
 
 	"Undead"
 	{
-		"hu"			"{olive}{1}{mint} növelte az élettartamát!"
+		"hu"			"{olive}{1}{mint} növelte az életerejét!"
 	}
 
 	"Undead2"
