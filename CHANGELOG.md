@@ -25,9 +25,13 @@
 - Shield
 	- Fixed Tanks taking fire damage in certain cases while shield is up. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
+- Throw
+	- Fixed the `Ability Enabled` setting not being checked properly for human-controlled Tanks.
+
 ### Changes
 
 #### General
+- Added chat notifications for all admin commands. (Thanks to Mi.Cura for the idea!)
 - Added logging for all admin commands. (Thanks to Mi.Cura for the idea!)
 - The hidden `z_burn_max` convar will now be automatically set to `1.0` while Mutant Tanks is running.
 
