@@ -235,7 +235,7 @@
 			// -1.0: OFF
 			// 0.0: Random
 			// 0.01-1.0: Burn percentage
-			"Burnt Skin"				"0.01"
+			"Burnt Skin"				"-1.0"
 
 			// The range of types to check for.
 			// --
