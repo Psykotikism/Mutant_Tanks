@@ -1,5 +1,43 @@
 # Changelog
 
+## Version 8.83 (TBA)
+
+### Bug Fixes
+
+#### General
+- Fixed common infected developing wounds from blocked friendly-fire. (Thanks to Marttt for the code!)
+
+### Changes
+
+#### Settings
+- Added the `Reward Effect` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
+
+#### Translations
+- Updated Hungarian translations. (Thanks to KasperH/Ladis!)
+
+#### Abilities
+- Choke
+	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Idle
+	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Vision
+	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Warp
+	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Whirl
+	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+
+### Files
+
+#### Updates
+- Updated config files.
+- Updated include file.
+- Updated translation file.
+
 ## Version 8.82 (January 25, 2021)
 
 ### Bug Fixes

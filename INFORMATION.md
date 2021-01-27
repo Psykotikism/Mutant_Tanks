@@ -379,6 +379,27 @@
 			// 3rd number = Enable rewards for teammates.
 			"Reward Enabled"			"-1,-1,-1"
 
+			// The effects displayed when rewarding survivors.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 15
+			// --
+			// 0: OFF
+			// 1: Trophy
+			// 2: Fireworks particles
+			// 4: Sound effect
+			// 8: Thirdperson view
+			// --
+			// 1st number = Effect for killers.
+			// 2nd number = Effect for assistants.
+			// 3rd number = Effect for teammates.
+			"Reward Effect"				"0,0,0"
+
 			// The chance to reward survivors for killing Mutant Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
@@ -1214,6 +1235,28 @@
 			// 2nd number = Enable rewards for assistants.
 			// 3rd number = Enable rewards for teammates.
 			"Reward Enabled"			"-1,-1,-1"
+
+			// The effects displayed when rewarding survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 3
+			// --
+			// 0: OFF
+			// 1: Trophy
+			// 2: Fireworks particles
+			// 4: Sound effect
+			// 8: Thirdperson view
+			// --
+			// 1st number = Effect for killers.
+			// 2nd number = Effect for assistants.
+			// 3rd number = Effect for teammates.
+			"Reward Effect"				"0,0,0"
 
 			// The chance to reward survivors for killing Mutant Tanks.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -18121,7 +18164,6 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
-
 		// Each Mutant Tank type can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above.
 		"Tank #1"
 		{
@@ -18139,7 +18181,6 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
-
 		// Each ability can be assigned its own access and immunity flags that will override all the "Access Flags" and "Immunity Flags" above.
 		"Absorb Ability"
 		{
@@ -18157,7 +18198,6 @@
 			// Not empty: These immunity flags are immune.
 			"Immunity Flags"			""
 		}
-
 		// Note: Admins can each have their own personalized/custom Mutant Tanks by using the same settings above in the "Tank Settings" and "X Ability" sections.
 	}
 }
