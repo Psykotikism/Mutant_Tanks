@@ -7,7 +7,14 @@
 #### General
 - Fixed common infected developing wounds from blocked friendly-fire. (Thanks to Marttt for the code!)
 
+#### Core Plugin
+- Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
+- Fixed the Mutant Tank type selection menu not appearing for human-controlled Tanks in competitive modes. (Thanks to yuzumi for reporting!)
+
 ### Changes
+
+#### Core Plugin
+- Earning the same rewards with durations now extends the durations.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
