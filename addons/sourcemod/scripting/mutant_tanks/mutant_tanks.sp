@@ -1673,8 +1673,8 @@ public void OnConfigsExecuted()
 			CreateDirectory(sSMPath, 511);
 
 			char sEvent[32];
-			int iAmount = g_bSecondGame ? 11 : 8;
-			for (int iType = 0; iType < iAmount; iType++)
+			int iLimit = g_bSecondGame ? 11 : 8;
+			for (int iType = 0; iType < iLimit; iType++)
 			{
 				switch (iType)
 				{
@@ -3138,7 +3138,7 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vTank(client, sType, false, _, iAmount, iMode);
+	vTank(client, sType, _, _, iAmount, iMode);
 
 	return Plugin_Handled;
 }
@@ -3200,7 +3200,7 @@ public Action cmdTank2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vTank(client, sType, false, _, iAmount, iMode);
+	vTank(client, sType, _, _, iAmount, iMode);
 
 	return Plugin_Handled;
 }
@@ -3260,12 +3260,12 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	vTank(client, sType, false, _, iAmount, iMode);
+	vTank(client, sType, _, _, iAmount, iMode);
 
 	return Plugin_Handled;
 }
 
-static void vTank(int admin, char[] type, bool spawn = true, bool log = true, int amount = 1, int mode = 0)
+static void vTank(int admin, char[] type, bool spawn = false, bool log = true, int amount = 1, int mode = 0)
 {
 	int iType = StringToInt(type);
 
@@ -3385,7 +3385,7 @@ static void vTank(int admin, char[] type, bool spawn = true, bool log = true, in
 		}
 		case false:
 		{
-			switch (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin))
+			switch (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin, -1))
 			{
 				case true: vChangeTank(admin, amount, mode);
 				case false: MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoCommandAccess");
@@ -3440,7 +3440,7 @@ static void vSpawnTank(int admin, int type, bool log = true, int amount, int mod
 
 	switch (amount)
 	{
-		case 1: vCheatCommand(admin, g_bSecondGame ? "z_spawn_old" : "z_spawn", sParameter);
+		case 1: vCheatCommand(admin, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), sParameter);
 		default:
 		{
 			for (int iAmount = 0; iAmount <= amount; iAmount++)
@@ -3449,15 +3449,11 @@ static void vSpawnTank(int admin, int type, bool log = true, int amount, int mod
 				{
 					if (bIsValidClient(admin))
 					{
-						vCheatCommand(admin, g_bSecondGame ? "z_spawn_old" : "z_spawn", sParameter);
+						vCheatCommand(admin, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), sParameter);
 
 						g_esGeneral.g_bForceSpawned = true;
 						g_esGeneral.g_iChosenType = type;
 					}
-				}
-				else if (iAmount == amount)
-				{
-					g_esGeneral.g_iChosenType = 0;
 				}
 			}
 		}
@@ -6569,7 +6565,7 @@ static void vRegularSpawn()
 	{
 		if (bIsValidClient(iTank, MT_CHECK_INGAME))
 		{
-			vCheatCommand(iTank, g_bSecondGame ? "z_spawn_old" : "z_spawn", "tank auto");
+			vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn", "tank auto"));
 
 			break;
 		}
