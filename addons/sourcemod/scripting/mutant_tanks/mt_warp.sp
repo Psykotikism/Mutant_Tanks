@@ -1012,7 +1012,7 @@ static void vWarpHit(int survivor, int tank, float random, float chance, int ena
 		return;
 	}
 
-	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor))
+	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor))
 	{
 		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -1201,7 +1201,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 		{
 			static int iSurvivor;
 			iSurvivor = iGetRandomSurvivor(iTank);
-			if (bIsSurvivor(iSurvivor) && !bIsInsideSaferoom(iSurvivor))
+			if (bIsSurvivor(iSurvivor) && !bIsPlayerDisabled(iSurvivor) && !bIsInsideSaferoom(iSurvivor))
 			{
 				vWarp2(iTank, iSurvivor);
 			}

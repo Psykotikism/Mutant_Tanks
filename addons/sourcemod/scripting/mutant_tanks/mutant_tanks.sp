@@ -106,17 +106,21 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MODEL_WITCH "models/infected/witch.mdl"
 #define MODEL_WITCHBRIDE "models/infected/witch_bride.mdl"
 
+#define PARTICLE_ACHIEVED "achieved"
 #define PARTICLE_BLOOD "boomer_explode_D"
 #define PARTICLE_ELECTRICITY "electrical_arc_01_parent"
 #define PARTICLE_FIRE "aircraft_destroy_fastFireTrail"
+#define PARTICLE_FIREWORK "mini_fireworks"
 #define PARTICLE_ICE "apc_wheel_smoke1"
 #define PARTICLE_METEOR "smoke_medium_01"
 #define PARTICLE_SMOKE "smoker_smokecloud"
 #define PARTICLE_SPIT "spitter_projectile"
 
+#define SOUND_ACHIEVEMENT "ui/pickup_misc42.wav"
 #define SOUND_ELECTRICITY "items/suitchargeok1.wav"
 #define SOUND_EXPLOSION2 "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_2.wav" // Only available in L4D2
 #define SOUND_EXPLOSION1 "animation/van_inside_debris.wav"
+#define SOUND_HEARTBEAT "player/heartbeatloop.wav"
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #define SOUND_MISSILE "player/tank/attack/thrown_missile_loop_1.wav"
 #define SOUND_SPIT "player/spitter/voice/warn/spitter_spit_02.wav"
@@ -198,6 +202,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTION_IMMUNE "Immunities"
 #define MT_CONFIG_SECTION_IMMUNE2 "immune"
 #define MT_CONFIG_SECTIONS_IMMUNE MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE, MT_CONFIG_SECTION_IMMUNE2
+
+#define MT_EFFECT_TROPHY (1 << 0) // trophy
+#define MT_EFFECT_FIREWORKS (1 << 1) // fireworks particles
+#define MT_EFFECT_SOUND (1 << 2) // sound effect
+#define MT_EFFECT_THIRDPERSON (1 << 3) // thirdperson view
 
 #define MT_PARTICLE_BLOOD (1 << 0) // blood particle
 #define MT_PARTICLE_ELECTRICITY (1 << 1) // electric particle
@@ -387,6 +396,7 @@ enum struct esGeneral
 	int g_iRegularWave;
 	int g_iRequiresHumans;
 	int g_iRespawnLoadoutReward[3];
+	int g_iRewardEffect[3];
 	int g_iRewardEnabled[3];
 	int g_iScaleDamage;
 	int g_iSection;
@@ -516,6 +526,7 @@ enum struct esPlayer
 	int g_iDetectPlugins;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
+	int g_iEffect[2];
 	int g_iExplosiveImmunity;
 	int g_iExtraHealth;
 	int g_iFavoriteType;
@@ -547,6 +558,7 @@ enum struct esPlayer
 	int g_iPropTankColor[4];
 	int g_iRandomTank;
 	int g_iRespawnLoadoutReward[3];
+	int g_iRewardEffect[3];
 	int g_iRewardEnabled[3];
 	int g_iRock[20];
 	int g_iRockColor[4];
@@ -659,6 +671,7 @@ enum struct esTank
 	int g_iRandomTank;
 	int g_iRequiresHumans;
 	int g_iRespawnLoadoutReward[3];
+	int g_iRewardEffect[3];
 	int g_iRewardEnabled[3];
 	int g_iRockColor[4];
 	int g_iRockEffects;
@@ -755,6 +768,7 @@ enum struct esCache
 	int g_iPropTankColor[4];
 	int g_iRandomTank;
 	int g_iRespawnLoadoutReward[3];
+	int g_iRewardEffect[3];
 	int g_iRewardEnabled[3];
 	int g_iRockColor[4];
 	int g_iRockEffects;
@@ -1414,9 +1428,11 @@ public void OnMapStart()
 	PrecacheModel(MODEL_WITCH, true);
 	PrecacheModel(MODEL_WITCHBRIDE, true);
 
+	iPrecacheParticle(PARTICLE_ACHIEVED);
 	iPrecacheParticle(PARTICLE_BLOOD);
 	iPrecacheParticle(PARTICLE_ELECTRICITY);
 	iPrecacheParticle(PARTICLE_FIRE);
+	iPrecacheParticle(PARTICLE_FIREWORK);
 	iPrecacheParticle(PARTICLE_ICE);
 	iPrecacheParticle(PARTICLE_METEOR);
 	iPrecacheParticle(PARTICLE_SMOKE);
@@ -1436,7 +1452,9 @@ public void OnMapStart()
 		}
 	}
 
+	PrecacheSound(SOUND_ACHIEVEMENT, true);
 	PrecacheSound(SOUND_ELECTRICITY, true);
+	PrecacheSound(SOUND_HEARTBEAT, true);
 	PrecacheSound(SOUND_METAL, true);
 
 	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
@@ -3947,6 +3965,8 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 						RequestFrame(vDetonateRockFrame, EntIndexToEntRef(inflictor));
 					}
 
+					vSetWounds(victim);
+
 					return Plugin_Handled;
 				}
 			}
@@ -3970,6 +3990,8 @@ public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float 
 					ExtinguishEntity(victim);
 				}
 
+				vSetWounds(victim);
+
 				return Plugin_Handled;
 			}
 		}
@@ -3981,6 +4003,8 @@ public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float 
 				{
 					ExtinguishEntity(victim);
 				}
+
+				vSetWounds(victim);
 
 				return Plugin_Handled;
 			}
@@ -4105,6 +4129,8 @@ static void vCacheSettings(int tank)
 			g_esCache[tank].g_flRewardDuration[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRewardDuration[iPos], g_esCache[tank].g_flRewardDuration[iPos]);
 			g_esCache[tank].g_flRewardPercentage[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flRewardPercentage[iPos], g_esGeneral.g_flRewardPercentage[iPos]);
 			g_esCache[tank].g_flRewardPercentage[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRewardPercentage[iPos], g_esCache[tank].g_flRewardPercentage[iPos]);
+			g_esCache[tank].g_iRewardEffect[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRewardEffect[iPos], g_esGeneral.g_iRewardEffect[iPos]);
+			g_esCache[tank].g_iRewardEffect[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRewardEffect[iPos], g_esCache[tank].g_iRewardEffect[iPos]);
 			g_esCache[tank].g_iRewardEnabled[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRewardEnabled[iPos], g_esGeneral.g_iRewardEnabled[iPos], 1);
 			g_esCache[tank].g_iRewardEnabled[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRewardEnabled[iPos], g_esCache[tank].g_iRewardEnabled[iPos], 1);
 			g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRespawnLoadoutReward[iPos], g_esGeneral.g_iRespawnLoadoutReward[iPos]);
@@ -4452,6 +4478,7 @@ public void SMCParseStart(SMCParser smc)
 
 			if (iPos < sizeof(esGeneral::g_iRewardEnabled))
 			{
+				g_esGeneral.g_iRewardEffect[iPos] = 0;
 				g_esGeneral.g_iRewardEnabled[iPos] = -1;
 				g_esGeneral.g_flRewardChance[iPos] = 33.3;
 				g_esGeneral.g_flRewardDuration[iPos] = 10.0;
@@ -4540,6 +4567,7 @@ public void SMCParseStart(SMCParser smc)
 
 				if (iPos < sizeof(esTank::g_iRewardEnabled))
 				{
+					g_esTank[iIndex].g_iRewardEffect[iPos] = 0;
 					g_esTank[iIndex].g_iRewardEnabled[iPos] = -1;
 					g_esTank[iIndex].g_flRewardChance[iPos] = 0.0;
 					g_esTank[iIndex].g_flRewardDuration[iPos] = 0.0;
@@ -4666,6 +4694,7 @@ public void SMCParseStart(SMCParser smc)
 
 					if (iPos < sizeof(esPlayer::g_iRewardEnabled))
 					{
+						g_esPlayer[iPlayer].g_iRewardEffect[iPos] = 0;
 						g_esPlayer[iPlayer].g_iRewardEnabled[iPos] = -1;
 						g_esPlayer[iPlayer].g_flRewardChance[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_flRewardDuration[iPos] = 0.0;
@@ -4874,6 +4903,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						if (StrEqual(key, "RewardEnabled", false) || StrEqual(key, "Reward Enabled", false) || StrEqual(key, "Reward_Enabled", false) || StrEqual(key, "renabled", false))
 						{
 							g_esGeneral.g_iRewardEnabled[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 2147483647) : g_esGeneral.g_iRewardEnabled[iPos];
+						}
+						else if (StrEqual(key, "RewardEffect", false) || StrEqual(key, "Reward Effect", false) || StrEqual(key, "Reward_Effect", false) || StrEqual(key, "effect", false))
+						{
+							g_esGeneral.g_iRewardEffect[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 15) : g_esGeneral.g_iRewardEffect[iPos];
 						}
 						else if (StrEqual(key, "RewardChance", false) || StrEqual(key, "Reward Chance", false) || StrEqual(key, "Reward_Chance", false) || StrEqual(key, "chance", false))
 						{
@@ -5132,6 +5165,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 									if (StrEqual(key, "RewardEnabled", false) || StrEqual(key, "Reward Enabled", false) || StrEqual(key, "Reward_Enabled", false) || StrEqual(key, "renabled", false))
 									{
 										g_esPlayer[iPlayer].g_iRewardEnabled[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 2147483647) : g_esPlayer[iPlayer].g_iRewardEnabled[iPos];
+									}
+									else if (StrEqual(key, "RewardEffect", false) || StrEqual(key, "Reward Effect", false) || StrEqual(key, "Reward_Effect", false) || StrEqual(key, "effect", false))
+									{
+										g_esPlayer[iPlayer].g_iRewardEffect[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 15) : g_esPlayer[iPlayer].g_iRewardEffect[iPos];
 									}
 									else if (StrEqual(key, "RewardChance", false) || StrEqual(key, "Reward Chance", false) || StrEqual(key, "Reward_Chance", false) || StrEqual(key, "chance", false))
 									{
@@ -5614,6 +5651,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 						vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iVictim);
 					}
 				}
+
+				vRemoveEffects(iVictim);
 			}
 		}
 		else if (StrEqual(name, "player_hurt"))
@@ -5668,6 +5707,14 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			if (bIsValidClient(iPlayer))
 			{
 				RequestFrame(vPlayerSpawnFrame, iPlayerId);
+			}
+		}
+		else if (StrEqual(name, "player_team"))
+		{
+			int iPlayer = GetClientOfUserId(event.GetInt("userid"));
+			if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+			{
+				vRemoveEffects(iPlayer);
 			}
 		}
 		else if (StrEqual(name, "revive_success"))
@@ -5817,6 +5864,10 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 				if (StrEqual(key, "RewardEnabled", false) || StrEqual(key, "Reward Enabled", false) || StrEqual(key, "Reward_Enabled", false) || StrEqual(key, "renabled", false))
 				{
 					g_esTank[type].g_iRewardEnabled[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 2147483647) : g_esTank[type].g_iRewardEnabled[iPos];
+				}
+				else if (StrEqual(key, "RewardEffect", false) || StrEqual(key, "Reward Effect", false) || StrEqual(key, "Reward_Effect", false) || StrEqual(key, "effect", false))
+				{
+					g_esTank[type].g_iRewardEffect[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 15) : g_esTank[type].g_iRewardEffect[iPos];
 				}
 				else if (StrEqual(key, "RewardChance", false) || StrEqual(key, "Reward Chance", false) || StrEqual(key, "Reward_Chance", false) || StrEqual(key, "chance", false))
 				{
@@ -6231,7 +6282,7 @@ static void vHookEvents(bool hook)
 		HookEvent("player_spawn", vEventHandler);
 		HookEvent("player_now_it", vEventHandler);
 		HookEvent("player_no_longer_it", vEventHandler);
-		HookEvent("player_team", vEventHandler, EventHookMode_Post);
+		HookEvent("player_team", vEventHandler);
 		HookEvent("revive_success", vEventHandler);
 		HookEvent("weapon_fire", vEventHandler);
 
@@ -6268,7 +6319,7 @@ static void vHookEvents(bool hook)
 		UnhookEvent("player_spawn", vEventHandler);
 		UnhookEvent("player_now_it", vEventHandler);
 		UnhookEvent("player_no_longer_it", vEventHandler);
-		UnhookEvent("player_team", vEventHandler, EventHookMode_Post);
+		UnhookEvent("player_team", vEventHandler);
 		UnhookEvent("revive_success", vEventHandler);
 		UnhookEvent("weapon_fire", vEventHandler);
 
@@ -6534,6 +6585,25 @@ static void vRegularSpawn()
 	}
 }
 
+static void vRemoveEffects(int survivor)
+{
+	int iEffect = g_esPlayer[survivor].g_iEffect[0];
+	if (bIsValidEntRef(iEffect))
+	{
+		RemoveEntity(iEffect);
+	}
+
+	g_esPlayer[survivor].g_iEffect[0] = INVALID_ENT_REFERENCE;
+
+	iEffect = g_esPlayer[survivor].g_iEffect[1];
+	if (bIsValidEntRef(iEffect))
+	{
+		RemoveEntity(iEffect);
+	}
+
+	g_esPlayer[survivor].g_iEffect[1] = INVALID_ENT_REFERENCE;
+}
+
 static void vRemoveGlow(int tank)
 {
 	SetEntProp(tank, Prop_Send, "m_glowColorOverride", 0);
@@ -6733,6 +6803,7 @@ static void vResetRound()
 			vReset2(iPlayer);
 			vReset3(iPlayer);
 			vResetCore(iPlayer);
+			vRemoveEffects(iPlayer);
 			vCacheSettings(iPlayer);
 		}
 	}
@@ -7044,6 +7115,7 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 				{
 					vSaveCaughtSurvivor(survivor);
 					vCheatCommand(survivor, "give", "health");
+					vStopHeartbeat(survivor);
 
 					switch (priority)
 					{
@@ -7076,6 +7148,7 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 					{
 						vSaveCaughtSurvivor(survivor);
 						vCheatCommand(survivor, "give", "health");
+						vStopHeartbeat(survivor);
 					}
 
 					vCheatCommand(survivor, "give", "ammo");
@@ -7162,6 +7235,30 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 					}
 
 					g_esPlayer[survivor].g_bRewardedGod = true;
+				}
+
+				int iEffect = g_esCache[tank].g_iRewardEffect[priority];
+				if (iEffect > 0)
+				{
+					if (iEffect & MT_EFFECT_TROPHY)
+					{
+						g_esPlayer[survivor].g_iEffect[0] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_ACHIEVED, 3.5, 3.5));
+					}
+
+					if (iEffect & MT_EFFECT_FIREWORKS)
+					{
+						g_esPlayer[survivor].g_iEffect[1] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_FIREWORK, 4.0, 3.5));
+					}
+
+					if (iEffect & MT_EFFECT_SOUND)
+					{
+						EmitSoundToAll(SOUND_ACHIEVEMENT, survivor, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, SNDVOL_NORMAL, SNDPITCH_NORMAL, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
+					}
+
+					if ((iEffect & MT_EFFECT_THIRDPERSON) && bIsSurvivor(survivor, MT_CHECK_FAKECLIENT))
+					{
+						vExternalView(survivor, 3.5);
+					}
 				}
 			}
 		}
@@ -7414,6 +7511,7 @@ static void vSetupDeveloper(int developer, bool setup)
 			vCheatCommand(developer, "give", "molotov");
 			vCheatCommand(developer, "give", "first_aid_kit");
 			vCheatCommand(developer, "give", "health");
+			vStopHeartbeat(developer);
 
 			switch (g_bSecondGame)
 			{
@@ -7471,6 +7569,14 @@ static void vSetupDeveloper(int developer, bool setup)
 			SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		}
 	}
+}
+
+static void vStopHeartbeat(int client)
+{
+	StopSound(client, SNDCHAN_STATIC, SOUND_HEARTBEAT);
+	StopSound(client, SNDCHAN_STATIC, SOUND_HEARTBEAT);
+	StopSound(client, SNDCHAN_STATIC, SOUND_HEARTBEAT);
+	StopSound(client, SNDCHAN_STATIC, SOUND_HEARTBEAT);
 }
 
 static void vSpawnModes(int tank, bool status)

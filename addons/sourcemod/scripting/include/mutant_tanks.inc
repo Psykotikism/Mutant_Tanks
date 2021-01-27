@@ -72,7 +72,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_NAME "Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.82"
+#define MT_VERSION "8.83"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 // Chat tags
@@ -1053,14 +1053,14 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 		iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
 		{
+			DispatchKeyValue(iParticle, "effect_name", particlename);
+			vSetEntityParent(iParticle, entity);
+
 			static float flPos[3];
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 
 			flPos[2] += origin;
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
-
-			DispatchKeyValue(iParticle, "effect_name", particlename);
-			vSetEntityParent(iParticle, entity);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
 			AcceptEntityInput(iParticle, "Start");
@@ -1125,6 +1125,49 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 
 		delete fFilename;
 	}
+}
+
+stock int iCreateParticle(int player, const char[] particlename, float pause, float duration)
+{
+	static int iEffect;
+	iEffect = CreateEntityByName("info_particle_system");
+	if (bIsValidEntity(iEffect))
+	{
+		DispatchKeyValue(iEffect, "effect_name", particlename);
+		vSetEntityParent(iEffect, player);
+		TeleportEntity(iEffect, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, NULL_VECTOR);
+		DispatchSpawn(iEffect);
+		ActivateEntity(iEffect);
+		AcceptEntityInput(iEffect, "Start");
+
+		static char sVariant[64];
+		SetVariantString("OnUser1 !self:Start::0.0:-1");
+		AcceptEntityInput(iEffect, "AddOutput");
+
+		FormatEx(sVariant, sizeof(sVariant), "OnUser2 !self:Stop::%f:-1", pause);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
+
+		FormatEx(sVariant, sizeof(sVariant), "OnUser2 !self:FireUser1::%f:-1", pause + 0.1);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
+
+		FormatEx(sVariant, sizeof(sVariant), "OnUser2 !self:FireUser2::%f:-1", pause + 0.1);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
+
+		AcceptEntityInput(iEffect, "FireUser1");
+		AcceptEntityInput(iEffect, "FireUser2");
+
+		FormatEx(sVariant, sizeof(sVariant), "OnUser3 !self:Kill::%f:-1", duration);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
+		AcceptEntityInput(iEffect, "FireUser3");
+
+		return iEffect;
+	}
+
+	return -1;
 }
 
 stock void vDamagePlayer(int victim, int attacker, float damage, const char[] damagetype = "0")
@@ -1300,6 +1343,15 @@ stock void vSetVector(float target[3], float x, float y, float z)
 	target[0] = x;
 	target[1] = y;
 	target[2] = z;
+}
+
+stock void vSetWounds(int common, int type = -1)
+{
+	if (bIsCommonInfected(common) && HasEntProp(common, Prop_Send, "m_iRequestedWound1"))
+	{
+		SetEntProp(common, Prop_Send, "m_iRequestedWound1", type);
+		SetEntProp(common, Prop_Send, "m_iRequestedWound2", type);
+	}
 }
 
 stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] model)
@@ -1502,6 +1554,7 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
+
 					return true;
 				}
 			}
@@ -1902,6 +1955,7 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
+
 			return false;
 		}
 
@@ -1960,6 +2014,7 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
+
 				return flUnits;
 			}
 
@@ -2485,7 +2540,8 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, i
 
 stock int iGetWeaponOffset(const char[] weapon)
 {
-	bool bSecondGame = GetEngineVersion() == Engine_Left4Dead2;
+	static bool bSecondGame;
+	bSecondGame = GetEngineVersion() == Engine_Left4Dead2;
 	if (StrEqual(weapon, "weapon_rifle") || StrEqual(weapon, "weapon_rifle_ak47") || StrEqual(weapon, "weapon_rifle_desert") || StrEqual(weapon, "weapon_rifle_sg552"))
 	{
 		return 3;

@@ -875,7 +875,7 @@ static void vIdleHit(int survivor, int tank, float random, float chance, int ena
 		return;
 	}
 
-	if (enabled == 1 && bIsHumanSurvivor(survivor))
+	if (enabled == 1 && bIsHumanSurvivor(survivor) && !bIsPlayerHanging(survivor))
 	{
 		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
