@@ -10,12 +10,14 @@
 #### Core Plugin
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
 - Fixed the Mutant Tank type selection menu not appearing for human-controlled Tanks in competitive modes. (Thanks to yuzumi for reporting!)
+- Fixed Tanks not being setup properly when exiting ghost mode. (Thanks to yuzumi for reporting!)
 
 ### Changes
 
 #### Core Plugin
 - Earning the same rewards with durations now extends the durations.
 - Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
+- Added extra copies of the `Body Effects` setting's electric jolt option.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
