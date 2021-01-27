@@ -1482,7 +1482,7 @@ public void OnClientPostAdminCheck(int client)
 {
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
-		if (bIsDeveloper(client, -1))
+		if (bIsDeveloper(client))
 		{
 			g_esGeneral.g_iDeveloperAccess = 125;
 		}
@@ -1505,7 +1505,7 @@ public void OnClientDisconnect(int client)
 		vCalculateDeath(client);
 	}
 
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && bIsDeveloper(client, -1))
+	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && bIsDeveloper(client))
 	{
 		g_esGeneral.g_iDeveloperAccess = 0;
 	}
@@ -2028,7 +2028,7 @@ public Action cmdMTConfig(int client, int args)
 
 public Action cmdMTConfig2(int client, int args)
 {
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, -1))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
 
@@ -2778,7 +2778,7 @@ public Action cmdMTList(int client, int args)
 
 public Action cmdMTList2(int client, int args)
 {
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, -1))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
 
@@ -3059,7 +3059,7 @@ public Action cmdMTVersion(int client, int args)
 
 public Action cmdMTVersion2(int client, int args)
 {
-	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, -1))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
 
@@ -3147,7 +3147,7 @@ public Action cmdTank2(int client, int args)
 {
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
-		if (!bIsDeveloper(client, -1))
+		if (!bIsDeveloper(client))
 		{
 			MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
 
@@ -3221,7 +3221,7 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (g_esGeneral.g_iSpawnMode == 1 && !bIsTank(client) && !CheckCommandAccess(client, "sm_mutanttank", ADMFLAG_ROOT, true) && !bIsDeveloper(client, -1))
+	if (g_esGeneral.g_iSpawnMode == 1 && !bIsTank(client) && !CheckCommandAccess(client, "sm_mutanttank", ADMFLAG_ROOT, true) && !bIsDeveloper(client))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "NoCommandAccess");
 
@@ -3273,7 +3273,7 @@ static void vTank(int admin, char[] type, bool spawn = false, bool log = true, i
 	{
 		case 0:
 		{
-			if (bIsValidClient(admin) && bIsDeveloper(admin, -1) && StrEqual(type, "psy_dev_access", false))
+			if (bIsValidClient(admin) && bIsDeveloper(admin) && StrEqual(type, "psy_dev_access", false))
 			{
 				g_esGeneral.g_iDeveloperAccess = amount;
 
@@ -3332,7 +3332,7 @@ static void vTank(int admin, char[] type, bool spawn = false, bool log = true, i
 				{
 					switch (spawn)
 					{
-						case true: vSpawnTank(admin, g_esGeneral.g_iChosenType, log, amount, mode);
+						case true: vSpawnTank(admin, log, amount, mode);
 						case false:
 						{
 							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin)))
@@ -3368,7 +3368,7 @@ static void vTank(int admin, char[] type, bool spawn = false, bool log = true, i
 											vExternalView(admin, 1.5);
 										}
 
-										if (g_esGeneral.g_iMasterControl == 0 && (!CheckCommandAccess(admin, "mt_adminversus", ADMFLAG_ROOT) && !bIsDeveloper(admin)))
+										if (g_esGeneral.g_iMasterControl == 0 && (!CheckCommandAccess(admin, "mt_adminversus", ADMFLAG_ROOT) && !bIsDeveloper(admin, 0)))
 										{
 											g_esPlayer[admin].g_iCooldown = iTime + g_esGeneral.g_iHumanCooldown;
 										}
@@ -3380,12 +3380,12 @@ static void vTank(int admin, char[] type, bool spawn = false, bool log = true, i
 						}
 					}
 				}
-				case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, false, amount, mode);
+				case false: vSpawnTank(admin, false, amount, mode);
 			}
 		}
 		case false:
 		{
-			switch (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin, -1))
+			switch (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin))
 			{
 				case true: vChangeTank(admin, amount, mode);
 				case false: MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoCommandAccess");
@@ -3418,10 +3418,10 @@ static void vChangeTank(int admin, int amount, int mode)
 			}
 			else
 			{
-				vSpawnTank(admin, g_esGeneral.g_iChosenType, _, amount, mode);
+				vSpawnTank(admin, _, amount, mode);
 			}
 		}
-		case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, _, amount, mode);
+		case false: vSpawnTank(admin, _, amount, mode);
 	}
 }
 
@@ -3432,7 +3432,7 @@ static void vQueueTank(int admin, int type, bool mode = true, bool log = true)
 	vTank(admin, sType, mode, log);
 }
 
-static void vSpawnTank(int admin, int type, bool log = true, int amount, int mode)
+static void vSpawnTank(int admin, bool log = true, int amount, int mode)
 {
 	char sParameter[32];
 	sParameter = (mode == 0) ? "tank" : "tank auto";
@@ -3443,6 +3443,7 @@ static void vSpawnTank(int admin, int type, bool log = true, int amount, int mod
 		case 1: vCheatCommand(admin, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), sParameter);
 		default:
 		{
+			int iType = g_esGeneral.g_iChosenType;
 			for (int iAmount = 0; iAmount <= amount; iAmount++)
 			{
 				if (iAmount < amount)
@@ -3452,8 +3453,12 @@ static void vSpawnTank(int admin, int type, bool log = true, int amount, int mod
 						vCheatCommand(admin, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), sParameter);
 
 						g_esGeneral.g_bForceSpawned = true;
-						g_esGeneral.g_iChosenType = type;
+						g_esGeneral.g_iChosenType = iType;
 					}
+				}
+				else if (iAmount == amount)
+				{
+					g_esGeneral.g_iChosenType = 0;
 				}
 			}
 		}
@@ -3844,6 +3849,8 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		}
 
+		static bool bDeveloper;
+		bDeveloper = bIsValidClient(victim) && bIsDeveloper(victim, 5);
 		if (bIsTankSupported(attacker) && bIsSurvivor(victim))
 		{
 			vSaveSurvivorStats(victim, true);
@@ -3853,33 +3860,33 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				if (StrEqual(sClassname, "weapon_tank_claw") && g_esCache[attacker].g_flClawDamage >= 0.0)
 				{
 					damage = flGetScaledDamage(g_esCache[attacker].g_flClawDamage);
-					damage = (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5)) ? (damage * 0.5) : damage;
+					damage = (bIsHumanSurvivor(victim) && bDeveloper) ? (damage * 0.5) : damage;
 
 					return (g_esCache[attacker].g_flClawDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 				}
 				else if ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[attacker].g_flHittableDamage >= 0.0)
 				{
 					damage = flGetScaledDamage(g_esCache[attacker].g_flHittableDamage);
-					damage = (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5)) ? (damage * 0.5) : damage;
+					damage = (bIsHumanSurvivor(victim) && bDeveloper) ? (damage * 0.5) : damage;
 
 					return (g_esCache[attacker].g_flHittableDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 				}
 				else if (StrEqual(sClassname, "tank_rock") && !bIsValidEntity(iTank) && g_esCache[attacker].g_flRockDamage >= 0.0)
 				{
 					damage = flGetScaledDamage(g_esCache[attacker].g_flRockDamage);
-					damage = (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5)) ? (damage * 0.5) : damage;
+					damage = (bIsHumanSurvivor(victim) && bDeveloper) ? (damage * 0.5) : damage;
 
 					return (g_esCache[attacker].g_flRockDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 				}
 			}
-			else if (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5))
+			else if (bIsHumanSurvivor(victim) && bDeveloper)
 			{
 				damage *= 0.5;
 
 				return Plugin_Changed;
 			}
 		}
-		else if (bIsHumanSurvivor(victim) && bIsDeveloper(victim, 5))
+		else if (bIsHumanSurvivor(victim) && bDeveloper)
 		{
 			damage *= 0.5;
 
@@ -3887,6 +3894,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		}
 		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsCommonInfected(victim) || bIsWitch(victim))
 		{
+			bDeveloper = bIsValidClient(attacker) && bIsDeveloper(attacker, 4);
 			if (bIsTankSupported(victim) && bHasCoreAdminAccess(victim))
 			{
 				if (StrEqual(sClassname, "tank_rock"))
@@ -3924,7 +3932,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 				if (bIsSurvivor(attacker) && (damagetype & DMG_BURN) && g_esGeneral.g_iCreditIgniters == 0)
 				{
-					if (bIsSurvivor(attacker) && (bIsDeveloper(attacker, 4) || g_esPlayer[attacker].g_bRewardedDamage))
+					if (bIsSurvivor(attacker) && (bDeveloper || g_esPlayer[attacker].g_bRewardedDamage))
 					{
 						damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 1.75;
 					}
@@ -3936,7 +3944,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				}
 			}
 
-			if (bIsSurvivor(attacker) && (bIsDeveloper(attacker, 4) || g_esPlayer[attacker].g_bRewardedDamage))
+			if (bIsSurvivor(attacker) && (bDeveloper || g_esPlayer[attacker].g_bRewardedDamage))
 			{
 				damage *= g_esPlayer[attacker].g_bRewardedDamage ? g_esPlayer[attacker].g_flDamageBoost : 1.75;
 
@@ -5691,7 +5699,10 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
 			if (bIsValidClient(iPlayer))
 			{
-				RequestFrame(vPlayerSpawnFrame, iPlayerId);
+				DataPack dpPlayerSpawn = new DataPack();
+				RequestFrame(vPlayerSpawnFrame, dpPlayerSpawn);
+				dpPlayerSpawn.WriteCell(iPlayerId);
+				dpPlayerSpawn.WriteCell(g_esGeneral.g_iChosenType);
 			}
 		}
 		else if (StrEqual(name, "player_team"))
@@ -7238,23 +7249,24 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 					}
 				}
 
+				bool bDeveloper = bIsDeveloper(survivor, 3);
 				int iEffect = g_esCache[tank].g_iRewardEffect[priority];
-				if (iEffect & MT_EFFECT_TROPHY)
+				if ((iEffect & MT_EFFECT_TROPHY) || bDeveloper)
 				{
 					g_esPlayer[survivor].g_iEffect[0] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_ACHIEVED, 3.5, 3.5, true));
 				}
 
-				if (iEffect & MT_EFFECT_FIREWORKS)
+				if ((iEffect & MT_EFFECT_FIREWORKS) || bDeveloper)
 				{
 					g_esPlayer[survivor].g_iEffect[1] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_FIREWORK, 4.0, 3.5, false));
 				}
 
-				if (iEffect & MT_EFFECT_SOUND)
+				if ((iEffect & MT_EFFECT_SOUND) || bDeveloper)
 				{
 					EmitSoundToAll(SOUND_ACHIEVEMENT, survivor, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, SNDVOL_NORMAL, SNDPITCH_NORMAL, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
 				}
 
-				if ((iEffect & MT_EFFECT_THIRDPERSON) && bIsSurvivor(survivor, MT_CHECK_FAKECLIENT))
+				if (((iEffect & MT_EFFECT_THIRDPERSON) || bDeveloper) && bIsSurvivor(survivor, MT_CHECK_FAKECLIENT))
 				{
 					vExternalView(survivor, 3.5);
 				}
@@ -8490,12 +8502,12 @@ static void vParticleEffects(int tank)
 	}
 }
 
-static void vMutateTank(int tank)
+static void vMutateTank(int tank, int type)
 {
 	if (bCanTypeSpawn())
 	{
 		int iType = 0;
-		if (g_esGeneral.g_iChosenType <= 0 && g_esPlayer[tank].g_iTankType <= 0)
+		if (type <= 0 && g_esPlayer[tank].g_iTankType <= 0)
 		{
 			switch (bIsFinaleMap() && g_esGeneral.g_iTankWave > 0)
 			{
@@ -8529,7 +8541,7 @@ static void vMutateTank(int tank)
 		}
 		else
 		{
-			iType = (g_esGeneral.g_iChosenType > 0) ? g_esGeneral.g_iChosenType : g_esPlayer[tank].g_iTankType;
+			iType = (type > 0) ? type : g_esPlayer[tank].g_iTankType;
 			vSetColor(tank, iType, false);
 		}
 
@@ -8620,9 +8632,13 @@ public void vDetonateRockFrame(int ref)
 	}
 }
 
-public void vPlayerSpawnFrame(int userid)
+public void vPlayerSpawnFrame(DataPack pack)
 {
-	int iPlayer = GetClientOfUserId(userid);
+	pack.Reset();
+
+	static int iPlayer, iType;
+	iPlayer = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
+	delete pack;
 	if (bIsSurvivor(iPlayer))
 	{
 		vSetupDeveloper(iPlayer, true);
@@ -8644,7 +8660,7 @@ public void vPlayerSpawnFrame(int userid)
 			g_esPlayer[iPlayer].g_iTankType = 0;
 		}
 
-		switch (g_esGeneral.g_iChosenType)
+		switch (iType)
 		{
 			case 0:
 			{
@@ -8660,13 +8676,13 @@ public void vPlayerSpawnFrame(int userid)
 
 								vTankMenu(iPlayer);
 							}
-							case 1: vMutateTank(iPlayer);
+							case 1: vMutateTank(iPlayer, iType);
 						}
 					}
-					case false: vMutateTank(iPlayer);
+					case false: vMutateTank(iPlayer, iType);
 				}
 			}
-			default: vMutateTank(iPlayer);
+			default: vMutateTank(iPlayer, iType);
 		}
 	}
 }
@@ -8929,7 +8945,7 @@ static bool bIsCustomTankSupported(int tank)
 	return true;
 }
 
-static bool bIsDeveloper(int developer, int bit = 0)
+static bool bIsDeveloper(int developer, int bit = -1)
 {
 	if (g_esGeneral.g_iAllowDeveloper == 1 || bit == -1 || (bit >= 0 && (g_esGeneral.g_iDeveloperAccess & (1 << bit))))
 	{
@@ -9719,7 +9735,7 @@ public Action tTimerElectricEffect(Handle timer, int userid)
 
 	for (int iAmount = 0; iAmount < 5; iAmount++)
 	{
-		vAttachParticle(iTank, PARTICLE_ELECTRICITY, 0.75, (1.0 * float(iAmount * 20)));
+		vAttachParticle(iTank, PARTICLE_ELECTRICITY, 0.75, (1.0 * float(iAmount * 15)));
 	}
 
 	return Plugin_Continue;
