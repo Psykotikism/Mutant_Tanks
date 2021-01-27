@@ -15,6 +15,7 @@
 
 #### Core Plugin
 - Earning the same rewards with durations now extends the durations.
+- Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
