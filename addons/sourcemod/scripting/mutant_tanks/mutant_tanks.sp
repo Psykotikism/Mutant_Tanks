@@ -638,7 +638,6 @@ enum struct esTank
 	int g_iBossStages;
 	int g_iBossType[4];
 	int g_iBulletImmunity;
-	int g_iChosenTypeLimit;
 	int g_iCrownColor[4];
 	int g_iDeathMessage;
 	int g_iDeathRevert;
@@ -685,6 +684,7 @@ enum struct esTank
 	int g_iTankNote;
 	int g_iTireColor[4];
 	int g_iTransformType[10];
+	int g_iTypeLimit;
 	int g_iUsefulRewards[3];
 }
 
@@ -1418,6 +1418,7 @@ public void OnMapStart()
 
 	PrecacheModel(MODEL_TANK_MAIN, true);
 	PrecacheModel(MODEL_TANK_DLC, true);
+
 	PrecacheModel(MODEL_CONCRETE_CHUNK, true);
 	PrecacheModel(MODEL_FIREWORKCRATE, true);
 	PrecacheModel(MODEL_GASCAN, true);
@@ -3290,7 +3291,7 @@ static void vTank(int admin, char[] type, bool spawn = true, bool log = true, in
 					vGetTranslatedName(sPhrase, sizeof(sPhrase), _, iIndex);
 					SetGlobalTransTarget(admin);
 					FormatEx(sTankName, sizeof(sTankName), "%T", sPhrase, admin);
-					if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly) || StrContains(sTankName, type) == -1)
+					if (g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly) || StrContains(sTankName, type, false) == -1)
 					{
 						continue;
 					}
@@ -3331,7 +3332,7 @@ static void vTank(int admin, char[] type, bool spawn = true, bool log = true, in
 				{
 					switch (spawn)
 					{
-						case true: vSpawnTank(admin, log, amount, mode);
+						case true: vSpawnTank(admin, g_esGeneral.g_iChosenType, log, amount, mode);
 						case false:
 						{
 							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin)))
@@ -3379,7 +3380,7 @@ static void vTank(int admin, char[] type, bool spawn = true, bool log = true, in
 						}
 					}
 				}
-				case false: vSpawnTank(admin, false, amount, mode);
+				case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, false, amount, mode);
 			}
 		}
 		case false:
@@ -3417,10 +3418,10 @@ static void vChangeTank(int admin, int amount, int mode)
 			}
 			else
 			{
-				vSpawnTank(admin, _, amount, mode);
+				vSpawnTank(admin, g_esGeneral.g_iChosenType, _, amount, mode);
 			}
 		}
-		case false: vSpawnTank(admin, _, amount, mode);
+		case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, _, amount, mode);
 	}
 }
 
@@ -3431,7 +3432,7 @@ static void vQueueTank(int admin, int type, bool mode = true, bool log = true)
 	vTank(admin, sType, mode, log);
 }
 
-static void vSpawnTank(int admin, bool log = true, int amount, int mode)
+static void vSpawnTank(int admin, int type, bool log = true, int amount, int mode)
 {
 	char sParameter[32];
 	sParameter = (mode == 0) ? "tank" : "tank auto";
@@ -3442,7 +3443,6 @@ static void vSpawnTank(int admin, bool log = true, int amount, int mode)
 		case 1: vCheatCommand(admin, g_bSecondGame ? "z_spawn_old" : "z_spawn", sParameter);
 		default:
 		{
-			int iType = g_esGeneral.g_iChosenType;
 			for (int iAmount = 0; iAmount <= amount; iAmount++)
 			{
 				if (iAmount < amount)
@@ -3452,7 +3452,7 @@ static void vSpawnTank(int admin, bool log = true, int amount, int mode)
 						vCheatCommand(admin, g_bSecondGame ? "z_spawn_old" : "z_spawn", sParameter);
 
 						g_esGeneral.g_bForceSpawned = true;
-						g_esGeneral.g_iChosenType = iType;
+						g_esGeneral.g_iChosenType = type;
 					}
 				}
 				else if (iAmount == amount)
@@ -4525,7 +4525,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iRequiresHumans = 0;
 			g_esTank[iIndex].g_iAccessFlags = 0;
 			g_esTank[iIndex].g_iImmunityFlags = 0;
-			g_esTank[iIndex].g_iChosenTypeLimit = 32;
+			g_esTank[iIndex].g_iTypeLimit = 32;
 			g_esTank[iIndex].g_iFinaleTank = 0;
 			g_esTank[iIndex].g_iBossStages = 4;
 			g_esTank[iIndex].g_sComboSet[0] = '\0';
@@ -5798,7 +5798,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_iMinimumHumans = iGetKeyValue(sub, MT_CONFIG_SECTIONS_HEALTH, key, "MinimumHumans", "Minimum Humans", "Minimum_Humans", "minhumans", g_esTank[type].g_iMinimumHumans, value, 1, 32);
 		g_esTank[type].g_iMultiHealth = iGetKeyValue(sub, MT_CONFIG_SECTIONS_HEALTH, key, "MultiplyHealth", "Multiply Health", "Multiply_Health", "multihp", g_esTank[type].g_iMultiHealth, value, 0, 3);
 		g_esTank[type].g_iHumanSupport = iGetKeyValue(sub, MT_CONFIG_SECTIONS_HUMAN, key, MT_CONFIG_SECTIONS_HUMAN, g_esTank[type].g_iHumanSupport, value, 0, 2);
-		g_esTank[type].g_iChosenTypeLimit = iGetKeyValue(sub, MT_CONFIG_SECTIONS_SPAWN, key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_esTank[type].g_iChosenTypeLimit, value, 0, 32);
+		g_esTank[type].g_iTypeLimit = iGetKeyValue(sub, MT_CONFIG_SECTIONS_SPAWN, key, "TypeLimit", "Type Limit", "Type_Limit", "limit", g_esTank[type].g_iTypeLimit, value, 0, 32);
 		g_esTank[type].g_iFinaleTank = iGetKeyValue(sub, MT_CONFIG_SECTIONS_SPAWN, key, "FinaleTank", "Finale Tank", "Finale_Tank", "finale", g_esTank[type].g_iFinaleTank, value, 0, 4);
 		g_esTank[type].g_flOpenAreasOnly = flGetKeyValue(sub, MT_CONFIG_SECTIONS_SPAWN, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esTank[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
 		g_esTank[type].g_iBossStages = iGetKeyValue(sub, MT_CONFIG_SECTIONS_BOSS, key, "BossStages", "Boss Stages", "Boss_Stages", "bossstages", g_esTank[type].g_iBossStages, value, 1, 4);
@@ -9184,7 +9184,7 @@ static int iChooseType(int exclude, int tank = 0, int min = 0, int max = 0)
 	{
 		switch (exclude)
 		{
-			case 1: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank, iIndex) || g_esTank[iIndex].g_iSpawnEnabled == 0 || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || !bTankChance(iIndex) || (g_esTank[iIndex].g_iChosenTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iChosenTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
+			case 1: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank, iIndex) || g_esTank[iIndex].g_iSpawnEnabled == 0 || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || !bTankChance(iIndex) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
 			case 2: bCondition = g_esTank[iIndex].g_iTankEnabled == 0 || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || g_esTank[iIndex].g_iSpawnEnabled == 0 || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly);
 		}
 
