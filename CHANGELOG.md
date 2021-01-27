@@ -11,6 +11,8 @@
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
 - Fixed the Mutant Tank type selection menu not appearing for human-controlled Tanks in competitive modes. (Thanks to yuzumi for reporting!)
 - Fixed Tanks not being setup properly when exiting ghost mode. (Thanks to yuzumi for reporting!)
+- Fixed the Tank spawner not allowing multiple copies of the same Mutant Tank type to spawn.
+- Fixed inconsistent access levels for some developer commands.
 
 ### Changes
 
