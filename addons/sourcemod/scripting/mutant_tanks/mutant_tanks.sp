@@ -1418,7 +1418,6 @@ public void OnMapStart()
 
 	PrecacheModel(MODEL_TANK_MAIN, true);
 	PrecacheModel(MODEL_TANK_DLC, true);
-
 	PrecacheModel(MODEL_CONCRETE_CHUNK, true);
 	PrecacheModel(MODEL_FIREWORKCRATE, true);
 	PrecacheModel(MODEL_GASCAN, true);
@@ -3332,7 +3331,7 @@ static void vTank(int admin, char[] type, bool spawn = true, bool log = true, in
 				{
 					switch (spawn)
 					{
-						case true: vSpawnTank(admin, g_esGeneral.g_iChosenType, log, amount, mode);
+						case true: vSpawnTank(admin, log, amount, mode);
 						case false:
 						{
 							if ((GetClientButtons(admin) & IN_SPEED) && (CheckCommandAccess(admin, "sm_tank", ADMFLAG_ROOT, true) || CheckCommandAccess(admin, "sm_mt_tank", ADMFLAG_ROOT, true) || bIsDeveloper(admin)))
@@ -3380,7 +3379,7 @@ static void vTank(int admin, char[] type, bool spawn = true, bool log = true, in
 						}
 					}
 				}
-				case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, false, amount, mode);
+				case false: vSpawnTank(admin, false, amount, mode);
 			}
 		}
 		case false:
@@ -3418,10 +3417,10 @@ static void vChangeTank(int admin, int amount, int mode)
 			}
 			else
 			{
-				vSpawnTank(admin, g_esGeneral.g_iChosenType, _, amount, mode);
+				vSpawnTank(admin, _, amount, mode);
 			}
 		}
-		case false: vSpawnTank(admin, g_esGeneral.g_iChosenType, _, amount, mode);
+		case false: vSpawnTank(admin, _, amount, mode);
 	}
 }
 
@@ -3432,7 +3431,7 @@ static void vQueueTank(int admin, int type, bool mode = true, bool log = true)
 	vTank(admin, sType, mode, log);
 }
 
-static void vSpawnTank(int admin, int type, bool log = true, int amount, int mode)
+static void vSpawnTank(int admin, bool log = true, int amount, int mode)
 {
 	char sParameter[32];
 	sParameter = (mode == 0) ? "tank" : "tank auto";
@@ -3443,6 +3442,7 @@ static void vSpawnTank(int admin, int type, bool log = true, int amount, int mod
 		case 1: vCheatCommand(admin, g_bSecondGame ? "z_spawn_old" : "z_spawn", sParameter);
 		default:
 		{
+			int iType = g_esGeneral.g_iChosenType;
 			for (int iAmount = 0; iAmount <= amount; iAmount++)
 			{
 				if (iAmount < amount)
@@ -3452,7 +3452,7 @@ static void vSpawnTank(int admin, int type, bool log = true, int amount, int mod
 						vCheatCommand(admin, g_bSecondGame ? "z_spawn_old" : "z_spawn", sParameter);
 
 						g_esGeneral.g_bForceSpawned = true;
-						g_esGeneral.g_iChosenType = type;
+						g_esGeneral.g_iChosenType = iType;
 					}
 				}
 				else if (iAmount == amount)
@@ -7583,6 +7583,18 @@ static void vSetupDeveloper(int developer, bool setup)
 	}
 }
 
+static void vSpawnMessages(int tank)
+{
+	if (bIsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esTank[g_esPlayer[tank].g_iTankType].g_iHumanSupport == 1 && bHasCoreAdminAccess(tank))
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "SpawnMessage");
+		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons");
+		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons2");
+		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons3");
+		MT_PrintToChat(tank, "%s %t", MT_TAG2, "AbilityButtons4");
+	}
+}
+
 static void vSpawnModes(int tank, bool status)
 {
 	g_esPlayer[tank].g_bBoss = status;
@@ -7602,14 +7614,16 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 	{
 		vRemoveProps(tank);
 		vChangeTypeForward(tank, g_esPlayer[tank].g_iTankType, type, revert);
+
 		g_esPlayer[tank].g_iTankType = type;
 
 		return;
 	}
 	else if (g_esPlayer[tank].g_iTankType > 0 && g_esPlayer[tank].g_iTankType == type && !g_esPlayer[tank].g_bReplaceSelf && !g_esPlayer[tank].g_bKeepCurrentType)
 	{
-		vRemoveProps(tank);
 		g_esPlayer[tank].g_iTankType = 0;
+
+		vRemoveProps(tank);
 		vChangeTypeForward(tank, type, g_esPlayer[tank].g_iTankType, revert);
 
 		return;
@@ -8723,10 +8737,11 @@ public void vTankSpawnFrame(DataPack pack)
 			{
 				SetEntityRenderMode(iTank, RENDER_NORMAL);
 				SetEntityRenderColor(iTank, iGetRandomColor(g_esCache[iTank].g_iSkinColor[0]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[1]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[2]), iGetRandomColor(g_esCache[iTank].g_iSkinColor[3]));
+				vSpawnMessages(iTank);
 			}
 			case 0:
 			{
-				if (!bIsCustomTank(iTank))
+				if (!bIsCustomTank(iTank) && !bIsInfectedGhost(iTank))
 				{
 					static int iHumanCount, iSpawnHealth, iExtraHealthNormal, iExtraHealthBoost, iExtraHealthBoost2, iExtraHealthBoost3, iNoBoost, iBoost,
 						iBoost2, iBoost3, iNegaNoBoost, iNegaBoost, iNegaBoost2, iNegaBoost3, iFinalNoHealth, iFinalHealth, iFinalHealth2, iFinalHealth3;
@@ -8770,14 +8785,7 @@ public void vTankSpawnFrame(DataPack pack)
 						}
 					}
 
-					if (bIsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esTank[g_esPlayer[iTank].g_iTankType].g_iHumanSupport == 1 && bHasCoreAdminAccess(iTank))
-					{
-						MT_PrintToChat(iTank, "%s %t", MT_TAG3, "SpawnMessage");
-						MT_PrintToChat(iTank, "%s %t", MT_TAG2, "AbilityButtons");
-						MT_PrintToChat(iTank, "%s %t", MT_TAG2, "AbilityButtons2");
-						MT_PrintToChat(iTank, "%s %t", MT_TAG2, "AbilityButtons3");
-						MT_PrintToChat(iTank, "%s %t", MT_TAG2, "AbilityButtons4");
-					}
+					vSpawnMessages(iTank);
 
 					g_esGeneral.g_iTankCount++;
 				}
@@ -9359,7 +9367,7 @@ static int iGetTypeCount(int type)
 
 public void L4D_OnEnterGhostState(int client)
 {
-	if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_iTankType > 0)
+	if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		g_esPlayer[client].g_bKeepCurrentType = true;
 
@@ -9713,7 +9721,10 @@ public Action tTimerElectricEffect(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	vAttachParticle(iTank, PARTICLE_ELECTRICITY, 0.75, 30.0);
+	for (int iAmount = 0; iAmount < 5; iAmount++)
+	{
+		vAttachParticle(iTank, PARTICLE_ELECTRICITY, 0.75, (1.0 * float(iAmount * 20)));
+	}
 
 	return Plugin_Continue;
 }
@@ -9776,15 +9787,16 @@ public Action tTimerFireEffect(Handle timer, int userid)
 public Action tTimerForceSpawnTank(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esTank[g_esPlayer[iTank].g_iTankType].g_iTankEnabled == 0)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTank(iTank))
 	{
 		return Plugin_Stop;
 	}
 
 	int iAbility = L4D_MaterializeFromGhost(iTank);
-	if (iAbility == -1)
+	switch (iAbility == -1)
 	{
-		MT_PrintToChat(iTank, "%s %t", MT_TAG3, "SpawnManually");
+		case true: MT_PrintToChat(iTank, "%s %t", MT_TAG3, "SpawnManually");
+		case false: vTankSpawn(iTank);
 	}
 
 	return Plugin_Continue;

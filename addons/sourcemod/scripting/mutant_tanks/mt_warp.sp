@@ -899,13 +899,13 @@ static void vWarp2(int tank, int other)
 	flOtherOrigin[1] += 50.0 * (Sine(DegToRad(flOtherAngles[1])));
 	flOtherOrigin[2] += 5.0;
 
-	vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0, 0.0);
+	vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	TeleportEntity(tank, flOtherOrigin, flOtherAngles, view_as<float>({0.0, 0.0, 0.0}));
 
 	if (g_esCache[tank].g_iWarpMode == 1 || g_esCache[tank].g_iWarpMode == 3)
 	{
-		vAttachParticle(other, PARTICLE_ELECTRICITY, 1.0, 0.0);
+		vAttachParticle(other, PARTICLE_ELECTRICITY, 1.0);
 		EmitSoundToAll(SOUND_ELECTRICITY2, other);
 		TeleportEntity(other, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 	}
@@ -1084,7 +1084,7 @@ static void vWarpRange(int tank)
 			return;
 		}
 
-		vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0, 0.0);
+		vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
 		EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	}
 }

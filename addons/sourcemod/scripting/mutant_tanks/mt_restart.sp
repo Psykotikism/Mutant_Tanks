@@ -984,7 +984,8 @@ static bool bIsSurvivorInCheckpoint(int survivor, bool start)
 		}
 	}
 
-	return bReturn || (start ? GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea") == 1 : false);
+	bool bReturn2 = start ? (GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea") == 1) : false;
+	return bReturn || bReturn2;
 }
 
 public Action tTimerCombo(Handle timer, DataPack pack)

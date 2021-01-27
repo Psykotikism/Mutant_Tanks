@@ -1053,13 +1053,14 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 		iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
 		{
+			DispatchKeyValue(iParticle, "effect_name", particlename);
+
 			static float flPos[3];
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
 			flPos[2] += origin;
 
-			DispatchKeyValue(iParticle, "effect_name", particlename);
-			vSetEntityParent(iParticle, entity);
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
+			vSetEntityParent(iParticle, entity);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
 			AcceptEntityInput(iParticle, "Start");

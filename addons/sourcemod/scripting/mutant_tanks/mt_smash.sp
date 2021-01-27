@@ -726,7 +726,7 @@ static void vSmash(int survivor, int tank)
 		EmitSoundToAll(SOUND_GROWL1, tank);
 	}
 
-	vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
+	vAttachParticle(survivor, PARTICLE_BLOOD, 0.1);
 }
 
 static void vSmashAbility(int tank, float random, int pos = -1)

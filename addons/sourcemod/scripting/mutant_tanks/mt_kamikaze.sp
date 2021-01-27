@@ -703,7 +703,7 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 			}
 
 			EmitSoundToAll((g_bSecondGame) ? SOUND_SMASH2 : SOUND_SMASH1, survivor);
-			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
+			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1);
 			ForcePlayerSuicide(survivor);
 			vEffect(survivor, tank, g_esCache[tank].g_iKamikazeEffect, flags);
 
@@ -713,7 +713,7 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 			}
 
 			EmitSoundToAll((g_bSecondGame) ? SOUND_GROWL2 : SOUND_GROWL1, survivor);
-			vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
+			vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
 			ForcePlayerSuicide(tank);
 
 			if (g_esCache[tank].g_iKamikazeMessage & messages)

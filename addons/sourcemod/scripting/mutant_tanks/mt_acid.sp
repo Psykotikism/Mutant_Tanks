@@ -942,7 +942,7 @@ static void vAcidRange(int tank, int value, float random, int pos = -1)
 			case true: vAcid(tank, tank);
 			case false:
 			{
-				vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
+				vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
 
 				static float flTankPos[3], flSurvivorPos[3], flRange;
 				GetClientAbsOrigin(tank, flTankPos);
