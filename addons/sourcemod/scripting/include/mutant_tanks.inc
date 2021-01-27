@@ -1053,13 +1053,12 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 		iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
 		{
-			DispatchKeyValue(iParticle, "effect_name", particlename);
-			vSetEntityParent(iParticle, entity);
-
 			static float flPos[3];
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
-
 			flPos[2] += origin;
+
+			DispatchKeyValue(iParticle, "effect_name", particlename);
+			vSetEntityParent(iParticle, entity);
 			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
@@ -1127,7 +1126,7 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 	}
 }
 
-stock int iCreateParticle(int player, const char[] particlename, float pause, float duration)
+stock int iCreateParticle(int player, const char[] particlename, float pause, float duration, bool fireUser2)
 {
 	static int iEffect;
 	iEffect = CreateEntityByName("info_particle_system");
@@ -1152,9 +1151,12 @@ stock int iCreateParticle(int player, const char[] particlename, float pause, fl
 		SetVariantString(sVariant);
 		AcceptEntityInput(iEffect, "AddOutput");
 
-		FormatEx(sVariant, sizeof(sVariant), "OnUser2 !self:FireUser2::%f:-1", pause + 0.1);
-		SetVariantString(sVariant);
-		AcceptEntityInput(iEffect, "AddOutput");
+		if (fireUser2)
+		{
+			FormatEx(sVariant, sizeof(sVariant), "OnUser2 !self:FireUser2::%f:-1", pause + 0.1);
+			SetVariantString(sVariant);
+			AcceptEntityInput(iEffect, "AddOutput");
+		}
 
 		AcceptEntityInput(iEffect, "FireUser1");
 		AcceptEntityInput(iEffect, "FireUser2");
@@ -1550,7 +1552,6 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 			if (TR_DidHit(hTrace))
 			{
 				TR_GetEndPosition(flPos, hTrace); 
-
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
@@ -1944,6 +1945,7 @@ public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 {
 	static Handle hTrace;
+
 	switch (type)
 	{
 		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
