@@ -5675,11 +5675,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
 			if (bIsHumanSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 6))
 			{
-				float flGravity = GetEntityGravity(iSurvivor);
-				if (flGravity == 0.75 || flGravity == 1.0)
-				{
-					SetEntityGravity(iSurvivor, 0.75);
-				}
+				SetEntityGravity(iSurvivor, 0.75);
 			}
 		}
 		else if (StrEqual(name, "player_now_it"))
@@ -6576,11 +6572,11 @@ static void vChangeTypeForward(int tank, int oldType, int newType, bool revert)
 
 static void vRegularSpawn()
 {
-	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
-		if (bIsValidClient(iTank, MT_CHECK_INGAME))
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
-			vCheatCommand(iTank, (g_bSecondGame ? "z_spawn_old" : "z_spawn", "tank auto"));
+			vCheatCommand(iPlayer, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), "tank auto");
 
 			break;
 		}
@@ -7339,7 +7335,7 @@ static void vStartRewardTimer(int survivor, int tank, int type, int priority)
 	vKillRewardTimer(survivor);
 
 	DataPack dpReward;
-	g_esPlayer[survivor].g_hRewardTimer = CreateDataTimer((bIsDeveloper(survivor, 3) ? 60.0 : g_esCache[tank].g_flRewardDuration[priority]), tTimerEndReward, dpReward, TIMER_FLAG_NO_MAPCHANGE);
+	g_esPlayer[survivor].g_hRewardTimer = CreateDataTimer((bIsDeveloper(survivor, 3) ? 60.0 : g_esCache[tank].g_flRewardDuration[priority]), tTimerEndReward, dpReward);
 	dpReward.WriteCell(GetClientUserId(survivor));
 	dpReward.WriteCell(type);
 	dpReward.WriteCell(priority);
@@ -9921,6 +9917,7 @@ public Action tTimerRegularWaves(Handle timer)
 	if (!bCanTypeSpawn() || bIsFinaleMap() || g_esGeneral.g_iTankWave > 0 || (g_esGeneral.g_iRegularLimit > 0 && g_esGeneral.g_iRegularCount >= g_esGeneral.g_iRegularLimit))
 	{
 		g_esGeneral.g_hRegularWavesTimer = null;
+		vLogMessage(MT_LOG_SERVER, _, "tTimerRegularWaves was stopped: %b %b %b %b", bCanTypeSpawn(), bIsFinaleMap(), g_esGeneral.g_iTankWave > 0, (g_esGeneral.g_iRegularLimit > 0 && g_esGeneral.g_iRegularCount >= g_esGeneral.g_iRegularLimit));
 
 		return Plugin_Stop;
 	}
@@ -9930,6 +9927,7 @@ public Action tTimerRegularWaves(Handle timer)
 	iCount = (iCount > 0) ? iCount : iGetTankCount(false);
 	if (!g_esGeneral.g_bPluginEnabled || g_esGeneral.g_iRegularLimit == 0 || g_esGeneral.g_iRegularMode == 0 || g_esGeneral.g_iRegularWave == 0 || (g_esGeneral.g_iRegularAmount > 0 && iCount >= g_esGeneral.g_iRegularAmount))
 	{
+		vLogMessage(MT_LOG_SERVER, _, "tTimerRegularWaves was paused: %b %b %b %b %b", g_esGeneral.g_bPluginEnabled, g_esGeneral.g_iRegularLimit == 0, g_esGeneral.g_iRegularMode == 0, g_esGeneral.g_iRegularWave == 0, (g_esGeneral.g_iRegularAmount > 0 && iCount >= g_esGeneral.g_iRegularAmount));
 		return Plugin_Continue;
 	}
 
