@@ -3120,9 +3120,9 @@ public Action cmdTank(int client, int args)
 	char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iAmount = iClamp(GetCmdArgInt(2), 1, 127), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 127 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
-	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 127 || iMode < 0 || iMode > 1 || args > 3)
+	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 
@@ -3182,9 +3182,9 @@ public Action cmdTank2(int client, int args)
 	char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iAmount = iClamp(GetCmdArgInt(2), 1, 127), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 127 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
-	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 127 || iMode < 0 || iMode > 1 || args > 3)
+	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 
@@ -3242,9 +3242,9 @@ public Action cmdMutantTank(int client, int args)
 	char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iAmount = iClamp(GetCmdArgInt(2), 1, 127), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 127 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
-	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > 127 || iMode < 0 || iMode > 1 || args > 3)
+	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
 
@@ -3436,6 +3436,7 @@ static void vSpawnTank(int admin, bool log = true, int amount, int mode)
 {
 	char sParameter[32];
 	sParameter = (mode == 0) ? "tank" : "tank auto";
+	int iType = g_esGeneral.g_iChosenType;
 	g_esGeneral.g_bForceSpawned = true;
 
 	switch (amount)
@@ -3443,7 +3444,6 @@ static void vSpawnTank(int admin, bool log = true, int amount, int mode)
 		case 1: vCheatCommand(admin, (g_bSecondGame ? "z_spawn_old" : "z_spawn"), sParameter);
 		default:
 		{
-			int iType = g_esGeneral.g_iChosenType;
 			for (int iAmount = 0; iAmount <= amount; iAmount++)
 			{
 				if (iAmount < amount)
@@ -3466,8 +3466,8 @@ static void vSpawnTank(int admin, bool log = true, int amount, int mode)
 
 	if (log)
 	{
-		vLogCommand(admin, "{default}Spawned a{mint} Mutant Tank{default}.");
-		vLogMessage(MT_LOG_SERVER, _, "%s %N: Spawned a Mutant Tank.", MT_TAG, admin);
+		vLogCommand(admin, "{default}Spawned{mint} %i{olive} %s%s{default}.", amount, g_esTank[iType].g_sTankName, ((amount > 1) ? "s" : ""));
+		vLogMessage(MT_LOG_SERVER, _, "%s %N: Spawned %i %s%s.", MT_TAG, admin, amount, g_esTank[iType].g_sTankName, ((amount > 1) ? "s" : ""));
 	}
 }
 
@@ -9917,7 +9917,6 @@ public Action tTimerRegularWaves(Handle timer)
 	if (!bCanTypeSpawn() || bIsFinaleMap() || g_esGeneral.g_iTankWave > 0 || (g_esGeneral.g_iRegularLimit > 0 && g_esGeneral.g_iRegularCount >= g_esGeneral.g_iRegularLimit))
 	{
 		g_esGeneral.g_hRegularWavesTimer = null;
-		vLogMessage(MT_LOG_SERVER, _, "tTimerRegularWaves was stopped: %b %b %b %b", bCanTypeSpawn(), bIsFinaleMap(), g_esGeneral.g_iTankWave > 0, (g_esGeneral.g_iRegularLimit > 0 && g_esGeneral.g_iRegularCount >= g_esGeneral.g_iRegularLimit));
 
 		return Plugin_Stop;
 	}
@@ -9927,7 +9926,6 @@ public Action tTimerRegularWaves(Handle timer)
 	iCount = (iCount > 0) ? iCount : iGetTankCount(false);
 	if (!g_esGeneral.g_bPluginEnabled || g_esGeneral.g_iRegularLimit == 0 || g_esGeneral.g_iRegularMode == 0 || g_esGeneral.g_iRegularWave == 0 || (g_esGeneral.g_iRegularAmount > 0 && iCount >= g_esGeneral.g_iRegularAmount))
 	{
-		vLogMessage(MT_LOG_SERVER, _, "tTimerRegularWaves was paused: %b %b %b %b %b", g_esGeneral.g_bPluginEnabled, g_esGeneral.g_iRegularLimit == 0, g_esGeneral.g_iRegularMode == 0, g_esGeneral.g_iRegularWave == 0, (g_esGeneral.g_iRegularAmount > 0 && iCount >= g_esGeneral.g_iRegularAmount));
 		return Plugin_Continue;
 	}
 
