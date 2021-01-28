@@ -513,8 +513,6 @@ enum struct esPlayer
 	float g_flTransformDelay;
 	float g_flTransformDuration;
 
-	Handle g_hRewardTimer;
-
 	int g_iAccessFlags;
 	int g_iAnnounceArrival;
 	int g_iAnnounceDeath;
@@ -6360,7 +6358,7 @@ static void vLogCommand(int admin, int type, const char[] activity, any ...)
 	{
 		char sMessage[255], sTag[32];
 		FormatEx(sTag, sizeof(sTag), "%s ", MT_TAG4);
-		VFormat(sMessage, sizeof(sMessage), activity, 3);
+		VFormat(sMessage, sizeof(sMessage), activity, 4);
 
 		ReplaceString(sMessage, sizeof(sMessage), "{default}", "\x01");
 		ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
@@ -6838,7 +6836,6 @@ static void vResetRound()
 			vResetCore(iPlayer);
 			vRemoveEffects(iPlayer);
 			vCacheSettings(iPlayer);
-			vKillRewardTimer(iPlayer);
 		}
 	}
 
@@ -7104,8 +7101,6 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 
 			if ((type & MT_REWARD_RESPAWN) && !bIsSurvivor(survivor, MT_CHECK_ALIVE) && !g_esPlayer[survivor].g_bRewardedRespawn && g_esGeneral.g_hSDKRespawnPlayer != null)
 			{
-				g_esPlayer[survivor].g_bRewardedRespawn = true;
-
 				SDKCall(g_esGeneral.g_hSDKRespawnPlayer, survivor);
 
 				bool bTeleport = true;
@@ -7141,15 +7136,14 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 					case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRespawn2", sTankName);
 					case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRespawn3", sTankName);
 				}
+
+				g_esPlayer[survivor].g_bRewardedRespawn = true;
 			}
 
 			if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
 			{
 				if ((type & MT_REWARD_HEALTH) && GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")) && !g_esPlayer[survivor].g_bRewardedHealth)
 				{
-					g_esPlayer[survivor].g_bLastLife = false;
-					g_esPlayer[survivor].g_bRewardedHealth = true;
-
 					vSaveCaughtSurvivor(survivor);
 					vCheatCommand(survivor, "give", "health");
 
@@ -7159,12 +7153,13 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardHealth2", sTankName);
 						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardHealth3", sTankName);
 					}
+
+					g_esPlayer[survivor].g_bLastLife = false;
+					g_esPlayer[survivor].g_bRewardedHealth = true;
 				}
 
 				if ((type & MT_REWARD_AMMO) && GetPlayerWeaponSlot(survivor, 0) > MaxClients && !g_esPlayer[survivor].g_bRewardedAmmo)
 				{
-					g_esPlayer[survivor].g_bRewardedAmmo = true;
-
 					vCheatCommand(survivor, "give", "ammo");
 
 					switch (priority)
@@ -7173,13 +7168,12 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardAmmo2", sTankName);
 						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardAmmo3", sTankName);
 					}
+
+					g_esPlayer[survivor].g_bRewardedAmmo = true;
 				}
 
 				if ((type & MT_REWARD_REFILL) && !g_esPlayer[survivor].g_bRewardedRefill)
 				{
-					g_esPlayer[survivor].g_bLastLife = false;
-					g_esPlayer[survivor].g_bRewardedRefill = true;
-
 					if (GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2 && (bIsPlayerDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth")))
 					{
 						vSaveCaughtSurvivor(survivor);
@@ -7194,12 +7188,13 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRefill2", sTankName);
 						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardRefill3", sTankName);
 					}
+
+					g_esPlayer[survivor].g_bLastLife = false;
+					g_esPlayer[survivor].g_bRewardedRefill = true;
 				}
 
 				if ((type & MT_REWARD_ITEM) && !g_esPlayer[survivor].g_bRewardedItem)
 				{
-					g_esPlayer[survivor].g_bRewardedItem = true;
-
 					char sItems[320], sItem[5][64];
 
 					switch (priority)
@@ -7225,13 +7220,12 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 							}
 						}
 					}
+
+					g_esPlayer[survivor].g_bRewardedItem = true;
 				}
 
 				if ((type & MT_REWARD_SPEEDBOOST) && !g_esPlayer[survivor].g_bRewardedSpeed)
 				{
-					g_esPlayer[survivor].g_bRewardedSpeed = true;
-					g_esPlayer[survivor].g_flSpeedBoost = g_esCache[tank].g_flSpeedBoostReward[priority];
-
 					SDKHook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 
 					switch (priority)
@@ -7240,25 +7234,26 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardSpeedBoost2", sTankName);
 						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardSpeedBoost3", sTankName);
 					}
+
+					g_esPlayer[survivor].g_bRewardedSpeed = true;
+					g_esPlayer[survivor].g_flSpeedBoost = g_esCache[tank].g_flSpeedBoostReward[priority];
 				}
 
 				if ((type & MT_REWARD_DAMAGEBOOST) && !g_esPlayer[survivor].g_bRewardedDamage)
 				{
-					g_esPlayer[survivor].g_bRewardedDamage = true;
-					g_esPlayer[survivor].g_flDamageBoost = g_esCache[tank].g_flDamageBoostReward[priority];
-
 					switch (priority)
 					{
 						case 0: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardDamageBoost", sTankName);
 						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardDamageBoost2", sTankName);
 						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardDamageBoost3", sTankName);
 					}
+
+					g_esPlayer[survivor].g_bRewardedDamage = true;
+					g_esPlayer[survivor].g_flDamageBoost = g_esCache[tank].g_flDamageBoostReward[priority];
 				}
 
 				if ((type & MT_REWARD_GODMODE) && !g_esPlayer[survivor].g_bRewardedGod)
 				{
-					g_esPlayer[survivor].g_bRewardedGod = true;
-
 					SetEntProp(survivor, Prop_Data, "m_takedamage", 0, 1);
 
 					switch (priority)
@@ -7267,6 +7262,8 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 						case 1: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardGod2", sTankName);
 						case 2: MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardGod3", sTankName);
 					}
+
+					g_esPlayer[survivor].g_bRewardedGod = true;
 				}
 
 				bool bDeveloper = bIsDeveloper(survivor, 3);
@@ -7341,21 +7338,10 @@ static void vRewardSurvivor(int survivor, int tank, int type, int priority, bool
 	Call_Finish();
 }
 
-static void vKillRewardTimer(int survivor)
-{
-	if (g_esPlayer[survivor].g_hRewardTimer != null)
-	{
-		KillTimer(g_esPlayer[survivor].g_hRewardTimer);
-		g_esPlayer[survivor].g_hRewardTimer = null;
-	}
-}
-
 static void vStartRewardTimer(int survivor, int tank, int type, int priority)
 {
-	vKillRewardTimer(survivor);
-
 	DataPack dpReward;
-	g_esPlayer[survivor].g_hRewardTimer = CreateDataTimer((bIsDeveloper(survivor, 3) ? 60.0 : g_esCache[tank].g_flRewardDuration[priority]), tTimerEndReward, dpReward);
+	CreateDataTimer((bIsDeveloper(survivor, 3) ? 60.0 : g_esCache[tank].g_flRewardDuration[priority]), tTimerEndReward, dpReward, TIMER_FLAG_NO_MAPCHANGE);
 	dpReward.WriteCell(GetClientUserId(survivor));
 	dpReward.WriteCell(type);
 	dpReward.WriteCell(priority);
@@ -9768,8 +9754,6 @@ public Action tTimerEndReward(Handle timer, DataPack pack)
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
 	if (!bIsSurvivor(iSurvivor))
 	{
-		g_esPlayer[iSurvivor].g_hRewardTimer = null;
-
 		vResetSurvivorStats(iSurvivor);
 
 		return Plugin_Stop;
@@ -9777,8 +9761,6 @@ public Action tTimerEndReward(Handle timer, DataPack pack)
 
 	int iType = pack.ReadCell(), iPriority = pack.ReadCell();
 	vRewardSurvivor(iSurvivor, 0, iType, iPriority, false);
-
-	g_esPlayer[iSurvivor].g_hRewardTimer = null;
 
 	return Plugin_Continue;
 }

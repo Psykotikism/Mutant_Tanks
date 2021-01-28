@@ -64,6 +64,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esPlayer
 {
 	bool g_bFailed;
+	bool g_bRewarded;
 
 	float g_flKamikazeChance;
 	float g_flKamikazeRange;
@@ -611,6 +612,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
+public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
+{
+	if (bIsSurvivor(survivor) && (type & MT_REWARD_GODMODE))
+	{
+		g_esPlayer[survivor].g_bRewarded = apply;
+	}
+}
+
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
@@ -693,7 +702,7 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !g_esPlayer[survivor].g_bRewarded)
 	{
 		if (random <= chance)
 		{
@@ -709,7 +718,7 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 
 			if (g_esCache[tank].g_iKamikazeBody == 1)
 			{
-				RequestFrame(vRemoveBody, GetClientUserId(survivor));
+				RequestFrame(vRemoveKamikazeBody, GetClientUserId(survivor));
 			}
 
 			EmitSoundToAll((g_bSecondGame) ? SOUND_GROWL2 : SOUND_GROWL1, survivor);
@@ -739,6 +748,7 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 static void vRemoveKamikaze(int tank)
 {
 	g_esPlayer[tank].g_bFailed = false;
+	g_esPlayer[tank].g_bRewarded = false;
 }
 
 static void vReset()
@@ -752,7 +762,7 @@ static void vReset()
 	}
 }
 
-public void vRemoveBody(int userid)
+public void vRemoveKamikazeBody(int userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);
 	if (!bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
