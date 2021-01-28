@@ -20,9 +20,11 @@
 - Earning the same rewards with durations now extends the durations.
 - Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
 - Added extra copies of the `Body Effects` setting's electric jolt option.
+- Logging for admin commands is now verbose.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
+- Added the `Log Commands` setting under the `Plugin Settings/General` section. (Requested by 3aljiyavslgazana.)
 
 #### Translations
 - Updated Hungarian translations. (Thanks to KasperH/Ladis!)

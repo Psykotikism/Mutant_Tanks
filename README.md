@@ -1937,7 +1937,7 @@ Examples:
 
 **Blueberry (Kleiner)** - For Russian translations and suggesting ideas.
 
-**yuzumi** - For Simplified Chinese translations and suggesting ideas.
+**yuzumi** - For Simplified Chinese translations, reporting issues, and suggesting ideas.
 
 **Mi.Cura, 3aljiyavslgazana** - For reporting issues, suggesting ideas, testing features, and overall support.
 
