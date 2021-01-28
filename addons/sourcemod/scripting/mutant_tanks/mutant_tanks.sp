@@ -5675,7 +5675,11 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
 			if (bIsHumanSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 6))
 			{
-				SetEntPropFloat(iSurvivor, Prop_Data, "m_flGravity", 0.75);
+				float flGravity = GetEntityGravity(iSurvivor);
+				if (flGravity == 0.75 || flGravity == 1.0)
+				{
+					SetEntityGravity(iSurvivor, 0.75);
+				}
 			}
 		}
 		else if (StrEqual(name, "player_now_it"))
