@@ -39,10 +39,16 @@
 - Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
 - Added extra copies of the `Body Effects` setting's electric jolt option.
 - Increased verbosity of logging for admin commands.
+- The vocalizer feature for Tank deaths now requires the `Reward Enabled` setting to be enabled.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
 - Added the `Log Commands` setting under the `Plugin Settings/General` section. (Requested by 3aljiyavslgazana.)
+- Added the following settings under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections:
+	- `Arrival Sound` (Thanks to Tank Rush for the idea!)
+	- `Death Sound` (Thanks to Tank Rush for the idea!)
+	- `Vocalize Arrival`
+	- `Vocalize Death`
 
 #### Translations
 - Updated Simplified Chinese translations.

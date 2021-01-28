@@ -321,6 +321,13 @@
 			// 512: Message #10
 			"Arrival Message"			"0"
 
+			// A sound is played to players when a Mutant Tank arrives.
+			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Arrival Sound"				"1"
+
 			// The message shown to players when a Mutant Tank dies.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
@@ -342,6 +349,13 @@
 			// 512: Message #10
 			"Death Message"				"0"
 
+			// A sound is played to players when a Mutant Tank dies.
+			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Death Sound"				"1"
+
 			// The message shown to players when a Mutant Tank kills a survivor.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
@@ -362,6 +376,20 @@
 			// 256: Message #9
 			// 512: Message #10
 			"Kill Message"				"0"
+
+			// All alive survivors vocalize when a Mutant Tank arrives.
+			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Vocalize Arrival"			"1"
+
+			// All alive survivors vocalize when a Mutant Tank dies.
+			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Vocalize Death"			"1"
 		}
 		"Rewards"
 		{
@@ -1175,6 +1203,14 @@
 			// 512: Message #10
 			"Arrival Message"			"0"
 
+			// A sound is played to players when the Mutant Tank arrives.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Arrival Sound"				"1"
+
 			// The message shown to players when the Mutant Tank dies.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
 			// Note: This setting can be overridden for specific players.
@@ -1197,6 +1233,14 @@
 			// 512: Message #10
 			"Death Message"				"0"
 
+			// A sound is played to players when the Mutant Tank dies.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Death Sound"				"1"
+
 			// The message shown to players when the Mutant Tank kills a survivor.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
 			// Note: This setting can be overridden for specific players.
@@ -1218,6 +1262,22 @@
 			// 256: Message #9
 			// 512: Message #10
 			"Kill Message"				"0"
+
+			// All alive survivors vocalize when the Mutant Tank arrives.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Vocalize Arrival"			"1"
+
+			// All alive survivors vocalize when the Mutant Tank dies.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Vocalize Death"			"1"
 		}
 		"Rewards"
 		{
