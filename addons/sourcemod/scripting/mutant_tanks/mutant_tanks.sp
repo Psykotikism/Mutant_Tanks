@@ -117,11 +117,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define PARTICLE_SPIT "spitter_projectile"
 
 #define SOUND_ACHIEVEMENT "ui/pickup_misc42.wav"
+#define SOUND_DEATH "ui/pickup_scifi37.wav"
 #define SOUND_ELECTRICITY "items/suitchargeok1.wav"
 #define SOUND_EXPLOSION2 "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_2.wav" // Only available in L4D2
 #define SOUND_EXPLOSION1 "animation/van_inside_debris.wav"
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #define SOUND_MISSILE "player/tank/attack/thrown_missile_loop_1.wav"
+#define SOUND_SPAWN "ui/pickup_secret01.wav"
 #define SOUND_SPIT "player/spitter/voice/warn/spitter_spit_02.wav"
 
 #define SPRITE_EXPLODE "sprites/zerogxplode.spr"
@@ -350,6 +352,7 @@ enum struct esGeneral
 	int g_iAnnounceDeath;
 	int g_iAnnounceKill;
 	int g_iArrivalMessage;
+	int g_iArrivalSound;
 	int g_iBaseHealth;
 	int g_iChosenType;
 	int g_iConfigCreate;
@@ -360,6 +363,7 @@ enum struct esGeneral
 	int g_iCurrentMode;
 	int g_iDeathMessage;
 	int g_iDeathRevert;
+	int g_iDeathSound;
 	int g_iDetectPlugins;
 	int g_iDeveloperAccess;
 	int g_iDisplayHealth;
@@ -413,6 +417,8 @@ enum struct esGeneral
 	int g_iTankWave;
 	int g_iTeamID[2048];
 	int g_iUsefulRewards[3];
+	int g_iVocalizeArrival;
+	int g_iVocalizeDeath;
 
 	TopMenu g_tmMTMenu;
 }
@@ -518,6 +524,7 @@ enum struct esPlayer
 	int g_iAnnounceDeath;
 	int g_iAnnounceKill;
 	int g_iArrivalMessage;
+	int g_iArrivalSound;
 	int g_iBaseHealth;
 	int g_iBodyEffects;
 	int g_iBossHealth[4];
@@ -529,6 +536,7 @@ enum struct esPlayer
 	int g_iCrownColor[4];
 	int g_iDeathMessage;
 	int g_iDeathRevert;
+	int g_iDeathSound;
 	int g_iDetectPlugins;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
@@ -582,6 +590,8 @@ enum struct esPlayer
 	int g_iTransformType[10];
 	int g_iUsefulRewards[3];
 	int g_iUserID;
+	int g_iVocalizeArrival;
+	int g_iVocalizeDeath;
 	int g_iWeaponInfo[4];
 	int g_iWeaponInfo2;
 }
@@ -637,6 +647,7 @@ enum struct esTank
 	int g_iAnnounceDeath;
 	int g_iAnnounceKill;
 	int g_iArrivalMessage;
+	int g_iArrivalSound;
 	int g_iBaseHealth;
 	int g_iBodyEffects;
 	int g_iBossHealth[4];
@@ -646,6 +657,7 @@ enum struct esTank
 	int g_iCrownColor[4];
 	int g_iDeathMessage;
 	int g_iDeathRevert;
+	int g_iDeathSound;
 	int g_iDetectPlugins;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
@@ -691,6 +703,8 @@ enum struct esTank
 	int g_iTransformType[10];
 	int g_iTypeLimit;
 	int g_iUsefulRewards[3];
+	int g_iVocalizeArrival;
+	int g_iVocalizeDeath;
 }
 
 esTank g_esTank[MT_MAXTYPES + 1];
@@ -740,6 +754,7 @@ enum struct esCache
 	int g_iAnnounceDeath;
 	int g_iAnnounceKill;
 	int g_iArrivalMessage;
+	int g_iArrivalSound;
 	int g_iBaseHealth;
 	int g_iBodyEffects;
 	int g_iBossHealth[4];
@@ -749,6 +764,7 @@ enum struct esCache
 	int g_iCrownColor[4];
 	int g_iDeathMessage;
 	int g_iDeathRevert;
+	int g_iDeathSound;
 	int g_iDetectPlugins;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
@@ -786,6 +802,8 @@ enum struct esCache
 	int g_iTireColor[4];
 	int g_iTransformType[10];
 	int g_iUsefulRewards[3];
+	int g_iVocalizeArrival;
+	int g_iVocalizeDeath;
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
@@ -1459,8 +1477,10 @@ public void OnMapStart()
 	}
 
 	PrecacheSound(SOUND_ACHIEVEMENT, true);
+	PrecacheSound(SOUND_DEATH, true);
 	PrecacheSound(SOUND_ELECTRICITY, true);
 	PrecacheSound(SOUND_METAL, true);
+	PrecacheSound(SOUND_SPAWN, true);
 
 	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
 	g_iBossHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
@@ -1507,7 +1527,7 @@ public void OnClientDisconnect(int client)
 			g_esGeneral.g_iTankCount--;
 		}
 
-		vCalculateDeath(client);
+		vCalculateDeath(client, 0);
 	}
 
 	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && bIsDeveloper(client))
@@ -4076,6 +4096,8 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iAnnounceKill = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iAnnounceKill, g_esCache[tank].g_iAnnounceKill);
 	g_esCache[tank].g_iArrivalMessage = iGetSettingValue(bAccess, true, g_esTank[iType].g_iArrivalMessage, g_esGeneral.g_iArrivalMessage);
 	g_esCache[tank].g_iArrivalMessage = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iArrivalMessage, g_esCache[tank].g_iArrivalMessage);
+	g_esCache[tank].g_iArrivalSound = iGetSettingValue(bAccess, true, g_esTank[iType].g_iArrivalSound, g_esGeneral.g_iArrivalSound);
+	g_esCache[tank].g_iArrivalSound = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iArrivalSound, g_esCache[tank].g_iArrivalSound);
 	g_esCache[tank].g_iBaseHealth = iGetSettingValue(bAccess, true, g_esTank[iType].g_iBaseHealth, g_esGeneral.g_iBaseHealth);
 	g_esCache[tank].g_iBaseHealth = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iBaseHealth, g_esCache[tank].g_iBaseHealth);
 	g_esCache[tank].g_iBodyEffects = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iBodyEffects, g_esTank[iType].g_iBodyEffects);
@@ -4085,6 +4107,8 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iDeathMessage = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDeathMessage, g_esCache[tank].g_iDeathMessage);
 	g_esCache[tank].g_iDeathRevert = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDeathRevert, g_esGeneral.g_iDeathRevert);
 	g_esCache[tank].g_iDeathRevert = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDeathRevert, g_esCache[tank].g_iDeathRevert);
+	g_esCache[tank].g_iDeathSound = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDeathSound, g_esGeneral.g_iDeathSound);
+	g_esCache[tank].g_iDeathSound = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDeathSound, g_esCache[tank].g_iDeathSound);
 	g_esCache[tank].g_iDetectPlugins = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDetectPlugins, g_esGeneral.g_iDetectPlugins);
 	g_esCache[tank].g_iDetectPlugins = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDetectPlugins, g_esCache[tank].g_iDetectPlugins);
 	g_esCache[tank].g_iDisplayHealth = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDisplayHealth, g_esGeneral.g_iDisplayHealth);
@@ -4116,6 +4140,10 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iTankModel = iGetSettingValue(bAccess, true, g_esTank[iType].g_iTankModel, g_esGeneral.g_iTankModel);
 	g_esCache[tank].g_iTankModel = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iTankModel, g_esCache[tank].g_iTankModel);
 	g_esCache[tank].g_iTankNote = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iTankNote, g_esTank[iType].g_iTankNote);
+	g_esCache[tank].g_iVocalizeArrival = iGetSettingValue(bAccess, true, g_esTank[iType].g_iVocalizeArrival, g_esGeneral.g_iVocalizeArrival);
+	g_esCache[tank].g_iVocalizeArrival = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iVocalizeArrival, g_esCache[tank].g_iVocalizeArrival);
+	g_esCache[tank].g_iVocalizeDeath = iGetSettingValue(bAccess, true, g_esTank[iType].g_iVocalizeDeath, g_esGeneral.g_iVocalizeDeath);
+	g_esCache[tank].g_iVocalizeDeath = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iVocalizeDeath, g_esCache[tank].g_iVocalizeDeath);
 
 	for (int iPos = 0; iPos < sizeof(esCache::g_iTransformType); iPos++)
 	{
@@ -4438,8 +4466,12 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iAnnounceDeath = 1;
 		g_esGeneral.g_iAnnounceKill = 1;
 		g_esGeneral.g_iArrivalMessage = 0;
+		g_esGeneral.g_iArrivalSound = 1;
 		g_esGeneral.g_iDeathMessage = 0;
+		g_esGeneral.g_iDeathSound = 1;
 		g_esGeneral.g_iKillMessage = 0;
+		g_esGeneral.g_iVocalizeArrival = 1;
+		g_esGeneral.g_iVocalizeDeath = 1;
 		g_esGeneral.g_sItemReward = "first_aid_kit";
 		g_esGeneral.g_sItemReward2 = "first_aid_kit";
 		g_esGeneral.g_sItemReward3 = "first_aid_kit";
@@ -4521,8 +4553,12 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iAnnounceDeath = 0;
 			g_esTank[iIndex].g_iAnnounceKill = 0;
 			g_esTank[iIndex].g_iArrivalMessage = 0;
+			g_esTank[iIndex].g_iArrivalSound = 0;
 			g_esTank[iIndex].g_iDeathMessage = 0;
+			g_esTank[iIndex].g_iDeathSound = 0;
 			g_esTank[iIndex].g_iKillMessage = 0;
+			g_esTank[iIndex].g_iVocalizeArrival = 0;
+			g_esTank[iIndex].g_iVocalizeDeath = 0;
 			g_esTank[iIndex].g_sItemReward[0] = '\0';
 			g_esTank[iIndex].g_sItemReward2[0] = '\0';
 			g_esTank[iIndex].g_sItemReward3[0] = '\0';
@@ -4652,8 +4688,12 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_iAnnounceDeath = 0;
 				g_esPlayer[iPlayer].g_iAnnounceKill = 0;
 				g_esPlayer[iPlayer].g_iArrivalMessage = 0;
+				g_esPlayer[iPlayer].g_iArrivalSound = 0;
 				g_esPlayer[iPlayer].g_iDeathMessage = 0;
+				g_esPlayer[iPlayer].g_iDeathSound = 0;
 				g_esPlayer[iPlayer].g_iKillMessage = 0;
+				g_esPlayer[iPlayer].g_iVocalizeArrival = 0;
+				g_esPlayer[iPlayer].g_iVocalizeDeath = 0;
 				g_esPlayer[iPlayer].g_sItemReward[0] = '\0';
 				g_esPlayer[iPlayer].g_sItemReward2[0] = '\0';
 				g_esPlayer[iPlayer].g_sItemReward3[0] = '\0';
@@ -4862,8 +4902,12 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esGeneral.g_iAnnounceDeath, value, 0, 2);
 				g_esGeneral.g_iAnnounceKill = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceKill", "Announce Kill", "Announce_Kill", "kill", g_esGeneral.g_iAnnounceKill, value, 0, 1);
 				g_esGeneral.g_iArrivalMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalMessage", "Arrival Message", "Arrival_Message", "arrivalmsg", g_esGeneral.g_iArrivalMessage, value, 0, 1023);
+				g_esGeneral.g_iArrivalSound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalSound", "Arrival Sound", "Arrival_Sound", "arrivalsnd", g_esGeneral.g_iArrivalSound, value, 0, 1);
 				g_esGeneral.g_iDeathMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathMessage", "Death Message", "Death_Message", "deathmsg", g_esGeneral.g_iDeathMessage, value, 0, 1023);
+				g_esGeneral.g_iDeathSound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathSound", "Death Sound", "Death_Sound", "deathsnd", g_esGeneral.g_iDeathSound, value, 0, 1);
 				g_esGeneral.g_iKillMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "KillMessage", "Kill Message", "Kill_Message", "killmsg", g_esGeneral.g_iKillMessage, value, 0, 1023);
+				g_esGeneral.g_iVocalizeArrival = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "VocalizeArrival", "Vocalize Arrival", "Vocalize_Arrival", "arrivalvoc", g_esGeneral.g_iVocalizeArrival, value, 0, 1);
+				g_esGeneral.g_iVocalizeDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "VocalizeDeath", "Vocalize Death", "Vocalize_Death", "deathvoc", g_esGeneral.g_iVocalizeDeath, value, 0, 1);
 				g_esGeneral.g_iAggressiveTanks = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_COMP, key, "AggressiveTanks", "Aggressive Tanks", "Aggressive_Tanks", "aggressive", g_esGeneral.g_iAggressiveTanks, value, 0, 1);
 				g_esGeneral.g_iCreditIgniters = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_COMP, key, "CreditIgniters", "Credit Igniters", "Credit_Igniters", "credit", g_esGeneral.g_iCreditIgniters, value, 0, 1);
 				g_esGeneral.g_iStasisMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_COMP, key, "StasisMode", "Stasis Mode", "Stasis_Mode", "stasis", g_esGeneral.g_iStasisMode, value, 0, 1);
@@ -5110,8 +5154,12 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 							g_esPlayer[iPlayer].g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esPlayer[iPlayer].g_iAnnounceDeath, value, 0, 2);
 							g_esPlayer[iPlayer].g_iAnnounceKill = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceKill", "Announce Kill", "Announce_Kill", "kill", g_esPlayer[iPlayer].g_iAnnounceKill, value, 0, 1);
 							g_esPlayer[iPlayer].g_iArrivalMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalMessage", "Arrival Message", "Arrival_Message", "arrivalmsg", g_esPlayer[iPlayer].g_iArrivalMessage, value, 0, 1023);
+							g_esPlayer[iPlayer].g_iArrivalSound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalSound", "Arrival Sound", "Arrival_Sound", "arrivalsnd", g_esPlayer[iPlayer].g_iArrivalSound, value, 0, 1);
 							g_esPlayer[iPlayer].g_iDeathMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathMessage", "Death Message", "Death_Message", "deathmsg", g_esPlayer[iPlayer].g_iDeathMessage, value, 0, 1023);
+							g_esPlayer[iPlayer].g_iDeathSound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathSound", "Death Sound", "Death_Sound", "deathsnd", g_esPlayer[iPlayer].g_iDeathSound, value, 0, 1);
 							g_esPlayer[iPlayer].g_iKillMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "KillMessage", "Kill Message", "Kill_Message", "killmsg", g_esPlayer[iPlayer].g_iKillMessage, value, 0, 1023);
+							g_esPlayer[iPlayer].g_iVocalizeArrival = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "VocalizeArrival", "Vocalize Arrival", "Vocalize_Arrival", "arrivalvoc", g_esPlayer[iPlayer].g_iVocalizeArrival, value, 0, 1);
+							g_esPlayer[iPlayer].g_iVocalizeDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "VocalizeDeath", "Vocalize Death", "Vocalize_Death", "deathvoc", g_esPlayer[iPlayer].g_iVocalizeDeath, value, 0, 1);
 							g_esPlayer[iPlayer].g_iGlowEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GLOW, key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "genabled", g_esPlayer[iPlayer].g_iGlowEnabled, value, 0, 1);
 							g_esPlayer[iPlayer].g_iGlowFlashing = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GLOW, key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "flashing", g_esPlayer[iPlayer].g_iGlowFlashing, value, 0, 1);
 							g_esPlayer[iPlayer].g_iGlowType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GLOW, key, "GlowType", "Glow Type", "Glow_Type", "type", g_esPlayer[iPlayer].g_iGlowType, value, 0, 1);
@@ -5696,7 +5744,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_now_it"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
- 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_bSecondGame)
+ 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
 			{
 				vRemoveGlow(iTank);
 			}
@@ -5704,7 +5752,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_no_longer_it"))
 		{
 			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
- 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_bSecondGame && !bIsPlayerIncapacitated(iTank) && g_esCache[iTank].g_iGlowEnabled == 1)
+ 			if (bIsTank(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerIncapacitated(iTank))
 			{
 				vSetGlow(iTank);
 			}
@@ -5808,8 +5856,12 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_iAnnounceDeath = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esTank[type].g_iAnnounceDeath, value, 0, 2);
 		g_esTank[type].g_iAnnounceKill = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceKill", "Announce Kill", "Announce_Kill", "kill", g_esTank[type].g_iAnnounceKill, value, 0, 1);
 		g_esTank[type].g_iArrivalMessage = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalMessage", "Arrival Message", "Arrival_Message", "arrivalmsg", g_esTank[type].g_iArrivalMessage, value, 0, 1023);
+		g_esTank[type].g_iArrivalSound = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalSound", "Arrival Sound", "Arrival_Sound", "arrivalsnd", g_esTank[type].g_iArrivalSound, value, 0, 1);
 		g_esTank[type].g_iDeathMessage = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathMessage", "Death Message", "Death_Message", "deathmsg", g_esTank[type].g_iDeathMessage, value, 0, 1023);
+		g_esTank[type].g_iDeathSound = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathSound", "Death Sound", "Death_Sound", "deathsnd", g_esTank[type].g_iDeathSound, value, 0, 1);
 		g_esTank[type].g_iKillMessage = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "KillMessage", "Kill Message", "Kill_Message", "killmsg", g_esTank[type].g_iKillMessage, value, 0, 1023);
+		g_esTank[type].g_iVocalizeArrival = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "VocalizeArrival", "Vocalize Arrival", "Vocalize_Arrival", "arrivalvoc", g_esTank[type].g_iVocalizeArrival, value, 0, 1);
+		g_esTank[type].g_iVocalizeDeath = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "VocalizeDeath", "Vocalize Death", "Vocalize_Death", "deathvoc", g_esTank[type].g_iVocalizeDeath, value, 0, 1);
 		g_esTank[type].g_iGlowEnabled = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GLOW, key, "GlowEnabled", "Glow Enabled", "Glow_Enabled", "genabled", g_esTank[type].g_iGlowEnabled, value, 0, 1);
 		g_esTank[type].g_iGlowFlashing = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GLOW, key, "GlowFlashing", "Glow Flashing", "Glow_Flashing", "flashing", g_esTank[type].g_iGlowFlashing, value, 0, 1);
 		g_esTank[type].g_iGlowType = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GLOW, key, "GlowType", "Glow Type", "Glow_Type", "type", g_esTank[type].g_iGlowType, value, 0, 1);
@@ -6156,21 +6208,24 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 static void vVocalizeDeath(int killer, int assistant, int tank)
 {
 	int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
-	if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+	if (g_esCache[tank].g_iRewardEnabled[0] != -1 && bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
 	{
 		FakeClientCommand(killer, "vocalize PlayerHurrah #%i", iTimestamp);
 	}
 
-	if (bIsSurvivor(assistant, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && assistant != killer)
+	if (g_esCache[tank].g_iRewardEnabled[1] != -1 && bIsSurvivor(assistant, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && assistant != killer)
 	{
 		FakeClientCommand(assistant, "vocalize PlayerTaunt #%i", iTimestamp);
 	}
 
-	for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
+	if (g_esCache[tank].g_iRewardEnabled[2] != -1)
 	{
-		if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTeammate].g_iTankDamage[tank] > 0.0 && iTeammate != killer && iTeammate != assistant)
+		for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 		{
-			FakeClientCommand(iTeammate, "vocalize PlayerNiceJob #%i", iTimestamp);
+			if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTeammate].g_iTankDamage[tank] > 0.0 && iTeammate != killer && iTeammate != assistant)
+			{
+				FakeClientCommand(iTeammate, "vocalize PlayerNiceJob #%i", iTimestamp);
+			}
 		}
 	}
 }
@@ -6740,10 +6795,7 @@ static void vRemoveProps(int tank, int mode = 1)
 
 	g_esPlayer[tank].g_iFlashlight = INVALID_ENT_REFERENCE;
 
-	if (g_bSecondGame)
-	{
-		vRemoveGlow(tank);
-	}
+	vRemoveGlow(tank);
 
 	if (mode == 1)
 	{
@@ -6902,11 +6954,7 @@ static void vResetTank(int tank)
 	vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(SOUND_ELECTRICITY, tank);
 	vResetSpeed(tank, true);
-
-	if (g_bSecondGame)
-	{
-		vRemoveGlow(tank);
-	}
+	vRemoveGlow(tank);
 }
 
 static void vKillRegularWavesTimer()
@@ -6952,7 +7000,7 @@ static void vResetTimersForward(int mode = 0, int tank = 0)
 	Call_Finish();
 }
 
-static void vCalculateDeath(int tank, int survivor = 0)
+static void vCalculateDeath(int tank, int survivor)
 {
 	if (bIsCustomTankSupported(tank))
 	{
@@ -6967,39 +7015,8 @@ static void vCalculateDeath(int tank, int survivor = 0)
 
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), tank);
-
 		float flPercentage = (float(g_esPlayer[iAssistant].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
-
-		switch (g_esCache[tank].g_iAnnounceDeath)
-		{
-			case 1: vAnnounceDeath(tank);
-			case 2:
-			{
-				int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
-				if (iOption > 0)
-				{
-					char sPhrase[32];
-					if (bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
-					{
-						FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
-						MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, survivor, sTankName, iAssistant, flPercentage);
-						vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, survivor, sTankName, iAssistant, flPercentage);
-						vVocalizeDeath(survivor, iAssistant, tank);
-					}
-					else if (flPercentage >= 1.0)
-					{
-						FormatEx(sPhrase, sizeof(sPhrase), "Assist%i", iOption);
-						MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, iAssistant, flPercentage);
-						vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, iAssistant, flPercentage);
-						vVocalizeDeath(0, iAssistant, tank);
-					}
-					else
-					{
-						vAnnounceDeath(tank);
-					}
-				}
-			}
-		}
+		vAnnounceDeath(tank, survivor, iAssistant, flPercentage);
 
 		float flRandom = GetRandomFloat(0.1, 100.0);
 		if (bIsSurvivor(iAssistant, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esCache[tank].g_iRewardEnabled[1] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[1])
@@ -7047,7 +7064,7 @@ static void vCalculateDeath(int tank, int survivor = 0)
 	}
 	else if (g_esCache[tank].g_iAnnounceDeath > 0)
 	{
-		vAnnounceDeath(tank);
+		vAnnounceDeath(tank, 0, 0, 0.0);
 	}
 }
 
@@ -7591,7 +7608,7 @@ static void vSetupDeveloper(int developer, bool setup)
 
 		if (bIsValidClient(developer, MT_CHECK_ALIVE))
 		{
-			SetEntPropFloat(developer, Prop_Data, "m_flGravity", 1.0);
+			SetEntityGravity(developer, 1.0);
 			SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
 		}
 	}
@@ -7653,11 +7670,7 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 	vChangeTypeForward(tank, g_esPlayer[tank].g_iOldTankType, g_esPlayer[tank].g_iTankType, revert);
 	vCacheSettings(tank);
 	vSetTankModel(tank);
-
-	if (g_bSecondGame)
-	{
-		vRemoveGlow(tank);
-	}
+	vRemoveGlow(tank);
 
 	SetEntityRenderMode(tank, RENDER_NORMAL);
 	SetEntityRenderColor(tank, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
@@ -7703,7 +7716,7 @@ static void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type =
 
 static void vSetGlow(int tank)
 {
-	if (!g_bSecondGame)
+	if (!g_bSecondGame || g_esCache[tank].g_iGlowEnabled == 0)
 	{
 		return;
 	}
@@ -8265,17 +8278,14 @@ static void vAnnounce(int tank, const char[] oldname, const char[] name, int mod
 		vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, (bExists ? sTankNote : "NoNote"), LANG_SERVER);
 	}
 
-	if (g_bSecondGame && g_esCache[tank].g_iGlowEnabled == 1)
-	{
-		vSetGlow(tank);
-	}
+	vSetGlow(tank);
 }
 
 static void vAnnounceArrival(int tank, const char[] name)
 {
 	if (g_esCache[tank].g_iAnnounceArrival & MT_ARRIVAL_SPAWN)
 	{
-		int iOption = iGetMessageType(g_esCache[tank].g_iArrivalMessage), iTimestamp = RoundToNearest(GetGameTime() * 10.0);
+		int iOption = iGetMessageType(g_esCache[tank].g_iArrivalMessage);
 		if (iOption > 0)
 		{
 			char sPhrase[32];
@@ -8283,32 +8293,100 @@ static void vAnnounceArrival(int tank, const char[] name)
 			MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, name);
 			vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, name);
 		}
+	}
 
-		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	if (g_esCache[tank].g_iVocalizeArrival == 1 || g_esCache[tank].g_iArrivalSound == 1)
+	{
+		int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+			if (g_esCache[tank].g_iVocalizeArrival == 1 && bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 			{
 				switch (GetRandomInt(1, 3))
 				{
-					case 1: FakeClientCommand(iSurvivor, "vocalize PlayerYellRun #%i", iTimestamp);
-					case 2: FakeClientCommand(iSurvivor, "vocalize %s #%i", (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
-					case 3: FakeClientCommand(iSurvivor, "vocalize PlayerBackUp #%i", iTimestamp);
+					case 1: FakeClientCommand(iPlayer, "vocalize PlayerYellRun #%i", iTimestamp);
+					case 2: FakeClientCommand(iPlayer, "vocalize %s #%i", (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
+					case 3: FakeClientCommand(iPlayer, "vocalize PlayerBackUp #%i", iTimestamp);
 				}
+			}
+
+			if (g_esCache[tank].g_iArrivalSound == 1 && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+			{
+				EmitSoundToClient(iPlayer, SOUND_SPAWN, iPlayer, SNDCHAN_WEAPON, SNDLEVEL_SCREAMING);
 			}
 		}
 	}
 }
 
-static void vAnnounceDeath(int tank)
+static void vAnnounceDeath(int tank, int killer, int assistant, float percentage)
 {
-	int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
-	if (iOption > 0)
+	bool bAnnounce = false;
+
+	switch (g_esCache[tank].g_iAnnounceDeath)
 	{
-		char sPhrase[32], sTankName[33];
-		FormatEx(sPhrase, sizeof(sPhrase), "Death%i", iOption);
-		vGetTranslatedName(sTankName, sizeof(sTankName), tank);
-		MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName);
-		vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName);
+		case 1: bAnnounce = true;
+		case 2:
+		{
+			int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
+			if (iOption > 0)
+			{
+				char sPhrase[32], sTankName[33];
+				vGetTranslatedName(sTankName, sizeof(sTankName), tank);
+				if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+				{
+					FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
+					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, killer, sTankName, assistant, percentage);
+					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, killer, sTankName, assistant, percentage);
+					vVocalizeDeath(killer, assistant, tank);
+				}
+				else if (percentage >= 1.0)
+				{
+					FormatEx(sPhrase, sizeof(sPhrase), "Assist%i", iOption);
+					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, assistant, percentage);
+					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, assistant, percentage);
+					vVocalizeDeath(killer, assistant, tank);
+				}
+				else
+				{
+					bAnnounce = true;
+				}
+			}
+		}
+	}
+
+	if (bAnnounce)
+	{
+		int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
+		if (iOption > 0)
+		{
+			char sPhrase[32], sTankName[33];
+			FormatEx(sPhrase, sizeof(sPhrase), "Death%i", iOption);
+			vGetTranslatedName(sTankName, sizeof(sTankName), tank);
+			MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName);
+			vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName);
+		}
+	}
+
+	if (g_esCache[tank].g_iVocalizeDeath == 1 || g_esCache[tank].g_iDeathSound == 1)
+	{
+		int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bAnnounce && g_esCache[tank].g_iVocalizeDeath == 1 && bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+			{
+				switch (GetRandomInt(1, 3))
+				{
+					case 1: FakeClientCommand(iPlayer, "vocalize PlayerHurrah #%i", iTimestamp);
+					case 2: FakeClientCommand(iPlayer, "vocalize PlayerTaunt #%i", iTimestamp);
+					case 3: FakeClientCommand(iPlayer, "vocalize PlayerNiceJob #%i", iTimestamp);
+				}
+			}
+
+			if (g_esCache[tank].g_iDeathSound == 1 && bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+			{
+				EmitSoundToClient(iPlayer, SOUND_DEATH, iPlayer, SNDCHAN_WEAPON, SNDLEVEL_SCREAMING);
+			}
+		}
 	}
 }
 
