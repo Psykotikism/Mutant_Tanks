@@ -14,10 +14,28 @@
 - Fixed the Tank spawner not allowing multiple copies of the same Mutant Tank type to spawn.
 - Fixed inconsistent access levels for some developer commands.
 
+#### Abilities
+- Heal
+	- Fixed players with the god mode reward being affected.
+
+- Kamikaze
+	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Restart
+	- Fixed players with the god mode reward being affected.
+
+- Rocket
+	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Smash
+	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Smite
+	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
 ### Changes
 
 #### Core Plugin
-- Earning the same rewards with durations now extends the durations.
 - Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
 - Added extra copies of the `Body Effects` setting's electric jolt option.
 - Increased verbosity of logging for admin commands.
@@ -52,7 +70,7 @@
 #### Updates
 - Updated config files.
 - Updated include file.
-- Updated translation file.
+- Updated translation files.
 
 ## Version 8.82 (January 25, 2021)
 
@@ -126,7 +144,7 @@
 - Updated config files.
 - Updated gamedata file.
 - Updated include file.
-- Updated translation file.
+- Updated translation files.
 
 ## Version 8.81 (January 20, 2021)
 
@@ -774,7 +792,7 @@
 - Updated config files.
 - Updated gamedata file.
 - Updated include files.
-- Updated translation file.
+- Updated translation files.
 
 ## Version 8.79 (October 10, 2020)
 
