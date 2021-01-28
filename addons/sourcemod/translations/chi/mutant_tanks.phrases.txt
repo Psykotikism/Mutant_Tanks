@@ -514,7 +514,7 @@
 
 	"MultipleMatches"
 	{
-		"chi"			"该名称与多种类型相匹配.{olive} 选择一个随机匹配项{yellow} (编号{1}){olive}..."
+		"chi"			"该名称与多种类型相匹配.{olive} 选择一个随机匹配项{yellow} (坦克 #{1}){olive}."
 	}
 
 	"NoAbilities"
@@ -579,12 +579,12 @@
 
 	"RequestFailed"
 	{
-		"chi"			"没有与该名称匹配的类型.{olive} 请求失败..."
+		"chi"			"没有与该名称匹配的类型.{olive} 请求失败."
 	}
 
 	"RequestSucceeded"
 	{
-		"chi"			"一种名称{yellow} (坦克＃2){mint} 与该名称匹配.{olive} 请求成功！"
+		"chi"			"一种名称{yellow} (坦克 #{1}){mint} 与该名称匹配.{olive} 请求成功!"
 	}
 
 	"RewardAmmo"
@@ -2889,7 +2889,7 @@
 
 	"MedicHuman"
 	{
-		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 您的医疗能力！"
+		"chi"			"您激活了{olive} {1}{mint}/{olive}{2}{mint} 您的医疗能力!"
 	}
 
 	"MedicHuman2"

@@ -514,7 +514,7 @@
 
 	"MultipleMatches"
 	{
-		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Tank #{1}){olive}..."
+		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Tank #{1}){olive}."
 	}
 
 	"NoAbilities"
@@ -579,7 +579,7 @@
 
 	"RequestFailed"
 	{
-		"hu"			"Nem találtunk ilyen nevű típust.{olive} Kérés sikertelen..."
+		"hu"			"Nem találtunk ilyen nevű típust.{olive} Kérés sikertelen."
 	}
 
 	"RequestSucceeded"

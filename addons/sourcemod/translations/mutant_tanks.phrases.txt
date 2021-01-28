@@ -580,7 +580,7 @@
 	"MultipleMatches"
 	{
 		"#format"		"{1:i}"
-		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Tank #{1}){olive}..."
+		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Tank #{1}){olive}."
 	}
 
 	"NoAbilities"
@@ -647,7 +647,7 @@
 
 	"RequestFailed"
 	{
-		"en"			"No types matched that name.{olive} Request failed..."
+		"en"			"No types matched that name.{olive} Request failed."
 	}
 
 	"RequestSucceeded"
