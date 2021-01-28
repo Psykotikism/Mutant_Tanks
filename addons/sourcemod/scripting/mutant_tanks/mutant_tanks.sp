@@ -132,6 +132,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_ARRIVAL_TRANSFORM (1 << 3) // announce transformation
 #define MT_ARRIVAL_REVERT (1 << 4) // announce revert
 
+#define MT_CMD_SPAWN (1 << 0) // "sm_tank"/"sm_mt_tank"
+#define MT_CMD_CONFIG (1 << 1) // "sm_mt_config"
+#define MT_CMD_LIST (1 << 2) // "sm_mt_list"
+#define MT_CMD_RELOAD (1 << 3) // "sm_mt_reload"
+#define MT_CMD_VERSION (1 << 4) // "sm_mt_version"
+
 #define MT_CONFIG_DIFFICULTY (1 << 0) // difficulty_configs
 #define MT_CONFIG_MAP (1 << 1) // l4d_map_configs/l4d2_map_configs
 #define MT_CONFIG_GAMEMODE (1 << 2) // l4d_gamemode_configs/l4d2_gamemode_configs
@@ -376,6 +382,7 @@ enum struct esGeneral
 	int g_iKillMessage;
 	int g_iLauncher;
 	int g_iLimitExtras;
+	int g_iLogCommands;
 	int g_iLogMessages;
 	int g_iMasterControl;
 	int g_iMaxType;
@@ -1884,7 +1891,7 @@ public void vMutantTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObjec
 		case TopMenuAction_SelectOption:
 		{
 			vTankMenu(param, true);
-			vLogCommand(param, "{default}Opened the{mint} %s{default} menu.", MT_NAME);
+			vLogCommand(param, MT_CMD_SPAWN, "{default}Opened the{mint} %s{default} menu.", MT_NAME);
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the %s menu.", MT_TAG, param, MT_NAME);
 		}
 	}
@@ -1898,7 +1905,7 @@ public void vMTConfigMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject o
 		case TopMenuAction_SelectOption:
 		{
 			vPathMenu(param, true);
-			vLogCommand(param, "{default}Opened the config file viewer.");
+			vLogCommand(param, MT_CMD_CONFIG, "{default}Opened the config file viewer.");
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the config file viewer.", MT_TAG, param);
 		}
 	}
@@ -1921,7 +1928,7 @@ public void vMTListMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject obj
 		case TopMenuAction_SelectOption:
 		{
 			vListAbilities(param);
-			vLogCommand(param, "{default}Checked the list of abilities installed.");
+			vLogCommand(param, MT_CMD_LIST, "{default}Checked the list of abilities installed.");
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the list of abilities installed.", MT_TAG, param);
 
 			if (bIsValidClient(param, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE) && g_esGeneral.g_tmMTMenu != null)
@@ -1940,7 +1947,7 @@ public void vMTReloadMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject o
 		case TopMenuAction_SelectOption:
 		{
 			vReloadConfig(param);
-			vLogCommand(param, "{default}Reloaded all config files.");
+			vLogCommand(param, MT_CMD_RELOAD, "{default}Reloaded all config files.");
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Reloaded all config files.", MT_TAG, param);
 
 			if (bIsValidClient(param, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE) && g_esGeneral.g_tmMTMenu != null)
@@ -1959,7 +1966,7 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 		case TopMenuAction_SelectOption:
 		{
 			MT_PrintToChat(param, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
-			vLogCommand(param, "{default}Checked the current version of{mint} %s{default}.", MT_NAME);
+			vLogCommand(param, MT_CMD_VERSION, "{default}Checked the current version of{mint} %s{default}.", MT_NAME);
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, param, MT_NAME);
 
 			if (bIsValidClient(param, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE) && g_esGeneral.g_tmMTMenu != null)
@@ -1982,7 +1989,7 @@ public Action cmdMTConfig(int client, int args)
 				case false: vPathMenu(client);
 			}
 
-			vLogCommand(client, "{default}Opened the config file viewer.");
+			vLogCommand(client, MT_CMD_CONFIG, "{default}Opened the config file viewer.");
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the config file viewer.", MT_TAG, client);
 		}
 		else
@@ -2025,7 +2032,7 @@ public Action cmdMTConfig(int client, int args)
 	char sFilePath[PLATFORM_MAX_PATH];
 	int iIndex = StrContains(g_esGeneral.g_sChosenPath, "mutant_tanks", false);
 	FormatEx(sFilePath, sizeof(sFilePath), "%s", g_esGeneral.g_sChosenPath[iIndex + 13]);
-	vLogCommand(client, "{default}Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", sSection, sFilePath);
+	vLogCommand(client, MT_CMD_CONFIG, "{default}Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", sSection, sFilePath);
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the %s section of the %s config file.", MT_TAG, client, sSection, sFilePath);
 
 	return Plugin_Handled;
@@ -2583,7 +2590,7 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 			char sFilePath[PLATFORM_MAX_PATH];
 			int iIndex = StrContains(g_esGeneral.g_sChosenPath, "mutant_tanks", false);
 			FormatEx(sFilePath, sizeof(sFilePath), "%s", g_esGeneral.g_sChosenPath[iIndex + 13]);
-			vLogCommand(param1, "{default}Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", sInfo, sFilePath);
+			vLogCommand(param1, MT_CMD_CONFIG, "{default}Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", sInfo, sFilePath);
 			vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the %s section of the %s config file.", MT_TAG, param1, sInfo, sFilePath);
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE))
@@ -2778,7 +2785,7 @@ public Action cmdMTList(int client, int args)
 	}
 
 	vListAbilities(client);
-	vLogCommand(client, "{default}Checked the list of abilities installed.");
+	vLogCommand(client, MT_CMD_LIST, "{default}Checked the list of abilities installed.");
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the list of abilities installed.", MT_TAG, client);
 
 	return Plugin_Handled;
@@ -2865,7 +2872,7 @@ static void vListAbilities(int admin)
 public Action cmdMTReload(int client, int args)
 {
 	vReloadConfig(client);
-	vLogCommand(client, "{default}Reloaded all config files.");
+	vLogCommand(client, MT_CMD_RELOAD, "{default}Reloaded all config files.");
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Reloaded all config files.", MT_TAG, client);
 
 	return Plugin_Handled;
@@ -3059,7 +3066,7 @@ static void vReloadConfig(int admin)
 public Action cmdMTVersion(int client, int args)
 {
 	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
-	vLogCommand(client, "{default}Checked the current version of{mint} %s{default}.", MT_NAME);
+	vLogCommand(client, MT_CMD_VERSION, "{default}Checked the current version of{mint} %s{default}.", MT_NAME);
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, client, MT_NAME);
 
 	return Plugin_Handled;
@@ -3119,7 +3126,7 @@ public Action cmdTank(int client, int args)
 			case false: vTankMenu(client);
 		}
 
-		vLogCommand(client, "{default}Opened the{mint} %s{default} menu.", MT_NAME);
+		vLogCommand(client, MT_CMD_SPAWN, "{default}Opened the{mint} %s{default} menu.", MT_NAME);
 		vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the %s menu.", MT_TAG, client, MT_NAME);
 
 		return Plugin_Handled;
@@ -3317,12 +3324,12 @@ static void vTank(int admin, char[] type, bool spawn = false, bool log = true, i
 
 						return;
 					}
-					case 1: MT_PrintToChat(admin, "%s %t", MT_TAG3, "RequestSucceeded");
+					case 1: MT_PrintToChat(admin, "%s %t", MT_TAG3, "RequestSucceeded", g_esGeneral.g_iChosenType);
 					default:
 					{
-						MT_PrintToChat(admin, "%s %t", MT_TAG3, "MultipleMatches");
-
 						g_esGeneral.g_iChosenType = iTankTypes[GetRandomInt(1, iTypeCount)];
+
+						MT_PrintToChat(admin, "%s %t", MT_TAG3, "MultipleMatches", g_esGeneral.g_iChosenType);
 					}
 				}
 			}
@@ -3474,7 +3481,7 @@ static void vSpawnTank(int admin, bool log = true, int amount, int mode)
 
 	if (log)
 	{
-		vLogCommand(admin, "{default}Spawned{mint} %i{olive} %s%s{default}.", amount, g_esTank[iType].g_sTankName, ((amount > 1) ? "s" : ""));
+		vLogCommand(admin, MT_CMD_SPAWN, "{default}Spawned{mint} %i{olive} %s%s{default}.", amount, g_esTank[iType].g_sTankName, ((amount > 1) ? "s" : ""));
 		vLogMessage(MT_LOG_SERVER, _, "%s %N: Spawned %i %s%s.", MT_TAG, admin, amount, g_esTank[iType].g_sTankName, ((amount > 1) ? "s" : ""));
 	}
 }
@@ -4422,6 +4429,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iFinalesOnly = 0;
 		g_esGeneral.g_flIdleCheck = 10.0;
 		g_esGeneral.g_iIdleCheckMode = 2;
+		g_esGeneral.g_iLogCommands = 31;
 		g_esGeneral.g_iLogMessages = 0;
 		g_esGeneral.g_iTankModel = 0;
 		g_esGeneral.g_flBurntSkin = -1.0;
@@ -4480,7 +4488,7 @@ public void SMCParseStart(SMCParser smc)
 
 			if (iPos < sizeof(esGeneral::g_iRewardEnabled))
 			{
-				g_esGeneral.g_iRewardEffect[iPos] = 0;
+				g_esGeneral.g_iRewardEffect[iPos] = 15;
 				g_esGeneral.g_iRewardEnabled[iPos] = -1;
 				g_esGeneral.g_flRewardChance[iPos] = 33.3;
 				g_esGeneral.g_flRewardDuration[iPos] = 10.0;
@@ -4847,7 +4855,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_iFinalesOnly = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esGeneral.g_iFinalesOnly, value, 0, 4);
 				g_esGeneral.g_flIdleCheck = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "IdleCheck", "Idle Check", "Idle_Check", "idle", g_esGeneral.g_flIdleCheck, value, 0.0, 999999.0);
 				g_esGeneral.g_iIdleCheckMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "IdleCheckMode", "Idle Check Mode", "Idle_Check_Mode", "idlemode", g_esGeneral.g_iIdleCheckMode, value, 0, 2);
-				g_esGeneral.g_iLogMessages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "LogMessages", "Log Messages", "Log_Messages", "log", g_esGeneral.g_iLogMessages, value, 0, 31);
+				g_esGeneral.g_iLogCommands = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "LogCommands", "Log Commands", "Log_Commands", "logcmds", g_esGeneral.g_iLogCommands, value, 0, 31);
+				g_esGeneral.g_iLogMessages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "LogMessages", "Log Messages", "Log_Messages", "logmsgs", g_esGeneral.g_iLogMessages, value, 0, 31);
 				g_esGeneral.g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGeneral.g_iRequiresHumans, value, 0, 32);
 				g_esGeneral.g_iTankModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esGeneral.g_iTankModel, value, 0, 7);
 				g_esGeneral.g_flBurntSkin = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esGeneral.g_flBurntSkin, value, -1.0, 1.0);
@@ -6345,19 +6354,22 @@ static void vHookEventForward(bool mode)
 	Call_Finish();
 }
 
-static void vLogCommand(int admin, const char[] activity, any ...)
+static void vLogCommand(int admin, int type, const char[] activity, any ...)
 {
-	char sMessage[255], sTag[32];
-	FormatEx(sTag, sizeof(sTag), "%s ", MT_TAG4);
-	VFormat(sMessage, sizeof(sMessage), activity, 3);
+	if (g_esGeneral.g_iLogCommands & type)
+	{
+		char sMessage[255], sTag[32];
+		FormatEx(sTag, sizeof(sTag), "%s ", MT_TAG4);
+		VFormat(sMessage, sizeof(sMessage), activity, 3);
 
-	ReplaceString(sMessage, sizeof(sMessage), "{default}", "\x01");
-	ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
-	ReplaceString(sMessage, sizeof(sMessage), "{yellow}", "\x04");
-	ReplaceString(sMessage, sizeof(sMessage), "{olive}", "\x05");
-	ReplaceString(sMessage, sizeof(sMessage), "{percent}", "%%");
+		ReplaceString(sMessage, sizeof(sMessage), "{default}", "\x01");
+		ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
+		ReplaceString(sMessage, sizeof(sMessage), "{yellow}", "\x04");
+		ReplaceString(sMessage, sizeof(sMessage), "{olive}", "\x05");
+		ReplaceString(sMessage, sizeof(sMessage), "{percent}", "%%");
 
-	ShowActivity2(admin, sTag, sMessage);
+		ShowActivity2(admin, sTag, sMessage);
+	}
 }
 
 static void vLogMessage(int type, bool timestamp = true, const char[] message, any ...)
