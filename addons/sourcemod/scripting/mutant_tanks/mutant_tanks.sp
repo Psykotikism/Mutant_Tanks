@@ -1993,10 +1993,12 @@ public Action cmdMTConfig(int client, int args)
 		return Plugin_Handled;
 	}
 
-	GetCmdArg(1, g_esGeneral.g_sSection, sizeof(esGeneral::g_sSection));
-	if (IsCharNumeric(g_esGeneral.g_sSection[0]))
+	char sSection[PLATFORM_MAX_PATH];
+	GetCmdArg(1, sSection, sizeof(sSection));
+	strcopy(g_esGeneral.g_sSection, sizeof(esGeneral::g_sSection), sSection);
+	if (IsCharNumeric(sSection[0]))
 	{
-		g_esGeneral.g_iSection = StringToInt(g_esGeneral.g_sSection);
+		g_esGeneral.g_iSection = StringToInt(sSection);
 	}
 
 	switch (args)
@@ -2020,8 +2022,8 @@ public Action cmdMTConfig(int client, int args)
 		case false: vParseConfig(client);
 	}
 
-	vLogCommand(client, "{default}Viewed the config file.");
-	vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the config file.", MT_TAG, client);
+	vLogCommand(client, "{default}Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", sSection, g_esGeneral.g_sChosenPath);
+	vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the %s section of the %s config file.", MT_TAG, client, sSection, g_esGeneral.g_sChosenPath);
 
 	return Plugin_Handled;
 }
@@ -2575,8 +2577,8 @@ public int iConfigMenuHandler(Menu menu, MenuAction action, int param1, int para
 				case false: vParseConfig(param1);
 			}
 
-			vLogCommand(param1, "{default}Viewed the config file.");
-			vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the config file.", MT_TAG, param1);
+			vLogCommand(param1, "{default}Viewed the{mint} %s{default} section of the{olive} %s{default} config file.", sInfo, g_esGeneral.g_sChosenPath);
+			vLogMessage(MT_LOG_SERVER, _, "%s %N: Viewed the %s section of the %s config file.", MT_TAG, param1, sInfo, g_esGeneral.g_sChosenPath);
 
 			if (bIsValidClient(param1, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE))
 			{
