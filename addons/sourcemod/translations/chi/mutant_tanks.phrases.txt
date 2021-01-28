@@ -514,7 +514,7 @@
 
 	"MultipleMatches"
 	{
-		"chi"			"多个{olive} 坦克类型{mint} 匹配该名称. 将随机选择一个匹配结果..."
+		"chi"			"该名称与多种类型相匹配.{olive} 选择一个随机匹配项{yellow} (编号{1}){olive}..."
 	}
 
 	"NoAbilities"
@@ -579,12 +579,12 @@
 
 	"RequestFailed"
 	{
-		"chi"			"没有{olive} 坦克类型{mint} 匹配该名称. 请求失败..."
+		"chi"			"没有与该名称匹配的类型.{olive} 请求失败..."
 	}
 
 	"RequestSucceeded"
 	{
-		"chi"			"{mint}有一个坦克类型匹配该名称. 请求成功!"
+		"chi"			"一种名称{yellow} (坦克＃2){mint} 与该名称匹配.{olive} 请求成功！"
 	}
 
 	"RewardAmmo"
@@ -5949,7 +5949,7 @@
 
 	"Tank #108 Name"
 	{
-		"chi"			"达斯·维达（Darth Vader）背心"
+		"chi"			"达斯·维达 (Darth Vader) 背心"
 	}
 
 	"Tank #108"
@@ -6019,7 +6019,7 @@
 
 	"Tank #115 Name"
 	{
-		"chi"			"老板（第一形式）"
+		"chi"			"老板 (第一形式)"
 	}
 
 	"Tank #115"
@@ -6029,7 +6029,7 @@
 
 	"Tank #116 Name"
 	{
-		"chi"			"钢铁霸主（第二种形式）"
+		"chi"			"钢铁霸主 (第二种形式)"
 	}
 
 	"Tank #116"
@@ -6039,7 +6039,7 @@
 
 	"Tank #117 Name"
 	{
-		"chi"			"暗夜魔王（第三形式）"
+		"chi"			"暗夜魔王 (第三形式)"
 	}
 
 	"Tank #117"
@@ -6049,7 +6049,7 @@
 
 	"Tank #118 Name"
 	{
-		"chi"			"火灵（第四形式）"
+		"chi"			"火灵 (第四形式)"
 	}
 
 	"Tank #118"

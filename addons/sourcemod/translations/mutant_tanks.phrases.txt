@@ -579,7 +579,8 @@
 
 	"MultipleMatches"
 	{
-		"en"			"Multiple{olive} Tank types{mint} matched that name. Selecting a random match..."
+		"#format"		"{1:i}"
+		"en"			"Multiple types matched that name.{olive} Selecting a random match{yellow} (Tank #{1}){olive}..."
 	}
 
 	"NoAbilities"
@@ -646,12 +647,13 @@
 
 	"RequestFailed"
 	{
-		"en"			"No{olive} Tank types{mint} matched that name. Request failed..."
+		"en"			"No types matched that name.{olive} Request failed..."
 	}
 
 	"RequestSucceeded"
 	{
-		"en"			"{mint}One Tank type matched that name. Request succeeded!"
+		"#format"		"{1:i}"
+		"en"			"One type{yellow} (Tank #{1}){mint} matched that name.{olive} Request succeeded!"
 	}
 
 	"RewardAmmo"

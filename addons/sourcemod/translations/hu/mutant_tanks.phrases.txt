@@ -514,7 +514,7 @@
 
 	"MultipleMatches"
 	{
-		"hu"			"Többféle{olive} Tank típushoz{mint} illik a név. Választunk véletlenszerűen..."
+		"hu"			"Többféle típushoz illik a név.{olive} Választunk véletlenszerűen{yellow} (Tank #{1}){olive}..."
 	}
 
 	"NoAbilities"
@@ -579,12 +579,12 @@
 
 	"RequestFailed"
 	{
-		"hu"			"Nem találtunk{olive} ilyen nevű Tank típust{mint}. Kérés sikertelen..."
+		"hu"			"Nem találtunk ilyen nevű típust.{olive} Kérés sikertelen..."
 	}
 
 	"RequestSucceeded"
 	{
-		"hu"			"{mint}Találtunk ilyen nevű Tank típust. Kérés sikeres!"
+		"hu"			"Találtunk ilyen nevű típust{yellow} (Tank #{1}){mint}.{olive} Kérés sikeres!"
 	}
 
 	"RewardAmmo"
