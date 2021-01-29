@@ -6207,19 +6207,19 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 
 static void vVocalizeDeath(int killer, int assistant, int tank)
 {
-	int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
-	if (g_esCache[tank].g_iRewardEnabled[0] != -1 && bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+	if (g_esCache[tank].g_iVocalizeDeath == 1)
 	{
-		FakeClientCommand(killer, "vocalize PlayerHurrah #%i", iTimestamp);
-	}
+		int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
+		if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+		{
+			FakeClientCommand(killer, "vocalize PlayerHurrah #%i", iTimestamp);
+		}
 
-	if (g_esCache[tank].g_iRewardEnabled[1] != -1 && bIsSurvivor(assistant, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && assistant != killer)
-	{
-		FakeClientCommand(assistant, "vocalize PlayerTaunt #%i", iTimestamp);
-	}
+		if (bIsSurvivor(assistant, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && assistant != killer)
+		{
+			FakeClientCommand(assistant, "vocalize PlayerTaunt #%i", iTimestamp);
+		}
 
-	if (g_esCache[tank].g_iRewardEnabled[2] != -1)
-	{
 		for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 		{
 			if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTeammate].g_iTankDamage[tank] > 0.0 && iTeammate != killer && iTeammate != assistant)
