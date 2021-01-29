@@ -153,9 +153,9 @@
 			"Death Revert"				"1"
 
 			// The plugin will automatically disable any Mutant Tank whose abilities are not installed.
-			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: The ability plugins cache is only updated when configs are loaded/refreshed.
 			// Note: This does not disable Mutant Tanks that do not have any abilities.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -163,6 +163,7 @@
 			"Detect Plugins"			"1"
 
 			// Spawn Mutant Tanks during finales only.
+			// Note: This setting can be used for standard Tanks.
 			// --
 			// 0: OFF, Mutant Tanks will spawn on any map.
 			// 1: ON, Mutant Tanks will only spawn on finale maps.
@@ -175,6 +176,7 @@
 			// Note: It is recommended to use this in finale stage configs only since idle Tanks can prevent finales from ending.
 			// Note: On non-finale maps, Tanks are only idle until survivors finally encounter them, but Tanks with no behavior can spawn on any map.
 			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be used for standard Tanks.
 			// --
 			// Minimum: 0.0 (OFF)
 			// Maximum: 999999.0
@@ -184,6 +186,7 @@
 			// Note: It is recommended to set this to "2" on non-finale maps and "0" on finale maps.
 			// Note: There is a rare bug where a Tank spawns with no behavior even though they look "idle" to survivors. Set this to "0" or "2" to detect this bug.
 			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be used for standard Tanks.
 			// --
 			// 0: Both
 			// 1: Only check for idle Tanks.
@@ -231,6 +234,7 @@
 			"Requires Humans"			"0"
 
 			// The model used by all Mutant Tanks.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// Add up numbers together for different results.
@@ -245,6 +249,7 @@
 			"Tank Model"				"0"
 
 			// The burnt percentage of all Mutant Tanks when they spawn.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// --
 			// -1.0: OFF
@@ -269,6 +274,7 @@
 		"Announcements"
 		{
 			// Announce each Mutant Tank's arrival.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// Add up numbers together for different results.
@@ -285,6 +291,7 @@
 			"Announce Arrival"			"31"
 
 			// Announce each Mutant Tank's death.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// 0: OFF
@@ -293,6 +300,7 @@
 			"Announce Death"			"1"
 
 			// Announce each Mutant Tank's kill.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -301,6 +309,7 @@
 
 			// The message shown to players when a Mutant Tank arrives.
 			// Note: This setting only works for the first option of the "Announce Arrival" setting.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// Add up numbers together for different results.
@@ -322,6 +331,7 @@
 			"Arrival Message"			"0"
 
 			// A sound is played to players when a Mutant Tank arrives.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -329,6 +339,7 @@
 			"Arrival Sound"				"1"
 
 			// The message shown to players when a Mutant Tank dies.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// Add up numbers together for different results.
@@ -350,6 +361,7 @@
 			"Death Message"				"0"
 
 			// A sound is played to players when a Mutant Tank dies.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -357,6 +369,7 @@
 			"Death Sound"				"1"
 
 			// The message shown to players when a Mutant Tank kills a survivor.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// Add up numbers together for different results.
@@ -378,6 +391,7 @@
 			"Kill Message"				"0"
 
 			// All alive survivors vocalize when a Mutant Tank arrives.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -385,6 +399,7 @@
 			"Vocalize Arrival"			"1"
 
 			// All alive survivors vocalize when a Mutant Tank dies.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -395,6 +410,7 @@
 		{
 			// Reward survivors for fighting Mutant Tanks.
 			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate values with commas (",").
@@ -422,7 +438,42 @@
 			// 3rd number = Enable rewards for teammates.
 			"Reward Enabled"			"-1,-1,-1"
 
+			// The chance to reward survivors for killing Mutant Tanks.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate chances with commas (",").
+			// --
+			// Chances limit: 3
+			// Character limit for each chance: 6
+			// --
+			// Minimum value for each chance: 0.0 (No chance)
+			// Maximum value for each chance: 100.0 (Highest chance)
+			// --
+			// 1st number = Chance to reward killers.
+			// 2nd number = Chance to reward assistants.
+			// 3rd number = Chance to reward teammates.
+			"Reward Chance"				"33.3,33.3,33.3"
+
+			// The duration of temporary rewards.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate durations with commas (",").
+			// --
+			// Durations limit: 3
+			// Character limit for each duration: 9
+			// --
+			// Minimum value for each duration: 0.1 (Shortest)
+			// Maximum value for each duration: 999999.0 (Longest)
+			// --
+			// 1st number = Duration for killer rewards.
+			// 2nd number = Duration for assistant rewards.
+			// 3rd number = Duration for teammate rewards.
+			"Reward Duration"			"10.0,10.0,10.0"
+
 			// The effects displayed when rewarding survivors.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate values with commas (",").
@@ -443,39 +494,8 @@
 			// 3rd number = Effect for teammates.
 			"Reward Effect"				"15,15,15"
 
-			// The chance to reward survivors for killing Mutant Tanks.
-			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// --
-			// Separate chances with commas (",").
-			// --
-			// Chances limit: 3
-			// Character limit for each chance: 6
-			// --
-			// Minimum value for each chance: 0.0 (No chance)
-			// Maximum value for each chance: 100.0 (Highest chance)
-			// --
-			// 1st number = Chance to reward killers.
-			// 2nd number = Chance to reward assistants.
-			// 3rd number = Chance to reward teammates.
-			"Reward Chance"				"33.3,33.3,33.3"
-
-			// The duration of temporary rewards.
-			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
-			// --
-			// Separate durations with commas (",").
-			// --
-			// Durations limit: 3
-			// Character limit for each duration: 9
-			// --
-			// Minimum value for each duration: 0.1 (Shortest)
-			// Maximum value for each duration: 999999.0 (Longest)
-			// --
-			// 1st number = Duration for killer rewards.
-			// 2nd number = Duration for assistant rewards.
-			// 3rd number = Duration for teammate rewards.
-			"Reward Duration"			"10.0,10.0,10.0"
-
 			// The minimum amount of damage in percentage required to receive a reward.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate percentages with commas (",").
@@ -492,6 +512,7 @@
 			"Reward Percentage"			"10.0,10.0,10.0"
 
 			// The damage boost to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate boosts with commas (",").
@@ -508,6 +529,7 @@
 			"Damage Boost Reward"			"1.25,1.25,1.25"
 
 			// The item(s) to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate item sets with commas (",").
@@ -522,6 +544,7 @@
 			"Item Reward"				"first_aid_kit,first_aid_kit,first_aid_kit"
 
 			// Restore the previous loadouts of survivors after respawning them.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate values with commas (",").
@@ -538,6 +561,7 @@
 			"Respawn Loadout Reward"		"1,1,1"
 
 			// The speed boost to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate boosts with commas (",").
@@ -554,6 +578,7 @@
 			"Speed Boost Reward"			"1.25,1.25,1.25"
 
 			// Include useful reward types depending on the status of the recipient.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
 			// Separate values with commas (",").
@@ -578,12 +603,14 @@
 		{
 			// (Co-Op modes only) Mutant Tanks should attack immediately after spawning.
 			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be used for standard Tanks.
 			// --
 			// 0: OFF, let the game determine Mutant Tanks' initial behavior.
 			// 1: ON, force Mutant Tanks to attack immediately.
 			"Aggressive Tanks"			"0"
 
 			// (Left 4 Dead 2 only) Survivors will be credited when damaging Mutant Tanks with fire.
+			// Note: This setting can be used for standard Tanks.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -591,6 +618,7 @@
 
 			// (Versus modes only) The stasis mode of Mutant Tanks in competitive game modes.
 			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be used for standard Tanks.
 			// --
 			// 0: OFF, let the game determine Mutant Tanks' stasis mode.
 			// 1: ON, skip stasis mode and spawn Mutant Tanks right away.
@@ -625,7 +653,8 @@
 			// Base health given to all Mutant Tanks.
 			// Note: Tank's health limit on any difficulty is 1,000,000.
 			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
+			// Note: Depending on the value of the "Multiply Health" setting, the Mutant Tank's health will be multiplied based on player count.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// Minimum: 0 (OFF)
@@ -633,6 +662,7 @@
 			"Base Health"				"0"
 
 			// Display Mutant Tanks' names and health.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// Minimum: 0
@@ -653,6 +683,7 @@
 			"Display Health"			"11"
 
 			// Display type of Mutant Tanks' names and health.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// 0: OFF
@@ -663,7 +694,8 @@
 			// Extra health given to the Mutant Tank.
 			// Note: Tank's health limit on any difficulty is 1,000,000.
 			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
+			// Note: Depending on the value of the "Multiply Health" setting, the Mutant Tank's health will be multiplied based on player count.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// Minimum: -1000000
@@ -675,6 +707,8 @@
 
 			// The characters used to represent the health bar of Mutant Tanks.
 			// Note: This setting only takes effect when the "Display Health" setting is enabled.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// Separate characters with commas (",").
 			// --
@@ -685,7 +719,8 @@
 			// 2nd character = Damage indicator
 			"Health Characters"			"|,-"
 
-			// The number of human survivors required for "Multiply Health" to take effect.
+			// The number of human survivors required for the "Multiply Health" setting to take effect.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
 			// --
 			// Minimum: 1
@@ -696,8 +731,9 @@
 			"Minimum Humans"			"2"
 
 			// Multiply Mutant Tanks' health.
+			// Note: Health multiplication only occurs when the requirement for the "Minimum Humans" setting is met.
+			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Health" section of their settings.
-			// Note: Health multiplication only occurs when the requirement for "Minimum Humans" is met.
 			// --
 			// 0: No changes to health.
 			// 1: Multiply original health only.
@@ -781,7 +817,7 @@
 
 			// Spawn this many Tanks on non-finale maps periodically.
 			// Note: Leave this off if you have a Multi-Tanks plugin installed that handles the limit.
-			// Note: This will not work unless "Regular Mode" is set to "1".
+			// Note: This will not work unless the "Regular Mode" setting is set to "1".
 			// --
 			// Minimum: 0
 			// Maximum: 32
@@ -804,7 +840,7 @@
 			"Regular Delay"				"10.0"
 
 			// Spawn Tanks on non-finale maps every time this many seconds passes.
-			// Note: This will not work unless "Regular Mode" is set to "1".
+			// Note: This will not work unless the "Regular Mode" setting is set to "1".
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -818,23 +854,23 @@
 
 			// How many waves of Tanks can spawn before the regular wave spawner stops.
 			// Note: All Tanks from a previous wave must die before more waves of Tanks can spawn.
+			// Note: This will not work unless the "Regular Mode" setting is set to "1".
 			// Note: Do not change this setting if you are unsure of how it works.
-			// Note: This will not work unless "Regular Mode" is set to "1".
 			// --
 			// 0: OFF
 			// 1-999999: Only allow this number of waves.
 			"Regular Limit"				"999999"
 
 			// The mode of the regular wave spawner.
-			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting does not need the "Regular Wave" setting to be enabled.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// 0: Wait for a Tank to spawn before spawning extra Tanks. (Recommended)
 			// 1: Use "Regular Wave" to spawn Tanks.
 			"Regular Mode"				"0"
 
 			// The type of Mutant Tank that will spawn.
-			// Note: This will not work unless "Regular Mode" is set to "1".
+			// Note: This will not work unless the "Regular Mode" setting is set to "1".
 			// --
 			// Separate values with "-".
 			// --
@@ -854,7 +890,7 @@
 			// Spawn Tanks on non-finale maps periodically.
 			// Note: The timer starts after "Regular Delay" is up.
 			// Note: Leave this off if you want a generic spawn rate for Tanks or if you have a Multi-Tanks plugin installed.
-			// Note: This will not work unless "Regular Mode" is set to "1".
+			// Note: This will not work unless the "Regular Mode" setting is set to "1".
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -1040,8 +1076,8 @@
 			"Tank Enabled"				"0"
 
 			// The Mutant Tank has this many chances out of 100.0% to spawn.
+			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected.
 			// Note: Do not change this setting if you are unsure of how it works.
-			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected. 
 			// --
 			// Minimum: 0.0 (No chance)
 			// Maximum: 100.0 (Highest chance)
@@ -1065,8 +1101,8 @@
 			"Tank Note"				"0"
 
 			// The Mutant Tank can spawn.
-			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: The Mutant Tank will still appear on the Mutant Tanks menu and other Mutant Tanks can still transform into the Mutant Tank.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -1090,9 +1126,9 @@
 			"Death Revert"				"0"
 
 			// The plugin will automatically disable the Mutant Tank if none of its abilities are installed.
-			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: The ability plugins cache is only updated when configs are loaded/refreshed.
 			// Note: This does not disable the Mutant Tank if it does not have any abilities.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -1311,28 +1347,6 @@
 			// 3rd number = Enable rewards for teammates.
 			"Reward Enabled"			"-1,-1,-1"
 
-			// The effects displayed when rewarding survivors.
-			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Separate values with commas (",").
-			// --
-			// Add up numbers together for different results.
-			// --
-			// Minimum value for each: 0
-			// Maximum value for each: 3
-			// --
-			// 0: OFF
-			// 1: Trophy
-			// 2: Fireworks particles
-			// 4: Sound effect
-			// 8: Thirdperson view
-			// --
-			// 1st number = Effect for killers.
-			// 2nd number = Effect for assistants.
-			// 3rd number = Effect for teammates.
-			"Reward Effect"				"0,0,0"
-
 			// The chance to reward survivors for killing Mutant Tanks.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -1366,6 +1380,28 @@
 			// 2nd number = Duration for assistant rewards.
 			// 3rd number = Duration for teammate rewards.
 			"Reward Duration"			"0.0,0.0,0.0"
+
+			// The effects displayed when rewarding survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 3
+			// --
+			// 0: OFF
+			// 1: Trophy
+			// 2: Fireworks particles
+			// 4: Sound effect
+			// 8: Thirdperson view
+			// --
+			// 1st number = Effect for killers.
+			// 2nd number = Effect for assistants.
+			// 3rd number = Effect for teammates.
+			"Reward Effect"				"0,0,0"
 
 			// The minimum amount of damage in percentage required to receive a reward.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -1554,16 +1590,16 @@
 		"Spawn"
 		{
 			// The number of Mutant Tanks with this type that can be alive at any given time.
+			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected.
 			// Note: Do not change this setting if you are unsure of how it works.
-			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected. 
 			// --
 			// Minimum: 0 (OFF)
 			// Maximum: 32
 			"Type Limit"				"0"
 
 			// The Mutant Tank will only spawn on finale maps.
+			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected.
 			// Note: Do not change this setting if you are unsure of how it works.
-			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected. 
 			// --
 			// 0: OFF, the Mutant Tank can appear on any map.
 			// 1: ON, the Mutant Tank can only appear on finale maps.
@@ -2242,7 +2278,7 @@
 			// Base health given to all Mutant Tanks.
 			// Note: Tank's health limit on any difficulty is 1,000,000.
 			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
+			// Note: Depending on the value of the "Multiply Health" setting, the Mutant Tank's health will be multiplied based on player count.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2283,7 +2319,7 @@
 			// Extra health given to the Mutant Tank.
 			// Note: Tank's health limit on any difficulty is 1,000,000.
 			// Note: Disable this setting if it conflicts with other plugins.
-			// Note: Depending on the setting for "Multiply Health", the Mutant Tank's health will be multiplied based on player count.
+			// Note: Depending on the value of the "Multiply Health" setting, the Mutant Tank's health will be multiplied based on player count.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2295,8 +2331,8 @@
 			"Extra Health"				"0"
 
 			// The characters used to represent the health bar of the Mutant Tank.
-			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting only takes effect when the "Display Health" setting is enabled.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// Separate characters with commas (",").
@@ -2308,7 +2344,7 @@
 			// 2nd character = Damage indicator
 			"Health Characters"			""
 
-			// The number of human survivors required for "Multiply Health" to take effect.
+			// The number of human survivors required for the "Multiply Health" setting to take effect.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2321,7 +2357,7 @@
 
 			// Multiply the Mutant Tank's health.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
-			// Note: Health multiplication only occurs when the requirement for "Minimum Humans" is met.
+			// Note: Health multiplication only occurs when the requirement for the "Minimum Humans" setting is met.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: No changes to health.

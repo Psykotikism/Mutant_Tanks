@@ -37,6 +37,44 @@
 
 ### Changes
 
+#### General
+- The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by Shadowart.):
+	- `Finales Only`
+	- `Idle Check`
+	- `Idle Check Mode`
+	- `Tank Model`
+	- `Burnt Skin`
+	- `Announce Arrival`
+	- `Announce Death`
+	- `Announce Kill`
+	- `Arrival Message`
+	- `Arrival Sound`
+	- `Death Message`
+	- `Death Sound`
+	- `Kill Message`
+	- `Vocalize Arrival`
+	- `Vocalize Death`
+	- `Reward Enabled`
+	- `Reward Effect`
+	- `Reward Chance`
+	- `Reward Duration`
+	- `Reward Percentage`
+	- `Damage Boost Reward`
+	- `Item Reward`
+	- `Respawn Loadout Reward`
+	- `Speed Boost Reward`
+	- `Useful Rewards`
+	- `Aggressive Tanks`
+	- `Credit Igniters`
+	- `Stasis Mode`
+	- `Base Health`
+	- `Display Health`
+	- `Display Health Type`
+	- `Extra Health`
+	- `Health Characters`
+	- `Minimum Humans`
+	- `Multiply Health`
+
 #### Core Plugin
 - Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
 - Added extra copies of the `Body Effects` setting's electric jolt option.
