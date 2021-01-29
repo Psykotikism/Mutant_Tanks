@@ -1254,7 +1254,7 @@ stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size = 0,
 {
 	switch (apply)
 	{
-		case true: Format(buffer, size, "%s", ((human && playerVal[0] != '\0') ? playerVal : typeVal));
+		case true: FormatEx(buffer, size, "%s", ((human && playerVal[0] != '\0') ? playerVal : typeVal));
 		case false: buffer[0] = '\0';
 	}
 }
