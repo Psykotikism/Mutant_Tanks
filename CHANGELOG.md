@@ -17,6 +17,8 @@
 #### Abilities
 - Heal
 	- Fixed players with the god mode reward being affected.
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
 
 - Kamikaze
 	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
