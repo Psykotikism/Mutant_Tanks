@@ -42,9 +42,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		case Engine_Left4Dead2: g_bSecondGame = true;
 		default:
 		{
-			char sMessage[64];
-			FormatEx(sMessage, sizeof(sMessage), "\"%s\" only supports Left 4 Dead 1 & 2.", MT_NAME);
-			strcopy(error, err_max, sMessage);
+			strcopy(error, err_max, "\"Mutant Tanks\" only supports Left 4 Dead 1 & 2.");
 
 			return APLRes_SilentFailure;
 		}
@@ -149,10 +147,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_INFECTEDCOUNT (1 << 6) // infectedcount_configs
 #define MT_CONFIG_FINALE (1 << 7) // l4d_finale_configs/l4d2_finale_configs
 
-#define MT_CONFIG_SECTION_MAIN "MutantTanks"
-#define MT_CONFIG_SECTION_MAIN2 "Mutant_Tanks"
-#define MT_CONFIG_SECTION_MAIN3 "MTanks"
-#define MT_CONFIG_SECTION_MAIN4 "MT"
+#define MT_CONFIG_SECTION_MAIN "Mutant Tanks"
+#define MT_CONFIG_SECTION_MAIN2 "MutantTanks"
+#define MT_CONFIG_SECTION_MAIN3 "Mutant_Tanks"
+#define MT_CONFIG_SECTION_MAIN4 "MTanks"
+#define MT_CONFIG_SECTION_MAIN5 "MT"
 #define MT_CONFIG_SECTION_SETTINGS "PluginSettings"
 #define MT_CONFIG_SECTION_SETTINGS2 "Plugin Settings"
 #define MT_CONFIG_SECTION_SETTINGS3 "Plugin_Settings"
@@ -1881,7 +1880,7 @@ public void OnAdminMenuReady(Handle topmenu)
 	}
 
 	g_esGeneral.g_tmMTMenu = tmMTMenu;
-	TopMenuObject tmoCommands = g_esGeneral.g_tmMTMenu.AddCategory(MT_CONFIG_SECTION_MAIN, vMTAdminMenuHandler, "mt_adminmenu", ADMFLAG_GENERIC);
+	TopMenuObject tmoCommands = g_esGeneral.g_tmMTMenu.AddCategory(MT_CONFIG_SECTION_MAIN2, vMTAdminMenuHandler, "mt_adminmenu", ADMFLAG_GENERIC);
 	if (tmoCommands != INVALID_TOPMENUOBJECT)
 	{
 		g_esGeneral.g_tmMTMenu.AddItem("sm_mt_tank", vMutantTanksMenu, tmoCommands, "sm_mt_tank", ADMFLAG_ROOT);
@@ -1897,7 +1896,7 @@ public void vMTAdminMenuHandler(TopMenu topmenu, TopMenuAction action, TopMenuOb
 {
 	switch (action)
 	{
-		case TopMenuAction_DisplayTitle, TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", MT_CONFIG_SECTION_MAIN, param);
+		case TopMenuAction_DisplayTitle, TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", MT_CONFIG_SECTION_MAIN2, param);
 	}
 }
 
@@ -1909,8 +1908,8 @@ public void vMutantTanksMenu(TopMenu topmenu, TopMenuAction action, TopMenuObjec
 		case TopMenuAction_SelectOption:
 		{
 			vTankMenu(param, true);
-			vLogCommand(param, MT_CMD_SPAWN, "{default}Opened the{mint} %s{default} menu.", MT_NAME);
-			vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the %s menu.", MT_TAG, param, MT_NAME);
+			vLogCommand(param, MT_CMD_SPAWN, "{default}Opened the{mint} %s{default} menu.", MT_CONFIG_SECTION_MAIN);
+			vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the %s menu.", MT_TAG, param, MT_CONFIG_SECTION_MAIN);
 		}
 	}
 }
@@ -1983,9 +1982,9 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 		case TopMenuAction_DisplayOption: FormatEx(buffer, maxlength, "%T", "MTVersionMenu", param);
 		case TopMenuAction_SelectOption:
 		{
-			MT_PrintToChat(param, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
-			vLogCommand(param, MT_CMD_VERSION, "{default}Checked the current version of{mint} %s{default}.", MT_NAME);
-			vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, param, MT_NAME);
+			MT_PrintToChat(param, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_CONFIG_SECTION_MAIN, MT_VERSION, MT_AUTHOR);
+			vLogCommand(param, MT_CMD_VERSION, "{default}Checked the current version of{mint} %s{default}.", MT_CONFIG_SECTION_MAIN);
+			vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, param, MT_CONFIG_SECTION_MAIN);
 
 			if (bIsValidClient(param, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT|MT_CHECK_INKICKQUEUE) && g_esGeneral.g_tmMTMenu != null)
 			{
@@ -2176,7 +2175,7 @@ public SMCResult SMCNewSection2(SMCParser smc, const char[] name, bool opt_quote
 	bool bHuman = bIsValidClient(g_esGeneral.g_iParserViewer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT);
 	if (g_esGeneral.g_csState2 == ConfigState_None)
 	{
-		if (StrEqual(name, MT_CONFIG_SECTION_MAIN, false) || StrEqual(name, MT_NAME, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN2, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN3, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN4, false))
+		if (StrEqual(name, MT_CONFIG_SECTION_MAIN, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN2, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN3, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN4, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN5, false))
 		{
 			g_esGeneral.g_csState2 = ConfigState_Start;
 
@@ -2646,7 +2645,7 @@ public void SMCParseStart3(SMCParser smc)
 
 public SMCResult SMCNewSection3(SMCParser smc, const char[] name, bool opt_quotes)
 {
-	if (StrEqual(name, MT_CONFIG_SECTION_MAIN, false) || StrEqual(name, MT_NAME, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN2, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN3, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN4, false))
+	if (StrEqual(name, MT_CONFIG_SECTION_MAIN, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN2, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN3, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN4, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN5, false))
 	{
 		return SMCParse_Continue;
 	}
@@ -2697,7 +2696,7 @@ public Action cmdMTInfo(int client, int args)
 static void vInfoMenu(int client, bool adminmenu = false, int item = 0)
 {
 	Menu mInfoMenu = new Menu(iInfoMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
-	mInfoMenu.SetTitle("%s Information", MT_NAME);
+	mInfoMenu.SetTitle("%s Information", MT_CONFIG_SECTION_MAIN);
 	mInfoMenu.AddItem("Status", "Status");
 	mInfoMenu.AddItem("Details", "Details");
 	mInfoMenu.AddItem("Human Support", "Human Support");
@@ -3083,9 +3082,9 @@ static void vReloadConfig(int admin)
 
 public Action cmdMTVersion(int client, int args)
 {
-	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
-	vLogCommand(client, MT_CMD_VERSION, "{default}Checked the current version of{mint} %s{default}.", MT_NAME);
-	vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, client, MT_NAME);
+	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_CONFIG_SECTION_MAIN, MT_VERSION, MT_AUTHOR);
+	vLogCommand(client, MT_CMD_VERSION, "{default}Checked the current version of{mint} %s{default}.", MT_CONFIG_SECTION_MAIN);
+	vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, client, MT_CONFIG_SECTION_MAIN);
 
 	return Plugin_Handled;
 }
@@ -3115,7 +3114,7 @@ public Action cmdMTVersion2(int client, int args)
 		}
 	}
 
-	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_NAME, MT_VERSION, MT_AUTHOR);
+	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_CONFIG_SECTION_MAIN, MT_VERSION, MT_AUTHOR);
 
 	return Plugin_Handled;
 }
@@ -3144,8 +3143,8 @@ public Action cmdTank(int client, int args)
 			case false: vTankMenu(client);
 		}
 
-		vLogCommand(client, MT_CMD_SPAWN, "{default}Opened the{mint} %s{default} menu.", MT_NAME);
-		vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the %s menu.", MT_TAG, client, MT_NAME);
+		vLogCommand(client, MT_CMD_SPAWN, "{default}Opened the{mint} %s{default} menu.", MT_CONFIG_SECTION_MAIN);
+		vLogMessage(MT_LOG_SERVER, _, "%s %N: Opened the %s menu.", MT_TAG, client, MT_CONFIG_SECTION_MAIN);
 
 		return Plugin_Handled;
 	}
@@ -3507,7 +3506,7 @@ static void vSpawnTank(int admin, bool log = true, int amount, int mode)
 static void vTankMenu(int admin, bool adminmenu = false, int item = 0)
 {
 	Menu mTankMenu = new Menu(iTankMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
-	mTankMenu.SetTitle("%s List", MT_NAME);
+	mTankMenu.SetTitle("%s List", MT_CONFIG_SECTION_MAIN);
 
 	static int iCount;
 	iCount = 0;
@@ -4826,7 +4825,7 @@ public SMCResult SMCNewSection(SMCParser smc, const char[] name, bool opt_quotes
 
 	if (g_esGeneral.g_csState == ConfigState_None)
 	{
-		if (StrEqual(name, MT_CONFIG_SECTION_MAIN, false) || StrEqual(name, MT_NAME, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN2, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN3, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN4, false))
+		if (StrEqual(name, MT_CONFIG_SECTION_MAIN, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN2, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN3, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN4, false) || StrEqual(name, MT_CONFIG_SECTION_MAIN5, false))
 		{
 			g_esGeneral.g_csState = ConfigState_Start;
 		}
@@ -7671,7 +7670,6 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 	vCacheSettings(tank);
 	vSetTankModel(tank);
 	vRemoveGlow(tank);
-
 	SetEntityRenderMode(tank, RENDER_NORMAL);
 	SetEntityRenderColor(tank, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
 }

@@ -1101,7 +1101,7 @@ static void vReset3(int tank)
 
 static void vResetGlow(int tank)
 {
-	if (!bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
+	if (!g_bSecondGame || !bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE))
 	{
 		return;
 	}
@@ -1203,7 +1203,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 	static int iTank, iType;
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || (g_esCache[iTank].g_iHealAbility != 2 && g_esCache[iTank].g_iHealAbility != 3) || !g_esPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || (g_esCache[iTank].g_iHealAbility != 2 && g_esCache[iTank].g_iHealAbility != 3) || !g_esPlayer[iTank].g_bActivated)
 	{
 		vReset2(iTank);
 
@@ -1222,37 +1222,30 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 	}
 
 	static float flTankPos[3], flInfectedPos[3];
-	static int iCommon, iCommonHealth, iExtraHealth, iExtraHealth2, iHealth, iHealType, iMaxHealth, iRealHealth, iSpecialHealth, iTankHealth;
+	GetClientAbsOrigin(iTank, flTankPos);
+	static int iCommon, iCommonHealth, iExtraHealth, iExtraHealth2, iGreen, iHealth, iLeftover, iMaxHealth, iRealHealth, iSpecialHealth, iTankHealth, iTotalHealth;
 	iCommon = -1;
-	iHealType = 0;
+	iGreen = 0;
+	iLeftover = 0;
 	iMaxHealth = MT_TankMaxHealth(iTank, 1);
+	iTotalHealth = 0;
 
 	while ((iCommon = FindEntityByClassname(iCommon, "infected")) != INVALID_ENT_REFERENCE)
 	{
-		GetClientAbsOrigin(iTank, flTankPos);
 		GetEntPropVector(iCommon, Prop_Send, "m_vecOrigin", flInfectedPos);
 		if (GetVectorDistance(flTankPos, flInfectedPos) <= g_esCache[iTank].g_flHealAbsorbRange)
 		{
 			iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
-			iCommonHealth = iHealth + g_esCache[iTank].g_iHealCommon;
-			iExtraHealth = (iCommonHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iCommonHealth;
-			iExtraHealth2 = (iCommonHealth < iHealth) ? 1 : iCommonHealth;
-			iRealHealth = (iCommonHealth >= 0) ? iExtraHealth : iExtraHealth2;
-			if (iHealth > 500)
+			if (iHealth >= 500)
 			{
-				MT_TankMaxHealth(iTank, 3, iMaxHealth + g_esCache[iTank].g_iHealCommon);
+				iCommonHealth = iHealth + g_esCache[iTank].g_iHealCommon;
+				iLeftover = (iCommonHealth > MT_MAXHEALTH) ? (iCommonHealth - MT_MAXHEALTH) : iCommonHealth;
+				iExtraHealth = (iCommonHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iCommonHealth;
+				iExtraHealth2 = (iCommonHealth < iHealth) ? 1 : iCommonHealth;
+				iRealHealth = (iCommonHealth >= 0) ? iExtraHealth : iExtraHealth2;
+				iGreen = 185;
+				iTotalHealth += (iCommonHealth > MT_MAXHEALTH) ? iLeftover : g_esCache[iTank].g_iHealCommon;
 				SetEntProp(iTank, Prop_Data, "m_iHealth", iRealHealth);
-
-				if (g_bSecondGame)
-				{
-					SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 185, 0));
-					SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
-					SetEntProp(iTank, Prop_Send, "m_nGlowRangeMin", MT_GetGlowRange(iTank, false));
-					SetEntProp(iTank, Prop_Send, "m_nGlowRange", MT_GetGlowRange(iTank, true));
-					SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
-				}
-
-				iHealType = 1;
 			}
 		}
 	}
@@ -1261,70 +1254,52 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 	{
 		if (bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 		{
-			GetClientAbsOrigin(iTank, flTankPos);
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			if (GetVectorDistance(flTankPos, flInfectedPos) <= g_esCache[iTank].g_flHealAbsorbRange)
 			{
 				iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
-				iSpecialHealth = iHealth + g_esCache[iTank].g_iHealSpecial;
-				iExtraHealth = (iSpecialHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iSpecialHealth;
-				iExtraHealth2 = (iSpecialHealth < iHealth) ? 1 : iSpecialHealth;
-				iRealHealth = (iSpecialHealth >= 0) ? iExtraHealth : iExtraHealth2;
-				if (iHealth > 500)
+				if (iHealth >= 500)
 				{
-					MT_TankMaxHealth(iTank, 3, iMaxHealth + g_esCache[iTank].g_iHealSpecial);
+					iSpecialHealth = iHealth + g_esCache[iTank].g_iHealSpecial;
+					iLeftover = (iSpecialHealth > MT_MAXHEALTH) ? (iSpecialHealth - MT_MAXHEALTH) : iSpecialHealth;
+					iExtraHealth = (iSpecialHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iSpecialHealth;
+					iExtraHealth2 = (iSpecialHealth < iHealth) ? 1 : iSpecialHealth;
+					iRealHealth = (iSpecialHealth >= 0) ? iExtraHealth : iExtraHealth2;
+					iGreen = 220;
+					iTotalHealth += (iSpecialHealth > MT_MAXHEALTH) ? iLeftover : g_esCache[iTank].g_iHealSpecial;
 					SetEntProp(iTank, Prop_Data, "m_iHealth", iRealHealth);
-
-					if (iHealType < 2)
-					{
-						if (g_bSecondGame)
-						{
-							SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 220, 0));
-							SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
-							SetEntProp(iTank, Prop_Send, "m_nGlowRangeMin", MT_GetGlowRange(iTank, false));
-							SetEntProp(iTank, Prop_Send, "m_nGlowRange", MT_GetGlowRange(iTank, true));
-							SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
-						}
-
-						iHealType = 1;
-					}
 				}
 			}
 		}
 		else if (MT_IsTankSupported(iInfected) && iInfected != iTank)
 		{
-			GetClientAbsOrigin(iTank, flTankPos);
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			if (GetVectorDistance(flTankPos, flInfectedPos) <= g_esCache[iTank].g_flHealAbsorbRange)
 			{
 				iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
-				iTankHealth = iHealth + g_esCache[iTank].g_iHealTank;
-				iExtraHealth = (iTankHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iTankHealth;
-				iExtraHealth2 = (iTankHealth < iHealth) ? 1 : iTankHealth;
-				iRealHealth = (iTankHealth >= 0) ? iExtraHealth : iExtraHealth2;
-				if (iHealth > 500)
+				if (iHealth >= 500)
 				{
-					MT_TankMaxHealth(iTank, 3, iMaxHealth + g_esCache[iTank].g_iHealTank);
+					iTankHealth = iHealth + g_esCache[iTank].g_iHealTank;
+					iLeftover = (iTankHealth > MT_MAXHEALTH) ? (iTankHealth - MT_MAXHEALTH) : iTankHealth;
+					iExtraHealth = (iTankHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iTankHealth;
+					iExtraHealth2 = (iTankHealth < iHealth) ? 1 : iTankHealth;
+					iRealHealth = (iTankHealth >= 0) ? iExtraHealth : iExtraHealth2;
+					iGreen = 255;
+					iTotalHealth += (iTankHealth > MT_MAXHEALTH) ? iLeftover : g_esCache[iTank].g_iHealTank;
 					SetEntProp(iTank, Prop_Data, "m_iHealth", iRealHealth);
-
-					if (g_bSecondGame)
-					{
-						SetEntProp(iTank, Prop_Send, "m_glowColorOverride", iGetRGBColor(0, 255, 0));
-						SetEntProp(iTank, Prop_Send, "m_bFlashing", 1);
-						SetEntProp(iTank, Prop_Send, "m_nGlowRangeMin", MT_GetGlowRange(iTank, false));
-						SetEntProp(iTank, Prop_Send, "m_nGlowRange", MT_GetGlowRange(iTank, true));
-						SetEntProp(iTank, Prop_Send, "m_iGlowType", 3);
-					}
-
-					iHealType = 2;
 				}
 			}
 		}
 	}
 
-	if (iHealType == 0 && g_bSecondGame)
+	switch (iGreen)
 	{
-		vResetGlow(iTank);
+		case 0: vResetGlow(iTank);
+		default:
+		{
+			MT_TankMaxHealth(iTank, 3, iMaxHealth + iTotalHealth);
+			vSetGlow(iTank, iGetRGBColor(0, iGreen, 0), 1, MT_GetGlowRange(iTank, false), MT_GetGlowRange(iTank, true), 3);
+		}
 	}
 
 	return Plugin_Continue;

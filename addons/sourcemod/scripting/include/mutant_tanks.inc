@@ -69,7 +69,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 #endif
 
 // Core plugin information
-#define MT_NAME "Mutant Tanks"
+#define MT_NAME "[L4D & L4D2] Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
 #define MT_VERSION "8.83"
