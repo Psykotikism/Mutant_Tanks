@@ -802,7 +802,7 @@ static void vElectricHit(int survivor, int tank, float random, float chance, int
 				dpElectric.WriteCell(messages);
 				dpElectric.WriteCell(enabled);
 				dpElectric.WriteCell(pos);
-				dpElectric.WriteCell(GetTime());
+				dpElectric.WriteCell(iTime);
 
 				static char sEffect[32];
 				vGetRandomParticle(sEffect, sizeof(sEffect));

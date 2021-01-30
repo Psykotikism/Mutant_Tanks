@@ -870,7 +870,7 @@ static void vWhirlHit(int survivor, int tank, float random, float chance, int en
 					dpWhirl.WriteCell(enabled);
 					dpWhirl.WriteCell(pos);
 					dpWhirl.WriteCell(iAxis);
-					dpWhirl.WriteCell(GetTime());
+					dpWhirl.WriteCell(iTime);
 
 					vEffect(survivor, tank, g_esCache[tank].g_iWhirlEffect, flags);
 

@@ -981,7 +981,7 @@ static void vJumpHit(int survivor, int tank, float random, float chance, int ena
 				dpJump3.WriteCell(messages);
 				dpJump3.WriteCell(enabled);
 				dpJump3.WriteCell(pos);
-				dpJump3.WriteCell(GetTime());
+				dpJump3.WriteCell(iTime);
 
 				vEffect(survivor, tank, g_esCache[tank].g_iJumpEffect, flags);
 

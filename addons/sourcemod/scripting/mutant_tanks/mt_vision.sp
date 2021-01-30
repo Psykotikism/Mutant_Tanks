@@ -813,7 +813,7 @@ static void vVisionHit(int survivor, int tank, float random, float chance, int e
 				dpVision.WriteCell(messages);
 				dpVision.WriteCell(enabled);
 				dpVision.WriteCell(pos);
-				dpVision.WriteCell(GetTime());
+				dpVision.WriteCell(iTime);
 
 				vEffect(survivor, tank, g_esCache[tank].g_iVisionEffect, flags);
 

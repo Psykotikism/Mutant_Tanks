@@ -752,7 +752,7 @@ static void vLeechHit(int survivor, int tank, float random, float chance, int en
 				dpLeech.WriteCell(messages);
 				dpLeech.WriteCell(enabled);
 				dpLeech.WriteCell(pos);
-				dpLeech.WriteCell(GetTime());
+				dpLeech.WriteCell(iTime);
 
 				vEffect(survivor, tank, g_esCache[tank].g_iLeechEffect, flags);
 

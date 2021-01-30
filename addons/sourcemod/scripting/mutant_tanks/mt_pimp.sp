@@ -760,7 +760,7 @@ static void vPimpHit(int survivor, int tank, float random, float chance, int ena
 				dpPimp.WriteCell(messages);
 				dpPimp.WriteCell(enabled);
 				dpPimp.WriteCell(pos);
-				dpPimp.WriteCell(GetTime());
+				dpPimp.WriteCell(iTime);
 
 				vEffect(survivor, tank, g_esCache[tank].g_iPimpEffect, flags);
 

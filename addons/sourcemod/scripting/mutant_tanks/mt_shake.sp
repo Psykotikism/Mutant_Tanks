@@ -841,7 +841,7 @@ static void vShakeHit(int survivor, int tank, float random, float chance, int en
 				dpShake.WriteCell(messages);
 				dpShake.WriteCell(enabled);
 				dpShake.WriteCell(pos);
-				dpShake.WriteCell(GetTime());
+				dpShake.WriteCell(iTime);
 
 				vEffect(survivor, tank, g_esCache[tank].g_iShakeEffect, flags);
 				EmitSoundToClient(survivor, (g_bSecondGame ? SOUND_SMASH2 : SOUND_SMASH1));

@@ -861,7 +861,7 @@ static void vShoveHit(int survivor, int tank, float random, float chance, int en
 				dpShove.WriteCell(messages);
 				dpShove.WriteCell(enabled);
 				dpShove.WriteCell(pos);
-				dpShove.WriteCell(GetTime());
+				dpShove.WriteCell(iTime);
 
 				vEffect(survivor, tank, g_esCache[tank].g_iShoveEffect, flags);
 

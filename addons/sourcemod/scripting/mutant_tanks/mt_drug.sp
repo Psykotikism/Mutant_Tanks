@@ -829,7 +829,7 @@ static void vDrugHit(int survivor, int tank, float random, float chance, int ena
 				dpDrug.WriteCell(messages);
 				dpDrug.WriteCell(enabled);
 				dpDrug.WriteCell(pos);
-				dpDrug.WriteCell(GetTime());
+				dpDrug.WriteCell(iTime);
 
 				vEffect(survivor, tank, g_esCache[tank].g_iDrugEffect, flags);
 

@@ -776,7 +776,7 @@ static void vHurtHit(int survivor, int tank, float random, float chance, int ena
 				dpHurt.WriteCell(messages);
 				dpHurt.WriteCell(enabled);
 				dpHurt.WriteCell(pos);
-				dpHurt.WriteCell(GetTime());
+				dpHurt.WriteCell(iTime);
 
 				vEffect(survivor, tank, g_esCache[tank].g_iHurtEffect, flags);
 
