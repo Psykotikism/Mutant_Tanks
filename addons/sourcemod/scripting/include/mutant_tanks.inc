@@ -1350,11 +1350,13 @@ stock void vSetVector(float target[3], float x, float y, float z)
 
 stock void vSetWounds(int common, int type = -1)
 {
-	if (bIsCommonInfected(common) && HasEntProp(common, Prop_Send, "m_iRequestedWound1"))
+	if (GetEngineVersion() != Engine_Left4Dead2 || !bIsCommonInfected(common) || !HasEntProp(common, Prop_Send, "m_iRequestedWound1"))
 	{
-		SetEntProp(common, Prop_Send, "m_iRequestedWound1", type);
-		SetEntProp(common, Prop_Send, "m_iRequestedWound2", type);
+		return;
 	}
+
+	SetEntProp(common, Prop_Send, "m_iRequestedWound1", type);
+	SetEntProp(common, Prop_Send, "m_iRequestedWound2", type);
 }
 
 stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] model)
@@ -1556,7 +1558,6 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
-
 					return true;
 				}
 			}
@@ -1958,7 +1959,6 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
-
 			return false;
 		}
 
@@ -2017,7 +2017,6 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
-
 				return flUnits;
 			}
 
