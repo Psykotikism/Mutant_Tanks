@@ -6,6 +6,7 @@
 
 #### General
 - Fixed common infected developing wounds from blocked friendly-fire. (Thanks to Marttt for the code!)
+- Fixed Tanks spawned from the `sm_tank`/`sm_mt_tank` menu raising the wave count when they die.
 
 #### Core Plugin
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
@@ -13,6 +14,7 @@
 - Fixed Tanks not being setup properly when exiting ghost mode. (Thanks to yuzumi for reporting!)
 - Fixed the Tank spawner not allowing multiple copies of the same Mutant Tank type to spawn.
 - Fixed inconsistent access levels for some developer commands.
+- Fixed players with the god mode reward not being saved from special infected when given the health or refill reward.
 
 #### Abilities
 - Heal
@@ -74,6 +76,17 @@
 	- `Health Characters`
 	- `Minimum Humans`
 	- `Multiply Health`
+	- `Attack Interval`
+	- `Claw Damage`
+	- `Hittable Damage`
+	- `Rock Damage`
+	- `Run Speed`
+	- `Throw Interval`
+	- `Bullet Immunity`
+	- `Explosive Immunity`
+	- `Fire Immunity`
+	- `Hittable Immunity`
+	- `Melee Immunity`
 
 #### Core Plugin
 - Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
@@ -89,6 +102,11 @@
 	- `Death Sound` (Thanks to Tank Rush for the idea!)
 	- `Vocalize Arrival`
 	- `Vocalize Death`
+- Added the `Enhancements` and `Immunities` sections under the `Plugin Settings` section for global use.
+- The following settings now accept a value of `0` (standard Tanks) [Thanks to Tonblader for the idea!]:
+	- `Type Range`
+	- `Regular Type`
+	- `Finale Types`
 
 #### Translations
 - Updated Simplified Chinese translations.

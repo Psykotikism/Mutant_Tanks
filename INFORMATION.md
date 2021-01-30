@@ -16,6 +16,8 @@
 	- Competitive
 	- Difficulty
 	- Health
+	- Enhancements
+	- Immunities
 	- Administration
 	- Human Support
 	- Waves
@@ -125,7 +127,7 @@
 
 ### Plugin Settings
 
-#### General, Announcements, Rewards, Competitive, Difficulty, Health, Administration, Human Support, Waves, Game Modes, Custom
+#### General, Announcements, Rewards, Competitive, Difficulty, Health, Enhancements, Immunities, Administration, Human Support, Waves, Game Modes, Custom
 ```
 "Mutant Tanks"
 {
@@ -264,11 +266,14 @@
 			// Value limit: 2
 			// Character limit for each value: 4
 			// --
-			// Minimum number for each value: 1
+			// Minimum number for each value: 0 (OFF)
 			// Maximum number for each value: 500
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
+			// --
+			// 0: OFF, use standard Tanks.
+			// 1-500: ON, the type that will spawn.
 			"Type Range"				"1-500"
 		}
 		"Announcements"
@@ -741,6 +746,134 @@
 			// 3: Multiply both.
 			"Multiply Health"			"0"
 		}
+		"Enhancements"
+		{
+			// The Mutant Tank can only attack every time this many seconds passes.
+			// Note: Default attack interval is 2.0 seconds.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// OFF: 0.0
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
+			"Attack Interval"			"0.0"
+
+			// The Mutant Tank's claw attacks do this much damage.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 damage
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
+			"Claw Damage"				"-1.0"
+
+			// The Mutant Tank's hittables do this much damage.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 damage
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
+			"Hittable Damage"			"-1.0"
+
+			// The Mutant Tank's rock throws do this much damage.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 damage
+			// "weakest" - 1.0 damage
+			// "strongest" - 999999.0 damage
+			"Rock Damage"				"-1.0"
+
+			// Set the Mutant Tank's run speed.
+			// Note: Default run speed is 1.0.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// OFF: 0.0
+			// Minimum: 0.1
+			// Maximum: 3.0
+			"Run Speed"				"0.0"
+
+			// The Mutant Tank throws a rock every time this many seconds passes.
+			// Note: Default throw interval is 5.0 seconds.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// OFF: 0.0
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
+			"Throw Interval"			"0.0"
+		}
+		"Immunities"
+		{
+			// Give the Mutant Tank bullet immunity.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Bullet Immunity"			"0"
+
+			// Give the Mutant Tank explosive immunity.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Explosive Immunity"			"0"
+
+			// Give the Mutant Tank fire immunity.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Fire Immunity"				"0"
+
+			// Give the Mutant Tank hittable immunity.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Hittable Immunity"			"0"
+
+			// Give the Mutant Tank melee immunity.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Melee Immunity"			"0"
+		}
 		"Administration"
 		{
 			// Admins with one or more of these access flags have access to all Mutant Tank types.
@@ -877,15 +1010,15 @@
 			// Value limit: 2
 			// Character limit for each value: 4
 			// --
-			// Minimum number for each value: 0 (OFF)
+			// Minimum number for each value: -1 (OFF)
 			// Maximum number for each value: 500
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			// --
-			// 0: OFF, use the randomization feature.
+			// 0: OFF, use standard Tanks.
 			// 1-500: ON, the type that will spawn.
-			"Regular Type"				"0-0"
+			"Regular Type"				"1-500"
 
 			// Spawn Tanks on non-finale maps periodically.
 			// Note: The timer starts after "Regular Delay" is up.
@@ -915,15 +1048,15 @@
 			// Wave limit: 10
 			// Character limit for each wave: 10
 			// --
-			// Minimum value for each wave: 0 (OFF)
+			// Minimum value for each wave: -1 (OFF)
 			// Maximum value for each wave: 500
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			// --
-			// 0: OFF, use the randomization feature.
+			// 0: OFF, use standard Tanks.
 			// 1-500: ON, the type that will spawn.
-			"Finale Types"				"0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0"
+			"Finale Types"				"1-500,1-500,1-500,1-500,1-500,1-500,1-500,1-500,1-500,1-500"
 
 			// Number of Tanks to spawn for each finale wave.
 			// Note: This setting does not seem to work on the official Left 4 Dead 1 campaigns' finale maps in Left 4 Dead 2. They have their own finale scripts which limit the number of Tanks to 1 for each wave.
@@ -2356,8 +2489,8 @@
 			"Minimum Humans"			"0"
 
 			// Multiply the Mutant Tank's health.
-			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: Health multiplication only occurs when the requirement for the "Minimum Humans" setting is met.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Health" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0: No changes to health.
@@ -2370,6 +2503,7 @@
 		{
 			// The Mutant Tank can only attack every time this many seconds passes.
 			// Note: Default attack interval is 2.0 seconds.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// OFF: 0.0
@@ -2384,6 +2518,7 @@
 			"Attack Interval"			"0.0"
 
 			// The Mutant Tank's claw attacks do this much damage.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// OFF: -1.0
@@ -2397,6 +2532,7 @@
 			"Claw Damage"				"-1.0"
 
 			// The Mutant Tank's hittables do this much damage.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// OFF: -1.0
@@ -2410,6 +2546,7 @@
 			"Hittable Damage"			"-1.0"
 
 			// The Mutant Tank's rock throws do this much damage.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// OFF: -1.0
@@ -2424,6 +2561,7 @@
 
 			// Set the Mutant Tank's run speed.
 			// Note: Default run speed is 1.0.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// OFF: 0.0
@@ -2433,6 +2571,7 @@
 
 			// The Mutant Tank throws a rock every time this many seconds passes.
 			// Note: Default throw interval is 5.0 seconds.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// OFF: 0.0
@@ -2449,6 +2588,7 @@
 		"Immunities"
 		{
 			// Give the Mutant Tank bullet immunity.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Immunities" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -2456,6 +2596,7 @@
 			"Bullet Immunity"			"0"
 
 			// Give the Mutant Tank explosive immunity.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Immunities" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -2463,6 +2604,7 @@
 			"Explosive Immunity"			"0"
 
 			// Give the Mutant Tank fire immunity.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Immunities" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -2470,6 +2612,7 @@
 			"Fire Immunity"				"0"
 
 			// Give the Mutant Tank hittable immunity.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Immunities" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -2477,6 +2620,7 @@
 			"Hittable Immunity"			"0"
 
 			// Give the Mutant Tank melee immunity.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Immunities" section.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -18255,7 +18399,7 @@
 		"Administration"
 		{
 			// This is the Mutant Tank type that the admin will spawn with.
-			// Note: If the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to "1", the admin will be prompted a menu asking if the admin wants to use this type.
+			// Note: If the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to "1", the admin will be prompted with a menu asking if the admin wants to use this type.
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-500: ON, the type that will be favorited.

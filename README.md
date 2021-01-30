@@ -1359,7 +1359,7 @@ sm_mt_tank - Spawn a Mutant Tank.
 
 Valid inputs:
 
-1. sm_tank <type 1*-500*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is "500" though.)
+1. sm_tank <type 1*-500*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is "1" and the highest value you can set is "500" though.)
 2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The plugin will attempt to match the name with any of the Mutant Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
 
 The command has 4 functions.
@@ -1372,7 +1372,7 @@ If you are not a Tank:
 If you are a Tank:
 
 1. When holding down the +speed (default: LSHIFT) button, a Mutant Tank will spawn into the chosen type.
-2. When not holding down the +speed button, you will transform into the chosen type.
+2. When not holding down the +speed (default: LSHIFT) button, you will transform into the chosen type.
 ```
 
 ```
@@ -1943,7 +1943,7 @@ Examples:
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush** - For reporting issues and suggesting ideas.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader** - For reporting issues and suggesting ideas.
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, Maku** - For reporting issues.
 
