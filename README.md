@@ -1,4 +1,5 @@
 # Mutant Tanks
+
 ## Languages
  - [Русский](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md)
 
@@ -473,14 +474,14 @@ Example:
 	{
 		"General"
 		{
-			"Type Range"				"1-69" // The plugin will check for 69 entries when loading the config file.
+			"Type Range"				"1-2" // The plugin will check for 2 entries when loading the config file.
 		}
 	}
-	"Tank #69"
+	"Tank #2"
 	{
 		"General"
 		{
-			"Tank Enabled"				"1" // Tank #69 is enabled and can be chosen.
+			"Tank Enabled"				"1" // Tank #2 is enabled and can be chosen.
 		}
 	}
 }
@@ -548,7 +549,7 @@ Example:
 			"Execute Config Types"			"1" // 1: Difficulty configs (easy, normal, hard, impossible)
 		}
 	}
-	"Tank #69"
+	"Tank #1"
 	{
 		"General"
 		{
@@ -574,7 +575,7 @@ Example:
 // Settings for addons/sourcemod/data/mutant_tanks/difficulty_configs/impossible.cfg
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #1"
 	{
 		"General"
 		{
@@ -1918,6 +1919,8 @@ Examples:
 **Ernecio** - For the [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) and [[L4D1 & L4D2] Improved Flying Tank](https://forums.alliedmods.net/showthread.php?t=325719) plugin.
 
 **Luckylock** - For the [[L4D & L4D2] Tank Rock Lag Compensation](https://forums.alliedmods.net/showthread.php?t=315345) plugin.
+
+**raoulduke** - For the [[L4D] Survival Event Timer](https://forums.alliedmods.net/showthread.php?t=92175) plugin.
 
 **Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
 

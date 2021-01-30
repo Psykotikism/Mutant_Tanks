@@ -7,6 +7,8 @@
 #### General
 - Fixed common infected developing wounds from blocked friendly-fire. (Thanks to Marttt for the code!)
 - Fixed Tanks spawned from the `sm_tank`/`sm_mt_tank` menu raising the wave count when they die.
+- Fixed clones, respawned Tanks, randomized Tanks, and Tanks spawned through the Mutant Tanks menu not being exempted from the `Type Limit` setting.
+- Fixed game modes not being detected properly.
 
 #### Core Plugin
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
@@ -107,6 +109,8 @@
 	- `Type Range`
 	- `Regular Type`
 	- `Finale Types`
+- Added the `Spawn Limit` setting under the `Plugin Settings/General` section. (Requested by Tonblader.)
+- Added the `Survival Delay` setting under the `Plugin Settings/Competitive` section. (Requested by Tonblader.)
 
 #### Translations
 - Updated Simplified Chinese translations.

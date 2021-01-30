@@ -1,4 +1,5 @@
 # Танки-мутанты
+
 ## Языки
  - [English](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md)
 
@@ -473,14 +474,14 @@ mt_pluginenabled "1"
 	{
 		"General"
 		{
-			"Type Range"				"1-69" // Плагин проверит 69 записей при загрузке файла конфигурации.
+			"Type Range"				"1-2" // Плагин проверит 2 записей при загрузке файла конфигурации.
 		}
 	}
-	"Tank #69"
+	"Tank #2"
 	{
 		"General"
 		{
-			"Tank Enabled"				"1" // Танк #69 включен и может быть выбран.
+			"Tank Enabled"				"1" // Танк #2 включен и может быть выбран.
 		}
 	}
 }
@@ -548,7 +549,7 @@ mt_pluginenabled "1"
 			"Execute Config Types"			"1" // 1: Конфигурация сложности (легко, нормально, сложно, невозможно)
 		}
 	}
-	"Tank #69"
+	"Tank #1"
 	{
 		"General"
 		{
@@ -574,7 +575,7 @@ mt_pluginenabled "1"
 // Настройки для addons/sourcemod/data/mutant_tanks/difficulty_configs/impossible.cfg
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #1"
 	{
 		"General"
 		{
@@ -1918,6 +1919,8 @@ Overrides
 **Ernecio** - За плагин [[L4D1 AND L4D2] Tank's Laser Attack](https://forums.alliedmods.net/showthread.php?t=320215) и [[L4D1 & L4D2] Improved Flying Tank](https://forums.alliedmods.net/showthread.php?t=325719).
 
 **Luckylock** - За плагин [[L4D & L4D2] Tank Rock Lag Compensation](https://forums.alliedmods.net/showthread.php?t=315345).
+
+**raoulduke** - За плагин [[L4D] Survival Event Timer](https://forums.alliedmods.net/showthread.php?t=92175).
 
 **Silvers (Silvershot)** - За его плагины в которых хорошие отсылки, помог с подписями игровых данных и помог оптимизировать/исправить различные части кода.
 

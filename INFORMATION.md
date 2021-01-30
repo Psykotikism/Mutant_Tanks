@@ -259,6 +259,14 @@
 			// 0.01-1.0: Burn percentage
 			"Burnt Skin"				"-1.0"
 
+			// The number of Mutant Tanks that can be alive at any given time.
+			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// --
+			// Minimum: 0 (OFF)
+			// Maximum: 32
+			"Spawn Limit"				"0"
+
 			// The range of types to check for.
 			// --
 			// Separate values with "-".
@@ -628,6 +636,18 @@
 			// 0: OFF, let the game determine Mutant Tanks' stasis mode.
 			// 1: ON, skip stasis mode and spawn Mutant Tanks right away.
 			"Stasis Mode"				"0"
+
+			// (Survival modes only) The delay in seconds before allowing Mutant Tanks to spawn.
+			// --
+			// Minimum: 0.1
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "milli"/"millisecond" - 0.1 seconds
+			// "second" - 1 second
+			// "minute" - 1 minute
+			// "forever" - 999999 seconds
+			"Survival Delay"			"0.1"
 		}
 		"Difficulty"
 		{
@@ -935,7 +955,7 @@
 			// 1: ON, let Mutant Tanks limit Tank spawns.
 			"Limit Extras"				"1"
 
-			// Wait this many seconds before spawning an extra Tank.
+			// The delay in seconds before spawning an extra Tank.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// Minimum: 0.1
