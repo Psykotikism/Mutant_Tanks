@@ -277,10 +277,10 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			"Type Range"				"1-5" // Check "Tank #1" to "Tank #5"
+			"Type Range"				"1-10" // Check "Tank #1" to "Tank #10"
 		}
 	}
-	"Tank #5" // Checked by the plugin.
+	"Tank #10" // Checked by the plugin.
 	{
 		"General"
 		{
@@ -1926,7 +1926,7 @@ Examples:
 
 **epz (epzminion)** - For help with gamedata signatures, offsets, addresses, and invaluable input.
 
-**Lux** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) plugins.
+**Lux** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) and [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947) plugins.
 
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 

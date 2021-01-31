@@ -95,11 +95,12 @@
 - Added extra copies of the `Body Effects` setting's electric jolt option.
 - Increased verbosity of logging for admin commands.
 - The vocalizer feature for Tank deaths now requires the `Vocalize Death` setting to be enabled.
+- The god mode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
 
 #### Settings
-- Added the `Reward Effect` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
+- Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
 - Added the `Log Commands` setting under the `Plugin Settings/General` section. (Requested by 3aljiyavslgazana.)
-- Added the following settings under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections:
+- Added the following settings under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
 	- `Arrival Sound` (Thanks to Tank Rush for the idea!)
 	- `Death Sound` (Thanks to Tank Rush for the idea!)
 	- `Vocalize Arrival`
@@ -111,6 +112,8 @@
 	- `Finale Types`
 - Added the `Spawn Limit` setting under the `Plugin Settings/General` section. (Requested by Tonblader.)
 - Added the `Survival Delay` setting under the `Plugin Settings/Competitive` section. (Requested by Tonblader.)
+- Added a new option for the `Reward Enabled` setting. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
+- Added the `Attack Boost Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 
 #### Translations
 - Updated Simplified Chinese translations.
@@ -118,6 +121,9 @@
 - Updated Russian translations.
 
 #### Abilities
+- Clone
+	- Clones no longer reward survivors after dying.
+
 - Choke
 	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 

@@ -277,10 +277,10 @@ mt_pluginenabled "1"
 	{
 		"General"
 		{
-			"Type Range"				"1-5" // От "Tank #1" до "Tank #5"
+			"Type Range"				"1-10" // От "Tank #1" до "Tank #10"
 		}
 	}
-	"Tank #5" // Проверено плагином.
+	"Tank #10" // Проверено плагином.
 	{
 		"General"
 		{
@@ -1926,7 +1926,7 @@ Overrides
 
 **epz (epzminion)** - За помощь с подписями, смещениями, адресами игровых данных и бесценным вводом.
 
-**Lux** - За помощь в оптимизации/исправлении различных частей кода, кода для определения вида от третьего лица и за плагин [Left4Fix](https://github.com/LuxLuma/Left-4-fix).
+**Lux** - За помощь в оптимизации/исправлении различных частей кода, кода для определения вида от третьего лица и за плагин [Left4Fix](https://github.com/LuxLuma/Left-4-fix) и [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947).
 
 **Milo|** - За плагины [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) и [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720).
 

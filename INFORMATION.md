@@ -438,13 +438,14 @@
 			// 1: Health reward
 			// 2: Speed boost reward (temporary)
 			// 4: Damage boost reward (temporary)
-			// 8: Ammo reward
-			// 16: Item reward
-			// 32: God mode reward (temporary)
-			// 64: Health and ammo refill reward
-			// 128: Respawn reward
-			// 255: All above rewards
-			// 256-2147483647: Reserved for third-party plugins
+			// 8: Attack boost reward (temporary) [Requires WeaponHandling API; link: https://forums.alliedmods.net/showthread.php?t=319947]
+			// 16: Ammo reward
+			// 32: Item reward
+			// 64: God mode reward (temporary)
+			// 128: Health and ammo refill reward
+			// 256: Respawn reward
+			// 511: All above rewards
+			// 512-2147483647: Reserved for third-party plugins
 			// --
 			// 1st number = Enable rewards for killers.
 			// 2nd number = Enable rewards for assistants.
@@ -524,6 +525,23 @@
 			// 3rd number = Percentage of damage required for teammate rewards.
 			"Reward Percentage"			"10.0,10.0,10.0"
 
+			// The attack boost to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate boosts with commas (",").
+			// --
+			// Boosts limit: 3
+			// Character limit for each boost: 9
+			// --
+			// Minimum value for each boost: 1.1
+			// Maximum value for each boost: 999999.0 (Fastest)
+			// --
+			// 1st number = Boost for killers.
+			// 2nd number = Boost for assistants.
+			// 3rd number = Boost for teammates.
+			"Attack Boost Reward"			"1.25,1.25,1.25"
+
 			// The damage boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -583,7 +601,7 @@
 			// Character limit for each boost: 9
 			// --
 			// Minimum value for each boost: 1.1
-			// Maximum value for each boost: 999999.0 (Strongest)
+			// Maximum value for each boost: 999999.0 (Fastest)
 			// --
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
@@ -1487,13 +1505,14 @@
 			// 1: Health reward
 			// 2: Speed boost reward (temporary)
 			// 4: Damage boost reward (temporary)
-			// 8: Ammo reward
-			// 16: Item reward
-			// 32: God mode reward (temporary)
-			// 64: Health and ammo refill reward
-			// 128: Respawn reward
-			// 255: All above rewards
-			// 256-2147483647: Reserved for third-party plugins
+			// 8: Attack boost reward (temporary) [Requires WeaponHandling API; link: https://forums.alliedmods.net/showthread.php?t=319947]
+			// 16: Ammo reward
+			// 32: Item reward
+			// 64: God mode reward (temporary)
+			// 128: Health and ammo refill reward
+			// 256: Respawn reward
+			// 511: All above rewards
+			// 512-2147483647: Reserved for third-party plugins
 			// --
 			// 1st number = Enable rewards for killers.
 			// 2nd number = Enable rewards for assistants.
@@ -1573,6 +1592,23 @@
 			// 3rd number = Percentage of damage required for teammate rewards.
 			"Reward Percentage"			"0.0,0.0,0.0"
 
+			// The attack boost to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate boosts with commas (",").
+			// --
+			// Boosts limit: 3
+			// Character limit for each boost: 9
+			// --
+			// Minimum value for each boost: 1.1
+			// Maximum value for each boost: 999999.0 (Fastest)
+			// --
+			// 1st number = Boost for killers.
+			// 2nd number = Boost for assistants.
+			// 3rd number = Boost for teammates.
+			"Attack Boost Reward"			"0.0,0.0,0.0"
+
 			// The damage boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -1632,7 +1668,7 @@
 			// Character limit for each boost: 9
 			// --
 			// Minimum value for each boost: 1.1
-			// Maximum value for each boost: 999999.0 (Strongest)
+			// Maximum value for each boost: 999999.0 (Fastest)
 			// --
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
