@@ -96,6 +96,7 @@
 - Increased verbosity of logging for admin commands.
 - The vocalizer feature for Tank deaths now requires the `Vocalize Death` setting to be enabled.
 - The god mode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
+- Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
@@ -122,7 +123,8 @@
 
 #### Abilities
 - Clone
-	- Clones no longer reward survivors after dying.
+	- Clones no longer reward survivors after dying. (Thanks to 3aljiyavslgazana for the idea!)
+	- Clones no longer trigger announcements when spawning and dying. (Thanks to 3aljiyavslgazana for the idea!)
 
 - Choke
 	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)

@@ -1,7 +1,8 @@
 # Танки-мутанты
 
 ## Языки
- - [English](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md)
+ - [Русский](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md)
+ - [Английский](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md)
 
 ## Лицензия
 > Следующая лицензия помещается в исходный код каждого плагина и включаемого файла.
@@ -41,7 +42,9 @@
 1. `SourceMod 1.11.0.6511` или выше
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
-4. Терпение и знания
+4. Рекомендуется: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
+5. Необязательно: [VScript File Replacer](https://forums.alliedmods.net/showthread.php?t=318024)
+6. Терпение и знания
 
 ## Примечание
 1. Я не предоставляю поддержку для выделенного/локальных серверов, но плагин и его модули должны работать на них должным образом.

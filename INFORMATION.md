@@ -423,6 +423,8 @@
 		{
 			// Reward survivors for fighting Mutant Tanks.
 			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
+			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
+			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
@@ -438,7 +440,7 @@
 			// 1: Health reward
 			// 2: Speed boost reward (temporary)
 			// 4: Damage boost reward (temporary)
-			// 8: Attack boost reward (temporary) [Requires WeaponHandling API; link: https://forums.alliedmods.net/showthread.php?t=319947]
+			// 8: Attack boost reward (temporary)
 			// 16: Ammo reward
 			// 32: Item reward
 			// 64: God mode reward (temporary)
@@ -1490,6 +1492,8 @@
 		{
 			// Reward survivors for fighting Mutant Tanks.
 			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
+			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
+			// Link: https://forums.alliedmods.net/showthread.php?t=319947
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -1505,7 +1509,7 @@
 			// 1: Health reward
 			// 2: Speed boost reward (temporary)
 			// 4: Damage boost reward (temporary)
-			// 8: Attack boost reward (temporary) [Requires WeaponHandling API; link: https://forums.alliedmods.net/showthread.php?t=319947]
+			// 8: Attack boost reward (temporary)
 			// 16: Ammo reward
 			// 32: Item reward
 			// 64: God mode reward (temporary)
