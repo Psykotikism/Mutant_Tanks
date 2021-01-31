@@ -602,6 +602,26 @@
 		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert segítettél{olive} {1}{default}ellen!"
 	}
 
+	"RewardAttackBoost"
+	{
+		"hu"			"Most{default} kaptál{yellow} támadás növelést{default} mert megölted{olive} {1}{default}!"
+	}
+
+	"RewardAttackBoost2"
+	{
+		"hu"			"Most{default} kaptál{yellow} támadás növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
+	}
+
+	"RewardAttackBoost3"
+	{
+		"hu"			"Most{default} kaptál{yellow} támadás növelést{default} mert segítettél{olive} {1}{default}ellen!"
+	}
+
+	"RewardAttackBoostEnd"
+	{
+		"hu"			"A{yellow} támadás növelésed{default} véget ért!"
+	}
+
 	"RewardDamageBoost"
 	{
 		"hu"			"Most{default} kaptál{yellow} sebzés növelést{default} mert megölted{olive} {1}{default}!"

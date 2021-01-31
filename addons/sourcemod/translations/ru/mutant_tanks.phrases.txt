@@ -602,6 +602,26 @@
 		"ru"			"Вы{default} получили{yellow} боеприпасы{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 
+	"RewardAttackBoost"
+	{
+		"ru"			"Вы{default} получили{yellow} усиление атаки{default} за убийство{olive} {1}{default}!"
+	}
+
+	"RewardAttackBoost2"
+	{
+		"ru"			"Вы{default} получили{yellow} усиление атаки{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+	}
+
+	"RewardAttackBoost3"
+	{
+		"ru"			"Вы{default} получили{yellow} усиление атаки{default} за помощь в убийстве{olive} {1}{default}!"
+	}
+
+	"RewardAttackBoostEnd"
+	{
+		"ru"			"Ваше{yellow} усиление атаки{default} закончилось!"
+	}
+
 	"RewardDamageBoost"
 	{
 		"ru"			"Вы{default} получили{yellow} усиление урона{default} за убийство{olive} {1}{default}!"

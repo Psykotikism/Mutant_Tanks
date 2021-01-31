@@ -602,6 +602,26 @@
 		"chi"			"您{default} 收到{yellow} 弹药{default}, 以协助{olive} {1}{default}!"
 	}
 
+	"RewardAttackBoost"
+	{
+		"chi"			"您{default} 收到{yellow} 攻击加成{default}, 以杀死{olive} {1}{default}!"
+	}
+
+	"RewardAttackBoost2"
+	{
+		"chi"			"您{default} 收到{yellow} 攻击加成{default}, 以协助{olive} {1}{default} 的最大支援!"
+	}
+
+	"RewardAttackBoost3"
+	{
+		"chi"			"您{default} 收到{yellow} 攻击加成{default}, 以协助{olive} {1}{default}!"
+	}
+
+	"RewardAttackBoostEnd"
+	{
+		"chi"			"您的{yellow} 攻击加成{default} 结束了!"
+	}
+
 	"RewardDamageBoost"
 	{
 		"chi"			"您{default} 收到{yellow} 伤害加成{default}, 以杀死{olive} {1}{default}!"
@@ -709,22 +729,22 @@
 
 	"RewardSpeedBoost"
 	{
-		"chi"			"您{default} 收到{yellow} 提速{default}, 以杀死{olive} {1}{default}!"
+		"chi"			"您{default} 收到{yellow} 速度加成{default}, 以杀死{olive} {1}{default}!"
 	}
 
 	"RewardSpeedBoost2"
 	{
-		"chi"			"您{default} 收到{yellow} 提速{default}, 以协助{olive} {1}{default} 的最大支援!"
+		"chi"			"您{default} 收到{yellow} 速度加成{default}, 以协助{olive} {1}{default} 的最大支援!"
 	}
 
 	"RewardSpeedBoost3"
 	{
-		"chi"			"您{default} 收到{yellow} 提速{default}, 以协助{olive} {1}{default}!"
+		"chi"			"您{default} 收到{yellow} 速度加成{default}, 以协助{olive} {1}{default}!"
 	}
 
 	"RewardSpeedBoostEnd"
 	{
-		"chi"			"您的{yellow} 速度提升{default} 已结束!"
+		"chi"			"您的{yellow} 速度加成{default} 已结束!"
 	}
 
 	"SpawnMessage"

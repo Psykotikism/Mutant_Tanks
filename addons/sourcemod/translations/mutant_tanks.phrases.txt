@@ -674,6 +674,29 @@
 		"en"			"You{default} received{yellow} ammunition{default} for assisting against{olive} {1}{default}!"
 	}
 
+	"RewardAttackBoost"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} attack boost{default} for killing{olive} {1}{default}!"
+	}
+
+	"RewardAttackBoost2"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} attack boost{default} for assisting the most against{olive} {1}{default}!"
+	}
+
+	"RewardAttackBoost3"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} attack boost{default} for assisting against{olive} {1}{default}!"
+	}
+
+	"RewardAttackBoostEnd"
+	{
+		"en"			"Your{yellow} attack boost{default} ended!"
+	}
+
 	"RewardDamageBoost"
 	{
 		"#format"		"{1:t}"
