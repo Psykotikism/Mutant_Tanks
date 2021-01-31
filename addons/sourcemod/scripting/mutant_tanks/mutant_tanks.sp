@@ -9465,6 +9465,16 @@ static bool bTankChance(int type)
 	return GetRandomFloat(0.1, 100.0) <= g_esTank[type].g_flTankChance;
 }
 
+static float flGetAttackBoost(int survivor, float speedmodifier)
+{
+	if (g_esPlayer[survivor].g_bRewardedAttack || bIsDeveloper(survivor, 7))
+	{
+		return g_esPlayer[survivor].g_bRewardedAttack ? g_esPlayer[survivor].g_flAttackBoost : 1.25;
+	}
+
+	return speedmodifier;
+}
+
 static float flGetScaledDamage(float damage)
 {
 	if (g_esGeneral.g_cvMTDifficulty != null && g_esGeneral.g_iScaleDamage == 1)
@@ -9890,16 +9900,6 @@ public void WH_OnGetRateOfFire(int client, int weapon, L4D2WeaponType weapontype
 public void WH_OnDeployModifier(int client, int weapon, L4D2WeaponType weapontype, float &speedmodifier)
 {
 	speedmodifier = flGetAttackBoost(client, speedmodifier);
-}
-
-static float flGetAttackBoost(int survivor, float speedmodifier)
-{
-	if (g_esPlayer[survivor].g_bRewardedAttack || bIsDeveloper(survivor, 7))
-	{
-		return g_esPlayer[survivor].g_bRewardedAttack ? g_esPlayer[survivor].g_flAttackBoost : 1.25;
-	}
-
-	return speedmodifier;
 }
 
 public void vGameMode(const char[] output, int caller, int activator, float delay)
