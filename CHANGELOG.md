@@ -98,7 +98,7 @@
 - The vocalizer feature for Tank deaths now requires the `Vocalize Death` setting to be enabled.
 - The god mode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
 - Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
-- Rewards that have a duration can now have their duration extended when received again.
+- Rewards that have a duration can now have their duration extended when received again. (Requested by 3aljiyavslgazana.)
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]

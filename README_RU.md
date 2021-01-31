@@ -66,7 +66,11 @@
  - `addons/sourcemod/scripting` (`mutant_tanks.sp` и все его модули)
 2. Удалите `mutant_tanks.txt` из папки `addons/sourcemod/gamedata`.
 3. Удалите `mutant_tanks.inc` и `mt_clone.inc` из папки `addons/sourcemod/scripting/include`.
-4. Удалите `mutant_tanks.phrases.txt` из папки `addons/sourcemod/translations`.
+4. Удалите `mutant_tanks.phrases.txt` из:
+- папки `addons/sourcemod/translations`
+- папки `addons/sourcemod/translations/chi`
+- папки `addons/sourcemod/translations/hu`
+- папки `addons/sourcemod/translations/ru`
 5. Создайте копию папки `mutant_tanks` в папке `addons/sourcemod/data`.
 6. Следуйте руководству по установке выше. (Только для обновления до более новых версий.)
 
