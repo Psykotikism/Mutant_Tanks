@@ -123,11 +123,12 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_REWARD_HEALTH (1 << 0) // health reward
 #define MT_REWARD_SPEEDBOOST (1 << 1) // speed boost reward
 #define MT_REWARD_DAMAGEBOOST (1 << 2) // damage boost reward
-#define MT_REWARD_AMMO (1 << 3) // ammo reward
-#define MT_REWARD_ITEM (1 << 4) // item reward
-#define MT_REWARD_GODMODE (1 << 5) // god mode reward
-#define MT_REWARD_REFILL (1 << 6) // refill reward
-#define MT_REWARD_RESPAWN (1 << 7) // respawn reward
+#define MT_REWARD_ATTACKBOOST (1 << 3) // attack boost reward
+#define MT_REWARD_AMMO (1 << 4) // ammo reward
+#define MT_REWARD_ITEM (1 << 5) // item reward
+#define MT_REWARD_GODMODE (1 << 6) // god mode reward
+#define MT_REWARD_REFILL (1 << 7) // refill reward
+#define MT_REWARD_RESPAWN (1 << 8) // respawn reward
 
 // Combination types
 #define MT_COMBO_MAINRANGE 0 // main/range ability
@@ -1558,6 +1559,7 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
+
 					return true;
 				}
 			}
@@ -1959,6 +1961,7 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
+
 			return false;
 		}
 
@@ -2017,6 +2020,7 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
+
 				return flUnits;
 			}
 
