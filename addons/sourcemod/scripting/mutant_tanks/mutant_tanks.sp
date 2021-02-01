@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -2562,6 +2562,7 @@ static void vConfigMenu(int admin, int item = 0)
 	iCount = 0;
 
 	vClearSectionList();
+
 	g_esGeneral.g_alSections = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
 	if (g_esGeneral.g_alSections != null)
 	{
@@ -7613,6 +7614,7 @@ static void vSaveWeapons(int survivor)
 	{
 		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
 		strcopy(g_esPlayer[survivor].g_sWeaponPrimary, sizeof(esPlayer::g_sWeaponPrimary), sWeapon);
+
 		g_esPlayer[survivor].g_iWeaponInfo[0] = GetEntProp(iSlot, Prop_Send, "m_iClip1");
 		g_esPlayer[survivor].g_iWeaponInfo[1] = GetEntProp(survivor, Prop_Send, "m_iAmmo", _, iGetWeaponOffset(sWeapon));
 
@@ -9338,10 +9340,10 @@ static bool bIsPluginEnabled()
 	g_esGeneral.g_cvMTGameMode.GetString(sGameMode, sizeof(sGameMode));
 	FormatEx(sFixed, sizeof(sFixed), ",%s,", sGameMode);
 
-	strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sEnabledGameModes);
-	if (sGameModes[0] == '\0')
+	switch (g_esGeneral.g_sEnabledGameModes[0] != '\0')
 	{
-		g_esGeneral.g_cvMTEnabledGameModes.GetString(sGameModes, sizeof(sGameModes));
+		case true: strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sEnabledGameModes);
+		case false: g_esGeneral.g_cvMTEnabledGameModes.GetString(sGameModes, sizeof(sGameModes));
 	}
 
 	if (sGameModes[0] != '\0')
@@ -9353,10 +9355,10 @@ static bool bIsPluginEnabled()
 		}
 	}
 
-	strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sDisabledGameModes);
-	if (sGameModes[0] == '\0')
+	switch (g_esGeneral.g_sDisabledGameModes[0] != '\0')
 	{
-		g_esGeneral.g_cvMTDisabledGameModes.GetString(sGameModes, sizeof(sGameModes));
+		case true: strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sDisabledGameModes);
+		case false: g_esGeneral.g_cvMTDisabledGameModes.GetString(sGameModes, sizeof(sGameModes));
 	}
 
 	if (sGameModes[0] != '\0')
