@@ -7,7 +7,7 @@
 ## License
 > The following license is placed inside the source code of each plugin and include file.
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -1768,7 +1768,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 90-93 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines 91-94 of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
