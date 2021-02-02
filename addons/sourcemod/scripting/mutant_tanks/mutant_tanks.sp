@@ -392,7 +392,6 @@ enum struct esGeneral
 
 	Handle g_hRegularWavesTimer;
 	Handle g_hSDKDetonateRock;
-	Handle g_hSDKFirstContainedResponder;
 	Handle g_hSDKGetName;
 	Handle g_hSDKIsInStasis;
 	Handle g_hSDKLeaveStasis;
@@ -400,6 +399,7 @@ enum struct esGeneral
 	Handle g_hSurvivalTimer;
 
 	int g_iAccessFlags;
+	int g_iActionOffset;
 	int g_iAggressiveTanks;
 	int g_iAllowDeveloper;
 	int g_iAnnounceArrival;
@@ -408,7 +408,9 @@ enum struct esGeneral
 	int g_iArrivalMessage;
 	int g_iArrivalSound;
 	int g_iBaseHealth;
+	int g_iBehaviorOffset;
 	int g_iBulletImmunity;
+	int g_iChildActionOffset;
 	int g_iChosenType;
 	int g_iConfigCreate;
 	int g_iConfigEnable;
@@ -1435,17 +1437,25 @@ public void OnPluginStart()
 				LogError("%s Failed to load offset: Tank::GetIntentionInterface", MT_TAG);
 			}
 
-			int iOffset = gdMutantTanks.GetOffset("Action<Tank>::FirstContainedResponder");
-			StartPrepSDKCall(SDKCall_Raw);
-			PrepSDKCall_SetVirtual(iOffset);
-			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-			g_esGeneral.g_hSDKFirstContainedResponder = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKFirstContainedResponder == null)
+			g_esGeneral.g_iBehaviorOffset = gdMutantTanks.GetOffset("TankIntention::FirstContainedResponder");
+			if (g_esGeneral.g_iBehaviorOffset == -1)
 			{
-				LogError("%s Your \"Action<Tank>::FirstContainedResponder\" offsets are outdated.", MT_TAG);
+				LogError("%s Failed to load offset: TankIntention::FirstContainedResponder", MT_TAG);
 			}
 
-			iOffset = gdMutantTanks.GetOffset("TankIdle::GetName");
+			g_esGeneral.g_iActionOffset = gdMutantTanks.GetOffset("Behavior<Tank>::FirstContainedResponder");
+			if (g_esGeneral.g_iActionOffset == -1)
+			{
+				LogError("%s Failed to load offset: Behavior<Tank>::FirstContainedResponder", MT_TAG);
+			}
+
+			g_esGeneral.g_iChildActionOffset = gdMutantTanks.GetOffset("Action<Tank>::FirstContainedResponder");
+			if (g_esGeneral.g_iChildActionOffset == -1)
+			{
+				LogError("%s Failed to load offset: Action<Tank>::FirstContainedResponder", MT_TAG);
+			}
+
+			int iOffset = gdMutantTanks.GetOffset("TankIdle::GetName");
 			StartPrepSDKCall(SDKCall_Raw);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Plain);
@@ -1545,12 +1555,9 @@ public void OnMapStart()
 		{
 			PrecacheSound(SOUND_EXPLOSION2, true);
 			PrecacheSound(SOUND_SPIT, true);
-		}
-		case false:
-		{
-			PrecacheSound(SOUND_EXPLOSION1, true);
 			PrecacheModel(MODEL_TANK_L4D1, true);
 		}
+		case false: PrecacheSound(SOUND_EXPLOSION1, true);
 	}
 
 	PrecacheSound(SOUND_ACHIEVEMENT, true);
@@ -1617,7 +1624,6 @@ public void OnClientDisconnect_Post(int client)
 {
 	vReset3(client);
 	vResetCore(client);
-
 	g_esGeneral.g_iPlayerCount[0] = iGetPlayerCount();
 }
 
@@ -5831,7 +5837,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					CreateTimer(1.0, tTimerResetType, iVictimId, TIMER_FLAG_NO_MAPCHANGE);
 				}
 
-				if (!g_esPlayer[iVictim].g_bArtificial)
+				if (!g_esPlayer[iVictim].g_bArtificial && bIsFinaleMap() && iGetTankCount(true, true) <= 0 && iGetTankCount(false, true) <= 0 && (0 < g_esGeneral.g_iTankWave < 10))
 				{
 					CreateTimer(5.0, tTimerTankWave, _, TIMER_FLAG_NO_MAPCHANGE);
 				}
@@ -9391,16 +9397,16 @@ static bool bIsTankIdle(int tank, int type = 0)
 		if (adTank != Address_Null)
 		{
 			Address adIntention = view_as<Address>(LoadFromAddress(adTank + view_as<Address>(g_esGeneral.g_iIntentionOffset), NumberType_Int32));
-			if (adIntention != Address_Null && g_esGeneral.g_hSDKFirstContainedResponder != null)
+			if (adIntention != Address_Null)
 			{
-				Address adBehavior = view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, adIntention));
+				Address adBehavior = view_as<Address>(LoadFromAddress(adIntention + view_as<Address>(g_esGeneral.g_iBehaviorOffset), NumberType_Int32));
 				if (adBehavior != Address_Null)
 				{
-					Address adAction = view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, adBehavior));
+					Address adAction = view_as<Address>(LoadFromAddress(adBehavior + view_as<Address>(g_esGeneral.g_iActionOffset), NumberType_Int32));
 					if (adAction != Address_Null)
 					{
 						Address adChildAction = Address_Null;
-						while ((adChildAction = view_as<Address>(SDKCall(g_esGeneral.g_hSDKFirstContainedResponder, adAction))) != Address_Null)
+						while ((adChildAction = view_as<Address>(LoadFromAddress(adAction + view_as<Address>(g_esGeneral.g_iChildActionOffset), NumberType_Int32))) != Address_Null)
 						{
 							adAction = adChildAction;
 						}

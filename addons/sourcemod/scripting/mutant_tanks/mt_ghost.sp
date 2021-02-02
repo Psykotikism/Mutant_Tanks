@@ -1027,11 +1027,14 @@ static void vGhostHit(int survivor, int tank, float random, float chance, int en
 					}
 				}
 
+				static int iSlot;
+				iSlot = 0;
 				for (int iBit = 0; iBit < 5; iBit++)
 				{
-					if (((g_esCache[tank].g_iGhostWeaponSlots & (1 << iBit)) || g_esCache[tank].g_iGhostWeaponSlots == 0) && GetPlayerWeaponSlot(survivor, iBit) > 0)
+					iSlot = GetPlayerWeaponSlot(survivor, iBit);
+					if (((g_esCache[tank].g_iGhostWeaponSlots & (1 << iBit)) || g_esCache[tank].g_iGhostWeaponSlots == 0) && iSlot > MaxClients)
 					{
-						SDKHooks_DropWeapon(survivor, GetPlayerWeaponSlot(survivor, iBit), NULL_VECTOR, NULL_VECTOR);
+						SDKHooks_DropWeapon(survivor, iSlot, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 
