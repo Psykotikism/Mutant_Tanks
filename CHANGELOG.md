@@ -9,6 +9,8 @@
 - Fixed Tanks spawned from the `sm_tank`/`sm_mt_tank` menu raising the wave count when they die.
 - Fixed clones, respawned Tanks, randomized Tanks, and Tanks spawned through the Mutant Tanks menu not being exempted from the `Type Limit` setting.
 - Fixed game modes not being detected properly.
+- Fixed the L4D1 Tank model not being precached in L4D2.
+- Fixed Tank deaths raising the wave count while there are still other Tanks alive. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 #### Core Plugin
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
@@ -42,6 +44,34 @@
 ### Changes
 
 #### General
+- Changed the method for checking idle Tanks. (Thanks to BHaType for the code and epzminion for the help!)
+
+#### Core Plugin
+- Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
+- Added extra copies of the `Body Effects` setting's electric jolt option.
+- Increased verbosity of logging for admin commands.
+- The vocalizer feature for Tank deaths now requires the `Vocalize Death` setting to be enabled.
+- The god mode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
+- Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
+- Rewards that have a duration can now have their duration extended when received again. (Requested by 3aljiyavslgazana.)
+
+#### Settings
+- Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
+- Added the `Log Commands` setting under the `Plugin Settings/General` section. (Requested by 3aljiyavslgazana.)
+- Added the following settings under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
+	- `Arrival Sound` (Thanks to Tank Rush for the idea!)
+	- `Death Sound` (Thanks to Tank Rush for the idea!)
+	- `Vocalize Arrival`
+	- `Vocalize Death`
+- Added the `Enhancements` and `Immunities` sections under the `Plugin Settings` section for global use.
+- The following settings now accept a value of `0` (standard Tanks) [Thanks to Tonblader for the idea!]:
+	- `Type Range`
+	- `Regular Type`
+	- `Finale Types`
+- Added the `Spawn Limit` setting under the `Plugin Settings/General` section. (Requested by Tonblader.)
+- Added the `Survival Delay` setting under the `Plugin Settings/Competitive` section. (Requested by Tonblader.)
+- Added a new option for the `Reward Enabled` setting. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
+- Added the `Attack Boost Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 - The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by Shadowart.):
 	- `Finales Only`
 	- `Idle Check`
@@ -91,33 +121,6 @@
 	- `Hittable Immunity`
 	- `Melee Immunity`
 
-#### Core Plugin
-- Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
-- Added extra copies of the `Body Effects` setting's electric jolt option.
-- Increased verbosity of logging for admin commands.
-- The vocalizer feature for Tank deaths now requires the `Vocalize Death` setting to be enabled.
-- The god mode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
-- Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
-- Rewards that have a duration can now have their duration extended when received again. (Requested by 3aljiyavslgazana.)
-
-#### Settings
-- Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
-- Added the `Log Commands` setting under the `Plugin Settings/General` section. (Requested by 3aljiyavslgazana.)
-- Added the following settings under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
-	- `Arrival Sound` (Thanks to Tank Rush for the idea!)
-	- `Death Sound` (Thanks to Tank Rush for the idea!)
-	- `Vocalize Arrival`
-	- `Vocalize Death`
-- Added the `Enhancements` and `Immunities` sections under the `Plugin Settings` section for global use.
-- The following settings now accept a value of `0` (standard Tanks) [Thanks to Tonblader for the idea!]:
-	- `Type Range`
-	- `Regular Type`
-	- `Finale Types`
-- Added the `Spawn Limit` setting under the `Plugin Settings/General` section. (Requested by Tonblader.)
-- Added the `Survival Delay` setting under the `Plugin Settings/Competitive` section. (Requested by Tonblader.)
-- Added a new option for the `Reward Enabled` setting. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
-- Added the `Attack Boost Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
-
 #### Translations
 - Updated English translations.
 - Updated Simplified Chinese translations.
@@ -148,6 +151,7 @@
 
 #### Updates
 - Updated config files.
+- Updated gamedata file.
 - Updated include file.
 - Updated translation files.
 
