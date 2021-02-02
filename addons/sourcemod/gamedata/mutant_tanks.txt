@@ -93,8 +93,13 @@
 		{
 			"Action<Tank>::FirstContainedResponder"
 			{
-				"windows"	"1"
-				"linux"		"2"
+				"windows"	"16"
+				"linux"		"16"
+			}
+			"Behavior<Tank>::FirstContainedResponder"
+			{
+				"windows"	"8"
+				"linux"		"8"
 			}
 			"CTerrorPlayer::Deafen"
 			{
@@ -111,11 +116,6 @@
 				"windows"	"375"
 				"linux"		"376"
 			}
-			"Infected::GetIntentionInterface"
-			{
-				"windows"	"3456"
-				"linux"		"3476"
-			}
 			"Tank::GetIntentionInterface"
 			{
 				"windows"	"11924"
@@ -125,6 +125,11 @@
 			{
 				"windows"	"35"
 				"linux"		"36"
+			}
+			"TankIntention::FirstContainedResponder"
+			{
+				"windows"	"28"
+				"linux"		"28"
 			}
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
@@ -219,8 +224,13 @@
 		{
 			"Action<Tank>::FirstContainedResponder"
 			{
-				"windows"	"1"
-				"linux"		"2"
+				"windows"	"16"
+				"linux"		"16"
+			}
+			"Behavior<Tank>::FirstContainedResponder"
+			{
+				"windows"	"8"
+				"linux"		"8"
 			}
 			"CBaseEntity::IsInStasis"
 			{
@@ -242,11 +252,6 @@
 				"windows"	"402"
 				"linux"		"403"
 			}
-			"Infected::GetIntentionInterface"
-			{
-				"windows"	"7368"
-				"linux"		"7364"
-			}
 			"Tank::GetIntentionInterface"
 			{
 				"windows"	"17236"
@@ -256,6 +261,11 @@
 			{
 				"windows"	"40"
 				"linux"		"41"
+			}
+			"TankIntention::FirstContainedResponder"
+			{
+				"windows"	"28"
+				"linux"		"28"
 			}
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
