@@ -9560,7 +9560,6 @@ static int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 	static int iMin, iMax, iTypeCount, iTankTypes[MT_MAXTYPES + 1];
 	iMin = (min >= 0) ? min : g_esGeneral.g_iMinType;
 	iMax = (max >= 0) ? max : g_esGeneral.g_iMaxType;
-	vLogMessage(MT_LOG_SERVER, _, "Test: Choosing between %i-%i", min, max);
 	if (iMax < iMin || (g_esGeneral.g_iCurrentMode == 4 && g_esGeneral.g_iSurvivalBlock != 2))
 	{
 		return 0;
@@ -9591,9 +9590,7 @@ static int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 
 	if (iTypeCount > 0)
 	{
-		int iType = iTankTypes[GetRandomInt(1, iTypeCount)];
-		vLogMessage(MT_LOG_SERVER, _, "Test: Chose %i (%s)", iType, g_esTank[iType].g_sTankName);
-		return iType;
+		return iTankTypes[GetRandomInt(1, iTypeCount)];
 	}
 
 	return 0;
@@ -10621,14 +10618,12 @@ public Action tTimerTankWave(Handle timer)
 	if (bIsNonFinaleMap() || iGetTankCount(true, true) > 0 || iGetTankCount(false, true) > 0 || !(0 < g_esGeneral.g_iTankWave < 10))
 	{
 		g_esGeneral.g_hTankWaveTimer = null;
-		vLogMessage(MT_LOG_SERVER, _, "Test: Wave %i is not over", g_esGeneral.g_hTankWaveTimer);
 
 		return Plugin_Stop;
 	}
 
 	g_esGeneral.g_hTankWaveTimer = null;
 	g_esGeneral.g_iTankWave++;
-	vLogMessage(MT_LOG_SERVER, _, "Test: Wave %i started", g_esGeneral.g_hTankWaveTimer);
 
 	return Plugin_Continue;
 }
