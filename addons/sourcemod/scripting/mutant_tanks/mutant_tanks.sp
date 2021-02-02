@@ -397,6 +397,7 @@ enum struct esGeneral
 	Handle g_hSDKLeaveStasis;
 	Handle g_hSDKRespawnPlayer;
 	Handle g_hSurvivalTimer;
+	Handle g_hTankWaveTimer;
 
 	int g_iAccessFlags;
 	int g_iActionOffset;
@@ -5766,6 +5767,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "finale_vehicle_leaving"))
 		{
 			g_esGeneral.g_bFinaleEnded = true;
+			g_esGeneral.g_iTankWave = 4;
 
 			vExecuteFinaleConfigs(name);
 		}
@@ -5835,11 +5837,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 					vReset2(iVictim, g_esCache[iVictim].g_iDeathRevert);
 					CreateTimer(1.0, tTimerResetType, iVictimId, TIMER_FLAG_NO_MAPCHANGE);
-				}
-
-				if (!g_esPlayer[iVictim].g_bArtificial && bIsFinaleMap() && iGetTankCount(true, true) <= 0 && iGetTankCount(false, true) <= 0 && (0 < g_esGeneral.g_iTankWave < 10))
-				{
-					CreateTimer(5.0, tTimerTankWave, _, TIMER_FLAG_NO_MAPCHANGE);
 				}
 			}
 			else if (bIsSurvivor(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME))
@@ -7050,6 +7047,7 @@ static void vResetRound()
 
 	vKillRegularWavesTimer();
 	vKillSurvivalTimer();
+	vKillTankWaveTimer();
 }
 
 static void vResetSpeed(int tank, bool mode = true)
@@ -7132,6 +7130,15 @@ static void vKillSurvivalTimer()
 	{
 		KillTimer(g_esGeneral.g_hSurvivalTimer);
 		g_esGeneral.g_hSurvivalTimer = null;
+	}
+}
+
+static void vKillTankWaveTimer()
+{
+	if (g_esGeneral.g_hTankWaveTimer != null)
+	{
+		KillTimer(g_esGeneral.g_hTankWaveTimer);
+		g_esGeneral.g_hTankWaveTimer = null;
 	}
 }
 
@@ -9835,6 +9842,12 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 		if (!bIsCustomTank(pThis))
 		{
 			g_esGeneral.g_iTankCount--;
+
+			if (!g_esPlayer[pThis].g_bArtificial)
+			{
+				vKillTankWaveTimer();
+				g_esGeneral.g_hTankWaveTimer = CreateTimer(5.0, tTimerTankWave);
+			}
 		}
 
 		if (bIsTankSupported(pThis) && bIsCustomTankSupported(pThis))
@@ -10604,9 +10617,12 @@ public Action tTimerTankWave(Handle timer)
 {
 	if (bIsNonFinaleMap() || iGetTankCount(true, true) > 0 || iGetTankCount(false, true) > 0 || !(0 < g_esGeneral.g_iTankWave < 10))
 	{
+		g_esGeneral.g_hTankWaveTimer = null;
+
 		return Plugin_Stop;
 	}
 
+	g_esGeneral.g_hTankWaveTimer = null;
 	g_esGeneral.g_iTankWave++;
 
 	return Plugin_Continue;
