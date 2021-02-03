@@ -11,7 +11,7 @@
 - Fixed game modes not being detected properly.
 - Fixed the L4D1 Tank model not being precached in L4D2.
 - Fixed Tank deaths raising the wave count while there are still other Tanks alive. (Thanks to 3aljiyavslgazana for testing and reporting!)
-- Fixed raising the wave count for each Tank death. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed each Tank death raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 #### Core Plugin
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
