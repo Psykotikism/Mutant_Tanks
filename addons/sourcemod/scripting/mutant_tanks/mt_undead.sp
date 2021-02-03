@@ -268,7 +268,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
 	{
-		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esPlayer[victim].g_bActivated)
+		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && !bIsPlayerIncapacitated(victim) && g_esPlayer[victim].g_bActivated)
 		{
 			if (bIsAreaNarrow(victim, g_esCache[victim].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (g_esCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)))
 			{
@@ -281,7 +281,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 				static int iMaxHealth, iNewHealth;
 				iMaxHealth = MT_TankMaxHealth(victim, 1);
-				iNewHealth = GetEntProp(victim, Prop_Data, "m_iMaxHealth");
+				iNewHealth = MT_TankMaxHealth(victim, 2);
 				MT_TankMaxHealth(victim, 3, iMaxHealth + iNewHealth);
 				SetEntProp(victim, Prop_Data, "m_iHealth", iNewHealth);
 

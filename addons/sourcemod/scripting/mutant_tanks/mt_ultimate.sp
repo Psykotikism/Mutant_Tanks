@@ -776,7 +776,9 @@ static void vReset()
 
 static void vUltimate(int tank, int pos = -1)
 {
-	if (g_esPlayer[tank].g_bQualified && g_esPlayer[tank].g_iCount < g_esCache[tank].g_iUltimateAmount)
+	static int iTankHealth;
+	iTankHealth = GetEntProp(tank, Prop_Data, "m_iHealth");
+	if (iTankHealth <= g_esCache[tank].g_iUltimateHealthLimit && !bIsPlayerIncapacitated(tank) && g_esPlayer[tank].g_bQualified && g_esPlayer[tank].g_iCount < g_esCache[tank].g_iUltimateAmount)
 	{
 		static int iDuration;
 		iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esCache[tank].g_iUltimateDuration;
@@ -801,11 +803,15 @@ static void vUltimate(int tank, int pos = -1)
 			EmitSoundToAll(SOUND_SMASH1, tank);
 		}
 
-		static int iMaxHealth, iNewHealth;
+		static int iValue, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
+		iValue = RoundToNearest(MT_TankMaxHealth(tank, 2) * g_esCache[tank].g_flUltimateHealthPortion);
 		iMaxHealth = MT_TankMaxHealth(tank, 1);
-		iNewHealth = RoundToNearest(GetEntProp(tank, Prop_Data, "m_iMaxHealth") * g_esCache[tank].g_flUltimateHealthPortion);
-		MT_TankMaxHealth(tank, 3, iMaxHealth + iNewHealth);
-		SetEntProp(tank, Prop_Data, "m_iHealth", iNewHealth);
+		iNewHealth = iTankHealth + iValue;
+		iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iNewHealth - MT_MAXHEALTH) : iNewHealth;
+		iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
+		iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : iValue;
+		MT_TankMaxHealth(tank, 3, iMaxHealth + iTotalHealth);
+		SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
 		SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
 
 		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)

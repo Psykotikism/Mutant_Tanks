@@ -236,9 +236,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
 	{
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && g_esCache[attacker].g_iXiphosAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[attacker].g_flXiphosChance && bIsSurvivor(victim) && !bIsPlayerDisabled(victim))
+		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && !bIsPlayerIncapacitated(attacker) && g_esCache[attacker].g_iXiphosAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[attacker].g_flXiphosChance && bIsSurvivor(victim) && !bIsPlayerDisabled(victim))
 		{
-			if (bIsPlayerIncapacitated(attacker) || bIsAreaNarrow(attacker, g_esCache[attacker].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[attacker].g_iTankType) || (g_esCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
+			if (bIsAreaNarrow(attacker, g_esCache[attacker].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[attacker].g_iTankType) || (g_esCache[attacker].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[attacker].g_iRequiresHumans) || (!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -251,9 +251,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				vEffect(victim, attacker, g_esCache[attacker].g_iXiphosEffect, 1);
 			}
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esCache[victim].g_iXiphosAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[victim].g_flXiphosChance && bIsSurvivor(attacker) && !bIsPlayerDisabled(attacker))
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && !bIsPlayerIncapacitated(victim) && g_esCache[victim].g_iXiphosAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esCache[victim].g_flXiphosChance && bIsSurvivor(attacker) && !bIsPlayerDisabled(attacker))
 		{
-			if (bIsPlayerIncapacitated(victim) || bIsAreaNarrow(victim, g_esCache[victim].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (g_esCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
+			if (bIsAreaNarrow(victim, g_esCache[victim].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (g_esCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
 			{
 				return Plugin_Continue;
 			}
@@ -409,21 +409,21 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 static void vXiphos(int attacker, int victim, float damage, bool tank)
 {
-	static int iTank;
+	static int iTank, iDamage, iHealth, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
 	iTank = tank ? attacker : victim;
-
-	static int iDamage, iHealth, iMaxHealth, iNewHealth, iFinalHealth;
 	iDamage = RoundToNearest(damage);
 	iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth");
 	iMaxHealth = tank ? MT_MAXHEALTH : g_esCache[iTank].g_iXiphosMaxHealth;
 	iMaxHealth = (!tank && g_esCache[iTank].g_iXiphosMaxHealth == 0) ? GetEntProp(attacker, Prop_Data, "m_iMaxHealth") : iMaxHealth;
 	iNewHealth = iHealth + iDamage;
+	iLeftover = (iNewHealth > iMaxHealth) ? (iNewHealth - iMaxHealth) : iNewHealth;
 	iFinalHealth = (iNewHealth > iMaxHealth) ? iMaxHealth : iNewHealth;
+	iTotalHealth = (iNewHealth > iMaxHealth) ? iLeftover : iDamage;
 	SetEntProp(attacker, Prop_Data, "m_iHealth", iFinalHealth);
 
 	if (tank)
 	{
-		MT_TankMaxHealth(attacker, 3, (MT_TankMaxHealth(attacker, 1) + iDamage));
+		MT_TankMaxHealth(attacker, 3, (MT_TankMaxHealth(attacker, 1) + iTotalHealth));
 	}
 
 	static int iFlag;

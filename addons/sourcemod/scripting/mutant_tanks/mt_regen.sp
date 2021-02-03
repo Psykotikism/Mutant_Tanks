@@ -730,7 +730,7 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 	static int iTank, iType;
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iRegenAbility == 0 || !g_esPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iRegenAbility == 0 || !g_esPlayer[iTank].g_bActivated)
 	{
 		vReset2(iTank);
 
@@ -748,15 +748,17 @@ public Action tTimerRegen(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iHealth, iExtraHealth, iMaxHealth, iNewHealth, iNewHealth2, iRealHealth, iFinalHealth;
+	static int iHealth, iExtraHealth, iMaxHealth, iLeftover, iNewHealth, iNewHealth2, iRealHealth, iFinalHealth, iTotalHealth;
 	iHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
 	iExtraHealth = iHealth + g_esCache[iTank].g_iRegenHealth;
 	iMaxHealth = MT_TankMaxHealth(iTank, 1);
+	iLeftover = (iExtraHealth > MT_MAXHEALTH) ? (iExtraHealth - MT_MAXHEALTH) : iExtraHealth;
 	iNewHealth = (iExtraHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iExtraHealth;
 	iNewHealth2 = (iExtraHealth <= 1) ? iHealth : iExtraHealth;
 	iRealHealth = (g_esCache[iTank].g_iRegenHealth >= 1) ? iNewHealth : iNewHealth2;
 	iFinalHealth = (g_esCache[iTank].g_iRegenHealth >= 1 && iRealHealth >= g_esCache[iTank].g_iRegenLimit) ? g_esCache[iTank].g_iRegenLimit : iRealHealth;
-	MT_TankMaxHealth(iTank, 3, iMaxHealth + g_esCache[iTank].g_iRegenHealth);
+	iTotalHealth = (iExtraHealth > MT_MAXHEALTH) ? iLeftover : g_esCache[iTank].g_iRegenHealth;
+	MT_TankMaxHealth(iTank, 3, iMaxHealth + iTotalHealth);
 	SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth);
 
 	return Plugin_Continue;

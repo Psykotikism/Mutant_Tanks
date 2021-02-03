@@ -900,7 +900,7 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
 	iMessage = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) || !g_esPlayer[iSurvivor].g_bAffected)
+	if (!MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) || !g_esPlayer[iSurvivor].g_bAffected)
 	{
 		vReset2(iSurvivor, iTank, iMessage);
 
@@ -919,12 +919,14 @@ public Action tTimerLeech(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	static int iTankHealth, iMaxHealth, iNewHealth, iFinalHealth;
+	static int iTankHealth, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
 	iTankHealth = GetEntProp(iTank, Prop_Data, "m_iHealth");
 	iMaxHealth = MT_TankMaxHealth(iTank, 1);
 	iNewHealth = iTankHealth + 1;
+	iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iNewHealth - MT_MAXHEALTH) : iNewHealth;
 	iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
-	MT_TankMaxHealth(iTank, 3, iMaxHealth + 1);
+	iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : 1;
+	MT_TankMaxHealth(iTank, 3, iMaxHealth + iTotalHealth);
 	SetEntProp(iTank, Prop_Data, "m_iHealth", iFinalHealth);
 	vDamagePlayer(iSurvivor, iTank, 1.0);
 

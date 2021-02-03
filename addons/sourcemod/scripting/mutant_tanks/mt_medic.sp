@@ -468,7 +468,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			}
 			else
 			{
-				static char sSet[7][6], sValue[42];
+				static char sSet[7][11], sValue[77];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -525,7 +525,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			}
 			else
 			{
-				static char sSet[7][6], sValue[42];
+				static char sSet[7][11], sValue[77];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -906,7 +906,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 	static int iTank, iType;
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iMedicAbility == 0 || !g_esPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iMedicAbility == 0 || !g_esPlayer[iTank].g_bActivated)
 	{
 		vReset2(iTank);
 
@@ -936,21 +936,25 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 		TE_SendToAll();
 	}
 
-	static int iHealth, iMaxHealth, iNewHealth, iExtraHealth, iExtraHealth2, iRealHealth;
+	static int iHealth, iValue, iLimit, iMaxHealth, iNewHealth, iLeftover, iExtraHealth, iExtraHealth2, iRealHealth, iTotalHealth;
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
-		if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE)) && iTank != iInfected)
+		if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE)) && bIsPlayerIncapacitated(iInfected) && iTank != iInfected)
 		{
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			if (GetVectorDistance(flTankPos, flInfectedPos) <= flRange)
 			{
 				iHealth = GetEntProp(iInfected, Prop_Data, "m_iHealth");
+				iValue = iGetHealth(iTank, iInfected);
+				iLimit = iGetMaxHealth(iTank, iInfected);
 				iMaxHealth = MT_TankMaxHealth(iInfected, 1);
-				iNewHealth = iHealth + iGetHealth(iTank, iInfected);
-				iExtraHealth = (iNewHealth > iGetMaxHealth(iTank, iInfected)) ? iGetMaxHealth(iTank, iInfected) : iNewHealth;
+				iNewHealth = iHealth + iValue;
+				iLeftover = (iNewHealth > iLimit) ? (iNewHealth - iLimit) : iNewHealth;
+				iExtraHealth = (iNewHealth > iLimit) ? iLimit : iNewHealth;
 				iExtraHealth2 = (iNewHealth < iHealth) ? 1 : iNewHealth;
 				iRealHealth = (iNewHealth >= 0) ? iExtraHealth : iExtraHealth2;
-				MT_TankMaxHealth(iInfected, 3, iMaxHealth + iGetHealth(iTank, iInfected));
+				iTotalHealth = (iNewHealth > iLimit) ? iLeftover : iValue;
+				MT_TankMaxHealth(iInfected, 3, iMaxHealth + iTotalHealth);
 				SetEntProp(iInfected, Prop_Data, "m_iHealth", iRealHealth);
 
 				if (g_esCache[iTank].g_iMedicMessage == 1)
