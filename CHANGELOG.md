@@ -21,6 +21,9 @@
 - Fixed inconsistent access levels for some developer commands.
 - Fixed players with the god mode reward not being saved from special infected when given the health or refill reward.
 
+#### Settings
+- Fixed the `Boss Health Stages` setting not being read entirely.
+
 #### Abilities
 - Clone
 	- Fixed clone deaths raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -33,6 +36,19 @@
 - Kamikaze
 	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
+- Leech
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+
+- Medic
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+	- Fixed the `Medic Health` and `Medic Max Health` settings not being read entirely. (Thanks to TheStarRocker for testing and reporting!)
+
+- Regen
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+
 - Restart
 	- Fixed players with the god mode reward being affected.
 
@@ -44,6 +60,22 @@
 
 - Smite
 	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Ultimate
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+
+- Undead
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+
+- Vampire
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+
+- Xiphos
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
 
 ### Changes
 
@@ -76,11 +108,13 @@
 - Added the `Survival Delay` setting under the `Plugin Settings/Competitive` section. (Requested by Tonblader.)
 - Added a new option for the `Reward Enabled` setting. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 - Added the `Attack Boost Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
+- Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by TheStarRocker.) [Thanks to Silvers for the code!]
 - The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by Shadowart.):
 	- `Finales Only`
 	- `Idle Check`
 	- `Idle Check Mode`
 	- `Tank Model`
+	- `Burn Duration`
 	- `Burnt Skin`
 	- `Announce Arrival`
 	- `Announce Death`

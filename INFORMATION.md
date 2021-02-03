@@ -249,6 +249,14 @@
 			// 4: L4D1 model (Only available in Left 4 Dead 2.)
 			"Tank Model"				"0"
 
+			// The duration in seconds of all Mutant Tanks' afterburn.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0
+			"Burn Duration"				"0.0"
+
 			// The burnt percentage of all Mutant Tanks when they spawn.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
@@ -1343,6 +1351,14 @@
 			// 4: L4D1 model (Only available in Left 4 Dead 2.)
 			"Tank Model"				"0"
 
+			// The duration in seconds of the Mutant Tank's afterburn.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0
+			"Burn Duration"				"0.0"
+
 			// The burnt percentage of the Mutant Tank when it spawns.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This setting can be overridden for specific players.
@@ -1832,9 +1848,9 @@
 			// --
 			// Separate abilities with commas (",").
 			// --
-			// Character limit: 24 (including commas)
+			// Character limit: 44 (including commas)
 			// Health stages limit: 4
-			// Character limit for each health stage: 6
+			// Character limit for each health stage: 11
 			// --
 			// Minimum value for each health stage: 1
 			// Maximum value for each health stage: 1000000
