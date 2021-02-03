@@ -1109,7 +1109,7 @@
 
 	"Bury"
 	{
-		"hu"			"{olive}{1}{mint} eltemette{olive} {2}{yellow} {3}{mint} lábát a föld alá!"
+		"hu"			"{olive}{1}{mint} eltemette{olive} {2}-t{yellow} {3}{mint} lábra a föld alá!"
 	}
 
 	"Bury2"
