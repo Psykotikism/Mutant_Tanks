@@ -453,8 +453,9 @@
 			// 64: God mode reward (temporary)
 			// 128: Health and ammo refill reward
 			// 256: Respawn reward
-			// 511: All above rewards
-			// 512-2147483647: Reserved for third-party plugins
+			// 512: Infinite primary ammo reward (temporary)
+			// 1023: All above rewards
+			// 1024-2147483647: Reserved for third-party plugins
 			// --
 			// 1st number = Enable rewards for killers.
 			// 2nd number = Enable rewards for assistants.
@@ -1530,8 +1531,9 @@
 			// 64: God mode reward (temporary)
 			// 128: Health and ammo refill reward
 			// 256: Respawn reward
-			// 511: All above rewards
-			// 512-2147483647: Reserved for third-party plugins
+			// 512: Infinite primary ammo reward (temporary)
+			// 1023: All above rewards
+			// 1024-2147483647: Reserved for third-party plugins
 			// --
 			// 1st number = Enable rewards for killers.
 			// 2nd number = Enable rewards for assistants.

@@ -106,7 +106,9 @@
 	- `Finale Types`
 - Added the `Spawn Limit` setting under the `Plugin Settings/General` section. (Requested by Tonblader.)
 - Added the `Survival Delay` setting under the `Plugin Settings/Competitive` section. (Requested by Tonblader.)
-- Added a new option for the `Reward Enabled` setting. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
+- Added the following new options for the `Reward Enabled` setting:
+	- `Attack boost reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
+	- `Infinite primary ammo reward` (Thanks to epzminion for helping!)
 - Added the `Attack Boost Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 - Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by TheStarRocker.) [Thanks to Silvers for the code!]
 - The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by Shadowart.):

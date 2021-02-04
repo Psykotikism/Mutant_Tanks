@@ -267,13 +267,13 @@ To make sure that this entry can be chosen, we must change the value in the `Typ
 	{
 		"General"
 		{
-			"Type Range"				"1-24" // Determines what entry to start and stop at when reading the entire config file.
+			"Type Range"				"1-14" // Determines what entry to start and stop at when reading the entire config file.
 		}
 	}
 }
 ```
 
-Now, assuming that `Tank #25` is our highest entry, we just raise the maximum value of `Type Range` by 1, so we get 25 entries to choose from. Once the plugin starts reading the config file, when it gets to `Tank #25` it will stop reading the rest.
+Now, assuming that `Tank #15` is our highest entry, we just raise the maximum value of `Type Range` by 1, so we get 15 entries to choose from. Once the plugin starts reading the config file, when it gets to `Tank #15` it will stop reading the rest.
 
 - Advanced Entry Examples
 
