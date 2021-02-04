@@ -677,6 +677,26 @@
 		"hu"			"Most{default} kaptál{yellow} életet{default} mert segítettél{olive} {1}{default}ellen!"
 	}
 
+	"RewardInfAmmo"
+	{
+		"hu"			"Most{default} kaptál{yellow} végtelen elsődleges lőszert{default} mert megölted{olive} {1}{default}!"
+	}
+
+	"RewardInfAmmo2"
+	{
+		"hu"			"Most{default} kaptál{yellow} végtelen elsődleges lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
+	}
+
+	"RewardInfAmmo3"
+	{
+		"hu"			"Most{default} kaptál{yellow} végtelen elsődleges lőszert{default} mert segítettél{olive} {1}{default}ellen!"
+	}
+
+	"RewardInfAmmoEnd"
+	{
+		"hu"			"A{yellow} végtelen elsődleges lőszered{default} véget ért!"
+	}
+
 	"RewardItem"
 	{
 		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert megölted{olive} {2}{default}!"

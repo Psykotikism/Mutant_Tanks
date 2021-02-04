@@ -659,33 +659,16 @@ static void vDropWeapon(int tank, int value, float random, int pos = -1)
 				static int iAmmo, iClip;
 				iAmmo = 0;
 				iClip = 0;
-				if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_sg552"))
+
+				switch (iGetWeaponType(iDrop))
 				{
-					iAmmo = g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue;
-				}
-				else if (StrEqual(sWeapon, "weapon_autoshotgun") || StrEqual(sWeapon, "weapon_shotgun_spas"))
-				{
-					iAmmo = g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue;
-				}
-				else if (StrEqual(sWeapon, "weapon_grenade_launcher"))
-				{
-					iAmmo = g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue;
-				}
-				else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
-				{
-					iAmmo = g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue;
-				}
-				else if (StrEqual(sWeapon, "weapon_pumpshotgun") || StrEqual(sWeapon, "weapon_shotgun_chrome"))
-				{
-					iAmmo = g_esGeneral.g_cvMTShotgunAmmo.IntValue;
-				}
-				else if (StrEqual(sWeapon, "weapon_smg") || StrEqual(sWeapon, "weapon_smg_silenced") || StrEqual(sWeapon, "weapon_smg_mp5"))
-				{
-					iAmmo = g_esGeneral.g_cvMTSMGAmmo.IntValue;
-				}
-				else if (StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_awp"))
-				{
-					iAmmo = g_esGeneral.g_cvMTSniperRifleAmmo.IntValue;
+					case MT_WEAPON_ASSAULTRIFLE: iAmmo = g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue;
+					case MT_WEAPON_GRENADELAUNCHER: iAmmo = g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue;
+					case MT_WEAPON_HUNTINGRIFLE: iAmmo = g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue;
+					case MT_WEAPON_SMG: iAmmo = g_esGeneral.g_cvMTSMGAmmo.IntValue;
+					case MT_WEAPON_SNIPERRIFLE: iAmmo = g_esGeneral.g_cvMTSniperRifleAmmo.IntValue;
+					case MT_WEAPON_TIER1SHOTGUN: iAmmo = g_esGeneral.g_cvMTShotgunAmmo.IntValue;
+					case MT_WEAPON_TIER2SHOTGUN: iAmmo = g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue;
 				}
 
 				if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flDropClipChance)

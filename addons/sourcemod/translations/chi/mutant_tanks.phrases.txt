@@ -659,7 +659,7 @@
 
 	"RewardGodEnd"
 	{
-		"chi"			"您的{yellow} 上帝模式{default} 已结束!"
+		"chi"			"您的{yellow} 神模式{default} 已结束!"
 	}
 
 	"RewardHealth"
@@ -675,6 +675,26 @@
 	"RewardHealth3"
 	{
 		"chi"			"您{default} 收到{yellow} 健康{default}, 以协助{olive} {1}{default}!"
+	}
+
+	"RewardInfAmmo"
+	{
+		"chi"			"您{default} 收到{yellow} 无限弹药{default}, 以杀死{olive} {1}{default}!"
+	}
+
+	"RewardInfAmmo2"
+	{
+		"chi"			"您{default} 收到{yellow} 无限弹药{default}, 以协助{olive} {1}{default} 的最大支援!"
+	}
+
+	"RewardInfAmmo3"
+	{
+		"chi"			"您{default} 收到{yellow} 无限弹药{default}, 以协助{olive} {1}{default}!"
+	}
+
+	"RewardInfAmmoEnd"
+	{
+		"chi"			"您的{yellow} 无限弹药{default} 已结束!"
 	}
 
 	"RewardItem"

@@ -761,6 +761,29 @@
 		"en"			"You{default} received{yellow} health{default} for assisting against{olive} {1}{default}!"
 	}
 
+	"RewardInfAmmo"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} infinite primary ammo{default} for killing{olive} {1}{default}!"
+	}
+
+	"RewardInfAmmo2"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} infinite primary ammo{default} for assisting the most against{olive} {1}{default}!"
+	}
+
+	"RewardInfAmmo3"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} received{yellow} infinite primary ammo{default} for assisting against{olive} {1}{default}!"
+	}
+
+	"RewardInfAmmoEnd"
+	{
+		"en"			"Your{yellow} infinite primary ammo{default} ended!"
+	}
+
 	"RewardItem"
 	{
 		"#format"		"{1:s},{2:t}"

@@ -721,11 +721,8 @@ static void vAmmoHit(int survivor, int tank, float random, float chance, int ena
 					}
 				}
 
-				static char sWeapon[32];
-				GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
-				SetEntProp(survivor, Prop_Send, "m_iAmmo", g_esCache[tank].g_iAmmoAmount, _, iGetWeaponOffset(sWeapon));
+				SetEntProp(survivor, Prop_Send, "m_iAmmo", g_esCache[tank].g_iAmmoAmount, _, iGetWeaponOffset(iSlot));
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esCache[tank].g_iAmmoAmount);
-
 				vEffect(survivor, tank, g_esCache[tank].g_iAmmoEffect, flags);
 
 				if (g_esCache[tank].g_iAmmoMessage & messages)

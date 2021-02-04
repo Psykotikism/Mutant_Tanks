@@ -677,6 +677,26 @@
 		"ru"			"Вы{default} получили{yellow} здоровье{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 
+	"RewardInfAmmo"
+	{
+		"ru"			"Вы{default} получили{yellow} бесконечный основной боезапас{default} за убийство{olive} {1}{default}!"
+	}
+
+	"RewardInfAmmo2"
+	{
+		"ru"			"Вы{default} получили{yellow} бесконечный основной боезапас{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+	}
+
+	"RewardInfAmmo3"
+	{
+		"ru"			"Вы{default} получили{yellow} бесконечный основной боезапас{default} за помощь в убийстве{olive} {1}{default}!"
+	}
+
+	"RewardInfAmmoEnd"
+	{
+		"ru"			"Ваш{yellow} бесконечный основной боезапас{default} закончился!"
+	}
+
 	"RewardItem"
 	{
 		"ru"			"Вы{default} получили {yellow} {1}{default} за убийство{olive} {2}{default}!"

@@ -807,7 +807,6 @@ static void vElectricHit(int survivor, int tank, float random, float chance, int
 				static char sEffect[32];
 				vGetRandomParticle(sEffect, sizeof(sEffect));
 				vAttachParticle(survivor, sEffect, 2.0, 30.0);
-
 				vEffect(survivor, tank, g_esCache[tank].g_iElectricEffect, flags);
 
 				if (g_esCache[tank].g_iElectricMessage & messages)

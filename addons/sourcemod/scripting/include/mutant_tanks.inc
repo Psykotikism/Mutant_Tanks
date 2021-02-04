@@ -129,6 +129,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_REWARD_GODMODE (1 << 6) // god mode reward
 #define MT_REWARD_REFILL (1 << 7) // refill reward
 #define MT_REWARD_RESPAWN (1 << 8) // respawn reward
+#define MT_REWARD_INFAMMO (1 << 9) // infinite primary ammo reward
 
 // Combination types
 #define MT_COMBO_MAINRANGE 0 // main/range ability
@@ -138,6 +139,16 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_COMBO_POSTSPAWN 4 // after spawning
 #define MT_COMBO_UPONDEATH 5 // when dying
 #define MT_COMBO_UPONINCAP 6 // when incapacitated
+
+// Weapon types
+#define MT_WEAPON_UNKNOWN 0
+#define MT_WEAPON_ASSAULTRIFLE 1
+#define MT_WEAPON_GRENADELAUNCHER 2
+#define MT_WEAPON_HUNTINGRIFLE 3
+#define MT_WEAPON_SMG 4
+#define MT_WEAPON_SNIPERRIFLE 5
+#define MT_WEAPON_TIER1SHOTGUN 6
+#define MT_WEAPON_TIER2SHOTGUN 7
 
 // Forwards
 /**
@@ -1559,7 +1570,6 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
-
 					return true;
 				}
 			}
@@ -1961,7 +1971,6 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
-
 			return false;
 		}
 
@@ -2020,7 +2029,6 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
-
 				return flUnits;
 			}
 
@@ -2544,48 +2552,86 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, i
 	return (overrideLevel == 1) ? -1 : 0;
 }
 
-stock int iGetWeaponOffset(const char[] weapon)
+stock int iGetWeaponOffset(int weapon)
 {
 	static bool bSecondGame;
 	bSecondGame = GetEngineVersion() == Engine_Left4Dead2;
-	if (StrEqual(weapon, "weapon_rifle") || StrEqual(weapon, "weapon_rifle_ak47") || StrEqual(weapon, "weapon_rifle_desert") || StrEqual(weapon, "weapon_rifle_sg552"))
+	static char sWeapon[32];
+	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_sg552"))
 	{
 		return 3;
 	}
-	else if (StrEqual(weapon, "weapon_smg") || StrEqual(weapon, "weapon_smg_silenced") || StrEqual(weapon, "weapon_smg_mp5"))
+	else if (StrEqual(sWeapon, "weapon_smg") || StrEqual(sWeapon, "weapon_smg_silenced") || StrEqual(sWeapon, "weapon_smg_mp5"))
 	{
 		return 5;
 	}
-	else if (StrEqual(weapon, "weapon_shotgun_chrome"))
+	else if (StrEqual(sWeapon, "weapon_shotgun_chrome"))
 	{
 		return 7;
 	}
-	else if (StrEqual(weapon, "weapon_pumpshotgun"))
+	else if (StrEqual(sWeapon, "weapon_pumpshotgun"))
 	{
 		return bSecondGame ? 7 : 6;
 	}
-	else if (StrEqual(weapon, "weapon_shotgun_spas"))
+	else if (StrEqual(sWeapon, "weapon_shotgun_spas"))
 	{
 		return 8;
 	}
-	else if (StrEqual(weapon, "weapon_autoshotgun"))
+	else if (StrEqual(sWeapon, "weapon_autoshotgun"))
 	{
 		return bSecondGame ? 8 : 6;
 	}
-	else if (StrEqual(weapon, "weapon_hunting_rifle"))
+	else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
 	{
 		return bSecondGame ? 9 : 2;
 	}
-	else if (StrEqual(weapon, "weapon_sniper_military") || StrEqual(weapon, "weapon_sniper_scout") || StrEqual(weapon, "weapon_sniper_awp"))
+	else if (StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_awp"))
 	{
 		return 10;
 	}
-	else if (StrEqual(weapon, "weapon_grenade_launcher"))
+	else if (StrEqual(sWeapon, "weapon_grenade_launcher"))
 	{
 		return 17;
 	}
 
 	return 0;
+}
+
+stock int iGetWeaponType(int weapon)
+{
+	static char sWeapon[32];
+	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_sg552"))
+	{
+		return MT_WEAPON_ASSAULTRIFLE;
+	}
+	else if (StrEqual(sWeapon, "weapon_autoshotgun") || StrEqual(sWeapon, "weapon_shotgun_spas"))
+	{
+		return MT_WEAPON_TIER2SHOTGUN;
+	}
+	else if (StrEqual(sWeapon, "weapon_grenade_launcher"))
+	{
+		return MT_WEAPON_GRENADELAUNCHER;
+	}
+	else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
+	{
+		return MT_WEAPON_HUNTINGRIFLE;
+	}
+	else if (StrEqual(sWeapon, "weapon_pumpshotgun") || StrEqual(sWeapon, "weapon_shotgun_chrome"))
+	{
+		return MT_WEAPON_TIER1SHOTGUN;
+	}
+	else if (StrEqual(sWeapon, "weapon_smg") || StrEqual(sWeapon, "weapon_smg_silenced") || StrEqual(sWeapon, "weapon_smg_mp5"))
+	{
+		return MT_WEAPON_SMG;
+	}
+	else if (StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_awp"))
+	{
+		return MT_WEAPON_SNIPERRIFLE;
+	}
+
+	return MT_WEAPON_UNKNOWN;
 }
 
 stock int iGetWitchCount()
