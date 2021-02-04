@@ -101,6 +101,11 @@
 				"windows"	"8"
 				"linux"		"8"
 			}
+			"CBaseCombatWeapon::GetMaxClip1"
+			{
+				"windows"	"300"
+				"linux"		"301"
+			}
 			"CTerrorPlayer::Deafen"
 			{
 				"windows"	"491"
@@ -231,6 +236,11 @@
 			{
 				"windows"	"8"
 				"linux"		"8"
+			}
+			"CBaseCombatWeapon::GetMaxClip1"
+			{
+				"windows"	"323"
+				"linux"		"324"
 			}
 			"CBaseEntity::IsInStasis"
 			{
