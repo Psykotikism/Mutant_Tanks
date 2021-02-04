@@ -55,6 +55,7 @@ enum struct esPlayer
 	bool g_bAffected;
 	bool g_bFailed;
 	bool g_bNoAmmo;
+	bool g_bRewarded;
 
 	float g_flEnforceChance;
 	float g_flEnforceDuration;
@@ -311,7 +312,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -635,6 +636,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
+public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
+{
+	if (bIsSurvivor(survivor) && (type & MT_REWARD_INFAMMO))
+	{
+		g_esPlayer[survivor].g_bRewarded = apply;
+	}
+}
+
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
@@ -762,28 +771,35 @@ static void vEnforceHit(int survivor, int tank, float random, float chance, int 
 					}
 				}
 
-				static int iSlotCount, iSlots[5], iFlag;
-				iSlotCount = 0;
-				for (int iBit = 0; iBit < sizeof(iSlots); iBit++)
+				if (g_esPlayer[survivor].g_bRewarded)
 				{
-					iFlag = (1 << iBit);
-					if (!(g_esCache[tank].g_iEnforceWeaponSlots & iFlag))
+					g_esPlayer[survivor].g_iSlot = 0;
+				}
+				else
+				{
+					static int iSlotCount, iSlots[5], iFlag;
+					iSlotCount = 0;
+					for (int iBit = 0; iBit < sizeof(iSlots); iBit++)
 					{
-						continue;
+						iFlag = (1 << iBit);
+						if (!(g_esCache[tank].g_iEnforceWeaponSlots & iFlag))
+						{
+							continue;
+						}
+
+						iSlots[iSlotCount] = iFlag;
+						iSlotCount++;
 					}
 
-					iSlots[iSlotCount] = iFlag;
-					iSlotCount++;
-				}
-
-				switch (iSlots[GetRandomInt(0, iSlotCount - 1)])
-				{
-					case 1: g_esPlayer[survivor].g_iSlot = 0;
-					case 2: g_esPlayer[survivor].g_iSlot = 1;
-					case 4: g_esPlayer[survivor].g_iSlot = 2;
-					case 8: g_esPlayer[survivor].g_iSlot = 3;
-					case 16: g_esPlayer[survivor].g_iSlot = 4;
-					default: g_esPlayer[survivor].g_iSlot = GetRandomInt(0, 4);
+					switch (iSlots[GetRandomInt(0, iSlotCount - 1)])
+					{
+						case 1: g_esPlayer[survivor].g_iSlot = 0;
+						case 2: g_esPlayer[survivor].g_iSlot = 1;
+						case 4: g_esPlayer[survivor].g_iSlot = 2;
+						case 8: g_esPlayer[survivor].g_iSlot = 3;
+						case 16: g_esPlayer[survivor].g_iSlot = 4;
+						default: g_esPlayer[survivor].g_iSlot = GetRandomInt(0, 4);
+					}
 				}
 
 				static float flDuration;
@@ -857,6 +873,7 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
+	g_esPlayer[tank].g_bRewarded = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }

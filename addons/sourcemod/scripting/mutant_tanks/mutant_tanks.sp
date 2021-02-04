@@ -3958,7 +3958,7 @@ public void OnSpeedPreThinkPost(int survivor)
 
 public Action OnTakeCombineDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (g_esGeneral.g_bPluginEnabled && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
+	if (g_esGeneral.g_bPluginEnabled && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -3993,7 +3993,7 @@ public Action OnTakeCombineDamage(int victim, int &attacker, int &inflictor, flo
 
 public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (g_esGeneral.g_bPluginEnabled && damage >= 0.5)
+	if (g_esGeneral.g_bPluginEnabled && damage > 0.0)
 	{
 		static char sClassname[32];
 		sClassname[0] = '\0';
@@ -4163,7 +4163,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (g_esGeneral.g_bPluginEnabled && (bIsInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim)) && damage >= 0.5)
+	if (g_esGeneral.g_bPluginEnabled && (bIsInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim)) && damage > 0.0)
 	{
 		if (bIsValidEntity(inflictor) && attacker == inflictor && g_esGeneral.g_iTeamID[inflictor] == 3)
 		{
@@ -7738,7 +7738,7 @@ static void vRefillAmmo(int survivor)
 			{
 				static int iUpgrades;
 				iUpgrades = GetEntProp(iWeapon, Prop_Send, "m_upgradeBitVec");
-				if ((iUpgrades & (1 << 0)) || (iUpgrades & (1 << 1)))
+				if ((iUpgrades & MT_UPGRADE_INCENDIARY) || (iUpgrades & MT_UPGRADE_EXPLOSIVE))
 				{
 					SetEntProp(iWeapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", iClip);
 				}

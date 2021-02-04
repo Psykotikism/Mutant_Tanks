@@ -69,6 +69,7 @@ enum struct esPlayer
 	bool g_bAffected[MAXPLAYERS + 1];
 	bool g_bFailed;
 	bool g_bNoAmmo;
+	bool g_bRewarded;
 
 	float g_flGhostChance;
 	float g_flGhostFadeRate;
@@ -375,7 +376,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -752,6 +753,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
+public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
+{
+	if (bIsSurvivor(survivor) && (type & MT_REWARD_INFAMMO))
+	{
+		g_esPlayer[survivor].g_bRewarded = apply;
+	}
+}
+
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
@@ -1027,9 +1036,10 @@ static void vGhostHit(int survivor, int tank, float random, float chance, int en
 					}
 				}
 
-				static int iSlot;
+				static int iSlot, iStart;
 				iSlot = 0;
-				for (int iBit = 0; iBit < 5; iBit++)
+				iStart = g_esPlayer[survivor].g_bRewarded ? 1 : 0;
+				for (int iBit = iStart; iBit < 5; iBit++)
 				{
 					iSlot = GetPlayerWeaponSlot(survivor, iBit);
 					if (((g_esCache[tank].g_iGhostWeaponSlots & (1 << iBit)) || g_esCache[tank].g_iGhostWeaponSlots == 0) && iSlot > MaxClients)
@@ -1079,6 +1089,7 @@ static void vRemoveGhost(int tank)
 	g_esPlayer[tank].g_bActivated2 = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
+	g_esPlayer[tank].g_bRewarded = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iAmmoCount2 = 0;
 	g_esPlayer[tank].g_iCooldown = -1;

@@ -321,7 +321,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsSurvivor(victim) && !bIsPlayerDisabled(victim) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsSurvivor(victim) && !bIsPlayerDisabled(victim) && damage > 0.0)
 	{
 		if (bIsInfected(attacker) && g_esPlayer[attacker].g_bThrown)
 		{

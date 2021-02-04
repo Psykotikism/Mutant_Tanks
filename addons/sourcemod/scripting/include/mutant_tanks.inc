@@ -140,6 +140,11 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_COMBO_UPONDEATH 5 // when dying
 #define MT_COMBO_UPONINCAP 6 // when incapacitated
 
+// Special ammo types
+#define MT_UPGRADE_INCENDIARY (1 << 0) // incendiary ammo
+#define MT_UPGRADE_EXPLOSIVE (1 << 1) // explosive ammo
+#define MT_UPGRADE_LASERSIGHT (1 << 2) // laser sight
+
 // Weapon types
 #define MT_WEAPON_UNKNOWN 0
 #define MT_WEAPON_ASSAULTRIFLE 1
@@ -1570,6 +1575,7 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
+
 					return true;
 				}
 			}
@@ -1971,6 +1977,7 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
+
 			return false;
 		}
 
@@ -2029,6 +2036,7 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
+
 				return flUnits;
 			}
 
