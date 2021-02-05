@@ -543,7 +543,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flLagChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flLagChance, g_esAbility[type].g_flLagChance);
 	g_esCache[tank].g_flLagRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flLagRange, g_esAbility[type].g_flLagRange);
 	g_esCache[tank].g_flLagRangeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flLagRangeChance, g_esAbility[type].g_flLagRangeChance);
@@ -615,7 +615,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iLagAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iLagAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vLagAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
@@ -665,7 +665,7 @@ static void vLagAbility(int tank, float random, int pos = -1)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bFailed = false;
 		g_esPlayer[tank].g_bNoAmmo = false;
@@ -692,13 +692,13 @@ static void vLagAbility(int tank, float random, int pos = -1)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagHuman4");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "LagAmmo");
 	}
@@ -713,7 +713,7 @@ static void vLagHit(int survivor, int tank, float random, float chance, int enab
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
 			static int iTime;
 			iTime = GetTime();
@@ -722,7 +722,7 @@ static void vLagHit(int survivor, int tank, float random, float chance, int enab
 				g_esPlayer[survivor].g_bAffected = true;
 				g_esPlayer[survivor].g_iOwner = tank;
 
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 				{
 					g_esPlayer[tank].g_iAmmoCount++;
 
@@ -772,7 +772,7 @@ static void vLagHit(int survivor, int tank, float random, float chance, int enab
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
 				{
 					g_esPlayer[tank].g_bFailed = true;
 
@@ -780,7 +780,7 @@ static void vLagHit(int survivor, int tank, float random, float chance, int enab
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
 		{
 			g_esPlayer[tank].g_bNoAmmo = true;
 

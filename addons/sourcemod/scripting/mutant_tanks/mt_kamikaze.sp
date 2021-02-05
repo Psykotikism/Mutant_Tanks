@@ -538,7 +538,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flKamikazeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flKamikazeChance, g_esAbility[type].g_flKamikazeChance);
 	g_esCache[tank].g_flKamikazeRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flKamikazeRange, g_esAbility[type].g_flKamikazeRange);
 	g_esCache[tank].g_flKamikazeRangeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flKamikazeRangeChance, g_esAbility[type].g_flKamikazeRangeChance);
@@ -627,7 +627,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iKamikazeAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iKamikazeAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vKamikazeAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
@@ -688,7 +688,7 @@ static void vKamikazeAbility(int tank, float random, int pos = -1)
 
 	if (iSurvivorCount == 0)
 	{
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "KamikazeHuman3");
 		}
@@ -706,7 +706,7 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 	{
 		if (random <= chance)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE))
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE))
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "KamikazeHuman");
 			}
@@ -735,7 +735,7 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 		}
 		else if ((flags & MT_ATTACK_RANGE))
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
 			{
 				g_esPlayer[tank].g_bFailed = true;
 

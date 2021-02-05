@@ -564,7 +564,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flThrowCarLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowCarLifetime, g_esAbility[type].g_flThrowCarLifetime);
 	g_esCache[tank].g_flThrowChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowChance, g_esAbility[type].g_flThrowChance);
 	g_esCache[tank].g_flThrowInfectedLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowInfectedLifetime, g_esAbility[type].g_flThrowInfectedLifetime);
@@ -776,7 +776,7 @@ static void vReset()
 
 static void vThrow(int tank, int rock)
 {
-	if ((!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && !g_esPlayer[tank].g_bActivated)
+	if ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && !g_esPlayer[tank].g_bActivated)
 	{
 		g_esPlayer[tank].g_bActivated = true;
 	}
@@ -1119,7 +1119,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 		static int iTime;
 		iTime = GetTime();
-		if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iTime))
+		if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iTime))
 		{
 			g_esPlayer[iTank].g_iCooldown = (g_esPlayer[iTank].g_iAmmoCount < g_esCache[iTank].g_iHumanAmmo && g_esCache[iTank].g_iHumanAmmo > 0) ? (iTime + g_esCache[iTank].g_iHumanCooldown) : -1;
 			if (g_esPlayer[iTank].g_iCooldown != -1 && g_esPlayer[iTank].g_iCooldown > iTime)

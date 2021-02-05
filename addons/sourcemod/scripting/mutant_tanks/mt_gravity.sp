@@ -317,7 +317,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || !g_esPlayer[client].g_bActivated || (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || g_esPlayer[client].g_iDuration == -1)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || !g_esPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || g_esPlayer[client].g_iDuration == -1)
 	{
 		return Plugin_Continue;
 	}
@@ -326,7 +326,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	iTime = GetTime();
 	if (g_esPlayer[client].g_iDuration < iTime)
 	{
-		if (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbility[g_esPlayer[client].g_iTankType].g_iAccessFlags, g_esPlayer[client].g_iAccessFlags)) && g_esCache[client].g_iHumanAbility == 1 && (g_esPlayer[client].g_iCooldown == -1 || g_esPlayer[client].g_iCooldown < GetTime()))
+		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbility[g_esPlayer[client].g_iTankType].g_iAccessFlags, g_esPlayer[client].g_iAccessFlags)) && g_esCache[client].g_iHumanAbility == 1 && (g_esPlayer[client].g_iCooldown == -1 || g_esPlayer[client].g_iCooldown < GetTime()))
 		{
 			vReset4(client);
 		}
@@ -619,7 +619,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flGravityChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flGravityChance, g_esAbility[type].g_flGravityChance);
 	g_esCache[tank].g_flGravityForce = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flGravityForce, g_esAbility[type].g_flGravityForce, 2);
 	g_esCache[tank].g_flGravityRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flGravityRange, g_esAbility[type].g_flGravityRange);
@@ -706,7 +706,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iGravityAbility > 0 && g_esCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iGravityAbility > 0 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vGravityAbility(tank, false);
 		vGravityAbility(tank, true, GetRandomFloat(0.1, 100.0));
@@ -865,7 +865,7 @@ static void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -
 		{
 			if (g_esCache[tank].g_iGravityAbility == 1 || g_esCache[tank].g_iGravityAbility == 3)
 			{
-				if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+				if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 				{
 					g_esPlayer[tank].g_bFailed = false;
 					g_esPlayer[tank].g_bNoAmmo = false;
@@ -892,13 +892,13 @@ static void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -
 
 					if (iSurvivorCount == 0)
 					{
-						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman7");
 						}
 					}
 				}
-				else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+				else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityAmmo2");
 				}
@@ -908,7 +908,7 @@ static void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -
 		{
 			if ((g_esCache[tank].g_iGravityAbility == 2 || g_esCache[tank].g_iGravityAbility == 3) && !g_esPlayer[tank].g_bActivated)
 			{
-				if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+				if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 				{
 					g_esPlayer[tank].g_iGravity = CreateEntityByName("point_push");
 					if (bIsValidEntity(g_esPlayer[tank].g_iGravity))
@@ -920,7 +920,7 @@ static void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -
 
 						vGravity(tank);
 
-						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 						{
 							g_esPlayer[tank].g_iAmmoCount++;
 
@@ -936,7 +936,7 @@ static void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -
 						}
 					}
 				}
-				else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+				else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityAmmo");
 				}
@@ -954,7 +954,7 @@ static void vGravityHit(int survivor, int tank, float random, float chance, int 
 
 	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor))
 	{
-		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
 			static int iTime;
 			iTime = GetTime();
@@ -963,7 +963,7 @@ static void vGravityHit(int survivor, int tank, float random, float chance, int 
 				g_esPlayer[survivor].g_bAffected = true;
 				g_esPlayer[survivor].g_iOwner = tank;
 
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))
 				{
 					g_esPlayer[tank].g_iAmmoCount2++;
 
@@ -999,7 +999,7 @@ static void vGravityHit(int survivor, int tank, float random, float chance, int 
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
 				{
 					g_esPlayer[tank].g_bFailed = true;
 
@@ -1007,7 +1007,7 @@ static void vGravityHit(int survivor, int tank, float random, float chance, int 
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
 		{
 			g_esPlayer[tank].g_bNoAmmo = true;
 

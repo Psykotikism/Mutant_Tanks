@@ -410,7 +410,7 @@ public void OnGameFrame()
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || (g_esPlayer[client].g_iDuration == -1 && g_esPlayer[client].g_iCooldown2 == -1))
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || (g_esPlayer[client].g_iDuration == -1 && g_esPlayer[client].g_iCooldown2 == -1))
 	{
 		return Plugin_Continue;
 	}
@@ -419,7 +419,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	iTime = GetTime();
 	if (g_esPlayer[client].g_bActivated && g_esPlayer[client].g_iDuration != -1 && g_esPlayer[client].g_iDuration < iTime)
 	{
-		if (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbility[g_esPlayer[client].g_iTankType].g_iAccessFlags, g_esPlayer[client].g_iAccessFlags)) && g_esCache[client].g_iHumanAbility == 1 && g_esCache[client].g_iHumanMode == 0 && (g_esPlayer[client].g_iCooldown == -1 || g_esPlayer[client].g_iCooldown < iTime))
+		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbility[g_esPlayer[client].g_iTankType].g_iAccessFlags, g_esPlayer[client].g_iAccessFlags)) && g_esCache[client].g_iHumanAbility == 1 && g_esCache[client].g_iHumanMode == 0 && (g_esPlayer[client].g_iCooldown == -1 || g_esPlayer[client].g_iCooldown < iTime))
 		{
 			vReset3(client);
 		}
@@ -436,26 +436,31 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker) && g_esPlayer[victim].g_bActivated && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esPlayer[victim].g_bActivated && damage > 0.0)
 	{
-		if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
+		static bool bSurvivor;
+		bSurvivor = bIsSurvivor(attacker);
+		if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
 		{
 			vShieldAbility(victim, false);
 
 			return Plugin_Continue;
 		}
 
-		static bool bBulletDamage, bExplosiveDamage, bFireDamage, bMeleeDamage;
-		bBulletDamage = (damagetype & DMG_BULLET) && (g_esCache[victim].g_iShieldType & MT_SHIELD_BULLET);
-		bExplosiveDamage = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE);
-		bFireDamage = (damagetype & DMG_BURN) && (g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE);
-		bMeleeDamage = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE);
-		if (bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
+		if (bSurvivor)
 		{
-			g_esPlayer[victim].g_flHealth -= damage;
-			if (g_esCache[victim].g_flShieldHealth == 0.0 || g_esPlayer[victim].g_flHealth < 1.0)
+			static bool bBulletDamage, bExplosiveDamage, bFireDamage, bMeleeDamage;
+			bBulletDamage = (damagetype & DMG_BULLET) && (g_esCache[victim].g_iShieldType & MT_SHIELD_BULLET);
+			bExplosiveDamage = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE);
+			bFireDamage = (damagetype & DMG_BURN) && (g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE);
+			bMeleeDamage = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE);
+			if (bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
 			{
-				vShieldAbility(victim, false);
+				g_esPlayer[victim].g_flHealth -= damage;
+				if (g_esCache[victim].g_flShieldHealth == 0.0 || g_esPlayer[victim].g_flHealth < 1.0)
+				{
+					vShieldAbility(victim, false);
+				}
 			}
 		}
 
@@ -723,7 +728,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	vGetSettingValue(apply, bHuman, g_esCache[tank].g_sShieldHealthChars, sizeof(esCache::g_sShieldHealthChars), g_esPlayer[tank].g_sShieldHealthChars, g_esAbility[type].g_sShieldHealthChars);
 	g_esCache[tank].g_flShieldChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flShieldChance, g_esAbility[type].g_flShieldChance);
 	g_esCache[tank].g_flShieldHealth = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flShieldHealth, g_esAbility[type].g_flShieldHealth);
@@ -816,7 +821,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShieldAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShieldAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
 	{
 		vShieldAbility(tank, true);
 	}
@@ -1057,12 +1062,12 @@ static void vShieldAbility(int tank, bool shield)
 	{
 		case true:
 		{
-			if (bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || ((!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && g_esPlayer[tank].g_iCooldown2 != -1 && g_esPlayer[tank].g_iCooldown2 > iTime))
+			if (bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && g_esPlayer[tank].g_iCooldown2 != -1 && g_esPlayer[tank].g_iCooldown2 > iTime))
 			{
 				return;
 			}
 
-			if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+			if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 			{
 				if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flShieldChance)
 				{
@@ -1076,7 +1081,7 @@ static void vShieldAbility(int tank, bool shield)
 						vShield(tank);
 						ExtinguishEntity(tank);
 
-						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 						{
 							g_esPlayer[tank].g_iAmmoCount++;
 							g_esPlayer[tank].g_iDuration = iTime + g_esPlayer[tank].g_iHumanDuration;
@@ -1094,12 +1099,12 @@ static void vShieldAbility(int tank, bool shield)
 						}
 					}
 				}
-				else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+				else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman2");
 				}
 			}
-			else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+			else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldAmmo");
 			}

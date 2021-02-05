@@ -399,7 +399,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	vGetSettingValue(apply, bHuman, g_esCache[tank].g_sItemLoadout, sizeof(esCache::g_sItemLoadout), g_esPlayer[tank].g_sItemLoadout, g_esAbility[type].g_sItemLoadout);
 	g_esCache[tank].g_flItemChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flItemChance, g_esAbility[type].g_flItemChance);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
@@ -458,7 +458,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iItemAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flItemChance && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iItemAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flItemChance && !g_esPlayer[tank].g_bActivated)
 	{
 		g_esPlayer[tank].g_bActivated = true;
 	}

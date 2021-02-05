@@ -509,7 +509,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	vGetSettingValue(apply, bHuman, g_esCache[tank].g_sDropWeaponName, sizeof(esCache::g_sDropWeaponName), g_esPlayer[tank].g_sDropWeaponName, g_esAbility[type].g_sDropWeaponName);
 	g_esCache[tank].g_flDropChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flDropChance, g_esAbility[type].g_flDropChance);
 	g_esCache[tank].g_flDropClipChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flDropClipChance, g_esAbility[type].g_flDropClipChance);
@@ -583,7 +583,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iDropAbility == 1 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iDropAbility == 1 && !g_esPlayer[tank].g_bActivated)
 	{
 		RequestFrame(vDropFrame, GetClientUserId(tank));
 	}

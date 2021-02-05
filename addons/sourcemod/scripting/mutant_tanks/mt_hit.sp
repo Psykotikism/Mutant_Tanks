@@ -227,9 +227,9 @@ public Action TraceAttack(int victim, int &attacker, int &inflictor, float &dama
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esCache[victim].g_iHitAbility == 1 && bIsSurvivor(attacker))
+		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esCache[victim].g_iHitAbility == 1)
 		{
-			if (bIsAreaNarrow(victim, g_esCache[victim].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (g_esCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags) || g_esCache[victim].g_iHumanAbility == 0)
+			if (bIsAreaNarrow(victim, g_esCache[victim].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[victim].g_iTankType) || (g_esCache[victim].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[victim].g_iRequiresHumans) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bIsSurvivor(attacker) && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))) || (bIsTank(victim, MT_CHECK_FAKECLIENT) && g_esCache[victim].g_iHumanAbility == 0))
 			{
 				return Plugin_Continue;
 			}
@@ -349,7 +349,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flHitDamageMultiplier = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flHitDamageMultiplier, g_esAbility[type].g_flHitDamageMultiplier);
 	g_esCache[tank].g_iHitAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHitAbility, g_esAbility[type].g_iHitAbility);
 	g_esCache[tank].g_iHitGroup = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHitGroup, g_esAbility[type].g_iHitGroup);

@@ -641,7 +641,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flHealAbsorbRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flHealAbsorbRange, g_esAbility[type].g_flHealAbsorbRange);
 	g_esCache[tank].g_flHealBuffer = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flHealBuffer, g_esAbility[type].g_flHealBuffer);
 	g_esCache[tank].g_flHealChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flHealChance, g_esAbility[type].g_flHealChance);
@@ -759,7 +759,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iHealAbility > 0 && g_esCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iHealAbility > 0 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vHealAbility(tank, false);
 		vHealAbility(tank, true, GetRandomFloat(0.1, 100.0));
@@ -903,7 +903,7 @@ static void vHealAbility(int tank, bool main, float random = 0.0, int pos = -1)
 		{
 			if (g_esCache[tank].g_iHealAbility == 1 || g_esCache[tank].g_iHealAbility == 3)
 			{
-				if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+				if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 				{
 					g_esPlayer[tank].g_bFailed = false;
 					g_esPlayer[tank].g_bNoAmmo = false;
@@ -932,13 +932,13 @@ static void vHealAbility(int tank, bool main, float random = 0.0, int pos = -1)
 
 					if (iSurvivorCount == 0)
 					{
-						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 						{
 							MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealHuman7");
 						}
 					}
 				}
-				else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+				else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealAmmo2");
 				}
@@ -948,13 +948,13 @@ static void vHealAbility(int tank, bool main, float random = 0.0, int pos = -1)
 		{
 			if ((g_esCache[tank].g_iHealAbility == 2 || g_esCache[tank].g_iHealAbility == 3) && !g_esPlayer[tank].g_bActivated)
 			{
-				if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+				if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 				{
 					g_esPlayer[tank].g_bActivated = true;
 
 					vHeal(tank, pos);
 
-					if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 					{
 						g_esPlayer[tank].g_iAmmoCount++;
 
@@ -969,7 +969,7 @@ static void vHealAbility(int tank, bool main, float random = 0.0, int pos = -1)
 						MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Heal2", LANG_SERVER, sTankName);
 					}
 				}
-				else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+				else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 				{
 					MT_PrintToChat(tank, "%s %t", MT_TAG3, "HealAmmo");
 				}
@@ -987,7 +987,7 @@ static void vHealHit(int survivor, int tank, float random, float chance, int ena
 
 	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && !g_esPlayer[survivor].g_bRewarded)
 	{
-		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
 			static int iTime;
 			iTime = GetTime();
@@ -995,7 +995,7 @@ static void vHealHit(int survivor, int tank, float random, float chance, int ena
 			{
 				g_esPlayer[survivor].g_bAffected = true;
 
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))
 				{
 					g_esPlayer[tank].g_iAmmoCount2++;
 
@@ -1031,7 +1031,7 @@ static void vHealHit(int survivor, int tank, float random, float chance, int ena
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown2 == -1 || g_esPlayer[tank].g_iCooldown2 < iTime))
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
 				{
 					g_esPlayer[tank].g_bFailed = true;
 
@@ -1039,7 +1039,7 @@ static void vHealHit(int survivor, int tank, float random, float chance, int ena
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
 		{
 			g_esPlayer[tank].g_bNoAmmo = true;
 
@@ -1213,7 +1213,7 @@ public Action tTimerHeal(Handle timer, DataPack pack)
 	static int iTime, iCurrentTime;
 	iTime = pack.ReadCell();
 	iCurrentTime = GetTime();
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) && g_esCache[iTank].g_iHumanAbility == 1 && g_esCache[iTank].g_iHumanMode == 0 && (iTime + g_esCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iCurrentTime))
+	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iTank) || bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) && g_esCache[iTank].g_iHumanAbility == 1 && g_esCache[iTank].g_iHumanMode == 0 && (iTime + g_esCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vReset2(iTank);
 		vReset3(iTank);

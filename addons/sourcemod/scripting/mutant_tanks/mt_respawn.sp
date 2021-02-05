@@ -448,7 +448,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);\
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);\
 	g_esCache[tank].g_flRespawnChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flRespawnChance, g_esAbility[type].g_flRespawnChance);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
@@ -598,7 +598,7 @@ static void vRespawn(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bActivated)
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bActivated)
 	{
 		g_esPlayer[tank].g_bActivated = false;
 		g_esPlayer[tank].g_iCount = 0;
@@ -606,12 +606,12 @@ static void vRespawn(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iRespawnAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
+	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iRespawnAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
 	{
 		g_esPlayer[tank].g_bActivated = false;
 		g_esPlayer[tank].g_iCount++;
 
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			g_esPlayer[tank].g_iAmmoCount++;
 
@@ -675,7 +675,7 @@ static void vRespawn(int tank)
 	{
 		vRemoveRespawn(tank);
 
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "RespawnAmmo");
 		}

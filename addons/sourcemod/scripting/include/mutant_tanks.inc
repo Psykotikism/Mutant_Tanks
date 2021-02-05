@@ -1631,9 +1631,29 @@ stock bool bIsEntityGrounded(int entity)
 
 stock bool bIsGunWeapon(int survivor)
 {
-	static char sWeapon[32];
-	GetClientWeapon(survivor, sWeapon, sizeof(sWeapon));
-	return GetPlayerWeaponSlot(survivor, 0) > MaxClients || (GetPlayerWeaponSlot(survivor, 1) > MaxClients && StrContains(sWeapon, "pistol", false) != -1);
+	static int iWeapon;
+	iWeapon = GetEntPropEnt(survivor, Prop_Send, "m_hActiveWeapon");
+	if (iWeapon > MaxClients)
+	{
+		static int iSlot, iSlot2;
+		iSlot = GetPlayerWeaponSlot(survivor, 0);
+		iSlot2 = GetPlayerWeaponSlot(survivor, 1);
+		if (iSlot > MaxClients && iSlot == iWeapon)
+		{
+			return true;
+		}
+		else if (iSlot2 > MaxClients && iSlot2 == iWeapon)
+		{
+			static char sWeapon[32];
+			GetEntityClassname(iWeapon, sWeapon, sizeof(sWeapon));
+			if (StrContains(sWeapon, "pistol", false) != -1 || StrContains(sWeapon, "weapon_chainsaw") != -1)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 stock bool bIsHumanSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)

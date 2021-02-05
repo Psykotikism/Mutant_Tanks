@@ -499,7 +499,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flCloneChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCloneChance, g_esAbility[type].g_flCloneChance);
 	g_esCache[tank].g_flCloneLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flCloneLifetime, g_esAbility[type].g_flCloneLifetime);
 	g_esCache[tank].g_iCloneAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iCloneAbility, g_esAbility[type].g_iCloneAbility);
@@ -589,7 +589,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 										static int iTime;
 										iTime = GetTime();
-										if (MT_IsTankSupported(iOwner, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iOwner) || bHasAdminAccess(iOwner, g_esAbility[g_esPlayer[iOwner].g_iTankType].g_iAccessFlags, g_esPlayer[iOwner].g_iAccessFlags)) && g_esCache[iOwner].g_iHumanAbility == 1 && (g_esPlayer[iOwner].g_iCooldown == -1 || g_esPlayer[iOwner].g_iCooldown < iTime))
+										if (bIsTank(iOwner, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(iOwner) || bHasAdminAccess(iOwner, g_esAbility[g_esPlayer[iOwner].g_iTankType].g_iAccessFlags, g_esPlayer[iOwner].g_iAccessFlags)) && g_esCache[iOwner].g_iHumanAbility == 1 && (g_esPlayer[iOwner].g_iCooldown == -1 || g_esPlayer[iOwner].g_iCooldown < iTime))
 										{
 											g_esPlayer[iOwner].g_iCooldown = (g_esPlayer[iOwner].g_iCount < g_esCache[iOwner].g_iHumanAmmo && g_esCache[iOwner].g_iHumanAmmo > 0) ? (iTime + g_esCache[iOwner].g_iHumanCooldown) : -1;
 											if (g_esPlayer[iOwner].g_iCooldown != -1 && g_esPlayer[iOwner].g_iCooldown > iTime)
@@ -605,7 +605,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 											g_esPlayer[iOwner].g_iCount--;
 										}
 
-										if (MT_IsTankSupported(iOwner, MT_CHECK_FAKECLIENT) && g_esCache[iOwner].g_iHumanAbility == 1)
+										if (bIsTank(iOwner, MT_CHECK_FAKECLIENT) && g_esCache[iOwner].g_iHumanAbility == 1)
 										{
 											MT_PrintToChat(iOwner, "%s %t", MT_TAG3, "CloneHuman5");
 										}
@@ -650,7 +650,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && g_esCache[tank].g_iCloneAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < GetTime()) && !g_esPlayer[tank].g_bCloned)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && g_esCache[tank].g_iCloneAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < GetTime()) && !g_esPlayer[tank].g_bCloned)
 	{
 		vCloneAbility(tank);
 	}
@@ -773,7 +773,7 @@ static void vClone(int tank)
 						SetEntProp(iTank, Prop_Data, "m_iHealth", iNewHealth);
 						SetEntProp(iTank, Prop_Data, "m_iMaxHealth", iNewHealth);
 
-						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 						{
 							g_esPlayer[tank].g_iAmmoCount++;
 
@@ -830,18 +830,18 @@ static void vCloneAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iCloneAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
+	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iCloneAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flCloneChance)
 		{
 			vClone(tank);
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloneHuman2");
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "CloneAmmo");
 	}

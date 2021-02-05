@@ -428,7 +428,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flTrackChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flTrackChance, g_esAbility[type].g_flTrackChance);
 	g_esCache[tank].g_flTrackSpeed = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flTrackSpeed, g_esAbility[type].g_flTrackSpeed);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
@@ -597,7 +597,7 @@ static void vSetGlow(int rock, int color, int flashing, int min, int max, int ty
 
 static void vTrack(int tank, int rock)
 {
-	if ((!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && !g_esPlayer[tank].g_bActivated)
+	if ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && !g_esPlayer[tank].g_bActivated)
 	{
 		g_esPlayer[tank].g_bActivated = true;
 	}
@@ -954,7 +954,7 @@ public Action tTimerTrack(Handle timer, DataPack pack)
 
 	static int iTime;
 	iTime = GetTime();
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iTime))
+	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iTime))
 	{
 		g_esPlayer[iTank].g_bActivated = false;
 

@@ -241,7 +241,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					return Plugin_Continue;
 				}
 
-				if (!MT_IsTankSupported(attacker, MT_CHECK_FAKECLIENT) || g_esCache[attacker].g_iHumanAbility == 1)
+				if (!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esCache[attacker].g_iHumanAbility == 1)
 				{
 					static int iDamage, iHealth, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
 					iDamage = RoundToNearest(damage);
@@ -376,7 +376,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flVampireChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flVampireChance, g_esAbility[type].g_flVampireChance);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
 	g_esCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flOpenAreasOnly, g_esAbility[type].g_flOpenAreasOnly);

@@ -562,7 +562,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flRocketChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flRocketChance, g_esAbility[type].g_flRocketChance);
 	g_esCache[tank].g_flRocketDelay = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flRocketDelay, g_esAbility[type].g_flRocketDelay);
 	g_esCache[tank].g_flRocketRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flRocketRange, g_esAbility[type].g_flRocketRange);
@@ -668,7 +668,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iRocketAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iRocketAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vRocketAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
@@ -763,7 +763,7 @@ static void vRocketAbility(int tank, float random, int pos = -1)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bFailed = false;
 		g_esPlayer[tank].g_bNoAmmo = false;
@@ -790,13 +790,13 @@ static void vRocketAbility(int tank, float random, int pos = -1)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketHuman4");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "RocketAmmo");
 	}
@@ -811,7 +811,7 @@ static void vRocketHit(int survivor, int tank, float random, float chance, int e
 
 	if (enabled == 1 && bIsSurvivor(survivor) && !g_esPlayer[survivor].g_bRewarded)
 	{
-		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
 			static int iTime;
 			iTime = GetTime();
@@ -824,7 +824,7 @@ static void vRocketHit(int survivor, int tank, float random, float chance, int e
 					g_esPlayer[survivor].g_bAffected = true;
 					g_esPlayer[survivor].g_iOwner = tank;
 
-					if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
+					if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 					{
 						g_esPlayer[tank].g_iAmmoCount++;
 
@@ -888,7 +888,7 @@ static void vRocketHit(int survivor, int tank, float random, float chance, int e
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
 				{
 					g_esPlayer[tank].g_bFailed = true;
 
@@ -896,7 +896,7 @@ static void vRocketHit(int survivor, int tank, float random, float chance, int e
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
 		{
 			g_esPlayer[tank].g_bNoAmmo = true;
 
@@ -979,7 +979,7 @@ public Action tTimerRocketLaunch(Handle timer, DataPack pack)
 
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
+	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_bRewarded)
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;
@@ -1018,7 +1018,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
+	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_bRewarded)
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;

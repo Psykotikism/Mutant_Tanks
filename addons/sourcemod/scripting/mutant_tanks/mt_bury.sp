@@ -56,6 +56,7 @@ enum struct esPlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 	bool g_bRewarded;
+	bool g_bRewarded2;
 
 	float g_flBuryBuffer;
 	float g_flBuryChance;
@@ -584,7 +585,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flBuryBuffer = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flBuryBuffer, g_esAbility[type].g_flBuryBuffer);
 	g_esCache[tank].g_flBuryChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flBuryChance, g_esAbility[type].g_flBuryChance);
 	g_esCache[tank].g_flBuryDuration = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flBuryDuration, g_esAbility[type].g_flBuryDuration);
@@ -664,9 +665,17 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
 {
-	if (bIsSurvivor(survivor) && (type & MT_REWARD_GODMODE))
+	if (bIsSurvivor(survivor))
 	{
-		g_esPlayer[survivor].g_bRewarded = apply;
+		if (type & MT_REWARD_GODMODE)
+		{
+			g_esPlayer[survivor].g_bRewarded = apply;
+		}
+
+		if (type & MT_REWARD_INFAMMO)
+		{
+			g_esPlayer[survivor].g_bRewarded2 = apply;
+		}
 	}
 }
 
@@ -677,7 +686,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iBuryAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iBuryAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vBuryAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
@@ -724,7 +733,7 @@ static void vBuryAbility(int tank, float random, int pos = -1)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bFailed = false;
 		g_esPlayer[tank].g_bNoAmmo = false;
@@ -751,13 +760,13 @@ static void vBuryAbility(int tank, float random, int pos = -1)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "BuryHuman4");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "BuryAmmo");
 	}
@@ -770,9 +779,9 @@ static void vBuryHit(int survivor, int tank, float random, float chance, int ena
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && bIsEntityGrounded(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && bIsEntityGrounded(survivor) && !g_esPlayer[survivor].g_bRewarded && !g_esPlayer[survivor].g_bRewarded2)
 	{
-		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
 			static int iTime;
 			iTime = GetTime();
@@ -781,7 +790,7 @@ static void vBuryHit(int survivor, int tank, float random, float chance, int ena
 				g_esPlayer[survivor].g_bAffected = true;
 				g_esPlayer[survivor].g_iOwner = tank;
 
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 				{
 					g_esPlayer[tank].g_iAmmoCount++;
 
@@ -802,11 +811,7 @@ static void vBuryHit(int survivor, int tank, float random, float chance, int ena
 				SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 
 				SetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1);
-
-				if (!g_esPlayer[survivor].g_bRewarded)
-				{
-					SetEntProp(survivor, Prop_Data, "m_takedamage", 0, 1);
-				}
+				SetEntProp(survivor, Prop_Data, "m_takedamage", 0, 1);
 
 				if (GetEntityMoveType(survivor) != MOVETYPE_NONE)
 				{
@@ -833,7 +838,7 @@ static void vBuryHit(int survivor, int tank, float random, float chance, int ena
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
 				{
 					g_esPlayer[tank].g_bFailed = true;
 
@@ -841,7 +846,7 @@ static void vBuryHit(int survivor, int tank, float random, float chance, int ena
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
 		{
 			g_esPlayer[tank].g_bNoAmmo = true;
 
@@ -888,6 +893,7 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
 	g_esPlayer[tank].g_bRewarded = false;
+	g_esPlayer[tank].g_bRewarded2 = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }
