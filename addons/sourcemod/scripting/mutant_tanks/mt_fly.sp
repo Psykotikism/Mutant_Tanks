@@ -1325,7 +1325,7 @@ static void vStopFly(int tank)
 
 	static int iTime;
 	iTime = GetTime();
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) && g_esCache[tank].g_iHumanAbility == 1 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
+	if (bIsTank(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) && g_esCache[tank].g_iHumanAbility == 1 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 	{
 		vReset3(tank);
 	}
