@@ -33,6 +33,9 @@
 	- Fixed total health being miscalculated.
 	- Fixed Tanks gaining health while in the dying animation.
 
+- Hit
+	- Fixed the ability not working when the `Human Ability` setting is disabled.
+
 - Kamikaze
 	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
@@ -44,6 +47,9 @@
 	- Fixed total health being miscalculated.
 	- Fixed Tanks gaining health while in the dying animation.
 	- Fixed the `Medic Health` and `Medic Max Health` settings not being read entirely. (Thanks to TheStarRocker for testing and reporting!)
+
+- Recoil
+	- Fixed the ability affecting all weapons instead of just guns.
 
 - Regen
 	- Fixed total health being miscalculated.
@@ -81,6 +87,7 @@
 
 #### General
 - Changed the method for checking idle Tanks. (Thanks to BHaType for the code and epzminion for the help!)
+- The hidden `z_burn_max` convar will no longer be automatically set to `1.0` while Mutant Tanks is running. (Use the new `ConVars` section to modify the convar setting yourself.)
 
 #### Core Plugin
 - Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
@@ -90,6 +97,7 @@
 - The god mode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
 - Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
 - Rewards that have a duration can now have their duration extended when received again. (Requested by 3aljiyavslgazana.)
+- The damage boost reward now allows the recipient to bypass all types of damage immunity that Tanks may have. (Requested by 3aljiyavslgazana.)
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
@@ -111,6 +119,7 @@
 	- `Infinite primary ammo reward` (Thanks to epzminion for helping!)
 - Added the `Attack Boost Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 - Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by TheStarRocker.) [Thanks to Silvers for the code!]
+- Added the `ConVars` section under the `Plugin Settings` section which allows to change convar settings. (Requested by TheStarRocker.)
 - The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by Shadowart.):
 	- `Finales Only`
 	- `Idle Check`
@@ -168,6 +177,9 @@
 - Updated Russian translations.
 
 #### Abilities
+- Bury
+	- Survivors with the god mode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
 - Clone
 	- Clones no longer reward survivors after dying. (Thanks to 3aljiyavslgazana for the idea!)
 	- Clones no longer trigger announcements when spawning and dying. (Thanks to 3aljiyavslgazana for the idea!)

@@ -20,6 +20,7 @@
 	- Administration
 	- Human Support
 	- Waves
+	- ConVars
 	- Game Modes
 	- Custom
 
@@ -126,7 +127,7 @@
 
 ### Plugin Settings
 
-#### General, Announcements, Rewards, Competitive, Difficulty, Health, Enhancements, Immunities, Administration, Human Support, Waves, Game Modes, Custom
+#### General, Announcements, Rewards, Competitive, Difficulty, Health, Enhancements, Immunities, Administration, Human Support, Waves, ConVars, Game Modes, Custom
 ```
 "Mutant Tanks"
 {
@@ -1133,6 +1134,25 @@
 			// 0: OFF, no limit.
 			// 1-32: ON, the number of Tanks that will spawn.
 			"Finale Waves"				"0,0,0,0,0,0,0,0,0,0"
+		}
+		"ConVars"
+		{
+			// All convars (except the ones provided by Mutant Tanks) can be modified in this section.
+			// Each time the config file is read, the convars in this section will be modified with their associated values.
+			// This is a very powerful feature so use it as you would with your listenserver.cfg/server.cfg file.
+			// Here are some examples:
+
+			// This will fail because the convar is provided by Mutant Tanks.
+			"mt_pluginenabled"			"0"
+
+			// It takes a total of 2 1/2 minutes for Tanks to burn to death.
+			"tank_burn_duration"			"150"
+
+			// Special infected's burnt skins can go up to 100% (completely toasted) instead of only 85% (game default).
+			"z_burn_max"				"1.0"
+
+			// This will work but will just be overridden by the "Base Health" and "Extra Health" settings.
+			"z_tank_health"				"4000"
 		}
 		"Game Modes"
 		{
