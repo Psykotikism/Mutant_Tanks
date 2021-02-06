@@ -180,7 +180,7 @@
 
 #### Translations
 - Updated English translations.
-- Updated Simplified Chinese translations.
+- Updated Simplified Chinese translations. (Thanks to yuzumi!)
 - Updated Hungarian translations. (Thanks to KasperH/Ladis!)
 - Updated Russian translations.
 
