@@ -514,7 +514,7 @@
 
 	"MultipleMatches"
 	{
-		"ru"			"Этому названию соответствуют несколько тип.{olive} Выбор случайного совпадения{yellow} (Танк #{1}){olive}."
+		"ru"			"Этому названию соответствуют несколько типов.{olive} Выбор случайного{yellow} (Танка #{1}){olive}."
 	}
 
 	"NoAbilities"
@@ -579,12 +579,12 @@
 
 	"RequestFailed"
 	{
-		"ru"			"Ни один тип не соответствовал этому названию.{olive} Запрос не выполнен."
+		"ru"			"Ни один тип не соответствует этому названию.{olive} Запрос не выполнен."
 	}
 
 	"RequestSucceeded"
 	{
-		"ru"			"Этому названию соответствовал один тип{yellow} (Танк #{1}){mint}.{olive} Запрос выполнен!"
+		"ru"			"Этому названию соответствовал один тип -{yellow} (Танк #{1}){mint}.{olive} Запрос выполнен!"
 	}
 
 	"RewardAmmo"
@@ -679,22 +679,22 @@
 
 	"RewardInfAmmo"
 	{
-		"ru"			"Вы{default} получили{yellow} бесконечный основной боезапас{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} бесконечный боезапас{default} за убийство{olive} {1}{default}!"
 	}
 
 	"RewardInfAmmo2"
 	{
-		"ru"			"Вы{default} получили{yellow} бесконечный основной боезапас{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} бесконечный боезапас{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardInfAmmo3"
 	{
-		"ru"			"Вы{default} получили{yellow} бесконечный основной боезапас{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} бесконечный боезапас{default} за помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardInfAmmoEnd"
 	{
-		"ru"			"Ваш{yellow} бесконечный основной боезапас{default} закончился!"
+		"ru"			"Ваш{yellow} бесконечный боезапас{default} закончился!"
 	}
 
 	"RewardItem"
