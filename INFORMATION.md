@@ -1,8 +1,9 @@
 # Information
 
 ## Notes
-> This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
+> This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples.
 
+- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 1,000,000 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 87-88 and recompile all the plugins, but expect potential bugs with higher values.) [Default: 65,535]
 - Maximum types: 500 (Increase/decrease the value in the `mutant_tanks.inc` file on line 86 and recompile all the plugins, but expect potential server lag with higher values.)
 - Most of the settings below can be overridden for each player.
@@ -235,6 +236,15 @@
 			// 1-32: ON, the number of human survivors required to be present for all Mutant Tanks to be effective.
 			"Requires Humans"			"0"
 
+			// Enable all Mutant Tanks.
+			// Note: This setting determines full availability. Even if other spawn settings are enabled while this is disabled, all Mutant Tanks will stay disabled.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from each Mutant Tank's "General" section decide.
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Tank Enabled"				"0"
+
 			// The model used by all Mutant Tanks.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
@@ -266,6 +276,16 @@
 			// 0.0: Random
 			// 0.01-1.0: Burn percentage
 			"Burnt Skin"				"-1.0"
+
+			// All Mutant Tanks can spawn.
+			// Note: Mutant Tanks will still appear on the Mutant Tanks menu and other Mutant Tanks can still transform into each other.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from each Mutant Tank's "General" section decide.
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Spawn Enabled"				"1"
 
 			// The number of Mutant Tanks that can be alive at any given time.
 			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected.
@@ -1270,11 +1290,12 @@
 			"Tank Name"				"Tank #1"
 
 			// Enable the Mutant Tank.
-			// Note: This setting determines full enablement. Even if other settings are enabled while this is disabled, the Mutant Tank will stay disabled.
+			// Note: This setting determines full availability. Even if other spawn settings are enabled while this is disabled, the Mutant Tank will stay disabled.
 			// --
+			// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from the "Plugin Settings/General" section decide.
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Tank Enabled"				"0"
+			"Tank Enabled"				"-1"
 
 			// The Mutant Tank has this many chances out of 100.0% to spawn.
 			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected.
@@ -1305,9 +1326,10 @@
 			// Note: The Mutant Tank will still appear on the Mutant Tanks menu and other Mutant Tanks can still transform into the Mutant Tank.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
+			// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from the "Plugin Settings/General" section decide.
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Spawn Enabled"				"1"
+			"Spawn Enabled"				"-1"
 
 			// The Mutant Tank can be spawned through the "sm_tank"/"sm_mt_tank" command.
 			// Note: Do not change this setting if you are unsure of how it works.

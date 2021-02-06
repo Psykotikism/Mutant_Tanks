@@ -120,6 +120,14 @@
 - Added the `Attack Boost Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 - Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by TheStarRocker.) [Thanks to Silvers for the code!]
 - Added the `ConVars` section under the `Plugin Settings` section which allows to change convar settings. (Requested by TheStarRocker.)
+- Added the following settings under the `Plugin Settings/General` section for global use (Requested by Maku.):
+	- `Tank Enabled`
+	- `Spawn Enabled`
+- Changed the minimum value of the following settings under the `Tank #/General` section from `0` to `-1`:
+	- `Tank Enabled`
+	- `Spawn Enabled`
+- Added the following keywords for the `Tank Enabled` and `Spawn Enabled` settings:
+	- `ignore`/`exclude`/`filter`/`remove` - -1
 - The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by Shadowart.):
 	- `Finales Only`
 	- `Idle Check`
