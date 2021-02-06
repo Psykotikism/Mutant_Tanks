@@ -180,7 +180,7 @@
 - Updated English translations.
 - Updated Simplified Chinese translations. (Thanks to yuzumi!)
 - Updated Hungarian translations. (Thanks to KasperH/Ladis!)
-- Updated Russian translations.
+- Updated Russian translations. (Thanks to Blueberry/Kleiner!)
 
 #### Abilities
 - Bury
@@ -719,8 +719,8 @@
 - Updated English translations.
 - Updated Simplified Chinese translations.
 - Updated Hungarian translations. (Thanks to KasperH/Ladis!)
-- Added Russian translations. (Thanks to Blueberry!)
-- Divided the translations into separate files. (Requested by Blueberry.)
+- Added Russian translations. (Thanks to Blueberry/Kleiner!)
+- Divided the translations into separate files. (Requested by Blueberry/Kleiner.)
 
 #### Natives & Forwards
 - Added the `MT_IsTankClone` native to allow developers to check if a Tank is a clone.
