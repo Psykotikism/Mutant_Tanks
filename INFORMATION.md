@@ -243,7 +243,7 @@
 			// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from each Mutant Tank's "General" section decide.
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Tank Enabled"				"0"
+			"Tank Enabled"				"-1"
 
 			// The model used by all Mutant Tanks.
 			// Note: This setting can be used for standard Tanks.
@@ -285,7 +285,7 @@
 			// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from each Mutant Tank's "General" section decide.
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Spawn Enabled"				"1"
+			"Spawn Enabled"				"-1"
 
 			// The number of Mutant Tanks that can be alive at any given time.
 			// Note: Clones, respawned Mutant Tanks, randomized Tanks, and Mutant Tanks spawned through the Mutant Tanks menu are not affected.
@@ -1329,7 +1329,7 @@
 			// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from the "Plugin Settings/General" section decide.
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Spawn Enabled"				"-1"
+			"Spawn Enabled"				"1"
 
 			// The Mutant Tank can be spawned through the "sm_tank"/"sm_mt_tank" command.
 			// Note: Do not change this setting if you are unsure of how it works.

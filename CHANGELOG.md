@@ -123,9 +123,7 @@
 - Added the following settings under the `Plugin Settings/General` section for global use (Requested by Maku.):
 	- `Tank Enabled`
 	- `Spawn Enabled`
-- Changed the minimum value of the following settings under the `Tank #/General` section from `0` to `-1`:
-	- `Tank Enabled`
-	- `Spawn Enabled`
+- Changed the minimum value of the `Tank Enabled` setting under the `Tank #/General` section from `0` to `-1`:
 - Added the following keywords for the `Tank Enabled` and `Spawn Enabled` settings:
 	- `ignore`/`exclude`/`filter`/`remove` - -1
 - The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by Shadowart.):
