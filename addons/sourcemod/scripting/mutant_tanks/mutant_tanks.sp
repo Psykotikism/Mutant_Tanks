@@ -4620,11 +4620,11 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iIdleCheckMode = 2;
 		g_esGeneral.g_iLogCommands = 31;
 		g_esGeneral.g_iLogMessages = 0;
-		g_esGeneral.g_iTankEnabled = 0;
+		g_esGeneral.g_iTankEnabled = -1;
 		g_esGeneral.g_iTankModel = 0;
 		g_esGeneral.g_flBurnDuration = 0.0;
 		g_esGeneral.g_flBurntSkin = -1.0;
-		g_esGeneral.g_iSpawnEnabled = 1;
+		g_esGeneral.g_iSpawnEnabled = -1;
 		g_esGeneral.g_iSpawnLimit = 0;
 		g_esGeneral.g_iMinType = 1;
 		g_esGeneral.g_iMaxType = MT_MAXTYPES;
@@ -4726,7 +4726,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_flBurnDuration = 0.0;
 			g_esTank[iIndex].g_flBurntSkin = -1.0;
 			g_esTank[iIndex].g_iTankNote = 0;
-			g_esTank[iIndex].g_iSpawnEnabled = -1;
+			g_esTank[iIndex].g_iSpawnEnabled = 1;
 			g_esTank[iIndex].g_iMenuEnabled = 1;
 			g_esTank[iIndex].g_iDeathRevert = 0;
 			g_esTank[iIndex].g_iDetectPlugins = 0;
