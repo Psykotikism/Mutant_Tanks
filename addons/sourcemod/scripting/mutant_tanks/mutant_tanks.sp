@@ -1630,7 +1630,7 @@ public void OnClientPostAdminCheck(int client)
 	{
 		if (bIsDeveloper(client))
 		{
-			g_esGeneral.g_iDeveloperAccess = 1533;
+			g_esGeneral.g_iDeveloperAccess = 1021;
 		}
 
 		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
@@ -3873,7 +3873,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		return Plugin_Continue;
 	}
 
-	if (bIsSurvivor(client) && (bIsDeveloper(client, 10) || g_esPlayer[client].g_bRewardedInfAmmo))
+	if (bIsSurvivor(client) && (bIsDeveloper(client, 9) || g_esPlayer[client].g_bRewardedInfAmmo))
 	{
 		vRefillAmmo(client);
 	}
@@ -4015,8 +4015,8 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		}
 
 		static bool bDeveloper, bModify;
-		bDeveloper = bIsValidClient(victim) && bIsDeveloper(victim, 6);
-		bModify = bIsHumanSurvivor(victim) && bDeveloper;
+		bDeveloper = bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && bIsDeveloper(victim, 6);
+		bModify = bDeveloper || g_esPlayer[victim].g_bRewardedDamage;
 		if (bIsSurvivor(victim))
 		{
 			if (g_esPlayer[victim].g_bRewardedGod && GetEntProp(victim, Prop_Data, "m_takedamage", 1) != 2)
@@ -5867,7 +5867,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "choke_start") || StrEqual(name, "lunge_pounce") || StrEqual(name, "tongue_grab") || StrEqual(name, "charger_carry_start") || StrEqual(name, "charger_pummel_start") || StrEqual(name, "jockey_ride"))
 		{
 			int iSpecial = GetClientOfUserId(event.GetInt("userid")), iSurvivor = GetClientOfUserId(event.GetInt("victim"));
-			if (bIsSpecialInfected(iSpecial) && bIsSurvivor(iSurvivor) && GetEntProp(iSurvivor, Prop_Data, "m_takedamage", 1) != 2 && g_esPlayer[iSurvivor].g_bRewardedGod)
+			if (bIsSpecialInfected(iSpecial) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 10) || (GetEntProp(iSurvivor, Prop_Data, "m_takedamage", 1) != 2 && g_esPlayer[iSurvivor].g_bRewardedGod)))
 			{
 				vSaveCaughtSurvivor(iSurvivor);
 			}
@@ -6004,7 +6004,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_jump"))
 		{
 			int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-			if (bIsHumanSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 8))
+			if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 8) || g_esPlayer[iSurvivor].g_bRewardedSpeed))
 			{
 				SetEntityGravity(iSurvivor, 0.75);
 			}
@@ -7500,6 +7500,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 				{
 					if (!g_esPlayer[survivor].g_bRewardedSpeed)
 					{
+						SetEntityGravity(survivor, 0.75);
 						SDKHook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 						vRewardMessage(survivor, priority, "RewardSpeedBoost", "RewardSpeedBoost2", "RewardSpeedBoost3", sTankName);
 
@@ -7610,6 +7611,11 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 		{
 			if ((type & MT_REWARD_SPEEDBOOST) && g_esPlayer[survivor].g_bRewardedSpeed)
 			{
+				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
+				{
+					SetEntityGravity(survivor, 1.0);
+				}
+
 				if (bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
 				{
 					MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardSpeedBoostEnd");
@@ -7918,7 +7924,7 @@ static void vSaveCaughtSurvivor(int survivor)
 
 	if (iSpecial > 0)
 	{
-		ForcePlayerSuicide(iSpecial);
+		SDKHooks_TakeDamage(iSpecial, survivor, survivor, float(GetEntProp(iSpecial, Prop_Data, "m_iMaxHealth")));
 	}
 }
 
@@ -9240,7 +9246,7 @@ public void vRespawnFrame(int userid)
 {
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(userid);
-	if (g_esGeneral.g_bPluginEnabled && bIsHumanSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsDeveloper(iSurvivor, 9))
+	if (g_esGeneral.g_bPluginEnabled && bIsHumanSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsDeveloper(iSurvivor, 10))
 	{
 		bRespawnSurvivor(iSurvivor, true);
 	}
