@@ -1630,7 +1630,7 @@ public void OnClientPostAdminCheck(int client)
 	{
 		if (bIsDeveloper(client))
 		{
-			g_esGeneral.g_iDeveloperAccess = 509;
+			g_esGeneral.g_iDeveloperAccess = 253;
 		}
 
 		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
@@ -3995,13 +3995,13 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 	{
 		static char sClassname[32];
 		sClassname[0] = '\0';
-		static int iTank, iTank2;
-		iTank = 0;
-		iTank2 = 0;
+		static int iLauncherOwner, iRockOwner;
+		iLauncherOwner = 0;
+		iRockOwner = 0;
 		if (bIsValidEntity(inflictor))
 		{
-			iTank = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0;
-			iTank2 = HasEntProp(inflictor, Prop_Data, "m_hThrower") ? GetEntPropEnt(inflictor, Prop_Data, "m_hThrower") : 0;
+			iLauncherOwner = HasEntProp(inflictor, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(inflictor, Prop_Send, "m_hOwnerEntity") : 0;
+			iRockOwner = HasEntProp(inflictor, Prop_Data, "m_hThrower") ? GetEntPropEnt(inflictor, Prop_Data, "m_hThrower") : 0;
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		}
 
@@ -4033,7 +4033,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 						return (g_esCache[attacker].g_flHittableDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 					}
-					else if (StrEqual(sClassname, "tank_rock") && !bIsValidEntity(iTank) && g_esCache[attacker].g_flRockDamage >= 0.0)
+					else if (StrEqual(sClassname, "tank_rock") && !bIsValidEntity(iLauncherOwner) && g_esCache[attacker].g_flRockDamage >= 0.0)
 					{
 						damage = flGetScaledDamage(g_esCache[attacker].g_flRockDamage);
 						damage = bDeveloper ? (damage * 0.5) : damage;
@@ -4081,16 +4081,16 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 						return Plugin_Continue;
 					}
 
-					if (bBlockFire)
+					if (damagetype & DMG_BURN)
 					{
 						ExtinguishEntity(victim);
 					}
 
-					if (bBlockBullets || bBlockExplosives || bBlockHittables || bBlockMelee)
+					if (attacker != victim && (bBlockBullets || bBlockExplosives || bBlockHittables || bBlockMelee))
 					{
 						EmitSoundToAll(SOUND_METAL, victim);
 
-						if (bBlockMelee)
+						if ((!bSurvivor || (bSurvivor && !g_esPlayer[attacker].g_bRewardedGod)) && bBlockMelee)
 						{
 							static float flTankPos[3];
 							GetClientAbsOrigin(victim, flTankPos);
@@ -4140,7 +4140,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 				return Plugin_Changed;
 			}
-			else if ((bIsTankSupported(attacker) && victim != attacker) || (bIsTankSupported(iTank) && victim != iTank) || (bIsTankSupported(iTank2) && victim != iTank2))
+			else if ((bIsTankSupported(attacker) && victim != attacker) || (bIsTankSupported(iLauncherOwner) && victim != iLauncherOwner) || (bIsTankSupported(iRockOwner) && victim != iRockOwner))
 			{
 				if (StrEqual(sClassname, "weapon_tank_claw"))
 				{

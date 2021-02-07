@@ -344,10 +344,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbMeleeDivisor;
 
-				static float flTankPos[3];
-				GetClientAbsOrigin(victim, flTankPos);
-				vPushNearbyEntities(victim, flTankPos);
-				EmitSoundToAll(SOUND_METAL, victim);
+				if (damage < 1.0)
+				{
+					static float flTankPos[3];
+					GetClientAbsOrigin(victim, flTankPos);
+					vPushNearbyEntities(victim, flTankPos);
+					EmitSoundToAll(SOUND_METAL, victim);
+				}
 			}
 
 			if (bChanged)
