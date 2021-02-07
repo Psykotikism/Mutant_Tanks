@@ -19,7 +19,7 @@
 - Fixed Tanks not being setup properly when exiting ghost mode. (Thanks to yuzumi for reporting!)
 - Fixed the Tank spawner not allowing multiple copies of the same Mutant Tank type to spawn.
 - Fixed inconsistent access levels for some developer commands.
-- Fixed players with the god mode reward not being saved from special infected when given the health or refill reward.
+- Fixed players with the godmode reward not being saved from special infected when given the health or refill reward.
 
 #### Settings
 - Fixed the `Boss Health Stages` setting not being read entirely.
@@ -29,7 +29,7 @@
 	- Fixed clone deaths raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Heal
-	- Fixed players with the god mode reward being affected.
+	- Fixed players with the godmode reward being affected.
 	- Fixed total health being miscalculated.
 	- Fixed Tanks gaining health while in the dying animation.
 
@@ -37,7 +37,7 @@
 	- Fixed the ability not working when the `Human Ability` setting is disabled.
 
 - Kamikaze
-	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Leech
 	- Fixed total health being miscalculated.
@@ -56,16 +56,16 @@
 	- Fixed Tanks gaining health while in the dying animation.
 
 - Restart
-	- Fixed players with the god mode reward being affected.
+	- Fixed players with the godmode reward being affected.
 
 - Rocket
-	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Smash
-	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Smite
-	- Fixed players with the god mode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Ultimate
 	- Fixed total health being miscalculated.
@@ -96,7 +96,8 @@
 - The vocalizer feature for Tank deaths now requires the `Vocalize Death` setting to be enabled.
 - Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
 - Rewards that have a duration can now have their duration extended when received again. (Requested by 3aljiyavslgazana.)
-- The god mode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
+- The godmode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
+- The godmode reward fully blocks all damage from registering. (Requested by 3aljiyavslgazana.)
 - The damage boost reward now allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 - The damage boost reward now gives the recipient 50% damage resistance throughout its duration.
 - The speed boost reward now allows the recipient to jump slightly higher throughout its duration.
@@ -185,8 +186,11 @@
 - Updated Russian translations. (Thanks to Blueberry/Kleiner!)
 
 #### Abilities
+- Absorb
+	- The pushback effect no longer triggers for melee attacks unless the Tank takes at least one damage. (Requested by 3aljiyavslgazana.)
+
 - Bury
-	- Survivors with the god mode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Clone
 	- Clones no longer reward survivors after dying. (Thanks to 3aljiyavslgazana for the idea!)
@@ -195,8 +199,18 @@
 - Choke
 	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 
+- Fling
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
 - Idle
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Shield
+	- The damage boost reward now allows the recipient to bypass all types of shields that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
+	- Shields that can be damaged by melee weapons will no longer create pushback effects when hit by melee weapons. (Requested by 3aljiyavslgazana.)
+
+- Shove
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Vision
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -1350,7 +1364,7 @@ Changes:
 25. Added the `Propane Tank Color` setting under the `Props` section.
 26. The `MT_GetPropColors` native's `mode` parameter now accepts values as high as 6 to add support for the new propane tank prop.
 27. The `Regular Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
-28. The core plugin now uses `Left 4 DHooks` to check when Tanks enter ghost state and materializes them 1 second later.
+28. The core plugin now uses `Left 4 DHooks` to check when Tanks enter ghost state and materializes them one second later.
 29. The `Restart` ability's plugin (`mt_restart.smx`) now uses `Left 4 DHooks` to check when a survivor is inside the starting safe area in order to get their "spawn coordinates" to be used when `Restart Mode` is set to `0`.
 30. Added the `mt_enabledgamemodes`, `mt_disabledgamemodes`, and `mt_gamemodetypes` cvars as cvar equivalents of the `Enabled Game Modes`, `Disabled Game Modes`, and `Game Mode Types` settings.
 31. The core plugin now requires `DHooks` and `Left 4 DHooks`.
@@ -1744,7 +1758,7 @@ Bug fixes:
 
 Changes:
 
-1. The `sm_tank` command can now spawn more than 1 Super Tank at a time. (New syntax: `sm_tank "type 1-500 OR name" "amount: 1-32" "0: spawn at crosshair|1: spawn automatically"`)
+1. The `sm_tank` command can now spawn more than one Super Tank at a time. (New syntax: `sm_tank "type 1-500 OR name" "amount: 1-32" "0: spawn at crosshair|1: spawn automatically"`)
 
 ## Version 8.48 (November 30, 2018)
 
@@ -2211,7 +2225,7 @@ Files:
 Changes:
 
 1. Added extra checks to make sure the plugin spawns the proper amount of Tanks for each wave.
-2. Lessened the occurrence of Tanks flashing all over the map on finales. (Set `Glow Effect` to 1 to completely disable the glow outlines.)
+2. Lessened the occurrence of Tanks flashing all over the map on finales. (Set `Glow Effect` to `1` to completely disable the glow outlines.)
 
 Files:
 
@@ -2365,9 +2379,9 @@ Changes:
 8. Added the `Minion Amount` KeyValue which determines how many minions the Super Tank can spawn.
 9. Added the `Minion Chance` KeyValue which determines how often the Super Tank spawns special infected behind itself.
 10. Added the `Minion Types` KeyValue which decides what special infected the Super Tank can spawn behind itself.
-11. Added the `God Ability` KeyValue which lets the Super Tank have temporary god mode.
-12. Added the `God Chance` KeyValue which determines how often the Super Tank gets temporary god mode.
-13. Added the `God Duration` KeyValue which decides how long the Super Tank's temporary god mode lasts.
+11. Added the `God Ability` KeyValue which lets the Super Tank have temporary godmode.
+12. Added the `God Chance` KeyValue which determines how often the Super Tank gets temporary godmode.
+13. Added the `God Duration` KeyValue which decides how long the Super Tank's temporary godmode lasts.
 14. Added the `Clone Ability` KeyValue which lets the Super Tank spawn clones of itself.
 15. Added the `Clone Amount` KeyValue which determines how many clones the Super Tank can spawn.
 16. Added the `Clone Chance` KeyValue which determines how often the Super Tank can spawn clones of itself.
@@ -2419,7 +2433,7 @@ Changes:
 10. Added the `Nullify Duration` KeyValue which decides how long the Super Tank can nullify all of a survivor's damage.
 11. Buried survivors are now frozen in place.
 12. Buried survivors are now teleported to nearby teammates to avoid falling through the map after being unburied.
-13. The `Hypno` ability no longer sets survivors' HP to 1 when the inflicted damage is higher than their health, but rather incapacitates them.
+13. The `Hypno` ability no longer sets survivors' HP to `1` when the inflicted damage is higher than their health, but rather incapacitates them.
 14. Removed the `Tank Types` KeyValue.
 15. Replaced the `Tank Character` KeyValue with `Tank Enabled`. (Now users can simply enable/disable each Tank without using a letter, number, or symbol.)
 16. Added Tank death announcement messages.
@@ -2455,7 +2469,7 @@ Bug fixes:
 2. Fixed the `Enabled Game Modes` and `Disabled Game Modes` KeyValues not having enough space for more than 2-4 game modes.
 3. Fixed the issue with default `unnamed` Tanks appearing when certain Super Tanks are disabled.
 4. Fixed the `Warp` ability's interval glitching out.
-5. Fixed the `Gravity` ability creating more than 1 `point_push` entity per Tank.
+5. Fixed the `Gravity` ability creating more than one `point_push` entity per Tank.
 
 Changes:
 
