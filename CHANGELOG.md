@@ -94,10 +94,12 @@
 - Added extra copies of the `Body Effects` setting's electric jolt option.
 - Increased verbosity of logging for admin commands.
 - The vocalizer feature for Tank deaths now requires the `Vocalize Death` setting to be enabled.
-- The god mode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
 - Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
 - Rewards that have a duration can now have their duration extended when received again. (Requested by 3aljiyavslgazana.)
-- The damage boost reward now allows the recipient to bypass all types of damage immunity that Tanks may have. (Requested by 3aljiyavslgazana.)
+- The god mode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
+- The damage boost reward now allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
+- The damage boost reward now gives the recipient 50% damage resistance throughout its duration.
+- The speed boost reward now allows the recipient to jump slightly higher throughout its duration.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
