@@ -1343,14 +1343,14 @@ public void OnPluginStart()
 
 	g_esGeneral.g_cvMTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
 	g_esGeneral.g_cvMTAutoShotgunAmmo = g_bSecondGame ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
+	g_esGeneral.g_cvMTDifficulty = FindConVar("z_difficulty");
 	g_esGeneral.g_cvMTGrenadeLauncherAmmo = FindConVar("ammo_grenadelauncher_max");
 	g_esGeneral.g_cvMTHuntingRifleAmmo = FindConVar("ammo_huntingrifle_max");
+	g_esGeneral.g_cvMTGameMode = FindConVar("mp_gamemode");
+	g_esGeneral.g_cvMTGameTypes = FindConVar("sv_gametypes");
 	g_esGeneral.g_cvMTShotgunAmmo = g_bSecondGame ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
 	g_esGeneral.g_cvMTSMGAmmo = FindConVar("ammo_smg_max");
 	g_esGeneral.g_cvMTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
-	g_esGeneral.g_cvMTDifficulty = FindConVar("z_difficulty");
-	g_esGeneral.g_cvMTGameMode = FindConVar("mp_gamemode");
-	g_esGeneral.g_cvMTGameTypes = FindConVar("sv_gametypes");
 
 	g_esGeneral.g_cvMTDisabledGameModes.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTEnabledGameModes.AddChangeHook(vMTPluginStatusCvar);
@@ -5856,7 +5856,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (StrEqual(name, "choke_start") || StrEqual(name, "lunge_pounce") || StrEqual(name, "tongue_grab") || StrEqual(name, "charger_carry_start") || StrEqual(name, "charger_pummel_start") || StrEqual(name, "jockey_ride"))
 		{
-			int iSpecial = GetClientOfUserId(event.GetInt("userid")), iSurvivor = GetClientOfUserId(event.GetInt("victim"));
+			int iSpecialId = event.GetInt("userid"), iSpecial = GetClientOfUserId(iSpecialId), iSurvivorId = event.GetInt("victim"), iSurvivor = GetClientOfUserId(iSurvivorId);
 			if (bIsSpecialInfected(iSpecial) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 8) || (GetEntProp(iSurvivor, Prop_Data, "m_takedamage", 1) != 2 && g_esPlayer[iSurvivor].g_bRewardedGod)))
 			{
 				vSaveCaughtSurvivor(iSurvivor);
@@ -5930,7 +5930,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (StrEqual(name, "player_death"))
 		{
-			int iVictimId = event.GetInt("userid"), iVictim = GetClientOfUserId(iVictimId), iAttacker = GetClientOfUserId(event.GetInt("attacker"));
+			int iVictimId = event.GetInt("userid"), iVictim = GetClientOfUserId(iVictimId), iAttackerId = event.GetInt("attacker"), iAttacker = GetClientOfUserId(iAttackerId);
 			if (bIsTank(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
 				g_esPlayer[iVictim].g_bDied = true;
@@ -6028,7 +6028,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (StrEqual(name, "player_team"))
 		{
-			int iPlayer = GetClientOfUserId(event.GetInt("userid"));
+			int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
 			if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
 				vRemoveEffects(iPlayer);
