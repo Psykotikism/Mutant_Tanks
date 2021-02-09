@@ -15,7 +15,7 @@
 			{
 				"signature"	"CTankClaw::OnPlayerHit"
 				"callconv"	"thiscall"
-				"return"	"int"
+				"return"	"void"
 				"this"		"entity"
 				"arguments"
 				{
