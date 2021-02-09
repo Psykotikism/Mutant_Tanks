@@ -19,12 +19,17 @@
 - Fixed Tanks not being setup properly when exiting ghost mode. (Thanks to yuzumi for reporting!)
 - Fixed the Tank spawner not allowing multiple copies of the same Mutant Tank type to spawn.
 - Fixed inconsistent access levels for some developer commands.
-- Fixed players with the godmode reward not being saved from special infected when given the health or refill reward.
+- Fixed survivors with the godmode reward not being saved from special infected when given the health or refill reward.
+- Fixed the `Boss` feature not calculating overall Tank health properly.
 
 #### Settings
 - Fixed the `Boss Health Stages` setting not being read entirely.
 
 #### Abilities
+- Choke
+	- Fixed affected survivors not always being lifted off the ground while being choked. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	- Fixed affected survivors being stuck under the floor when the ability ends.
+
 - Clone
 	- Fixed clone deaths raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
@@ -101,6 +106,7 @@
 - The damage boost reward now allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 - The damage boost reward now gives the recipient 50% damage resistance throughout its duration.
 - The speed boost reward now allows the recipient to jump slightly higher throughout its duration.
+- The health display will no longer show the maximum health going over the maximum health set in `mutant_tanks.inc`.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
@@ -188,38 +194,72 @@
 #### Abilities
 - Absorb
 	- The pushback effect no longer triggers for melee attacks unless the Tank takes at least one damage. (Requested by 3aljiyavslgazana.)
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+
+- Aimless
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Bury
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Choke
+	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+	- The ability automatically ends when the targeted survivor becomes incapacitated. (Requested by 3aljiyavslgazana.)
+	- Affected survivors can no longer attack, shove, or use/grab items. (Requested by 3aljiyavslgazana.)
 
 - Clone
 	- Clones no longer reward survivors after dying. (Thanks to 3aljiyavslgazana for the idea!)
 	- Clones no longer trigger announcements when spawning and dying. (Thanks to 3aljiyavslgazana for the idea!)
 
-- Choke
-	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
-
 - Fling
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
+- God
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+
+- Hit
+	- Survivors with the damage boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Hypno
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+
 - Idle
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Nullify
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+
+- Pimp
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Shield
 	- The damage boost reward now allows the recipient to bypass all types of shields that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 	- Shields that can be damaged by melee weapons will no longer create pushback effects when hit by melee weapons. (Requested by 3aljiyavslgazana.)
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 
 - Shove
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
+- Slow
+	- Survivors with the speed boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Ultimate
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+
 - Vision
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Warp
 	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Whirl
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Yell
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 ### Files
 
