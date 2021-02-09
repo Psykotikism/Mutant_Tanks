@@ -3778,7 +3778,7 @@ public void OnGameFrame()
 	{
 		static char sHealthBar[51], sSet[2][2];
 		static float flPercentage;
-		static int iTarget, iHealth;
+		static int iTarget, iHealth, iMaxHealth, iTotalHealth;
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
@@ -3793,12 +3793,14 @@ public void OnGameFrame()
 
 					sHealthBar[0] = '\0';
 					iHealth = bIsPlayerIncapacitated(iTarget) ? 0 : GetEntProp(iTarget, Prop_Data, "m_iHealth");
-					flPercentage = (float(iHealth) / float(g_esPlayer[iTarget].g_iTankHealth)) * 100;
+					iMaxHealth = GetEntProp(iTarget, Prop_Data, "m_iMaxHealth");
+					iTotalHealth = (iHealth > iMaxHealth) ? iHealth : iMaxHealth;
+					flPercentage = (float(iHealth) / float(iTotalHealth)) * 100;
 
 					ReplaceString(g_esCache[iTarget].g_sHealthCharacters, sizeof(esCache::g_sHealthCharacters), " ", "");
 					ExplodeString(g_esCache[iTarget].g_sHealthCharacters, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 
-					for (int iCount = 0; iCount < (float(iHealth) / float(g_esPlayer[iTarget].g_iTankHealth)) * sizeof(sHealthBar) - 1 && iCount < sizeof(sHealthBar) - 1; iCount++)
+					for (int iCount = 0; iCount < (float(iHealth) / float(iTotalHealth)) * sizeof(sHealthBar) - 1 && iCount < sizeof(sHealthBar) - 1; iCount++)
 					{
 						StrCat(sHealthBar, sizeof(sHealthBar), sSet[0]);
 					}
@@ -3822,15 +3824,15 @@ public void OnGameFrame()
 							{
 								case 1: PrintHintText(iPlayer, "%t %s", sTankName, (bHuman ? sHumanTag : ""));
 								case 2: PrintHintText(iPlayer, "%i HP", iHealth);
-								case 3: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%");
+								case 3: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, iTotalHealth, flPercentage, "%%");
 								case 4: PrintHintText(iPlayer, "HP: |-<%s>-|", sHealthBar);
 								case 5: PrintHintText(iPlayer, "%t %s (%i HP)", sTankName, (bHuman ? sHumanTag : ""), iHealth);
-								case 6: PrintHintText(iPlayer, "%t %s [%i/%i HP (%.0f%s)]", sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%");
+								case 6: PrintHintText(iPlayer, "%t %s [%i/%i HP (%.0f%s)]", sTankName, (bHuman ? sHumanTag : ""), iHealth, iTotalHealth, flPercentage, "%%");
 								case 7: PrintHintText(iPlayer, "%t %s\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), sHealthBar);
 								case 8: PrintHintText(iPlayer, "%i HP\nHP: |-<%s>-|", iHealth, sHealthBar);
-								case 9: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%", sHealthBar);
+								case 9: PrintHintText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, iTotalHealth, flPercentage, "%%", sHealthBar);
 								case 10: PrintHintText(iPlayer, "%t %s (%i HP)\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), iHealth, sHealthBar);
-								case 11: PrintHintText(iPlayer, "%t %s [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%", sHealthBar);
+								case 11: PrintHintText(iPlayer, "%t %s [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), iHealth, iTotalHealth, flPercentage, "%%", sHealthBar);
 							}
 						}
 						case 2:
@@ -3839,15 +3841,15 @@ public void OnGameFrame()
 							{
 								case 1: PrintCenterText(iPlayer, "%t %s", sTankName, (bHuman ? sHumanTag : ""));
 								case 2: PrintCenterText(iPlayer, "%i HP", iHealth);
-								case 3: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%");
+								case 3: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)", iHealth, iTotalHealth, flPercentage, "%%");
 								case 4: PrintCenterText(iPlayer, "HP: |-<%s>-|", sHealthBar);
 								case 5: PrintCenterText(iPlayer, "%t %s (%i HP)", sTankName, (bHuman ? sHumanTag : ""), iHealth);
-								case 6: PrintCenterText(iPlayer, "%t %s [%i/%i HP (%.0f%s)]", sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%");
+								case 6: PrintCenterText(iPlayer, "%t %s [%i/%i HP (%.0f%s)]", sTankName, (bHuman ? sHumanTag : ""), iHealth, iTotalHealth, flPercentage, "%%");
 								case 7: PrintCenterText(iPlayer, "%t %s\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), sHealthBar);
 								case 8: PrintCenterText(iPlayer, "%i HP\nHP: |-<%s>-|", iHealth, sHealthBar);
-								case 9: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%", sHealthBar);
+								case 9: PrintCenterText(iPlayer, "%i/%i HP (%.0f%s)\nHP: |-<%s>-|", iHealth, iTotalHealth, flPercentage, "%%", sHealthBar);
 								case 10: PrintCenterText(iPlayer, "%t %s (%i HP)\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), iHealth, sHealthBar);
-								case 11: PrintCenterText(iPlayer, "%t %s [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), iHealth, g_esPlayer[iTarget].g_iTankHealth, flPercentage, "%%", sHealthBar);
+								case 11: PrintCenterText(iPlayer, "%t %s [%i/%i HP (%.0f%s)]\nHP: |-<%s>-|", sTankName, (bHuman ? sHumanTag : ""), iHealth, iTotalHealth, flPercentage, "%%", sHealthBar);
 							}
 						}
 					}
@@ -4708,16 +4710,11 @@ public void SMCParseStart(SMCParser smc)
 		for (int iIndex = 0; iIndex <= MT_MAXTYPES; iIndex++)
 		{
 			g_esTank[iIndex].g_iAbilityCount = -1;
-
-			FormatEx(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), "Tank", iIndex);
 			g_esTank[iIndex].g_iTankEnabled = -1;
-			g_esTank[iIndex].g_flTankChance = 100.0;
 			g_esTank[iIndex].g_iTankModel = 0;
 			g_esTank[iIndex].g_flBurnDuration = 0.0;
 			g_esTank[iIndex].g_flBurntSkin = -1.0;
-			g_esTank[iIndex].g_iTankNote = 0;
 			g_esTank[iIndex].g_iSpawnEnabled = 1;
-			g_esTank[iIndex].g_iMenuEnabled = 1;
 			g_esTank[iIndex].g_iDeathRevert = 0;
 			g_esTank[iIndex].g_iDetectPlugins = 0;
 			g_esTank[iIndex].g_iAnnounceArrival = 0;
@@ -4740,29 +4737,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_sHealthCharacters[0] = '\0';
 			g_esTank[iIndex].g_iMinimumHumans = 0;
 			g_esTank[iIndex].g_iMultiplyHealth = 0;
-			g_esTank[iIndex].g_iHumanSupport = 0;
-			g_esTank[iIndex].g_iGlowEnabled = 0;
-			g_esTank[iIndex].g_iGlowFlashing = 0;
-			g_esTank[iIndex].g_iGlowMinRange = 0;
-			g_esTank[iIndex].g_iGlowMaxRange = 999999;
-			g_esTank[iIndex].g_iGlowType = 0;
-			g_esTank[iIndex].g_flOpenAreasOnly = 0.0;
 			g_esTank[iIndex].g_iRequiresHumans = 0;
-			g_esTank[iIndex].g_iAccessFlags = 0;
-			g_esTank[iIndex].g_iImmunityFlags = 0;
-			g_esTank[iIndex].g_iTypeLimit = 32;
-			g_esTank[iIndex].g_iFinaleTank = 0;
-			g_esTank[iIndex].g_iBossStages = 4;
-			g_esTank[iIndex].g_sComboSet[0] = '\0';
-			g_esTank[iIndex].g_iRandomTank = 1;
-			g_esTank[iIndex].g_flRandomDuration = 999999.0;
-			g_esTank[iIndex].g_flRandomInterval = 5.0;
-			g_esTank[iIndex].g_flTransformDelay = 10.0;
-			g_esTank[iIndex].g_flTransformDuration = 10.0;
-			g_esTank[iIndex].g_iSpawnType = 0;
-			g_esTank[iIndex].g_iPropsAttached = g_bSecondGame ? 510 : 462;
-			g_esTank[iIndex].g_iBodyEffects = 0;
-			g_esTank[iIndex].g_iRockEffects = 0;
 			g_esTank[iIndex].g_iRockModel = 2;
 			g_esTank[iIndex].g_flAttackInterval = 0.0;
 			g_esTank[iIndex].g_flClawDamage = -1.0;
@@ -4776,69 +4751,100 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iHittableImmunity = 0;
 			g_esTank[iIndex].g_iMeleeImmunity = 0;
 
-			for (int iPos = 0; iPos < sizeof(esTank::g_iTransformType); iPos++)
+			if (iIndex > 0)
 			{
-				g_esTank[iIndex].g_iTransformType[iPos] = iPos + 1;
+				FormatEx(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), "Tank", iIndex);
 
-				if (iPos < sizeof(esTank::g_iRewardEnabled))
-				{
-					g_esTank[iIndex].g_iRewardEnabled[iPos] = -1;
-					g_esTank[iIndex].g_flRewardChance[iPos] = 0.0;
-					g_esTank[iIndex].g_flRewardDuration[iPos] = 0.0;
-					g_esTank[iIndex].g_iRewardEffect[iPos] = 0;
-					g_esTank[iIndex].g_flRewardPercentage[iPos] = 0.0;
-					g_esTank[iIndex].g_flAttackBoostReward[iPos] = 0.0;
-					g_esTank[iIndex].g_flDamageBoostReward[iPos] = 0.0;
-					g_esTank[iIndex].g_iRespawnLoadoutReward[iPos] = 0;
-					g_esTank[iIndex].g_flSpeedBoostReward[iPos] = 0.0;
-					g_esTank[iIndex].g_iUsefulRewards[iPos] = 0;
-				}
+				g_esTank[iIndex].g_flTankChance = 100.0;
+				g_esTank[iIndex].g_iTankNote = 0;
+				g_esTank[iIndex].g_iMenuEnabled = 1;
+				g_esTank[iIndex].g_iHumanSupport = 0;
+				g_esTank[iIndex].g_iGlowEnabled = 0;
+				g_esTank[iIndex].g_iGlowFlashing = 0;
+				g_esTank[iIndex].g_iGlowMinRange = 0;
+				g_esTank[iIndex].g_iGlowMaxRange = 999999;
+				g_esTank[iIndex].g_iGlowType = 0;
+				g_esTank[iIndex].g_flOpenAreasOnly = 0.0;
+				g_esTank[iIndex].g_iAccessFlags = 0;
+				g_esTank[iIndex].g_iImmunityFlags = 0;
+				g_esTank[iIndex].g_iTypeLimit = 32;
+				g_esTank[iIndex].g_iFinaleTank = 0;
+				g_esTank[iIndex].g_iBossStages = 4;
+				g_esTank[iIndex].g_sComboSet[0] = '\0';
+				g_esTank[iIndex].g_iRandomTank = 1;
+				g_esTank[iIndex].g_flRandomDuration = 999999.0;
+				g_esTank[iIndex].g_flRandomInterval = 5.0;
+				g_esTank[iIndex].g_flTransformDelay = 10.0;
+				g_esTank[iIndex].g_flTransformDuration = 10.0;
+				g_esTank[iIndex].g_iSpawnType = 0;
+				g_esTank[iIndex].g_iPropsAttached = g_bSecondGame ? 510 : 462;
+				g_esTank[iIndex].g_iBodyEffects = 0;
+				g_esTank[iIndex].g_iRockEffects = 0;
 
-				if (iPos < sizeof(esTank::g_flComboChance))
+				for (int iPos = 0; iPos < sizeof(esTank::g_iTransformType); iPos++)
 				{
-					g_esTank[iIndex].g_flComboChance[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboDamage[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboDeathChance[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboDeathRange[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboDelay[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboDuration[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboInterval[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboMaxRadius[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboMinRadius[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboRange[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboRangeChance[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboRockChance[iPos] = 0.0;
-					g_esTank[iIndex].g_flComboSpeed[iPos] = 0.0;
-				}
+					g_esTank[iIndex].g_iTransformType[iPos] = iPos + 1;
 
-				if (iPos < sizeof(esTank::g_flComboTypeChance))
-				{
-					g_esTank[iIndex].g_flComboTypeChance[iPos] = 0.0;
-				}
+					if (iPos < sizeof(esTank::g_iRewardEnabled))
+					{
+						g_esTank[iIndex].g_iRewardEnabled[iPos] = -1;
+						g_esTank[iIndex].g_flRewardChance[iPos] = 0.0;
+						g_esTank[iIndex].g_flRewardDuration[iPos] = 0.0;
+						g_esTank[iIndex].g_iRewardEffect[iPos] = 0;
+						g_esTank[iIndex].g_flRewardPercentage[iPos] = 0.0;
+						g_esTank[iIndex].g_flAttackBoostReward[iPos] = 0.0;
+						g_esTank[iIndex].g_flDamageBoostReward[iPos] = 0.0;
+						g_esTank[iIndex].g_iRespawnLoadoutReward[iPos] = 0;
+						g_esTank[iIndex].g_flSpeedBoostReward[iPos] = 0.0;
+						g_esTank[iIndex].g_iUsefulRewards[iPos] = 0;
+					}
 
-				if (iPos < sizeof(esTank::g_flPropsChance))
-				{
-					g_esTank[iIndex].g_flPropsChance[iPos] = 33.3;
-				}
+					if (iPos < sizeof(esTank::g_flComboChance))
+					{
+						g_esTank[iIndex].g_flComboChance[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboDamage[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboDeathChance[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboDeathRange[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboDelay[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboDuration[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboInterval[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboMaxRadius[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboMinRadius[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboRange[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboRangeChance[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboRockChance[iPos] = 0.0;
+						g_esTank[iIndex].g_flComboSpeed[iPos] = 0.0;
+					}
 
-				if (iPos < sizeof(esTank::g_iSkinColor))
-				{
-					g_esTank[iIndex].g_iSkinColor[iPos] = 255;
-					g_esTank[iIndex].g_iBossHealth[iPos] = 5000 / (iPos + 1);
-					g_esTank[iIndex].g_iBossType[iPos] = iPos + 2;
-					g_esTank[iIndex].g_iLightColor[iPos] = 255;
-					g_esTank[iIndex].g_iOzTankColor[iPos] = 255;
-					g_esTank[iIndex].g_iFlameColor[iPos] = 255;
-					g_esTank[iIndex].g_iRockColor[iPos] = 255;
-					g_esTank[iIndex].g_iTireColor[iPos] = 255;
-					g_esTank[iIndex].g_iPropTankColor[iPos] = 255;
-					g_esTank[iIndex].g_iFlashlightColor[iPos] = 255;
-					g_esTank[iIndex].g_iCrownColor[iPos] = 255;
-				}
+					if (iPos < sizeof(esTank::g_flComboTypeChance))
+					{
+						g_esTank[iIndex].g_flComboTypeChance[iPos] = 0.0;
+					}
 
-				if (iPos < sizeof(esTank::g_iGlowColor))
-				{
-					g_esTank[iIndex].g_iGlowColor[iPos] = 255;
+					if (iPos < sizeof(esTank::g_flPropsChance))
+					{
+						g_esTank[iIndex].g_flPropsChance[iPos] = 33.3;
+					}
+
+					if (iPos < sizeof(esTank::g_iSkinColor))
+					{
+						g_esTank[iIndex].g_iSkinColor[iPos] = 255;
+						g_esTank[iIndex].g_iBossHealth[iPos] = 5000 / (iPos + 1);
+						g_esTank[iIndex].g_iBossType[iPos] = iPos + 2;
+						g_esTank[iIndex].g_iLightColor[iPos] = 255;
+						g_esTank[iIndex].g_iOzTankColor[iPos] = 255;
+						g_esTank[iIndex].g_iFlameColor[iPos] = 255;
+						g_esTank[iIndex].g_iRockColor[iPos] = 255;
+						g_esTank[iIndex].g_iTireColor[iPos] = 255;
+						g_esTank[iIndex].g_iPropTankColor[iPos] = 255;
+						g_esTank[iIndex].g_iFlashlightColor[iPos] = 255;
+						g_esTank[iIndex].g_iCrownColor[iPos] = 255;
+					}
+
+					if (iPos < sizeof(esTank::g_iGlowColor))
+					{
+						g_esTank[iIndex].g_iGlowColor[iPos] = 255;
+					}
 				}
 			}
 		}
@@ -4975,7 +4981,7 @@ public void SMCParseStart(SMCParser smc)
 					}
 				}
 
-				for (int iIndex = 0; iIndex <= MT_MAXTYPES; iIndex++)
+				for (int iIndex = 1; iIndex <= MT_MAXTYPES; iIndex++)
 				{
 					g_esAdmin[iIndex].g_iAccessFlags[iPlayer] = 0;
 					g_esAdmin[iIndex].g_iImmunityFlags[iPlayer] = 0;
@@ -6818,13 +6824,14 @@ static void vBoss(int tank, int limit, int stages, int type, int stage)
 			vSetColor(tank, type, false);
 			vTankSpawn(tank, 1);
 
-			static int iNewHealth, iFinalHealth;
+			static int iNewHealth, iLeftover, iLeftover2, iFinalHealth;
 			iNewHealth = GetEntProp(tank, Prop_Data, "m_iMaxHealth") + limit;
+			iLeftover = iNewHealth - iHealth;
+			iLeftover2 = (iLeftover > MT_MAXHEALTH) ? (iLeftover - MT_MAXHEALTH) : iLeftover;
 			iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
+			g_esPlayer[tank].g_iTankHealth += (iLeftover > MT_MAXHEALTH) ? iLeftover2 : iLeftover;
 			SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
 			SetEntProp(tank, Prop_Data, "m_iMaxHealth", iFinalHealth);
-
-			g_esPlayer[tank].g_iTankHealth += iFinalHealth;
 		}
 	}
 }
@@ -6891,10 +6898,26 @@ static void vSurvivorReactions(int tank)
 		EmitSoundToAll((g_bSecondGame ? SOUND_EXPLOSION2 : SOUND_EXPLOSION1), iExplosion, 0, 75, 0, 1.0, 100, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
 	}
 
+	if (g_bSecondGame)
+	{
+		static int iTimescale;
+		iTimescale = CreateEntityByName("func_timescale");
+		if (bIsValidEntity(iTimescale))
+		{
+			DispatchKeyValue(iTimescale, "desiredTimescale", "0.2");
+			DispatchKeyValue(iTimescale, "acceleration", "2.0");
+			DispatchKeyValue(iTimescale, "minBlendRate", "1.0");
+			DispatchKeyValue(iTimescale, "blendDeltaMultiplier", "2.0");
+			DispatchSpawn(iTimescale);
+			AcceptEntityInput(iTimescale, "Start");
+			CreateTimer(1.25, tTimerRemoveTimescale, EntIndexToEntRef(iTimescale), TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
+
 	vPushNearbyEntities(tank, flTankPos);
 
 	flTankPos[2] += 40.0;
-	TE_SetupBeamRingPoint(flTankPos, 10.0, 500.0, g_iBossBeamSprite, g_iBossHaloSprite, 0, 35, 0.75, 88.0, 3.0, {255, 255, 255, 50}, 1000, 0);
+	TE_SetupBeamRingPoint(flTankPos, 10.0, 2000.0, g_iBossBeamSprite, g_iBossHaloSprite, 0, 50, 1.0, 88.0, 3.0, {255, 255, 255, 50}, 1000, 0);
 	TE_SendToAll();
 }
 
@@ -8618,18 +8641,21 @@ static void vSetTankModel(int tank)
 			iModelCount++;
 		}
 
-		switch (iModels[GetRandomInt(0, iModelCount - 1)])
+		if (iModelCount > 0)
 		{
-			case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
-			case 2: SetEntityModel(tank, MODEL_TANK_DLC);
-			case 4: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
-			default:
+			switch (iModels[GetRandomInt(0, iModelCount - 1)])
 			{
-				switch (GetRandomInt(1, sizeof(iModels)))
+				case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
+				case 2: SetEntityModel(tank, MODEL_TANK_DLC);
+				case 4: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
+				default:
 				{
-					case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
-					case 2: SetEntityModel(tank, MODEL_TANK_DLC);
-					case 3: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
+					switch (GetRandomInt(1, sizeof(iModels)))
+					{
+						case 1: SetEntityModel(tank, MODEL_TANK_MAIN);
+						case 2: SetEntityModel(tank, MODEL_TANK_DLC);
+						case 3: SetEntityModel(tank, (g_bSecondGame ? MODEL_TANK_L4D1 : MODEL_TANK_MAIN));
+					}
 				}
 			}
 		}
@@ -10612,6 +10638,20 @@ public Action tTimerRegularWaves(Handle timer)
 public Action tTimerReloadConfigs(Handle timer)
 {
 	vConfig(false);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerRemoveTimescale(Handle timer, int ref)
+{
+	int iTimescale = EntRefToEntIndex(ref);
+	if (iTimescale == INVALID_ENT_REFERENCE || !bIsValidEntity(iTimescale))
+	{
+		return Plugin_Stop;
+	}
+
+	AcceptEntityInput(iTimescale, "Stop");
+	RemoveEntity(iTimescale);
 
 	return Plugin_Continue;
 }

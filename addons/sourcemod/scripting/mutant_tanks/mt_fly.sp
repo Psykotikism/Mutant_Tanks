@@ -1255,13 +1255,10 @@ static void vFlyThink(int tank, int buttons, float duration)
 
 		static float flVelocity3[3];
 		AddVectors(flVelocity, flFront, flVelocity3);
-
 		NormalizeVector(flVelocity3, flVelocity3);
 		ScaleVector(flVelocity3, flSpeed);
-
 		SetEntityMoveType(tank, MOVETYPE_FLY);
 		vCopyVector(flVelocity3, g_esPlayer[tank].g_flCurrentVelocity);
-
 		TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 	}
 }

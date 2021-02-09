@@ -57,6 +57,7 @@ enum struct esPlayer
 	bool g_bAffected;
 	bool g_bFailed;
 	bool g_bNoAmmo;
+	bool g_bRewarded;
 
 	float g_flHypnoBulletDivisor;
 	float g_flHypnoChance;
@@ -363,7 +364,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 					static float flTankPos[3];
 					GetClientAbsOrigin(victim, flTankPos);
-					vPushNearbyEntities(victim, flTankPos);
+
+					switch (g_esPlayer[attacker].g_bRewarded)
+					{
+						case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
+						case false: vPushNearbyEntities(victim, flTankPos);
+					}
 				}
 
 				if (bChanged)
@@ -698,6 +704,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
+public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
+{
+	if (bIsSurvivor(survivor) && (type & MT_REWARD_GODMODE))
+	{
+		g_esPlayer[survivor].g_bRewarded = apply;
+	}
+}
+
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
@@ -894,6 +908,7 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
+	g_esPlayer[tank].g_bRewarded = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }
