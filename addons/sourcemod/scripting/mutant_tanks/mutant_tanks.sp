@@ -10220,23 +10220,33 @@ public MRESReturn mreLeaveStasisPost(int pThis)
 	return MRES_Ignored;
 }
 
-public MRESReturn mrePlayerHitPre(int pThis, DHookReturn hReturn, DHookParam hParams)
+public MRESReturn mrePlayerHitPre(int pThis, DHookParam hParams)
 {
 	g_esGeneral.g_iTankTarget = hParams.Get(1);
+	if (bIsSurvivor(g_esGeneral.g_iTankTarget) && bIsDeveloper(g_esGeneral.g_iTankTarget, 9))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
 }
 
-public MRESReturn mrePlayerHitPost(int pThis, DHookReturn hReturn, DHookParam hParams)
+public MRESReturn mrePlayerHitPost(int pThis, DHookParam hParams)
 {
-	int iTarget = g_esGeneral.g_iTankTarget;
-	if (bIsTank(pThis) && bIsSurvivor(iTarget))
+	if (bIsTank(pThis) && bIsSurvivor(g_esGeneral.g_iTankTarget))
 	{
-		bool bDeveloper = bIsDeveloper(iTarget, 8);
-		float flVelocity[3], flForce = bDeveloper ? 0.0 : 0.25;
-		flForce = (g_esCache[pThis].g_flPunchForce >= 0.0 && !bDeveloper && !g_esPlayer[iTarget].g_bRewardedGod) ? g_esCache[pThis].g_flPunchForce : flForce;
-		GetEntPropVector(iTarget, Prop_Data, "m_vecVelocity", flVelocity);
-		ScaleVector(flVelocity, flForce);
-		TeleportEntity(iTarget, NULL_VECTOR, NULL_VECTOR, flVelocity);
+		bool bDeveloper = bIsDeveloper(g_esGeneral.g_iTankTarget, 8);
+		if (g_esCache[pThis].g_flPunchForce >= 0.0 || bDeveloper || g_esPlayer[g_esGeneral.g_iTankTarget].g_bRewardedGod)
+		{
+			float flForce = bDeveloper ? 0.0 : 0.25, flVelocity[3];
+			flForce = (g_esCache[pThis].g_flPunchForce >= 0.0 && !bDeveloper && !g_esPlayer[g_esGeneral.g_iTankTarget].g_bRewardedGod) ? g_esCache[pThis].g_flPunchForce : flForce;
+			GetEntPropVector(g_esGeneral.g_iTankTarget, Prop_Data, "m_vecVelocity", flVelocity);
+			ScaleVector(flVelocity, flForce);
+			TeleportEntity(g_esGeneral.g_iTankTarget, NULL_VECTOR, NULL_VECTOR, flVelocity);
+		}
 	}
+
+	g_esGeneral.g_iTankTarget = 0;
 }
 
 public MRESReturn mreTankRockPost(DHookReturn hReturn)
