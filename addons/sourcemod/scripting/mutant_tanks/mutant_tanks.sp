@@ -8096,9 +8096,10 @@ static void vSetupDeveloper(int developer, bool setup)
 			SDKHook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 		}
 
-		if (bIsDeveloper(developer, 9))
+		switch (bIsDeveloper(developer, 9))
 		{
-			SetEntProp(developer, Prop_Data, "m_takedamage", 0, 1);
+			case true: SetEntProp(developer, Prop_Data, "m_takedamage", 0, 1);
+			case false: SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
 		}
 	}
 	else
@@ -10233,13 +10234,14 @@ public MRESReturn mrePlayerHitPre(int pThis, DHookParam hParams)
 
 public MRESReturn mrePlayerHitPost(int pThis, DHookParam hParams)
 {
-	if (bIsTank(pThis) && bIsSurvivor(g_esGeneral.g_iTankTarget))
+	int iTank = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	if (bIsTank(iTank) && bIsSurvivor(g_esGeneral.g_iTankTarget))
 	{
 		bool bDeveloper = bIsDeveloper(g_esGeneral.g_iTankTarget, 8);
-		if (g_esCache[pThis].g_flPunchForce >= 0.0 || bDeveloper || g_esPlayer[g_esGeneral.g_iTankTarget].g_bRewardedGod)
+		if (g_esCache[iTank].g_flPunchForce >= 0.0 || bDeveloper || g_esPlayer[g_esGeneral.g_iTankTarget].g_bRewardedGod)
 		{
 			float flForce = bDeveloper ? 0.0 : 0.25, flVelocity[3];
-			flForce = (g_esCache[pThis].g_flPunchForce >= 0.0 && !bDeveloper && !g_esPlayer[g_esGeneral.g_iTankTarget].g_bRewardedGod) ? g_esCache[pThis].g_flPunchForce : flForce;
+			flForce = (g_esCache[iTank].g_flPunchForce >= 0.0 && !bDeveloper && !g_esPlayer[g_esGeneral.g_iTankTarget].g_bRewardedGod) ? g_esCache[iTank].g_flPunchForce : flForce;
 			GetEntPropVector(g_esGeneral.g_iTankTarget, Prop_Data, "m_vecVelocity", flVelocity);
 			ScaleVector(flVelocity, flForce);
 			TeleportEntity(g_esGeneral.g_iTankTarget, NULL_VECTOR, NULL_VECTOR, flVelocity);
