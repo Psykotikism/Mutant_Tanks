@@ -219,7 +219,7 @@
 
 	"Arrival5"
 	{
-		"chi"			"{olive}{1}{default} 来了,迎接挑战吧!"
+		"chi"			"{olive}{1}{default} 来了, 迎接挑战吧!"
 	}
 
 	"Arrival6"
@@ -404,57 +404,57 @@
 
 	"Kill1"
 	{
-		"chi"			"{olive}{1}{default} 终结了{mint} {2} {default}!"
+		"chi"			"{olive}{1}{default} 终结了{mint} {2}{default}!"
 	}
 
 	"Kill2"
 	{
-		"chi"			"{olive}{1}{default} 击败了{mint} {2} {default}!"
+		"chi"			"{olive}{1}{default} 击败了{mint} {2}{default}!"
 	}
 
 	"Kill3"
 	{
-		"chi"			"{olive}{1}{default} 把{mint} {2} {default}打入地狱了!"
+		"chi"			"{olive}{1}{default} 把{mint} {2}{default} 打入地狱了!"
 	}
 
 	"Kill4"
 	{
-		"chi"			"{olive}{1}{default} 真的杀死{mint} {2} {default}...了吗?"
+		"chi"			"{olive}{1}{default} 真的杀死{mint} {2}{default}...了吗?"
 	}
 
 	"Kill5"
 	{
-		"chi"			"{mint}{2}{default} 挑战{olive} {1} {default}失败了!"
+		"chi"			"{mint}{2}{default} 挑战{olive} {1}{default} 失败了!"
 	}
 
 	"Kill6"
 	{
-		"chi"			"{mint}{2}{default} 无法杀死{olive} {1} {default}!"
+		"chi"			"{mint}{2}{default} 无法杀死{olive} {1}{default}!"
 	}
 
 	"Kill7"
 	{
-		"chi"			"{mint}{2}{default} 在{olive} {1} {default}手中灭亡!"
+		"chi"			"{mint}{2}{default} 在{olive} {1}{default} 手中灭亡!"
 	}
 
 	"Kill8"
 	{
-		"chi"			"哎呀!{mint} {2}  {default}死了, 这要感谢{olive} {1} {default}!"
+		"chi"			"哎呀!{mint} {2}  {default}死了, 这要感谢{olive} {1}{default}!"
 	}
 
 	"Kill9"
 	{
-		"chi"			"{olive}{1}{default} 气得{mint} {2} {default}愤怒退场!"
+		"chi"			"{olive}{1}{default} 气得{mint} {2}{default} 愤怒退场!"
 	}
 
 	"Kill10"
 	{
-		"chi"			"看来{mint} {2} {default}无法击败{olive} {1} {default}!"
+		"chi"			"看来{mint} {2}{default} 无法击败{olive} {1}{default}!"
 	}
 
 	"Killer1"
 	{
-		"chi"			"{mint}{1}{default} 终结了{olive} {2} {default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 终结了{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer2"
@@ -464,42 +464,42 @@
 
 	"Killer3"
 	{
-		"chi"			"{mint}{1}{default} 把{olive} {2} {default}打入地狱了!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 把{olive} {2}{default} 打入地狱了!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer4"
 	{
-		"chi"			"{mint}{1}{default} 真的杀死{olive} {2} {default}...了吗?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 真的杀死{olive} {2}{default}...了吗?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer5"
 	{
-		"chi"			"{olive}{2}{default} 挑战{mint} {1} {default}失败了!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{olive}{2}{default} 挑战{mint} {1}{default} 失败了!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer6"
 	{
-		"chi"			"{olive}{2}{default} 无法杀死{mint} {1} {default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{olive}{2}{default} 无法杀死{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer7"
 	{
-		"chi"			"{olive}{2}{default} 在{mint} {1} {default}手中灭亡!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{olive}{2}{default} 在{mint} {1}{default} 手中灭亡!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer8"
 	{
-		"chi"			"哎呀!{olive} {2} {default}死了, 这要感谢{mint} {1} {default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"哎呀!{olive} {2}{default} 死了, 这要感谢{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer9"
 	{
-		"chi"			"{mint}{1}{default} 把{olive} {2} {default}气得愤怒退场!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 把{olive} {2}{default} 气得愤怒退场!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"Killer10"
 	{
-		"chi"			"看来{olive} {2} {default}无法击败{mint} {1} {default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"看来{olive} {2}{default} 无法击败{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
 	}
 
 	"LogEnded"
@@ -589,32 +589,32 @@
 
 	"RewardAmmo"
 	{
-		"chi"			"你击杀了{olive} {1} {default},获得了{yellow} 弹药 {default}!"
+		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 弹药{default}!"
 	}
 
 	"RewardAmmo2"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default}且频繁支援,获得了{yellow} 弹药 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 弹药{default}!"
 	}
 
 	"RewardAmmo3"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default},获得了{yellow} 弹药 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 弹药{default}!"
 	}
 
 	"RewardAttackBoost"
 	{
-		"chi"			"你击杀了{olive} {1} {default},获得了{yellow} 攻击加成 {default}!"
+		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 攻击加成{default}!"
 	}
 
 	"RewardAttackBoost2"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default}且频繁支援,获得了{yellow} 攻击加成 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 攻击加成{default}!"
 	}
 
 	"RewardAttackBoost3"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default},获得了{yellow} 攻击加成 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 攻击加成{default}!"
 	}
 
 	"RewardAttackBoostEnd"
@@ -624,17 +624,17 @@
 
 	"RewardDamageBoost"
 	{
-		"chi"			"你击杀了{olive} {1} {default},获得了{yellow} 伤害加成 {default}!"
+		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 伤害加成{default}!"
 	}
 
 	"RewardDamageBoost2"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default}且频繁支援,获得了{yellow} 伤害加成 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 伤害加成{default}!"
 	}
 
 	"RewardDamageBoost3"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default},获得了{yellow} 伤害加成 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 伤害加成{default}!"
 	}
 
 	"RewardDamageBoostEnd"
@@ -644,17 +644,17 @@
 
 	"RewardGod"
 	{
-		"chi"			"你击杀了{olive} {1} {default},获得了{yellow} 无敌 {default}!"
+		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 无敌{default}!"
 	}
 
 	"RewardGod2"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default}且频繁支援,获得了{yellow} 无敌 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 无敌{default}!"
 	}
 
 	"RewardGod3"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default},获得了{yellow} 无敌 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 无敌{default}!"
 	}
 
 	"RewardGodEnd"
@@ -664,32 +664,32 @@
 
 	"RewardHealth"
 	{
-		"chi"			"你击杀了{olive} {1} {default},获得了{yellow} 生命值 {default}!"
+		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 生命值{default}!"
 	}
 
 	"RewardHealth2"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default}且频繁支援,获得了{yellow} 生命值 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 生命值{default}!"
 	}
 
 	"RewardHealth3"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default},获得了{yellow} 生命值 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 生命值{default}!"
 	}
 	
 	"RewardInfAmmo"
 	{
-		"chi"			"你击杀了{olive} {1} {default},获得了{yellow} 无限弹药 {default}!"
+		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 无限弹药{default}!"
 	}
 
 	"RewardInfAmmo2"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default}且频繁支援,获得了{yellow} 无限弹药 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 无限弹药{default}!"
 	}
 
 	"RewardInfAmmo3"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default},获得了{yellow} 无限弹药 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 无限弹药{default}!"
 	}
 
 	"RewardInfAmmoEnd"
@@ -699,67 +699,67 @@
 	
 	"RewardItem"
 	{
-		"chi"			"你击杀了{olive} {2} {default},获得了{yellow} {1} {default}!"
+		"chi"			"你击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
 	}
 
 	"RewardItem2"
 	{
-		"chi"			"你协助队友击杀了{olive} {2} {default}且频繁支援,获得了{yellow} {1} {default}!"
+		"chi"			"你协助队友击杀了{olive} {2}{default} 且频繁支援, 获得了{yellow} {1}{default}!"
 	}
 
 	"RewardItem3"
 	{
-		"chi"			"你协助队友击杀了{olive} {2} {default},获得了{yellow} {1} {default}!"
+		"chi"			"你协助队友击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
 	}
 
 	"RewardNone"
 	{
-		"chi"			"你对{default}{olive} {1} {default}的伤害不足,无法获得任何奖励."
+		"chi"			"你对{default}{olive} {1}{default} 的伤害不足, 无法获得任何奖励."
 	}
 
 	"RewardRefill"
 	{
-		"chi"			"你击杀了{olive} {1} {default},获得了{yellow} 生命值和弹药 {default}!"
+		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 生命值和弹药{default}!"
 	}
 
 	"RewardRefill2"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default}且频繁支援,获得了{yellow} 生命值和弹药 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 生命值和弹药{default}!"
 	}
 
 	"RewardRefill3"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default},获得了{yellow} 生命值和弹药 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 生命值和弹药{default}!"
 	}
 
 	"RewardRespawn"
 	{
-		"chi"			"你击杀了{olive} {1} {default},获得了{yellow} 复活 {default}!"
+		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 复活{default}!"
 	}
 
 	"RewardRespawn2"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default}且频繁支援,获得了{yellow} 复活 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 复活{default}!"
 	}
 
 	"RewardRespawn3"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default},获得了{yellow} 复活 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 复活{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"chi"			"你击杀了{olive} {1} {default},获得了{yellow} 速度加成 {default}!"
+		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 速度加成{default}!"
 	}
 
 	"RewardSpeedBoost2"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default}且频繁支援,获得了{yellow} 速度加成 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 速度加成{default}!"
 	}
 
 	"RewardSpeedBoost3"
 	{
-		"chi"			"你协助队友击杀了{olive} {1} {default},获得了{yellow} 速度加成 {default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 速度加成{default}!"
 	}
 
 	"RewardSpeedBoostEnd"
@@ -784,12 +784,12 @@
 
 	"Transformed"
 	{
-		"chi"			"{olive}{1}{mint} 变成了{olive} {2} {mint}!"
+		"chi"			"{olive}{1}{mint} 变成了{olive} {2}{mint}!"
 	}
 
 	"Untransformed"
 	{
-		"chi"			"{olive}{1}{mint} 恢复为{olive} {2} {mint}!"
+		"chi"			"{olive}{1}{mint} 恢复为{olive} {2}{mint}!"
 	}
 
 	"SpawnManually"
@@ -829,7 +829,7 @@
 
 	"AbsorbHuman2"
 	{
-		"chi"			"你的 吸收 范围能力未能激活,请重试."
+		"chi"			"你的 吸收 范围能力未能激活, 请重试."
 	}
 
 	"AbsorbHuman3"
@@ -844,7 +844,7 @@
 
 	"AbsorbHuman5"
 	{
-		"chi"			"你的 吸收 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 吸收 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"AbsorbMenu"
@@ -884,7 +884,7 @@
 
 	"AcidHuman2"
 	{
-		"chi"			"你的 酸液 范围能力未能激活,请重试."
+		"chi"			"你的 酸液 范围能力未能激活, 请重试."
 	}
 
 	"AcidHuman3"
@@ -899,7 +899,7 @@
 
 	"AcidHuman5"
 	{
-		"chi"			"你的 酸液 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 酸液 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"AcidMenu"
@@ -939,7 +939,7 @@
 
 	"AimlessHuman2"
 	{
-		"chi"			"你的 禁瞄 范围能力未能激活,请重试."
+		"chi"			"你的 禁瞄 范围能力未能激活, 请重试."
 	}
 
 	"AimlessHuman3"
@@ -954,7 +954,7 @@
 
 	"AimlessHuman5"
 	{
-		"chi"			"你的 禁瞄 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 禁瞄 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"AimlessMenu"
@@ -989,7 +989,7 @@
 
 	"AmmoHuman2"
 	{
-		"chi"			"你的 掠弹 范围能力未能激活,请重试."
+		"chi"			"你的 掠弹 范围能力未能激活, 请重试."
 	}
 
 	"AmmoHuman3"
@@ -1004,7 +1004,7 @@
 
 	"AmmoHuman5"
 	{
-		"chi"			"你的 掠弹 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 掠弹 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"AmmoMenu"
@@ -1044,7 +1044,7 @@
 
 	"BlindHuman2"
 	{
-		"chi"			"你的 致盲 范围能力未能激活,请重试."
+		"chi"			"你的 致盲 范围能力未能激活, 请重试."
 	}
 
 	"BlindHuman3"
@@ -1059,7 +1059,7 @@
 
 	"BlindHuman5"
 	{
-		"chi"			"你的 致盲 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 致盲 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"BlindMenu"
@@ -1099,7 +1099,7 @@
 
 	"BombHuman2"
 	{
-		"chi"			"你的 爆炸 范围能力未能激活,请重试."
+		"chi"			"你的 爆炸 范围能力未能激活, 请重试."
 	}
 
 	"BombHuman3"
@@ -1114,7 +1114,7 @@
 
 	"BombHuman5"
 	{
-		"chi"			"你的 爆炸 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 爆炸 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"BombMenu"
@@ -1129,7 +1129,7 @@
 
 	"Bury"
 	{
-		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 埋入地下{yellow} {3} {mint}尺!"
+		"chi"			"{olive}{1}{mint} 把{olive} {2}{mint} 埋入地下{yellow} {3}{mint} 尺!"
 	}
 
 	"Bury2"
@@ -1154,7 +1154,7 @@
 
 	"BuryHuman2"
 	{
-		"chi"			"你的 埋葬 范围能力未能激活,请重试."
+		"chi"			"你的 埋葬 范围能力未能激活, 请重试."
 	}
 
 	"BuryHuman3"
@@ -1169,7 +1169,7 @@
 
 	"BuryHuman5"
 	{
-		"chi"			"你的 埋葬 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 埋葬 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"BuryMenu"
@@ -1209,7 +1209,7 @@
 
 	"CarHuman2"
 	{
-		"chi"			"你的 汽车雨 未能激活,请重试."
+		"chi"			"你的 汽车雨 未能激活, 请重试."
 	}
 
 	"CarHuman3"
@@ -1264,7 +1264,7 @@
 
 	"ChokeHuman2"
 	{
-		"chi"			"你的 窒息 范围能力未能激活,请重试."
+		"chi"			"你的 窒息 范围能力未能激活, 请重试."
 	}
 
 	"ChokeHuman3"
@@ -1279,7 +1279,7 @@
 
 	"ChokeHuman5"
 	{
-		"chi"			"你的 窒息 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 窒息 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"ChokeMenu"
@@ -1314,7 +1314,7 @@
 
 	"CloneHuman2"
 	{
-		"chi"			"你制造 克隆体 失败,请重试."
+		"chi"			"你制造 克隆体 失败, 请重试."
 	}
 
 	"CloneHuman3"
@@ -1374,7 +1374,7 @@
 
 	"CloudHuman2"
 	{
-		"chi"			"你的 毒云 范围能力未能激活,请重试."
+		"chi"			"你的 毒云 范围能力未能激活, 请重试."
 	}
 
 	"CloudHuman3"
@@ -1389,7 +1389,7 @@
 
 	"CloudHuman5"
 	{
-		"chi"			"你的 毒云 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 毒云 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"CloudMenu"
@@ -1464,7 +1464,7 @@
 
 	"DrugHuman2"
 	{
-		"chi"			"你的 中毒 范围能力未能激活,请重试."
+		"chi"			"你的 中毒 范围能力未能激活, 请重试."
 	}
 
 	"DrugHuman3"
@@ -1479,7 +1479,7 @@
 
 	"DrugHuman5"
 	{
-		"chi"			"你的 中毒 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 中毒 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"DrugMenu"
@@ -1519,7 +1519,7 @@
 
 	"DrunkHuman2"
 	{
-		"chi"			"你的 醉酒 范围能力未能激活,请重试."
+		"chi"			"你的 醉酒 范围能力未能激活, 请重试."
 	}
 
 	"DrunkHuman3"
@@ -1534,7 +1534,7 @@
 
 	"DrunkHuman5"
 	{
-		"chi"			"你的 醉酒 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 醉酒 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"DrunkMenu"
@@ -1574,7 +1574,7 @@
 
 	"ElectricHuman2"
 	{
-		"chi"			"你的 电击 范围能力未能激活,请重试."
+		"chi"			"你的 电击 范围能力未能激活, 请重试."
 	}
 
 	"ElectricHuman3"
@@ -1589,7 +1589,7 @@
 
 	"ElectricHuman5"
 	{
-		"chi"			"你的 电击 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 电击 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"ElectricMenu"
@@ -1629,7 +1629,7 @@
 
 	"EnforceHuman2"
 	{
-		"chi"			"你的 迫用 范围能力未能激活,请重试."
+		"chi"			"你的 迫用 范围能力未能激活, 请重试."
 	}
 
 	"EnforceHuman3"
@@ -1644,7 +1644,7 @@
 
 	"EnforceHuman5"
 	{
-		"chi"			"你的 迫用 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 迫用 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"EnforceMenu"
@@ -1684,7 +1684,7 @@
 
 	"FastHuman2"
 	{
-		"chi"			"你的 迅速 范围能力未能激活,请重试."
+		"chi"			"你的 迅速 范围能力未能激活, 请重试."
 	}
 
 	"FastHuman3"
@@ -1699,7 +1699,7 @@
 
 	"FastHuman5"
 	{
-		"chi"			"你的 迅速 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 迅速 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"FastMenu"
@@ -1739,7 +1739,7 @@
 
 	"FireHuman2"
 	{
-		"chi"			"你的 火焰 范围能力未能激活,请重试."
+		"chi"			"你的 火焰 范围能力未能激活, 请重试."
 	}
 
 	"FireHuman3"
@@ -1754,7 +1754,7 @@
 
 	"FireHuman5"
 	{
-		"chi"			"你的 火焰 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 火焰 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"FireMenu"
@@ -1789,7 +1789,7 @@
 
 	"FlingHuman2"
 	{
-		"chi"			"你的 抛空 范围能力未能激活,请重试."
+		"chi"			"你的 抛空 范围能力未能激活, 请重试."
 	}
 
 	"FlingHuman3"
@@ -1804,7 +1804,7 @@
 
 	"FlingHuman5"
 	{
-		"chi"			"你的 抛空 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 抛空 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"FlingMenu"
@@ -1844,7 +1844,7 @@
 
 	"FlyHuman2"
 	{
-		"chi"			"你的飞行能力无法激活,请重试."
+		"chi"			"你的飞行能力无法激活, 请重试."
 	}
 
 	"FlyHuman3"
@@ -1904,7 +1904,7 @@
 
 	"FragileHuman2"
 	{
-		"chi"			"你的 脆弱 范围能力未能激活,请重试."
+		"chi"			"你的 脆弱 范围能力未能激活, 请重试."
 	}
 
 	"FragileHuman3"
@@ -1919,7 +1919,7 @@
 
 	"FragileHuman5"
 	{
-		"chi"			"你的 脆弱 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 脆弱 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"FragileMenu"
@@ -1974,7 +1974,7 @@
 
 	"GhostHuman3"
 	{
-		"chi"			"你的 缴械 范围能力未能激活,请重试."
+		"chi"			"你的 缴械 范围能力未能激活, 请重试."
 	}
 
 	"GhostHuman4"
@@ -1999,12 +1999,12 @@
 
 	"GhostHuman8"
 	{
-		"chi"			"你的 伪装 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 伪装 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"GhostHuman9"
 	{
-		"chi"			"你的 缴械 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 缴械 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"GhostMenu"
@@ -2044,7 +2044,7 @@
 
 	"GodHuman2"
 	{
-		"chi"			"你的 上帝 范围能力未能激活,请重试."
+		"chi"			"你的 上帝 范围能力未能激活, 请重试."
 	}
 
 	"GodHuman3"
@@ -2059,7 +2059,7 @@
 
 	"GodHuman5"
 	{
-		"chi"			"你的 上帝 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 上帝 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"GodMenu"
@@ -2119,7 +2119,7 @@
 
 	"GravityHuman3"
 	{
-		"chi"			"你的 重力 范围能力未能激活,请重试."
+		"chi"			"你的 重力 范围能力未能激活, 请重试."
 	}
 
 	"GravityHuman4"
@@ -2149,7 +2149,7 @@
 
 	"GravityHuman9"
 	{
-		"chi"			"你的 重力 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 重力 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"GravityMenu"
@@ -2204,7 +2204,7 @@
 
 	"HealHuman3"
 	{
-		"chi"			"你的 败血 范围能力未能激活,请重试."
+		"chi"			"你的 败血 范围能力未能激活, 请重试."
 	}
 
 	"HealHuman4"
@@ -2229,12 +2229,12 @@
 
 	"HealHuman8"
 	{
-		"chi"			"你的 治疗 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 治疗 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"HealHuman9"
 	{
-		"chi"			"你的 败血 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 败血 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"HealMenu"
@@ -2289,7 +2289,7 @@
 
 	"HurtHuman2"
 	{
-		"chi"			"你的 创伤 范围能力未能激活,请重试."
+		"chi"			"你的 创伤 范围能力未能激活, 请重试."
 	}
 
 	"HurtHuman3"
@@ -2304,7 +2304,7 @@
 
 	"HurtHuman5"
 	{
-		"chi"			"你的 创伤 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 创伤 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"HurtMenu"
@@ -2344,7 +2344,7 @@
 
 	"HypnoHuman2"
 	{
-		"chi"			"你的 催眠 范围能力未能激活,请重试."
+		"chi"			"你的 催眠 范围能力未能激活, 请重试."
 	}
 
 	"HypnoHuman3"
@@ -2359,7 +2359,7 @@
 
 	"HypnoHuman5"
 	{
-		"chi"			"你的 催眠 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 催眠 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"HypnoMenu"
@@ -2399,7 +2399,7 @@
 
 	"IceHuman2"
 	{
-		"chi"			"你的 冻结 范围能力未能激活,请重试."
+		"chi"			"你的 冻结 范围能力未能激活, 请重试."
 	}
 
 	"IceHuman3"
@@ -2414,7 +2414,7 @@
 
 	"IceHuman5"
 	{
-		"chi"			"你的 冻结 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 冻结 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"IceMenu"
@@ -2449,7 +2449,7 @@
 
 	"IdleHuman2"
 	{
-		"chi"			"你的 闲置 范围能力未能激活,请重试."
+		"chi"			"你的 闲置 范围能力未能激活, 请重试."
 	}
 
 	"IdleHuman3"
@@ -2464,7 +2464,7 @@
 
 	"IdleHuman5"
 	{
-		"chi"			"你的 闲置 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 闲置 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"IdleMenu"
@@ -2504,7 +2504,7 @@
 
 	"InvertHuman2"
 	{
-		"chi"			"你的 反向 范围能力未能激活,请重试."
+		"chi"			"你的 反向 范围能力未能激活, 请重试."
 	}
 
 	"InvertHuman3"
@@ -2519,7 +2519,7 @@
 
 	"InvertHuman5"
 	{
-		"chi"			"你的 反向 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 反向 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"InvertMenu"
@@ -2604,7 +2604,7 @@
 
 	"JumpHuman3"
 	{
-		"chi"			"你的 跳跃 范围能力未能激活,请重试."
+		"chi"			"你的 跳跃 范围能力未能激活, 请重试."
 	}
 
 	"JumpHuman4"
@@ -2629,12 +2629,12 @@
 
 	"JumpHuman8"
 	{
-		"chi"			"你的 周期性跳跃 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 周期性跳跃 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"JumpHuman9"
 	{
-		"chi"			"你的 跳跃 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 跳跃 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"JumpMenu"
@@ -2664,7 +2664,7 @@
 
 	"KamikazeHuman2"
 	{
-		"chi"			"你的 神风 范围能力未能激活,请重试."
+		"chi"			"你的 神风 范围能力未能激活, 请重试."
 	}
 
 	"KamikazeHuman3"
@@ -2709,7 +2709,7 @@
 
 	"LagHuman2"
 	{
-		"chi"			"你的 滞后 范围能力未能激活,请重试."
+		"chi"			"你的 滞后 范围能力未能激活, 请重试."
 	}
 
 	"LagHuman3"
@@ -2724,7 +2724,7 @@
 
 	"LagHuman5"
 	{
-		"chi"			"你的 滞后 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 滞后 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"LagMenu"
@@ -2764,7 +2764,7 @@
 
 	"LaserHuman2"
 	{
-		"chi"			"你的 激光 范围能力未能激活,请重试."
+		"chi"			"你的 激光 范围能力未能激活, 请重试."
 	}
 
 	"LaserHuman3"
@@ -2779,7 +2779,7 @@
 
 	"LaserHuman5"
 	{
-		"chi"			"你的 激光 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 激光 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"LaserMenu"
@@ -2819,7 +2819,7 @@
 
 	"LeechHuman2"
 	{
-		"chi"			"你的 水蛭 范围能力未能激活,请重试."
+		"chi"			"你的 水蛭 范围能力未能激活, 请重试."
 	}
 
 	"LeechHuman3"
@@ -2834,7 +2834,7 @@
 
 	"LeechHuman5"
 	{
-		"chi"			"你的 水蛭 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 水蛭 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"LeechMenu"
@@ -2874,7 +2874,7 @@
 
 	"LightningHuman2"
 	{
-		"chi"			"你的雷雨未能激活,请重试."
+		"chi"			"你的雷雨未能激活, 请重试."
 	}
 
 	"LightningHuman3"
@@ -2889,7 +2889,7 @@
 
 	"LightningHuman5"
 	{
-		"chi"			"你的雷雨结束了,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的雷雨结束了, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"LightningMenu"
@@ -2909,7 +2909,7 @@
 
 	"Medic2"
 	{
-		"chi"			"{olive}{1}{mint} 治愈了{yellow} {2} {mint}!"
+		"chi"			"{olive}{1}{mint} 治愈了{yellow} {2}{mint}!"
 	}
 
 	"Medic3"
@@ -2934,7 +2934,7 @@
 
 	"MedicHuman2"
 	{
-		"chi"			"你的医护技能无法激活,请重试."
+		"chi"			"你的医护技能无法激活, 请重试."
 	}
 
 	"MedicHuman3"
@@ -2949,7 +2949,7 @@
 
 	"MedicHuman5"
 	{
-		"chi"			"你的医护能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的医护能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"MedicMenu"
@@ -2989,7 +2989,7 @@
 
 	"MeteorHuman2"
 	{
-		"chi"			"你的 流星雨 未能激活,请重试."
+		"chi"			"你的 流星雨 未能激活, 请重试."
 	}
 
 	"MeteorHuman3"
@@ -3039,7 +3039,7 @@
 
 	"MinionHuman2"
 	{
-		"chi"			"你召唤 仆从 失败,请重试."
+		"chi"			"你召唤 仆从 失败, 请重试."
 	}
 
 	"MinionHuman3"
@@ -3089,7 +3089,7 @@
 
 	"NecroHuman2"
 	{
-		"chi"			"你的 死灵 范围能力未能激活,请重试."
+		"chi"			"你的 死灵 范围能力未能激活, 请重试."
 	}
 
 	"NecroHuman3"
@@ -3104,7 +3104,7 @@
 
 	"NecroHuman5"
 	{
-		"chi"			"你的 死灵 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 死灵 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"NecroMenu"
@@ -3144,7 +3144,7 @@
 
 	"NullifyHuman2"
 	{
-		"chi"			"你的 伤害无效化 范围能力未能激活,请重试."
+		"chi"			"你的 伤害无效化 范围能力未能激活, 请重试."
 	}
 
 	"NullifyHuman3"
@@ -3159,7 +3159,7 @@
 
 	"NullifyHuman5"
 	{
-		"chi"			"你的 伤害无效化 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 伤害无效化 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"NullifyMenu"
@@ -3199,7 +3199,7 @@
 
 	"OmniHuman2"
 	{
-		"chi"			"你的 全能 范围能力未能激活,请重试."
+		"chi"			"你的 全能 范围能力未能激活, 请重试."
 	}
 
 	"OmniHuman3"
@@ -3214,7 +3214,7 @@
 
 	"OmniHuman5"
 	{
-		"chi"			"你的 全能 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 全能 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"OmniMenu"
@@ -3254,7 +3254,7 @@
 
 	"PanicHuman2"
 	{
-		"chi"			"你的 唤潮 范围能力未能激活,请重试."
+		"chi"			"你的 唤潮 范围能力未能激活, 请重试."
 	}
 
 	"PanicHuman3"
@@ -3269,7 +3269,7 @@
 
 	"PanicHuman5"
 	{
-		"chi"			"你的 唤潮 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 唤潮 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"PanicMenu"
@@ -3309,7 +3309,7 @@
 
 	"PimpHuman2"
 	{
-		"chi"			"你的 鞭挞 范围能力未能激活,请重试."
+		"chi"			"你的 鞭挞 范围能力未能激活, 请重试."
 	}
 
 	"PimpHuman3"
@@ -3324,7 +3324,7 @@
 
 	"PimpHuman5"
 	{
-		"chi"			"你的 鞭挞 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 鞭挞 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"PimpMenu"
@@ -3359,7 +3359,7 @@
 
 	"PukeHuman2"
 	{
-		"chi"			"你的 呕吐 范围能力未能激活,请重试."
+		"chi"			"你的 呕吐 范围能力未能激活, 请重试."
 	}
 
 	"PukeHuman3"
@@ -3374,7 +3374,7 @@
 
 	"PukeHuman5"
 	{
-		"chi"			"你的 呕吐 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 呕吐 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"PukeMenu"
@@ -3419,7 +3419,7 @@
 
 	"PyroHuman2"
 	{
-		"chi"			"你的 火速 范围能力未能激活,请重试."
+		"chi"			"你的 火速 范围能力未能激活, 请重试."
 	}
 
 	"PyroHuman3"
@@ -3434,7 +3434,7 @@
 
 	"PyroHuman5"
 	{
-		"chi"			"你的 火速 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 火速 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"PyroMenu"
@@ -3474,7 +3474,7 @@
 
 	"QuietHuman2"
 	{
-		"chi"			"你的 沉默 范围能力未能激活,请重试."
+		"chi"			"你的 沉默 范围能力未能激活, 请重试."
 	}
 
 	"QuietHuman3"
@@ -3489,7 +3489,7 @@
 
 	"QuietHuman5"
 	{
-		"chi"			"你的 沉默 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 沉默 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"QuietMenu"
@@ -3529,7 +3529,7 @@
 
 	"RecoilHuman2"
 	{
-		"chi"			"你的 后坐力 范围能力未能激活,请重试."
+		"chi"			"你的 后坐力 范围能力未能激活, 请重试."
 	}
 
 	"RecoilHuman3"
@@ -3544,7 +3544,7 @@
 
 	"RecoilHuman5"
 	{
-		"chi"			"你的 后坐力 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 后坐力 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"RecoilMenu"
@@ -3584,7 +3584,7 @@
 
 	"RegenHuman2"
 	{
-		"chi"			"你的 自愈 范围能力未能激活,请重试."
+		"chi"			"你的 自愈 范围能力未能激活, 请重试."
 	}
 
 	"RegenHuman3"
@@ -3599,7 +3599,7 @@
 
 	"RegenHuman5"
 	{
-		"chi"			"你的 自愈 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 自愈 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"RegenMenu"
@@ -3674,7 +3674,7 @@
 
 	"RestartHuman2"
 	{
-		"chi"			"你的 重来 范围能力未能激活,请重试."
+		"chi"			"你的 重来 范围能力未能激活, 请重试."
 	}
 
 	"RestartHuman3"
@@ -3689,7 +3689,7 @@
 
 	"RestartHuman5"
 	{
-		"chi"			"你的 重来 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 重来 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"RestartMenu"
@@ -3729,7 +3729,7 @@
 
 	"RockHuman2"
 	{
-		"chi"			"你的 岩石雨 未能激活,请重试."
+		"chi"			"你的 岩石雨 未能激活, 请重试."
 	}
 
 	"RockHuman3"
@@ -3744,7 +3744,7 @@
 
 	"RockHuman5"
 	{
-		"chi"			"你的 岩石雨 范围能力已结束,还需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 岩石雨 范围能力已结束, 还需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"RockMenu"
@@ -3779,7 +3779,7 @@
 
 	"RocketHuman2"
 	{
-		"chi"			"你的 火箭 范围能力未能激活,请重试."
+		"chi"			"你的 火箭 范围能力未能激活, 请重试."
 	}
 
 	"RocketHuman3"
@@ -3794,7 +3794,7 @@
 
 	"RocketHuman5"
 	{
-		"chi"			"你的 火箭 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 火箭 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"RocketMenu"
@@ -3834,7 +3834,7 @@
 
 	"ShakeHuman2"
 	{
-		"chi"			"你的 震动 范围能力未能激活,请重试."
+		"chi"			"你的 震动 范围能力未能激活, 请重试."
 	}
 
 	"ShakeHuman3"
@@ -3849,7 +3849,7 @@
 
 	"ShakeHuman5"
 	{
-		"chi"			"你的 震动 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 震动 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"ShakeMenu"
@@ -3889,7 +3889,7 @@
 
 	"ShieldHuman2"
 	{
-		"chi"			"你的 护盾 未能激活,请重试."
+		"chi"			"你的 护盾 未能激活, 请重试."
 	}
 
 	"ShieldHuman3"
@@ -3949,7 +3949,7 @@
 
 	"ShoveHuman2"
 	{
-		"chi"			"你的 推挤 范围能力未能激活,请重试."
+		"chi"			"你的 推挤 范围能力未能激活, 请重试."
 	}
 
 	"ShoveHuman3"
@@ -3964,7 +3964,7 @@
 
 	"ShoveHuman5"
 	{
-		"chi"			"你的 推挤 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 推挤 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"ShoveMenu"
@@ -4004,7 +4004,7 @@
 
 	"SlowHuman2"
 	{
-		"chi"			"你的 减速 范围能力未能激活,请重试."
+		"chi"			"你的 减速 范围能力未能激活, 请重试."
 	}
 
 	"SlowHuman3"
@@ -4019,7 +4019,7 @@
 
 	"SlowHuman5"
 	{
-		"chi"			"你的 减速 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 减速 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"SlowMenu"
@@ -4054,7 +4054,7 @@
 
 	"SmashHuman2"
 	{
-		"chi"			"你的 粉碎 范围能力未能激活,请重试."
+		"chi"			"你的 粉碎 范围能力未能激活, 请重试."
 	}
 
 	"SmashHuman3"
@@ -4069,7 +4069,7 @@
 
 	"SmashHuman5"
 	{
-		"chi"			"你的 粉碎 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 粉碎 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"SmashMenu"
@@ -4104,7 +4104,7 @@
 
 	"SmiteHuman2"
 	{
-		"chi"			"你的 重击 范围能力未能激活,请重试."
+		"chi"			"你的 重击 范围能力未能激活, 请重试."
 	}
 
 	"SmiteHuman3"
@@ -4119,7 +4119,7 @@
 
 	"SmiteHuman5"
 	{
-		"chi"			"你的 重击 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 重击 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"SmiteMenu"
@@ -4159,7 +4159,7 @@
 
 	"SpamHuman2"
 	{
-		"chi"			"你的 岩石连投 范围能力未能激活,请重试."
+		"chi"			"你的 岩石连投 范围能力未能激活, 请重试."
 	}
 
 	"SpamHuman3"
@@ -4174,7 +4174,7 @@
 
 	"SpamHuman5"
 	{
-		"chi"			"你的 岩石连投 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 岩石连投 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"SpamMenu"
@@ -4214,7 +4214,7 @@
 
 	"SplashHuman2"
 	{
-		"chi"			"你的 溅射 范围能力未能激活,请重试."
+		"chi"			"你的 溅射 范围能力未能激活, 请重试."
 	}
 
 	"SplashHuman3"
@@ -4229,7 +4229,7 @@
 
 	"SplashHuman5"
 	{
-		"chi"			"你的 溅射 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 溅射 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"SplashMenu"
@@ -4269,7 +4269,7 @@
 
 	"SplatterHuman2"
 	{
-		"chi"			"你的飞溅技能无法激活,请重试."
+		"chi"			"你的飞溅技能无法激活, 请重试."
 	}
 
 	"SplatterHuman3"
@@ -4344,7 +4344,7 @@
 
 	"ThrowHuman4"
 	{
-		"chi"			"你的 投掷 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 投掷 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"ThrowMenu"
@@ -4389,7 +4389,7 @@
 
 	"TrackHuman4"
 	{
-		"chi"			"你的 追踪 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 追踪 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"TrackMenu"
@@ -4454,7 +4454,7 @@
 
 	"UltimateHuman5"
 	{
-		"chi"			"你的 终极 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 终极 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"UltimateMenu"
@@ -4494,7 +4494,7 @@
 
 	"UndeadHuman2"
 	{
-		"chi"			"你的 不死 范围能力未能激活,请重试."
+		"chi"			"你的 不死 范围能力未能激活, 请重试."
 	}
 
 	"UndeadHuman3"
@@ -4509,7 +4509,7 @@
 
 	"UndeadHuman5"
 	{
-		"chi"			"你的 不死 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 不死 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"UndeadMenu"
@@ -4569,7 +4569,7 @@
 
 	"VisionHuman2"
 	{
-		"chi"			"你的 视觉 范围能力未能激活,请重试."
+		"chi"			"你的 视觉 范围能力未能激活, 请重试."
 	}
 
 	"VisionHuman3"
@@ -4584,7 +4584,7 @@
 
 	"VisionHuman5"
 	{
-		"chi"			"你的 视觉 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 视觉 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"VisionMenu"
@@ -4639,7 +4639,7 @@
 
 	"WarpHuman3"
 	{
-		"chi"			"你的 传送 范围能力未能激活,请重试."
+		"chi"			"你的 传送 范围能力未能激活, 请重试."
 	}
 
 	"WarpHuman4"
@@ -4664,12 +4664,12 @@
 
 	"WarpHuman8"
 	{
-		"chi"			"你的 定期传送 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 定期传送 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"WarpHuman9"
 	{
-		"chi"			"你的 传送 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 传送 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"WarpMenu"
@@ -4709,7 +4709,7 @@
 
 	"WhirlHuman2"
 	{
-		"chi"			"你的 翻转 范围能力未能激活,请重试."
+		"chi"			"你的 翻转 范围能力未能激活, 请重试."
 	}
 
 	"WhirlHuman3"
@@ -4724,7 +4724,7 @@
 
 	"WhirlHuman5"
 	{
-		"chi"			"你的 翻转 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 翻转 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"WhirlMenu"
@@ -4759,7 +4759,7 @@
 
 	"WitchHuman2"
 	{
-		"chi"			"你的 召唤女巫 范围能力未能激活,请重试."
+		"chi"			"你的 召唤女巫 范围能力未能激活, 请重试."
 	}
 
 	"WitchHuman3"
@@ -4769,7 +4769,7 @@
 
 	"WitchHuman4"
 	{
-		"chi"			"你的 召唤女巫 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 召唤女巫 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"WitchMenu"
@@ -4834,7 +4834,7 @@
 
 	"YellHuman2"
 	{
-		"chi"			"你的 战吼 范围能力未能激活,请重试."
+		"chi"			"你的 战吼 范围能力未能激活, 请重试."
 	}
 
 	"YellHuman3"
@@ -4849,7 +4849,7 @@
 
 	"YellHuman5"
 	{
-		"chi"			"你的 战吼 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 战吼 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"YellMenu"
@@ -4889,7 +4889,7 @@
 
 	"ZombieHuman2"
 	{
-		"chi"			"你的 召唤僵尸 范围能力未能激活,请重试."
+		"chi"			"你的 召唤僵尸 范围能力未能激活, 请重试."
 	}
 
 	"ZombieHuman3"
@@ -4904,7 +4904,7 @@
 
 	"ZombieHuman5"
 	{
-		"chi"			"你的 召唤僵尸 范围能力已结束,需要{yellow} {1} 秒{mint}进行充能."
+		"chi"			"你的 召唤僵尸 范围能力已结束, 需要{yellow} {1} 秒{mint}进行充能."
 	}
 
 	"ZombieMenu"

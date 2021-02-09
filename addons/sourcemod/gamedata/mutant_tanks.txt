@@ -11,6 +11,24 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			"CTankClaw::OnPlayerHit"
+			{
+				"signature"	"CTankClaw::OnPlayerHit"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"entity"
+				"arguments"
+				{
+					"player"
+					{
+						"type"	"cbaseentity"
+					}
+					"incap"
+					{
+						"type"	"bool"
+					}
+				}
+			}
 			"CTankRock::Create"
 			{
 				"signature"	"CTankRock::Create"
@@ -89,6 +107,27 @@
 	}
 	"left4dead"
 	{
+		"Functions"
+		{
+			"CTerrorPlayer::OnVomitedUpon"
+			{
+				"signature"	"CTerrorPlayer::OnVomitedUpon"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"boomer"
+					{
+						"type"		"cbaseentity"
+					}
+					"bool1"
+					{
+						"type"		"bool"
+					}
+				}
+			}
+		}
 		"Offsets"
 		{
 			"Action<Tank>::FirstContainedResponder"
@@ -155,6 +194,12 @@
 				"linux"		"@_ZN16CEnvRockLauncher16LaunchCurrentDirEv"
 				"windows"	"\x83\xEC\x40\x56\x8B\xF1\x8B\x86\x1C\x01\x00\x00"
 			}
+			"CTankClaw::OnPlayerHit"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw11OnPlayerHitEP13CTerrorPlayerb"
+				"windows"	"\x81\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x8B"
+			}
 			"CTankRock::Create"
 			{
 				"library"	"server"
@@ -179,11 +224,11 @@
 				"linux"		"@_ZN13CTerrorPlayer18GoAwayFromKeyboardEv"
 				"windows"	"\x83\xEC\x2A\x53\x56\x57\x8B\xF1\x8B\x06\x8B\x90\xB8\x2A\x2A\x2A\x8B\x9E\x34\x2A\x2A\x2A\x6A\x2A\x6A\x2A\x6A\x2A"
 			}
-			"CTerrorPlayer::RoundRespawn"
+			"CTerrorPlayer::OnITExpired"
 			{
 				"library"	"server"
-				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
-				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
+				"linux"		"@_ZN13CTerrorPlayer11OnITExpiredEv"
+				"windows"	"\xD9\x05\x2A\x2A\x2A\x2A\x56\x57\x8B\xF9\xD8\x9F\x2A\x2A\x00\x00\x8D\xB7\x2A\x2A\x00\x00\xDF\xE0\xF6\xC4\x2A\x7B\x13\x8B\x46\xF8\x8B\x10\x8D\x4E\xF8\x56\xFF\xD2\xD9\x2A\x2A\x2A\x2A\x2A\xD9\x1E\x8B\x37\x6A"
 			}
 			"CTerrorPlayer::OnRevived"
 			{
@@ -202,6 +247,12 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_bb"
 				"windows"	"\x83\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84" 
+			}
+			"CTerrorPlayer::RoundRespawn"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
+				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
 			}
 			"SurvivorBot::SetHumanSpectator"
 			{
@@ -225,6 +276,45 @@
 	}
 	"left4dead2"
 	{
+		"Functions"
+		{
+			"CTerrorPlayer::OnVomitedUpon"
+			{
+				"signature"	"CTerrorPlayer::OnVomitedUpon"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"boomer"
+					{
+						"type"		"cbaseentity"
+					}
+					"bool1"
+					{
+						"type"		"bool"
+					}
+					"bool2"
+					{
+						"type"		"bool"
+					}
+				}
+			}
+			"CTerrorPlayer::OnHitByVomitJar"
+			{
+				"signature"	"CTerrorPlayer::OnHitByVomitJar"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"thrower"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+		}
 		"Offsets"
 		{
 			"Action<Tank>::FirstContainedResponder"
@@ -307,6 +397,12 @@
 				"linux"		"@_ZN18CSpitterProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57"
 			}
+			"CTankClaw::OnPlayerHit"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw11OnPlayerHitEP13CTerrorPlayerb"
+				"windows"	"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x56\x8B\x2A\x2A\x57\x8B\x2A\x89\x2A\x2A\xE8"
+			}
 			"CTankRock::Create"
 			{
 				"library"	"server"
@@ -336,6 +432,18 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer18GoAwayFromKeyboardEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC*\x53\x56\x57\x8B\xF1\x8B\x06\x8B\x90***\x00\x8B\x9e***\x00\x6A\x00\x6A\x08\x6A\x01"
+			}
+			"CTerrorPlayer::OnHitByVomitJar"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer15OnHitByVomitJarEP20CBaseCombatCharacter"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F"
+			}
+			"CTerrorPlayer::OnITExpired"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11OnITExpiredEv"
+				"windows"	"\x56\x57\x8B\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7B\x2A\x8B\x2A\x2A\x8B\x2A\x8D\x2A\x2A\x56\xFF\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x8B\x2A\x6A\x00"
 			}
 			"CTerrorPlayer::OnRevived"
 			{
