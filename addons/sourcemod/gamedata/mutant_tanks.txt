@@ -75,6 +75,24 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			"CTerrorPlayer::OnStaggered"
+			{
+				"signature"	"CTerrorPlayer::OnStaggered"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"pusher"
+					{
+						"type"		"cbaseentity"
+					}
+					"origin"
+					{
+						"type"		"vectorptr"
+					}
+				}
+			}
 			"SurvivorBot::SetHumanSpectator"
 			{
 				"signature"	"SurvivorBot::SetHumanSpectator"
@@ -282,6 +300,32 @@
 	{
 		"Functions"
 		{
+			"CTerrorPlayer::Fling"
+			{
+				"signature"	"CTerrorPlayer::Fling"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"velocity"
+					{
+						"type"		"vectorptr"
+					}
+					"animation"
+					{
+						"type"		"int"
+					}
+					"charger"
+					{
+						"type"		"cbaseentity"
+					}
+					"stunTime"
+					{
+						"type"		"float"
+					}
+				}
+			}
 			"CTerrorPlayer::OnHitByVomitJar"
 			{
 				"signature"	"CTerrorPlayer::OnHitByVomitJar"
