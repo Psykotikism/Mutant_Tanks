@@ -725,15 +725,18 @@ static void vSmash(int survivor, int tank)
 		return;
 	}
 
-	if (g_bSecondGame)
+	switch (g_bSecondGame)
 	{
-		EmitSoundToAll(SOUND_SMASH2, survivor);
-		EmitSoundToAll(SOUND_GROWL2, tank);
-	}
-	else
-	{
-		EmitSoundToAll(SOUND_SMASH1, survivor);
-		EmitSoundToAll(SOUND_GROWL1, tank);
+		case true:
+		{
+			EmitSoundToAll(SOUND_SMASH2, survivor);
+			EmitSoundToAll(SOUND_GROWL2, tank);
+		}
+		case false:
+		{
+			EmitSoundToAll(SOUND_SMASH1, survivor);
+			EmitSoundToAll(SOUND_GROWL1, tank);
+		}
 	}
 
 	vAttachParticle(survivor, PARTICLE_BLOOD, 0.1);

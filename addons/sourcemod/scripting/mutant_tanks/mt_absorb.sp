@@ -321,13 +321,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esPlayer[victim].g_bActivated)
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bIsSurvivor(attacker) && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
+			static bool bChanged, bSurvivor;
+			bChanged = false;
+			bSurvivor = bIsSurvivor(attacker);
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
 			}
 
-			static bool bChanged;
-			bChanged = false;
 			if (g_esCache[victim].g_flAbsorbBulletDivisor > 1.0 && (damagetype & DMG_BULLET))
 			{
 				bChanged = true;
@@ -359,7 +360,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					GetClientAbsOrigin(victim, flTankPos);
 					EmitSoundToAll(SOUND_METAL, victim);
 
-					switch (g_esPlayer[attacker].g_bRewarded)
+					switch (bSurvivor && g_esPlayer[attacker].g_bRewarded)
 					{
 						case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
 						case false: vPushNearbyEntities(victim, flTankPos);

@@ -855,7 +855,6 @@ static void vRocketHit(int survivor, int tank, float random, float chance, int e
 					DispatchKeyValue(iFlame, "JetLength", "400");
 
 					SetEntityRenderColor(iFlame, 180, 70, 10, 180);
-
 					TeleportEntity(iFlame, flPosition, flAngles, NULL_VECTOR);
 					DispatchSpawn(iFlame);
 					vSetEntityParent(iFlame, survivor);
@@ -863,6 +862,7 @@ static void vRocketHit(int survivor, int tank, float random, float chance, int e
 					iFlame = EntIndexToEntRef(iFlame);
 					vDeleteEntity(iFlame, 3.0);
 
+					vEffect(survivor, tank, g_esCache[tank].g_iRocketEffect, flags);
 					EmitSoundToAll(SOUND_FIRE, survivor, _, _, _, 1.0);
 
 					static float flDelay;
@@ -882,8 +882,6 @@ static void vRocketHit(int survivor, int tank, float random, float chance, int e
 					dpRocketDetonate.WriteCell(g_esPlayer[tank].g_iTankType);
 					dpRocketDetonate.WriteCell(enabled);
 					dpRocketDetonate.WriteCell(messages);
-
-					vEffect(survivor, tank, g_esCache[tank].g_iRocketEffect, flags);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))

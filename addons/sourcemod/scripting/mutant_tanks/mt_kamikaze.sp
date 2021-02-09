@@ -711,19 +711,18 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "KamikazeHuman");
 			}
 
-			EmitSoundToAll((g_bSecondGame) ? SOUND_SMASH2 : SOUND_SMASH1, survivor);
 			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1);
+			vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
 			ForcePlayerSuicide(survivor);
+			ForcePlayerSuicide(tank);
 			vEffect(survivor, tank, g_esCache[tank].g_iKamikazeEffect, flags);
+			EmitSoundToAll((g_bSecondGame) ? SOUND_SMASH2 : SOUND_SMASH1, survivor);
+			EmitSoundToAll((g_bSecondGame) ? SOUND_GROWL2 : SOUND_GROWL1, survivor);
 
 			if (g_esCache[tank].g_iKamikazeBody == 1)
 			{
 				RequestFrame(vRemoveKamikazeBody, GetClientUserId(survivor));
 			}
-
-			EmitSoundToAll((g_bSecondGame) ? SOUND_GROWL2 : SOUND_GROWL1, survivor);
-			vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
-			ForcePlayerSuicide(tank);
 
 			if (g_esCache[tank].g_iKamikazeMessage & messages)
 			{

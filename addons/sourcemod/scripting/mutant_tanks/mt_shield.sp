@@ -478,7 +478,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			static float flTankPos[3];
 			GetClientAbsOrigin(victim, flTankPos);
 
-			switch (g_esPlayer[attacker].g_bRewarded2)
+			switch (bSurvivor && g_esPlayer[attacker].g_bRewarded2)
 			{
 				case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
 				case false: vPushNearbyEntities(victim, flTankPos);

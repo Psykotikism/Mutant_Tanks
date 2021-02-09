@@ -351,9 +351,11 @@ enum struct esGeneral
 
 	DynamicDetour g_ddEnterStasisDetour;
 	DynamicDetour g_ddEventKilledDetour;
+	DynamicDetour g_ddFlingDetour;
 	DynamicDetour g_ddLauncherDirectionDetour;
 	DynamicDetour g_ddLeaveStasisDetour;
 	DynamicDetour g_ddPlayerHitDetour;
+	DynamicDetour g_ddStaggerDetour;
 	DynamicDetour g_ddTankRockDetour;
 	DynamicDetour g_ddVomitedUponDetour;
 	DynamicDetour g_ddVomitjarHitDetour;
@@ -1433,6 +1435,12 @@ public void OnPluginStart()
 					LogError("%s Failed to load offset: HiddenMelee", MT_TAG);
 				}
 
+				g_esGeneral.g_ddFlingDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::Fling");
+				if (g_esGeneral.g_ddFlingDetour == null)
+				{
+					LogError("%s Failed to find signature: CTerrorPlayer::Fling", MT_TAG);
+				}
+
 				g_esGeneral.g_ddVomitjarHitDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnHitByVomitJar");
 				if (g_esGeneral.g_ddVomitjarHitDetour == null)
 				{
@@ -1567,6 +1575,12 @@ public void OnPluginStart()
 			if (g_esGeneral.g_ddPlayerHitDetour == null)
 			{
 				LogError("%s Failed to find signature: CTankClaw::OnPlayerHit", MT_TAG);
+			}
+
+			g_esGeneral.g_ddStaggerDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnStaggered");
+			if (g_esGeneral.g_ddStaggerDetour == null)
+			{
+				LogError("%s Failed to find signature: CTerrorPlayer::OnStaggered", MT_TAG);
 			}
 
 			g_esGeneral.g_ddVomitedUponDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnVomitedUpon");
@@ -4139,7 +4153,12 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 						{
 							static float flTankPos[3];
 							GetClientAbsOrigin(victim, flTankPos);
-							vPushNearbyEntities(victim, flTankPos);
+
+							switch (bSurvivor && g_esPlayer[attacker].g_bRewardedGod)
+							{
+								case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
+								case false: vPushNearbyEntities(victim, flTankPos);
+							}
 						}
 					}
 
@@ -6615,9 +6634,19 @@ static void vPluginStatus()
 			LogError("Failed to enable detour post: CTankClaw::OnPlayerHit");
 		}
 
+		if (!g_esGeneral.g_ddStaggerDetour.Enable(Hook_Pre, mreStaggerPre))
+		{
+			LogError("Failed to enable detour pre: CTerrorPlayer::OnStaggered");
+		}
+
 		if (!g_esGeneral.g_ddVomitedUponDetour.Enable(Hook_Pre, mreVomitedUponPre))
 		{
 			LogError("Failed to enable detour pre: CTerrorPlayer::OnVomitedUpon");
+		}
+
+		if (g_bSecondGame && !g_esGeneral.g_ddFlingDetour.Enable(Hook_Pre, mreFlingPre))
+		{
+			LogError("Failed to enable detour pre: CTerrorPlayer::Fling");
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddVomitjarHitDetour.Enable(Hook_Pre, mreVomitjarHitPre))
@@ -6666,9 +6695,19 @@ static void vPluginStatus()
 			LogError("Failed to disable detour post: CTankClaw::OnPlayerHit");
 		}
 
+		if (!g_esGeneral.g_ddStaggerDetour.Disable(Hook_Pre, mreStaggerPre))
+		{
+			LogError("Failed to disable detour pre: CTerrorPlayer::OnStaggered");
+		}
+
 		if (!g_esGeneral.g_ddVomitedUponDetour.Disable(Hook_Pre, mreVomitedUponPre))
 		{
 			LogError("Failed to disable detour pre: CTerrorPlayer::OnVomitedUpon");
+		}
+
+		if (g_bSecondGame && !g_esGeneral.g_ddFlingDetour.Disable(Hook_Pre, mreFlingPre))
+		{
+			LogError("Failed to disable detour pre: CTerrorPlayer::Fling");
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddVomitjarHitDetour.Disable(Hook_Pre, mreVomitjarHitPre))
@@ -7007,6 +7046,7 @@ static void vSurvivorReactions(int tank)
 			DispatchKeyValue(iTimescale, "acceleration", "2.0");
 			DispatchKeyValue(iTimescale, "minBlendRate", "1.0");
 			DispatchKeyValue(iTimescale, "blendDeltaMultiplier", "2.0");
+
 			DispatchSpawn(iTimescale);
 			AcceptEntityInput(iTimescale, "Start");
 			CreateTimer(0.75, tTimerRemoveTimescale, EntIndexToEntRef(iTimescale), TIMER_FLAG_NO_MAPCHANGE);
@@ -7956,7 +7996,7 @@ static void vSaveWeapons(int survivor)
 	int iSlot2 = 0;
 	if (g_bSecondGame)
 	{
-		if (bIsPlayerIncapacitated(survivor))
+		if (bIsPlayerIncapacitated(survivor) && g_esGeneral.g_iMeleeOffset != -1)
 		{
 			int iMelee = GetEntDataEnt2(survivor, g_esGeneral.g_iMeleeOffset);
 
@@ -9735,16 +9775,16 @@ static bool bIsTankIdle(int tank, int type = 0)
 	if (bIsTank(tank) && !bIsTank(tank, MT_CHECK_FAKECLIENT))
 	{
 		Address adTank = GetEntityAddress(tank);
-		if (adTank != Address_Null)
+		if (adTank != Address_Null && g_esGeneral.g_iIntentionOffset != -1)
 		{
 			Address adIntention = view_as<Address>(LoadFromAddress(adTank + view_as<Address>(g_esGeneral.g_iIntentionOffset), NumberType_Int32));
-			if (adIntention != Address_Null)
+			if (adIntention != Address_Null && g_esGeneral.g_iBehaviorOffset != -1)
 			{
 				Address adBehavior = view_as<Address>(LoadFromAddress(adIntention + view_as<Address>(g_esGeneral.g_iBehaviorOffset), NumberType_Int32));
-				if (adBehavior != Address_Null)
+				if (adBehavior != Address_Null && g_esGeneral.g_iActionOffset != -1)
 				{
 					Address adAction = view_as<Address>(LoadFromAddress(adBehavior + view_as<Address>(g_esGeneral.g_iActionOffset), NumberType_Int32));
-					if (adAction != Address_Null)
+					if (adAction != Address_Null && g_esGeneral.g_iChildActionOffset != -1)
 					{
 						Address adChildAction = Address_Null;
 						while ((adChildAction = view_as<Address>(LoadFromAddress(adAction + view_as<Address>(g_esGeneral.g_iChildActionOffset), NumberType_Int32))) != Address_Null)
@@ -10201,6 +10241,16 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
+public MRESReturn mreFlingPre(int pThis, DHookParam hParams)
+{
+	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 9) || g_esPlayer[pThis].g_bRewardedGod))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
+}
+
 public MRESReturn mreLaunchDirectionPre(int pThis)
 {
 	if (bIsValidEntity(pThis))
@@ -10249,6 +10299,16 @@ public MRESReturn mrePlayerHitPost(int pThis, DHookParam hParams)
 	}
 
 	g_esGeneral.g_iTankTarget = 0;
+}
+
+public MRESReturn mreStaggerPre(int pThis, DHookParam hParams)
+{
+	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 9) || g_esPlayer[pThis].g_bRewardedGod))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
 }
 
 public MRESReturn mreTankRockPost(DHookReturn hReturn)

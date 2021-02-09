@@ -58,6 +58,7 @@ enum struct esPlayer
 	bool g_bFailed;
 	bool g_bNoAmmo;
 	bool g_bRewarded;
+	bool g_bRewarded2;
 
 	float g_flNullifyChance;
 	float g_flNullifyDuration;
@@ -331,7 +332,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					static float flTankPos[3];
 					GetClientAbsOrigin(victim, flTankPos);
-					vPushNearbyEntities(victim, flTankPos);
+
+					switch (g_esPlayer[attacker].g_bRewarded2)
+					{
+						case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
+						case false: vPushNearbyEntities(victim, flTankPos);
+					}
 				}
 
 				return Plugin_Handled;
@@ -630,9 +636,17 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
 {
-	if (bIsSurvivor(survivor) && (type & MT_REWARD_DAMAGEBOOST))
+	if (bIsSurvivor(survivor))
 	{
-		g_esPlayer[survivor].g_bRewarded = apply;
+		if (type & MT_REWARD_DAMAGEBOOST)
+		{
+			g_esPlayer[survivor].g_bRewarded = apply;
+		}
+
+		if (type & MT_REWARD_GODMODE)
+		{
+			g_esPlayer[survivor].g_bRewarded2 = apply;
+		}
 	}
 }
 
@@ -833,6 +847,7 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
 	g_esPlayer[tank].g_bRewarded = false;
+	g_esPlayer[tank].g_bRewarded2 = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }

@@ -977,6 +977,8 @@ static void vGravityHit(int survivor, int tank, float random, float chance, int 
 				}
 
 				SetEntityGravity(survivor, g_esCache[tank].g_flGravityValue);
+				vEffect(survivor, tank, g_esCache[tank].g_iGravityEffect, flags);
+				EmitSoundToAll(SOUND_BELL, survivor);
 
 				static float flDuration;
 				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : float(g_esCache[tank].g_iGravityDuration);
@@ -985,9 +987,6 @@ static void vGravityHit(int survivor, int tank, float random, float chance, int 
 				dpStopGravity.WriteCell(GetClientUserId(survivor));
 				dpStopGravity.WriteCell(GetClientUserId(tank));
 				dpStopGravity.WriteCell(messages);
-
-				vEffect(survivor, tank, g_esCache[tank].g_iGravityEffect, flags);
-				EmitSoundToAll(SOUND_BELL, survivor);
 
 				if (g_esCache[tank].g_iGravityMessage & messages)
 				{

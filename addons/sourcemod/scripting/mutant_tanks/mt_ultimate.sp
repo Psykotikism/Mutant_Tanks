@@ -807,15 +807,18 @@ static void vUltimate(int tank, int pos = -1)
 		EmitSoundToAll(SOUND_ELECTRICITY, tank);
 		EmitSoundToAll(SOUND_EXPLOSION, tank);
 
-		if (g_bSecondGame)
+		switch (g_bSecondGame)
 		{
-			EmitSoundToAll(SOUND_GROWL2, tank);
-			EmitSoundToAll(SOUND_SMASH2, tank);
-		}
-		else
-		{
-			EmitSoundToAll(SOUND_GROWL1, tank);
-			EmitSoundToAll(SOUND_SMASH1, tank);
+			case true:
+			{
+				EmitSoundToAll(SOUND_GROWL2, tank);
+				EmitSoundToAll(SOUND_SMASH2, tank);
+			}
+			case false:
+			{
+				EmitSoundToAll(SOUND_GROWL1, tank);
+				EmitSoundToAll(SOUND_SMASH1, tank);
+			}
 		}
 
 		static int iValue, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;

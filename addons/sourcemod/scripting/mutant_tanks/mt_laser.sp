@@ -673,14 +673,13 @@ static void vLaser2(int tank, int pos = -1)
 		static float flSurvivorPos[3];
 		GetClientEyePosition(iSurvivor, flSurvivorPos);
 		flSurvivorPos[2] -= 15.0;
-
 		vAttachParticle2(flSurvivorPos, NULL_VECTOR, PARTICLE_ELECTRICITY, 3.0);
+
 		EmitSoundToAll((GetRandomInt(1, 2) == 1 ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flSurvivorPos, NULL_VECTOR, true, 0.0);
 		EmitSoundToAll((GetRandomInt(1, 2) == 1 ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flTankPos, NULL_VECTOR, true, 0.0);
 
 		static int iColor[4];
 		MT_GetTankColors(tank, GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
-
 		TE_SetupBeamPoints(flTankPos, flSurvivorPos, g_iLaserSprite, 0, 0, 0, 0.5, 5.0, 5.0, 1, 0.0, iColor, 0);
 		TE_SendToAll();
 

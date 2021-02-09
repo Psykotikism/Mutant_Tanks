@@ -984,7 +984,7 @@ static void vRestartHit(int survivor, int tank, float random, float chance, int 
 static bool bIsSurvivorInCheckpoint(int survivor, bool start)
 {
 	bool bReturn = false;
-	if (g_esPlayer[survivor].g_bCheckpoint)
+	if (g_esPlayer[survivor].g_bCheckpoint && g_esGeneral.g_iFlowOffset != -1)
 	{
 		int iArea = SDKCall(g_esGeneral.g_hSDKGetLastKnownArea, survivor);
 		if (iArea)
