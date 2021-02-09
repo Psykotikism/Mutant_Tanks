@@ -125,6 +125,10 @@
 					{
 						"type"		"bool"
 					}
+					"bool2"
+					{
+						"type"		"bool"
+					}
 				}
 			}
 		}
@@ -278,6 +282,20 @@
 	{
 		"Functions"
 		{
+			"CTerrorPlayer::OnHitByVomitJar"
+			{
+				"signature"	"CTerrorPlayer::OnHitByVomitJar"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"thrower"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
 			"CTerrorPlayer::OnVomitedUpon"
 			{
 				"signature"	"CTerrorPlayer::OnVomitedUpon"
@@ -293,24 +311,6 @@
 					"bool1"
 					{
 						"type"		"bool"
-					}
-					"bool2"
-					{
-						"type"		"bool"
-					}
-				}
-			}
-			"CTerrorPlayer::OnHitByVomitJar"
-			{
-				"signature"	"CTerrorPlayer::OnHitByVomitJar"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"entity"
-				"arguments"
-				{
-					"thrower"
-					{
-						"type"		"cbaseentity"
 					}
 				}
 			}
