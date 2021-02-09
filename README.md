@@ -119,7 +119,7 @@ mt_pluginenabled "1"
 ```
 
 ## KeyValues Settings
-> View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,400 to customize!)
+> View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,400 customization options!)
 
 ## Custom Configuration Files
 > Mutant Tanks has features that allow for creating and executing custom configuration files.

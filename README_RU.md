@@ -119,7 +119,7 @@ mt_pluginenabled "1"
 ```
 
 ## Настройки KeyValues
-> Просмотрите файл [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) для получения информации о каждой доступной настройке. (Более 1400 вариантов для настройки!)
+> Просмотрите файл [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) для получения информации о каждой доступной настройке. (Более 1,400 вариантов для настройки!)
 
 ## Пользовательские файлы конфигурации
 > Танки-мутанты имеет функции, позволяющие создавать и выполнять собственные файлы конфигурации.

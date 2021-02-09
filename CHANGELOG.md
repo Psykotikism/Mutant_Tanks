@@ -27,8 +27,8 @@
 
 #### Abilities
 - Choke
-	- Fixed affected survivors not always being lifted off the ground while being choked. (Thanks to 3aljiyavslgazana for testing and reporting!)
-	- Fixed affected survivors being stuck under the floor when the ability ends.
+	- Fixed choked survivors not always being lifted off the ground while being choked. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	- Fixed choked survivors being stuck under the floor when the ability ends.
 
 - Clone
 	- Fixed clone deaths raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)

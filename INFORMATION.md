@@ -1592,7 +1592,7 @@
 		}
 		"Rewards"
 		{
-			// Reward survivors for fighting Mutant Tanks.
+			// Reward survivors for fighting the Mutant Tank.
 			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
@@ -1626,7 +1626,7 @@
 			// 3rd number = Enable rewards for teammates.
 			"Reward Enabled"			"-1,-1,-1"
 
-			// The chance to reward survivors for killing Mutant Tanks.
+			// The chance to reward survivors for killing the Mutant Tank.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
