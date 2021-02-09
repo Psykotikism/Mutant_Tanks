@@ -93,6 +93,7 @@
 #### General
 - Changed the method for checking idle Tanks. (Thanks to BHaType for the code and epzminion for the help!)
 - The hidden `z_burn_max` convar will no longer be automatically set to `1.0` while Mutant Tanks is running. (Use the new `ConVars` section to modify the convar setting yourself.)
+- Added extra failsafe checks to make sure offsets are retrieved properly before executing relevant code. (Thanks to yuzumi for the idea!)
 
 #### Core Plugin
 - Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
@@ -111,6 +112,9 @@
 - The godmode reward now blocks Boomer pukes on the recipient. (Thanks to 3aljiyavslgazana for the idea and epzminion for the help!) [Thanks to Silvers for the signatures!]
 - The godmode reward now automatically removes the Boomer puke screen effect. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the signatures!]
 - The godmode reward now prevents the recipient from getting punched away by Tanks. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code and signatures!]
+- The godmode reward now prevents the recipient from getting flung away by Chargers.
+- The godmode reward now prevents the recipient from getting staggered.
+- The melee immunity feature's pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
