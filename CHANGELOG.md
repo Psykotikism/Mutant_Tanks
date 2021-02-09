@@ -107,7 +107,7 @@
 - The damage boost reward now gives the recipient 50% damage resistance throughout its duration.
 - The speed boost reward now allows the recipient to jump slightly higher throughout its duration.
 - The health display will no longer show the maximum health going over the maximum health set in `mutant_tanks.inc`.
-- The `Boss` feature's evolution now triggers a slow-motion effect for a second.
+- The `Boss` feature's evolution now triggers a slow-motion effect for almost a second.
 - The godmode reward now blocks Boomer pukes on the recipient. (Thanks to 3aljiyavslgazana for the idea and epzminion for the help!) [Thanks to Silvers for the signatures!]
 - The godmode reward now automatically removes the Boomer puke screen effect. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the signatures!]
 - The godmode reward now prevents the recipient from getting punched away by Tanks. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code and signatures!]

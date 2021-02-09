@@ -823,7 +823,7 @@
 		}
 		"Enhancements"
 		{
-			// All Mutant Tank can only attack every time this many seconds passes.
+			// Every Mutant Tank can only attack every time this many seconds passes.
 			// Note: Default attack interval is 2.0 seconds.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -839,7 +839,7 @@
 			// "forever" - 999999 seconds
 			"Attack Interval"			"0.0"
 
-			// All Mutant Tanks' claw attacks do this much damage.
+			// Every Mutant Tank's claw attacks do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -853,7 +853,7 @@
 			// "strongest" - 999999.0 damage
 			"Claw Damage"				"-1.0"
 
-			// All Mutant Tanks' hittables do this much damage.
+			// Every Mutant Tank's hittables do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -867,7 +867,7 @@
 			// "strongest" - 999999.0 damage
 			"Hittable Damage"			"-1.0"
 
-			// All Mutant Tanks' punches have this much force.
+			// Every Mutant Tank's punches have this much force.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -881,7 +881,7 @@
 			// "strongest" - 999999.0 force
 			"Punch Force"				"-1.0"
 
-			// All Mutant Tanks' rock throws do this much damage.
+			// Every Mutant Tank's rock throws do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -895,7 +895,7 @@
 			// "strongest" - 999999.0 damage
 			"Rock Damage"				"-1.0"
 
-			// Set all Mutant Tanks' run speed.
+			// Set every Mutant Tank's run speed.
 			// Note: Default run speed is 1.0.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -905,7 +905,7 @@
 			// Maximum: 3.0
 			"Run Speed"				"0.0"
 
-			// All Mutant Tanks throw a rock every time this many seconds passes.
+			// Every Mutant Tank throws a rock every time this many seconds passes.
 			// Note: Default throw interval is 5.0 seconds.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
