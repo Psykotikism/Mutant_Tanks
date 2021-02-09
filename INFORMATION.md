@@ -1,9 +1,8 @@
 # Information
 
 ## Notes
-> This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples.
+> This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 
-- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 - Maximum Tank health: 1,000,000 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 87-88 and recompile all the plugins, but expect potential bugs with higher values.) [Default: 65,535]
 - Maximum types: 500 (Increase/decrease the value in the `mutant_tanks.inc` file on line 86 and recompile all the plugins, but expect potential server lag with higher values.)
 - Most of the settings below can be overridden for each player.
@@ -307,6 +306,13 @@
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
+			// --
+			// Example: "0-0" (Do not choose from any Mutant Tank types.)
+			// Example: "1-25" (Choose a Mutant Tank type between 1 through 25.)
+			// Example: "50-0" (Automatically change to "0-0" because "50" is higher than "0".)
+			// Example: "1-1000" (Automatically change to "1-500" because "500" is the maximum number of Mutant Tank types allowed.)
+			// Example: "0" (Automatically change to "0-500" because the maximum range is not specified.)
+			// Example: "1000" (Automatically change to "500-500" because the maximum range is not specified and the minimum range exceeds the "500" limit.)
 			// --
 			// 0: OFF, use standard Tanks.
 			// 1-500: ON, the type that will spawn.
@@ -817,7 +823,7 @@
 		}
 		"Enhancements"
 		{
-			// The Mutant Tank can only attack every time this many seconds passes.
+			// All Mutant Tank can only attack every time this many seconds passes.
 			// Note: Default attack interval is 2.0 seconds.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -833,7 +839,7 @@
 			// "forever" - 999999 seconds
 			"Attack Interval"			"0.0"
 
-			// The Mutant Tank's claw attacks do this much damage.
+			// All Mutant Tanks' claw attacks do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -847,7 +853,7 @@
 			// "strongest" - 999999.0 damage
 			"Claw Damage"				"-1.0"
 
-			// The Mutant Tank's hittables do this much damage.
+			// All Mutant Tanks' hittables do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -861,7 +867,21 @@
 			// "strongest" - 999999.0 damage
 			"Hittable Damage"			"-1.0"
 
-			// The Mutant Tank's rock throws do this much damage.
+			// All Mutant Tanks' punches have this much force.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 force
+			// "weakest" - 1.0 force
+			// "strongest" - 999999.0 force
+			"Punch Force"				"-1.0"
+
+			// All Mutant Tanks' rock throws do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -875,7 +895,7 @@
 			// "strongest" - 999999.0 damage
 			"Rock Damage"				"-1.0"
 
-			// Set the Mutant Tank's run speed.
+			// Set all Mutant Tanks' run speed.
 			// Note: Default run speed is 1.0.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -885,7 +905,7 @@
 			// Maximum: 3.0
 			"Run Speed"				"0.0"
 
-			// The Mutant Tank throws a rock every time this many seconds passes.
+			// All Mutant Tanks throw a rock every time this many seconds passes.
 			// Note: Default throw interval is 5.0 seconds.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -903,7 +923,7 @@
 		}
 		"Immunities"
 		{
-			// Give the Mutant Tank bullet immunity.
+			// Give Mutant Tanks bullet immunity.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
 			// --
@@ -911,7 +931,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Bullet Immunity"			"0"
 
-			// Give the Mutant Tank explosive immunity.
+			// Give Mutant Tanks explosive immunity.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
 			// --
@@ -919,7 +939,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Explosive Immunity"			"0"
 
-			// Give the Mutant Tank fire immunity.
+			// Give Mutant Tanks fire immunity.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
 			// --
@@ -927,7 +947,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Fire Immunity"				"0"
 
-			// Give the Mutant Tank hittable immunity.
+			// Give Mutant Tanks hittable immunity.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
 			// --
@@ -935,13 +955,21 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Hittable Immunity"			"0"
 
-			// Give the Mutant Tank melee immunity.
+			// Give Mutant Tanks melee immunity.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Melee Immunity"			"0"
+
+			// Give Mutant Tanks vomit immunity.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Vomit Immunity"			"0"
 		}
 		"Administration"
 		{
@@ -1085,6 +1113,13 @@
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			// --
+			// Example: "0-0" (Do not choose from any Mutant Tank types.)
+			// Example: "1-25" (Choose a Mutant Tank type between 1 through 25.)
+			// Example: "50-0" (Automatically change to "0-0" because "50" is higher than "0".)
+			// Example: "1-1000" (Automatically change to "1-500" because "500" is the maximum number of Mutant Tank types allowed.)
+			// Example: "0" (Automatically change to "0-500" because the maximum range is not specified.)
+			// Example: "1000" (Automatically change to "500-500" because the maximum range is not specified and the minimum range exceeds the "500" limit.)
+			// --
 			// 0: OFF, use standard Tanks.
 			// 1-500: ON, the type that will spawn.
 			"Regular Type"				"1-500"
@@ -1122,6 +1157,13 @@
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
+			// --
+			// Example: "0-0" (Do not choose from any Mutant Tank types.)
+			// Example: "1-25" (Choose a Mutant Tank type between 1 through 25.)
+			// Example: "50-0" (Automatically change to "0-0" because "50" is higher than "0".)
+			// Example: "1-1000" (Automatically change to "1-500" because "500" is the maximum number of Mutant Tank types allowed.)
+			// Example: "0" (Automatically change to "0-500" because the maximum range is not specified.)
+			// Example: "1000" (Automatically change to "500-500" because the maximum range is not specified and the minimum range exceeds the "500" limit.)
 			// --
 			// 0: OFF, use standard Tanks.
 			// 1-500: ON, the type that will spawn.
@@ -2666,6 +2708,20 @@
 			// "strongest" - 999999.0 damage
 			"Hittable Damage"			"-1.0"
 
+			// The Mutant Tank's punches have this much force.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 force
+			// "weakest" - 1.0 force
+			// "strongest" - 999999.0 force
+			"Punch Force"				"-1.0"
+
 			// The Mutant Tank's rock throws do this much damage.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
@@ -2747,6 +2803,14 @@
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Melee Immunity"			"0"
+
+			// Give the Mutant Tank vomit immunity.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Immunities" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Vomit Immunity"			"0"
 		}
 	}
 }
@@ -2921,6 +2985,16 @@
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Absorb Fire Divisor"			"200.0"
+
+			// The hittable damage received by the Mutant Tank is divided by this value.
+			// Note: Damage = Hittable damage/Absorb hittable divisor
+			// Example: Damage = 30.0/20.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Hittable damage/1.0 = Hittable damage)
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0
+			// Maximum: 999999.0
+			"Absorb Hittable Divisor"		"20.0"
 
 			// The melee damage received by the Mutant Tank is divided by this value.
 			// Note: Damage = Melee damage/Absorb melee divisor
@@ -5011,6 +5085,13 @@
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
+			// --
+			// Example: "0-0" (Do not choose from any Mutant Tank types.)
+			// Example: "1-25" (Choose a Mutant Tank type between 1 through 25.)
+			// Example: "50-0" (Automatically change to "0-0" because "50" is higher than "0".)
+			// Example: "1-1000" (Automatically change to "1-500" because "500" is the maximum number of Mutant Tank types allowed.)
+			// Example: "0" (Automatically change to "0-500" because the maximum range is not specified.)
+			// Example: "1000" (Automatically change to "500-500" because the maximum range is not specified and the minimum range exceeds the "500" limit.)
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-500: ON, the type of the clone.
@@ -7285,6 +7366,16 @@
 			// Maximum: 999999.0
 			"Fragile Fire Multiplier"		"3.0"
 
+			// The hittable damage received by the Mutant Tank is multiplied by this value.
+			// Note: Damage = Hittable damage x Fragile hittable multiplier
+			// Example: Damage = 100.0 x 1.5 (150.0)
+			// Note: Use the value "1.0" to disable this setting. (Hittable damage x 1.0 = Hittable damage)
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0
+			// Maximum: 999999.0
+			"Fragile Hittable Multiplier"		"1.5"
+
 			// The melee damage received by the Mutant Tank is multiplied by this value.
 			// Note: Damage = Melee damage x Fragile melee multiplier
 			// Example: Damage = 100.0 x 1.5 (150.0)
@@ -8928,6 +9019,16 @@
 			// "tank"/"attack" - 1
 			// "survivor"/"hurt" - 2
 			"Hypno Hit Mode"			"0"
+
+			// The hittable damage reflected towards survivors by the Mutant Tank is divided by this value.
+			// Note: Damage = Hittable damage/Hypno hittable divisor
+			// Example: Damage = 30.0/20.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Hittable damage/1.0 = Hittable damage)
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0
+			// Maximum: 999999.0
+			"Hypno Hittable Divisor"		"20.0"
 
 			// The melee damage reflected towards survivors by the Mutant Tank is divided by this value.
 			// Note: Damage = Melee damage/Hypno melee divisor
@@ -13719,6 +13820,13 @@
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
+			// --
+			// Example: "0-0" (Do not choose from any Mutant Tank types.)
+			// Example: "1-25" (Choose a Mutant Tank type between 1 through 25.)
+			// Example: "50-0" (Automatically change to "0-0" because "50" is higher than "0".)
+			// Example: "1-1000" (Automatically change to "1-500" because "500" is the maximum number of Mutant Tank types allowed.)
+			// Example: "0" (Automatically change to "0-500" because the maximum range is not specified.)
+			// Example: "1000" (Automatically change to "500-500" because the maximum range is not specified and the minimum range exceeds the "500" limit.)
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-500: ON, the type to respawn as.

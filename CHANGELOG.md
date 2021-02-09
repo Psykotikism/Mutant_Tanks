@@ -102,12 +102,15 @@
 - Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
 - Rewards that have a duration can now have their duration extended when received again. (Requested by 3aljiyavslgazana.)
 - The godmode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
-- The godmode reward fully blocks all damage from registering. (Requested by 3aljiyavslgazana.)
+- The godmode reward now fully blocks all damage from registering. (Requested by 3aljiyavslgazana.)
 - The damage boost reward now allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 - The damage boost reward now gives the recipient 50% damage resistance throughout its duration.
 - The speed boost reward now allows the recipient to jump slightly higher throughout its duration.
 - The health display will no longer show the maximum health going over the maximum health set in `mutant_tanks.inc`.
 - The `Boss` feature's evolution now triggers a slow-motion effect for a second.
+- The godmode reward now blocks Boomer pukes on the recipient. (Thanks to 3aljiyavslgazana for the idea and epzminion for the help!) [Thanks to Silvers for the signatures!]
+- The godmode reward now automatically removes the Boomer puke screen effect. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the signatures!]
+- The godmode reward now prevents the recipient from getting punched away by Tanks. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code and signatures!]
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
@@ -136,6 +139,12 @@
 - Changed the minimum value of the `Tank Enabled` setting under the `Tank #/General` section from `0` to `-1`:
 - Added the following keywords for the `Tank Enabled` and `Spawn Enabled` settings:
 	- `ignore`/`exclude`/`filter`/`remove` - -1
+- Added the `Vomit Immunity` setting under the `Tank #/Immunities` and `STEAM_ID/Immunities` sections. (Thanks to epzminion for the help and Silvers for the signatures!)
+- Added the `Punch Force` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to 3aljiyavslgazana for the idea and Silvers for the code and signatures!)
+- Added the following keywords for the `Punch Force` setting:
+	- `nodmg`/`friendly`/`harmless` - 0.0 force
+	- `weakest` - 1.0 force
+	- `strongest` - 999999.0 force
 - The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by Shadowart.):
 	- `Finales Only`
 	- `Idle Check`
@@ -185,6 +194,7 @@
 	- `Fire Immunity`
 	- `Hittable Immunity`
 	- `Melee Immunity`
+	- `Vomit Immunity`
 
 #### Translations
 - Updated English translations.
@@ -196,6 +206,7 @@
 - Absorb
 	- The pushback effect no longer triggers for melee attacks unless the Tank takes at least one damage. (Requested by 3aljiyavslgazana.)
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+	- Added the `Absorb Hittable Divisor` setting.
 
 - Aimless
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -216,6 +227,9 @@
 - Fling
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
+- Fragile
+	- Added the `Fragile Hittable Multiplier` setting.
+
 - God
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 
@@ -224,6 +238,7 @@
 
 - Hypno
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+	- Added the `Hypno Hittable Divisor` setting.
 
 - Idle
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -233,6 +248,9 @@
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 
 - Pimp
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Puke
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Shield
@@ -549,7 +567,7 @@
 	- Fixed panic events not being called on L4D1.
 
 - Respawn
-	- Fixed the Tank not respawning consistently. (Thanks to epz for the method!)
+	- Fixed the Tank not respawning consistently. (Thanks to epzminion for the method!)
 
 - Rock
 	- Fixed the rocks colliding with each other and producing lag.
@@ -694,7 +712,7 @@
 - Added a new option for the `Announce Death` setting.
 - Changed the default value of the `Regular Limit` setting from `2` to `999999`.
 - Changed the default value of the `Death Revert` setting under the `Plugin Settings/General` from `0` to `1`.
-- Added the `Attack Interval` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to epz for the code!)
+- Added the `Attack Interval` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to epzminion for the code!)
 - Added the `Regular Delay` setting under the `Plugin Settings/Waves` section. (Requested by Tank Rush.)
 - Removed the `Rename Players` setting. (Too many bugs with special characters in people's names.)
 - Added the `Extras Delay` settings under `Plugin Settings/Waves` section.
@@ -1387,7 +1405,7 @@ Changes:
 - `STEAM_ID/Props`: Overrides the setting under the `Props` for specific players.
 7. Added more particle and sound effects for the `Electric ability`.
 8. Common infected are now immune to Tank abilities. They should no longer die from running into fires or explosions caused by certain abilities.
-9. The rocks from the `Rock` and `Spam` abilities are now colored based on the Tank's `Rock Color` setting. (Thanks to epz for the detour idea and gamedata info!)
+9. The rocks from the `Rock` and `Spam` abilities are now colored based on the Tank's `Rock Color` setting. (Thanks to epzminion for the detour idea and gamedata info!)
 10. The leftover rocks created by the `Meteor` ability now explode after 10 seconds regardless if they hit the ground.
 11. The `Rock` and `Spam` abilities now create three times more rocks.
 12. Lowered the position of the `Spam` ability's rock launcher so that it's more likely to hit survivors.
