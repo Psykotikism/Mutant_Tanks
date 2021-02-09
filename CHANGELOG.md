@@ -139,7 +139,7 @@
 - Changed the minimum value of the `Tank Enabled` setting under the `Tank #/General` section from `0` to `-1`:
 - Added the following keywords for the `Tank Enabled` and `Spawn Enabled` settings:
 	- `ignore`/`exclude`/`filter`/`remove` - -1
-- Added the `Vomit Immunity` setting under the `Tank #/Immunities` and `STEAM_ID/Immunities` sections. (Thanks to epzminion for the help and Silvers for the signatures!)
+- Added the `Vomit Immunity` setting under the `Tank #/Immunities` and `STEAM_ID/Immunities` sections. (Thanks to epzminion for the help, Marttt for the idea, and Silvers for the signatures!)
 - Added the `Punch Force` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to 3aljiyavslgazana for the idea and Silvers for the code and signatures!)
 - Added the following keywords for the `Punch Force` setting:
 	- `nodmg`/`friendly`/`harmless` - 0.0 force
