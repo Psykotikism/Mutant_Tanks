@@ -61,6 +61,7 @@ enum struct esPlayer
 	float g_flAbsorbChance;
 	float g_flAbsorbExplosiveDivisor;
 	float g_flAbsorbFireDivisor;
+	float g_flAbsorbHittableDivisor;
 	float g_flAbsorbMeleeDivisor;
 	float g_flOpenAreasOnly;
 
@@ -89,6 +90,7 @@ enum struct esAbility
 	float g_flAbsorbChance;
 	float g_flAbsorbExplosiveDivisor;
 	float g_flAbsorbFireDivisor;
+	float g_flAbsorbHittableDivisor;
 	float g_flAbsorbMeleeDivisor;
 	float g_flOpenAreasOnly;
 
@@ -113,6 +115,7 @@ enum struct esCache
 	float g_flAbsorbChance;
 	float g_flAbsorbExplosiveDivisor;
 	float g_flAbsorbFireDivisor;
+	float g_flAbsorbHittableDivisor;
 	float g_flAbsorbMeleeDivisor;
 	float g_flOpenAreasOnly;
 
@@ -340,6 +343,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbFireDivisor;
 			}
+			else if (g_esCache[victim].g_flAbsorbHittableDivisor > 1.0 && (damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable"))
+			{
+				bChanged = true;
+				damage /= g_esCache[victim].g_flAbsorbHittableDivisor;
+			}
 			else if (g_esCache[victim].g_flAbsorbMeleeDivisor > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
 			{
 				bChanged = true;
@@ -456,6 +464,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iAbsorbDuration = 5;
 				g_esAbility[iIndex].g_flAbsorbExplosiveDivisor = 20.0;
 				g_esAbility[iIndex].g_flAbsorbFireDivisor = 200.0;
+				g_esAbility[iIndex].g_flAbsorbHittableDivisor = 20.0;
 				g_esAbility[iIndex].g_flAbsorbMeleeDivisor = 200.0;
 			}
 		}
@@ -481,6 +490,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iAbsorbDuration = 0;
 					g_esPlayer[iPlayer].g_flAbsorbExplosiveDivisor = 0.0;
 					g_esPlayer[iPlayer].g_flAbsorbFireDivisor = 0.0;
+					g_esPlayer[iPlayer].g_flAbsorbHittableDivisor = 0.0;
 					g_esPlayer[iPlayer].g_flAbsorbMeleeDivisor = 0.0;
 				}
 			}
@@ -506,6 +516,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iAbsorbDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_esPlayer[admin].g_iAbsorbDuration, value, 1, 999999);
 		g_esPlayer[admin].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esPlayer[admin].g_flAbsorbExplosiveDivisor, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esPlayer[admin].g_flAbsorbFireDivisor, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flAbsorbHittableDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbHittableDivisor", "Absorb Hittable Divisor", "Absorb_Hittable_Divisor", "hittable", g_esPlayer[admin].g_flAbsorbHittableDivisor, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esPlayer[admin].g_flAbsorbMeleeDivisor, value, 1.0, 999999.0);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -537,6 +548,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iAbsorbDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_esAbility[type].g_iAbsorbDuration, value, 1, 999999);
 		g_esAbility[type].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esAbility[type].g_flAbsorbExplosiveDivisor, value, 1.0, 999999.0);
 		g_esAbility[type].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esAbility[type].g_flAbsorbFireDivisor, value, 1.0, 999999.0);
+		g_esAbility[type].g_flAbsorbHittableDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbHittableDivisor", "Absorb Hittable Divisor", "Absorb_Hittable_Divisor", "hittable", g_esAbility[type].g_flAbsorbHittableDivisor, value, 1.0, 999999.0);
 		g_esAbility[type].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbility[type].g_flAbsorbMeleeDivisor, value, 1.0, 999999.0);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -560,6 +572,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_flAbsorbChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAbsorbChance, g_esAbility[type].g_flAbsorbChance);
 	g_esCache[tank].g_flAbsorbExplosiveDivisor = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAbsorbExplosiveDivisor, g_esAbility[type].g_flAbsorbExplosiveDivisor);
 	g_esCache[tank].g_flAbsorbFireDivisor = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAbsorbFireDivisor, g_esAbility[type].g_flAbsorbFireDivisor);
+	g_esCache[tank].g_flAbsorbHittableDivisor = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAbsorbHittableDivisor, g_esAbility[type].g_flAbsorbHittableDivisor);
 	g_esCache[tank].g_flAbsorbMeleeDivisor = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAbsorbMeleeDivisor, g_esAbility[type].g_flAbsorbMeleeDivisor);
 	g_esCache[tank].g_iAbsorbAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iAbsorbAbility, g_esAbility[type].g_iAbsorbAbility);
 	g_esCache[tank].g_iAbsorbDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iAbsorbDuration, g_esAbility[type].g_iAbsorbDuration);

@@ -2130,15 +2130,19 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 	}
 	else if ((min == -1.0 || min == 1.0) && max == 999999.0)
 	{
-		if (min == -1.0 && StrContains(key, "damage", false) != -1 && (StrEqual(value, "nodmg", false) || StrEqual(value, "friendly", false) || StrEqual(value, "harmless", false)))
+		static bool bDamageSetting, bForceSetting, bRangeSetting;
+		bDamageSetting = StrContains(key, "damage", false) != -1;
+		bForceSetting = StrContains(key, "force", false) != -1;
+		bRangeSetting = StrContains(key, "range", false) != -1;
+		if (min == -1.0 && (bDamageSetting || bForceSetting) && (StrEqual(value, "nodmg", false) || StrEqual(value, "friendly", false) || StrEqual(value, "harmless", false)))
 		{
 			return 0.0;
 		}
-		else if ((StrContains(key, "damage", false) != -1 && StrEqual(value, "weakest", false)) || (StrContains(key, "range", false) != -1 && StrEqual(value, "closest", false)))
+		else if (((bDamageSetting || bForceSetting) && StrEqual(value, "weakest", false)) || (bRangeSetting && StrEqual(value, "closest", false)))
 		{
 			return min;
 		}
-		else if ((StrContains(key, "damage", false) != -1 && StrEqual(value, "strongest", false)) || (StrContains(key, "range", false) != -1 && StrEqual(value, "farthest", false)))
+		else if (((bDamageSetting || bForceSetting) && StrEqual(value, "strongest", false)) || (bRangeSetting && StrEqual(value, "farthest", false)))
 		{
 			return max;
 		}

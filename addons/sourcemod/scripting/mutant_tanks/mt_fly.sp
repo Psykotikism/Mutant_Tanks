@@ -605,7 +605,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "player_jump"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && (!bIsTank(iTank, MT_CHECK_FAKECLIENT) || g_esCache[iTank].g_iHumanAbility == 2))
+		if (MT_IsTankSupported(iTank) && (!bIsTank(iTank, MT_CHECK_FAKECLIENT) || g_esCache[iTank].g_iHumanAbility == 2))
 		{
 			if (g_esCache[iTank].g_iFlyAbility == 1 && (g_esCache[iTank].g_iFlyType == 0 || (g_esCache[iTank].g_iFlyType & MT_FLY_JUMP)) && !g_esPlayer[iTank].g_bActivated)
 			{
