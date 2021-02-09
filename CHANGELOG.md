@@ -20,7 +20,7 @@
 - Fixed the Tank spawner not allowing multiple copies of the same Mutant Tank type to spawn.
 - Fixed inconsistent access levels for some developer commands.
 - Fixed survivors with the godmode reward not being saved from special infected when given the health or refill reward.
-- Fixed the `Boss` feature not calculating overall Tank health properly.
+- Fixed the `Boss` feature not calculating the Tank's total health properly.
 
 #### Settings
 - Fixed the `Boss Health Stages` setting not being read entirely.
@@ -107,6 +107,7 @@
 - The damage boost reward now gives the recipient 50% damage resistance throughout its duration.
 - The speed boost reward now allows the recipient to jump slightly higher throughout its duration.
 - The health display will no longer show the maximum health going over the maximum health set in `mutant_tanks.inc`.
+- The `Boss` feature's evolution now triggers a slow-motion effect for a second.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
@@ -205,7 +206,8 @@
 - Choke
 	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 	- The ability automatically ends when the targeted survivor becomes incapacitated. (Requested by 3aljiyavslgazana.)
-	- Affected survivors can no longer attack, shove, or use/grab items. (Requested by 3aljiyavslgazana.)
+	- Choked survivors can no longer attack, shove, or use/grab items. (Requested by 3aljiyavslgazana.)
+	- Choked survivors are now teleported to nearby teammates to avoid falling through the map after falling back down.
 
 - Clone
 	- Clones no longer reward survivors after dying. (Thanks to 3aljiyavslgazana for the idea!)
