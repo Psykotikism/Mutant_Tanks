@@ -9319,7 +9319,6 @@
 		// - "Idle Chance"
 		// - "Idle Hit Mode"
 		// Requires "mt_idle.smx" to be installed.
-		// Requires DHooks to be installed.
 		"Idle Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -13710,7 +13709,6 @@
 	{
 		// The Mutant Tank respawns upon death.
 		// Requires "mt_respawn.smx" to be installed.
-		// Requires DHooks to be installed.
 		"Respawn Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.

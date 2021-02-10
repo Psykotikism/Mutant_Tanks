@@ -17,6 +17,7 @@
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
 - Fixed the Mutant Tank type selection menu not appearing for human-controlled Tanks in competitive modes. (Thanks to yuzumi for reporting!)
 - Fixed Tanks not being setup properly when exiting ghost mode. (Thanks to yuzumi for reporting!)
+- Fixed Tank arrivals being announced when they are in ghost mode.
 - Fixed the Tank spawner not allowing multiple copies of the same Mutant Tank type to spawn.
 - Fixed inconsistent access levels for some developer commands.
 - Fixed survivors with the godmode reward not being saved from special infected when given the health or refill reward.
@@ -94,6 +95,7 @@
 - Changed the method for checking idle Tanks. (Thanks to BHaType for the code and epzminion for the help!)
 - The hidden `z_burn_max` convar will no longer be automatically set to `1.0` while Mutant Tanks is running. (Use the new `ConVars` section to modify the convar setting yourself.)
 - Added extra failsafe checks to make sure offsets are retrieved properly before executing relevant code. (Thanks to yuzumi for the idea!)
+- `Left 4 DHooks` is no longer required.
 
 #### Core Plugin
 - Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
@@ -115,6 +117,7 @@
 - The godmode reward now prevents the recipient from getting flung away by Chargers.
 - The godmode reward now prevents the recipient from getting staggered.
 - The melee immunity feature's pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+- Decreased the delay for custom configs from `3` to `1.5` seconds.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
@@ -220,6 +223,7 @@
 
 - Choke
 	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 	- The ability automatically ends when the targeted survivor becomes incapacitated. (Requested by 3aljiyavslgazana.)
 	- Choked survivors can no longer attack, shove, or use/grab items. (Requested by 3aljiyavslgazana.)
 	- Choked survivors are now teleported to nearby teammates to avoid falling through the map after falling back down.
