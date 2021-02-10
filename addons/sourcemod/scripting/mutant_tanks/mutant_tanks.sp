@@ -1429,10 +1429,10 @@ public void OnPluginStart()
 					LogError("%s Your \"CBaseEntity::IsInStasis\" offsets are outdated.", MT_TAG);
 				}
 
-				g_esGeneral.g_iMeleeOffset = gdMutantTanks.GetOffset("HiddenMelee");
+				g_esGeneral.g_iMeleeOffset = gdMutantTanks.GetOffset("CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon");
 				if (g_esGeneral.g_iMeleeOffset == -1)
 				{
-					LogError("%s Failed to load offset: HiddenMelee", MT_TAG);
+					LogError("%s Failed to load offset: CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon", MT_TAG);
 				}
 
 				g_esGeneral.g_ddFlingDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::Fling");
@@ -10291,7 +10291,7 @@ public MRESReturn mrePlayerHitPost(int pThis, DHookParam hParams)
 		if (g_esCache[iTank].g_flPunchForce >= 0.0 || bDeveloper || g_esPlayer[g_esGeneral.g_iTankTarget].g_bRewardedGod)
 		{
 			float flForce = bDeveloper ? 0.0 : 0.25, flVelocity[3];
-			flForce = (g_esCache[iTank].g_flPunchForce >= 0.0 && !bDeveloper && !g_esPlayer[g_esGeneral.g_iTankTarget].g_bRewardedGod) ? g_esCache[iTank].g_flPunchForce : flForce;
+			flForce = (g_esCache[iTank].g_flPunchForce >= flForce && (bDeveloper || g_esPlayer[g_esGeneral.g_iTankTarget].g_bRewardedGod)) ? flForce : g_esCache[iTank].g_flPunchForce;
 			GetEntPropVector(g_esGeneral.g_iTankTarget, Prop_Data, "m_vecVelocity", flVelocity);
 			ScaleVector(flVelocity, flForce);
 			TeleportEntity(g_esGeneral.g_iTankTarget, NULL_VECTOR, NULL_VECTOR, flVelocity);

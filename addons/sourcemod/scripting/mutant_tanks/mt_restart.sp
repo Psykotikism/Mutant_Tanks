@@ -165,10 +165,10 @@ public void OnPluginStart()
 		delete gdMutantTanks;
 	}
 
-	g_esGeneral.g_iFlowOffset = gdMutantTanks.GetOffset("m_flow");
+	g_esGeneral.g_iFlowOffset = gdMutantTanks.GetOffset("WitchLocomotion::IsAreaTraversable::m_flow");
 	if (g_esGeneral.g_iFlowOffset == -1)
 	{
-		LogError("%s Failed to load offset: m_flow", MT_TAG);
+		LogError("%s Failed to load offset: WitchLocomotion::IsAreaTraversable::m_flow", MT_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
