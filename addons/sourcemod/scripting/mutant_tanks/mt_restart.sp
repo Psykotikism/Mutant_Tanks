@@ -57,7 +57,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esGeneral
 {
 	Handle g_hSDKGetLastKnownArea;
-	Handle g_hSDKRespawnPlayer;
+	Handle g_hSDKRoundRespawn;
 
 	int g_iFlowOffset;
 }
@@ -194,8 +194,8 @@ public void OnPluginStart()
 		delete gdMutantTanks;
 	}
 
-	g_esGeneral.g_hSDKRespawnPlayer = EndPrepSDKCall();
-	if (g_esGeneral.g_hSDKRespawnPlayer == null)
+	g_esGeneral.g_hSDKRoundRespawn = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKRoundRespawn == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
 	}
@@ -871,7 +871,7 @@ static void vRestartHit(int survivor, int tank, float random, float chance, int 
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !g_esPlayer[survivor].g_bRewarded)
+	if (enabled == 1 && bIsSurvivor(survivor) && !g_esPlayer[survivor].g_bRewarded && g_esGeneral.g_hSDKRoundRespawn != null)
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -892,12 +892,10 @@ static void vRestartHit(int survivor, int tank, float random, float chance, int 
 					}
 				}
 
-				SDKCall(g_esGeneral.g_hSDKRespawnPlayer, survivor);
-
 				static char sItems[5][64];
 				ReplaceString(g_esCache[tank].g_sRestartLoadout, sizeof(esAbility::g_sRestartLoadout), " ", "");
 				ExplodeString(g_esCache[tank].g_sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-
+				SDKCall(g_esGeneral.g_hSDKRoundRespawn, survivor);
 				vRemoveWeapons(survivor);
 
 				for (int iItem = 0; iItem < sizeof(sItems); iItem++)
@@ -984,7 +982,7 @@ static void vRestartHit(int survivor, int tank, float random, float chance, int 
 static bool bIsSurvivorInCheckpoint(int survivor, bool start)
 {
 	bool bReturn = false;
-	if (g_esPlayer[survivor].g_bCheckpoint && g_esGeneral.g_iFlowOffset != -1)
+	if (g_esPlayer[survivor].g_bCheckpoint && g_esGeneral.g_hSDKGetLastKnownArea != null && g_esGeneral.g_iFlowOffset != -1)
 	{
 		int iArea = SDKCall(g_esGeneral.g_hSDKGetLastKnownArea, survivor);
 		if (iArea)

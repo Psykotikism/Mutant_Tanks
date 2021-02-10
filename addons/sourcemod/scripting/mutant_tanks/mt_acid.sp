@@ -58,8 +58,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esGeneral
 {
-	Handle g_hSDKAcidPlayer;
-	Handle g_hSDKPukePlayer;
+	Handle g_hSDKSpitterProjectileCreate;
+	Handle g_hSDKVomitUpon;
 }
 
 esGeneral g_esGeneral;
@@ -186,11 +186,10 @@ public void OnPluginStart()
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 
-			g_esGeneral.g_hSDKAcidPlayer = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKAcidPlayer == null)
+			g_esGeneral.g_hSDKSpitterProjectileCreate = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKSpitterProjectileCreate == null)
 			{
 				LogError("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
 			}
@@ -207,9 +206,8 @@ public void OnPluginStart()
 
 			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-
-			g_esGeneral.g_hSDKPukePlayer = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKPukePlayer == null)
+			g_esGeneral.g_hSDKVomitUpon = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKVomitUpon == null)
 			{
 				LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
 			}
@@ -792,7 +790,7 @@ public void MT_OnRockBreak(int tank, int rock)
 
 static void vAcid(int survivor, int tank)
 {
-	if (bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+	if (g_esGeneral.g_hSDKSpitterProjectileCreate == null || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -800,8 +798,7 @@ static void vAcid(int survivor, int tank)
 	static float flOrigin[3], flAngles[3];
 	GetClientAbsOrigin(survivor, flOrigin);
 	GetClientAbsAngles(survivor, flAngles);
-
-	SDKCall(g_esGeneral.g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, tank, 2.0);
+	SDKCall(g_esGeneral.g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
 }
 
 static void vAcidAbility(int tank, float random, int pos = -1)
@@ -895,12 +892,15 @@ static void vAcidHit(int survivor, int tank, float random, float chance, int ena
 					}
 					case false:
 					{
-						SDKCall(g_esGeneral.g_hSDKPukePlayer, survivor, tank, true);
-
-						if (g_esCache[tank].g_iAcidMessage & messages)
+						if (g_esGeneral.g_hSDKVomitUpon != null)
 						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
+							SDKCall(g_esGeneral.g_hSDKVomitUpon, survivor, tank, true);
+
+							if (g_esCache[tank].g_iAcidMessage & messages)
+							{
+								MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
+								MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
+							}
 						}
 					}
 				}
@@ -942,19 +942,22 @@ static void vAcidRange(int tank, int value, float random, int pos = -1)
 			case true: vAcid(tank, tank);
 			case false:
 			{
-				vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
-
-				static float flTankPos[3], flSurvivorPos[3], flRange;
-				GetClientAbsOrigin(tank, flTankPos);
-				flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esCache[tank].g_flAcidDeathRange;
-				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				if (g_esGeneral.g_hSDKVomitUpon != null)
 				{
-					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
+					vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
+
+					static float flTankPos[3], flSurvivorPos[3], flRange;
+					GetClientAbsOrigin(tank, flTankPos);
+					flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esCache[tank].g_flAcidDeathRange;
+					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
-						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-						if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
+						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 						{
-							SDKCall(g_esGeneral.g_hSDKPukePlayer, iSurvivor, tank, true);
+							GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+							if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
+							{
+								SDKCall(g_esGeneral.g_hSDKVomitUpon, iSurvivor, tank, true);
+							}
 						}
 					}
 				}
@@ -967,13 +970,12 @@ static void vAcidRockBreak(int tank, int rock, float random, int pos = -1)
 {
 	static float flChance;
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 12, pos) : g_esCache[tank].g_flAcidRockChance;
-	if (random <= flChance)
+	if (g_esGeneral.g_hSDKSpitterProjectileCreate != null && random <= flChance)
 	{
 		static float flOrigin[3], flAngles[3];
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] += 40.0;
-
-		SDKCall(g_esGeneral.g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, tank, 2.0);
+		SDKCall(g_esGeneral.g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
 
 		if (g_esCache[tank].g_iAcidMessage & MT_MESSAGE_SPECIAL)
 		{

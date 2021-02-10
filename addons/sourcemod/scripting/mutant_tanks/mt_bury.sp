@@ -137,7 +137,7 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKRevivePlayer;
+Handle g_hSDKRevive;
 
 public void OnPluginStart()
 {
@@ -162,8 +162,8 @@ public void OnPluginStart()
 		delete gdMutantTanks;
 	}
 
-	g_hSDKRevivePlayer = EndPrepSDKCall();
-	if (g_hSDKRevivePlayer == null)
+	g_hSDKRevive = EndPrepSDKCall();
+	if (g_hSDKRevive == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::OnRevived\" signature is outdated.", MT_TAG);
 	}
@@ -908,9 +908,9 @@ static void vStopBury(int survivor, int tank)
 	flOrigin[2] += g_esCache[tank].g_flBuryHeight;
 	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 
-	if (bIsPlayerIncapacitated(survivor))
+	if (bIsPlayerIncapacitated(survivor) && g_hSDKRevive != null)
 	{
-		SDKCall(g_hSDKRevivePlayer, survivor);
+		SDKCall(g_hSDKRevive, survivor);
 
 		if (g_esCache[tank].g_flBuryBuffer > 0.0)
 		{

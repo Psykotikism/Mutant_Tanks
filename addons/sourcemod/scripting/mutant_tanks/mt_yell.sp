@@ -127,7 +127,7 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKDeafenPlayer;
+Handle g_hSDKDeafen;
 
 public void OnPluginStart()
 {
@@ -156,8 +156,8 @@ public void OnPluginStart()
 	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 
-	g_hSDKDeafenPlayer = EndPrepSDKCall();
-	if (g_hSDKDeafenPlayer == null)
+	g_hSDKDeafen = EndPrepSDKCall();
+	if (g_hSDKDeafen == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::Deafen\" offsets are outdated.", MT_TAG);
 	}
@@ -848,7 +848,11 @@ static void vYell3(int survivor)
 	EmitSoundToClient(survivor, SOUND_YELL9);
 	EmitSoundToClient(survivor, SOUND_YELL10);
 	EmitSoundToClient(survivor, SOUND_YELL11);
-	SDKCall(g_hSDKDeafenPlayer, survivor, 1.0, 0.0, 0.01);
+
+	if (g_hSDKDeafen != null)
+	{
+		SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
+	}
 }
 
 static void vYellAbility(int tank)
@@ -897,7 +901,7 @@ public Action tTimerYell(Handle timer, DataPack pack)
 
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_esPlayer[iSurvivor].g_bAffected || g_esPlayer[iSurvivor].g_bRewarded)
+	if (!bIsSurvivor(iSurvivor) || !g_esPlayer[iSurvivor].g_bAffected || g_esPlayer[iSurvivor].g_bRewarded || g_hSDKDeafen == null)
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;

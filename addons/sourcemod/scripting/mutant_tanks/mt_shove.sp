@@ -141,7 +141,7 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKShovePlayer;
+Handle g_hSDKStagger;
 
 public void OnPluginStart()
 {
@@ -168,9 +168,8 @@ public void OnPluginStart()
 
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_Pointer);
-
-	g_hSDKShovePlayer = EndPrepSDKCall();
-	if (g_hSDKShovePlayer == null)
+	g_hSDKStagger = EndPrepSDKCall();
+	if (g_hSDKStagger == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::OnStaggered\" signature is outdated.", MT_TAG);
 	}
@@ -837,7 +836,7 @@ static void vShoveHit(int survivor, int tank, float random, float chance, int en
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && !g_esPlayer[survivor].g_bRewarded)
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && !g_esPlayer[survivor].g_bRewarded && g_hSDKStagger != null)
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -908,7 +907,7 @@ static void vShoveRange(int tank, int value, float random, int pos = -1)
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esCache[tank].g_flShoveDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShoveDeath == 1 && random <= flChance)
 	{
-		if (g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
+		if (g_hSDKStagger == null || g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -923,7 +922,7 @@ static void vShoveRange(int tank, int value, float random, int pos = -1)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
-					SDKCall(g_hSDKShovePlayer, iSurvivor, tank, flTankPos);
+					SDKCall(g_hSDKStagger, iSurvivor, tank, flTankPos);
 				}
 			}
 		}
@@ -985,7 +984,7 @@ public Action tTimerShove(Handle timer, DataPack pack)
 
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
+	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || g_hSDKStagger == null)
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;
@@ -1018,7 +1017,7 @@ public Action tTimerShove(Handle timer, DataPack pack)
 
 	static float flOrigin[3];
 	GetClientAbsOrigin(iTank, flOrigin);
-	SDKCall(g_hSDKShovePlayer, iSurvivor, iTank, flOrigin);
+	SDKCall(g_hSDKStagger, iSurvivor, iTank, flOrigin);
 
 	return Plugin_Continue;
 }

@@ -413,15 +413,15 @@ enum struct esGeneral
 	GlobalForward g_gfTypeChosenForward;
 
 	Handle g_hRegularWavesTimer;
-	Handle g_hSDKDetonateRock;
 	Handle g_hSDKGetMaxClip1;
 	Handle g_hSDKGetName;
 	Handle g_hSDKHasAnySurvivorLeftSafeArea;
 	Handle g_hSDKIsInStasis;
+	Handle g_hSDKITExpired;
 	Handle g_hSDKLeaveStasis;
 	Handle g_hSDKMaterializeGhost;
-	Handle g_hSDKRespawnPlayer;
-	Handle g_hSDKUnpukePlayer;
+	Handle g_hSDKRockDetonate;
+	Handle g_hSDKRoundRespawn;
 	Handle g_hSurvivalTimer;
 	Handle g_hTankWaveTimer;
 
@@ -1482,8 +1482,8 @@ public void OnPluginStart()
 				LogError("%s Failed to find signature: CTankRock::Detonate", MT_TAG);
 			}
 
-			g_esGeneral.g_hSDKDetonateRock = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKDetonateRock == null)
+			g_esGeneral.g_hSDKRockDetonate = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKRockDetonate == null)
 			{
 				LogError("%s Your \"CTankRock::Detonate\" signature is outdated.", MT_TAG);
 			}
@@ -1507,8 +1507,8 @@ public void OnPluginStart()
 				LogError("%s Failed to find signature: CTerrorPlayer::OnITExpired", MT_TAG);
 			}
 
-			g_esGeneral.g_hSDKUnpukePlayer = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKUnpukePlayer == null)
+			g_esGeneral.g_hSDKITExpired = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKITExpired == null)
 			{
 				LogError("%s Your \"CTerrorPlayer::OnITExpired\" signature is outdated.", MT_TAG);
 			}
@@ -1519,8 +1519,8 @@ public void OnPluginStart()
 				LogError("%s Failed to find signature: CTerrorPlayer::RoundRespawn", MT_TAG);
 			}
 
-			g_esGeneral.g_hSDKRespawnPlayer = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKRespawnPlayer == null)
+			g_esGeneral.g_hSDKRoundRespawn = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKRoundRespawn == null)
 			{
 				LogError("%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
 			}
@@ -1563,6 +1563,11 @@ public void OnPluginStart()
 			}
 
 			int iOffset = gdMutantTanks.GetOffset("CBaseCombatWeapon::GetMaxClip1");
+			if (iOffset == -1)
+			{
+				LogError("%s Failed to load offset: CBaseCombatWeapon::GetMaxClip1", MT_TAG);
+			}
+
 			StartPrepSDKCall(SDKCall_Entity);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_ByValue);
@@ -1573,6 +1578,11 @@ public void OnPluginStart()
 			}
 
 			iOffset = gdMutantTanks.GetOffset("TankIdle::GetName");
+			if (iOffset == -1)
+			{
+				LogError("%s Failed to load offset: TankIdle::GetName", MT_TAG);
+			}
+
 			StartPrepSDKCall(SDKCall_Raw);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Plain);
@@ -6150,9 +6160,9 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				vRemoveGlow(iPlayer);
 			}
-			else if (bIsSurvivor(iPlayer) && g_esPlayer[iPlayer].g_bRewardedGod && g_esGeneral.g_hSDKUnpukePlayer != null)
+			else if (bIsSurvivor(iPlayer) && g_esPlayer[iPlayer].g_bRewardedGod && g_esGeneral.g_hSDKITExpired != null)
 			{
-				SDKCall(g_esGeneral.g_hSDKUnpukePlayer, iPlayer);
+				SDKCall(g_esGeneral.g_hSDKITExpired, iPlayer);
 			}
 		}
 		else if (StrEqual(name, "player_no_longer_it"))
@@ -7821,9 +7831,9 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 							g_esPlayer[survivor].g_bRewardedGod = true;
 						}
 
-						if (g_esGeneral.g_hSDKUnpukePlayer != null)
+						if (g_esGeneral.g_hSDKITExpired != null)
 						{
-							SDKCall(g_esGeneral.g_hSDKUnpukePlayer, survivor);
+							SDKCall(g_esGeneral.g_hSDKITExpired, survivor);
 						}
 					}
 					else if (repeat)
@@ -9439,9 +9449,9 @@ static void vTankSpawn(int tank, int mode = 0)
 public void vDetonateRockFrame(int ref)
 {
 	int iRock = EntRefToEntIndex(ref);
-	if (bIsValidEntity(iRock) && g_esGeneral.g_hSDKDetonateRock != null)
+	if (bIsValidEntity(iRock) && g_esGeneral.g_hSDKRockDetonate != null)
 	{
-		SDKCall(g_esGeneral.g_hSDKDetonateRock, iRock);
+		SDKCall(g_esGeneral.g_hSDKRockDetonate, iRock);
 	}
 }
 
@@ -9947,7 +9957,7 @@ static bool bIsTypeAvailable(int type, int tank = 0)
 
 static bool bRespawnSurvivor(int survivor, bool restore)
 {
-	if (!bIsSurvivor(survivor, MT_CHECK_ALIVE) && g_esGeneral.g_hSDKRespawnPlayer != null)
+	if (!bIsSurvivor(survivor, MT_CHECK_ALIVE) && g_esGeneral.g_hSDKRoundRespawn != null)
 	{
 		bool bTeleport = false;
 		float flOrigin[3], flAngles[3];
@@ -9966,7 +9976,7 @@ static bool bRespawnSurvivor(int survivor, bool restore)
 
 		if (bTeleport)
 		{
-			SDKCall(g_esGeneral.g_hSDKRespawnPlayer, survivor);
+			SDKCall(g_esGeneral.g_hSDKRoundRespawn, survivor);
 			TeleportEntity(survivor, flOrigin, flAngles, NULL_VECTOR);
 
 			if (restore)
@@ -11039,16 +11049,10 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 {
 	pack.Reset();
 
-	static int iRock;
+	static int iRock, iTank;
 	iRock = EntRefToEntIndex(pack.ReadCell());
-	if (!g_esGeneral.g_bPluginEnabled || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
-	{
-		return Plugin_Stop;
-	}
-
-	static int iTank;
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || g_esCache[iTank].g_iRockEffects == 0)
+	if (!g_esGeneral.g_bPluginEnabled || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock) || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || g_esCache[iTank].g_iRockEffects == 0)
 	{
 		return Plugin_Stop;
 	}

@@ -58,8 +58,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esGeneral
 {
-	Handle g_hSDKFlingPlayer;
-	Handle g_hSDKPukePlayer;
+	Handle g_hSDKFling;
+	Handle g_hSDKVomitUpon;
 }
 
 esGeneral g_esGeneral;
@@ -182,8 +182,8 @@ public void OnPluginStart()
 			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 
-			g_esGeneral.g_hSDKFlingPlayer = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKFlingPlayer == null)
+			g_esGeneral.g_hSDKFling = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKFling == null)
 			{
 				LogError("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
 			}
@@ -201,8 +201,8 @@ public void OnPluginStart()
 			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 
-			g_esGeneral.g_hSDKPukePlayer = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKPukePlayer == null)
+			g_esGeneral.g_hSDKVomitUpon = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKVomitUpon == null)
 			{
 				LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
 			}
@@ -765,7 +765,6 @@ static void vCopyStats(int oldTank, int newTank)
 static void vFling(int survivor, int tank)
 {
 	static float flSurvivorPos[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
-
 	GetClientAbsOrigin(survivor, flSurvivorPos);
 	GetClientAbsOrigin(tank, flTankPos);
 
@@ -780,7 +779,7 @@ static void vFling(int survivor, int tank)
 	flVelocity[1] = (flRatio[1] * -1) * g_esCache[tank].g_flFlingForce;
 	flVelocity[2] = g_esCache[tank].g_flFlingForce;
 
-	SDKCall(g_esGeneral.g_hSDKFlingPlayer, survivor, flVelocity, 76, tank, 3.0);
+	SDKCall(g_esGeneral.g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
 }
 
 static void vFlingAbility(int tank, float random, int pos = -1)
@@ -866,22 +865,28 @@ static void vFlingHit(int survivor, int tank, float random, float chance, int en
 				{
 					case true:
 					{
-						vFling(survivor, tank);
-
-						if (g_esCache[tank].g_iFlingMessage & messages)
+						if (g_esGeneral.g_hSDKFling != null)
 						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Fling", sTankName, survivor);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fling", LANG_SERVER, sTankName, survivor);
+							vFling(survivor, tank);
+
+							if (g_esCache[tank].g_iFlingMessage & messages)
+							{
+								MT_PrintToChatAll("%s %t", MT_TAG2, "Fling", sTankName, survivor);
+								MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fling", LANG_SERVER, sTankName, survivor);
+							}
 						}
 					}
 					case false:
 					{
-						SDKCall(g_esGeneral.g_hSDKPukePlayer, survivor, tank, true);
-
-						if (g_esCache[tank].g_iFlingMessage & messages)
+						if (g_esGeneral.g_hSDKVomitUpon != null)
 						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
+							SDKCall(g_esGeneral.g_hSDKVomitUpon, survivor, tank, true);
+
+							if (g_esCache[tank].g_iFlingMessage & messages)
+							{
+								MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
+								MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
+							}
 						}
 					}
 				}
@@ -916,9 +921,24 @@ static void vFlingRange(int tank, int value, float random, int pos = -1)
 			return;
 		}
 
-		if (!g_bSecondGame)
+		switch (g_bSecondGame)
 		{
-			vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
+			case true:
+			{
+				if (g_esGeneral.g_hSDKFling == null)
+				{
+					return;
+				}
+			}
+			case false:
+			{
+				if (g_esGeneral.g_hSDKVomitUpon == null)
+				{
+					return;
+				}
+
+				vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
+			}
 		}
 
 		static float flTankPos[3];
@@ -937,7 +957,7 @@ static void vFlingRange(int tank, int value, float random, int pos = -1)
 					switch (g_bSecondGame)
 					{
 						case true: vFling(iSurvivor, tank);
-						case false: SDKCall(g_esGeneral.g_hSDKPukePlayer, iSurvivor, tank, true);
+						case false: SDKCall(g_esGeneral.g_hSDKVomitUpon, iSurvivor, tank, true);
 					}
 				}
 			}
