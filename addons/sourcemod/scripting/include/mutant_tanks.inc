@@ -1107,14 +1107,17 @@ stock void vAttachParticle2(float pos[3], float angle[3], const char[] particlen
 
 stock void vCheatCommand(int player, const char[] command, const char[] arguments = "")
 {
-	static int iCmdFlags, iFlagBits;
-	iFlagBits = GetUserFlagBits(player);
-	iCmdFlags = GetCommandFlags(command);
-	SetUserFlagBits(player, ADMFLAG_ROOT);
-	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
-	FakeClientCommand(player, "%s %s", command, arguments);
-	SetUserFlagBits(player, iFlagBits);
-	SetCommandFlags(command, iCmdFlags|FCVAR_CHEAT);
+	if (bIsValidClient(player, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		static int iCmdFlags, iFlagBits;
+		iFlagBits = GetUserFlagBits(player);
+		iCmdFlags = GetCommandFlags(command);
+		SetUserFlagBits(player, ADMFLAG_ROOT);
+		SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
+		FakeClientCommand(player, "%s %s", command, arguments);
+		SetUserFlagBits(player, iFlagBits);
+		SetCommandFlags(command, iCmdFlags|FCVAR_CHEAT);
+	}
 }
 
 stock void vCopyVector(float source[3], float target[3])
@@ -1575,7 +1578,6 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
-
 					return true;
 				}
 			}
@@ -1997,7 +1999,6 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
-
 			return false;
 		}
 
@@ -2056,7 +2057,6 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
-
 				return flUnits;
 			}
 

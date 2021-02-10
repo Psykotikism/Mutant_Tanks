@@ -12,7 +12,6 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <dhooks>
-#include <left4dhooks>
 #include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN
@@ -302,6 +301,8 @@ enum L4D2WeaponType
 
 enum struct esGeneral
 {
+	Address g_adDirector;
+
 	ArrayList g_alAbilitySections[4];
 	ArrayList g_alFilePaths;
 	ArrayList g_alPlugins;
@@ -349,14 +350,18 @@ enum struct esGeneral
 	ConVar g_cvMTSniperRifleAmmo;
 	ConVar g_cvMTTempSetting;
 
+	DynamicDetour g_ddEnterGhostStateDetour;
 	DynamicDetour g_ddEnterStasisDetour;
 	DynamicDetour g_ddEventKilledDetour;
+	DynamicDetour g_ddFirstSurvivorLeftSafeAreaDetour;
 	DynamicDetour g_ddFlingDetour;
 	DynamicDetour g_ddLauncherDirectionDetour;
 	DynamicDetour g_ddLeaveStasisDetour;
 	DynamicDetour g_ddPlayerHitDetour;
+	DynamicDetour g_ddReplaceTankDetour;
+	DynamicDetour g_ddSpawnTankDetour;
 	DynamicDetour g_ddStaggerDetour;
-	DynamicDetour g_ddTankRockDetour;
+	DynamicDetour g_ddTankRockCreateDetour;
 	DynamicDetour g_ddVomitedUponDetour;
 	DynamicDetour g_ddVomitjarHitDetour;
 
@@ -411,8 +416,10 @@ enum struct esGeneral
 	Handle g_hSDKDetonateRock;
 	Handle g_hSDKGetMaxClip1;
 	Handle g_hSDKGetName;
+	Handle g_hSDKHasAnySurvivorLeftSafeArea;
 	Handle g_hSDKIsInStasis;
 	Handle g_hSDKLeaveStasis;
+	Handle g_hSDKMaterializeGhost;
 	Handle g_hSDKRespawnPlayer;
 	Handle g_hSDKUnpukePlayer;
 	Handle g_hSurvivalTimer;
@@ -1448,17 +1455,25 @@ public void OnPluginStart()
 				}
 			}
 
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "Tank::LeaveStasis"))
+			g_esGeneral.g_adDirector = gdMutantTanks.GetAddress("CDirector");
+			if (g_esGeneral.g_adDirector == Address_Null)
 			{
-				LogError("%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
+				LogError("%s Failed to find address: CDirector", MT_TAG);
 			}
 
-			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-			g_esGeneral.g_hSDKLeaveStasis = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKLeaveStasis == null)
+			char sName[40];
+			FormatEx(sName, sizeof(sName), "%s::HasAnySurvivorLeftSafeArea", (g_bSecondGame ? "CDirector" : "Director"));
+			StartPrepSDKCall(SDKCall_Raw);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, sName))
 			{
-				LogError("%s Your \"Tank::LeaveStasis\" signature is outdated.", MT_TAG);
+				LogError("%s Failed to find signature: %s", MT_TAG, sName);
+			}
+
+			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+			g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea == null)
+			{
+				LogError("%s Your \"%s\" signature is outdated.", MT_TAG, sName);
 			}
 
 			StartPrepSDKCall(SDKCall_Entity);
@@ -1471,6 +1486,19 @@ public void OnPluginStart()
 			if (g_esGeneral.g_hSDKDetonateRock == null)
 			{
 				LogError("%s Your \"CTankRock::Detonate\" signature is outdated.", MT_TAG);
+			}
+
+			StartPrepSDKCall(SDKCall_Player);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::MaterializeFromGhost"))
+			{
+				LogError("%s Failed to find signature: CTerrorPlayer::MaterializeFromGhost", MT_TAG);
+			}
+
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_esGeneral.g_hSDKMaterializeGhost = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKMaterializeGhost == null)
+			{
+				LogError("%s Your \"CTerrorPlayer::MaterializeFromGhost\" signature is outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
@@ -1495,6 +1523,19 @@ public void OnPluginStart()
 			if (g_esGeneral.g_hSDKRespawnPlayer == null)
 			{
 				LogError("%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
+			}
+
+			StartPrepSDKCall(SDKCall_Player);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "Tank::LeaveStasis"))
+			{
+				LogError("%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
+			}
+
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_esGeneral.g_hSDKLeaveStasis = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKLeaveStasis == null)
+			{
+				LogError("%s Your \"Tank::LeaveStasis\" signature is outdated.", MT_TAG);
 			}
 
 			g_esGeneral.g_iIntentionOffset = gdMutantTanks.GetOffset("Tank::GetIntentionInterface");
@@ -1541,16 +1582,10 @@ public void OnPluginStart()
 				LogError("%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
 			}
 
-			g_esGeneral.g_ddLauncherDirectionDetour = DynamicDetour.FromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
-			if (g_esGeneral.g_ddLauncherDirectionDetour == null)
+			g_esGeneral.g_ddEnterGhostStateDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnEnterGhostState");
+			if (g_esGeneral.g_ddEnterGhostStateDetour == null)
 			{
-				LogError("%s Failed to find signature: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
-			}
-
-			g_esGeneral.g_ddTankRockDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankRock::Create");
-			if (g_esGeneral.g_ddTankRockDetour == null)
-			{
-				LogError("%s Failed to find signature: CTankRock::Create", MT_TAG);
+				LogError("%s Failed to find signature: CTerrorPlayer::OnEnterGhostState", MT_TAG);
 			}
 
 			g_esGeneral.g_ddEnterStasisDetour = DynamicDetour.FromConf(gdMutantTanks, "Tank::EnterStasis");
@@ -1559,16 +1594,29 @@ public void OnPluginStart()
 				LogError("%s Failed to find signature: Tank::EnterStasis", MT_TAG);
 			}
 
-			g_esGeneral.g_ddLeaveStasisDetour = DynamicDetour.FromConf(gdMutantTanks, "Tank::LeaveStasis");
-			if (g_esGeneral.g_ddLeaveStasisDetour == null)
-			{
-				LogError("%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
-			}
-
 			g_esGeneral.g_ddEventKilledDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::Event_Killed");
 			if (g_esGeneral.g_ddEventKilledDetour == null)
 			{
 				LogError("%s Failed to find signature: CTerrorPlayer::Event_Killed", MT_TAG);
+			}
+
+			FormatEx(sName, sizeof(sName), "%s::OnFirstSurvivorLeftSafeArea", (g_bSecondGame ? "CDirector" : "Director"));
+			g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour = DynamicDetour.FromConf(gdMutantTanks, sName);
+			if (g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour == null)
+			{
+				LogError("%s Failed to find signature: %s", MT_TAG, sName);
+			}
+
+			g_esGeneral.g_ddLauncherDirectionDetour = DynamicDetour.FromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
+			if (g_esGeneral.g_ddLauncherDirectionDetour == null)
+			{
+				LogError("%s Failed to find signature: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
+			}
+
+			g_esGeneral.g_ddLeaveStasisDetour = DynamicDetour.FromConf(gdMutantTanks, "Tank::LeaveStasis");
+			if (g_esGeneral.g_ddLeaveStasisDetour == null)
+			{
+				LogError("%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
 			}
 
 			g_esGeneral.g_ddPlayerHitDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankClaw::OnPlayerHit");
@@ -1577,10 +1625,28 @@ public void OnPluginStart()
 				LogError("%s Failed to find signature: CTankClaw::OnPlayerHit", MT_TAG);
 			}
 
+			g_esGeneral.g_ddReplaceTankDetour = DynamicDetour.FromConf(gdMutantTanks, "ZombieManager::ReplaceTank");
+			if (g_esGeneral.g_ddReplaceTankDetour == null)
+			{
+				LogError("%s Failed to find signature: ZombieManager::ReplaceTank", MT_TAG);
+			}
+
+			g_esGeneral.g_ddSpawnTankDetour = DynamicDetour.FromConf(gdMutantTanks, "ZombieManager::SpawnTank");
+			if (g_esGeneral.g_ddSpawnTankDetour == null)
+			{
+				LogError("%s Failed to find signature: ZombieManager::SpawnTank", MT_TAG);
+			}
+
 			g_esGeneral.g_ddStaggerDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnStaggered");
 			if (g_esGeneral.g_ddStaggerDetour == null)
 			{
 				LogError("%s Failed to find signature: CTerrorPlayer::OnStaggered", MT_TAG);
+			}
+
+			g_esGeneral.g_ddTankRockCreateDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankRock::Create");
+			if (g_esGeneral.g_ddTankRockCreateDetour == null)
+			{
+				LogError("%s Failed to find signature: CTankRock::Create", MT_TAG);
 			}
 
 			g_esGeneral.g_ddVomitedUponDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnVomitedUpon");
@@ -4559,7 +4625,7 @@ static void vCopyTankStats(int tank, int newtank)
 static void vCustomConfig(const char[] savepath)
 {
 	DataPack dpConfig;
-	CreateDataTimer(3.0, tTimerExecuteCustomConfig, dpConfig, TIMER_FLAG_NO_MAPCHANGE);
+	CreateDataTimer(1.5, tTimerExecuteCustomConfig, dpConfig, TIMER_FLAG_NO_MAPCHANGE);
 	dpConfig.WriteString(savepath);
 }
 
@@ -6568,7 +6634,7 @@ static void vVocalizeDeath(int killer, int assistant, int tank)
 
 		for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 		{
-			if (bIsSurvivor(iTeammate) && g_esPlayer[iTeammate].g_iTankDamage[tank] > 0.0 && iTeammate != killer && iTeammate != assistant)
+			if (bIsSurvivor(iTeammate, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTeammate].g_iTankDamage[tank] > 0.0 && iTeammate != killer && iTeammate != assistant)
 			{
 				FakeClientCommand(iTeammate, "vocalize PlayerNiceJob #%i", iTimestamp);
 			}
@@ -6599,14 +6665,9 @@ static void vPluginStatus()
 
 		vHookEvents(true);
 
-		if (!g_esGeneral.g_ddLauncherDirectionDetour.Enable(Hook_Pre, mreLaunchDirectionPre))
+		if (!g_esGeneral.g_ddEnterGhostStateDetour.Enable(Hook_Post, mreEnterGhostStatePost))
 		{
-			LogError("Failed to enable detour pre: CEnvRockLauncher::LaunchCurrentDir");
-		}
-
-		if (!g_esGeneral.g_ddTankRockDetour.Enable(Hook_Post, mreTankRockPost))
-		{
-			LogError("Failed to enable detour post: CTankRock::Create");
+			LogError("Failed to enable detour post: CTerrorPlayer::OnEnterGhostState");
 		}
 
 		if (!g_esGeneral.g_ddEnterStasisDetour.Enable(Hook_Post, mreEnterStasisPost))
@@ -6614,14 +6675,24 @@ static void vPluginStatus()
 			LogError("Failed to enable detour post: Tank::EnterStasis");
 		}
 
-		if (!g_esGeneral.g_ddLeaveStasisDetour.Enable(Hook_Post, mreLeaveStasisPost))
-		{
-			LogError("Failed to enable detour post: Tank::LeaveStasis");
-		}
-
 		if (!g_esGeneral.g_ddEventKilledDetour.Enable(Hook_Pre, mreEventKilledPre))
 		{
 			LogError("Failed to enable detour pre: CTerrorPlayer::Event_Killed");
+		}
+
+		if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Enable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
+		{
+			LogError("Failed to enable detour post: %s::OnFirstSurvivorLeftSafeArea", (g_bSecondGame ? "CDirector" : "Director"));
+		}
+
+		if (!g_esGeneral.g_ddLauncherDirectionDetour.Enable(Hook_Pre, mreLaunchDirectionPre))
+		{
+			LogError("Failed to enable detour pre: CEnvRockLauncher::LaunchCurrentDir");
+		}
+
+		if (!g_esGeneral.g_ddLeaveStasisDetour.Enable(Hook_Post, mreLeaveStasisPost))
+		{
+			LogError("Failed to enable detour post: Tank::LeaveStasis");
 		}
 
 		if (!g_esGeneral.g_ddPlayerHitDetour.Enable(Hook_Pre, mrePlayerHitPre))
@@ -6634,9 +6705,24 @@ static void vPluginStatus()
 			LogError("Failed to enable detour post: CTankClaw::OnPlayerHit");
 		}
 
+		if (!g_esGeneral.g_ddReplaceTankDetour.Enable(Hook_Post, mreReplaceTankPost))
+		{
+			LogError("Failed to enable detour post: ZombieManager::ReplaceTank");
+		}
+
+		if (!g_esGeneral.g_ddSpawnTankDetour.Enable(Hook_Pre, mreSpawnTankPre))
+		{
+			LogError("Failed to enable detour pre: ZombieManager::SpawnTank");
+		}
+
 		if (!g_esGeneral.g_ddStaggerDetour.Enable(Hook_Pre, mreStaggerPre))
 		{
 			LogError("Failed to enable detour pre: CTerrorPlayer::OnStaggered");
+		}
+
+		if (!g_esGeneral.g_ddTankRockCreateDetour.Enable(Hook_Post, mreTankRockCreatePost))
+		{
+			LogError("Failed to enable detour post: CTankRock::Create");
 		}
 
 		if (!g_esGeneral.g_ddVomitedUponDetour.Enable(Hook_Pre, mreVomitedUponPre))
@@ -6660,14 +6746,9 @@ static void vPluginStatus()
 
 		vHookEvents(false);
 
-		if (!g_esGeneral.g_ddLauncherDirectionDetour.Disable(Hook_Pre, mreLaunchDirectionPre))
+		if (!g_esGeneral.g_ddEnterGhostStateDetour.Disable(Hook_Post, mreEnterGhostStatePost))
 		{
-			LogError("Failed to disable detour pre: CEnvRockLauncher::LaunchCurrentDir");
-		}
-
-		if (!g_esGeneral.g_ddTankRockDetour.Disable(Hook_Post, mreTankRockPost))
-		{
-			LogError("Failed to disable detour post: CTankRock::Create");
+			LogError("Failed to disable detour post: CTerrorPlayer::OnEnterGhostState");
 		}
 
 		if (!g_esGeneral.g_ddEnterStasisDetour.Disable(Hook_Post, mreEnterStasisPost))
@@ -6675,14 +6756,24 @@ static void vPluginStatus()
 			LogError("Failed to disable detour post: Tank::EnterStasis");
 		}
 
-		if (!g_esGeneral.g_ddLeaveStasisDetour.Disable(Hook_Post, mreLeaveStasisPost))
-		{
-			LogError("Failed to disable detour post: Tank::LeaveStasis");
-		}
-
 		if (!g_esGeneral.g_ddEventKilledDetour.Disable(Hook_Pre, mreEventKilledPre))
 		{
 			LogError("Failed to disable detour pre: CTerrorPlayer::Event_Killed");
+		}
+
+		if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Disable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
+		{
+			LogError("Failed to disable detour post: %s::OnFirstSurvivorLeftSafeArea", (g_bSecondGame ? "CDirector" : "Director"));
+		}
+
+		if (!g_esGeneral.g_ddLauncherDirectionDetour.Disable(Hook_Pre, mreLaunchDirectionPre))
+		{
+			LogError("Failed to disable detour pre: CEnvRockLauncher::LaunchCurrentDir");
+		}
+
+		if (!g_esGeneral.g_ddLeaveStasisDetour.Disable(Hook_Post, mreLeaveStasisPost))
+		{
+			LogError("Failed to disable detour post: Tank::LeaveStasis");
 		}
 
 		if (!g_esGeneral.g_ddPlayerHitDetour.Disable(Hook_Pre, mrePlayerHitPre))
@@ -6695,9 +6786,24 @@ static void vPluginStatus()
 			LogError("Failed to disable detour post: CTankClaw::OnPlayerHit");
 		}
 
+		if (!g_esGeneral.g_ddReplaceTankDetour.Disable(Hook_Post, mreReplaceTankPost))
+		{
+			LogError("Failed to disable detour post: ZombieManager::ReplaceTank");
+		}
+
+		if (!g_esGeneral.g_ddSpawnTankDetour.Disable(Hook_Pre, mreSpawnTankPre))
+		{
+			LogError("Failed to disable detour pre: ZombieManager::SpawnTank");
+		}
+
 		if (!g_esGeneral.g_ddStaggerDetour.Disable(Hook_Pre, mreStaggerPre))
 		{
 			LogError("Failed to disable detour pre: CTerrorPlayer::OnStaggered");
+		}
+
+		if (!g_esGeneral.g_ddTankRockCreateDetour.Disable(Hook_Post, mreTankRockCreatePost))
+		{
+			LogError("Failed to disable detour post: CTankRock::Create");
 		}
 
 		if (!g_esGeneral.g_ddVomitedUponDetour.Disable(Hook_Pre, mreVomitedUponPre))
@@ -7046,7 +7152,6 @@ static void vSurvivorReactions(int tank)
 			DispatchKeyValue(iTimescale, "acceleration", "2.0");
 			DispatchKeyValue(iTimescale, "minBlendRate", "1.0");
 			DispatchKeyValue(iTimescale, "blendDeltaMultiplier", "2.0");
-
 			DispatchSpawn(iTimescale);
 			AcceptEntityInput(iTimescale, "Start");
 			CreateTimer(0.75, tTimerRemoveTimescale, EntIndexToEntRef(iTimescale), TIMER_FLAG_NO_MAPCHANGE);
@@ -7424,7 +7529,8 @@ static void vResetTimers(bool delay = false)
 		case true: CreateTimer(g_esGeneral.g_flRegularDelay, tTimerDelayRegularWaves, _, TIMER_FLAG_NO_MAPCHANGE);
 		case false:
 		{
-			if (L4D_HasAnySurvivorLeftSafeArea())
+			bool bStart = SDKCall(g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea, g_esGeneral.g_adDirector);
+			if (g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea != null && g_esGeneral.g_adDirector != Address_Null && bStart)
 			{
 				vKillRegularWavesTimer();
 				g_esGeneral.g_hRegularWavesTimer = CreateTimer(g_esGeneral.g_flRegularInterval, tTimerRegularWaves, _, TIMER_REPEAT);
@@ -7575,7 +7681,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 				g_esPlayer[survivor].g_bRewardedRespawn = true;
 			}
 
-			if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
+			if (bIsSurvivor(survivor))
 			{
 				float flDuration = g_esCache[tank].g_flRewardDuration[priority], flTime = (bDeveloper && flDuration < 60.0) ? 60.0 : flDuration;
 				if ((type & MT_REWARD_HEALTH) && !g_esPlayer[survivor].g_bRewardedHealth)
@@ -9455,19 +9561,25 @@ public void vTankSpawnFrame(DataPack pack)
 	{
 		vCacheSettings(iTank);
 
-		static char sOldName[33], sNewName[33];
-		vGetTranslatedName(sOldName, sizeof(sOldName), _, g_esPlayer[iTank].g_iOldTankType);
-		vGetTranslatedName(sNewName, sizeof(sNewName), _, g_esPlayer[iTank].g_iTankType);
-		vSetName(iTank, sOldName, sNewName, iMode);
-
 		if (!bIsInfectedGhost(iTank) && !bIsTankInStasis(iTank))
 		{
 			g_esPlayer[iTank].g_bKeepCurrentType = false;
+
+			static char sOldName[33], sNewName[33];
+			vGetTranslatedName(sOldName, sizeof(sOldName), _, g_esPlayer[iTank].g_iOldTankType);
+			vGetTranslatedName(sNewName, sizeof(sNewName), _, g_esPlayer[iTank].g_iTankType);
+			vSetName(iTank, sOldName, sNewName, iMode);
 
 			vParticleEffects(iTank);
 			vResetSpeed(iTank, false);
 			vSetProps(iTank);
 			vThrowInterval(iTank);
+
+			Call_StartForward(g_esGeneral.g_gfPostTankSpawnForward);
+			Call_PushCell(iTank);
+			Call_Finish();
+
+			vCombineAbilitiesForward(iTank, MT_COMBO_POSTSPAWN);
 		}
 
 		switch (iMode)
@@ -9491,12 +9603,6 @@ public void vTankSpawnFrame(DataPack pack)
 				g_esPlayer[iTank].g_iTankHealth = GetEntProp(iTank, Prop_Data, "m_iMaxHealth");
 			}
 		}
-
-		Call_StartForward(g_esGeneral.g_gfPostTankSpawnForward);
-		Call_PushCell(iTank);
-		Call_Finish();
-
-		vCombineAbilitiesForward(iTank, MT_COMBO_POSTSPAWN);
 	}
 }
 
@@ -10136,64 +10242,16 @@ static int iGetTypeCount(int type = 0)
 	return iTypeCount;
 }
 
-public void L4D_OnEnterGhostState(int client)
+public MRESReturn mreEnterGhostStatePost(int pThis)
 {
-	if (bIsTank(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	if (bIsTank(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
-		g_esPlayer[client].g_bKeepCurrentType = true;
+		g_esPlayer[pThis].g_bKeepCurrentType = true;
 
-		CreateTimer(1.0, tTimerForceSpawnTank, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-	}
-}
-
-public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
-{
-	vResetTimers(true);
-}
-
-public void L4D_OnReplaceTank(int tank, int newtank)
-{
-	g_esPlayer[newtank].g_bReplaceSelf = true;
-
-	vSetColor(newtank, g_esPlayer[tank].g_iTankType);
-	vCopyTankStats(tank, newtank);
-	vTankSpawn(newtank, -1);
-	vReset2(tank, 0);
-	vReset3(tank);
-	vCacheSettings(tank);
-}
-
-public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
-{
-	if (g_esGeneral.g_iLimitExtras == 0 || g_esGeneral.g_bForceSpawned)
-	{
-		return Plugin_Continue;
+		CreateTimer(1.0, tTimerForceSpawnTank, GetClientUserId(pThis), TIMER_FLAG_NO_MAPCHANGE);
 	}
 
-	bool bBlock = false;
-	int iCount = iGetTankCount(true), iCount2 = iGetTankCount(false);
-
-	switch (bIsFinaleMap())
-	{
-		case true:
-		{
-			switch (g_esGeneral.g_iTankWave)
-			{
-				case 0: bBlock = false;
-				default:
-				{
-					switch (g_esGeneral.g_iFinaleAmount)
-					{
-						case 0: bBlock = (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount) || (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount2);
-						default: bBlock = (0 < g_esGeneral.g_iFinaleAmount <= iCount) || (0 < g_esGeneral.g_iFinaleAmount <= iCount2);
-					}
-				}
-			}
-		}
-		case false: bBlock = (0 < g_esGeneral.g_iRegularAmount <= iCount) || (0 < g_esGeneral.g_iRegularAmount <= iCount2);
-	}
-
-	return bBlock ? Plugin_Handled : Plugin_Continue;
+	return MRES_Ignored;
 }
 
 public MRESReturn mreEnterStasisPost(int pThis)
@@ -10236,6 +10294,22 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 	{
 		SetEntityRenderMode(pThis, RENDER_NORMAL);
 		SetEntityRenderColor(pThis, 255, 255, 255, 255);
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreFirstSurvivorLeftSafeAreaPost(DHookParam hParams)
+{
+	if (hParams.IsNull(1))
+	{
+		return MRES_Ignored;
+	}
+
+	int iSurvivor = hParams.Get(1);
+	if (bIsSurvivor(iSurvivor))
+	{
+		vResetTimers(true);
 	}
 
 	return MRES_Ignored;
@@ -10301,6 +10375,60 @@ public MRESReturn mrePlayerHitPost(int pThis, DHookParam hParams)
 	g_esGeneral.g_iTankTarget = 0;
 }
 
+public MRESReturn mreReplaceTankPost(DHookParam hParams)
+{
+	int iOldTank = hParams.Get(1), iNewTank = hParams.Get(2);
+	g_esPlayer[iNewTank].g_bReplaceSelf = true;
+
+	vSetColor(iNewTank, g_esPlayer[iOldTank].g_iTankType);
+	vCopyTankStats(iOldTank, iNewTank);
+	vTankSpawn(iNewTank, -1);
+	vReset2(iOldTank, 0);
+	vReset3(iOldTank);
+	vCacheSettings(iOldTank);
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreSpawnTankPre(DHookReturn hReturn, DHookParam hParams)
+{
+	float flPos[3], flAngles[3];
+	hParams.GetVector(1, flPos);
+	hParams.GetVector(2, flAngles);
+
+	if (g_esGeneral.g_iLimitExtras == 0 || g_esGeneral.g_bForceSpawned)
+	{
+		return MRES_Ignored;
+	}
+
+	bool bBlock = false;
+	int iCount = iGetTankCount(true), iCount2 = iGetTankCount(false), iReturn = hReturn.Value;
+
+	switch (bIsFinaleMap())
+	{
+		case true:
+		{
+			switch (g_esGeneral.g_iTankWave)
+			{
+				case 0: bBlock = false;
+				default:
+				{
+					switch (g_esGeneral.g_iFinaleAmount)
+					{
+						case 0: bBlock = (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount) || (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount2);
+						default: bBlock = (0 < g_esGeneral.g_iFinaleAmount <= iCount) || (0 < g_esGeneral.g_iFinaleAmount <= iCount2);
+					}
+				}
+			}
+		}
+		case false: bBlock = (0 < g_esGeneral.g_iRegularAmount <= iCount) || (0 < g_esGeneral.g_iRegularAmount <= iCount2);
+	}
+
+	hReturn.Value = bBlock ? 0 : iReturn;
+
+	return bBlock ? MRES_Supercede : MRES_Ignored;
+}
+
 public MRESReturn mreStaggerPre(int pThis, DHookParam hParams)
 {
 	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 9) || g_esPlayer[pThis].g_bRewardedGod))
@@ -10311,7 +10439,7 @@ public MRESReturn mreStaggerPre(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
-public MRESReturn mreTankRockPost(DHookReturn hReturn)
+public MRESReturn mreTankRockCreatePost(DHookReturn hReturn)
 {
 	static int iRock;
 	iRock = hReturn.Value;
@@ -10665,16 +10793,22 @@ public Action tTimerFireEffect(Handle timer, int userid)
 public Action tTimerForceSpawnTank(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTank(iTank))
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTank(iTank) || !bIsInfectedGhost(iTank))
 	{
 		return Plugin_Stop;
 	}
 
-	int iAbility = L4D_MaterializeFromGhost(iTank);
-	switch (iAbility == -1)
+	int iAbility = -1;
+	if (g_esGeneral.g_hSDKMaterializeGhost != null)
 	{
-		case true: MT_PrintToChat(iTank, "%s %t", MT_TAG3, "SpawnManually");
-		case false: vTankSpawn(iTank);
+		SDKCall(g_esGeneral.g_hSDKMaterializeGhost, iTank);
+		iAbility = GetEntPropEnt(iTank, Prop_Send, "m_customAbility");
+	}
+
+	switch (iAbility)
+	{
+		case -1: MT_PrintToChat(iTank, "%s %t", MT_TAG3, "SpawnManually");
+		default: vTankSpawn(iTank);
 	}
 
 	return Plugin_Continue;

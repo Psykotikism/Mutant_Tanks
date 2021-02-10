@@ -411,7 +411,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public MRESReturn mreIdlePlayerPre(int pThis, DHookReturn hReturn)
+public MRESReturn mreIdlePlayerPre(int pThis)
 {
 	if (g_esGeneral.g_bApplyFix)
 	{
@@ -421,7 +421,7 @@ public MRESReturn mreIdlePlayerPre(int pThis, DHookReturn hReturn)
 	g_esGeneral.g_bApplyFix = true;
 }
 
-public MRESReturn mreIdlePlayerPost(int pThis, DHookReturn hReturn)
+public MRESReturn mreIdlePlayerPost(int pThis)
 {
 	if (g_esGeneral.g_bApplyFix && g_esGeneral.g_iSurvivorBot > 0 && !bIsValidClient(g_esGeneral.g_iSurvivorBot, MT_CHECK_FAKECLIENT))
 	{
@@ -429,7 +429,6 @@ public MRESReturn mreIdlePlayerPost(int pThis, DHookReturn hReturn)
 
 		SDKCall(g_esGeneral.g_hSDKSpecPlayer, g_esGeneral.g_iSurvivorBot, pThis);
 		SDKCall(g_esGeneral.g_hSDKObservePlayer, pThis, g_esGeneral.g_iSurvivorBot);
-
 		vOfferTakeover(pThis, g_esGeneral.g_iSurvivorBot);
 
 		g_esPlayer[g_esGeneral.g_iSurvivorBot].g_bAffected = false;
