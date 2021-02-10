@@ -4,6 +4,7 @@
 	{
 		"Functions"
 		{
+			/* CEnvRockLauncher::LaunchCurrentDir() */
 			"CEnvRockLauncher::LaunchCurrentDir"
 			{
 				"signature"	"CEnvRockLauncher::LaunchCurrentDir"
@@ -11,6 +12,7 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
 			"CTankClaw::OnPlayerHit"
 			{
 				"signature"	"CTankClaw::OnPlayerHit"
@@ -29,6 +31,7 @@
 					}
 				}
 			}
+			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
 			"CTankRock::Create"
 			{
 				"signature"	"CTankRock::Create"
@@ -54,6 +57,7 @@
 					}
 				}
 			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed"
 			{
 				"signature"	"CTerrorPlayer::Event_Killed"
@@ -68,6 +72,7 @@
 					}
 				}
 			}
+			/* CTerrorPlayer::GoAwayFromKeyboard() */
 			"CTerrorPlayer::GoAwayFromKeyboard"
 			{
 				"signature"	"CTerrorPlayer::GoAwayFromKeyboard"
@@ -75,6 +80,7 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
 			"CTerrorPlayer::OnStaggered"
 			{
 				"signature"	"CTerrorPlayer::OnStaggered"
@@ -83,7 +89,7 @@
 				"this"		"entity"
 				"arguments"
 				{
-					"pusher"
+					"charger"
 					{
 						"type"		"cbaseentity"
 					}
@@ -93,6 +99,7 @@
 					}
 				}
 			}
+			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
 			{
 				"signature"	"SurvivorBot::SetHumanSpectator"
@@ -107,6 +114,7 @@
 					}
 				}
 			}
+			/* Tank::EnterStasis() */
 			"Tank::EnterStasis"
 			{
 				"signature"	"Tank::EnterStasis"
@@ -114,6 +122,7 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* Tank::LeaveStasis() */
 			"Tank::LeaveStasis"
 			{
 				"signature"	"Tank::LeaveStasis"
@@ -127,6 +136,7 @@
 	{
 		"Functions"
 		{
+			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool) */
 			"CTerrorPlayer::OnVomitedUpon"
 			{
 				"signature"	"CTerrorPlayer::OnVomitedUpon"
@@ -152,57 +162,68 @@
 		}
 		"Offsets"
 		{
+			/* Action<Tank>::FirstContainedResponder() const */
 			"Action<Tank>::FirstContainedResponder"
 			{
 				"windows"	"16"
 				"linux"		"16"
 			}
+			/* Behavior<Tank>::FirstContainedResponder() const */
 			"Behavior<Tank>::FirstContainedResponder"
 			{
 				"windows"	"8"
 				"linux"		"8"
 			}
+			/* CBaseCombatWeapon::GetMaxClip1() const */
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
 				"windows"	"300"
 				"linux"		"301"
 			}
+			/* CTerrorPlayer::Deafen(float, float, float) */
 			"CTerrorPlayer::Deafen"
 			{
 				"windows"	"491"
 				"linux"		"494"
 			}
+			/* CTerrorPlayer::GetLastKnownArea() const */
 			"CTerrorPlayer::GetLastKnownArea"
 			{
 				"windows"	"309"
 				"linux"		"310"
 			}
+			/* CTerrorPlayer::SetObserverTarget(CBaseEntity*) */
 			"CTerrorPlayer::SetObserverTarget"
 			{
 				"windows"	"375"
 				"linux"		"376"
 			}
+			/* Tank::GetIntentionInterface() const */
 			"Tank::GetIntentionInterface"
 			{
 				"windows"	"11924"
 				"linux"		"11940"
 			}
+			/* TankIdle::GetName() const */
 			"TankIdle::GetName"
 			{
 				"windows"	"35"
 				"linux"		"36"
 			}
+			/* TankIntention::FirstContainedResponder() const */
 			"TankIntention::FirstContainedResponder"
 			{
 				"windows"	"28"
 				"linux"		"28"
 			}
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
 				"windows"	"300"
 				"linux"		"304"
 			}
-			"m_flow"
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
+			"WitchLocomotion::IsAreaTraversable::m_flow"
 			{
 				"windows"	"340"
 				"linux"		"348"
@@ -210,84 +231,98 @@
 		}
 		"Signatures"
 		{
+			/* CEnvRockLauncher::LaunchCurrentDir() */
 			"CEnvRockLauncher::LaunchCurrentDir"
 			{
 				"library"	"server"
 				"linux"		"@_ZN16CEnvRockLauncher16LaunchCurrentDirEv"
 				"windows"	"\x83\xEC\x40\x56\x8B\xF1\x8B\x86\x1C\x01\x00\x00"
 			}
+			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
 			"CTankClaw::OnPlayerHit"
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankClaw11OnPlayerHitEP13CTerrorPlayerb"
 				"windows"	"\x81\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x8B"
 			}
+			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
 			"CTankRock::Create"
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter.constprop.123"
 				"windows"	"\x8B\x44\x24\x08\x53\x8B\x5C\x24\x08"
 			}
+			/* CTankRock::Detonate() */
 			"CTankRock::Detonate"
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock8DetonateEv"
 				"windows"	"\x83\xEC\x30\x53\x55\x56\x8B\xF1\x80\xBE\xD4\x08\x00\x00\x00"
 			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12Event_KilledERK15CTakeDamageInfo"
 				"windows"	"\x81\xEC\xE8\x01\x00\x00"
 			}
+			/* CTerrorPlayer::GoAwayFromKeyboard() */
 			"CTerrorPlayer::GoAwayFromKeyboard"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer18GoAwayFromKeyboardEv"
 				"windows"	"\x83\xEC\x2A\x53\x56\x57\x8B\xF1\x8B\x06\x8B\x90\xB8\x2A\x2A\x2A\x8B\x9E\x34\x2A\x2A\x2A\x6A\x2A\x6A\x2A\x6A\x2A"
 			}
+			/* CTerrorPlayer::OnITExpired() */
 			"CTerrorPlayer::OnITExpired"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer11OnITExpiredEv"
 				"windows"	"\xD9\x05\x2A\x2A\x2A\x2A\x56\x57\x8B\xF9\xD8\x9F\x2A\x2A\x00\x00\x8D\xB7\x2A\x2A\x00\x00\xDF\xE0\xF6\xC4\x2A\x7B\x13\x8B\x46\xF8\x8B\x10\x8D\x4E\xF8\x56\xFF\xD2\xD9\x2A\x2A\x2A\x2A\x2A\xD9\x1E\x8B\x37\x6A"
 			}
+			/* CTerrorPlayer::OnRevived() */
 			"CTerrorPlayer::OnRevived"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
 				"windows"	"\x83\x2A\x2A\x53\x55\x56\x57\x8B\x2A\x8B\x2A\x8B"
 			}
+			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
 			"CTerrorPlayer::OnStaggered"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
 				"windows"	"\x83\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 			}
+			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool) */
 			"CTerrorPlayer::OnVomitedUpon"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_bb"
 				"windows"	"\x83\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84" 
 			}
+			/* CTerrorPlayer::RoundRespawn() */
 			"CTerrorPlayer::RoundRespawn"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
 				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
 			}
+			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
 			{
 				"library"	"server"
 				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
 				"windows"	"\x53\x8B\xD9\x83\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8D\x2A\x2A\x2A\x2A\x2A\x7E\x07\x5E\x32\xC0\x5B\xC2\x04\x00"
 			}
+			/* Tank::EnterStasis() */
 			"Tank::EnterStasis"
 			{
 				"library"	"server"
 				"linux"		"@_ZN4Tank11EnterStasisEv"
 				"windows"	"\x56\x8B\xF1\x80\xBE\x2A\x2A\x2A\x2A\x00\x0F\x85\x2A\x2A\x2A\x2A\x83\x7E"
 			}
+			/* Tank::LeaveStasis() */
 			"Tank::LeaveStasis"
 			{
 				"library"	"server"
@@ -300,6 +335,7 @@
 	{
 		"Functions"
 		{
+			/* CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float) */
 			"CTerrorPlayer::Fling"
 			{
 				"signature"	"CTerrorPlayer::Fling"
@@ -326,6 +362,7 @@
 					}
 				}
 			}
+			/* CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*) */
 			"CTerrorPlayer::OnHitByVomitJar"
 			{
 				"signature"	"CTerrorPlayer::OnHitByVomitJar"
@@ -340,6 +377,7 @@
 					}
 				}
 			}
+			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool) */
 			"CTerrorPlayer::OnVomitedUpon"
 			{
 				"signature"	"CTerrorPlayer::OnVomitedUpon"
@@ -361,67 +399,80 @@
 		}
 		"Offsets"
 		{
+			/* Action<Tank>::FirstContainedResponder() const */
 			"Action<Tank>::FirstContainedResponder"
 			{
 				"windows"	"16"
 				"linux"		"16"
 			}
+			/* Behavior<Tank>::FirstContainedResponder() const */
 			"Behavior<Tank>::FirstContainedResponder"
 			{
 				"windows"	"8"
 				"linux"		"8"
 			}
+			/* CBaseCombatWeapon::GetMaxClip1() const */
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
 				"windows"	"323"
 				"linux"		"324"
 			}
+			/* CBaseEntity::IsInStasis() const */
 			"CBaseEntity::IsInStasis"
 			{
 				"windows"	"39"
 				"linux"		"40"
 			}
+			/* CTerrorPlayer::Deafen(float, float, float) */
 			"CTerrorPlayer::Deafen"
 			{
 				"windows"	"517"
 				"linux"		"518"
 			}
+			/* CTerrorPlayer::GetLastKnownArea() const */
 			"CTerrorPlayer::GetLastKnownArea"
 			{
 				"windows"	"330"
 				"linux"		"331"
 			}
+			/* CTerrorPlayer::SetObserverTarget(CBaseEntity*) */
 			"CTerrorPlayer::SetObserverTarget"
 			{
 				"windows"	"402"
 				"linux"		"403"
 			}
+			/* Tank::GetIntentionInterface() const */
 			"Tank::GetIntentionInterface"
 			{
 				"windows"	"17236"
 				"linux"		"17208"
 			}
+			/* TankIdle::GetName() const */
 			"TankIdle::GetName"
 			{
 				"windows"	"40"
 				"linux"		"41"
 			}
+			/* TankIntention::FirstContainedResponder() const */
 			"TankIntention::FirstContainedResponder"
 			{
 				"windows"	"28"
 				"linux"		"28"
 			}
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
 				"windows"	"296"
 				"linux"		"300"
 			}
-			"m_flow"
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
+			"WitchLocomotion::IsAreaTraversable::m_flow"
 			{
 				"windows"	"332"
 				"linux"		"340"
 			}
-			"HiddenMelee"
+			/* CTerrorPlayer::OnIncapacitatedAsSurvivor(CTakeDamageInfo const&) */
+			"CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon"
 			{
 				"windows"	"16340"
 				"linux"		"16320"
@@ -429,102 +480,119 @@
 		}
 		"Signatures"
 		{
+			/* CEnvRockLauncher::LaunchCurrentDir() */
 			"CEnvRockLauncher::LaunchCurrentDir"
 			{
 				"library"	"server"
 				"linux"		"@_ZN16CEnvRockLauncher16LaunchCurrentDirEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x3C\x56\x8B\xF1\x8B\x86\x38\x01\x00\x00"
 			}
+			/* CSpitterProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter*) */
 			"CSpitterProjectile::Create"
 			{
 				"library"	"server"
 				"linux"		"@_ZN18CSpitterProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57"
 			}
+			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
 			"CTankClaw::OnPlayerHit"
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankClaw11OnPlayerHitEP13CTerrorPlayerb"
 				"windows"	"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x56\x8B\x2A\x2A\x57\x8B\x2A\x89\x2A\x2A\xE8"
 			}
+			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
 			"CTankRock::Create"
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\xEC\x8B\x45\x0C\x8B\x4D\x08\x53"
 			}
+			/* CTankRock::Detonate() */
 			"CTankRock::Detonate"
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock8DetonateEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x34\x53\x56\x8B\xF1\x80\xBE\x9C\x1A\x00\x00\x00"
 			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12Event_KilledERK15CTakeDamageInfo"
 				"windows"	"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\x48\x02\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x43\x08"
 			}
+			/* CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float) */
 			"CTerrorPlayer::Fling"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer5FlingERK6Vector17PlayerAnimEvent_tP20CBaseCombatCharacterf"
 				"windows"	"\x53\x8B\xDC\x83\xEC\x2A\x83\xE4\x2A\x83\xC4\x2A\x55\x8B\x6B\x2A\x89\x6C\x2A\x2A\x8B\xEC\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x8B\x43\x2A\x56\x8B\x73\x2A\x57\x6A\x2A\x8B\xF9\x89\x45"
 			}
+			/* CTerrorPlayer::GoAwayFromKeyboard() */
 			"CTerrorPlayer::GoAwayFromKeyboard"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer18GoAwayFromKeyboardEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC*\x53\x56\x57\x8B\xF1\x8B\x06\x8B\x90***\x00\x8B\x9e***\x00\x6A\x00\x6A\x08\x6A\x01"
 			}
+			/* CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*) */
 			"CTerrorPlayer::OnHitByVomitJar"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer15OnHitByVomitJarEP20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F"
 			}
+			/* CTerrorPlayer::OnITExpired() */
 			"CTerrorPlayer::OnITExpired"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer11OnITExpiredEv"
 				"windows"	"\x56\x57\x8B\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7B\x2A\x8B\x2A\x2A\x8B\x2A\x8D\x2A\x2A\x56\xFF\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x8B\x2A\x6A\x00"
 			}
+			/* CTerrorPlayer::OnRevived() */
 			"CTerrorPlayer::OnRevived"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\xCE"
 			}
+			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
 			"CTerrorPlayer::OnStaggered"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
 				"windows"	"\x53\x8B\x2A\x83\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 			}
+			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool) */
 			"CTerrorPlayer::OnVomitedUpon"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_b"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x53\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90"
 			}
+			/* CTerrorPlayer::RoundRespawn() */
 			"CTerrorPlayer::RoundRespawn"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
 				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
 			}
+			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
 			{
 				"library"	"server"
 				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
 				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x83\xBE\x2A\x2A\x2A\x2A\x00\x7E\x07\x32\xC0\x5E\x5D\xC2\x04\x00\x8B\x0D"
 			}
+			/* Tank::EnterStasis() */
 			"Tank::EnterStasis"
 			{
 				"library"	"server"
 				"linux"		"@_ZN4Tank11EnterStasisEv"
 				"windows"	"\x56\x57\x8B\xF9\x80\xBF\x2A\x2A\x2A\x2A\x00\x8D\xB7\x2A\x2A\x2A\x2A\x74\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x56\xFF\xD2\xC6\x06\x00\x8B"
 			}
+			/* Tank::LeaveStasis() */
 			"Tank::LeaveStasis"
 			{
 				"library"	"server"
