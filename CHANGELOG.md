@@ -23,6 +23,9 @@
 - Fixed survivors with the godmode reward not being saved from special infected when given the health or refill reward.
 - Fixed the `Boss` feature not calculating the Tank's total health properly.
 
+#### Game Data
+- Fixed some detours crashing servers due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
 #### Settings
 - Fixed the `Boss Health Stages` setting not being read entirely.
 
@@ -120,6 +123,9 @@
 	- Reduces the pushback force from Tank punches. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code and signatures!]
 	- Prevents the recipient from getting flung away by Chargers.
 	- Prevents the recipient from getting staggered.
+
+#### Game Data
+- Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
