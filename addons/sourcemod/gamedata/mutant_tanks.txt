@@ -114,6 +114,13 @@
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
+				"arguments"
+				{
+					"revivee" //Changed from "target" to be compatible with Left 4 Fix
+					{
+						"type"		"cbaseentity"
+					}
+				}
 			}
 			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
@@ -124,7 +131,7 @@
 				"this"		"entity"
 				"arguments"
 				{
-					"AFKPlayer"
+					"AFKPlayer" //Changed from "player" to be compatible with Left 4 Fix
 					{
 						"type"		"cbaseentity"
 					}
@@ -155,11 +162,11 @@
 				"this"		"ignore"
 				"arguments"
 				{
-					"oldTank"
+					"a1" //Changed from "oldTank" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"cbaseentity"
 					}
-					"newTank"
+					"a2" //Changed from "newTank" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"cbaseentity"
 					}
@@ -174,11 +181,11 @@
 				"this"		"ignore"
 				"arguments"
 				{
-					"origin"
+					"a1" //Changed from "origin" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"vectorptr"
 					}
-					"angles"
+					"a2" //Changed from "angles" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"vectorptr"
 					}
@@ -207,7 +214,7 @@
 				"this"		"ignore"
 				"arguments"
 				{
-					"survivor"
+					"a1" //Changed from "survivor" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"cbaseentity"
 					}
@@ -456,7 +463,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
-				"windows"	"\x81\xEC\x1C\x01\x00\x00\x53\x8B\x9C\x24\x24\x01\x00\x00"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x9C\x24\x24\x01\x00\x00"
 			}
 			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
@@ -533,7 +540,7 @@
 				"this"		"ignore"
 				"arguments"
 				{
-					"survivor"
+					"a1" //Changed from "survivor" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"cbaseentity"
 					}
@@ -850,7 +857,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
-				"windows"	"\x55\x8B\xEC\x81\xEC\x14\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x08\x8B\x83\x58\x2E\x00\x00"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x08\x8B\x83\x58\x2E\x00\x00"
 			}
 			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
