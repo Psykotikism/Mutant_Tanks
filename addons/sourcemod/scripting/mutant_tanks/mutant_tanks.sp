@@ -10681,7 +10681,7 @@ public MRESReturn mreStartHealingPost(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
-public MRESReturn mreStartRevivingPre(int pThis)
+public MRESReturn mreStartRevivingPre(int pThis, DHookParam hParams)
 {
 	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || g_esPlayer[pThis].g_bRewardedAttack) && g_esGeneral.g_cvMTSurvivorReviveDuration != null)
 	{
@@ -10692,7 +10692,7 @@ public MRESReturn mreStartRevivingPre(int pThis)
 	return MRES_Ignored;
 }
 
-public MRESReturn mreStartRevivingPost(int pThis)
+public MRESReturn mreStartRevivingPost(int pThis, DHookParam hParams)
 {
 	if (g_esGeneral.g_cvMTSurvivorReviveDuration != null)
 	{
