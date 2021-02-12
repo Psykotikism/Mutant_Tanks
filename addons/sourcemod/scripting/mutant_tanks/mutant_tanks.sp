@@ -1397,20 +1397,6 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
 	g_esGeneral.g_cvMTSurvivorReviveDuration = FindConVar("survivor_revive_duration");
 
-	if (g_bSecondGame)
-	{
-		g_esGeneral.g_cvMTAmmoPackUseDuration = FindConVar("ammo_pack_use_duration");
-		g_esGeneral.g_cvMTColaBottlesUseDuration = FindConVar("cola_bottles_use_duration");
-		g_esGeneral.g_cvMTDefibrillatorUseDuration = FindConVar("defibrillator_use_duration");
-		g_esGeneral.g_cvMTGasCanUseDuration = FindConVar("gas_can_use_duration");
-		g_esGeneral.g_cvMTUpgradePackUseDuration = FindConVar("upgrade_pack_use_duration");
-		g_esGeneral.g_cvMTAmmoPackUseDuration.AddChangeHook(vMTUseDurationCvar);
-		g_esGeneral.g_cvMTColaBottlesUseDuration.AddChangeHook(vMTUseDurationCvar);
-		g_esGeneral.g_cvMTDefibrillatorUseDuration.AddChangeHook(vMTUseDurationCvar);
-		g_esGeneral.g_cvMTGasCanUseDuration.AddChangeHook(vMTUseDurationCvar);
-		g_esGeneral.g_cvMTUpgradePackUseDuration.AddChangeHook(vMTUseDurationCvar);
-	}
-
 	g_esGeneral.g_cvMTDisabledGameModes.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTEnabledGameModes.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTGameModeTypes.AddChangeHook(vMTPluginStatusCvar);
@@ -1418,6 +1404,21 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
 	g_esGeneral.g_cvMTFirstAidKitUseDuration.AddChangeHook(vMTUseDurationCvar);
 	g_esGeneral.g_cvMTSurvivorReviveDuration.AddChangeHook(vMTReviveDurationCvar);
+
+	if (g_bSecondGame)
+	{
+		g_esGeneral.g_cvMTAmmoPackUseDuration = FindConVar("ammo_pack_use_duration");
+		g_esGeneral.g_cvMTColaBottlesUseDuration = FindConVar("cola_bottles_use_duration");
+		g_esGeneral.g_cvMTDefibrillatorUseDuration = FindConVar("defibrillator_use_duration");
+		g_esGeneral.g_cvMTGasCanUseDuration = FindConVar("gas_can_use_duration");
+		g_esGeneral.g_cvMTUpgradePackUseDuration = FindConVar("upgrade_pack_use_duration");
+
+		g_esGeneral.g_cvMTAmmoPackUseDuration.AddChangeHook(vMTUseDurationCvar);
+		g_esGeneral.g_cvMTColaBottlesUseDuration.AddChangeHook(vMTUseDurationCvar);
+		g_esGeneral.g_cvMTDefibrillatorUseDuration.AddChangeHook(vMTUseDurationCvar);
+		g_esGeneral.g_cvMTGasCanUseDuration.AddChangeHook(vMTUseDurationCvar);
+		g_esGeneral.g_cvMTUpgradePackUseDuration.AddChangeHook(vMTUseDurationCvar);
+	}
 
 	char sDate[32];
 	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
@@ -4266,9 +4267,10 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		}
 		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsCommonInfected(victim) || bIsWitch(victim))
 		{
-			static bool bSurvivor;
-			bDeveloper = bIsValidClient(attacker) && bIsDeveloper(attacker, 4);
+			static bool bPlayer, bSurvivor;
+			bPlayer = bIsValidClient(attacker);
 			bSurvivor = bIsSurvivor(attacker);
+			bDeveloper = bPlayer && bIsDeveloper(attacker, 4);
 			static float flBoost, flDamage;
 			if (bIsTank(victim))
 			{
@@ -4295,11 +4297,11 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 						ExtinguishEntity(victim);
 					}
 
-					if (attacker != victim && (bBlockBullets || bBlockExplosives || bBlockHittables || bBlockMelee))
+					if (bPlayer && attacker != victim && (bBlockBullets || bBlockExplosives || bBlockHittables || bBlockMelee))
 					{
 						EmitSoundToAll(SOUND_METAL, victim);
 
-						if ((!bSurvivor || (bSurvivor && !g_esPlayer[attacker].g_bRewardedGod)) && bBlockMelee)
+						if (bPlayer && bBlockMelee)
 						{
 							static float flTankPos[3];
 							GetClientAbsOrigin(victim, flTankPos);
