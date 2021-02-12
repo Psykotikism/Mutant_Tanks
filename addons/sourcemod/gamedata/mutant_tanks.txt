@@ -107,6 +107,14 @@
 					}
 				}
 			}
+			/* CTerrorPlayer::StartReviving(CTerrorPlayer*) */
+			"CTerrorPlayer::StartReviving"
+			{
+				"signature"	"CTerrorPlayer::StartReviving"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
 			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
 			{
@@ -202,6 +210,21 @@
 					"survivor"
 					{
 						"type"		"cbaseentity"
+					}
+				}
+			}
+			/* CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType) */
+			"CFirstAidKit::StartHealing"
+			{
+				"signature"	"CFirstAidKit::StartHealing"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"targetType"
+					{
+						"type"		"int"
 					}
 				}
 			}
@@ -337,6 +360,13 @@
 				"linux"		"@_ZN16CEnvRockLauncher16LaunchCurrentDirEv"
 				"windows"	"\x83\xEC\x40\x56\x8B\xF1\x8B\x86\x1C\x01\x00\x00"
 			}
+			/* CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType) */
+			"CFirstAidKit::StartHealing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CFirstAidKit12StartHealingENS_14HealTargetTypeE.part.43"
+				"windows"	"\x51\x80\xB9\x58\x08\x00\x00\x00"
+			}
 			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
 			"CTankClaw::OnPlayerHit"
 			{
@@ -421,6 +451,13 @@
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
 				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
 			}
+			/* CTerrorPlayer::StartReviving(CTerrorPlayer*) */
+			"CTerrorPlayer::StartReviving"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
+				"windows"	"\x81\xEC\x1C\x01\x00\x00\x53\x8B\x9C\x24\x24\x01\x00\x00"
+			}
 			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
 			{
@@ -468,6 +505,25 @@
 	{
 		"Functions"
 		{
+			/* CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger) */
+			"CBaseBackpackItem::StartAction"
+			{
+				"signature"	"CBaseBackpackItem::StartAction"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"entity"
+				"arguments"
+				{
+					"actionType"
+					{
+						"type"		"int"
+					}
+					"actionTrigger"
+					{
+						"type"		"int"
+					}
+				}
+			}
 			/* CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
 			"CDirector::OnFirstSurvivorLeftSafeArea"
 			{
@@ -575,6 +631,12 @@
 				"windows"	"8"
 				"linux"		"8"
 			}
+			/* CBaseBackpackItem::GetUseAction() const */
+			"CBaseBackpackItem::GetUseAction"
+			{
+				"windows"	"451"
+				"linux"		"453"
+			}
 			/* CBaseCombatWeapon::GetMaxClip1() const */
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
@@ -644,6 +706,13 @@
 		}
 		"Signatures"
 		{
+			/* CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger) */
+			"CBaseBackpackItem::StartAction"
+			{
+				"library"	"server"
+				"linux"		"@_ZN17CBaseBackpackItem11StartActionENS_22BackpackItemActionTypeENS_25BackpackItemActionTriggerE"
+				"windows"	"\x55\x8B\xEC\x51\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x8B\xF8\x85\xFF\x75\x2A\x5F\x32\xC0"
+			}
 			/* CDirector::HasAnySurvivorLeftSafeArea() */
 			"CDirector::HasAnySurvivorLeftSafeArea"
 			{
@@ -775,6 +844,13 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
 				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
+			}
+			/* CTerrorPlayer::StartReviving(CTerrorPlayer*) */
+			"CTerrorPlayer::StartReviving"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x14\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x08\x8B\x83\x58\x2E\x00\x00"
 			}
 			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
