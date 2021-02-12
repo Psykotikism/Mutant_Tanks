@@ -313,6 +313,8 @@ enum struct esGeneral
 	bool g_bFinaleEnded;
 	bool g_bForceSpawned;
 	bool g_bHideNameChange;
+	bool g_bIgnoreReviveDuration;
+	bool g_bIgnoreUseDuration;
 	bool g_bMapStarted;
 	bool g_bPluginEnabled;
 	bool g_bUsedParser;
@@ -334,21 +336,28 @@ enum struct esGeneral
 	ConfigState g_csState;
 	ConfigState g_csState2;
 
+	ConVar g_cvMTAmmoPackUseDuration;
 	ConVar g_cvMTAssaultRifleAmmo;
 	ConVar g_cvMTAutoShotgunAmmo;
+	ConVar g_cvMTColaBottlesUseDuration;
+	ConVar g_cvMTDefibrillatorUseDuration;
 	ConVar g_cvMTDifficulty;
 	ConVar g_cvMTDisabledGameModes;
 	ConVar g_cvMTEnabledGameModes;
+	ConVar g_cvMTFirstAidKitUseDuration;
 	ConVar g_cvMTGameMode;
 	ConVar g_cvMTGameModeTypes;
 	ConVar g_cvMTGameTypes;
+	ConVar g_cvMTGasCanUseDuration;
 	ConVar g_cvMTGrenadeLauncherAmmo;
 	ConVar g_cvMTHuntingRifleAmmo;
 	ConVar g_cvMTPluginEnabled;
 	ConVar g_cvMTShotgunAmmo;
 	ConVar g_cvMTSMGAmmo;
 	ConVar g_cvMTSniperRifleAmmo;
+	ConVar g_cvMTSurvivorReviveDuration;
 	ConVar g_cvMTTempSetting;
+	ConVar g_cvMTUpgradePackUseDuration;
 
 	DynamicDetour g_ddEnterGhostStateDetour;
 	DynamicDetour g_ddEnterStasisDetour;
@@ -361,6 +370,9 @@ enum struct esGeneral
 	DynamicDetour g_ddReplaceTankDetour;
 	DynamicDetour g_ddSpawnTankDetour;
 	DynamicDetour g_ddStaggerDetour;
+	DynamicDetour g_ddStartHealing;
+	DynamicDetour g_ddStartReviving;
+	DynamicDetour g_ddStartAction;
 	DynamicDetour g_ddTankRockCreateDetour;
 	DynamicDetour g_ddVomitedUponDetour;
 	DynamicDetour g_ddVomitjarHitDetour;
@@ -371,6 +383,13 @@ enum struct esGeneral
 	float g_flBurntSkin;
 	float g_flClawDamage;
 	float g_flDamageBoostReward[3];
+	float g_flDefaultAmmoPackUseDuration;
+	float g_flDefaultColaBottlesUseDuration;
+	float g_flDefaultDefibrillatorUseDuration;
+	float g_flDefaultFirstAidKitUseDuration;
+	float g_flDefaultGasCanUseDuration;
+	float g_flDefaultSurvivorReviveDuration;
+	float g_flDefaultUpgradePackUseDuration;
 	float g_flDifficultyDamage[4];
 	float g_flExtrasDelay;
 	float g_flHittableDamage;
@@ -415,6 +434,7 @@ enum struct esGeneral
 	Handle g_hRegularWavesTimer;
 	Handle g_hSDKGetMaxClip1;
 	Handle g_hSDKGetName;
+	Handle g_hSDKGetUseAction;
 	Handle g_hSDKHasAnySurvivorLeftSafeArea;
 	Handle g_hSDKIsInStasis;
 	Handle g_hSDKITExpired;
@@ -565,6 +585,7 @@ enum struct esPlayer
 	bool g_bThirdPerson;
 	bool g_bTransformed;
 	bool g_bTriggered;
+	bool g_bVomited;
 
 	char g_sComboSet[320];
 	char g_sHealthCharacters[4];
@@ -1366,6 +1387,7 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
 	g_esGeneral.g_cvMTAutoShotgunAmmo = g_bSecondGame ? FindConVar("ammo_autoshotgun_max") : FindConVar("ammo_buckshot_max");
 	g_esGeneral.g_cvMTDifficulty = FindConVar("z_difficulty");
+	g_esGeneral.g_cvMTFirstAidKitUseDuration = FindConVar("first_aid_kit_use_duration");
 	g_esGeneral.g_cvMTGrenadeLauncherAmmo = FindConVar("ammo_grenadelauncher_max");
 	g_esGeneral.g_cvMTHuntingRifleAmmo = FindConVar("ammo_huntingrifle_max");
 	g_esGeneral.g_cvMTGameMode = FindConVar("mp_gamemode");
@@ -1373,12 +1395,29 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTShotgunAmmo = g_bSecondGame ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
 	g_esGeneral.g_cvMTSMGAmmo = FindConVar("ammo_smg_max");
 	g_esGeneral.g_cvMTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
+	g_esGeneral.g_cvMTSurvivorReviveDuration = FindConVar("survivor_revive_duration");
+
+	if (g_bSecondGame)
+	{
+		g_esGeneral.g_cvMTAmmoPackUseDuration = FindConVar("ammo_pack_use_duration");
+		g_esGeneral.g_cvMTColaBottlesUseDuration = FindConVar("cola_bottles_use_duration");
+		g_esGeneral.g_cvMTDefibrillatorUseDuration = FindConVar("defibrillator_use_duration");
+		g_esGeneral.g_cvMTGasCanUseDuration = FindConVar("gas_can_use_duration");
+		g_esGeneral.g_cvMTUpgradePackUseDuration = FindConVar("upgrade_pack_use_duration");
+		g_esGeneral.g_cvMTAmmoPackUseDuration.AddChangeHook(vMTUseDurationCvar);
+		g_esGeneral.g_cvMTColaBottlesUseDuration.AddChangeHook(vMTUseDurationCvar);
+		g_esGeneral.g_cvMTDefibrillatorUseDuration.AddChangeHook(vMTUseDurationCvar);
+		g_esGeneral.g_cvMTGasCanUseDuration.AddChangeHook(vMTUseDurationCvar);
+		g_esGeneral.g_cvMTUpgradePackUseDuration.AddChangeHook(vMTUseDurationCvar);
+	}
 
 	g_esGeneral.g_cvMTDisabledGameModes.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTEnabledGameModes.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTGameModeTypes.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTPluginEnabled.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
+	g_esGeneral.g_cvMTFirstAidKitUseDuration.AddChangeHook(vMTUseDurationCvar);
+	g_esGeneral.g_cvMTSurvivorReviveDuration.AddChangeHook(vMTReviveDurationCvar);
 
 	char sDate[32];
 	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
@@ -1423,6 +1462,19 @@ public void OnPluginStart()
 		{
 			if (g_bSecondGame)
 			{
+				StartPrepSDKCall(SDKCall_Entity);
+				if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseBackpackItem::GetUseAction"))
+				{
+					LogError("%s Failed to load offset: CBaseBackpackItem::GetUseAction", MT_TAG);
+				}
+
+				PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+				g_esGeneral.g_hSDKGetUseAction = EndPrepSDKCall();
+				if (g_esGeneral.g_hSDKGetUseAction == null)
+				{
+					LogError("%s Your \"CBaseBackpackItem::GetUseAction\" offsets are outdated.", MT_TAG);
+				}
+
 				StartPrepSDKCall(SDKCall_Player);
 				if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseEntity::IsInStasis"))
 				{
@@ -1448,10 +1500,24 @@ public void OnPluginStart()
 					LogError("%s Failed to find signature: CTerrorPlayer::Fling", MT_TAG);
 				}
 
+				g_esGeneral.g_ddStartAction = DynamicDetour.FromConf(gdMutantTanks, "CBaseBackpackItem::StartAction");
+				if (g_esGeneral.g_ddStartAction == null)
+				{
+					LogError("%s Failed to find signature: CBaseBackpackItem::StartAction", MT_TAG);
+				}
+
 				g_esGeneral.g_ddVomitjarHitDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnHitByVomitJar");
 				if (g_esGeneral.g_ddVomitjarHitDetour == null)
 				{
 					LogError("%s Failed to find signature: CTerrorPlayer::OnHitByVomitJar", MT_TAG);
+				}
+			}
+			else
+			{
+				g_esGeneral.g_ddStartHealing = DynamicDetour.FromConf(gdMutantTanks, "CFirstAidKit::StartHealing");
+				if (g_esGeneral.g_ddStartHealing == null)
+				{
+					LogError("%s Failed to find signature: CFirstAidKit::StartHealing", MT_TAG);
 				}
 			}
 
@@ -1653,6 +1719,12 @@ public void OnPluginStart()
 				LogError("%s Failed to find signature: CTerrorPlayer::OnStaggered", MT_TAG);
 			}
 
+			g_esGeneral.g_ddStartReviving = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::StartReviving");
+			if (g_esGeneral.g_ddStartReviving == null)
+			{
+				LogError("%s Failed to find signature: CTerrorPlayer::StartReviving", MT_TAG);
+			}
+
 			g_esGeneral.g_ddTankRockCreateDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankRock::Create");
 			if (g_esGeneral.g_ddTankRockCreateDetour == null)
 			{
@@ -1800,15 +1872,17 @@ public void OnClientDisconnect_Post(int client)
 
 public void OnConfigsExecuted()
 {
-	g_esGeneral.g_iChosenType = 0;
-	g_esGeneral.g_iRegularCount = 0;
-	g_esGeneral.g_iTankCount = 0;
-
 	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 	vPluginStatus();
 	vResetTimers();
+	vCacheCvars();
 	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(0.1, tTimerRefreshRewards, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+
+	g_esGeneral.g_flDefaultSurvivorReviveDuration = g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue;
+	g_esGeneral.g_iChosenType = 0;
+	g_esGeneral.g_iRegularCount = 0;
+	g_esGeneral.g_iTankCount = 0;
 
 	if (g_esGeneral.g_iConfigEnable == 1)
 	{
@@ -4144,7 +4218,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		bDeveloper = bIsValidClient(victim) && (bIsDeveloper(victim, 4) || g_esPlayer[victim].g_bRewardedDamage);
 		if (bIsSurvivor(victim))
 		{
-			if (bIsDeveloper(victim, 9) || (g_esPlayer[victim].g_bRewardedGod && GetEntProp(victim, Prop_Data, "m_takedamage", 1) != 2))
+			if (bIsDeveloper(victim, 9) || g_esPlayer[victim].g_bRewardedGod)
 			{
 				return Plugin_Handled;
 			}
@@ -4343,6 +4417,20 @@ public Action RockSoundHook(int clients[MAXPLAYERS], int &numClients, char sampl
 	}
 
 	return Plugin_Continue;
+}
+
+static void vCacheCvars()
+{
+	g_esGeneral.g_flDefaultFirstAidKitUseDuration = g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue;
+
+	if (g_bSecondGame)
+	{
+		g_esGeneral.g_flDefaultAmmoPackUseDuration = g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue;
+		g_esGeneral.g_flDefaultColaBottlesUseDuration = g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue;
+		g_esGeneral.g_flDefaultDefibrillatorUseDuration = g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue;
+		g_esGeneral.g_flDefaultGasCanUseDuration = g_esGeneral.g_cvMTGasCanUseDuration.FloatValue;
+		g_esGeneral.g_flDefaultUpgradePackUseDuration = g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue;
+	}
 }
 
 static void vCacheSettings(int tank)
@@ -6011,7 +6099,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "choke_start") || StrEqual(name, "lunge_pounce") || StrEqual(name, "tongue_grab") || StrEqual(name, "charger_carry_start") || StrEqual(name, "charger_pummel_start") || StrEqual(name, "jockey_ride"))
 		{
 			int iSpecialId = event.GetInt("userid"), iSpecial = GetClientOfUserId(iSpecialId), iSurvivorId = event.GetInt("victim"), iSurvivor = GetClientOfUserId(iSurvivorId);
-			if (bIsSpecialInfected(iSpecial) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 8) || (GetEntProp(iSurvivor, Prop_Data, "m_takedamage", 1) != 2 && g_esPlayer[iSurvivor].g_bRewardedGod)))
+			if (bIsSpecialInfected(iSpecial) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 8) || g_esPlayer[iSurvivor].g_bRewardedGod))
 			{
 				vSaveCaughtSurvivor(iSurvivor);
 			}
@@ -6160,17 +6248,21 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				vRemoveGlow(iPlayer);
 			}
-			else if (bIsSurvivor(iPlayer) && g_esPlayer[iPlayer].g_bRewardedGod && g_esGeneral.g_hSDKITExpired != null)
+			else if (bIsSurvivor(iPlayer) && !g_esPlayer[iPlayer].g_bVomited)
 			{
-				SDKCall(g_esGeneral.g_hSDKITExpired, iPlayer);
+				g_esPlayer[iPlayer].g_bVomited = true;
 			}
 		}
 		else if (StrEqual(name, "player_no_longer_it"))
 		{
-			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
- 			if (bIsTank(iTank) && !bIsPlayerIncapacitated(iTank))
+			int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+ 			if (bIsTank(iPlayer) && !bIsPlayerIncapacitated(iPlayer))
 			{
-				vSetGlow(iTank);
+				vSetGlow(iPlayer);
+			}
+			else if (bIsSurvivor(iPlayer) && g_esPlayer[iPlayer].g_bVomited)
+			{
+				g_esPlayer[iPlayer].g_bVomited = false;
 			}
 		}
 		else if (StrEqual(name, "player_spawn"))
@@ -6730,6 +6822,16 @@ static void vPluginStatus()
 			LogError("Failed to enable detour pre: CTerrorPlayer::OnStaggered");
 		}
 
+		if (!g_esGeneral.g_ddStartReviving.Enable(Hook_Pre, mreStartRevivingPre))
+		{
+			LogError("Failed to enable detour pre: CTerrorPlayer::StartReviving");
+		}
+
+		if (!g_esGeneral.g_ddStartReviving.Enable(Hook_Post, mreStartRevivingPost))
+		{
+			LogError("Failed to enable detour post: CTerrorPlayer::StartReviving");
+		}
+
 		if (!g_esGeneral.g_ddTankRockCreateDetour.Enable(Hook_Post, mreTankRockCreatePost))
 		{
 			LogError("Failed to enable detour post: CTankRock::Create");
@@ -6745,9 +6847,29 @@ static void vPluginStatus()
 			LogError("Failed to enable detour pre: CTerrorPlayer::Fling");
 		}
 
+		if (g_bSecondGame && !g_esGeneral.g_ddStartAction.Enable(Hook_Pre, mreStartActionPre))
+		{
+			LogError("Failed to enable detour pre: CBaseBackpackItem::StartAction");
+		}
+
+		if (g_bSecondGame && !g_esGeneral.g_ddStartAction.Enable(Hook_Post, mreStartActionPost))
+		{
+			LogError("Failed to enable detour post: CBaseBackpackItem::StartAction");
+		}
+
 		if (g_bSecondGame && !g_esGeneral.g_ddVomitjarHitDetour.Enable(Hook_Pre, mreVomitjarHitPre))
 		{
 			LogError("Failed to enable detour pre: CTerrorPlayer::OnHitByVomitJar");
+		}
+
+		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealing.Enable(Hook_Pre, mreStartHealingPre))
+		{
+			LogError("Failed to enable detour pre: CFirstAidKit::StartHealing");
+		}
+
+		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealing.Enable(Hook_Post, mreStartHealingPost))
+		{
+			LogError("Failed to enable detour post: CFirstAidKit::StartHealing");
 		}
 	}
 	else if (g_esGeneral.g_bPluginEnabled && (!bPluginAllowed || !bPluginEnabled))
@@ -6811,6 +6933,16 @@ static void vPluginStatus()
 			LogError("Failed to disable detour pre: CTerrorPlayer::OnStaggered");
 		}
 
+		if (!g_esGeneral.g_ddStartReviving.Disable(Hook_Pre, mreStartRevivingPre))
+		{
+			LogError("Failed to disable detour pre: CTerrorPlayer::StartReviving");
+		}
+
+		if (!g_esGeneral.g_ddStartReviving.Disable(Hook_Post, mreStartRevivingPost))
+		{
+			LogError("Failed to disable detour post: CTerrorPlayer::StartReviving");
+		}
+
 		if (!g_esGeneral.g_ddTankRockCreateDetour.Disable(Hook_Post, mreTankRockCreatePost))
 		{
 			LogError("Failed to disable detour post: CTankRock::Create");
@@ -6826,9 +6958,29 @@ static void vPluginStatus()
 			LogError("Failed to disable detour pre: CTerrorPlayer::Fling");
 		}
 
+		if (g_bSecondGame && !g_esGeneral.g_ddStartAction.Disable(Hook_Pre, mreStartActionPre))
+		{
+			LogError("Failed to disable detour pre: CBaseBackpackItem::StartAction");
+		}
+
+		if (g_bSecondGame && !g_esGeneral.g_ddStartAction.Disable(Hook_Post, mreStartActionPost))
+		{
+			LogError("Failed to disable detour post: CBaseBackpackItem::StartAction");
+		}
+
 		if (g_bSecondGame && !g_esGeneral.g_ddVomitjarHitDetour.Disable(Hook_Pre, mreVomitjarHitPre))
 		{
 			LogError("Failed to disable detour pre: CTerrorPlayer::OnHitByVomitJar");
+		}
+
+		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealing.Disable(Hook_Pre, mreStartHealingPre))
+		{
+			LogError("Failed to disable detour pre: CFirstAidKit::StartHealing");
+		}
+
+		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealing.Disable(Hook_Post, mreStartHealingPost))
+		{
+			LogError("Failed to disable detour post: CFirstAidKit::StartHealing");
 		}
 	}
 }
@@ -7464,6 +7616,7 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_bRewardedGod = false;
 	g_esPlayer[survivor].g_bRewardedInfAmmo = false;
 	g_esPlayer[survivor].g_bRewardedSpeed = false;
+	g_esPlayer[survivor].g_bVomited = false;
 	g_esPlayer[survivor].g_flAttackBoost = 0.0;
 	g_esPlayer[survivor].g_flDamageBoost = 0.0;
 	g_esPlayer[survivor].g_flSpeedBoost = 0.0;
@@ -7486,7 +7639,7 @@ static void vResetSurvivorStats2(int survivor)
 	g_esPlayer[survivor].g_bRewardedRespawn = false;
 }
 
-static void vSaveSurvivorStats(int survivor, bool override = false)
+static void vSaveSurvivorStats(int survivor, bool override)
 {
 	if (!override)
 	{
@@ -7826,12 +7979,12 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						if (GetEntProp(survivor, Prop_Data, "m_takedamage", 1) == 2)
 						{
 							SetEntProp(survivor, Prop_Data, "m_takedamage", 0, 1);
-							vRewardMessage(survivor, priority, "RewardGod", "RewardGod2", "RewardGod3", sTankName);
-
-							g_esPlayer[survivor].g_bRewardedGod = true;
 						}
 
-						if (g_esGeneral.g_hSDKITExpired != null)
+						vRewardMessage(survivor, priority, "RewardGod", "RewardGod2", "RewardGod3", sTankName);
+						g_esPlayer[survivor].g_bRewardedGod = true;
+
+						if (g_esPlayer[survivor].g_bVomited && g_esGeneral.g_hSDKITExpired != null)
 						{
 							SDKCall(g_esGeneral.g_hSDKITExpired, survivor);
 						}
@@ -8247,12 +8400,12 @@ static void vSetupDeveloper(int developer, bool setup)
 			}
 		}
 
-		if (bIsDeveloper(developer, 5))
+		if (bIsDeveloper(developer, 5) || g_esPlayer[developer].g_bRewardedSpeed)
 		{
 			SDKHook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 		}
 
-		switch (bIsDeveloper(developer, 9))
+		switch (bIsDeveloper(developer, 9) || g_esPlayer[developer].g_bRewardedGod)
 		{
 			case true: SetEntProp(developer, Prop_Data, "m_takedamage", 0, 1);
 			case false: SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
@@ -8260,13 +8413,20 @@ static void vSetupDeveloper(int developer, bool setup)
 	}
 	else
 	{
-		SDKUnhook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
-
 		if (bIsValidClient(developer, MT_CHECK_ALIVE))
 		{
 			SetEntityGravity(developer, 1.0);
-			SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
-			SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
+
+			if (!g_esPlayer[developer].g_bRewardedSpeed)
+			{
+				SDKUnhook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+				SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			}
+
+			if (!g_esPlayer[developer].g_bRewardedGod)
+			{
+				SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
+			}
 		}
 	}
 }
@@ -8330,6 +8490,32 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 	vRemoveGlow(tank);
 	SetEntityRenderMode(tank, RENDER_NORMAL);
 	SetEntityRenderColor(tank, iGetRandomColor(g_esCache[tank].g_iSkinColor[0]), iGetRandomColor(g_esCache[tank].g_iSkinColor[1]), iGetRandomColor(g_esCache[tank].g_iSkinColor[2]), iGetRandomColor(g_esCache[tank].g_iSkinColor[3]));
+}
+
+static void vSetDurationCvars(int item, bool reset)
+{
+	if (!reset)
+	{
+		g_esGeneral.g_bIgnoreUseDuration = true;
+	}
+
+	if (g_esGeneral.g_hSDKGetUseAction != null)
+	{
+		switch (SDKCall(g_esGeneral.g_hSDKGetUseAction, item))
+		{
+			case 1: g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultFirstAidKitUseDuration : (g_esGeneral.g_flDefaultFirstAidKitUseDuration * 0.4); // first_aid_kit
+			case 2: g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultAmmoPackUseDuration : (g_esGeneral.g_flDefaultAmmoPackUseDuration * 0.4); // ammo_pack
+			case 4: g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultDefibrillatorUseDuration : (g_esGeneral.g_flDefaultDefibrillatorUseDuration * 0.4); // defibrillator
+			case 6, 7: g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultUpgradePackUseDuration : (g_esGeneral.g_flDefaultUpgradePackUseDuration * 0.4); // upgrade_pack
+			case 8: g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultGasCanUseDuration : (g_esGeneral.g_flDefaultGasCanUseDuration * 0.4); // gas_can
+			case 9: g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultColaBottlesUseDuration : (g_esGeneral.g_flDefaultColaBottlesUseDuration * 0.4); // cola_bottles
+		}
+	}
+
+	if (reset)
+	{
+		g_esGeneral.g_bIgnoreUseDuration = false;
+	}
 }
 
 static void vGetTranslatedName(char[] buffer, int size, int tank = 0, int type = 0)
@@ -10280,7 +10466,7 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 	{
 		g_esPlayer[pThis].g_bLastLife = false;
 
-		vSaveSurvivorStats(pThis);
+		vSaveSurvivorStats(pThis, false);
 	}
 	else if (bIsTank(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
@@ -10449,6 +10635,72 @@ public MRESReturn mreStaggerPre(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
+public MRESReturn mreStartActionPre(int pThis, DHookReturn hReturn, DHookParam hParams)
+{
+	int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || g_esPlayer[iSurvivor].g_bRewardedAttack) && g_esGeneral.g_hSDKGetUseAction != null)
+	{
+		vSetDurationCvars(pThis, false);
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreStartActionPost(int pThis, DHookReturn hReturn, DHookParam hParams)
+{
+	if (g_esGeneral.g_hSDKGetUseAction != null)
+	{
+		vSetDurationCvars(pThis, true);
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreStartHealingPre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || g_esPlayer[iSurvivor].g_bRewardedAttack) && g_esGeneral.g_cvMTFirstAidKitUseDuration != null)
+	{
+		g_esGeneral.g_bIgnoreUseDuration = true;
+		g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = g_esGeneral.g_flDefaultFirstAidKitUseDuration * 0.4;
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreStartHealingPost(int pThis, DHookParam hParams)
+{
+	if (g_esGeneral.g_cvMTFirstAidKitUseDuration != null)
+	{
+		g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = g_esGeneral.g_flDefaultFirstAidKitUseDuration;
+		g_esGeneral.g_bIgnoreUseDuration = false;
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreStartRevivingPre(int pThis)
+{
+	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || g_esPlayer[pThis].g_bRewardedAttack) && g_esGeneral.g_cvMTSurvivorReviveDuration != null)
+	{
+		g_esGeneral.g_bIgnoreReviveDuration = true;
+		g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue = g_esGeneral.g_flDefaultSurvivorReviveDuration * 0.4;
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreStartRevivingPost(int pThis)
+{
+	if (g_esGeneral.g_cvMTSurvivorReviveDuration != null)
+	{
+		g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue = g_esGeneral.g_flDefaultSurvivorReviveDuration;
+		g_esGeneral.g_bIgnoreReviveDuration = false;
+	}
+
+	return MRES_Ignored;
+}
+
 public MRESReturn mreTankRockCreatePost(DHookReturn hReturn)
 {
 	static int iRock;
@@ -10569,6 +10821,22 @@ public void vMTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 			g_esGeneral.g_iFileTimeNew[1] = g_esGeneral.g_iFileTimeOld[1];
 		}
+	}
+}
+
+public void vMTUseDurationCvar(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	if (!g_esGeneral.g_bIgnoreUseDuration)
+	{
+		vCacheCvars();
+	}
+}
+
+public void vMTReviveDurationCvar(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	if (!g_esGeneral.g_bIgnoreReviveDuration)
+	{
+		g_esGeneral.g_flDefaultSurvivorReviveDuration = g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue;
 	}
 }
 
