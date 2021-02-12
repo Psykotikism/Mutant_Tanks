@@ -472,14 +472,40 @@
 			// -1: OFF
 			// 0: Random
 			// 1: Health reward
+			// - Refill to 100% health
+			// - Automatically kill any current special infected attacker
 			// 2: Speed boost reward (temporary)
 			// 4: Damage boost reward (temporary)
+			// - Extra damage
+			// - Bypass Tank immunities
+			// - 50% damage resistance
 			// 8: Attack boost reward (temporary)
+			// - Faster shoot rate (guns)
+			// - Faster reload rate (guns)
+			// - Faster swing rate (melee)
+			// - Faster throw time (throwables)
+			// - Faster revive time
+			// - Faster healing time (first aid kit)
+			// - Faster defib time (defibrillator)
+			// - Faster deploy time (ammo upgrade packs)
+			// - Faster pour time (gas cans)
+			// - Faster delivery time (cola bottles)
 			// 16: Ammo reward
+			// - Refill clip to max size
+			// - Refill magazine to max size
 			// 32: Item reward
 			// 64: God mode reward (temporary)
+			// - Automatically kill all special infected attackers
+			// - Immune to all types of damage
+			// - Cannot be flung away by Chargers
+			// - Cannot be pushed around
+			// - Cannot be vomited on by Boomers
+			// - Reduced pushback from Tank punches
+			// - Reduced pushback from hitting Tanks with melee immunity
 			// 128: Health and ammo refill reward
 			// 256: Respawn reward
+			// - Respawn and teleport to a teammate
+			// - Restore previous loadout
 			// 512: Infinite primary ammo reward (temporary)
 			// 1023: All above rewards
 			// 1024-2147483647: Reserved for third-party plugins
@@ -1609,14 +1635,40 @@
 			// -1: OFF
 			// 0: Random
 			// 1: Health reward
+			// - Refill to 100% health
+			// - Automatically kill any current special infected attacker
 			// 2: Speed boost reward (temporary)
 			// 4: Damage boost reward (temporary)
+			// - Extra damage
+			// - Bypass Tank immunities
+			// - 50% damage resistance
 			// 8: Attack boost reward (temporary)
+			// - Faster shoot rate (guns)
+			// - Faster reload rate (guns)
+			// - Faster swing rate (melee)
+			// - Faster throw time (throwables)
+			// - Faster revive time
+			// - Faster healing time (first aid kit)
+			// - Faster defib time (defibrillator)
+			// - Faster deploy time (ammo upgrade packs)
+			// - Faster pour time (gas cans)
+			// - Faster delivery time (cola bottles)
 			// 16: Ammo reward
+			// - Refill clip to max size
+			// - Refill magazine to max size
 			// 32: Item reward
 			// 64: God mode reward (temporary)
+			// - Automatically kill all special infected attackers
+			// - Immune to all types of damage
+			// - Cannot be flung away by Chargers
+			// - Cannot be pushed around
+			// - Cannot be vomited on by Boomers
+			// - Reduced pushback from Tank punches
+			// - Reduced pushback from hitting Tanks with melee immunity
 			// 128: Health and ammo refill reward
 			// 256: Respawn reward
+			// - Respawn and teleport to a teammate
+			// - Restore previous loadout
 			// 512: Infinite primary ammo reward (temporary)
 			// 1023: All above rewards
 			// 1024-2147483647: Reserved for third-party plugins

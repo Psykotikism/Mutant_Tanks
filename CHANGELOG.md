@@ -104,20 +104,22 @@
 - The vocalizer feature for Tank deaths now requires the `Vocalize Death` setting to be enabled.
 - Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
 - Rewards that have a duration can now have their duration extended when received again. (Requested by 3aljiyavslgazana.)
-- The godmode reward now automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
-- The godmode reward now fully blocks all damage from registering. (Requested by 3aljiyavslgazana.)
-- The damage boost reward now allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
-- The damage boost reward now gives the recipient 50% damage resistance throughout its duration.
 - The speed boost reward now allows the recipient to jump slightly higher throughout its duration.
-- The health display will no longer show the maximum health going over the maximum health set in `mutant_tanks.inc`.
+- The health display will no longer show the maximum health going over the value set in `mutant_tanks.inc`.
 - The `Boss` feature's evolution now triggers a slow-motion effect for almost a second.
-- The godmode reward now blocks Boomer pukes on the recipient. (Thanks to 3aljiyavslgazana for the idea and epzminion for the help!) [Thanks to Silvers for the signatures!]
-- The godmode reward now automatically removes the Boomer puke screen effect. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the signatures!]
-- The godmode reward now prevents the recipient from getting punched away by Tanks. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code and signatures!]
-- The godmode reward now prevents the recipient from getting flung away by Chargers.
-- The godmode reward now prevents the recipient from getting staggered.
 - The melee immunity feature's pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 - Decreased the delay for custom configs from `3` to `1.5` seconds.
+- The damage boost reward now does the following:
+	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
+	- Gives the recipient 50% damage resistance throughout its duration.
+- The godmode reward now does the following:
+	- Automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
+	- Fully blocks all damage from registering. (Requested by 3aljiyavslgazana.)
+	- Blocks Boomer pukes on the recipient. (Thanks to 3aljiyavslgazana for the idea and epzminion for the help!) [Thanks to Silvers for the signatures!]
+	- Automatically removes the Boomer puke screen effect. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the signatures!]
+	- Reduces the pushback force from Tank punches. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code and signatures!]
+	- Prevents the recipient from getting flung away by Chargers.
+	- Prevents the recipient from getting staggered.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]

@@ -41,10 +41,8 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 ## Requirements
 1. `SourceMod 1.11.0.6511` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. Recommended: [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
-4. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
-5. Optional: [VScript File Replacer](https://forums.alliedmods.net/showthread.php?t=318024)
-6. Patience and knowledge of installing SourceMod plugins.
+3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
+4. Patience and knowledge of installing SourceMod plugins.
 
 ## Notes
 1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
