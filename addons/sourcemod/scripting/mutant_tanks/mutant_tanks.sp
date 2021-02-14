@@ -392,6 +392,7 @@ enum struct esGeneral
 	float g_flDefaultUpgradePackUseDuration;
 	float g_flDifficultyDamage[4];
 	float g_flExtrasDelay;
+	float g_flForceSpawn;
 	float g_flHittableDamage;
 	float g_flIdleCheck;
 	float g_flPunchForce;
@@ -4868,6 +4869,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_sItemReward3 = "first_aid_kit";
 		g_esGeneral.g_iAggressiveTanks = 0;
 		g_esGeneral.g_iCreditIgniters = 1;
+		g_esGeneral.g_flForceSpawn = 0.0;
 		g_esGeneral.g_iStasisMode = 0;
 		g_esGeneral.g_flSurvivalDelay = 0.1;
 		g_esGeneral.g_iScaleDamage = 0;
@@ -5328,6 +5330,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_iVocalizeDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "VocalizeDeath", "Vocalize Death", "Vocalize_Death", "deathvoc", g_esGeneral.g_iVocalizeDeath, value, 0, 1);
 				g_esGeneral.g_iAggressiveTanks = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_COMP, key, "AggressiveTanks", "Aggressive Tanks", "Aggressive_Tanks", "aggressive", g_esGeneral.g_iAggressiveTanks, value, 0, 1);
 				g_esGeneral.g_iCreditIgniters = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_COMP, key, "CreditIgniters", "Credit Igniters", "Credit_Igniters", "credit", g_esGeneral.g_iCreditIgniters, value, 0, 1);
+				g_esGeneral.g_flForceSpawn = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_COMP, key, "ForceSpawn", "Force Spawn", "Force_Spawn", "force", g_esGeneral.g_flForceSpawn, value, 0.0, 999999.0);
 				g_esGeneral.g_iStasisMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_COMP, key, "StasisMode", "Stasis Mode", "Stasis_Mode", "stasis", g_esGeneral.g_iStasisMode, value, 0, 1);
 				g_esGeneral.g_flSurvivalDelay = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_COMP, key, "SurvivalDelay", "Survival Delay", "Survival_Delay", "survdelay", g_esGeneral.g_flSurvivalDelay, value, 0.1, 999999.0);
 				g_esGeneral.g_iScaleDamage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_DIFF, key, "ScaleDamage", "Scale Damage", "Scale_Damage", "scaledmg", g_esGeneral.g_iScaleDamage, value, 0, 1);
@@ -10076,7 +10079,7 @@ static bool bIsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAM
 
 static bool bIsTankIdle(int tank, int type = 0)
 {
-	if (bIsTank(tank) && !bIsTank(tank, MT_CHECK_FAKECLIENT))
+	if (bIsTank(tank) && !bIsTank(tank, MT_CHECK_FAKECLIENT) && !bIsInfectedGhost(tank) && !bIsTankInStasis(tank))
 	{
 		Address adTank = GetEntityAddress(tank);
 		if (adTank != Address_Null && g_esGeneral.g_iIntentionOffset != -1)
@@ -10442,11 +10445,14 @@ static int iGetTypeCount(int type = 0)
 
 public MRESReturn mreEnterGhostStatePost(int pThis)
 {
-	if (bIsTank(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	if (bIsTank(pThis))
 	{
 		g_esPlayer[pThis].g_bKeepCurrentType = true;
 
-		CreateTimer(1.0, tTimerForceSpawnTank, GetClientUserId(pThis), TIMER_FLAG_NO_MAPCHANGE);
+		if (g_esGeneral.g_iCurrentMode == 1 && g_esGeneral.g_flForceSpawn > 0.0)
+		{
+			CreateTimer(g_esGeneral.g_flForceSpawn, tTimerForceSpawnTank, GetClientUserId(pThis), TIMER_FLAG_NO_MAPCHANGE);
+		}
 	}
 
 	return MRES_Ignored;
