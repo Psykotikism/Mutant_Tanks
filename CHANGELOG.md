@@ -12,6 +12,7 @@
 - Fixed the L4D1 Tank model not being precached in L4D2.
 - Fixed Tank deaths raising the wave count while there are still other Tanks alive. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed each Tank death raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed AI Tanks in ghost mode not being forcefully spawned. (Thanks to yuzumi for reporting!)
 
 #### Core Plugin
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
@@ -160,6 +161,7 @@
 	- `nodmg`/`friendly`/`harmless` - 0.0 force
 	- `weakest` - 1.0 force
 	- `strongest` - 999999.0 force
+- Added the `Force Spawn` setting under the `Plugin Settings/Competitive` section. (Requested by yuzumi.)
 - The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by Shadowart.):
 	- `Finales Only`
 	- `Idle Check`

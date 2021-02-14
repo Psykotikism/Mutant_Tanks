@@ -704,11 +704,20 @@
 			"Aggressive Tanks"			"0"
 
 			// (Left 4 Dead 2 only) Survivors will be credited when damaging Mutant Tanks with fire.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be used for standard Tanks.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Credit Igniters"			"1"
+
+			// (Co-Op modes only) Mutant Tanks in ghost mode will be forcefully spawned after this many seconds passes.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be used for standard Tanks.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0
+			"Force Spawn"				"0.0"
 
 			// (Versus modes only) The stasis mode of Mutant Tanks in competitive game modes.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -719,6 +728,7 @@
 			"Stasis Mode"				"0"
 
 			// (Survival modes only) The delay in seconds before allowing Mutant Tanks to spawn.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
