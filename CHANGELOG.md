@@ -23,6 +23,7 @@
 - Fixed inconsistent access levels for some developer commands.
 - Fixed survivors with the godmode reward not being saved from special infected when given the health or refill reward.
 - Fixed the `Boss` feature not calculating the Tank's total health properly.
+- Fixed the `Reward` system notifying recipients twice when they do not do enough damage to Tanks. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 #### Game Data
 - Fixed some detours crashing servers due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -108,7 +109,6 @@
 - The vocalizer feature for Tank deaths now requires the `Vocalize Death` setting to be enabled.
 - Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
 - Rewards that have a duration can now have their duration extended when received again. (Requested by 3aljiyavslgazana.)
-- The speed boost reward now allows the recipient to jump slightly higher throughout its duration.
 - The health display will no longer show the maximum health going over the value set in `mutant_tanks.inc`.
 - The `Boss` feature's evolution now triggers a slow-motion effect for almost a second.
 - The melee immunity feature's pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
@@ -1342,7 +1342,7 @@ Changes:
 23. Added backwards compatibility for old natives.
 24. Updated/removed several phrases for each ability.
 25. Moved all redundant code to the core plugin's include file for universal usage.
-26. Changed how the administration system works. (Please read the `Administration System` section of the `README.md` file.)
+26. Changed how the administration system works. (Please read the `Administration System` section of the `README` file.)
 27. Optimized the code of all the plugins included.
 28. Added Hungarian translations. (Thanks to KasperH/Ladis!)
 
