@@ -4,6 +4,21 @@
 	{
 		"Functions"
 		{
+			/* CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
+			"CDirector::OnFirstSurvivorLeftSafeArea"
+			{
+				"signature"	"CDirector::OnFirstSurvivorLeftSafeArea"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"ignore"
+				"arguments"
+				{
+					"a1" //Changed from "survivor" to be compatible with Left 4 DHooks Direct
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
 			/* CEnvRockLauncher::LaunchCurrentDir() */
 			"CEnvRockLauncher::LaunchCurrentDir"
 			{
@@ -122,6 +137,14 @@
 					}
 				}
 			}
+			/* CTerrorWeapon::SecondaryAttack() */
+			"CTerrorWeapon::SecondaryAttack"
+			{
+				"signature"	"CTerrorWeapon::SecondaryAttack"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
 			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
 			{
@@ -205,21 +228,6 @@
 	{
 		"Functions"
 		{
-			/* Director::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
-			"Director::OnFirstSurvivorLeftSafeArea"
-			{
-				"signature"	"Director::OnFirstSurvivorLeftSafeArea"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"ignore"
-				"arguments"
-				{
-					"a1" //Changed from "survivor" to be compatible with Left 4 DHooks Direct
-					{
-						"type"		"cbaseentity"
-					}
-				}
-			}
 			/* CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType) */
 			"CFirstAidKit::StartHealing"
 			{
@@ -347,14 +355,14 @@
 		"Signatures"
 		{
 			/* Director::HasAnySurvivorLeftSafeArea() */
-			"Director::HasAnySurvivorLeftSafeArea"
+			"CDirector::HasAnySurvivorLeftSafeArea"
 			{
 				"library"	"server"
 				"linux"		"@_ZN8Director26HasAnySurvivorLeftSafeAreaEv"
 				"windows"	"\x8A\x2A\x68\x01\x00\x00\xC3"
 			}
 			/* Director::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
-			"Director::OnFirstSurvivorLeftSafeArea"
+			"CDirector::OnFirstSurvivorLeftSafeArea"
 			{
 				"library"	"server"
 				"linux"		"@_ZN8Director27OnFirstSurvivorLeftSafeAreaEP13CTerrorPlayer"
@@ -465,6 +473,13 @@
 				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x9C\x24\x24\x01\x00\x00"
 			}
+			/* CTerrorWeapon::SecondaryAttack() */
+			"CTerrorWeapon::SecondaryAttack"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorWeapon15SecondaryAttackEv"
+				"windows"	"\x56\x57\x8B\xF9\xE8\x2A\x2A\x2A\x2A\x8B\xF0\x85\xF6\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x40\x01\x00\x00\x8B\xCE\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x7C\x07\x00\x00\x8B\xCE\xFF\xD2\x84\xC0\x0F\x85"
+			}
 			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
 			{
@@ -531,20 +546,13 @@
 					}
 				}
 			}
-			/* CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
-			"CDirector::OnFirstSurvivorLeftSafeArea"
+			/* CTerrorMeleeWeapon::SecondaryAttack() */
+			"CTerrorMeleeWeapon::SecondaryAttack"
 			{
-				"signature"	"CDirector::OnFirstSurvivorLeftSafeArea"
+				"signature"	"CTerrorMeleeWeapon::SecondaryAttack"
 				"callconv"	"thiscall"
 				"return"	"void"
-				"this"		"ignore"
-				"arguments"
-				{
-					"a1" //Changed from "survivor" to be compatible with Left 4 DHooks Direct
-					{
-						"type"		"cbaseentity"
-					}
-				}
+				"this"		"entity"
 			}
 			/* CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float) */
 			"CTerrorPlayer::Fling"
@@ -775,6 +783,13 @@
 				"linux"		"@_ZN9CTankRock8DetonateEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x34\x53\x56\x8B\xF1\x80\xBE\x9C\x1A\x00\x00\x00"
 			}
+			/* CTerrorMeleeWeapon::SecondaryAttack() */
+			"CTerrorMeleeWeapon::SecondaryAttack"
+			{
+				"library"	"server"
+				"linux"		"@_ZN18CTerrorMeleeWeapon15SecondaryAttackEv"
+				"windows"	"\x53\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x8B\xD8\x85\xDB\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06"
+			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed"
 			{
@@ -858,6 +873,13 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x08\x8B\x83\x58\x2E\x00\x00"
+			}
+			/* CTerrorWeapon::SecondaryAttack() */
+			"CTerrorWeapon::SecondaryAttack"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorWeapon15SecondaryAttackEv"
+				"windows"	"\x56\x57\x8B\xF9\xE8\x2A\x2A\x2A\x2A\x8B\xF0\x85\xF6\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x68\x01\x00\x00\x8B\xCE\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06"
 			}
 			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
 			"SurvivorBot::SetHumanSpectator"
