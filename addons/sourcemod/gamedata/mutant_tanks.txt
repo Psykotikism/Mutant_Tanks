@@ -445,6 +445,13 @@
 				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
 				"windows"	"\x83\x2A\x2A\x53\x55\x56\x57\x8B\x2A\x8B\x2A\x8B"
 			}
+			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
+			"CTerrorPlayer::OnShovedBySurvivor"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer18OnShovedBySurvivorEPS_RK6Vector"
+				"windows"	"\x81\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85"
+			}
 			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
 			"CTerrorPlayer::OnStaggered"
 			{
@@ -457,7 +464,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_bb"
-				"windows"	"\x83\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84" 
+				"windows"	"\x83\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84"
 			}
 			/* CTerrorPlayer::RoundRespawn() */
 			"CTerrorPlayer::RoundRespawn"
@@ -512,7 +519,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13ZombieManager11ReplaceTankEP13CTerrorPlayerS1_"
-				"windows" 	"\x83\x2A\x2A\x55\x56\x8B\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x57\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x03"
+				"windows"	"\x83\x2A\x2A\x55\x56\x8B\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x57\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x03"
 			}
 			/* ZombieManager::SpawnTank(Vector const&, QAngle const&) */
 			"ZombieManager::SpawnTank"
@@ -846,6 +853,13 @@
 				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\xCE"
 			}
+			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
+			"CTerrorPlayer::OnShovedBySurvivor"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer18OnShovedBySurvivorEPS_RK6Vector"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x2A\x56\x57\x8B\x7D\x2A\x8B\xF1"
+			}
 			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
 			"CTerrorPlayer::OnStaggered"
 			{
@@ -907,7 +921,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13ZombieManager11ReplaceTankEP13CTerrorPlayerS1_"
-				"windows" 	"\x55\x8B\xEC\x83\xEC\x2A\x53\x56\x8B\x75\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\x8B\xF9\x8B\xCE\xFF\xD2\x84\xC0\x0F"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x53\x56\x8B\x75\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\x8B\xF9\x8B\xCE\xFF\xD2\x84\xC0\x0F"
 			}
 			/* ZombieManager::SpawnTank(Vector const&, QAngle const&) */
 			"ZombieManager::SpawnTank"
