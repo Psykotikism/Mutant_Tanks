@@ -314,6 +314,7 @@ enum struct esGeneral
 	bool g_bForceSpawned;
 	bool g_bHideNameChange;
 	bool g_bIgnoreReviveDuration;
+	bool g_bIgnoreSwingInterval;
 	bool g_bIgnoreUseDuration;
 	bool g_bMapStarted;
 	bool g_bPluginEnabled;
@@ -350,6 +351,7 @@ enum struct esGeneral
 	ConVar g_cvMTGameTypes;
 	ConVar g_cvMTGasCanUseDuration;
 	ConVar g_cvMTGrenadeLauncherAmmo;
+	ConVar g_cvMTGunSwingInterval;
 	ConVar g_cvMTHuntingRifleAmmo;
 	ConVar g_cvMTPluginEnabled;
 	ConVar g_cvMTShotgunAmmo;
@@ -368,11 +370,13 @@ enum struct esGeneral
 	DynamicDetour g_ddLeaveStasisDetour;
 	DynamicDetour g_ddPlayerHitDetour;
 	DynamicDetour g_ddReplaceTankDetour;
+	DynamicDetour g_ddSecondaryAttackDetour;
+	DynamicDetour g_ddSecondaryAttackDetour2;
 	DynamicDetour g_ddSpawnTankDetour;
 	DynamicDetour g_ddStaggerDetour;
-	DynamicDetour g_ddStartHealing;
-	DynamicDetour g_ddStartReviving;
-	DynamicDetour g_ddStartAction;
+	DynamicDetour g_ddStartHealingDetour;
+	DynamicDetour g_ddStartRevivingDetour;
+	DynamicDetour g_ddStartActionDetour;
 	DynamicDetour g_ddTankRockCreateDetour;
 	DynamicDetour g_ddVomitedUponDetour;
 	DynamicDetour g_ddVomitjarHitDetour;
@@ -388,6 +392,7 @@ enum struct esGeneral
 	float g_flDefaultDefibrillatorUseDuration;
 	float g_flDefaultFirstAidKitUseDuration;
 	float g_flDefaultGasCanUseDuration;
+	float g_flDefaultGunSwingInterval;
 	float g_flDefaultSurvivorReviveDuration;
 	float g_flDefaultUpgradePackUseDuration;
 	float g_flDifficultyDamage[4];
@@ -1397,6 +1402,7 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTSMGAmmo = FindConVar("ammo_smg_max");
 	g_esGeneral.g_cvMTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
 	g_esGeneral.g_cvMTSurvivorReviveDuration = FindConVar("survivor_revive_duration");
+	g_esGeneral.g_cvMTGunSwingInterval = FindConVar("z_gun_swing_interval");
 
 	g_esGeneral.g_cvMTDisabledGameModes.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTEnabledGameModes.AddChangeHook(vMTPluginStatusCvar);
@@ -1405,6 +1411,7 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
 	g_esGeneral.g_cvMTFirstAidKitUseDuration.AddChangeHook(vMTUseDurationCvar);
 	g_esGeneral.g_cvMTSurvivorReviveDuration.AddChangeHook(vMTReviveDurationCvar);
+	g_esGeneral.g_cvMTGunSwingInterval.AddChangeHook(vMTSwingIntervalCvar);
 
 	if (g_bSecondGame)
 	{
@@ -1502,8 +1509,14 @@ public void OnPluginStart()
 					LogError("%s Failed to find signature: CTerrorPlayer::Fling", MT_TAG);
 				}
 
-				g_esGeneral.g_ddStartAction = DynamicDetour.FromConf(gdMutantTanks, "CBaseBackpackItem::StartAction");
-				if (g_esGeneral.g_ddStartAction == null)
+				g_esGeneral.g_ddSecondaryAttackDetour2 = DynamicDetour.FromConf(gdMutantTanks, "CTerrorMeleeWeapon::SecondaryAttack");
+				if (g_esGeneral.g_ddSecondaryAttackDetour2 == null)
+				{
+					LogError("%s Failed to find signature: CTerrorMeleeWeapon::SecondaryAttack", MT_TAG);
+				}
+
+				g_esGeneral.g_ddStartActionDetour = DynamicDetour.FromConf(gdMutantTanks, "CBaseBackpackItem::StartAction");
+				if (g_esGeneral.g_ddStartActionDetour == null)
 				{
 					LogError("%s Failed to find signature: CBaseBackpackItem::StartAction", MT_TAG);
 				}
@@ -1516,8 +1529,8 @@ public void OnPluginStart()
 			}
 			else
 			{
-				g_esGeneral.g_ddStartHealing = DynamicDetour.FromConf(gdMutantTanks, "CFirstAidKit::StartHealing");
-				if (g_esGeneral.g_ddStartHealing == null)
+				g_esGeneral.g_ddStartHealingDetour = DynamicDetour.FromConf(gdMutantTanks, "CFirstAidKit::StartHealing");
+				if (g_esGeneral.g_ddStartHealingDetour == null)
 				{
 					LogError("%s Failed to find signature: CFirstAidKit::StartHealing", MT_TAG);
 				}
@@ -1529,19 +1542,17 @@ public void OnPluginStart()
 				LogError("%s Failed to find address: CDirector", MT_TAG);
 			}
 
-			char sName[40];
-			FormatEx(sName, sizeof(sName), "%s::HasAnySurvivorLeftSafeArea", (g_bSecondGame ? "CDirector" : "Director"));
 			StartPrepSDKCall(SDKCall_Raw);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, sName))
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CDirector::HasAnySurvivorLeftSafeArea"))
 			{
-				LogError("%s Failed to find signature: %s", MT_TAG, sName);
+				LogError("%s Failed to find signature: CDirector::HasAnySurvivorLeftSafeArea", MT_TAG);
 			}
 
 			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 			g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea = EndPrepSDKCall();
 			if (g_esGeneral.g_hSDKHasAnySurvivorLeftSafeArea == null)
 			{
-				LogError("%s Your \"%s\" signature is outdated.", MT_TAG, sName);
+				LogError("%s Your \"CDirector::HasAnySurvivorLeftSafeArea\" signature is outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Entity);
@@ -1678,11 +1689,10 @@ public void OnPluginStart()
 				LogError("%s Failed to find signature: CTerrorPlayer::Event_Killed", MT_TAG);
 			}
 
-			FormatEx(sName, sizeof(sName), "%s::OnFirstSurvivorLeftSafeArea", (g_bSecondGame ? "CDirector" : "Director"));
-			g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour = DynamicDetour.FromConf(gdMutantTanks, sName);
+			g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour = DynamicDetour.FromConf(gdMutantTanks, "CDirector::OnFirstSurvivorLeftSafeArea");
 			if (g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour == null)
 			{
-				LogError("%s Failed to find signature: %s", MT_TAG, sName);
+				LogError("%s Failed to find signature: CDirector::OnFirstSurvivorLeftSafeArea", MT_TAG);
 			}
 
 			g_esGeneral.g_ddLauncherDirectionDetour = DynamicDetour.FromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
@@ -1709,6 +1719,12 @@ public void OnPluginStart()
 				LogError("%s Failed to find signature: ZombieManager::ReplaceTank", MT_TAG);
 			}
 
+			g_esGeneral.g_ddSecondaryAttackDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorWeapon::SecondaryAttack");
+			if (g_esGeneral.g_ddSecondaryAttackDetour == null)
+			{
+				LogError("%s Failed to find signature: CTerrorWeapon::SecondaryAttack", MT_TAG);
+			}
+
 			g_esGeneral.g_ddSpawnTankDetour = DynamicDetour.FromConf(gdMutantTanks, "ZombieManager::SpawnTank");
 			if (g_esGeneral.g_ddSpawnTankDetour == null)
 			{
@@ -1721,8 +1737,8 @@ public void OnPluginStart()
 				LogError("%s Failed to find signature: CTerrorPlayer::OnStaggered", MT_TAG);
 			}
 
-			g_esGeneral.g_ddStartReviving = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::StartReviving");
-			if (g_esGeneral.g_ddStartReviving == null)
+			g_esGeneral.g_ddStartRevivingDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::StartReviving");
+			if (g_esGeneral.g_ddStartRevivingDetour == null)
 			{
 				LogError("%s Failed to find signature: CTerrorPlayer::StartReviving", MT_TAG);
 			}
@@ -1882,6 +1898,7 @@ public void OnConfigsExecuted()
 	CreateTimer(0.1, tTimerRefreshRewards, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 	g_esGeneral.g_flDefaultSurvivorReviveDuration = g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue;
+	g_esGeneral.g_flDefaultGunSwingInterval = g_esGeneral.g_cvMTGunSwingInterval.FloatValue;
 	g_esGeneral.g_iChosenType = 0;
 	g_esGeneral.g_iRegularCount = 0;
 	g_esGeneral.g_iTankCount = 0;
@@ -6191,7 +6208,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					{
 						int iType = g_esPlayer[iVictim].g_iTankType;
 						vSetColor(iVictim, _, _, true);
-
 						g_esPlayer[iVictim].g_iTankType = iType;
 					}
 
@@ -6268,6 +6284,20 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			else if (bIsSurvivor(iPlayer) && g_esPlayer[iPlayer].g_bVomited)
 			{
 				g_esPlayer[iPlayer].g_bVomited = false;
+			}
+		}
+		else if (StrEqual(name, "player_shoved"))
+		{
+			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+				iSurvivorId = event.GetInt("attacker"), iSurvivor = GetClientOfUserId(iSurvivorId);
+			if (bIsTank(iTank) && bIsSurvivor(iSurvivor))
+			{
+				bool bDeveloper = bIsDeveloper(iSurvivor, 6);
+				if (bDeveloper || g_esPlayer[iSurvivor].g_bRewardedAttack)
+				{
+					float flMultiplier = bDeveloper ? 0.01 : 0.025;
+					SDKHooks_TakeDamage(iTank, iSurvivor, iSurvivor, (float(GetEntProp(iTank, Prop_Data, "m_iMaxHealth")) * flMultiplier));
+				}
 			}
 		}
 		else if (StrEqual(name, "player_spawn"))
@@ -6789,7 +6819,7 @@ static void vPluginStatus()
 
 		if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Enable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
 		{
-			LogError("Failed to enable detour post: %s::OnFirstSurvivorLeftSafeArea", (g_bSecondGame ? "CDirector" : "Director"));
+			LogError("Failed to enable detour post: CDirector::OnFirstSurvivorLeftSafeArea");
 		}
 
 		if (!g_esGeneral.g_ddLauncherDirectionDetour.Enable(Hook_Pre, mreLaunchDirectionPre))
@@ -6817,6 +6847,16 @@ static void vPluginStatus()
 			LogError("Failed to enable detour post: ZombieManager::ReplaceTank");
 		}
 
+		if (!g_esGeneral.g_ddSecondaryAttackDetour.Enable(Hook_Pre, mreSecondaryAttackPre))
+		{
+			LogError("Failed to enable detour pre: CTerrorWeapon::SecondaryAttack");
+		}
+
+		if (!g_esGeneral.g_ddSecondaryAttackDetour.Enable(Hook_Post, mreSecondaryAttackPost))
+		{
+			LogError("Failed to enable detour post: CTerrorWeapon::SecondaryAttack");
+		}
+
 		if (!g_esGeneral.g_ddSpawnTankDetour.Enable(Hook_Pre, mreSpawnTankPre))
 		{
 			LogError("Failed to enable detour pre: ZombieManager::SpawnTank");
@@ -6827,12 +6867,12 @@ static void vPluginStatus()
 			LogError("Failed to enable detour pre: CTerrorPlayer::OnStaggered");
 		}
 
-		if (!g_esGeneral.g_ddStartReviving.Enable(Hook_Pre, mreStartRevivingPre))
+		if (!g_esGeneral.g_ddStartRevivingDetour.Enable(Hook_Pre, mreStartRevivingPre))
 		{
 			LogError("Failed to enable detour pre: CTerrorPlayer::StartReviving");
 		}
 
-		if (!g_esGeneral.g_ddStartReviving.Enable(Hook_Post, mreStartRevivingPost))
+		if (!g_esGeneral.g_ddStartRevivingDetour.Enable(Hook_Post, mreStartRevivingPost))
 		{
 			LogError("Failed to enable detour post: CTerrorPlayer::StartReviving");
 		}
@@ -6852,12 +6892,22 @@ static void vPluginStatus()
 			LogError("Failed to enable detour pre: CTerrorPlayer::Fling");
 		}
 
-		if (g_bSecondGame && !g_esGeneral.g_ddStartAction.Enable(Hook_Pre, mreStartActionPre))
+		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Enable(Hook_Pre, mreSecondaryAttackPre))
+		{
+			LogError("Failed to enable detour pre: CTerrorMeleeWeapon::SecondaryAttack");
+		}
+
+		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Enable(Hook_Post, mreSecondaryAttackPost))
+		{
+			LogError("Failed to enable detour post: CTerrorMeleeWeapon::SecondaryAttack");
+		}
+
+		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Enable(Hook_Pre, mreStartActionPre))
 		{
 			LogError("Failed to enable detour pre: CBaseBackpackItem::StartAction");
 		}
 
-		if (g_bSecondGame && !g_esGeneral.g_ddStartAction.Enable(Hook_Post, mreStartActionPost))
+		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Enable(Hook_Post, mreStartActionPost))
 		{
 			LogError("Failed to enable detour post: CBaseBackpackItem::StartAction");
 		}
@@ -6867,12 +6917,12 @@ static void vPluginStatus()
 			LogError("Failed to enable detour pre: CTerrorPlayer::OnHitByVomitJar");
 		}
 
-		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealing.Enable(Hook_Pre, mreStartHealingPre))
+		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Enable(Hook_Pre, mreStartHealingPre))
 		{
 			LogError("Failed to enable detour pre: CFirstAidKit::StartHealing");
 		}
 
-		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealing.Enable(Hook_Post, mreStartHealingPost))
+		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Enable(Hook_Post, mreStartHealingPost))
 		{
 			LogError("Failed to enable detour post: CFirstAidKit::StartHealing");
 		}
@@ -6900,7 +6950,7 @@ static void vPluginStatus()
 
 		if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Disable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
 		{
-			LogError("Failed to disable detour post: %s::OnFirstSurvivorLeftSafeArea", (g_bSecondGame ? "CDirector" : "Director"));
+			LogError("Failed to disable detour post: CDirector::OnFirstSurvivorLeftSafeArea");
 		}
 
 		if (!g_esGeneral.g_ddLauncherDirectionDetour.Disable(Hook_Pre, mreLaunchDirectionPre))
@@ -6928,6 +6978,16 @@ static void vPluginStatus()
 			LogError("Failed to disable detour post: ZombieManager::ReplaceTank");
 		}
 
+		if (!g_esGeneral.g_ddSecondaryAttackDetour.Disable(Hook_Pre, mreSecondaryAttackPre))
+		{
+			LogError("Failed to disable detour pre: CTerrorWeapon::SecondaryAttack");
+		}
+
+		if (!g_esGeneral.g_ddSecondaryAttackDetour.Disable(Hook_Post, mreSecondaryAttackPost))
+		{
+			LogError("Failed to disable detour post: CTerrorWeapon::SecondaryAttack");
+		}
+
 		if (!g_esGeneral.g_ddSpawnTankDetour.Disable(Hook_Pre, mreSpawnTankPre))
 		{
 			LogError("Failed to disable detour pre: ZombieManager::SpawnTank");
@@ -6938,12 +6998,12 @@ static void vPluginStatus()
 			LogError("Failed to disable detour pre: CTerrorPlayer::OnStaggered");
 		}
 
-		if (!g_esGeneral.g_ddStartReviving.Disable(Hook_Pre, mreStartRevivingPre))
+		if (!g_esGeneral.g_ddStartRevivingDetour.Disable(Hook_Pre, mreStartRevivingPre))
 		{
 			LogError("Failed to disable detour pre: CTerrorPlayer::StartReviving");
 		}
 
-		if (!g_esGeneral.g_ddStartReviving.Disable(Hook_Post, mreStartRevivingPost))
+		if (!g_esGeneral.g_ddStartRevivingDetour.Disable(Hook_Post, mreStartRevivingPost))
 		{
 			LogError("Failed to disable detour post: CTerrorPlayer::StartReviving");
 		}
@@ -6963,12 +7023,22 @@ static void vPluginStatus()
 			LogError("Failed to disable detour pre: CTerrorPlayer::Fling");
 		}
 
-		if (g_bSecondGame && !g_esGeneral.g_ddStartAction.Disable(Hook_Pre, mreStartActionPre))
+		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Disable(Hook_Pre, mreSecondaryAttackPre))
+		{
+			LogError("Failed to disable detour pre: CTerrorMeleeWeapon::SecondaryAttack");
+		}
+
+		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Disable(Hook_Post, mreSecondaryAttackPost))
+		{
+			LogError("Failed to disable detour post: CTerrorMeleeWeapon::SecondaryAttack");
+		}
+
+		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Disable(Hook_Pre, mreStartActionPre))
 		{
 			LogError("Failed to disable detour pre: CBaseBackpackItem::StartAction");
 		}
 
-		if (g_bSecondGame && !g_esGeneral.g_ddStartAction.Disable(Hook_Post, mreStartActionPost))
+		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Disable(Hook_Post, mreStartActionPost))
 		{
 			LogError("Failed to disable detour post: CBaseBackpackItem::StartAction");
 		}
@@ -6978,12 +7048,12 @@ static void vPluginStatus()
 			LogError("Failed to disable detour pre: CTerrorPlayer::OnHitByVomitJar");
 		}
 
-		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealing.Disable(Hook_Pre, mreStartHealingPre))
+		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Disable(Hook_Pre, mreStartHealingPre))
 		{
 			LogError("Failed to disable detour pre: CFirstAidKit::StartHealing");
 		}
 
-		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealing.Disable(Hook_Post, mreStartHealingPost))
+		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Disable(Hook_Post, mreStartHealingPost))
 		{
 			LogError("Failed to disable detour post: CFirstAidKit::StartHealing");
 		}
@@ -7017,9 +7087,10 @@ static void vHookEvents(bool hook)
 		HookEvent("player_hurt", vEventHandler);
 		HookEvent("player_incapacitated", vEventHandler);
 		HookEvent("player_jump", vEventHandler);
-		HookEvent("player_spawn", vEventHandler);
 		HookEvent("player_now_it", vEventHandler);
 		HookEvent("player_no_longer_it", vEventHandler);
+		HookEvent("player_shoved", vEventHandler);
+		HookEvent("player_spawn", vEventHandler);
 		HookEvent("player_team", vEventHandler);
 		HookEvent("revive_success", vEventHandler);
 		HookEvent("tongue_grab", vEventHandler);
@@ -7061,9 +7132,10 @@ static void vHookEvents(bool hook)
 		UnhookEvent("player_hurt", vEventHandler);
 		UnhookEvent("player_incapacitated", vEventHandler);
 		UnhookEvent("player_jump", vEventHandler);
-		UnhookEvent("player_spawn", vEventHandler);
 		UnhookEvent("player_now_it", vEventHandler);
 		UnhookEvent("player_no_longer_it", vEventHandler);
+		UnhookEvent("player_shoved", vEventHandler);
+		UnhookEvent("player_spawn", vEventHandler);
 		UnhookEvent("player_team", vEventHandler);
 		UnhookEvent("revive_success", vEventHandler);
 		UnhookEvent("tongue_grab", vEventHandler);
@@ -10600,6 +10672,34 @@ public MRESReturn mreReplaceTankPost(DHookParam hParams)
 	return MRES_Ignored;
 }
 
+public MRESReturn mreSecondaryAttackPre(int pThis)
+{
+	int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	if (bIsSurvivor(iSurvivor) && g_esGeneral.g_cvMTGunSwingInterval != null)
+	{
+		bool bDeveloper = bIsDeveloper(iSurvivor, 6);
+		if (bDeveloper || g_esPlayer[iSurvivor].g_bRewardedAttack)
+		{
+			float flMultiplier = bDeveloper ? 0.4 : 0.7;
+			g_esGeneral.g_bIgnoreSwingInterval = true;
+			g_esGeneral.g_cvMTGunSwingInterval.FloatValue = g_esGeneral.g_flDefaultGunSwingInterval * flMultiplier;
+		}
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreSecondaryAttackPost(int pThis)
+{
+	if (g_esGeneral.g_cvMTGunSwingInterval != null)
+	{
+		g_esGeneral.g_cvMTGunSwingInterval.FloatValue = g_esGeneral.g_flDefaultGunSwingInterval;
+		g_esGeneral.g_bIgnoreSwingInterval = false;
+	}
+
+	return MRES_Ignored;
+}
+
 public MRESReturn mreSpawnTankPre(DHookReturn hReturn, DHookParam hParams)
 {
 	float flPos[3], flAngles[3];
@@ -10851,6 +10951,14 @@ public void vMTReviveDurationCvar(ConVar convar, const char[] oldValue, const ch
 	if (!g_esGeneral.g_bIgnoreReviveDuration)
 	{
 		g_esGeneral.g_flDefaultSurvivorReviveDuration = g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue;
+	}
+}
+
+public void vMTSwingIntervalCvar(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	if (!g_esGeneral.g_bIgnoreSwingInterval)
+	{
+		g_esGeneral.g_flDefaultGunSwingInterval = g_esGeneral.g_cvMTGunSwingInterval.FloatValue;
 	}
 }
 
