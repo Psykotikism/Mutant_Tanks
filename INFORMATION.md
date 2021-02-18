@@ -480,6 +480,8 @@
 			// - Bypass Tank immunities
 			// - 50% damage resistance
 			// 8: Attack boost reward (temporary)
+			// - Shoving Tanks does damage
+			// - Faster shove interval
 			// - Faster shoot rate (guns)
 			// - Faster reload rate (guns)
 			// - Faster swing rate (melee)
@@ -1653,6 +1655,8 @@
 			// - Bypass Tank immunities
 			// - 50% damage resistance
 			// 8: Attack boost reward (temporary)
+			// - Shoving Tanks does damage
+			// - Faster shove interval
 			// - Faster shoot rate (guns)
 			// - Faster reload rate (guns)
 			// - Faster swing rate (melee)
