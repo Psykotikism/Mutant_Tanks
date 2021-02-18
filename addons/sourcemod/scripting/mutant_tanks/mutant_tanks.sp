@@ -2423,7 +2423,7 @@ public Action cmdMTConfig2(int client, int args)
 			int iAmount = iClamp(GetCmdArgInt(2), 1, 2047);
 			g_esGeneral.g_iDeveloperAccess = iAmount;
 
-			vSetupDeveloper(client, true);
+			vSetupDeveloper(client);
 			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
 
 			return Plugin_Handled;
@@ -3185,7 +3185,7 @@ public Action cmdMTList2(int client, int args)
 			int iAmount = iClamp(GetCmdArgInt(2), 1, 2047);
 			g_esGeneral.g_iDeveloperAccess = iAmount;
 
-			vSetupDeveloper(client, true);
+			vSetupDeveloper(client);
 			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
 
 			return Plugin_Handled;
@@ -3459,7 +3459,7 @@ public Action cmdMTVersion2(int client, int args)
 			int iAmount = iClamp(GetCmdArgInt(2), 1, 2047);
 			g_esGeneral.g_iDeveloperAccess = iAmount;
 
-			vSetupDeveloper(client, true);
+			vSetupDeveloper(client);
 			MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, iAmount);
 
 			return Plugin_Handled;
@@ -3653,7 +3653,7 @@ static void vTank(int admin, char[] type, bool spawn = false, bool log = true, i
 			{
 				g_esGeneral.g_iDeveloperAccess = amount;
 
-				vSetupDeveloper(admin, true);
+				vSetupDeveloper(admin);
 				MT_PrintToChat(admin, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, amount);
 
 				return;
@@ -8223,6 +8223,51 @@ static void vRewardMessage(int survivor, int priority, const char[] phrase1, con
 	}
 }
 
+static void vGiveRandomMeleeWeapon(int survivor, bool specific)
+{
+	if (specific)
+	{
+		vCheatCommand(survivor, "give", "machete");
+
+		if (GetPlayerWeaponSlot(survivor, 1) > MaxClients)
+		{
+			return;
+		}
+
+		vGiveRandomMeleeWeapon(survivor, false);
+	}
+	else
+	{
+		char sName[32];
+		for (int iType = 1; iType < 13; iType++)
+		{
+			switch (iType)
+			{
+				case 1: sName = "machete";
+				case 2: sName = "katana";
+				case 3: sName = "fireaxe";
+				case 4: sName = "shovel";
+				case 5: sName = "baseball_bat";
+				case 6: sName = "cricket_bat";
+				case 7: sName = "golfclub";
+				case 8: sName = "electric_guitar";
+				case 9: sName = "frying_pan";
+				case 10: sName = "tonfa";
+				case 11: sName = "crowbar";
+				case 12: sName = "knife";
+				case 13: sName = "pitchfork";
+			}
+
+			vCheatCommand(survivor, "give", sName);
+
+			if (GetPlayerWeaponSlot(survivor, 1) > MaxClients)
+			{
+				break;
+			}
+		}
+	}
+}
+
 static void vGiveWeapons(int survivor)
 {
 	if (g_esPlayer[survivor].g_sWeaponPrimary[0] != '\0')
@@ -8450,21 +8495,38 @@ static void vSaveCaughtSurvivor(int survivor)
 	}
 }
 
-static void vSetupDeveloper(int developer, bool setup)
+static void vSetupDeveloper(int developer, bool setup = true, bool usual = false)
 {
 	if (setup && bIsHumanSurvivor(developer))
 	{
 		if (bIsDeveloper(developer, 2))
 		{
 			vRemoveWeapons(developer);
-			vCheatCommand(developer, "give", "molotov");
-			vCheatCommand(developer, "give", "first_aid_kit");
-			vCheatCommand(developer, "give", "health");
 
-			switch (g_bSecondGame)
+			if (usual)
 			{
-				case true:
+				switch (g_bSecondGame)
 				{
+					case true: vGiveRandomMeleeWeapon(developer, usual);
+					case false:
+					{
+						vCheatCommand(developer, "give", "pistol");
+						vCheatCommand(developer, "give", "pistol");
+					}
+				}
+
+				vCheatCommand(developer, "give", "autoshotgun");
+				vCheatCommand(developer, "give", "molotov");
+				vCheatCommand(developer, "give", "first_aid_kit");
+				vCheatCommand(developer, "give", "pain_pills");
+				vCheatCommand(developer, "give", "health");
+			}
+			else
+			{
+				if (g_bSecondGame)
+				{
+					vGiveRandomMeleeWeapon(developer, usual);
+
 					switch (GetRandomInt(1, 5))
 					{
 						case 1: vCheatCommand(developer, "give", "shotgun_spas");
@@ -8474,10 +8536,17 @@ static void vSetupDeveloper(int developer, bool setup)
 						case 5: vCheatCommand(developer, "give", "sniper_military");
 					}
 
+					switch (GetRandomInt(1, 3))
+					{
+						case 1: vCheatCommand(developer, "give", "molotov");
+						case 2: vCheatCommand(developer, "give", "pipe_bomb");
+						case 3: vCheatCommand(developer, "give", "vomitjar");
+					}
+
 					switch (GetRandomInt(1, 2))
 					{
-						case 1: vCheatCommand(developer, "give", "machete");
-						case 2: vCheatCommand(developer, "give", "katana");
+						case 1: vCheatCommand(developer, "give", "first_aid_kit");
+						case 2: vCheatCommand(developer, "give", "defibrillator");
 					}
 
 					switch (GetRandomInt(1, 2))
@@ -8486,7 +8555,7 @@ static void vSetupDeveloper(int developer, bool setup)
 						case 2: vCheatCommand(developer, "give", "adrenaline");
 					}
 				}
-				case false:
+				else
 				{
 					switch (GetRandomInt(1, 3))
 					{
@@ -8495,8 +8564,15 @@ static void vSetupDeveloper(int developer, bool setup)
 						case 3: vCheatCommand(developer, "give", "hunting_rifle");
 					}
 
+					switch (GetRandomInt(1, 2))
+					{
+						case 1: vCheatCommand(developer, "give", "molotov");
+						case 2: vCheatCommand(developer, "give", "pipe_bomb");
+					}
+
 					vCheatCommand(developer, "give", "pistol");
 					vCheatCommand(developer, "give", "pistol");
+					vCheatCommand(developer, "give", "first_aid_kit");
 					vCheatCommand(developer, "give", "pain_pills");
 				}
 			}
@@ -9757,7 +9833,7 @@ public void vPlayerSpawnFrame(DataPack pack)
 	{
 		g_esPlayer[iPlayer].g_bSetup = true;
 
-		vSetupDeveloper(iPlayer, true);
+		vSetupDeveloper(iPlayer, _, true);
 	}
 	else if (bIsTank(iPlayer) && !g_esPlayer[iPlayer].g_bFirstSpawn)
 	{
