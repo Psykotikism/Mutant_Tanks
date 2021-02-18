@@ -585,6 +585,7 @@ enum struct esPlayer
 	bool g_bRewardedRefill;
 	bool g_bRewardedRespawn;
 	bool g_bRewardedSpeed;
+	bool g_bSetup;
 	bool g_bSmoke;
 	bool g_bSpit;
 	bool g_bStasis;
@@ -4092,9 +4093,17 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		return Plugin_Continue;
 	}
 
-	if (bIsSurvivor(client) && (bIsDeveloper(client, 7) || g_esPlayer[client].g_bRewardedInfAmmo))
+	if (bIsSurvivor(client))
 	{
-		vRefillAmmo(client);
+		if (bIsDeveloper(client, 6) && (buttons & IN_ATTACK2))
+		{
+			SetEntProp(client, Prop_Send, "m_iShovePenalty", 0, 1);
+		}
+
+		if (bIsDeveloper(client, 7) || g_esPlayer[client].g_bRewardedInfAmmo)
+		{
+			vRefillAmmo(client);
+		}
 	}
 	else if (bIsTank(client))
 	{
@@ -6135,6 +6144,16 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				g_esGeneral.g_hSurvivalTimer = CreateTimer(g_esGeneral.g_flSurvivalDelay, tTimerDelaySurvival);
 			}
 		}
+		else if (StrEqual(name, "entity_shoved"))
+		{
+			int iSurvivorId = event.GetInt("attacker"), iSurvivor = GetClientOfUserId(iSurvivorId),
+				iWitch = event.GetInt("entityid");
+			if (bIsWitch(iWitch) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || g_esPlayer[iSurvivor].g_bRewardedAttack))
+			{
+				float flMultiplier = g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.025 : 0.01;
+				SDKHooks_TakeDamage(iWitch, iSurvivor, iSurvivor, (float(GetEntProp(iWitch, Prop_Data, "m_iMaxHealth")) * flMultiplier), DMG_CLUB);
+			}
+		}
 		else if (StrEqual(name, "finale_escape_start") || StrEqual(name, "finale_vehicle_incoming") || StrEqual(name, "finale_vehicle_ready"))
 		{
 			g_esGeneral.g_iTankWave = 3;
@@ -6208,6 +6227,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					{
 						int iType = g_esPlayer[iVictim].g_iTankType;
 						vSetColor(iVictim, _, _, true);
+
 						g_esPlayer[iVictim].g_iTankType = iType;
 					}
 
@@ -6288,16 +6308,12 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (StrEqual(name, "player_shoved"))
 		{
-			int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId),
+			int iSpecialId = event.GetInt("userid"), iSpecial = GetClientOfUserId(iSpecialId),
 				iSurvivorId = event.GetInt("attacker"), iSurvivor = GetClientOfUserId(iSurvivorId);
-			if (bIsTank(iTank) && bIsSurvivor(iSurvivor))
+			if ((bIsTank(iSpecial) || bIsCharger(iSpecial)) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || g_esPlayer[iSurvivor].g_bRewardedAttack))
 			{
-				bool bDeveloper = bIsDeveloper(iSurvivor, 6);
-				if (bDeveloper || g_esPlayer[iSurvivor].g_bRewardedAttack)
-				{
-					float flMultiplier = bDeveloper ? 0.01 : 0.025;
-					SDKHooks_TakeDamage(iTank, iSurvivor, iSurvivor, (float(GetEntProp(iTank, Prop_Data, "m_iMaxHealth")) * flMultiplier));
-				}
+				float flMultiplier = g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.025 : 0.01;
+				vDamagePlayer(iSpecial, iSurvivor, (float(GetEntProp(iSpecial, Prop_Data, "m_iMaxHealth")) * flMultiplier), "128");
 			}
 		}
 		else if (StrEqual(name, "player_spawn"))
@@ -7071,6 +7087,7 @@ static void vHookEvents(bool hook)
 		HookEvent("bot_player_replace", vEventHandler);
 		HookEvent("choke_start", vEventHandler);
 		HookEvent("create_panic_event", vEventHandler);
+		HookEvent("entity_shoved", vEventHandler);
 		HookEvent("finale_escape_start", vEventHandler);
 		HookEvent("finale_start", vEventHandler, EventHookMode_Pre);
 		HookEvent("finale_vehicle_leaving", vEventHandler);
@@ -7116,6 +7133,7 @@ static void vHookEvents(bool hook)
 		UnhookEvent("bot_player_replace", vEventHandler);
 		UnhookEvent("choke_start", vEventHandler);
 		UnhookEvent("create_panic_event", vEventHandler);
+		UnhookEvent("entity_shoved", vEventHandler);
 		UnhookEvent("finale_escape_start", vEventHandler);
 		UnhookEvent("finale_start", vEventHandler, EventHookMode_Pre);
 		UnhookEvent("finale_vehicle_leaving", vEventHandler);
@@ -7693,6 +7711,7 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_bRewardedGod = false;
 	g_esPlayer[survivor].g_bRewardedInfAmmo = false;
 	g_esPlayer[survivor].g_bRewardedSpeed = false;
+	g_esPlayer[survivor].g_bSetup = false;
 	g_esPlayer[survivor].g_bVomited = false;
 	g_esPlayer[survivor].g_flAttackBoost = 0.0;
 	g_esPlayer[survivor].g_flDamageBoost = 0.0;
@@ -8498,15 +8517,18 @@ static void vSetupDeveloper(int developer, bool setup)
 	{
 		if (bIsValidClient(developer, MT_CHECK_ALIVE))
 		{
-			SetEntityGravity(developer, 1.0);
-
-			if (!g_esPlayer[developer].g_bRewardedSpeed)
+			if (!bIsDeveloper(developer, 5))
 			{
-				SDKUnhook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
-				SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
+				SetEntityGravity(developer, 1.0);
+
+				if (!g_esPlayer[developer].g_bRewardedSpeed)
+				{
+					SDKUnhook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+					SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
+				}
 			}
 
-			if (!g_esPlayer[developer].g_bRewardedGod)
+			if (!bIsDeveloper(developer, 9) && !g_esPlayer[developer].g_bRewardedGod)
 			{
 				SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
 			}
@@ -9731,8 +9753,10 @@ public void vPlayerSpawnFrame(DataPack pack)
 	static int iPlayer, iType;
 	iPlayer = GetClientOfUserId(pack.ReadCell()), iType = pack.ReadCell();
 	delete pack;
-	if (bIsSurvivor(iPlayer))
+	if (bIsSurvivor(iPlayer) && bIsDeveloper(iPlayer) && !g_esPlayer[iPlayer].g_bSetup)
 	{
+		g_esPlayer[iPlayer].g_bSetup = true;
+
 		vSetupDeveloper(iPlayer, true);
 	}
 	else if (bIsTank(iPlayer) && !g_esPlayer[iPlayer].g_bFirstSpawn)
@@ -10675,15 +10699,11 @@ public MRESReturn mreReplaceTankPost(DHookParam hParams)
 public MRESReturn mreSecondaryAttackPre(int pThis)
 {
 	int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
-	if (bIsSurvivor(iSurvivor) && g_esGeneral.g_cvMTGunSwingInterval != null)
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || g_esPlayer[iSurvivor].g_bRewardedAttack) && g_esGeneral.g_cvMTGunSwingInterval != null)
 	{
-		bool bDeveloper = bIsDeveloper(iSurvivor, 6);
-		if (bDeveloper || g_esPlayer[iSurvivor].g_bRewardedAttack)
-		{
-			float flMultiplier = bDeveloper ? 0.4 : 0.7;
-			g_esGeneral.g_bIgnoreSwingInterval = true;
-			g_esGeneral.g_cvMTGunSwingInterval.FloatValue = g_esGeneral.g_flDefaultGunSwingInterval * flMultiplier;
-		}
+		float flMultiplier = g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.7 : 0.4;
+		g_esGeneral.g_bIgnoreSwingInterval = true;
+		g_esGeneral.g_cvMTGunSwingInterval.FloatValue = g_esGeneral.g_flDefaultGunSwingInterval * flMultiplier;
 	}
 
 	return MRES_Ignored;

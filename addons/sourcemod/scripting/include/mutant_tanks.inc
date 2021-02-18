@@ -1615,7 +1615,7 @@ stock bool bIsBotSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT
 
 stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
 {
-	return bIsInfected(charger, flags) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
+	return bIsInfected(charger, flags) && GetEngineVersion() == Engine_Left4Dead2 && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
 
 stock bool bIsCommonInfected(int common)
@@ -1752,7 +1752,7 @@ stock bool bIsSpecialInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_
 
 stock bool bIsSpitter(int spitter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
 {
-	return bIsInfected(spitter, flags) && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
+	return bIsInfected(spitter, flags) && GetEngineVersion() == Engine_Left4Dead2 && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
 }
 
 stock bool bIsSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)

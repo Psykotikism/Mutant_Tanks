@@ -53,6 +53,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esPlayer
 {
 	bool g_bActivated;
+	bool g_bRewarded;
 
 	float g_flFragileBulletMultiplier;
 	float g_flFragileChance;
@@ -138,12 +139,40 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+Handle g_hSDKShovedBySurvivor;
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_fragile", cmdFragileInfo, "View information about the Fragile ability.");
+
+	GameData gdMutantTanks = new GameData("mutant_tanks");
+	if (gdMutantTanks == null)
+	{
+		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+
+		delete gdMutantTanks;
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnShovedBySurvivor"))
+	{
+		SetFailState("Failed to find signature: CTerrorPlayer::OnShovedBySurvivor");
+
+		delete gdMutantTanks;
+	}
+
+	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+	g_hSDKShovedBySurvivor = EndPrepSDKCall();
+	if (g_hSDKShovedBySurvivor == null)
+	{
+		LogError("%s Your \"CTerrorPlayer::OnStaggered\" signature is outdated.", MT_TAG);
+	}
+
+	delete gdMutantTanks;
 
 	if (g_bLateLoad)
 	{
@@ -327,7 +356,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esPlayer[victim].g_bActivated)
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bIsSurvivor(attacker) && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
+			static bool bSurvivor;
+			bSurvivor = bIsSurvivor(attacker);
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
 			}
@@ -358,6 +389,16 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileMeleeMultiplier;
+
+				if (bSurvivor && g_esPlayer[attacker].g_bRewarded && GetRandomFloat(0.0, 100.0) <= 15.0 && g_hSDKShovedBySurvivor != null)
+				{
+					static float flTankOrigin[3], flSurvivorOrigin[3], flDirection[3];
+					GetClientAbsOrigin(attacker, flSurvivorOrigin);
+					GetClientAbsOrigin(victim, flTankOrigin);
+					MakeVectorFromPoints(flSurvivorOrigin, flTankOrigin, flDirection);
+					NormalizeVector(flDirection, flDirection);
+					SDKCall(g_hSDKShovedBySurvivor, victim, attacker, flDirection);
+				}
 			}
 
 			if (bChanged)
@@ -675,6 +716,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
+public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
+{
+	if (bIsSurvivor(survivor) && (type & MT_REWARD_ATTACKBOOST))
+	{
+		g_esPlayer[survivor].g_bRewarded = apply;
+	}
+}
+
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
@@ -830,6 +879,7 @@ static void vFragileAbility(int tank)
 static void vRemoveFragile(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
+	g_esPlayer[tank].g_bRewarded = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iDuration = -1;

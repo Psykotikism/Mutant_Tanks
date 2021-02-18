@@ -765,6 +765,8 @@ static void vReset3(int tank)
 static int iGetNearestSurvivor(int tank, float pos[3])
 {
 	static float flSurvivorPos[3];
+	static int iSurvivorCount, iSurvivors[MAXPLAYERS + 1];
+	iSurvivorCount = 0;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
@@ -772,12 +774,12 @@ static int iGetNearestSurvivor(int tank, float pos[3])
 			GetClientEyePosition(iSurvivor, flSurvivorPos);
 			if (GetVectorDistance(pos, flSurvivorPos) <= g_esCache[tank].g_flLaserRange && bVisiblePosition(pos, flSurvivorPos, tank, 1))
 			{
-				return iSurvivor;
+				iSurvivors[iSurvivorCount++] = iSurvivor;
 			}
 		}
 	}
 
-	return 0;
+	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
 }
 
 public Action tTimerCombo(Handle timer, DataPack pack)
