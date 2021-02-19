@@ -58,6 +58,7 @@ enum struct esPlayer
 	bool g_bAffected;
 	bool g_bFailed;
 	bool g_bNoAmmo;
+	bool g_bRewarded;
 
 	float g_flGravityChance;
 	float g_flGravityForce;
@@ -699,6 +700,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
+public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
+{
+	if (bIsSurvivor(survivor) && (type & MT_REWARD_SPEEDBOOST))
+	{
+		g_esPlayer[survivor].g_bRewarded = apply;
+	}
+}
+
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
@@ -952,7 +961,7 @@ static void vGravityHit(int survivor, int tank, float random, float chance, int 
 		return;
 	}
 
-	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor))
+	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !g_esPlayer[survivor].g_bRewarded)
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount2 < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -1023,10 +1032,7 @@ static void vRemoveGravity(int tank)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iSurvivor].g_bAffected && g_esPlayer[iSurvivor].g_iOwner == tank)
 		{
-			g_esPlayer[iSurvivor].g_bAffected = false;
-			g_esPlayer[iSurvivor].g_iOwner = 0;
-
-			SetEntityGravity(iSurvivor, 1.0);
+			vStopGravity(iSurvivor);
 		}
 	}
 }
@@ -1065,6 +1071,7 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
+	g_esPlayer[tank].g_bRewarded = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iAmmoCount2 = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
@@ -1097,6 +1104,14 @@ static void vReset4(int tank)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "GravityHuman8", g_esPlayer[tank].g_iCooldown - iTime);
 	}
+}
+
+static void vStopGravity(int survivor)
+{
+	g_esPlayer[survivor].g_bAffected = false;
+	g_esPlayer[survivor].g_iOwner = 0;
+
+	SetEntityGravity(survivor, 1.0);
 }
 
 public Action tTimerCombo(Handle timer, DataPack pack)
@@ -1180,18 +1195,12 @@ public Action tTimerStopGravity(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsTankSupported(iTank) || !MT_IsCustomTankSupported(iTank) || !g_esPlayer[iSurvivor].g_bAffected)
 	{
-		g_esPlayer[iSurvivor].g_bAffected = false;
-		g_esPlayer[iSurvivor].g_iOwner = 0;
-
-		SetEntityGravity(iSurvivor, 1.0);
+		vStopGravity(iSurvivor);
 
 		return Plugin_Stop;
 	}
 
-	g_esPlayer[iSurvivor].g_bAffected = false;
-	g_esPlayer[iSurvivor].g_iOwner = 0;
-
-	SetEntityGravity(iSurvivor, 1.0);
+	vStopGravity(iSurvivor);
 
 	int iMessage = pack.ReadCell();
 	if (g_esCache[iTank].g_iGravityMessage & iMessage)

@@ -670,6 +670,11 @@ public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, 
 		if (type & MT_REWARD_GODMODE)
 		{
 			g_esPlayer[survivor].g_bRewarded = apply;
+
+			if (apply)
+			{
+				vStopBury(survivor, tank);
+			}
 		}
 
 		if (type & MT_REWARD_INFAMMO)

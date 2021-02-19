@@ -11044,10 +11044,12 @@ public MRESReturn mreReplaceTankPost(DHookParam hParams)
 
 public MRESReturn mreSecondaryAttackPre(int pThis)
 {
-	int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	static int iSurvivor;
+	iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
 	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || g_esPlayer[iSurvivor].g_bRewardedAttack) && g_esGeneral.g_cvMTGunSwingInterval != null)
 	{
-		float flMultiplier = g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.7 : 0.4;
+		static float flMultiplier;
+		flMultiplier = g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.7 : 0.4;
 		g_esGeneral.g_bIgnoreSwingInterval = true;
 		g_esGeneral.g_cvMTGunSwingInterval.FloatValue = g_esGeneral.g_flDefaultGunSwingInterval * flMultiplier;
 	}
