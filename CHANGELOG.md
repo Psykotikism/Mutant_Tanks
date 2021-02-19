@@ -50,6 +50,9 @@
 - Kamikaze
 	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
+- Laser
+	- Fixed the ability always targeting the first player that joined the server.
+
 - Leech
 	- Fixed total health being miscalculated.
 	- Fixed Tanks gaining health while in the dying animation.
@@ -116,6 +119,7 @@
 - The damage boost reward now does the following:
 	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 	- Gives the recipient 50% damage resistance throughout its duration.
+- The speed boost reward now gives the recipient extra jump height. (Thanks to epzminion for the help!)
 - The godmode reward now does the following:
 	- Automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
 	- Fully blocks all damage from registering. (Requested by 3aljiyavslgazana.)

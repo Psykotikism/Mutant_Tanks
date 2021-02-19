@@ -475,6 +475,8 @@
 			// - Refill to 100% health
 			// - Automatically kill any current special infected attacker
 			// 2: Speed boost reward (temporary)
+			// - Run faster
+			// - Jump higher
 			// 4: Damage boost reward (temporary)
 			// - Extra damage
 			// - Bypass Tank immunities
@@ -1650,6 +1652,8 @@
 			// - Refill to 100% health
 			// - Automatically kill any current special infected attacker
 			// 2: Speed boost reward (temporary)
+			// - Run faster
+			// - Jump higher
 			// 4: Damage boost reward (temporary)
 			// - Extra damage
 			// - Bypass Tank immunities
