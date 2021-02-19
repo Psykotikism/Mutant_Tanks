@@ -72,6 +72,21 @@
 					}
 				}
 			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump"
+			{
+				"signature"	"CTerrorGameMovement::DoJump"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"address"
+				"arguments"
+				{
+					"vec"
+					{
+						"type"		"vectorptr"
+					}
+				}
+			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed"
 			{
@@ -215,6 +230,53 @@
 				}
 			}
 		}
+		"Addresses"
+		{
+			"DoJumpStart"
+			{
+				"signature"	"CTerrorGameMovement::DoJump"
+			}
+			/**
+			 * Failsafe method for finding default jump height (57.0) using byte signatures
+			 * Used in case "DoJumpValueRead" fails
+			 **/
+			"DoJumpValueBytes"
+			{
+				"signature"	"CTerrorGameMovement::DoJump::Value"
+			}
+		}
+		"Offsets"
+		{
+			"OS"
+			{
+				"windows"	"0"
+				"linux"		"1"
+			}
+			/* Action<Tank>::FirstContainedResponder() const */
+			"Action<Tank>::FirstContainedResponder"
+			{
+				"windows"	"16"
+				"linux"		"16"
+			}
+			/* Behavior<Tank>::FirstContainedResponder() const */
+			"Behavior<Tank>::FirstContainedResponder"
+			{
+				"windows"	"8"
+				"linux"		"8"
+			}
+			/* CBaseEntity::GetRefEHandle() const */
+			"CBaseEntity::GetRefEHandle"
+			{
+				"windows"	"2"
+				"linux"		"3"
+			}
+			/* TankIntention::FirstContainedResponder() const */
+			"TankIntention::FirstContainedResponder"
+			{
+				"windows"	"28"
+				"linux"		"28"
+			}
+		}
 		"Signatures"
 		{
 			"TheDirector"
@@ -282,26 +344,41 @@
 				}
 				"read"		"0"
 			}
+			/**
+			 * Initial method for finding default jump height (57.0) by jumping to location
+			 * Relies on "DoJumpValueBytes" in case of failure
+			 **/
+			"DoJumpValueRead"
+			{
+				"signature"	"CTerrorGameMovement::DoJump"
+				"windows"
+				{
+					"read"		"174"
+				}
+				"linux"
+				{
+					"read"		"184"
+				}
+			}
 		}
 		"Offsets"
 		{
-			/* Action<Tank>::FirstContainedResponder() const */
-			"Action<Tank>::FirstContainedResponder"
-			{
-				"windows"	"16"
-				"linux"		"16"
-			}
-			/* Behavior<Tank>::FirstContainedResponder() const */
-			"Behavior<Tank>::FirstContainedResponder"
-			{
-				"windows"	"8"
-				"linux"		"8"
-			}
 			/* CBaseCombatWeapon::GetMaxClip1() const */
 			"CBaseCombatWeapon::GetMaxClip1"
 			{
 				"windows"	"300"
 				"linux"		"301"
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Start"
+			{
+				"windows"	"71" // change DD to D9
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Start2"
+			{
+				// Windows references the default jump height (57.0) twice
+				"windows"	"172" // change DC to D8
 			}
 			/* CTerrorPlayer::Deafen(float, float, float) */
 			"CTerrorPlayer::Deafen"
@@ -332,12 +409,6 @@
 			{
 				"windows"	"35"
 				"linux"		"36"
-			}
-			/* TankIntention::FirstContainedResponder() const */
-			"TankIntention::FirstContainedResponder"
-			{
-				"windows"	"28"
-				"linux"		"28"
 			}
 			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
@@ -402,6 +473,20 @@
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock8DetonateEv"
 				"windows"	"\x83\xEC\x30\x53\x55\x56\x8B\xF1\x80\xBE\xD4\x08\x00\x00\x00"
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CTerrorGameMovement6DoJumpEP6Vector"
+				"windows"	"\x83\xEC\x10\x56\x8B\xF1\x8B\x06\x8B\x90\xFC\x00\x00\x00"
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Value"
+			{
+				"library"	"server"
+				"linux"		"\x00\x00\x64\x42\x00"
+				"windows"	"\x00\x00\x00\x00\x00\x80\x4C\x40"
 			}
 			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed"
@@ -638,21 +723,25 @@
 				}
 				"read"		"0"
 			}
+			/**
+			 * Initial method for finding default jump height (57.0) by jumping to location
+			 * Relies on "DoJumpValueBytes" in case of failure
+			 **/
+			"DoJumpValueRead"
+			{
+				"signature"	"CTerrorGameMovement::DoJump"
+				"windows"
+				{
+					"read"		"86"
+				}
+				"linux"
+				{
+					"read"		"695"
+				}
+			}
 		}
 		"Offsets"
 		{
-			/* Action<Tank>::FirstContainedResponder() const */
-			"Action<Tank>::FirstContainedResponder"
-			{
-				"windows"	"16"
-				"linux"		"16"
-			}
-			/* Behavior<Tank>::FirstContainedResponder() const */
-			"Behavior<Tank>::FirstContainedResponder"
-			{
-				"windows"	"8"
-				"linux"		"8"
-			}
 			/* CBaseBackpackItem::GetUseAction() const */
 			"CBaseBackpackItem::GetUseAction"
 			{
@@ -670,6 +759,18 @@
 			{
 				"windows"	"39"
 				"linux"		"40"
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Start"
+			{
+				"windows"	"84" // change DD to D9
+				"linux"		"691" // change F2 to F3
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Start2"
+			{
+				// Windows references the default jump height (57.0) twice
+				"windows"	"186" // change DC to D8
 			}
 			/* CTerrorPlayer::Deafen(float, float, float) */
 			"CTerrorPlayer::Deafen"
@@ -700,12 +801,6 @@
 			{
 				"windows"	"40"
 				"linux"		"41"
-			}
-			/* TankIntention::FirstContainedResponder() const */
-			"TankIntention::FirstContainedResponder"
-			{
-				"windows"	"28"
-				"linux"		"28"
 			}
 			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
@@ -789,6 +884,20 @@
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock8DetonateEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x34\x53\x56\x8B\xF1\x80\xBE\x9C\x1A\x00\x00\x00"
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CTerrorGameMovement6DoJumpEP6Vector"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x10\x56\x8B\xF1\x8B\x06\x8B\x90\xFC\x00\x00\x00"
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Value"
+			{
+				"library"	"server"
+				"linux"		"\x00\x00\x00\x00\x00\x80\x4C\x40"
+				"windows"	"\x00\x00\x00\x00\x00\x80\x4C\x40"
 			}
 			/* CTerrorMeleeWeapon::SecondaryAttack() */
 			"CTerrorMeleeWeapon::SecondaryAttack"
