@@ -244,6 +244,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_USEFUL_AMMO (1 << 2) // useful ammo reward
 #define MT_USEFUL_RESPAWN (1 << 3) // useful respawn reward
 
+#define MAX_EDICT_BITS 11
+#define NUM_ENT_ENTRY_BITS (MAX_EDICT_BITS + 1)
+#define NUM_ENT_ENTRIES (1 << NUM_ENT_ENTRY_BITS)
+#define ENT_ENTRY_MASK (NUM_ENT_ENTRIES - 1)
+
 enum ConfigState
 {
 	ConfigState_None, // no section yet
@@ -302,6 +307,8 @@ enum L4D2WeaponType
 enum struct esGeneral
 {
 	Address g_adDirector;
+	Address g_adDoJumpStart;
+	Address g_adDoJumpValue;
 
 	ArrayList g_alAbilitySections[4];
 	ArrayList g_alFilePaths;
@@ -316,7 +323,10 @@ enum struct esGeneral
 	bool g_bIgnoreReviveDuration;
 	bool g_bIgnoreSwingInterval;
 	bool g_bIgnoreUseDuration;
+	bool g_bLinux;
 	bool g_bMapStarted;
+	bool g_bPatchDoJumpStart;
+	bool g_bPatchDoJumpValue;
 	bool g_bPluginEnabled;
 	bool g_bUsedParser;
 	bool g_bWeaponHandlingInstalled;
@@ -361,6 +371,7 @@ enum struct esGeneral
 	ConVar g_cvMTTempSetting;
 	ConVar g_cvMTUpgradePackUseDuration;
 
+	DynamicDetour g_ddDoJumpDetour;
 	DynamicDetour g_ddEnterGhostStateDetour;
 	DynamicDetour g_ddEnterStasisDetour;
 	DynamicDetour g_ddEventKilledDetour;
@@ -440,6 +451,7 @@ enum struct esGeneral
 	Handle g_hRegularWavesTimer;
 	Handle g_hSDKGetMaxClip1;
 	Handle g_hSDKGetName;
+	Handle g_hSDKGetRefEHandle;
 	Handle g_hSDKGetUseAction;
 	Handle g_hSDKHasAnySurvivorLeftSafeArea;
 	Handle g_hSDKIsInStasis;
@@ -448,6 +460,7 @@ enum struct esGeneral
 	Handle g_hSDKMaterializeGhost;
 	Handle g_hSDKRockDetonate;
 	Handle g_hSDKRoundRespawn;
+	Handle g_hSDKShovedBySurvivor;
 	Handle g_hSurvivalTimer;
 	Handle g_hTankWaveTimer;
 
@@ -478,6 +491,8 @@ enum struct esGeneral
 	int g_iDeveloperAccess;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
+	int g_iDoJumpOffset;
+	int g_iDoJumpOffset2;
 	int g_iExplosiveImmunity;
 	int g_iExtraHealth;
 	int g_iFileTimeOld[8];
@@ -508,6 +523,7 @@ enum struct esGeneral
 	int g_iMinType;
 	int g_iMinimumHumans;
 	int g_iMultiplyHealth;
+	int g_iOriginalJumpHeight;
 	int g_iParserViewer;
 	int g_iPlayerCount[3];
 	int g_iPluginEnabled;
@@ -1537,10 +1553,37 @@ public void OnPluginStart()
 				}
 			}
 
+			g_esGeneral.g_bLinux = gdMutantTanks.GetOffset("OS") == 1;
+
 			g_esGeneral.g_adDirector = gdMutantTanks.GetAddress("CDirector");
 			if (g_esGeneral.g_adDirector == Address_Null)
 			{
 				LogError("%s Failed to find address: CDirector", MT_TAG);
+			}
+
+			g_esGeneral.g_adDoJumpValue = gdMutantTanks.GetAddress("DoJumpValueRead");
+			if (g_esGeneral.g_adDoJumpValue == Address_Null)
+			{
+				LogError("%s Failed to find address from \"DoJumpValueRead\". Retrieving from \"DoJumpValueBytes\" instead.", MT_TAG);
+
+				g_esGeneral.g_adDoJumpValue = gdMutantTanks.GetAddress("DoJumpValueBytes");
+				if (g_esGeneral.g_adDoJumpValue == Address_Null)
+				{
+					LogError("%s Failed to find address from \"DoJumpValueBytes\". Failed to retrieve address from both methods.", MT_TAG);
+				}
+			}
+
+			StartPrepSDKCall(SDKCall_Raw);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CBaseEntity::GetRefEHandle"))
+			{
+				LogError("%s Failed to find signature: CBaseEntity::GetRefEHandle", MT_TAG);
+			}
+
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_esGeneral.g_hSDKGetRefEHandle = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKGetRefEHandle == null)
+			{
+				LogError("%s Your \"CBaseEntity::GetRefEHandle\" signature is outdated.", MT_TAG);
 			}
 
 			StartPrepSDKCall(SDKCall_Raw);
@@ -1594,6 +1637,20 @@ public void OnPluginStart()
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnShovedBySurvivor"))
+			{
+				LogError("%s Failed to find signature: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
+			}
+
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+			g_esGeneral.g_hSDKShovedBySurvivor = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKShovedBySurvivor == null)
+			{
+				LogError("%s Your \"CTerrorPlayer::OnShovedBySurvivor\" signature is outdated.", MT_TAG);
+			}
+
+			StartPrepSDKCall(SDKCall_Player);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::RoundRespawn"))
 			{
 				LogError("%s Failed to find signature: CTerrorPlayer::RoundRespawn", MT_TAG);
@@ -1616,6 +1673,30 @@ public void OnPluginStart()
 			if (g_esGeneral.g_hSDKLeaveStasis == null)
 			{
 				LogError("%s Your \"Tank::LeaveStasis\" signature is outdated.", MT_TAG);
+			}
+
+			if (g_bSecondGame || (!g_bSecondGame && !g_esGeneral.g_bLinux))
+			{
+				g_esGeneral.g_adDoJumpStart = gdMutantTanks.GetAddress("DoJumpStart");
+				if (g_esGeneral.g_adDoJumpStart == Address_Null)
+				{
+					LogError("%s Failed to find address: DoJumpStart", MT_TAG);
+				}
+
+				g_esGeneral.g_iDoJumpOffset = gdMutantTanks.GetOffset("CTerrorGameMovement::DoJump::Start");
+				if (g_esGeneral.g_iDoJumpOffset == -1)
+				{
+					LogError("%s Failed to load offset: CTerrorGameMovement::DoJump::Start", MT_TAG);
+				}
+			}
+
+			if (!g_esGeneral.g_bLinux)
+			{
+				g_esGeneral.g_iDoJumpOffset2 = gdMutantTanks.GetOffset("CTerrorGameMovement::DoJump::Start2");
+				if (g_esGeneral.g_iDoJumpOffset2 == -1)
+				{
+					LogError("%s Failed to load offset: CTerrorGameMovement::DoJump::Start2", MT_TAG);
+				}
 			}
 
 			g_esGeneral.g_iIntentionOffset = gdMutantTanks.GetOffset("Tank::GetIntentionInterface");
@@ -1670,6 +1751,12 @@ public void OnPluginStart()
 			if (g_esGeneral.g_hSDKGetName == null)
 			{
 				LogError("%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
+			}
+
+			g_esGeneral.g_ddDoJumpDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorGameMovement::DoJump");
+			if (g_esGeneral.g_ddDoJumpDetour == null)
+			{
+				LogError("%s Failed to find signature: CTerrorGameMovement::DoJump", MT_TAG);
 			}
 
 			g_esGeneral.g_ddEnterGhostStateDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnEnterGhostState");
@@ -2420,7 +2507,7 @@ public Action cmdMTConfig2(int client, int args)
 		GetCmdArg(1, sCode, sizeof(sCode));
 		if (StrEqual(sCode, "psy_dev_access", false))
 		{
-			int iAmount = iClamp(GetCmdArgInt(2), 1, 2047);
+			int iAmount = iClamp(GetCmdArgInt(2), 1, 4095);
 			g_esGeneral.g_iDeveloperAccess = iAmount;
 
 			vSetupDeveloper(client);
@@ -3182,7 +3269,7 @@ public Action cmdMTList2(int client, int args)
 		GetCmdArg(1, sCode, sizeof(sCode));
 		if (StrEqual(sCode, "psy_dev_access", false))
 		{
-			int iAmount = iClamp(GetCmdArgInt(2), 1, 2047);
+			int iAmount = iClamp(GetCmdArgInt(2), 1, 4095);
 			g_esGeneral.g_iDeveloperAccess = iAmount;
 
 			vSetupDeveloper(client);
@@ -3456,7 +3543,7 @@ public Action cmdMTVersion2(int client, int args)
 		GetCmdArg(1, sCode, sizeof(sCode));
 		if (StrEqual(sCode, "psy_dev_access", false))
 		{
-			int iAmount = iClamp(GetCmdArgInt(2), 1, 2047);
+			int iAmount = iClamp(GetCmdArgInt(2), 1, 4095);
 			g_esGeneral.g_iDeveloperAccess = iAmount;
 
 			vSetupDeveloper(client);
@@ -3504,7 +3591,7 @@ public Action cmdTank(int client, int args)
 	char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 2047 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -3557,7 +3644,7 @@ public Action cmdTank2(int client, int args)
 	char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 2047 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -3617,7 +3704,7 @@ public Action cmdMutantTank(int client, int args)
 	char sCmd[12], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 2047 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
 
 	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
@@ -4246,7 +4333,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		bDeveloper = bIsValidClient(victim) && (bIsDeveloper(victim, 4) || g_esPlayer[victim].g_bRewardedDamage);
 		if (bIsSurvivor(victim))
 		{
-			if (bIsDeveloper(victim, 9) || g_esPlayer[victim].g_bRewardedGod)
+			if (bIsDeveloper(victim, 11) || g_esPlayer[victim].g_bRewardedGod)
 			{
 				return Plugin_Handled;
 			}
@@ -4316,6 +4403,8 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				{
 					if (bSurvivor && g_esPlayer[attacker].g_bRewardedDamage)
 					{
+						vKnockbackTank(victim, attacker, damagetype);
+
 						return Plugin_Continue;
 					}
 
@@ -4342,6 +4431,11 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					}
 
 					return Plugin_Handled;
+				}
+
+				if (bSurvivor)
+				{
+					vKnockbackTank(victim, attacker, damagetype);
 				}
 
 				if ((damagetype & DMG_BURN) && g_esCache[victim].g_flBurnDuration > 0.0)
@@ -4373,6 +4467,10 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 					return Plugin_Changed;
 				}
+			}
+			else if (bIsSpecialInfected(victim) && bSurvivor && bIsDeveloper(attacker, 9) && (damagetype & DMG_BULLET))
+			{
+				vPerformKnockback(victim, attacker);
 			}
 
 			if (bSurvivor && (bDeveloper || g_esPlayer[attacker].g_bRewardedDamage))
@@ -4446,6 +4544,29 @@ public Action RockSoundHook(int clients[MAXPLAYERS], int &numClients, char sampl
 	}
 
 	return Plugin_Continue;
+}
+
+static void vKnockbackTank(int tank, int survivor, int damagetype)
+{
+	if (bIsDeveloper(survivor, 9) && !bIsPlayerIncapacitated(tank) && (damagetype & DMG_CLUB) && GetRandomFloat(0.0, 100.0) <= 33.3)
+	{
+		vPerformKnockback(tank, survivor);
+	}
+}
+
+static void vPerformKnockback(int special, int survivor)
+{
+	if (g_esGeneral.g_hSDKShovedBySurvivor != null)
+	{
+		static float flTankOrigin[3], flSurvivorOrigin[3], flDirection[3];
+		GetClientAbsOrigin(survivor, flSurvivorOrigin);
+		GetClientAbsOrigin(special, flTankOrigin);
+		MakeVectorFromPoints(flSurvivorOrigin, flTankOrigin, flDirection);
+		NormalizeVector(flDirection, flDirection);
+		SDKCall(g_esGeneral.g_hSDKShovedBySurvivor, special, survivor, flDirection);
+	}
+
+	SetEntPropFloat(special, Prop_Send, "m_flVelocityModifier", 0.4);
 }
 
 static void vCacheCvars()
@@ -6130,7 +6251,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "choke_start") || StrEqual(name, "lunge_pounce") || StrEqual(name, "tongue_grab") || StrEqual(name, "charger_carry_start") || StrEqual(name, "charger_pummel_start") || StrEqual(name, "jockey_ride"))
 		{
 			int iSpecialId = event.GetInt("userid"), iSpecial = GetClientOfUserId(iSpecialId), iSurvivorId = event.GetInt("victim"), iSurvivor = GetClientOfUserId(iSurvivorId);
-			if (bIsSpecialInfected(iSpecial) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 8) || g_esPlayer[iSurvivor].g_bRewardedGod))
+			if (bIsSpecialInfected(iSpecial) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || g_esPlayer[iSurvivor].g_bRewardedGod))
 			{
 				vSaveCaughtSurvivor(iSurvivor);
 			}
@@ -6148,7 +6269,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		{
 			int iSurvivorId = event.GetInt("attacker"), iSurvivor = GetClientOfUserId(iSurvivorId),
 				iWitch = event.GetInt("entityid");
-			if (bIsWitch(iWitch) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || g_esPlayer[iSurvivor].g_bRewardedAttack))
+			if (bIsWitch(iWitch) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 9) || g_esPlayer[iSurvivor].g_bRewardedAttack))
 			{
 				float flMultiplier = g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.025 : 0.01;
 				SDKHooks_TakeDamage(iWitch, iSurvivor, iSurvivor, (float(GetEntProp(iWitch, Prop_Data, "m_iMaxHealth")) * flMultiplier), DMG_CLUB);
@@ -6227,7 +6348,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 					{
 						int iType = g_esPlayer[iVictim].g_iTankType;
 						vSetColor(iVictim, _, _, true);
-
 						g_esPlayer[iVictim].g_iTankType = iType;
 					}
 
@@ -6274,14 +6394,6 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				vCombineAbilitiesForward(iPlayer, MT_COMBO_UPONINCAP);
 			}
 		}
-		else if (StrEqual(name, "player_jump"))
-		{
-			int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-			if (bIsSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 5))
-			{
-				SetEntityGravity(iSurvivor, 0.75);
-			}
-		}
 		else if (StrEqual(name, "player_now_it"))
 		{
 			int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
@@ -6310,7 +6422,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		{
 			int iSpecialId = event.GetInt("userid"), iSpecial = GetClientOfUserId(iSpecialId),
 				iSurvivorId = event.GetInt("attacker"), iSurvivor = GetClientOfUserId(iSurvivorId);
-			if ((bIsTank(iSpecial) || bIsCharger(iSpecial)) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || g_esPlayer[iSurvivor].g_bRewardedAttack))
+			if ((bIsTank(iSpecial) || bIsCharger(iSpecial)) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 9) || g_esPlayer[iSurvivor].g_bRewardedAttack))
 			{
 				float flMultiplier = g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.025 : 0.01;
 				vDamagePlayer(iSpecial, iSurvivor, (float(GetEntProp(iSpecial, Prop_Data, "m_iMaxHealth")) * flMultiplier), "128");
@@ -6818,6 +6930,16 @@ static void vPluginStatus()
 
 		vHookEvents(true);
 
+		if (!g_esGeneral.g_ddDoJumpDetour.Enable(Hook_Pre, mreDoJumpPre))
+		{
+			LogError("Failed to enable detour pre: CTerrorGameMovement::DoJump");
+		}
+
+		if (!g_esGeneral.g_ddDoJumpDetour.Enable(Hook_Post, mreDoJumpPost))
+		{
+			LogError("Failed to enable detour post: CTerrorGameMovement::DoJump");
+		}
+
 		if (!g_esGeneral.g_ddEnterGhostStateDetour.Enable(Hook_Post, mreEnterGhostStatePost))
 		{
 			LogError("Failed to enable detour post: CTerrorPlayer::OnEnterGhostState");
@@ -6948,6 +7070,16 @@ static void vPluginStatus()
 		g_esGeneral.g_bPluginEnabled = false;
 
 		vHookEvents(false);
+
+		if (!g_esGeneral.g_ddDoJumpDetour.Disable(Hook_Pre, mreDoJumpPre))
+		{
+			LogError("Failed to disable detour pre: CTerrorGameMovement::DoJump");
+		}
+
+		if (!g_esGeneral.g_ddDoJumpDetour.Disable(Hook_Post, mreDoJumpPost))
+		{
+			LogError("Failed to disable detour post: CTerrorGameMovement::DoJump");
+		}
 
 		if (!g_esGeneral.g_ddEnterGhostStateDetour.Disable(Hook_Post, mreEnterGhostStatePost))
 		{
@@ -8583,7 +8715,7 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 			SDKHook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 		}
 
-		switch (bIsDeveloper(developer, 9) || g_esPlayer[developer].g_bRewardedGod)
+		switch (bIsDeveloper(developer, 11) || g_esPlayer[developer].g_bRewardedGod)
 		{
 			case true: SetEntProp(developer, Prop_Data, "m_takedamage", 0, 1);
 			case false: SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
@@ -8595,8 +8727,6 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 		{
 			if (!bIsDeveloper(developer, 5))
 			{
-				SetEntityGravity(developer, 1.0);
-
 				if (!g_esPlayer[developer].g_bRewardedSpeed)
 				{
 					SDKUnhook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
@@ -8604,7 +8734,7 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 				}
 			}
 
-			if (!bIsDeveloper(developer, 9) && !g_esPlayer[developer].g_bRewardedGod)
+			if (!bIsDeveloper(developer, 11) && !g_esPlayer[developer].g_bRewardedGod)
 			{
 				SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
 			}
@@ -10116,6 +10246,20 @@ static bool bIsCustomTankSupported(int tank)
 	return true;
 }
 
+/**
+ * 1 - 0 - no versus cooldown
+ * 2 - 1 - immune to abilities, access to all tanks
+ * 4 - 2 - loadout on initial spawn
+ * 8 - 3 - all rewards/effects
+ * 16 - 4 - damage boost/resistance, less punch force
+ * 32 - 5 - speed boost, jump height
+ * 64 - 6 - no shove penalty, fast shove/attack rate/action durations
+ * 128 - 7 - infinite primary ammo
+ * 256 - 8 - block puke/fling/stagger/punch
+ * 512 - 9 - sledgehammer rounds, tank melee knockback, shove damage against tank/charger/witch
+ * 1024 - 10 - respawn upon death
+ * 2048 - 11 - auto insta-kill SI attackers, god mode, no damage
+ **/
 static bool bIsDeveloper(int developer, int bit = -1)
 {
 	if (g_esGeneral.g_iAllowDeveloper == 1 || bit == -1 || (bit >= 0 && (g_esGeneral.g_iDeveloperAccess & (1 << bit))))
@@ -10520,6 +10664,62 @@ static int iGetConfigSectionNumber(const char[] section, int size)
 	return -1;
 }
 
+/**
+ * L4D:
+ * - Windows: Requires 2 instructions to be patched
+ * - Linux: Both instructions do not need to be patched
+ * L4D2:
+ * - Windows: Requires 2 instructions to be patched
+ * - Linux: Requires only the first instruction to be patched
+ **/
+static int iGetDoJumpStartByte(bool patch)
+{
+	switch (patch)
+	{
+		case true:
+		{
+			switch (g_bSecondGame)
+			{
+				case true: return g_esGeneral.g_bLinux ? 0xF3 : 0xD9; // F3/D9 allows float values
+				case false: return 0xD9; // D9 allows float values (same byte for both platforms)
+			}
+		}
+		case false:
+		{
+			switch (g_bSecondGame)
+			{
+				case true: return g_esGeneral.g_bLinux ? 0xF2 : 0xDD; // F2/DD allows double values
+				case false: return 0xDD; // DD allows double values (same byte for both platforms)
+			}
+		}
+	}
+
+	return 0;
+}
+
+static int iGetDoJumpStartByte2(bool patch)
+{
+	switch (patch)
+	{
+		case true: return 0xD8; // D8 allows float values (same byte for both games)
+		case false: return 0xDC; // DC allows double values (same byte for both games)
+	}
+
+	return 0;
+}
+
+static int iGetEntityIndex(Address adEntity)
+{
+	Address adHandle = view_as<Address>(SDKCall(g_esGeneral.g_hSDKGetRefEHandle, adEntity));
+	return iGetEntryIndex(adHandle);
+}
+
+static int iGetEntryIndex(Address adHandle)
+{
+	int iMaskIndex = LoadFromAddress(adHandle, NumberType_Int32);
+	return iMaskIndex & ENT_ENTRY_MASK;
+}
+
 static int iGetMessageType(int setting)
 {
 	static int iMessageCount, iMessages[10], iFlag;
@@ -10621,6 +10821,76 @@ static int iGetTypeCount(int type = 0)
 	return iTypeCount;
 }
 
+public MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
+{
+	Address adSurvivor = view_as<Address>(LoadFromAddress(view_as<Address>(pThis + 4), NumberType_Int32));
+	int iSurvivor = iGetEntityIndex(adSurvivor);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 5) || g_esPlayer[iSurvivor].g_bRewardedSpeed))
+	{
+		if (!g_esGeneral.g_bPatchDoJumpStart)
+		{
+			if (g_bSecondGame || (!g_bSecondGame && !g_esGeneral.g_bLinux))
+			{
+				if (LoadFromAddress(g_esGeneral.g_adDoJumpStart + view_as<Address>(g_esGeneral.g_iDoJumpOffset), NumberType_Int8) != iGetDoJumpStartByte(false))
+				{
+					LogError("%s Failed to locate patch: CTerrorGameMovement::DoJump::Start", MT_TAG);
+				}
+
+				StoreToAddress(g_esGeneral.g_adDoJumpStart + view_as<Address>(g_esGeneral.g_iDoJumpOffset), iGetDoJumpStartByte(true), NumberType_Int8);
+			}
+
+			if (!g_esGeneral.g_bLinux)
+			{
+				if (LoadFromAddress(g_esGeneral.g_adDoJumpStart + view_as<Address>(g_esGeneral.g_iDoJumpOffset2), NumberType_Int8) != iGetDoJumpStartByte2(false))
+				{
+					LogError("%s Failed to locate patch: CTerrorGameMovement::DoJump::Start2", MT_TAG);
+				}
+
+				StoreToAddress(g_esGeneral.g_adDoJumpStart + view_as<Address>(g_esGeneral.g_iDoJumpOffset2), iGetDoJumpStartByte2(true), NumberType_Int8);
+			}
+
+			g_esGeneral.g_bPatchDoJumpStart = true;
+		}
+
+		if (g_esGeneral.g_bPatchDoJumpStart && !g_esGeneral.g_bPatchDoJumpValue)
+		{
+			g_esGeneral.g_bPatchDoJumpValue = true;
+			g_esGeneral.g_iOriginalJumpHeight = LoadFromAddress(g_esGeneral.g_adDoJumpValue, NumberType_Int32);
+
+			float flHeight = g_esPlayer[iSurvivor].g_bRewardedSpeed ? 75.0 : 100.0;
+			StoreToAddress(g_esGeneral.g_adDoJumpValue, view_as<int>(flHeight), NumberType_Int32);
+		}
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
+{
+	if (g_esGeneral.g_bPatchDoJumpStart)
+	{
+		if (g_bSecondGame || (!g_bSecondGame && !g_esGeneral.g_bLinux))
+		{
+			StoreToAddress(g_esGeneral.g_adDoJumpStart + view_as<Address>(g_esGeneral.g_iDoJumpOffset), iGetDoJumpStartByte(false), NumberType_Int8);
+		}
+
+		if (!g_esGeneral.g_bLinux)
+		{
+			StoreToAddress(g_esGeneral.g_adDoJumpStart + view_as<Address>(g_esGeneral.g_iDoJumpOffset2), iGetDoJumpStartByte2(false), NumberType_Int8);
+		}
+
+		g_esGeneral.g_bPatchDoJumpStart = false;
+	}
+
+	if (!g_esGeneral.g_bPatchDoJumpStart && g_esGeneral.g_bPatchDoJumpValue)
+	{
+		g_esGeneral.g_bPatchDoJumpValue = false;
+		StoreToAddress(g_esGeneral.g_adDoJumpValue, g_esGeneral.g_iOriginalJumpHeight, NumberType_Int32);
+	}
+
+	return MRES_Ignored;
+}
+
 public MRESReturn mreEnterGhostStatePost(int pThis)
 {
 	if (bIsTank(pThis))
@@ -10699,7 +10969,7 @@ public MRESReturn mreFirstSurvivorLeftSafeAreaPost(DHookParam hParams)
 
 public MRESReturn mreFlingPre(int pThis, DHookParam hParams)
 {
-	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 9) || g_esPlayer[pThis].g_bRewardedGod))
+	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 8) || g_esPlayer[pThis].g_bRewardedGod))
 	{
 		return MRES_Supercede;
 	}
@@ -10730,7 +11000,7 @@ public MRESReturn mreLeaveStasisPost(int pThis)
 public MRESReturn mrePlayerHitPre(int pThis, DHookParam hParams)
 {
 	g_esGeneral.g_iTankTarget = hParams.Get(1);
-	if (bIsSurvivor(g_esGeneral.g_iTankTarget) && bIsDeveloper(g_esGeneral.g_iTankTarget, 9))
+	if (bIsSurvivor(g_esGeneral.g_iTankTarget) && bIsDeveloper(g_esGeneral.g_iTankTarget, 8))
 	{
 		return MRES_Supercede;
 	}
@@ -10743,7 +11013,7 @@ public MRESReturn mrePlayerHitPost(int pThis, DHookParam hParams)
 	int iTank = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
 	if (bIsTank(iTank) && bIsSurvivor(g_esGeneral.g_iTankTarget))
 	{
-		bool bDeveloper = bIsDeveloper(g_esGeneral.g_iTankTarget, 8);
+		bool bDeveloper = bIsDeveloper(g_esGeneral.g_iTankTarget, 4);
 		if (g_esCache[iTank].g_flPunchForce >= 0.0 || bDeveloper || g_esPlayer[g_esGeneral.g_iTankTarget].g_bRewardedGod)
 		{
 			float flForce = bDeveloper ? 0.0 : 0.25, flVelocity[3];
@@ -10837,7 +11107,7 @@ public MRESReturn mreSpawnTankPre(DHookReturn hReturn, DHookParam hParams)
 
 public MRESReturn mreStaggerPre(int pThis, DHookParam hParams)
 {
-	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 9) || g_esPlayer[pThis].g_bRewardedGod))
+	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 8) || g_esPlayer[pThis].g_bRewardedGod))
 	{
 		return MRES_Supercede;
 	}

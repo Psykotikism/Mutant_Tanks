@@ -169,7 +169,7 @@ public void OnPluginStart()
 	g_hSDKShovedBySurvivor = EndPrepSDKCall();
 	if (g_hSDKShovedBySurvivor == null)
 	{
-		LogError("%s Your \"CTerrorPlayer::OnStaggered\" signature is outdated.", MT_TAG);
+		LogError("%s Your \"CTerrorPlayer::OnShovedBySurvivor\" signature is outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
@@ -398,6 +398,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					MakeVectorFromPoints(flSurvivorOrigin, flTankOrigin, flDirection);
 					NormalizeVector(flDirection, flDirection);
 					SDKCall(g_hSDKShovedBySurvivor, victim, attacker, flDirection);
+					SetEntPropFloat(victim, Prop_Send, "m_flVelocityModifier", 0.4);
 				}
 			}
 
