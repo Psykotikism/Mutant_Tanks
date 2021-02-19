@@ -235,6 +235,7 @@
 
 - Bury
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Buried survivors can no longer attack, shove, or use/grab items. (Requested by 3aljiyavslgazana.)
 
 - Choke
 	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -252,12 +253,13 @@
 
 - Fragile
 	- Added the `Fragile Hittable Multiplier` setting.
+	- Tank now have a `15%` chance of being knocked back when shoved by recipients of the attack boost reward. (Thanks to 3aljiyavslgazana for suggesting!)
 
 - God
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 
 - Gravity
-	- Survivors with the speed boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Survivors with the speed boost reward are no longer affected by the hit and range attacks. (Requested by 3aljiyavslgazana.)
 
 - Hit
 	- Survivors with the damage boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -298,7 +300,7 @@
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Warp
-	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Incapacitated or ledge-hanging survivors are no longer affected by the hit and range attacks. (Requested by 3aljiyavslgazana.)
 
 - Whirl
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
