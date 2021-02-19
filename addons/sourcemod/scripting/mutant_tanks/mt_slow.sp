@@ -639,7 +639,7 @@ public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, 
 	{
 		g_esPlayer[survivor].g_bRewarded = apply;
 
-		if (apply)
+		if (apply && g_esPlayer[survivor].g_bAffected)
 		{
 			vStopSlow(survivor);
 		}

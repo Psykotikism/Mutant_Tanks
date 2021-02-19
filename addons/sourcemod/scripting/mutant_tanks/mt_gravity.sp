@@ -705,6 +705,11 @@ public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, 
 	if (bIsSurvivor(survivor) && (type & MT_REWARD_SPEEDBOOST))
 	{
 		g_esPlayer[survivor].g_bRewarded = apply;
+
+		if (apply && g_esPlayer[survivor].g_bAffected)
+		{
+			vStopGravity(survivor);
+		}
 	}
 }
 
