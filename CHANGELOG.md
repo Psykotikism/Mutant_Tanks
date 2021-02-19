@@ -131,6 +131,7 @@
 
 #### Game Data
 - Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.
+- Updated and added addresses, detours, offsets, and signatures.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
@@ -254,6 +255,9 @@
 
 - God
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+
+- Gravity
+	- Survivors with the speed boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Hit
 	- Survivors with the damage boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
