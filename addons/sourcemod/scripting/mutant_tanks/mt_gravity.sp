@@ -74,13 +74,13 @@ enum struct esPlayer
 	int g_iCooldown;
 	int g_iCooldown2;
 	int g_iDuration;
-	int g_iGravity;
 	int g_iGravityAbility;
 	int g_iGravityDuration;
 	int g_iGravityEffect;
 	int g_iGravityHit;
 	int g_iGravityHitMode;
 	int g_iGravityMessage;
+	int g_iGravityPointPush;
 	int g_iHumanAbility;
 	int g_iHumanAmmo;
 	int g_iHumanCooldown;
@@ -771,8 +771,8 @@ public void MT_OnButtonPressed(int tank, int button)
 								g_esPlayer[tank].g_bActivated = true;
 								g_esPlayer[tank].g_iAmmoCount++;
 
-								g_esPlayer[tank].g_iGravity = CreateEntityByName("point_push");
-								if (bIsValidEntity(g_esPlayer[tank].g_iGravity))
+								g_esPlayer[tank].g_iGravityPointPush = CreateEntityByName("point_push");
+								if (bIsValidEntity(g_esPlayer[tank].g_iGravityPointPush))
 								{
 									vGravity(tank);
 								}
@@ -856,14 +856,14 @@ static void vGravity(int tank)
 	GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 	flAngles[0] += -90.0;
 
-	DispatchKeyValueVector(g_esPlayer[tank].g_iGravity, "origin", flOrigin);
-	DispatchKeyValueVector(g_esPlayer[tank].g_iGravity, "angles", flAngles);
-	DispatchKeyValue(g_esPlayer[tank].g_iGravity, "radius", "750");
-	DispatchKeyValueFloat(g_esPlayer[tank].g_iGravity, "magnitude", g_esCache[tank].g_flGravityForce);
-	DispatchKeyValue(g_esPlayer[tank].g_iGravity, "spawnflags", "8");
-	vSetEntityParent(g_esPlayer[tank].g_iGravity, tank, true);
-	AcceptEntityInput(g_esPlayer[tank].g_iGravity, "Enable");
-	g_esPlayer[tank].g_iGravity = EntIndexToEntRef(g_esPlayer[tank].g_iGravity);
+	DispatchKeyValueVector(g_esPlayer[tank].g_iGravityPointPush, "origin", flOrigin);
+	DispatchKeyValueVector(g_esPlayer[tank].g_iGravityPointPush, "angles", flAngles);
+	DispatchKeyValue(g_esPlayer[tank].g_iGravityPointPush, "radius", "750");
+	DispatchKeyValueFloat(g_esPlayer[tank].g_iGravityPointPush, "magnitude", g_esCache[tank].g_flGravityForce);
+	DispatchKeyValue(g_esPlayer[tank].g_iGravityPointPush, "spawnflags", "8");
+	vSetEntityParent(g_esPlayer[tank].g_iGravityPointPush, tank, true);
+	AcceptEntityInput(g_esPlayer[tank].g_iGravityPointPush, "Enable");
+	g_esPlayer[tank].g_iGravityPointPush = EntIndexToEntRef(g_esPlayer[tank].g_iGravityPointPush);
 }
 
 static void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -1)
@@ -924,8 +924,8 @@ static void vGravityAbility(int tank, bool main, float random = 0.0, int pos = -
 			{
 				if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 				{
-					g_esPlayer[tank].g_iGravity = CreateEntityByName("point_push");
-					if (bIsValidEntity(g_esPlayer[tank].g_iGravity))
+					g_esPlayer[tank].g_iGravityPointPush = CreateEntityByName("point_push");
+					if (bIsValidEntity(g_esPlayer[tank].g_iGravityPointPush))
 					{
 						static int iDuration;
 						iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esCache[tank].g_iGravityDuration;
@@ -1044,17 +1044,17 @@ static void vRemoveGravity(int tank)
 
 static void vRemoveGravity2(int tank)
 {
-	if (bIsValidEntRef(g_esPlayer[tank].g_iGravity))
+	if (bIsValidEntRef(g_esPlayer[tank].g_iGravityPointPush))
 	{
-		g_esPlayer[tank].g_iGravity = EntRefToEntIndex(g_esPlayer[tank].g_iGravity);
-		if (bIsValidEntity(g_esPlayer[tank].g_iGravity))
+		g_esPlayer[tank].g_iGravityPointPush = EntRefToEntIndex(g_esPlayer[tank].g_iGravityPointPush);
+		if (bIsValidEntity(g_esPlayer[tank].g_iGravityPointPush))
 		{
-			RemoveEntity(g_esPlayer[tank].g_iGravity);
+			RemoveEntity(g_esPlayer[tank].g_iGravityPointPush);
 		}
 	}
 
 	g_esPlayer[tank].g_bActivated = false;
-	g_esPlayer[tank].g_iGravity = INVALID_ENT_REFERENCE;
+	g_esPlayer[tank].g_iGravityPointPush = INVALID_ENT_REFERENCE;
 }
 
 static void vReset()
@@ -1082,7 +1082,7 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCooldown2 = -1;
 	g_esPlayer[tank].g_iDuration = -1;
-	g_esPlayer[tank].g_iGravity = INVALID_ENT_REFERENCE;
+	g_esPlayer[tank].g_iGravityPointPush = INVALID_ENT_REFERENCE;
 }
 
 static void vReset3(int tank)

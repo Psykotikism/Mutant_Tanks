@@ -6271,7 +6271,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				iWitch = event.GetInt("entityid");
 			if (bIsWitch(iWitch) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 9) || g_esPlayer[iSurvivor].g_bRewardedAttack))
 			{
-				float flMultiplier = g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.025 : 0.01;
+				float flMultiplier = !g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.01 : 0.025;
 				SDKHooks_TakeDamage(iWitch, iSurvivor, iSurvivor, (float(GetEntProp(iWitch, Prop_Data, "m_iMaxHealth")) * flMultiplier), DMG_CLUB);
 			}
 		}
@@ -6424,7 +6424,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				iSurvivorId = event.GetInt("attacker"), iSurvivor = GetClientOfUserId(iSurvivorId);
 			if ((bIsTank(iSpecial) || bIsCharger(iSpecial)) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 9) || g_esPlayer[iSurvivor].g_bRewardedAttack))
 			{
-				float flMultiplier = g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.025 : 0.01;
+				float flMultiplier = !g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.01 : 0.025;
 				vDamagePlayer(iSpecial, iSurvivor, (float(GetEntProp(iSpecial, Prop_Data, "m_iMaxHealth")) * flMultiplier), "128");
 			}
 		}
@@ -10857,7 +10857,7 @@ public MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 			g_esGeneral.g_bPatchDoJumpValue = true;
 			g_esGeneral.g_iOriginalJumpHeight = LoadFromAddress(g_esGeneral.g_adDoJumpValue, NumberType_Int32);
 
-			float flHeight = g_esPlayer[iSurvivor].g_bRewardedSpeed ? 75.0 : 100.0;
+			float flHeight = !g_esPlayer[iSurvivor].g_bRewardedSpeed ? 100.0 : 75.0;
 			StoreToAddress(g_esGeneral.g_adDoJumpValue, view_as<int>(flHeight), NumberType_Int32);
 		}
 	}
@@ -11049,7 +11049,7 @@ public MRESReturn mreSecondaryAttackPre(int pThis)
 	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || g_esPlayer[iSurvivor].g_bRewardedAttack) && g_esGeneral.g_cvMTGunSwingInterval != null)
 	{
 		static float flMultiplier;
-		flMultiplier = g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.7 : 0.4;
+		flMultiplier = !g_esPlayer[iSurvivor].g_bRewardedAttack ? 0.4 : 0.7;
 		g_esGeneral.g_bIgnoreSwingInterval = true;
 		g_esGeneral.g_cvMTGunSwingInterval.FloatValue = g_esGeneral.g_flDefaultGunSwingInterval * flMultiplier;
 	}
