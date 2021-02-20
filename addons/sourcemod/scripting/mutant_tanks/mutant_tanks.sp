@@ -4690,9 +4690,27 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					return Plugin_Changed;
 				}
 			}
-			else if (bIsSpecialInfected(victim) && bSurvivor && bIsDeveloper(attacker, 9) && (damagetype & DMG_BULLET))
+			else if (bSurvivor && bIsDeveloper(attacker, 9) && (damagetype & DMG_BULLET))
 			{
-				vPerformKnockback(victim, attacker);
+				if (bIsSpecialInfected(victim))
+				{
+					vPerformKnockback(victim, attacker);
+				}
+				else if (bIsCommonInfected(victim))
+				{
+					if (bDeveloper || g_esPlayer[attacker].g_bRewardedDamage)
+					{
+						flDamage = (bDeveloper && g_esDeveloper.g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper.g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
+						if (flDamage > 0.0)
+						{
+							damage *= flDamage;
+						}
+					}
+
+					damagetype |= DMG_BUCKSHOT;
+
+					return Plugin_Changed;
+				}
 			}
 
 			if (bSurvivor && (bDeveloper || g_esPlayer[attacker].g_bRewardedDamage))
