@@ -42,7 +42,8 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 1. `SourceMod 1.11.0.6511` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
-4. Patience and knowledge of installing SourceMod plugins.
+4. Knowledge of installing SourceMod plugins.
+5. Patience
 
 ## Notes
 1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
@@ -150,7 +151,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -171,7 +172,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -192,7 +193,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -213,7 +214,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -236,7 +237,7 @@ Here's our final entry:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -1392,6 +1393,7 @@ sm_mt_version - Find out the current version of Mutant Tanks.
 
 // Accessible by the developer only.
 sm_mt_config2 - View a section of a config file.
+sm_mt_dev - Used only by and for the developer.
 sm_mt_list2 - View a list of installed abilities.
 sm_tank2 - Spawn a Mutant Tank.
 sm_mt_tank2 - Spawn a Mutant Tank.

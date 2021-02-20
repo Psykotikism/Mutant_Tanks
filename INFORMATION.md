@@ -592,6 +592,23 @@
 			// 3rd number = Percentage of damage required for teammate rewards.
 			"Reward Percentage"			"10.0,10.0,10.0"
 
+			// The action duration to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate durations with commas (",").
+			// --
+			// Durations limit: 3
+			// Character limit for each duration: 9
+			// --
+			// Minimum value for each duration: 0.0 (OFF)
+			// Maximum value for each duration: 999999.0 (Slowest)
+			// --
+			// 1st number = Duration for killers.
+			// 2nd number = Duration for assistants.
+			// 3rd number = Duration for teammates.
+			"Action Duration Reward"		"2.0,2.0,2.0"
+
 			// The attack boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -601,7 +618,7 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Fastest)
 			// --
 			// 1st number = Boost for killers.
@@ -618,13 +635,30 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Strongest)
 			// --
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
 			"Damage Boost Reward"			"1.25,1.25,1.25"
+
+			// The damage resistance to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate resistances with commas (",").
+			// --
+			// Resistances limit: 3
+			// Character limit for each resistance: 9
+			// --
+			// Minimum value for each resistance: 0.0 (OFF)
+			// Maximum value for each resistance: 1.0 (None)
+			// --
+			// 1st number = Resistance for killers.
+			// 2nd number = Resistance for assistants.
+			// 3rd number = Resistance for teammates.
+			"Damage Resistance Reward"		"0.5,0.5,0.5"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -640,6 +674,41 @@
 			// 2nd set = Item set to reward assistants.
 			// 3rd set = Item set to reward teammates.
 			"Item Reward"				"first_aid_kit,first_aid_kit,first_aid_kit"
+
+			// The jump height to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: Any value above "150.0" may cause instant death from fall damage.
+			// --
+			// Separate heights with commas (",").
+			// --
+			// Heights limit: 3
+			// Character limit for each height: 9
+			// --
+			// Minimum value for each height: 0.0 (OFF)
+			// Maximum value for each height: 1.0 (None)
+			// --
+			// 1st number = Height for killers.
+			// 2nd number = Height for assistants.
+			// 3rd number = Height for teammates.
+			"Jump Height Reward"			"75.0,75.0,75.0"
+
+			// The punch resistance to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate resistances with commas (",").
+			// --
+			// Resistances limit: 3
+			// Character limit for each resistance: 9
+			// --
+			// Minimum value for each resistance: 0.0 (OFF)
+			// Maximum value for each resistance: 1.0 (None)
+			// --
+			// 1st number = Resistance for killers.
+			// 2nd number = Resistance for assistants.
+			// 3rd number = Resistance for teammates.
+			"Punch Resistance Reward"		"0.25,0.25,0.25"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting can be used for standard Tanks.
@@ -658,6 +727,46 @@
 			// 3rd number = Restore loadouts for teammates.
 			"Respawn Loadout Reward"		"1,1,1"
 
+			// The shove damage multiplier against Chargers, Witches, and Tanks to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: The max health of the target will be multiplied by this setting's value.
+			// --
+			// Separate multipliers with commas (",").
+			// --
+			// Multipliers limit: 3
+			// Character limit for each multiplier: 9
+			// --
+			// Minimum value for each multiplier: 0.0 (OFF)
+			// Maximum value for each multiplier: 999999.0 (Strongest)
+			// --
+			// 1st number = Multiplier for killers.
+			// 2nd number = Multiplier for assistants.
+			// 3rd number = Multiplier for teammates.
+			// --
+			// Example: 600 (default Charger health) * 0.025 (shove damage reward) = 15 damage per shove
+			"Shove Damage Reward"			"0.025,0.025,0.025"
+
+			// The shove rate to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: The value of "z_gun_swing_interval" will be multiplied by this setting's value.
+			// --
+			// Separate rates with commas (",").
+			// --
+			// Rates limit: 3
+			// Character limit for each rate: 9
+			// --
+			// Minimum value for each rate: 0.0 (OFF)
+			// Maximum value for each rate: 999999.0 (Slowest)
+			// --
+			// 1st number = Rate for killers.
+			// 2nd number = Rate for assistants.
+			// 3rd number = Rate for teammates.
+			// --
+			// Example: 0.7 (default "z_gun_swing_interval" value) * 0.7 (shove rate reward) = 0.49 rate
+			"Shove Rate Reward"			"0.7,0.7,0.7"
+
 			// The speed boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -667,7 +776,7 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Fastest)
 			// --
 			// 1st number = Boost for killers.
@@ -1769,6 +1878,23 @@
 			// 3rd number = Percentage of damage required for teammate rewards.
 			"Reward Percentage"			"0.0,0.0,0.0"
 
+			// The action duration to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate durations with commas (",").
+			// --
+			// Durations limit: 3
+			// Character limit for each duration: 9
+			// --
+			// Minimum value for each duration: 0.0 (OFF)
+			// Maximum value for each duration: 999999.0 (Slowest)
+			// --
+			// 1st number = Duration for killers.
+			// 2nd number = Duration for assistants.
+			// 3rd number = Duration for teammates.
+			"Action Duration Reward"		"0.0,0.0,0.0"
+
 			// The attack boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -1778,7 +1904,7 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Fastest)
 			// --
 			// 1st number = Boost for killers.
@@ -1795,13 +1921,30 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Strongest)
 			// --
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
 			"Damage Boost Reward"			"0.0,0.0,0.0"
+
+			// The damage resistance to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate resistances with commas (",").
+			// --
+			// Resistances limit: 3
+			// Character limit for each resistance: 9
+			// --
+			// Minimum value for each resistance: 0.0 (OFF)
+			// Maximum value for each resistance: 1.0 (None)
+			// --
+			// 1st number = Resistance for killers.
+			// 2nd number = Resistance for assistants.
+			// 3rd number = Resistance for teammates.
+			"Damage Resistance Reward"		"0.0,0.0,0.0"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -1817,6 +1960,41 @@
 			// 2nd set = Item set to reward assistants.
 			// 3rd set = Item set to reward teammates.
 			"Item Reward"				""
+
+			// The jump height to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: Any value above "150.0" may cause instant death from fall damage.
+			// --
+			// Separate heights with commas (",").
+			// --
+			// Heights limit: 3
+			// Character limit for each height: 9
+			// --
+			// Minimum value for each height: 0.0 (OFF)
+			// Maximum value for each height: 1.0 (None)
+			// --
+			// 1st number = Height for killers.
+			// 2nd number = Height for assistants.
+			// 3rd number = Height for teammates.
+			"Jump Height Reward"			"0.0,0.0,0.0"
+
+			// The punch resistance to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate resistances with commas (",").
+			// --
+			// Resistances limit: 3
+			// Character limit for each resistance: 9
+			// --
+			// Minimum value for each resistance: 0.0 (OFF)
+			// Maximum value for each resistance: 1.0 (None)
+			// --
+			// 1st number = Resistance for killers.
+			// 2nd number = Resistance for assistants.
+			// 3rd number = Resistance for teammates.
+			"Punch Resistance Reward"		"0.0,0.0,0.0"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -1835,6 +2013,46 @@
 			// 3rd number = Restore loadouts for teammates.
 			"Respawn Loadout Reward"		"0,0,0"
 
+			// The shove damage multiplier against Chargers, Witches, and Tanks to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: The max health of the target will be multiplied by this setting's value.
+			// --
+			// Separate multipliers with commas (",").
+			// --
+			// Multipliers limit: 3
+			// Character limit for each multiplier: 9
+			// --
+			// Minimum value for each multiplier: 0.0 (OFF)
+			// Maximum value for each multiplier: 999999.0 (Strongest)
+			// --
+			// 1st number = Multiplier for killers.
+			// 2nd number = Multiplier for assistants.
+			// 3rd number = Multiplier for teammates.
+			// --
+			// Example: 600 (default Charger health) * 0.025 (shove damage reward) = 15 damage per shove
+			"Shove Damage Reward"			"0.0,0.0,0.0"
+
+			// The shove rate to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: The value of "z_gun_swing_interval" will be multiplied by this setting's value.
+			// --
+			// Separate rates with commas (",").
+			// --
+			// Rates limit: 3
+			// Character limit for each rate: 9
+			// --
+			// Minimum value for each rate: 0.0 (OFF)
+			// Maximum value for each rate: 999999.0 (Slowest)
+			// --
+			// 1st number = Rate for killers.
+			// 2nd number = Rate for assistants.
+			// 3rd number = Rate for teammates.
+			// --
+			// Example: 0.7 (default "z_gun_swing_interval" value) * 0.7 (shove rate reward) = 0.49 rate
+			"Shove Rate Reward"			"0.0,0.0,0.0"
+
 			// The speed boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -1844,7 +2062,7 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Fastest)
 			// --
 			// 1st number = Boost for killers.

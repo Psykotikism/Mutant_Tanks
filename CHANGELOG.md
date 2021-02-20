@@ -115,6 +115,8 @@
 - The health display will no longer show the maximum health going over the value set in `mutant_tanks.inc`.
 - The `Boss` feature's evolution now triggers a slow-motion effect for almost a second.
 - The melee immunity feature's pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+- The `Reward` system now validates all reward settings before applying them to recipients.
+- Added the `sm_mt_dev` command for the developer.
 - Decreased the delay for custom configs from `3` to `1.5` seconds.
 - The damage boost reward now does the following:
 	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
@@ -151,13 +153,23 @@
 - Added the following new options for the `Reward Enabled` setting:
 	- `Attack boost reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 	- `Infinite primary ammo reward` (Thanks to epzminion for helping!)
-- Added the `Attack Boost Reward` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
+- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+	- `Attack Boost Reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
+	- `Action Duration Reward`
+	- `Damage Resistance Reward`
+	- `Jump Height Reward`
+	- `Punch Resistance Reward`
+	- `Shove Damage Reward`
+	- `Shove Rate Reward`
 - Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by TheStarRocker.) [Thanks to Silvers for the code!]
 - Added the `ConVars` section under the `Plugin Settings` section which allows to change convar settings. (Requested by TheStarRocker.)
 - Added the following settings under the `Plugin Settings/General` section for global use (Requested by Maku.):
 	- `Tank Enabled`
 	- `Spawn Enabled`
-- Changed the minimum value of the `Tank Enabled` setting under the `Tank #/General` section from `0` to `-1`:
+- Changed the minimum value of the `Tank Enabled` setting under the `Tank #/General` section from `0` to `-1`.
+- Changed the minimum value of the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, `STEAM_ID/Rewards` sections from `1.1` to `0.0`:
+	- `Damage Boost Reward`
+	- `Speed Boost Reward`
 - Added the following keywords for the `Tank Enabled` and `Spawn Enabled` settings:
 	- `ignore`/`exclude`/`filter`/`remove` - -1
 - Added the `Vomit Immunity` setting under the `Tank #/Immunities` and `STEAM_ID/Immunities` sections. (Thanks to epzminion for the help, Marttt for the idea, and Silvers for the signatures!)
@@ -189,10 +201,16 @@
 	- `Reward Chance`
 	- `Reward Duration`
 	- `Reward Percentage`
+	- `Action Duration Reward`
 	- `Attack Boost Reward`
 	- `Damage Boost Reward`
+	- `Damage Resistance Reward`
 	- `Item Reward`
+	- `Jump Height Reward`
+	- `Punch Resistance Reward`
 	- `Respawn Loadout Reward`
+	- `Shove Damage Reward`
+	- `Shove Rate Reward`
 	- `Speed Boost Reward`
 	- `Useful Rewards`
 	- `Aggressive Tanks`

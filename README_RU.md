@@ -42,7 +42,8 @@
 1. `SourceMod 1.11.0.6511` или выше
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
-4. Терпение и знания по установке SourceMod плагинов.
+4. Знания по установке SourceMod плагинов.
+5. Терпение
 
 ## Примечание
 1. Я не предоставляю поддержку для выделенного/локальных серверов, но плагин и его модули должны работать на них должным образом.
@@ -150,7 +151,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -171,7 +172,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -192,7 +193,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -213,7 +214,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -236,7 +237,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -1392,6 +1393,7 @@ sm_mt_version - Узнать текущую версию плагина.
 
 // Доступно только разработчику.
 sm_mt_config2 - Просмотр раздела файла конфигурации.
+sm_mt_dev - Используется только разработчиком и для него.
 sm_mt_list2 - Просмотр списка установленных способностей.
 sm_tank2 - Создать танка-мутанта.
 sm_mt_tank2 - Создать танка-мутанта.
