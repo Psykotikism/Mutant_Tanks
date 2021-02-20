@@ -1027,7 +1027,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor) || !g_esPlayer[iSurvivor].g_bAffected)
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;
@@ -1036,7 +1036,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsTankSupported(iTank) || !MT_IsCustomTankSupported(iTank) || !g_esPlayer[iSurvivor].g_bAffected)
+	if (!MT_IsTankSupported(iTank) || !MT_IsCustomTankSupported(iTank))
 	{
 		vStopBury(iSurvivor, iTank);
 

@@ -423,23 +423,24 @@ public MRESReturn mreIdlePlayerPre(int pThis)
 
 public MRESReturn mreIdlePlayerPost(int pThis)
 {
-	if (g_esGeneral.g_bApplyFix && g_esGeneral.g_iSurvivorBot > 0 && !bIsValidClient(g_esGeneral.g_iSurvivorBot, MT_CHECK_FAKECLIENT))
+	int iSurvivor = g_esGeneral.g_iSurvivorBot;
+	if (g_esGeneral.g_bApplyFix && iSurvivor > 0 && !bIsValidClient(iSurvivor, MT_CHECK_FAKECLIENT))
 	{
 		g_esGeneral.g_bIgnoreSpec = true;
 
 		if (g_esGeneral.g_hSDKSetHumanSpectator != null)
 		{
-			SDKCall(g_esGeneral.g_hSDKSetHumanSpectator, g_esGeneral.g_iSurvivorBot, pThis);
+			SDKCall(g_esGeneral.g_hSDKSetHumanSpectator, iSurvivor, pThis);
 		}
 
 		if (g_esGeneral.g_hSDKSetObserverTarget != null)
 		{
-			SDKCall(g_esGeneral.g_hSDKSetObserverTarget, pThis, g_esGeneral.g_iSurvivorBot);
+			SDKCall(g_esGeneral.g_hSDKSetObserverTarget, pThis, iSurvivor);
 		}
 
-		vOfferTakeover(pThis, g_esGeneral.g_iSurvivorBot);
+		vOfferTakeover(pThis, iSurvivor);
 
-		g_esPlayer[g_esGeneral.g_iSurvivorBot].g_bAffected = false;
+		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esGeneral.g_bIgnoreSpec = false;
 	}
 
