@@ -2016,7 +2016,6 @@ public void OnMapStart()
 
 	vReset();
 	vToggleLogging(1);
-	AddNormalSoundHook(RockSoundHook);
 }
 
 public void OnClientPutInServer(int client)
@@ -2345,7 +2344,6 @@ public void OnMapEnd()
 
 	vReset();
 	vToggleLogging(0);
-	RemoveNormalSoundHook(RockSoundHook);
 }
 
 public void OnPluginEnd()
@@ -4841,18 +4839,6 @@ public Action OnTakePropDamage(int victim, int &attacker, int &inflictor, float 
 				return Plugin_Handled;
 			}
 		}
-	}
-
-	return Plugin_Continue;
-}
-
-public Action RockSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
-{
-	if (g_esGeneral.g_bPluginEnabled && StrEqual(sample, SOUND_MISSILE, false))
-	{
-		numClients = 0;
-
-		return Plugin_Changed;
 	}
 
 	return Plugin_Continue;
@@ -11541,7 +11527,7 @@ public MRESReturn mreFallingPre(int pThis)
 	{
 		g_esPlayer[pThis].g_bFalling = true;
 
-		if ((bIsDeveloper(pThis, 5) || bIsDeveloper(pThis, 11) || g_esPlayer[pThis].g_bRewardedGod) && !g_esGeneral.g_bPatchFallingSound)
+		if ((bIsDeveloper(pThis, 5) || bIsDeveloper(pThis, 11) || g_esPlayer[pThis].g_bRewardedSpeed || g_esPlayer[pThis].g_bRewardedGod) && !g_esGeneral.g_bPatchFallingSound)
 		{
 			g_esGeneral.g_bPatchFallingSound = true;
 
