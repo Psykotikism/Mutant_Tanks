@@ -4398,39 +4398,30 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	if (bIsSurvivor(client))
 	{
-		if (bIsDeveloper(client, 7) || g_esPlayer[client].g_bRewardedInfAmmo)
-		{
-			vRefillAmmo(client);
-		}
-
 		if ((bIsDeveloper(client, 6) || (g_esPlayer[client].g_bRewardedAttack && g_esPlayer[client].g_iShovePenalty == 1)) && (buttons & IN_ATTACK2))
 		{
 			SetEntProp(client, Prop_Send, "m_iShovePenalty", 0, 1);
 		}
 
-		if (bIsDeveloper(client, 5) || g_esPlayer[client].g_bRewardedSpeed)
+		if (bIsDeveloper(client, 7) || g_esPlayer[client].g_bRewardedInfAmmo)
 		{
-			if (GetEntProp(client, Prop_Send, "m_hGroundEntity") < 0)
-			{
-				static float flVelocity[3];
-				GetEntPropVector(client, Prop_Data, "m_vecVelocity", flVelocity);
-				if (flVelocity[2] < 0.0)
-				{
-					if (!g_esPlayer[client].g_bFallTracked)
-					{
-						static float flOrigin[3];
-						GetEntPropVector(client, Prop_Data, "m_vecOrigin", flOrigin);
-						g_esPlayer[client].g_flPreFallZ = flOrigin[2];
-						g_esPlayer[client].g_bFallTracked = true;
+			vRefillAmmo(client);
+		}
 
-						return Plugin_Continue;
-					}
-				}
-				else if (g_esPlayer[client].g_bFalling || g_esPlayer[client].g_bFallTracked)
+		if (GetEntProp(client, Prop_Send, "m_hGroundEntity") < 0)
+		{
+			static float flVelocity[3];
+			GetEntPropVector(client, Prop_Data, "m_vecVelocity", flVelocity);
+			if (flVelocity[2] < 0.0)
+			{
+				if (!g_esPlayer[client].g_bFallTracked)
 				{
-					g_esPlayer[client].g_bFalling = false;
-					g_esPlayer[client].g_bFallTracked = false;
-					g_esPlayer[client].g_flPreFallZ = 0.0;
+					static float flOrigin[3];
+					GetEntPropVector(client, Prop_Data, "m_vecOrigin", flOrigin);
+					g_esPlayer[client].g_flPreFallZ = flOrigin[2];
+					g_esPlayer[client].g_bFallTracked = true;
+
+					return Plugin_Continue;
 				}
 			}
 			else if (g_esPlayer[client].g_bFalling || g_esPlayer[client].g_bFallTracked)
@@ -4439,6 +4430,12 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				g_esPlayer[client].g_bFallTracked = false;
 				g_esPlayer[client].g_flPreFallZ = 0.0;
 			}
+		}
+		else if (g_esPlayer[client].g_bFalling || g_esPlayer[client].g_bFallTracked)
+		{
+			g_esPlayer[client].g_bFalling = false;
+			g_esPlayer[client].g_bFallTracked = false;
+			g_esPlayer[client].g_flPreFallZ = 0.0;
 		}
 	}
 	else if (bIsTank(client))
@@ -4599,30 +4596,16 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		{
 			if (bIsDeveloper(victim, 11) || g_esPlayer[victim].g_bRewardedGod)
 			{
+				if ((damagetype & DMG_FALL) && !bIsSafeFalling(victim))
+				{
+					return Plugin_Continue;
+				}
+
 				return Plugin_Handled;
 			}
-			if ((bIsDeveloper(victim, 5) || g_esPlayer[victim].g_bRewardedSpeed) && (damagetype & DMG_FALL))
+			else if ((bIsDeveloper(victim, 5) || g_esPlayer[victim].g_bRewardedSpeed) && (damagetype & DMG_FALL) && (bIsSafeFalling(victim) || RoundToNearest(damage) < GetEntProp(victim, Prop_Data, "m_iHealth")))
 			{
-				if (g_esPlayer[victim].g_bFalling)
-				{
-					static float flOrigin[3];
-					GetEntPropVector(victim, Prop_Data, "m_vecOrigin", flOrigin);
-					if (g_esPlayer[victim].g_flPreFallZ - flOrigin[2] < 1000.0)
-					{
-						g_esPlayer[victim].g_bFalling = false;
-						g_esPlayer[victim].g_flPreFallZ = 0.0;
-
-						return Plugin_Handled;
-					}
-
-					g_esPlayer[victim].g_bFalling = false;
-					g_esPlayer[victim].g_flPreFallZ = 0.0;
-				}
-
-				if (RoundToNearest(damage) < GetEntProp(victim, Prop_Data, "m_iHealth"))
-				{
-					return Plugin_Handled;
-				}
+				return Plugin_Handled;
 			}
 			else if (bIsTank(attacker))
 			{
@@ -10922,6 +10905,27 @@ static bool bIsPluginEnabled()
 	return true;
 }
 
+static bool bIsSafeFalling(int survivor)
+{
+	if (g_esPlayer[survivor].g_bFalling)
+	{
+		static float flOrigin[3];
+		GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flOrigin);
+		if (g_esPlayer[survivor].g_flPreFallZ - flOrigin[2] < 1000.0)
+		{
+			g_esPlayer[survivor].g_bFalling = false;
+			g_esPlayer[survivor].g_flPreFallZ = 0.0;
+
+			return true;
+		}
+
+		g_esPlayer[survivor].g_bFalling = false;
+		g_esPlayer[survivor].g_flPreFallZ = 0.0;
+	}
+
+	return false;
+}
+
 static bool bIsSpawnEnabled(int type)
 {
 	if ((g_esGeneral.g_iSpawnEnabled <= 0 && g_esTank[type].g_iSpawnEnabled <= 0) || (g_esGeneral.g_iSpawnEnabled == 1 && g_esTank[type].g_iSpawnEnabled == 0))
@@ -11517,7 +11521,7 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 
 public MRESReturn mreFallingPre(int pThis)
 {
-	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 5) || g_esPlayer[pThis].g_bRewardedSpeed))
+	if (bIsSurvivor(pThis) && !g_esPlayer[pThis].g_bFalling)
 	{
 		g_esPlayer[pThis].g_bFalling = true;
 	}
