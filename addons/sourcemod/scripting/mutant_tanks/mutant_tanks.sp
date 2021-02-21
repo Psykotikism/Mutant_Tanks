@@ -4598,6 +4598,8 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			{
 				if ((damagetype & DMG_FALL) && !bIsSafeFalling(victim))
 				{
+					SetEntProp(victim, Prop_Data, "m_takedamage", 2, 1);
+
 					return Plugin_Continue;
 				}
 
