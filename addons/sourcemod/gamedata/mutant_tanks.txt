@@ -118,6 +118,14 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* CTerrorPlayer::OnFalling() */
+			"CTerrorPlayer::OnFalling"
+			{
+				"signature"	"CTerrorPlayer::OnFalling"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
 			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
 			"CTerrorPlayer::OnStaggered"
 			{
@@ -508,6 +516,13 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer20MaterializeFromGhostEv"
 				"windows"	"\x56\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xFF\x2A\x50\xE8"
+			}
+			/* CTerrorPlayer::OnFalling() */
+			"CTerrorPlayer::OnFalling"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer9OnFallingEv"
+				"windows"	"\x83\xEC\x70\x53\x55\x56\x57\x8B\xF1"
 			}
 			/* CTerrorPlayer::OnITExpired() */
 			"CTerrorPlayer::OnITExpired"
@@ -940,6 +955,13 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer17OnEnterGhostStateEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x08\x53\x56\x8B\xF1\x8B\x86\x2A\x2A\x2A\x2A\x8B"
+			}
+			/* CTerrorPlayer::OnFalling() */
+			"CTerrorPlayer::OnFalling"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer9OnFallingEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x78\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x57\x8B\xF1"
 			}
 			/* CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*) */
 			"CTerrorPlayer::OnHitByVomitJar"

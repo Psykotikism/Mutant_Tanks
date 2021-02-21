@@ -699,17 +699,17 @@
 
 	"RewardItem"
 	{
-		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert megölted{olive} {2}{default}!"
+		"hu"			"Most{default} kaptál{yellow} {1}{default} mert megölted{olive} {2}{default}!"
 	}
 
 	"RewardItem2"
 	{
-		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert nagyrészt segítettél{olive} {2}{default}ellen!"
+		"hu"			"Most{default} kaptál{yellow} {1}{default} mert nagyrészt segítettél{olive} {2}{default}ellen!"
 	}
 
 	"RewardItem3"
 	{
-		"hu"			"Most{default} kaptál egy{yellow} {1}{default} mert segítettél{olive} {2}{default}ellen!"
+		"hu"			"Most{default} kaptál{yellow} {1}{default} mert segítettél{olive} {2}{default}ellen!"
 	}
 
 	"RewardNone"

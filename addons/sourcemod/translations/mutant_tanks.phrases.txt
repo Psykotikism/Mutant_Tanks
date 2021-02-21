@@ -787,19 +787,19 @@
 	"RewardItem"
 	{
 		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received a(n){yellow} {1}{default} for killing{olive} {2}{default}!"
+		"en"			"You{default} received{yellow} {1}{default} for killing{olive} {2}{default}!"
 	}
 
 	"RewardItem2"
 	{
 		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received a(n){yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
+		"en"			"You{default} received{yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
 	}
 
 	"RewardItem3"
 	{
 		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received a(n){yellow} {1}{default} for assisting against{olive} {2}{default}!"
+		"en"			"You{default} received{yellow} {1}{default} for assisting against{olive} {2}{default}!"
 	}
 
 	"RewardNone"

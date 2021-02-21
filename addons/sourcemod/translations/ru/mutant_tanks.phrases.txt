@@ -699,17 +699,17 @@
 
 	"RewardItem"
 	{
-		"ru"			"Вы{default} получили {yellow} {1}{default} за убийство{olive} {2}{default}!"
+		"ru"			"Вы{default} получили{yellow} {1}{default} за убийство{olive} {2}{default}!"
 	}
 
 	"RewardItem2"
 	{
-		"ru"			"Вы{default} получили {yellow} {1}{default} за наибольшую помощь в убийстве{olive} {2}{default}!"
+		"ru"			"Вы{default} получили{yellow} {1}{default} за наибольшую помощь в убийстве{olive} {2}{default}!"
 	}
 
 	"RewardItem3"
 	{
-		"ru"			"Вы{default} получили {yellow} {1}{default} за помощь в убийстве{olive} {2}{default}!"
+		"ru"			"Вы{default} получили{yellow} {1}{default} за помощь в убийстве{olive} {2}{default}!"
 	}
 
 	"RewardNone"

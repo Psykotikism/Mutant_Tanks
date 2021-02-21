@@ -684,13 +684,16 @@ public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, 
 {
 	if (bIsSurvivor(survivor))
 	{
-		if (type & MT_REWARD_GODMODE)
+		if ((type & MT_REWARD_HEALTH) || (type & MT_REWARD_REFILL) || (type & MT_REWARD_GODMODE))
 		{
-			g_esPlayer[survivor].g_bRewarded = apply;
+			if (type & MT_REWARD_GODMODE)
+			{
+				g_esPlayer[survivor].g_bRewarded = apply;
+			}
 
 			if (apply && g_esPlayer[survivor].g_bAffected)
 			{
-				vStopBury(survivor, tank);
+				vStopBury(survivor, g_esPlayer[survivor].g_iOwner);
 			}
 		}
 
