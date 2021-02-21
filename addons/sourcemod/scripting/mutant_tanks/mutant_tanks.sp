@@ -1536,6 +1536,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -4611,8 +4612,6 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			}
 			else if (bIsTank(attacker))
 			{
-				vSaveSurvivorStats(victim, true);
-
 				flResistance = (bDeveloper && g_esDeveloper.g_flDevDamageResistance > g_esPlayer[victim].g_flDamageResistance) ? g_esDeveloper.g_flDevDamageResistance : g_esPlayer[victim].g_flDamageResistance;
 				if (!bIsCoreAdminImmune(victim, attacker))
 				{
@@ -8350,16 +8349,6 @@ static void vResetSurvivorStats2(int survivor)
 	g_esPlayer[survivor].g_bRewardedRespawn = false;
 }
 
-static void vSaveSurvivorStats(int survivor, bool override)
-{
-	if (!override)
-	{
-		vResetSurvivorStats(survivor);
-	}
-
-	vSaveWeapons(survivor);
-}
-
 static void vResetTank(int tank)
 {
 	ExtinguishEntity(tank);
@@ -11492,7 +11481,8 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 	{
 		g_esPlayer[pThis].g_bLastLife = false;
 
-		vSaveSurvivorStats(pThis, false);
+		vResetSurvivorStats(pThis);
+		vSaveWeapons(pThis);
 	}
 	else if (bIsTank(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
