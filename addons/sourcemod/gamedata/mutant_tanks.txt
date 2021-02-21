@@ -252,6 +252,14 @@
 			{
 				"signature"	"CTerrorGameMovement::DoJump::Value"
 			}
+			/**
+			 * Failsafe method for finding default sound string ("Player.Fall") using byte signatures
+			 * Used in case "OnFallingSoundRead" fails
+			 **/
+			"OnFallingSoundBytes"
+			{
+				"signature"	"CTerrorPlayer::OnFalling::Sound"
+			}
 		}
 		"Offsets"
 		{
@@ -366,6 +374,22 @@
 				"linux"
 				{
 					"read"		"184"
+				}
+			}
+			/**
+			 * Initial method for finding default sound string ("Player.Fall") by jumping to location
+			 * Relies on "OnFallingSoundBytes" in case of failure
+			 **/
+			"OnFallingSoundRead"
+			{
+				"signature"	"CTerrorPlayer::OnFalling"
+				"windows"
+				{
+					"read"		"361"
+				}
+				"linux"
+				{
+					"read"		"386"
 				}
 			}
 		}
@@ -522,7 +546,14 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer9OnFallingEv"
-				"windows"	"\x83\xEC\x70\x53\x55\x56\x57\x8B\xF1"
+				"windows"	"\x2A\x2A\x70\x53\x55\x56\x57\x8B\xF1"
+			}
+			/* CTerrorPlayer::OnFalling() */
+			"CTerrorPlayer::OnFalling::Sound"
+			{
+				"library"	"server"
+				"linux"		"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
+				"windows"	"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
 			}
 			/* CTerrorPlayer::OnITExpired() */
 			"CTerrorPlayer::OnITExpired"
@@ -754,6 +785,22 @@
 					"read"		"695"
 				}
 			}
+			/**
+			 * Initial method for finding default sound string ("Player.Fall") by jumping to location
+			 * Relies on "OnFallingSoundBytes" in case of failure
+			 **/
+			"OnFallingSoundRead"
+			{
+				"signature"	"CTerrorPlayer::OnFalling"
+				"windows"
+				{
+					"read"		"297"
+				}
+				"linux"
+				{
+					"read"		"426"
+				}
+			}
 		}
 		"Offsets"
 		{
@@ -961,7 +1008,14 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer9OnFallingEv"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x78\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x57\x8B\xF1"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x78\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x57\x8B\xF1"
+			}
+			/* CTerrorPlayer::OnFalling() */
+			"CTerrorPlayer::OnFalling::Sound"
+			{
+				"library"	"server"
+				"linux"		"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
+				"windows"	"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
 			}
 			/* CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*) */
 			"CTerrorPlayer::OnHitByVomitJar"
