@@ -34,6 +34,7 @@
 
 #### Abilities
 - Bury
+	- Fixed survivors not being revived when receiving the godmode reward.
 	- Fixed survivors not being healed when receiving the health or refill reward. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Choke
@@ -484,7 +485,6 @@
 - Fixed the SourceMod admin menu plugin not being optional.
 - Fixed rare cases where non-Mutant Tanks are counted as Mutant Tanks.
 - Fixed Tank rocks not breaking when hitting special and common infected.
-- Fixed the strong wind sound caused by Tank rock debris. (Thanks to Dragokas for the code!)
 
 #### Core Plugin
 - Fixed log files being created even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
