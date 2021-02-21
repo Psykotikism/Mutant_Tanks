@@ -117,12 +117,38 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+Handle g_hSDKITExpired;
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_god", cmdGodInfo, "View information about the God ability.");
+
+	GameData gdMutantTanks = new GameData("mutant_tanks");
+	if (gdMutantTanks == null)
+	{
+		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+
+		delete gdMutantTanks;
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnITExpired"))
+	{
+		SetFailState("Failed to find signature: CTerrorPlayer::OnITExpired");
+
+		delete gdMutantTanks;
+	}
+
+	g_hSDKITExpired = EndPrepSDKCall();
+	if (g_hSDKITExpired == null)
+	{
+		LogError("%s Your \"CTerrorPlayer::OnITExpired\" signature is outdated.", MT_TAG);
+	}
+
+	delete gdMutantTanks;
 
 	if (g_bLateLoad)
 	{
@@ -559,6 +585,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveGod(iTank);
 		}
 	}
+	else if (StrEqual(name, "player_now_it"))
+	{
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (MT_IsTankSupported(iTank) && g_esPlayer[iTank].g_bActivated)
+		{
+			vRemoveVomit(iTank);
+		}
+	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
 		vReset();
@@ -685,6 +719,8 @@ static void vGod(int tank, int pos = -1)
 	g_esPlayer[tank].g_bActivated = true;
 	g_esPlayer[tank].g_iDuration = GetTime() + iDuration;
 
+	vRemoveVomit(tank);
+
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		g_esPlayer[tank].g_iAmmoCount++;
@@ -732,6 +768,14 @@ static void vRemoveGod(int tank)
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iDuration = -1;
+}
+
+static void vRemoveVomit(int tank)
+{
+	if (g_hSDKITExpired != null)
+	{
+		SDKCall(g_hSDKITExpired, tank);
+	}
 }
 
 static void vReset()
