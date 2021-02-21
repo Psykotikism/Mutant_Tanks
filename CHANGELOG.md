@@ -30,8 +30,12 @@
 
 #### Settings
 - Fixed the `Boss Health Stages` setting not being read entirely.
+- Fixed the `Item Reward` setting not being read properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 #### Abilities
+- Bury
+	- Fixed survivors not being healed when receiving the health or refill reward. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
 - Choke
 	- Fixed choked survivors not always being lifted off the ground while being choked. (Thanks to 3aljiyavslgazana for testing and reporting!)
 	- Fixed choked survivors being stuck under the floor when the ability ends.
@@ -121,7 +125,9 @@
 - The damage boost reward now does the following:
 	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 	- Gives the recipient 50% damage resistance throughout its duration.
-- The speed boost reward now gives the recipient extra jump height. (Thanks to epzminion for the help!)
+- The speed boost reward now does the following (Thanks to epzminion for the help!):
+	- Gives the recipient extra jump height.
+	- Blocks fall damage within a certain height limit.
 - The godmode reward now does the following:
 	- Automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
 	- Fully blocks all damage from registering. (Requested by 3aljiyavslgazana.)
@@ -155,12 +161,14 @@
 	- `Infinite primary ammo reward` (Thanks to epzminion for helping!)
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Attack Boost Reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
-	- `Action Duration Reward`
+	- `Action Duration Reward` (Thanks to epzminion for the help!)
 	- `Damage Resistance Reward`
-	- `Jump Height Reward`
-	- `Punch Resistance Reward`
+	- `Jump Height Reward` (Thanks to epzminion for the help!)
+	- `Punch Resistance Reward` (Thanks to Silvers for the code!)
 	- `Shove Damage Reward`
-	- `Shove Rate Reward`
+	- `Shove Penalty Reward`
+	- `Shove Rate Reward` (Thanks to epzminion for the help!)
+	- `Sledgehammer Rounds Reward` (Thanks to epzminion for the code!)
 - Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by TheStarRocker.) [Thanks to Silvers for the code!]
 - Added the `ConVars` section under the `Plugin Settings` section which allows to change convar settings. (Requested by TheStarRocker.)
 - Added the following settings under the `Plugin Settings/General` section for global use (Requested by Maku.):
@@ -210,7 +218,9 @@
 	- `Punch Resistance Reward`
 	- `Respawn Loadout Reward`
 	- `Shove Damage Reward`
+	- `Shove Penalty Reward`
 	- `Shove Rate Reward`
+	- `Sledgehammer Rounds Reward`
 	- `Speed Boost Reward`
 	- `Useful Rewards`
 	- `Aggressive Tanks`

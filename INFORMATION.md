@@ -481,7 +481,9 @@
 			// - Extra damage
 			// - Bypass Tank immunities
 			// - 50% damage resistance
+			// - Sledgehammer rounds
 			// 8: Attack boost reward (temporary)
+			// - Bypass shove penalty
 			// - Shoving Tanks does damage
 			// - Faster shove interval
 			// - Faster shoot rate (guns)
@@ -686,7 +688,7 @@
 			// Character limit for each height: 9
 			// --
 			// Minimum value for each height: 0.0 (OFF)
-			// Maximum value for each height: 1.0 (None)
+			// Maximum value for each height: 999999.0 (Highest)
 			// --
 			// 1st number = Height for killers.
 			// 2nd number = Height for assistants.
@@ -747,6 +749,23 @@
 			// Example: 600 (default Charger health) * 0.025 (shove damage reward) = 15 damage per shove
 			"Shove Damage Reward"			"0.025,0.025,0.025"
 
+			// Remove shove penalty as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Remove shove penalty for killers.
+			// 2nd number = Remove shove penalty for assistants.
+			// 3rd number = Remove shove penalty for teammates.
+			"Shove Penalty Reward"			"1,1,1"
+
 			// The shove rate to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -766,6 +785,23 @@
 			// --
 			// Example: 0.7 (default "z_gun_swing_interval" value) * 0.7 (shove rate reward) = 0.49 rate
 			"Shove Rate Reward"			"0.7,0.7,0.7"
+
+			// Give sledgehammer rounds as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give sledgehammer rounds to killers.
+			// 2nd number = Give sledgehammer rounds to assistants.
+			// 3rd number = Give sledgehammer rounds to teammates.
+			"Sledgehammer Rounds Reward"		"1,1,1"
 
 			// The speed boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1767,7 +1803,9 @@
 			// - Extra damage
 			// - Bypass Tank immunities
 			// - 50% damage resistance
+			// - Sledgehammer rounds
 			// 8: Attack boost reward (temporary)
+			// - Bypass shove penalty
 			// - Shoving Tanks does damage
 			// - Faster shove interval
 			// - Faster shoot rate (guns)
@@ -1972,7 +2010,7 @@
 			// Character limit for each height: 9
 			// --
 			// Minimum value for each height: 0.0 (OFF)
-			// Maximum value for each height: 1.0 (None)
+			// Maximum value for each height: 999999.0 (Highest)
 			// --
 			// 1st number = Height for killers.
 			// 2nd number = Height for assistants.
@@ -2033,6 +2071,23 @@
 			// Example: 600 (default Charger health) * 0.025 (shove damage reward) = 15 damage per shove
 			"Shove Damage Reward"			"0.0,0.0,0.0"
 
+			// Remove shove penalty as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Remove shove penalty for killers.
+			// 2nd number = Remove shove penalty for assistants.
+			// 3rd number = Remove shove penalty for teammates.
+			"Shove Penalty Reward"			"1,1,1"
+
 			// The shove rate to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -2052,6 +2107,23 @@
 			// --
 			// Example: 0.7 (default "z_gun_swing_interval" value) * 0.7 (shove rate reward) = 0.49 rate
 			"Shove Rate Reward"			"0.0,0.0,0.0"
+
+			// Give sledgehammer rounds as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give sledgehammer rounds to killers.
+			// 2nd number = Give sledgehammer rounds to assistants.
+			// 3rd number = Give sledgehammer rounds to teammates.
+			"Sledgehammer Rounds Reward"		"1,1,1"
 
 			// The speed boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
