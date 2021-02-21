@@ -309,6 +309,7 @@ enum struct esGeneral
 	Address g_adDirector;
 	Address g_adDoJumpStart;
 	Address g_adDoJumpValue;
+	Address g_adFallingSound;
 
 	ArrayList g_alAbilitySections[4];
 	ArrayList g_alFilePaths;
@@ -327,6 +328,7 @@ enum struct esGeneral
 	bool g_bMapStarted;
 	bool g_bPatchDoJumpStart;
 	bool g_bPatchDoJumpValue;
+	bool g_bPatchFallingSound;
 	bool g_bPluginEnabled;
 	bool g_bUsedParser;
 	bool g_bWeaponHandlingInstalled;
@@ -1536,7 +1538,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -1635,6 +1636,18 @@ public void OnPluginStart()
 				if (g_esGeneral.g_adDoJumpValue == Address_Null)
 				{
 					LogError("%s Failed to find address from \"DoJumpValueBytes\". Failed to retrieve address from both methods.", MT_TAG);
+				}
+			}
+
+			g_esGeneral.g_adFallingSound = gdMutantTanks.GetAddress("OnFallingSoundRead");
+			if (g_esGeneral.g_adFallingSound == Address_Null)
+			{
+				LogError("%s Failed to find address from \"OnFallingSoundRead\". Retrieving from \"OnFallingSoundBytes\" instead.", MT_TAG);
+
+				g_esGeneral.g_adFallingSound = gdMutantTanks.GetAddress("OnFallingSoundBytes");
+				if (g_esGeneral.g_adFallingSound == Address_Null)
+				{
+					LogError("%s Failed to find address from \"OnFallingSoundBytes\". Failed to retrieve address from both methods.", MT_TAG);
 				}
 			}
 
@@ -3209,7 +3222,7 @@ public Action cmdMTDev(int client, int args)
 				g_esDeveloper.g_iDevAccess = iClamp(RoundToNearest(flValue), 1, 4095);
 				vSetupDeveloper(client);
 			}
-			else if (StrContains(sKeyword, "action", false) != -1)
+			else if (StrContains(sKeyword, "action", false) != -1 || StrContains(sKeyword, "duration", false) != -1)
 			{
 				g_esDeveloper.g_flDevActionDuration = flValue;
 			}
@@ -3217,35 +3230,35 @@ public Action cmdMTDev(int client, int args)
 			{
 				g_esDeveloper.g_flDevAttackBoost = flValue;
 			}
-			else if (StrContains(sKeyword, "dmgboost", false) != -1)
+			else if (StrContains(sKeyword, "dmgboost", false) != -1 || StrContains(sKeyword, "damage", false) != -1 || StrContains(sKeyword, "dmg", false) != -1)
 			{
 				g_esDeveloper.g_flDevDamageBoost = flValue;
 			}
-			else if (StrContains(sKeyword, "dmgres", false) != -1)
+			else if (StrContains(sKeyword, "dmgres", false) != -1 || StrContains(sKeyword, "damage2", false) != -1 || StrContains(sKeyword, "dmg2", false) != -1 || StrContains(sKeyword, "resistance", false) != -1 || StrContains(sKeyword, "res", false) != -1)
 			{
 				g_esDeveloper.g_flDevDamageResistance = flValue;
 			}
-			else if (StrContains(sKeyword, "jump", false) != -1)
+			else if (StrContains(sKeyword, "jump", false) != -1 || StrContains(sKeyword, "height", false) != -1)
 			{
 				g_esDeveloper.g_flDevJumpHeight = flValue;
 			}
-			else if (StrContains(sKeyword, "punch", false) != -1)
+			else if (StrContains(sKeyword, "punch", false) != -1 || StrContains(sKeyword, "force", false) != -1 || StrContains(sKeyword, "resistance2", false) != -1 || StrContains(sKeyword, "res2", false) != -1)
 			{
 				g_esDeveloper.g_flDevPunchResistance = flValue;
 			}
-			else if (StrContains(sKeyword, "rdur", false) != -1)
+			else if (StrContains(sKeyword, "rdur", false) != -1 || StrContains(sKeyword, "duration2", false) != -1 || StrContains(sKeyword, "reward", false) != -1)
 			{
 				g_esDeveloper.g_flDevRewardDuration = flValue;
 			}
-			else if (StrContains(sKeyword, "rtypes", false) != -1)
+			else if (StrContains(sKeyword, "rtypes", false) != -1 || StrContains(sKeyword, "reward2", false) != -1)
 			{
 				g_esDeveloper.g_iDevRewardTypes = iClamp(RoundToNearest(flValue), 0, 2147483647);
 			}
-			else if (StrContains(sKeyword, "sdmg", false) != -1)
+			else if (StrContains(sKeyword, "sdmg", false) != -1 || StrContains(sKeyword, "shovedmg", false) != -1 || StrContains(sKeyword, "shove", false) != -1)
 			{
 				g_esDeveloper.g_flDevShoveDamage = flValue;
 			}
-			else if (StrContains(sKeyword, "srate", false) != -1)
+			else if (StrContains(sKeyword, "srate", false) != -1 || StrContains(sKeyword, "shoverate", false) != -1 || StrContains(sKeyword, "shove2", false) != -1)
 			{
 				g_esDeveloper.g_flDevShoveRate = flValue;
 			}
@@ -3259,7 +3272,7 @@ public Action cmdMTDev(int client, int args)
 			switch (StrContains(sKeyword, "access", false) != -1)
 			{
 				case true: MT_ReplyToCommand(client, "%s %s{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, MT_AUTHOR, g_esDeveloper.g_iDevAccess);
-				case false: MT_ReplyToCommand(client, "%s Set perk{yellow} %s{mint} to{olive} %.2f{mint}.", MT_TAG3, sKeyword, flValue);
+				case false: MT_ReplyToCommand(client, "%s Set perk{yellow} %s{mint} to{olive} %.3f{mint}.", MT_TAG3, sKeyword, flValue);
 			}
 		}
 		default:
@@ -3287,37 +3300,37 @@ static void vDeveloperPanel(int developer)
 	FormatEx(sDisplay, sizeof(sDisplay), "Access Level: %i", g_esDeveloper.g_iDevAccess);
 	pDevPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Action Duration: %.2f", g_esDeveloper.g_flDevActionDuration);
+	FormatEx(sDisplay, sizeof(sDisplay), "Action Duration: %.3f", g_esDeveloper.g_flDevActionDuration);
 	pDevPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Attack Boost: %.2f", g_esDeveloper.g_flDevAttackBoost);
+	FormatEx(sDisplay, sizeof(sDisplay), "Attack Boost: %.3f", g_esDeveloper.g_flDevAttackBoost);
 	pDevPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Damage Boost: %.2f", g_esDeveloper.g_flDevDamageBoost);
+	FormatEx(sDisplay, sizeof(sDisplay), "Damage Boost: %.3f", g_esDeveloper.g_flDevDamageBoost);
 	pDevPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Damage Resistance: %.2f", g_esDeveloper.g_flDevDamageResistance);
+	FormatEx(sDisplay, sizeof(sDisplay), "Damage Resistance: %.3f", g_esDeveloper.g_flDevDamageResistance);
 	pDevPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Jump Height: %.2f", g_esDeveloper.g_flDevJumpHeight);
+	FormatEx(sDisplay, sizeof(sDisplay), "Jump Height: %.3f", g_esDeveloper.g_flDevJumpHeight);
 	pDevPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Punch Resistance: %.2f", g_esDeveloper.g_flDevPunchResistance);
+	FormatEx(sDisplay, sizeof(sDisplay), "Punch Resistance: %.3f", g_esDeveloper.g_flDevPunchResistance);
 	pDevPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Reward Duration: %.2f", g_esDeveloper.g_flDevRewardDuration);
+	FormatEx(sDisplay, sizeof(sDisplay), "Reward Duration: %.3f", g_esDeveloper.g_flDevRewardDuration);
 	pDevPanel.DrawText(sDisplay);
 
 	FormatEx(sDisplay, sizeof(sDisplay), "Reward Types: %i", g_esDeveloper.g_iDevRewardTypes);
 	pDevPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Shove Damage: %.2f", g_esDeveloper.g_flDevShoveDamage);
+	FormatEx(sDisplay, sizeof(sDisplay), "Shove Damage: %.3f", g_esDeveloper.g_flDevShoveDamage);
 	pDevPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Shove Rate: %.2f", g_esDeveloper.g_flDevShoveRate);
+	FormatEx(sDisplay, sizeof(sDisplay), "Shove Rate: %.3f", g_esDeveloper.g_flDevShoveRate);
 	pDevPanel.DrawText(sDisplay);
 
-	FormatEx(sDisplay, sizeof(sDisplay), "Speed Boost: %.2f", g_esDeveloper.g_flDevSpeedBoost);
+	FormatEx(sDisplay, sizeof(sDisplay), "Speed Boost: %.3f", g_esDeveloper.g_flDevSpeedBoost);
 	pDevPanel.DrawText(sDisplay);
 
 	pDevPanel.DrawItem("", ITEMDRAW_SPACER);
@@ -4531,6 +4544,7 @@ public void OnSpeedPreThinkPost(int survivor)
 			else
 			{
 				SDKUnhook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+				SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
 			}
 		}
 		case false: SDKUnhook(survivor, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
@@ -7420,6 +7434,11 @@ static void vPluginStatus()
 			LogError("Failed to enable detour pre: CTerrorPlayer::OnFalling");
 		}
 
+		if (!g_esGeneral.g_ddFallingDetour.Enable(Hook_Post, mreFallingPost))
+		{
+			LogError("Failed to enable detour post: CTerrorPlayer::OnFalling");
+		}
+
 		if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Enable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
 		{
 			LogError("Failed to enable detour post: CDirector::OnFirstSurvivorLeftSafeArea");
@@ -7564,6 +7583,11 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddFallingDetour.Disable(Hook_Pre, mreFallingPre))
 		{
 			LogError("Failed to disable detour pre: CTerrorPlayer::OnFalling");
+		}
+
+		if (!g_esGeneral.g_ddFallingDetour.Disable(Hook_Post, mreFallingPost))
+		{
+			LogError("Failed to disable detour post: CTerrorPlayer::OnFalling");
 		}
 
 		if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Disable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
@@ -11516,6 +11540,36 @@ public MRESReturn mreFallingPre(int pThis)
 	if (bIsSurvivor(pThis) && !g_esPlayer[pThis].g_bFalling)
 	{
 		g_esPlayer[pThis].g_bFalling = true;
+
+		if ((bIsDeveloper(pThis, 5) || bIsDeveloper(pThis, 11) || g_esPlayer[pThis].g_bRewardedGod) && !g_esGeneral.g_bPatchFallingSound)
+		{
+			g_esGeneral.g_bPatchFallingSound = true;
+
+			char sSound[] = "Player.Laugh";
+			for (int iPos = 0; iPos < sizeof(sSound); iPos++)
+			{
+				StoreToAddress(g_esGeneral.g_adFallingSound + view_as<Address>(iPos), sSound[iPos], NumberType_Int8);
+			}
+
+			int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
+			FakeClientCommand(pThis, "vocalize PlayerLaugh #%i", iTimestamp);
+		}
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreFallingPost(int pThis)
+{
+	if (g_esGeneral.g_bPatchFallingSound)
+	{
+		g_esGeneral.g_bPatchFallingSound = false;
+
+		char sSound[] = "Player.Fall";
+		for (int iPos = 0; iPos < sizeof(sSound); iPos++)
+		{
+			StoreToAddress(g_esGeneral.g_adFallingSound + view_as<Address>(iPos), sSound[iPos], NumberType_Int8);
+		}
 	}
 
 	return MRES_Ignored;
