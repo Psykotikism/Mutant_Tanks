@@ -4,6 +4,21 @@
 	{
 		"Functions"
 		{
+			/* CDeathFallCamera::Enable(CBasePlayer*) */
+			"CDeathFallCamera::Enable"
+			{
+				"signature"	"CDeathFallCamera::Enable"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"player"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
 			/* CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
 			"CDirector::OnFirstSurvivorLeftSafeArea"
 			{
@@ -457,6 +472,13 @@
 		}
 		"Signatures"
 		{
+			/* CDeathFallCamera::Enable(CBasePlayer*) */
+			"CDeathFallCamera::Enable"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CDeathFallCamera6EnableEP11CBasePlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xCF\xE8\x2A\x2A\x2A\x2A\x85\xC0\x74\x2A\x6A\x2A\x8B\xCF\xE8\x2A\x2A\x2A\x2A\x8B\xC8"
+			}
 			/* Director::HasAnySurvivorLeftSafeArea() */
 			"CDirector::HasAnySurvivorLeftSafeArea"
 			{
@@ -546,7 +568,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer9OnFallingEv"
-				"windows"	"\x2A\x2A\x70\x53\x55\x56\x57\x8B\xF1"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x83\xF8\x02\x0F\x85\x2A\x2A\x2A\x2A\x8D\xBE\x2A\x2A\x2A\x2A\x8B\xCF"
 			}
 			/* CTerrorPlayer::OnFalling() */
 			"CTerrorPlayer::OnFalling::Sound"
@@ -885,6 +907,13 @@
 		}
 		"Signatures"
 		{
+			/* CDeathFallCamera::Enable(CBasePlayer*) */
+			"CDeathFallCamera::Enable"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CDeathFallCamera6EnableEP11CBasePlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\xF9\x8B\xCB\x89\x7D\xFC\xE8\x2A\x2A\x2A\x2A\x85\xC0\x74\x2A\x6A"
+			}
 			/* CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger) */
 			"CBaseBackpackItem::StartAction"
 			{
@@ -1008,7 +1037,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer9OnFallingEv"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x78\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x57\x8B\xF1"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x83\xF8\x02"
 			}
 			/* CTerrorPlayer::OnFalling() */
 			"CTerrorPlayer::OnFalling::Sound"
