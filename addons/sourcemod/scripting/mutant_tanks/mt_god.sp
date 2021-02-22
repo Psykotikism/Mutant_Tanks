@@ -56,6 +56,7 @@ enum struct esPlayer
 {
 	bool g_bActivated;
 	bool g_bRewarded;
+	bool g_bRewarded2;
 
 	float g_flGodChance;
 	float g_flOpenAreasOnly;
@@ -117,38 +118,12 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKITExpired;
-
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_god", cmdGodInfo, "View information about the God ability.");
-
-	GameData gdMutantTanks = new GameData("mutant_tanks");
-	if (gdMutantTanks == null)
-	{
-		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
-	}
-
-	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnITExpired"))
-	{
-		SetFailState("Failed to find signature: CTerrorPlayer::OnITExpired");
-
-		delete gdMutantTanks;
-	}
-
-	g_hSDKITExpired = EndPrepSDKCall();
-	if (g_hSDKITExpired == null)
-	{
-		LogError("%s Your \"CTerrorPlayer::OnITExpired\" signature is outdated.", MT_TAG);
-	}
-
-	delete gdMutantTanks;
 
 	if (g_bLateLoad)
 	{
@@ -346,7 +321,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				static float flTankPos[3];
 				GetClientAbsOrigin(victim, flTankPos);
 
-				switch (bSurvivor && g_esPlayer[attacker].g_bRewarded)
+				switch (bSurvivor && g_esPlayer[attacker].g_bRewarded2)
 				{
 					case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
 					case false: vPushNearbyEntities(victim, flTankPos);
@@ -355,6 +330,16 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			return Plugin_Handled;
 		}
+	}
+
+	return Plugin_Continue;
+}
+
+public Action MT_OnPlayerHitByVomitJar(int player, int thrower)
+{
+	if (MT_IsTankSupported(player) && g_esPlayer[player].g_bActivated && bIsSurvivor(thrower, MT_CHECK_INDEX|MT_CHECK_INGAME) && !g_esPlayer[thrower].g_bRewarded)
+	{
+		return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
@@ -585,14 +570,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveGod(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_now_it"))
-	{
-		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank) && g_esPlayer[iTank].g_bActivated)
-		{
-			vRemoveVomit(iTank);
-		}
-	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
 		vReset();
@@ -601,9 +578,17 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
 {
-	if (bIsSurvivor(survivor) && (type & MT_REWARD_GODMODE))
+	if (bIsSurvivor(survivor))
 	{
-		g_esPlayer[survivor].g_bRewarded = apply;
+		if (type & MT_REWARD_DAMAGEBOOST)
+		{
+			g_esPlayer[survivor].g_bRewarded = apply;
+		}
+
+		if (type & MT_REWARD_GODMODE)
+		{
+			g_esPlayer[survivor].g_bRewarded2 = apply;
+		}
 	}
 }
 
@@ -719,7 +704,7 @@ static void vGod(int tank, int pos = -1)
 	g_esPlayer[tank].g_bActivated = true;
 	g_esPlayer[tank].g_iDuration = GetTime() + iDuration;
 
-	vRemoveVomit(tank);
+	MT_UnvomitPlayer(tank);
 
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
@@ -765,17 +750,10 @@ static void vRemoveGod(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_bRewarded = false;
+	g_esPlayer[tank].g_bRewarded2 = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iDuration = -1;
-}
-
-static void vRemoveVomit(int tank)
-{
-	if (g_hSDKITExpired != null)
-	{
-		SDKCall(g_hSDKITExpired, tank);
-	}
 }
 
 static void vReset()

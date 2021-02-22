@@ -65,6 +65,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_SetTankType");
 	MarkNativeAsOptional("MT_SpawnTank");
 	MarkNativeAsOptional("MT_TankMaxHealth");
+	MarkNativeAsOptional("MT_UnvomitPlayer");
 }
 #endif
 
@@ -305,6 +306,25 @@ forward void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer
  * @param info			String containing the name of the item.
  **/
 forward void MT_OnMenuItemSelected(int client, const char[] info);
+
+/**
+ * Called right before a player dies.
+ * Use this forward to do anything before the player dies.
+ *
+ * @param player		Client index of the dying player.
+ **/
+forward void MT_OnPlayerEventKilled(int player);
+
+/**
+ * Called right before a player is hit by a bile bomb (vomit jar).
+ * Use this forward to do anything before the player is hit.
+ *
+ * @param player		Client index of the hit player.
+ * @param thrower		Client index of the survivor that threw the bile bomb (vomit jar).
+ *
+ * @return			Plugin_Handled to prevent the player from being hit, Plugin_Continue to allow.
+ **/
+forward Action MT_OnPlayerHitByVomitJar(int player, int thrower);
 
 /**
  * Called before the config file is read.
@@ -724,6 +744,14 @@ native void MT_SpawnTank(int tank, int type);
  * @param newHealth		The Tank's new max health.
  **/
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
+
+/**
+ * Removes the vomit effect on a player.
+ *
+ * @param player		Client index of the player.
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_UnvomitPlayer(int player);
 
 /* Called every second to trigger the Super Tank's ability.
  * Use this forward for any passive abilities.

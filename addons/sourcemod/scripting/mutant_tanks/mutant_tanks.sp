@@ -82,6 +82,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MT_SetTankType", aNative_SetTankType);
 	CreateNative("MT_SpawnTank", aNative_SpawnTank);
 	CreateNative("MT_TankMaxHealth", aNative_TankMaxHealth);
+	CreateNative("MT_UnvomitPlayer", aNative_UnvomitPlayer);
 
 	RegPluginLibrary("mutant_tanks");
 
@@ -373,6 +374,7 @@ enum struct esGeneral
 	ConVar g_cvMTTempSetting;
 	ConVar g_cvMTUpgradePackUseDuration;
 
+	DynamicDetour g_ddDeathFallCameraEnableDetour;
 	DynamicDetour g_ddDoJumpDetour;
 	DynamicDetour g_ddEnterGhostStateDetour;
 	DynamicDetour g_ddEnterStasisDetour;
@@ -380,6 +382,7 @@ enum struct esGeneral
 	DynamicDetour g_ddFallingDetour;
 	DynamicDetour g_ddFirstSurvivorLeftSafeAreaDetour;
 	DynamicDetour g_ddFlingDetour;
+	DynamicDetour g_ddHitByVomitJarDetour;
 	DynamicDetour g_ddLauncherDirectionDetour;
 	DynamicDetour g_ddLeaveStasisDetour;
 	DynamicDetour g_ddPlayerHitDetour;
@@ -393,7 +396,6 @@ enum struct esGeneral
 	DynamicDetour g_ddStartActionDetour;
 	DynamicDetour g_ddTankRockCreateDetour;
 	DynamicDetour g_ddVomitedUponDetour;
-	DynamicDetour g_ddVomitjarHitDetour;
 
 	float g_flActionDurationReward[3];
 	float g_flAttackBoostReward[3];
@@ -447,6 +449,8 @@ enum struct esGeneral
 	GlobalForward g_gfLogMessageForward;
 	GlobalForward g_gfMenuItemDisplayedForward;
 	GlobalForward g_gfMenuItemSelectedForward;
+	GlobalForward g_gfPlayerEventKilledForward;
+	GlobalForward g_gfPlayerHitByVomitJarForward;
 	GlobalForward g_gfPluginCheckForward;
 	GlobalForward g_gfPluginEndForward;
 	GlobalForward g_gfPostTankSpawnForward;
@@ -532,6 +536,7 @@ enum struct esGeneral
 	int g_iMinType;
 	int g_iMinimumHumans;
 	int g_iMultiplyHealth;
+	int g_iOnFallingOffset;
 	int g_iOriginalJumpHeight;
 	int g_iParserViewer;
 	int g_iPlayerCount[3];
@@ -614,6 +619,7 @@ enum struct esPlayer
 	bool g_bElectric;
 	bool g_bFalling;
 	bool g_bFallTracked;
+	bool g_bFatalFalling;
 	bool g_bFire;
 	bool g_bFirstSpawn;
 	bool g_bIce;
@@ -1388,6 +1394,15 @@ public any aNative_TankMaxHealth(Handle plugin, int numParams)
 	return 0;
 }
 
+public any aNative_UnvomitPlayer(Handle plugin, int numParams)
+{
+	int iPlayer = GetNativeCell(1);
+	if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && GetClientTeam(iPlayer) > 1 && g_esGeneral.g_hSDKITExpired != null && g_esPlayer[iPlayer].g_bVomited)
+	{
+		SDKCall(g_esGeneral.g_hSDKITExpired, iPlayer);
+	}
+}
+
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "mt_clone", false))
@@ -1435,6 +1450,8 @@ public void OnPluginStart()
 	g_esGeneral.g_gfLogMessageForward = new GlobalForward("MT_OnLogMessage", ET_Event, Param_Cell, Param_String);
 	g_esGeneral.g_gfMenuItemDisplayedForward = new GlobalForward("MT_OnMenuItemDisplayed", ET_Ignore, Param_Cell, Param_String, Param_String, Param_Cell);
 	g_esGeneral.g_gfMenuItemSelectedForward = new GlobalForward("MT_OnMenuItemSelected", ET_Ignore, Param_Cell, Param_String);
+	g_esGeneral.g_gfPlayerEventKilledForward = new GlobalForward("MT_OnPlayerEventKilled", ET_Ignore, Param_Cell);
+	g_esGeneral.g_gfPlayerHitByVomitJarForward = new GlobalForward("MT_OnPlayerHitByVomitJar", ET_Event, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfPluginCheckForward = new GlobalForward("MT_OnPluginCheck", ET_Ignore, Param_Array);
 	g_esGeneral.g_gfPluginEndForward = new GlobalForward("MT_OnPluginEnd", ET_Ignore);
 	g_esGeneral.g_gfPostTankSpawnForward = new GlobalForward("MT_OnPostTankSpawn", ET_Ignore, Param_Cell);
@@ -1538,6 +1555,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -1592,6 +1610,12 @@ public void OnPluginStart()
 					LogError("%s Failed to find signature: CTerrorPlayer::Fling", MT_TAG);
 				}
 
+				g_esGeneral.g_ddHitByVomitJarDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnHitByVomitJar");
+				if (g_esGeneral.g_ddHitByVomitJarDetour == null)
+				{
+					LogError("%s Failed to find signature: CTerrorPlayer::OnHitByVomitJar", MT_TAG);
+				}
+
 				g_esGeneral.g_ddSecondaryAttackDetour2 = DynamicDetour.FromConf(gdMutantTanks, "CTerrorMeleeWeapon::SecondaryAttack");
 				if (g_esGeneral.g_ddSecondaryAttackDetour2 == null)
 				{
@@ -1602,12 +1626,6 @@ public void OnPluginStart()
 				if (g_esGeneral.g_ddStartActionDetour == null)
 				{
 					LogError("%s Failed to find signature: CBaseBackpackItem::StartAction", MT_TAG);
-				}
-
-				g_esGeneral.g_ddVomitjarHitDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnHitByVomitJar");
-				if (g_esGeneral.g_ddVomitjarHitDetour == null)
-				{
-					LogError("%s Failed to find signature: CTerrorPlayer::OnHitByVomitJar", MT_TAG);
 				}
 			}
 			else
@@ -1841,6 +1859,12 @@ public void OnPluginStart()
 			if (g_esGeneral.g_hSDKGetName == null)
 			{
 				LogError("%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
+			}
+
+			g_esGeneral.g_ddDeathFallCameraEnableDetour = DynamicDetour.FromConf(gdMutantTanks, "CDeathFallCamera::Enable");
+			if (g_esGeneral.g_ddDeathFallCameraEnableDetour == null)
+			{
+				LogError("%s Failed to find signature: CDeathFallCamera::Enable", MT_TAG);
 			}
 
 			g_esGeneral.g_ddDoJumpDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorGameMovement::DoJump");
@@ -4609,7 +4633,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 		{
 			if (bIsDeveloper(victim, 11) || g_esPlayer[victim].g_bRewardedGod)
 			{
-				if ((damagetype & DMG_FALL) && !bIsSafeFalling(victim))
+				if ((damagetype & DMG_FALL) && !bIsSafeFalling(victim) && g_esPlayer[victim].g_bFatalFalling)
 				{
 					SetEntProp(victim, Prop_Data, "m_takedamage", 2, 1);
 
@@ -4618,7 +4642,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 				return Plugin_Handled;
 			}
-			else if ((bIsDeveloper(victim, 5) || g_esPlayer[victim].g_bRewardedSpeed) && (damagetype & DMG_FALL) && (bIsSafeFalling(victim) || RoundToNearest(damage) < GetEntProp(victim, Prop_Data, "m_iHealth")))
+			else if ((bIsDeveloper(victim, 5) || g_esPlayer[victim].g_bRewardedSpeed) && (damagetype & DMG_FALL) && (bIsSafeFalling(victim) || RoundToNearest(damage) < GetEntProp(victim, Prop_Data, "m_iHealth") || !g_esPlayer[victim].g_bFatalFalling))
 			{
 				return Plugin_Handled;
 			}
@@ -6822,7 +6846,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				vRemoveGlow(iPlayer);
 			}
-			else if (bIsSurvivor(iPlayer) && !g_esPlayer[iPlayer].g_bVomited)
+
+			if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && !g_esPlayer[iPlayer].g_bVomited)
 			{
 				g_esPlayer[iPlayer].g_bVomited = true;
 			}
@@ -6834,7 +6859,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				vSetGlow(iPlayer);
 			}
-			else if (bIsSurvivor(iPlayer) && g_esPlayer[iPlayer].g_bVomited)
+
+			if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iPlayer].g_bVomited)
 			{
 				g_esPlayer[iPlayer].g_bVomited = false;
 			}
@@ -7390,6 +7416,11 @@ static void vPluginStatus()
 
 		vHookEvents(true);
 
+		if (!g_esGeneral.g_ddDeathFallCameraEnableDetour.Enable(Hook_Pre, mreDeathFallCameraEnablePre))
+		{
+			LogError("Failed to enable detour pre: CDeathFallCamera::Enable");
+		}
+
 		if (!g_esGeneral.g_ddDoJumpDetour.Enable(Hook_Pre, mreDoJumpPre))
 		{
 			LogError("Failed to enable detour pre: CTerrorGameMovement::DoJump");
@@ -7500,6 +7531,11 @@ static void vPluginStatus()
 			LogError("Failed to enable detour pre: CTerrorPlayer::Fling");
 		}
 
+		if (g_bSecondGame && !g_esGeneral.g_ddHitByVomitJarDetour.Enable(Hook_Pre, mreHitByVomitJarPre))
+		{
+			LogError("Failed to enable detour pre: CTerrorPlayer::OnHitByVomitJar");
+		}
+
 		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Enable(Hook_Pre, mreSecondaryAttackPre))
 		{
 			LogError("Failed to enable detour pre: CTerrorMeleeWeapon::SecondaryAttack");
@@ -7520,11 +7556,6 @@ static void vPluginStatus()
 			LogError("Failed to enable detour post: CBaseBackpackItem::StartAction");
 		}
 
-		if (g_bSecondGame && !g_esGeneral.g_ddVomitjarHitDetour.Enable(Hook_Pre, mreVomitjarHitPre))
-		{
-			LogError("Failed to enable detour pre: CTerrorPlayer::OnHitByVomitJar");
-		}
-
 		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Enable(Hook_Pre, mreStartHealingPre))
 		{
 			LogError("Failed to enable detour pre: CFirstAidKit::StartHealing");
@@ -7540,6 +7571,11 @@ static void vPluginStatus()
 		g_esGeneral.g_bPluginEnabled = false;
 
 		vHookEvents(false);
+
+		if (!g_esGeneral.g_ddDeathFallCameraEnableDetour.Disable(Hook_Pre, mreDeathFallCameraEnablePre))
+		{
+			LogError("Failed to disable detour pre: CDeathFallCamera::Enable");
+		}
 
 		if (!g_esGeneral.g_ddDoJumpDetour.Disable(Hook_Pre, mreDoJumpPre))
 		{
@@ -7651,6 +7687,11 @@ static void vPluginStatus()
 			LogError("Failed to disable detour pre: CTerrorPlayer::Fling");
 		}
 
+		if (g_bSecondGame && !g_esGeneral.g_ddHitByVomitJarDetour.Disable(Hook_Pre, mreHitByVomitJarPre))
+		{
+			LogError("Failed to disable detour pre: CTerrorPlayer::OnHitByVomitJar");
+		}
+
 		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Disable(Hook_Pre, mreSecondaryAttackPre))
 		{
 			LogError("Failed to disable detour pre: CTerrorMeleeWeapon::SecondaryAttack");
@@ -7669,11 +7710,6 @@ static void vPluginStatus()
 		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Disable(Hook_Post, mreStartActionPost))
 		{
 			LogError("Failed to disable detour post: CBaseBackpackItem::StartAction");
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddVomitjarHitDetour.Disable(Hook_Pre, mreVomitjarHitPre))
-		{
-			LogError("Failed to disable detour pre: CTerrorPlayer::OnHitByVomitJar");
 		}
 
 		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Disable(Hook_Pre, mreStartHealingPre))
@@ -8241,6 +8277,7 @@ static void vReset3(int tank)
 	g_esPlayer[tank].g_bSmoke = false;
 	g_esPlayer[tank].g_bSpit = false;
 	g_esPlayer[tank].g_bTriggered = false;
+	g_esPlayer[tank].g_bVomited = false;
 	g_esPlayer[tank].g_flAttackDelay = -1.0;
 	g_esPlayer[tank].g_iBossStageCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
@@ -8322,6 +8359,7 @@ static void vResetSurvivorStats(int survivor)
 {
 	g_esPlayer[survivor].g_bFalling = false;
 	g_esPlayer[survivor].g_bFallTracked = false;
+	g_esPlayer[survivor].g_bFatalFalling = false;
 	g_esPlayer[survivor].g_bRewardedAttack = false;
 	g_esPlayer[survivor].g_bRewardedDamage = false;
 	g_esPlayer[survivor].g_bRewardedGod = false;
@@ -10912,7 +10950,7 @@ static bool bIsSafeFalling(int survivor)
 	{
 		static float flOrigin[3];
 		GetEntPropVector(survivor, Prop_Data, "m_vecOrigin", flOrigin);
-		if (g_esPlayer[survivor].g_flPreFallZ - flOrigin[2] < 1000.0)
+		if (g_esPlayer[survivor].g_flPreFallZ - flOrigin[2] < 900.0)
 		{
 			g_esPlayer[survivor].g_bFalling = false;
 			g_esPlayer[survivor].g_flPreFallZ = 0.0;
@@ -11384,6 +11422,21 @@ static int iGetTypeCount(int type = 0)
 	return iTypeCount;
 }
 
+public MRESReturn mreDeathFallCameraEnablePre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.Get(1);
+	if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 5) || bIsDeveloper(iSurvivor, 11) || g_esPlayer[iSurvivor].g_bRewardedSpeed || g_esPlayer[iSurvivor].g_bRewardedGod) && g_esPlayer[iSurvivor].g_bFalling)
+	{
+		g_esPlayer[iSurvivor].g_bFatalFalling = true;
+
+		return MRES_Supercede;
+	}
+
+	g_esPlayer[iSurvivor].g_bFatalFalling = true;
+
+	return MRES_Ignored;
+}
+
 public MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 {
 	Address adSurvivor = view_as<Address>(LoadFromAddress(view_as<Address>(pThis + 4), NumberType_Int32));
@@ -11518,6 +11571,10 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 		SetEntityRenderColor(pThis, 255, 255, 255, 255);
 	}
 
+	Call_StartForward(g_esGeneral.g_gfPlayerEventKilledForward);
+	Call_PushCell(pThis);
+	Call_Finish();
+
 	return MRES_Ignored;
 }
 
@@ -11531,7 +11588,7 @@ public MRESReturn mreFallingPre(int pThis)
 		{
 			g_esGeneral.g_bPatchFallingSound = true;
 
-			char sSound[] = "Player.Laugh";
+			char sSound[] = "Player.Fail";
 			for (int iPos = 0; iPos < sizeof(sSound); iPos++)
 			{
 				StoreToAddress(g_esGeneral.g_adFallingSound + view_as<Address>(iPos), sSound[iPos], NumberType_Int8);
@@ -11580,6 +11637,28 @@ public MRESReturn mreFirstSurvivorLeftSafeAreaPost(DHookParam hParams)
 public MRESReturn mreFlingPre(int pThis, DHookParam hParams)
 {
 	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 8) || g_esPlayer[pThis].g_bRewardedGod))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreHitByVomitJarPre(int pThis, DHookParam hParams)
+{
+	int iSurvivor = hParams.Get(1);
+	if (bIsTank(pThis) && g_esCache[pThis].g_iVomitImmunity == 1 && bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && !g_esPlayer[iSurvivor].g_bRewardedDamage)
+	{
+		return MRES_Supercede;
+	}
+
+	Action aResult = Plugin_Continue;
+	Call_StartForward(g_esGeneral.g_gfPlayerHitByVomitJarForward);
+	Call_PushCell(pThis);
+	Call_PushCell(iSurvivor);
+	Call_Finish(aResult);
+
+	if (aResult == Plugin_Handled)
 	{
 		return MRES_Supercede;
 	}
@@ -11861,17 +11940,6 @@ public MRESReturn mreTankRockCreatePost(DHookReturn hReturn)
 public MRESReturn mreVomitedUponPre(int pThis, DHookParam hParams)
 {
 	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 8) || g_esPlayer[pThis].g_bRewardedGod))
-	{
-		return MRES_Supercede;
-	}
-
-	return MRES_Ignored;
-}
-
-public MRESReturn mreVomitjarHitPre(int pThis, DHookParam hParams)
-{
-	int iSurvivor = hParams.Get(1);
-	if (bIsTank(pThis) && g_esCache[pThis].g_iVomitImmunity == 1 && bIsSurvivor(iSurvivor) && !g_esPlayer[iSurvivor].g_bRewardedDamage)
 	{
 		return MRES_Supercede;
 	}

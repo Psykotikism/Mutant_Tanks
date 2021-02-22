@@ -46,8 +46,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_RESPAWN "Respawn Ability"
 
-DynamicDetour g_ddEventKilled;
-
 enum struct esPlayer
 {
 	bool g_bActivated;
@@ -115,24 +113,6 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_respawn", cmdRespawnInfo, "View information about the Respawn ability.");
-
-	GameData gdMutantTanks = new GameData("mutant_tanks");
-	if (gdMutantTanks == null)
-	{
-		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
-	}
-
-	g_ddEventKilled = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::Event_Killed");
-	if (g_ddEventKilled == null)
-	{
-		SetFailState("Failed to find signature: CTerrorPlayer::Event_Killed");
-
-		delete gdMutantTanks;
-	}
-
-	delete gdMutantTanks;
 }
 
 public void OnMapStart()
@@ -264,14 +244,12 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
+public void MT_OnPlayerEventKilled(int player)
 {
-	if (MT_IsTankSupported(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(pThis) && g_esCache[pThis].g_iRespawnAbility == 1 && g_esCache[pThis].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[pThis].g_flRespawnChance)
+	if (MT_IsTankSupported(player, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(player) && g_esCache[player].g_iRespawnAbility == 1 && g_esCache[player].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[player].g_flRespawnChance)
 	{
-		vRespawn(pThis);
+		vRespawn(player);
 	}
-
-	return MRES_Ignored;
 }
 
 public void MT_OnPluginCheck(ArrayList &list)
@@ -470,27 +448,6 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	if (oldTank != newTank)
 	{
 		vRemoveRespawn(oldTank);
-	}
-}
-
-public void MT_OnHookEvent(bool hooked)
-{
-	switch (hooked)
-	{
-		case true:
-		{
-			if (!g_ddEventKilled.Enable(Hook_Pre, mreEventKilledPre))
-			{
-				SetFailState("Failed to enable detour pre: CTerrorPlayer::Event_Killed");
-			}
-		}
-		case false:
-		{
-			if (!g_ddEventKilled.Disable(Hook_Pre, mreEventKilledPre))
-			{
-				SetFailState("Failed to disable detour pre: CTerrorPlayer::Event_Killed");
-			}
-		}
 	}
 }
 
