@@ -128,7 +128,8 @@
 	- Gives the recipient 50% damage resistance throughout its duration.
 - The speed boost reward now does the following (Thanks to epzminion for the help!):
 	- Gives the recipient extra jump height.
-	- Blocks fall damage within a certain height limit.
+	- Blocks fall damage for the recipient within a certain height limit (`900` HMU).
+	- Blocks the deathfall camera for the recipient.
 - The godmode reward now does the following:
 	- Automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
 	- Fully blocks all damage from registering. (Requested by 3aljiyavslgazana.)
@@ -253,6 +254,11 @@
 - Updated Hungarian translations. (Thanks to KasperH/Ladis!)
 - Updated Russian translations. (Thanks to Blueberry/Kleiner!)
 
+#### Natives & Forwards
+- Added the `MT_OnPlayerEventKilled` forward.
+- Added the `MT_OnPlayerHitByVomitJar` forward.
+- Added the `MT_UnvomitPlayer` native.
+
 #### Abilities
 - Absorb
 	- The pushback effect no longer triggers for melee attacks unless the Tank takes at least one damage. (Requested by 3aljiyavslgazana.)
@@ -286,6 +292,7 @@
 
 - God
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+	- Tanks with this ability activated are no longer affected by bile bombs unless the thrower has the damage boost reward. (Requested by 3aljiyavslgazana.)
 
 - Gravity
 	- Survivors with the speed boost reward are no longer affected by the hit and range attacks. (Requested by 3aljiyavslgazana.)
@@ -309,6 +316,9 @@
 
 - Puke
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Respawn
+	- Replaced the detour for the `CTerrorPlayer::Event_Killed` function with the new `MT_OnPlayerEventKilled`.
 
 - Shield
 	- The damage boost reward now allows the recipient to bypass all types of shields that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)

@@ -43,7 +43,6 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Knowledge of installing SourceMod plugins.
-5. Patience
 
 ## Notes
 1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
@@ -823,6 +822,25 @@ forward void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer
 forward void MT_OnMenuItemSelected(int client, const char[] info);
 
 /**
+ * Called right before a player dies.
+ * Use this forward to do anything before the player dies.
+ *
+ * @param client		Client index of the dying player.
+ **/
+forward void MT_OnPlayerEventKilled(int player);
+
+/**
+ * Called right before a player is hit by a bile bomb (vomit jar).
+ * Use this forward to do anything before the player is hit.
+ *
+ * @param client		Client index of the hit player.
+ * @param thrower		Client index of the survivor that threw the bile bomb (vomit jar).
+ *
+ * @return			Plugin_Handled to prevent the player from being hit, Plugin_Continue to allow.
+ **/
+forward Action MT_OnPlayerHitByVomitJar(int player, int thrower);
+
+/**
  * Called before the config file is read.
  * Use this forward to officially register an ability's plugin.
  *
@@ -1245,6 +1263,14 @@ native void MT_SpawnTank(int tank, int type);
  * @param newHealth		The Tank's new max health.
  **/
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
+
+/**
+ * Removes the vomit effect on a player.
+ *
+ * @param player		Client index of the player.
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_UnvomitPlayer(int player);
 ```
 
 - Clone ability
@@ -1768,7 +1794,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 91-94 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines 92-95 of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
