@@ -496,6 +496,7 @@
 			// - Faster deploy time (ammo upgrade packs)
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
+			// - Faster recovery
 			// 16: Ammo reward
 			// - Refill clip to max size
 			// - Refill magazine to max size
@@ -508,6 +509,7 @@
 			// - Cannot be vomited on by Boomers
 			// - Reduced pushback from Tank punches
 			// - Reduced pushback from hitting Tanks with melee immunity
+			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
 			// 128: Health and ammo refill reward
 			// 256: Respawn reward
 			// - Respawn and teleport to a teammate
@@ -628,6 +630,23 @@
 			// 3rd number = Boost for teammates.
 			"Attack Boost Reward"			"1.25,1.25,1.25"
 
+			// Give clean kills (no Smoker clouds, Boomer explosions, and Spitter acide puddles) as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give clean kills to killers.
+			// 2nd number = Give clean kills to assistants.
+			// 3rd number = Give clean kills to teammates.
+			"Clean Kills Reward"			"1,1,1"
+
 			// The damage boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -661,6 +680,20 @@
 			// 2nd number = Resistance for assistants.
 			// 3rd number = Resistance for teammates.
 			"Damage Resistance Reward"		"0.5,0.5,0.5"
+
+			// The voiceline that plays when survivors are falling.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate voicelines sets with commas (",").
+			// --
+			// Item sets limit: 3
+			// Character limit for each set: 192
+			// --
+			// 1st set = Fall voiceline of killers.
+			// 2nd set = Fall voiceline of assistants.
+			// 3rd set = Fall voiceline of teammates.
+			"Fall Voiceline Reward"			"PlayerLaugh,PlayerLaugh,PlayerLaugh"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1818,6 +1851,7 @@
 			// - Faster deploy time (ammo upgrade packs)
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
+			// - Faster recovery
 			// 16: Ammo reward
 			// - Refill clip to max size
 			// - Refill magazine to max size
@@ -1830,6 +1864,7 @@
 			// - Cannot be vomited on by Boomers
 			// - Reduced pushback from Tank punches
 			// - Reduced pushback from hitting Tanks with melee immunity
+			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
 			// 128: Health and ammo refill reward
 			// 256: Respawn reward
 			// - Respawn and teleport to a teammate
@@ -1950,6 +1985,23 @@
 			// 3rd number = Boost for teammates.
 			"Attack Boost Reward"			"0.0,0.0,0.0"
 
+			// Give clean kills (no Smoker clouds, Boomer explosions, and Spitter acide puddles) as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give clean kills to killers.
+			// 2nd number = Give clean kills to assistants.
+			// 3rd number = Give clean kills to teammates.
+			"Clean Kills Reward"			"1,1,1"
+
 			// The damage boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -1983,6 +2035,20 @@
 			// 2nd number = Resistance for assistants.
 			// 3rd number = Resistance for teammates.
 			"Damage Resistance Reward"		"0.0,0.0,0.0"
+
+			// The voiceline that plays when survivors are falling.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate voicelines sets with commas (",").
+			// --
+			// Item sets limit: 3
+			// Character limit for each set: 192
+			// --
+			// 1st set = Fall voiceline of killers.
+			// 2nd set = Fall voiceline of assistants.
+			// 3rd set = Fall voiceline of teammates.
+			"Fall Voiceline Reward"			""
 
 			// The item(s) to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2086,7 +2152,7 @@
 			// 1st number = Remove shove penalty for killers.
 			// 2nd number = Remove shove penalty for assistants.
 			// 3rd number = Remove shove penalty for teammates.
-			"Shove Penalty Reward"			"1,1,1"
+			"Shove Penalty Reward"			"0,0,0"
 
 			// The shove rate to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2123,7 +2189,7 @@
 			// 1st number = Give sledgehammer rounds to killers.
 			// 2nd number = Give sledgehammer rounds to assistants.
 			// 3rd number = Give sledgehammer rounds to teammates.
-			"Sledgehammer Rounds Reward"		"1,1,1"
+			"Sledgehammer Rounds Reward"		"0,0,0"
 
 			// The speed boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -5417,7 +5483,7 @@
 			// 1: ON, the clone can use abilities like real Mutant Tanks.
 			"Clone Mode"				"0"
 
-			// Remove all clones created by the Mutant Tank when it dies.
+			// Remove all clones created by the Mutant Tank when it dies or changes its Mutant Tank type.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -12069,7 +12135,7 @@
 			// "forever"/"death" - 999999 seconds
 			"Minion Lifetime"			"0.0"
 
-			// Remove all minions spawned by the Mutant Tank when it dies.
+			// Remove all minions spawned by the Mutant Tank when it dies or changes its Mutant Tank type.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -17034,7 +17100,7 @@
 			// 64: Tank
 			"Throw Infected Options"		"0"
 
-			// Remove all special infected thrown by the Mutant Tank when it dies.
+			// Remove all special infected thrown by the Mutant Tank when it dies or changes its Mutant Tank type.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -17074,7 +17140,7 @@
 			// "forever"/"death" - 999999 seconds
 			"Throw Witch Lifetime"			"0.0"
 
-			// Remove all Witches thrown by the Mutant Tank when it dies.
+			// Remove all Witches thrown by the Mutant Tank when it dies or changes its Mutant Tank type.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -18523,7 +18589,7 @@
 			// "farthest" - 999999.0 range
 			"Witch Range"				"500.0"
 
-			// Remove all Witches spawned by the Mutant Tank when it dies.
+			// Remove all Witches spawned by the Mutant Tank when it dies or changes its Mutant Tank type.
 			// Note: This setting spawns a Witch on the Mutant Tank's corpse if it is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --

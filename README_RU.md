@@ -43,6 +43,7 @@
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Знания по установке SourceMod плагинов.
+5. Терпение
 
 ## Примечание
 1. Я не предоставляю поддержку для выделенного/локальных серверов, но плагин и его модули должны работать на них должным образом.
@@ -150,7 +151,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -171,7 +172,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -192,7 +193,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -213,7 +214,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -236,7 +237,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -825,15 +826,16 @@ forward void MT_OnMenuItemSelected(int client, const char[] info);
  * Вызывается прямо перед смертью игрока.
  * Используйте этот форвард, чтобы сделать что-нибудь, прежде чем игрок умрет.
  *
- * @param client		Клиентский индекс умирающего игрока.
+ * @param victim		Клиентский индекс умирающего игрока.
+ * @param attacker		Клиентский индекс убийцы.
  **/
-forward void MT_OnPlayerEventKilled(int player);
+forward void MT_OnPlayerEventKilled(int victim, int attacker);
 
 /**
  * Вызывается непосредственно перед попаданием в игрока желчной бомбы (банку с рвотой).
  * Используйте это форвард, чтобы сделать что-нибудь, прежде чем игрок получит удар.
  *
- * @param client		Клиентский индекс пораженного игрока.
+ * @param player		Клиентский индекс пораженного игрока.
  * @param thrower		Клиентский индекс выжившего, бросившего желчную бомбу (банку с рвотой).
  *
  * @return			Plugin_Handled, чтобы игрок не попал, Plugin_Continue, чтобы разрешить.
@@ -883,8 +885,10 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param priority		1 = Убийца, 2 = Помощник в убийстве, который причинил наибольший ущерб, 3 = Товарищ по команде, который помог
  * @param duration		Срок действия награды.
  * @param apply			True, если награда дана, в противном случае - false.
+ *
+ * @return			Plugin_Handled, чтобы предотвратить выдачу или окончание награды, Plugin_Continue, чтобы разрешить.
  **/
-forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply);
+forward Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply);
 
 /**
  * Вызывается, когда камень танка-мутанта ломается.
@@ -1981,7 +1985,7 @@ Overrides
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku** - За сообщения о проблемах и предложения идей.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai** - За сообщения о проблемах.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer** - За сообщения о проблемах.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType** - За предложения идей.
 

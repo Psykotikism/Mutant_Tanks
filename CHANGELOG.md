@@ -13,6 +13,7 @@
 - Fixed Tank deaths raising the wave count while there are still other Tanks alive. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed each Tank death raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed AI Tanks in ghost mode not being forcefully spawned. (Thanks to yuzumi for reporting!)
+- Fixed Tank rocks breaking before leaving the Tank's hands. (Thanks to weffer for reporting!)
 
 #### Core Plugin
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
@@ -22,6 +23,7 @@
 - Fixed the Tank spawner not allowing multiple copies of the same Mutant Tank type to spawn.
 - Fixed inconsistent access levels for some developer commands.
 - Fixed survivors with the godmode reward not being saved from special infected when given the health or refill reward.
+- Fixed survivors with the godmode reward surviving underwater. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed the `Boss` feature not calculating the Tank's total health properly.
 - Fixed the `Reward` system notifying recipients twice when they do not do enough damage to Tanks. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
@@ -74,6 +76,9 @@
 	- Fixed total health being miscalculated.
 	- Fixed Tanks gaining health while in the dying animation.
 
+- Respawn
+	- Fixed Tanks not respawning when dying as a different type. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
 - Restart
 	- Fixed players with the godmode reward being affected.
 
@@ -102,6 +107,9 @@
 	- Fixed total health being miscalculated.
 	- Fixed Tanks gaining health while in the dying animation.
 
+- Zombie
+	- Fixed the ability trying to spawn uncommon infected on L4D1.
+
 ### Changes
 
 #### General
@@ -121,11 +129,12 @@
 - The `Boss` feature's evolution now triggers a slow-motion effect for almost a second.
 - The melee immunity feature's pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 - The `Reward` system now validates all reward settings before applying them to recipients.
-- Added the `sm_mt_dev` command for the developer.
+- Added the `sm_mt_dev` command for developer use.
 - Decreased the delay for custom configs from `3` to `1.5` seconds.
 - The damage boost reward now does the following:
 	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
-	- Gives the recipient 50% damage resistance throughout its duration.
+	- Gives the recipient `50%` damage resistance throughout its duration.
+	- Gives the recipient sledgehammer rounds which knock back special infected and has a `33.33%` chance to knock back Tanks.
 - The speed boost reward now does the following (Thanks to epzminion for the help!):
 	- Gives the recipient extra jump height.
 	- Blocks fall damage for the recipient within a certain height limit (`900` HMU).
@@ -138,6 +147,7 @@
 	- Reduces the pushback force from Tank punches. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code and signatures!]
 	- Prevents the recipient from getting flung away by Chargers.
 	- Prevents the recipient from getting staggered.
+	- Blocks Smoker clouds, Boomer explosions, and Spitter acid puddles when they die (clean kills). (Thanks to epzminion for the help!)
 
 #### Game Data
 - Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.
@@ -164,7 +174,9 @@
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Attack Boost Reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 	- `Action Duration Reward` (Thanks to epzminion for the help!)
+	- `Clean Kills Reward` (Thanks to epzminion for the help!)
 	- `Damage Resistance Reward`
+	- `Fall Voiceline Reward`
 	- `Jump Height Reward` (Thanks to epzminion for the help!)
 	- `Punch Resistance Reward` (Thanks to Silvers for the code!)
 	- `Shove Damage Reward`
@@ -213,8 +225,10 @@
 	- `Reward Percentage`
 	- `Action Duration Reward`
 	- `Attack Boost Reward`
+	- `Clean Kills Reward`
 	- `Damage Boost Reward`
 	- `Damage Resistance Reward`
+	- `Fall Voiceline Reward`
 	- `Item Reward`
 	- `Jump Height Reward`
 	- `Punch Resistance Reward`
@@ -255,6 +269,7 @@
 - Updated Russian translations. (Thanks to Blueberry/Kleiner!)
 
 #### Natives & Forwards
+- Updated the `MT_OnRewardSurvivor` forward.
 - Added the `MT_OnPlayerEventKilled` forward.
 - Added the `MT_OnPlayerHitByVomitJar` forward.
 - Added the `MT_UnvomitPlayer` native.
@@ -282,6 +297,7 @@
 - Clone
 	- Clones no longer reward survivors after dying. (Thanks to 3aljiyavslgazana for the idea!)
 	- Clones no longer trigger announcements when spawning and dying. (Thanks to 3aljiyavslgazana for the idea!)
+	- Clones are removed when their Tank owner changes its Mutant Tank type if the `Clone Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
 
 - Fling
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -308,6 +324,9 @@
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
+- Minion
+	- Minions are removed when their Tank owner changes its Mutant Tank type if the `Minion Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
+
 - Nullify
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 
@@ -318,7 +337,8 @@
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Respawn
-	- Replaced the detour for the `CTerrorPlayer::Event_Killed` function with the new `MT_OnPlayerEventKilled`.
+	- Replaced the detour for the `CTerrorPlayer::Event_Killed` function with the new `MT_OnPlayerEventKilled` forward.
+	- Tanks that respawn no longer give out rewards until their final deaths. (Thanks to 3aljiyavslgazana for suggesting!)
 
 - Shield
 	- The damage boost reward now allows the recipient to bypass all types of shields that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
@@ -330,6 +350,10 @@
 
 - Slow
 	- Survivors with the speed boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Throw
+	- Thrown special infected are removed when their Tank owner changes its Mutant Tank type if the `Throw Infected Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
+	- Thrown Witches are removed when their Tank owner changes its Mutant Tank type if the `Throw Witch Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
 
 - Ultimate
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
@@ -344,6 +368,9 @@
 - Whirl
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Witch
+	- Witches are removed when their Tank owner changes its Mutant Tank type if the `Witch Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
 
 - Yell
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -495,6 +522,7 @@
 - Fixed the SourceMod admin menu plugin not being optional.
 - Fixed rare cases where non-Mutant Tanks are counted as Mutant Tanks.
 - Fixed Tank rocks not breaking when hitting special and common infected.
+- Fixed the strong wind sound caused by Tank rock debris. (Thanks to Dragokas for the code!)
 
 #### Core Plugin
 - Fixed log files being created even when the `Log Messages` setting is disabled. (Thanks to KasperH/Ladis for reporting!)
@@ -1912,7 +1940,7 @@ Changes:
 
 1. Added new target filters: `@special`, `@infected`
 2. The `Ability Effect` settings are now disabled by default.
-3. All Chance settings now accept 0.0% as a valid value.
+3. All Chance settings now accept `0.0%` as a valid value.
 4. The `Skin-Glow Colors` and `Props Colors` settings have been divided into different settings.
 5. The `Tank Chance`, `Type Limit`, and `Finale Tank` settings no longer affect respawned Tanks and randomized Tanks.
 6. The `Announce Arrival` setting now accepts different values.

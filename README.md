@@ -43,6 +43,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Knowledge of installing SourceMod plugins.
+5. Patience
 
 ## Notes
 1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
@@ -150,7 +151,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -171,7 +172,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -192,7 +193,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -213,7 +214,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -236,7 +237,7 @@ Here's our final entry:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -825,15 +826,16 @@ forward void MT_OnMenuItemSelected(int client, const char[] info);
  * Called right before a player dies.
  * Use this forward to do anything before the player dies.
  *
- * @param client		Client index of the dying player.
+ * @param victim		Client index of the dying player.
+ * @param attacker		Client index of the killer.
  **/
-forward void MT_OnPlayerEventKilled(int player);
+forward void MT_OnPlayerEventKilled(int victim, int attacker);
 
 /**
  * Called right before a player is hit by a bile bomb (vomit jar).
  * Use this forward to do anything before the player is hit.
  *
- * @param client		Client index of the hit player.
+ * @param player		Client index of the hit player.
  * @param thrower		Client index of the survivor that threw the bile bomb (vomit jar).
  *
  * @return			Plugin_Handled to prevent the player from being hit, Plugin_Continue to allow.
@@ -883,8 +885,10 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param priority		1 = Killer, 2 = Assistant who did most damage, 3 = Teammate who helped
  * @param duration		The duration of the reward.
  * @param apply			True if the reward is given, false otherwise.
+ *
+ * @return			Plugin_Handled to prevent giving or ending rewards, Plugin_Continue to allow.
  **/
-forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply);
+forward Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply);
 
 /**
  * Called when a Mutant Tank's rock breaks.
@@ -1981,7 +1985,7 @@ Examples:
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku** - For reporting issues and suggesting ideas.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai** - For reporting issues.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer** - For reporting issues.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType** - For suggesting ideas.
 
