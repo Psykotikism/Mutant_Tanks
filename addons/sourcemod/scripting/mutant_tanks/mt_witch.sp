@@ -543,22 +543,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			switch (g_esCache[iTank].g_iWitchRemove)
+			if (g_esCache[iTank].g_iWitchRemove == 0)
 			{
-				case 0: vWitchRange(iTank);
-				case 1:
-				{
-					int iWitch = -1;
-					while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
-					{
-						if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") == iTank)
-						{
-							RemoveEntity(iWitch);
-						}
-					}
-				}
+				vWitchRange(iTank);
 			}
 
+			vRemoveWitches(iTank);
 			vRemoveWitch(iTank);
 		}
 	}
@@ -627,6 +617,21 @@ static void vRemoveWitch(int tank)
 {
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
+}
+
+static void vRemoveWitches(int tank)
+{
+	if (g_esCache[tank].g_iWitchRemove)
+	{
+		int iWitch = -1;
+		while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
+		{
+			if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") == tank)
+			{
+				RemoveEntity(iWitch);
+			}
+		}
+	}
 }
 
 static void vReset()

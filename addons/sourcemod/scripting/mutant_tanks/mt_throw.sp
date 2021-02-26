@@ -645,33 +645,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
 		if (MT_IsTankSupported(iInfected, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
-			{
-				if (g_esPlayer[iSpecial].g_iOwner == iInfected)
-				{
-					g_esPlayer[iSpecial].g_iOwner = 0;
-
-					if (g_esPlayer[iSpecial].g_bThrown && g_esCache[iInfected].g_iThrowInfectedRemove == 1 && bIsValidClient(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE))
-					{
-						g_esPlayer[iSpecial].g_bThrown = false;
-
-						ForcePlayerSuicide(iSpecial);
-					}
-				}
-			}
-
-			if (g_esCache[iInfected].g_iThrowWitchRemove == 1)
-			{
-				int iWitch = -1;
-				while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
-				{
-					if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") == iInfected)
-					{
-						RemoveEntity(iWitch);
-					}
-				}
-			}
-
+			vRemoveThrows(iInfected);
 			vRemoveThrow(iInfected);
 		}
 		else if (bIsSpecialInfected(iInfected) && g_esPlayer[iInfected].g_bThrown)
@@ -732,6 +706,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
+	vRemoveThrows(tank);
 	vRemoveThrow(tank);
 }
 
@@ -761,6 +736,39 @@ static void vRemoveThrow(int tank)
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iOwner = 0;
+}
+
+static void vRemoveThrows(int tank)
+{
+	if (g_esCache[tank].g_iThrowInfectedRemove == 1)
+	{
+		for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
+		{
+			if (g_esPlayer[iSpecial].g_iOwner == tank)
+			{
+				g_esPlayer[iSpecial].g_iOwner = 0;
+
+				if (g_esPlayer[iSpecial].g_bThrown && bIsValidClient(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+				{
+					g_esPlayer[iSpecial].g_bThrown = false;
+
+					ForcePlayerSuicide(iSpecial);
+				}
+			}
+		}
+	}
+
+	if (g_esCache[tank].g_iThrowWitchRemove == 1)
+	{
+		int iWitch = -1;
+		while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
+		{
+			if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") == tank)
+			{
+				RemoveEntity(iWitch);
+			}
+		}
+	}
 }
 
 static void vReset()

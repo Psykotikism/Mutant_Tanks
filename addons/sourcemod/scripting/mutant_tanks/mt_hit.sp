@@ -361,7 +361,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
-public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
+public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
 {
 	if (bIsSurvivor(survivor) && (type & MT_REWARD_DAMAGEBOOST))
 	{

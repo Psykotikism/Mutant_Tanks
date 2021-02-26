@@ -699,42 +699,49 @@ static void vSpawnZombie(int tank, bool uncommon)
 	{
 		case true:
 		{
-			static int iTypeCount, iTypes[7], iFlag;
-			iTypeCount = 0;
-			for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
+			if (g_bSecondGame)
 			{
-				iFlag = (1 << iBit);
-				if (!(g_esCache[tank].g_iZombieType & iFlag))
+				static int iTypeCount, iTypes[7], iFlag;
+				iTypeCount = 0;
+				for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
 				{
-					continue;
+					iFlag = (1 << iBit);
+					if (!(g_esCache[tank].g_iZombieType & iFlag))
+					{
+						continue;
+					}
+
+					iTypes[iTypeCount] = iFlag;
+					iTypeCount++;
 				}
 
-				iTypes[iTypeCount] = iFlag;
-				iTypeCount++;
-			}
-
-			switch (iTypes[GetRandomInt(0, iTypeCount - 1)])
-			{
-				case 1: vSpawnUncommon(tank, MODEL_CEDA);
-				case 2: vSpawnUncommon(tank, MODEL_JIMMY);
-				case 4: vSpawnUncommon(tank, MODEL_FALLEN);
-				case 8: vSpawnUncommon(tank, MODEL_CLOWN);
-				case 16: vSpawnUncommon(tank, MODEL_MUDMAN);
-				case 32: vSpawnUncommon(tank, MODEL_ROADCREW);
-				case 64: vSpawnUncommon(tank, MODEL_RIOTCOP);
-				default:
+				switch (iTypes[GetRandomInt(0, iTypeCount - 1)])
 				{
-					switch (GetRandomInt(1, sizeof(iTypes)))
+					case 1: vSpawnUncommon(tank, MODEL_CEDA);
+					case 2: vSpawnUncommon(tank, MODEL_JIMMY);
+					case 4: vSpawnUncommon(tank, MODEL_FALLEN);
+					case 8: vSpawnUncommon(tank, MODEL_CLOWN);
+					case 16: vSpawnUncommon(tank, MODEL_MUDMAN);
+					case 32: vSpawnUncommon(tank, MODEL_ROADCREW);
+					case 64: vSpawnUncommon(tank, MODEL_RIOTCOP);
+					default:
 					{
-						case 1: vSpawnUncommon(tank, MODEL_CEDA);
-						case 2: vSpawnUncommon(tank, MODEL_JIMMY);
-						case 3: vSpawnUncommon(tank, MODEL_FALLEN);
-						case 4: vSpawnUncommon(tank, MODEL_CLOWN);
-						case 5: vSpawnUncommon(tank, MODEL_MUDMAN);
-						case 6: vSpawnUncommon(tank, MODEL_ROADCREW);
-						case 7: vSpawnUncommon(tank, MODEL_RIOTCOP);
+						switch (GetRandomInt(1, sizeof(iTypes)))
+						{
+							case 1: vSpawnUncommon(tank, MODEL_CEDA);
+							case 2: vSpawnUncommon(tank, MODEL_JIMMY);
+							case 3: vSpawnUncommon(tank, MODEL_FALLEN);
+							case 4: vSpawnUncommon(tank, MODEL_CLOWN);
+							case 5: vSpawnUncommon(tank, MODEL_MUDMAN);
+							case 6: vSpawnUncommon(tank, MODEL_ROADCREW);
+							case 7: vSpawnUncommon(tank, MODEL_RIOTCOP);
+						}
 					}
 				}
+			}
+			else
+			{
+				vSpawnZombie(tank, false);
 			}
 		}
 		case false:

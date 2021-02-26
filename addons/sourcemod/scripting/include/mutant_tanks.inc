@@ -156,6 +156,11 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_WEAPON_TIER1SHOTGUN 6
 #define MT_WEAPON_TIER2SHOTGUN 7
 
+#define MAX_EDICT_BITS 11
+#define NUM_ENT_ENTRY_BITS (MAX_EDICT_BITS + 1)
+#define NUM_ENT_ENTRIES (1 << NUM_ENT_ENTRY_BITS)
+#define ENT_ENTRY_MASK (NUM_ENT_ENTRIES - 1)
+
 // Forwards
 /**
  * Called every second to trigger a Mutant Tank's ability.
@@ -311,9 +316,10 @@ forward void MT_OnMenuItemSelected(int client, const char[] info);
  * Called right before a player dies.
  * Use this forward to do anything before the player dies.
  *
- * @param player		Client index of the dying player.
+ * @param victim		Client index of the dying player.
+ * @param attacker		Client index of the killer.
  **/
-forward void MT_OnPlayerEventKilled(int player);
+forward void MT_OnPlayerEventKilled(int victim, int attacker);
 
 /**
  * Called right before a player is hit by a bile bomb (vomit jar).
@@ -369,8 +375,10 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param priority		1 = Killer, 2 = Assistant who did most damage, 3 = Teammate who helped
  * @param duration		The duration of the reward.
  * @param apply			True if the reward is given, false otherwise.
+ *
+ * @return			Plugin_Handled to prevent giving or ending rewards, Plugin_Continue to allow.
  **/
-forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply);
+forward Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply);
 
 /**
  * Called when a Mutant Tank's rock breaks.
@@ -1402,13 +1410,21 @@ stock void vSetVector(float target[3], float x, float y, float z)
 
 stock void vSetWounds(int common, int type = -1)
 {
-	if (GetEngineVersion() != Engine_Left4Dead2 || !bIsCommonInfected(common) || !HasEntProp(common, Prop_Send, "m_iRequestedWound1"))
+	if (!bIsCommonInfected(common))
 	{
 		return;
 	}
 
-	SetEntProp(common, Prop_Send, "m_iRequestedWound1", type);
-	SetEntProp(common, Prop_Send, "m_iRequestedWound2", type);
+	bool bSecondGame = GetEngineVersion() == Engine_Left4Dead2;
+	if (bSecondGame && HasEntProp(common, Prop_Send, "m_iRequestedWound1"))
+	{
+		SetEntProp(common, Prop_Send, "m_iRequestedWound1", type);
+		SetEntProp(common, Prop_Send, "m_iRequestedWound2", type);
+	}
+	else if (HasEntProp(common, Prop_Send, "m_nBody"))
+	{
+		SetEntProp(common, Prop_Send, "m_nBody", ((type < 0) ? 0 : type));
+	}
 }
 
 stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] model)
@@ -2283,6 +2299,18 @@ stock int iGetBotSurvivor()
 	}
 
 	return -1;
+}
+
+stock int iGetEntityIndex(any refHandle)
+{
+	Address adHandle = view_as<Address>(refHandle);
+	return iGetEntryIndex(adHandle);
+}
+
+stock int iGetEntryIndex(Address entityHandle)
+{
+	int iMaskIndex = LoadFromAddress(entityHandle, NumberType_Int32);
+	return iMaskIndex & ENT_ENTRY_MASK;
 }
 
 stock int iGetHumanCount(bool infected = false)

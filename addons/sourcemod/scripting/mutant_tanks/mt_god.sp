@@ -335,16 +335,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public Action MT_OnPlayerHitByVomitJar(int player, int thrower)
-{
-	if (MT_IsTankSupported(player) && g_esPlayer[player].g_bActivated && bIsSurvivor(thrower, MT_CHECK_INDEX|MT_CHECK_INGAME) && !g_esPlayer[thrower].g_bRewarded)
-	{
-		return Plugin_Handled;
-	}
-
-	return Plugin_Continue;
-}
-
 public void MT_OnPluginCheck(ArrayList &list)
 {
 	char sName[32];
@@ -576,7 +566,17 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
+public Action MT_OnPlayerHitByVomitJar(int player, int thrower)
+{
+	if (MT_IsTankSupported(player) && g_esPlayer[player].g_bActivated && bIsSurvivor(thrower, MT_CHECK_INDEX|MT_CHECK_INGAME) && !g_esPlayer[thrower].g_bRewarded)
+	{
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+
+public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
 {
 	if (bIsSurvivor(survivor))
 	{

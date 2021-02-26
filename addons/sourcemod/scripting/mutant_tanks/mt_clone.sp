@@ -617,21 +617,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 						}
 					}
 				}
-				case false:
-				{
-					for (int iClone = 1; iClone <= MaxClients; iClone++)
-					{
-						if (g_esPlayer[iClone].g_iOwner == iTank)
-						{
-							g_esPlayer[iClone].g_iOwner = 0;
-
-							if (g_esPlayer[iClone].g_bCloned && g_esCache[iTank].g_iCloneRemove == 1 && bIsValidClient(iClone, MT_CHECK_INGAME|MT_CHECK_ALIVE))
-							{
-								ForcePlayerSuicide(iClone);
-							}
-						}
-					}
-				}
+				case false: vRemoveClones(iTank);
 			}
 
 			vRemoveClone(iTank);
@@ -692,6 +678,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
+	vRemoveClones(tank);
 	vRemoveClone(tank, revert);
 }
 
@@ -871,6 +858,25 @@ static void vRemoveClone(int tank, int level = 2)
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
+}
+
+static void vRemoveClones(int tank)
+{
+	if (!g_esPlayer[tank].g_bCloned && g_esCache[tank].g_iCloneRemove == 1)
+	{
+		for (int iClone = 1; iClone <= MaxClients; iClone++)
+		{
+			if (g_esPlayer[iClone].g_iOwner == tank)
+			{
+				g_esPlayer[iClone].g_iOwner = 0;
+
+				if (g_esPlayer[iClone].g_bCloned && bIsValidClient(iClone, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+				{
+					ForcePlayerSuicide(iClone);
+				}
+			}
+		}
+	}
 }
 
 static void vReset()
