@@ -8821,7 +8821,7 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_flShoveRate = 0.0;
 	g_esPlayer[survivor].g_flSpeedBoost = 0.0;
 	g_esPlayer[survivor].g_iCleanKills = 0;
-	g_esPlayer[survivor].g_iRewardTypes &= MT_REWARD_SPEEDBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_ATTACKBOOST|MT_REWARD_GODMODE|MT_REWARD_INFAMMO|MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
+	g_esPlayer[survivor].g_iRewardTypes = 0;
 	g_esPlayer[survivor].g_iShovePenalty = 0;
 	g_esPlayer[survivor].g_iSledgehammerRounds = 0;
 
@@ -8957,7 +8957,7 @@ static void vCalculateDeath(int tank, int survivor)
 					if (flPercentage >= g_esCache[tank].g_flRewardPercentage[2])
 					{
 						vChooseReward(iTeammate, tank, 2, bRepeat);
-						g_esPlayer[iTeammate].g_iRewardTypes &= MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
+						g_esPlayer[iTeammate].g_iRewardTypes &= ~MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
 					}
 					else
 					{
@@ -8968,8 +8968,8 @@ static void vCalculateDeath(int tank, int survivor)
 		}
 
 		vResetDamage(tank);
-		g_esPlayer[survivor].g_iRewardTypes &= MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
-		g_esPlayer[iAssistant].g_iRewardTypes &= MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
+		g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
+		g_esPlayer[iAssistant].g_iRewardTypes &= ~MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
 	}
 	else if (g_esCache[tank].g_iAnnounceDeath > 0)
 	{
@@ -9283,7 +9283,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 					MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardSpeedBoostEnd");
 				}
 
-				g_esPlayer[survivor].g_iRewardTypes &= MT_REWARD_SPEEDBOOST;
+				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_SPEEDBOOST;
 				g_esPlayer[survivor].g_flRewardTime[0] = -1.0;
 			}
 
@@ -9294,7 +9294,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 					MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardDamageBoostEnd");
 				}
 
-				g_esPlayer[survivor].g_iRewardTypes &= MT_REWARD_DAMAGEBOOST;
+				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_DAMAGEBOOST;
 				g_esPlayer[survivor].g_flRewardTime[1] = -1.0;
 			}
 
@@ -9305,7 +9305,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 					MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardAttackBoostEnd");
 				}
 
-				g_esPlayer[survivor].g_iRewardTypes &= MT_REWARD_ATTACKBOOST;
+				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_ATTACKBOOST;
 				g_esPlayer[survivor].g_flRewardTime[2] = -1.0;
 			}
 
@@ -9321,7 +9321,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 					MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardGodEnd");
 				}
 
-				g_esPlayer[survivor].g_iRewardTypes &= MT_REWARD_GODMODE;
+				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_GODMODE;
 				g_esPlayer[survivor].g_flRewardTime[3] = -1.0;
 			}
 
@@ -9332,7 +9332,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 					MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardInfAmmoEnd");
 				}
 
-				g_esPlayer[survivor].g_iRewardTypes &= MT_REWARD_INFAMMO;
+				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_INFAMMO;
 				g_esPlayer[survivor].g_flRewardTime[4] = -1.0;
 			}
 		}
