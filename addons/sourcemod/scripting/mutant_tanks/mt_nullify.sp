@@ -57,8 +57,6 @@ enum struct esPlayer
 	bool g_bAffected;
 	bool g_bFailed;
 	bool g_bNoAmmo;
-	bool g_bRewarded;
-	bool g_bRewarded2;
 
 	float g_flNullifyChance;
 	float g_flNullifyDuration;
@@ -324,7 +322,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 			}
 
-			if (g_esPlayer[attacker].g_bAffected && !g_esPlayer[attacker].g_bRewarded)
+			if (g_esPlayer[attacker].g_bAffected && !MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST))
 			{
 				EmitSoundToAll(SOUND_METAL, victim);
 
@@ -333,7 +331,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					static float flTankPos[3];
 					GetClientAbsOrigin(victim, flTankPos);
 
-					switch (g_esPlayer[attacker].g_bRewarded2)
+					switch (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
 					{
 						case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
 						case false: vPushNearbyEntities(victim, flTankPos);
@@ -634,22 +632,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
-{
-	if (bIsSurvivor(survivor))
-	{
-		if (type & MT_REWARD_DAMAGEBOOST)
-		{
-			g_esPlayer[survivor].g_bRewarded = apply;
-		}
-
-		if (type & MT_REWARD_GODMODE)
-		{
-			g_esPlayer[survivor].g_bRewarded2 = apply;
-		}
-	}
-}
-
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
@@ -753,7 +735,7 @@ static void vNullifyHit(int survivor, int tank, float random, float chance, int 
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !g_esPlayer[survivor].g_bRewarded)
+	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_DAMAGEBOOST))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -846,8 +828,6 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
-	g_esPlayer[tank].g_bRewarded = false;
-	g_esPlayer[tank].g_bRewarded2 = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }

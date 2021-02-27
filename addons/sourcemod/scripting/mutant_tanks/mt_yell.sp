@@ -61,7 +61,6 @@ enum struct esPlayer
 {
 	bool g_bActivated;
 	bool g_bAffected;
-	bool g_bRewarded;
 
 	float g_flOpenAreasOnly;
 	float g_flYellChance;
@@ -601,14 +600,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
-{
-	if (bIsSurvivor(survivor) && (type & MT_REWARD_GODMODE))
-	{
-		g_esPlayer[survivor].g_bRewarded = apply;
-	}
-}
-
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
@@ -722,7 +713,6 @@ static void vRemoveYell(int tank)
 
 	g_esPlayer[tank].g_bActivated = false;
 	g_esPlayer[tank].g_bAffected = false;
-	g_esPlayer[tank].g_bRewarded = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iDuration = -1;
@@ -811,7 +801,7 @@ static void vYell2(int tank, bool repeat, int pos = -1)
 	flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esCache[tank].g_flYellRange;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) && !g_esPlayer[iSurvivor].g_bAffected && !g_esPlayer[iSurvivor].g_bRewarded)
+		if (bIsHumanSurvivor(iSurvivor, MT_CHECK_INGAME) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) && !g_esPlayer[iSurvivor].g_bAffected && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 		{
 			GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 			if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
@@ -901,7 +891,7 @@ public Action tTimerYell(Handle timer, DataPack pack)
 
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_esPlayer[iSurvivor].g_bAffected || g_esPlayer[iSurvivor].g_bRewarded || g_hSDKDeafen == null)
+	if (!bIsSurvivor(iSurvivor) || !g_esPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE) || g_hSDKDeafen == null)
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;

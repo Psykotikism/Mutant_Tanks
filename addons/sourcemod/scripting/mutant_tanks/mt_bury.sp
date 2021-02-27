@@ -55,8 +55,6 @@ enum struct esPlayer
 	bool g_bAffected;
 	bool g_bFailed;
 	bool g_bNoAmmo;
-	bool g_bRewarded;
-	bool g_bRewarded2;
 
 	float g_flBuryBuffer;
 	float g_flBuryChance;
@@ -682,25 +680,9 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
 {
-	if (bIsSurvivor(survivor))
+	if (bIsSurvivor(survivor) && apply & ((type & MT_REWARD_HEALTH) || (type & MT_REWARD_REFILL) || (type & MT_REWARD_GODMODE)) && g_esPlayer[survivor].g_bAffected)
 	{
-		if ((type & MT_REWARD_HEALTH) || (type & MT_REWARD_REFILL) || (type & MT_REWARD_GODMODE))
-		{
-			if (type & MT_REWARD_GODMODE)
-			{
-				g_esPlayer[survivor].g_bRewarded = apply;
-			}
-
-			if (apply && g_esPlayer[survivor].g_bAffected)
-			{
-				vStopBury(survivor, g_esPlayer[survivor].g_iOwner);
-			}
-		}
-
-		if (type & MT_REWARD_INFAMMO)
-		{
-			g_esPlayer[survivor].g_bRewarded2 = apply;
-		}
+		vStopBury(survivor, g_esPlayer[survivor].g_iOwner);
 	}
 }
 
@@ -804,7 +786,7 @@ static void vBuryHit(int survivor, int tank, float random, float chance, int ena
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && bIsEntityGrounded(survivor) && !g_esPlayer[survivor].g_bRewarded && !g_esPlayer[survivor].g_bRewarded2)
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && bIsEntityGrounded(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_INFAMMO))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -917,8 +899,6 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
-	g_esPlayer[tank].g_bRewarded = false;
-	g_esPlayer[tank].g_bRewarded2 = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }
@@ -944,7 +924,7 @@ static void vStopBury(int survivor, int tank)
 		}
 	}
 
-	if (!g_esPlayer[survivor].g_bRewarded)
+	if (!MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
 	}

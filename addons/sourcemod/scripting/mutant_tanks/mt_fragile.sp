@@ -53,7 +53,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esPlayer
 {
 	bool g_bActivated;
-	bool g_bRewarded;
 
 	float g_flFragileBulletMultiplier;
 	float g_flFragileChance;
@@ -390,7 +389,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileMeleeMultiplier;
 
-				if (bSurvivor && g_esPlayer[attacker].g_bRewarded && GetRandomFloat(0.0, 100.0) <= 15.0 && g_hSDKShovedBySurvivor != null)
+				if (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_ATTACKBOOST) && GetRandomFloat(0.0, 100.0) <= 15.0 && g_hSDKShovedBySurvivor != null)
 				{
 					static float flTankOrigin[3], flSurvivorOrigin[3], flDirection[3];
 					GetClientAbsOrigin(attacker, flSurvivorOrigin);
@@ -717,14 +716,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
-{
-	if (bIsSurvivor(survivor) && (type & MT_REWARD_ATTACKBOOST))
-	{
-		g_esPlayer[survivor].g_bRewarded = apply;
-	}
-}
-
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
@@ -880,7 +871,6 @@ static void vFragileAbility(int tank)
 static void vRemoveFragile(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
-	g_esPlayer[tank].g_bRewarded = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iDuration = -1;

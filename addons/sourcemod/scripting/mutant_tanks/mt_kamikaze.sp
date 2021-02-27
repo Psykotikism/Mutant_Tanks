@@ -64,7 +64,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esPlayer
 {
 	bool g_bFailed;
-	bool g_bRewarded;
 
 	float g_flKamikazeChance;
 	float g_flKamikazeRange;
@@ -170,14 +169,14 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	g_esPlayer[client].g_bFailed = false;
 
-	vRemoveKamikaze(client);
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public void OnClientDisconnect_Post(int client)
 {
-	vRemoveKamikaze(client);
+	g_esPlayer[client].g_bFailed = false;
 }
 
 public void OnMapEnd()
@@ -557,10 +556,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
-
 	if (oldTank != newTank)
 	{
-		vRemoveKamikaze(oldTank);
+		g_esPlayer[oldTank].g_bFailed = false;
 	}
 }
 
@@ -572,7 +570,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
-			vRemoveKamikaze(iBot);
+			g_esPlayer[iBot].g_bFailed = false;
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -581,7 +579,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
-			vRemoveKamikaze(iTank);
+			g_esPlayer[iTank].g_bFailed = false;
 		}
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
@@ -589,7 +587,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
 		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveKamikaze(iPlayer);
+			g_esPlayer[iPlayer].g_bFailed = false;
 		}
 		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_bSecondGame)
 		{
@@ -609,14 +607,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
 		vReset();
-	}
-}
-
-public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
-{
-	if (bIsSurvivor(survivor) && (type & MT_REWARD_GODMODE))
-	{
-		g_esPlayer[survivor].g_bRewarded = apply;
 	}
 }
 
@@ -654,7 +644,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
-	vRemoveKamikaze(tank);
+	g_esPlayer[tank].g_bFailed = false;
 }
 
 static void vKamikazeAbility(int tank, float random, int pos = -1)
@@ -702,7 +692,7 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !g_esPlayer[survivor].g_bRewarded)
+	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (random <= chance)
 		{
@@ -744,19 +734,13 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 	}
 }
 
-static void vRemoveKamikaze(int tank)
-{
-	g_esPlayer[tank].g_bFailed = false;
-	g_esPlayer[tank].g_bRewarded = false;
-}
-
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
-			vRemoveKamikaze(iPlayer);
+			g_esPlayer[iPlayer].g_bFailed = false;
 		}
 	}
 }

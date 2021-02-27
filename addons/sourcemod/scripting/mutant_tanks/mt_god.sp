@@ -55,8 +55,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esPlayer
 {
 	bool g_bActivated;
-	bool g_bRewarded;
-	bool g_bRewarded2;
 
 	float g_flGodChance;
 	float g_flOpenAreasOnly;
@@ -321,7 +319,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				static float flTankPos[3];
 				GetClientAbsOrigin(victim, flTankPos);
 
-				switch (bSurvivor && g_esPlayer[attacker].g_bRewarded2)
+				switch (bSurvivor && MT_DoesSurvivorHaveRewardType(victim, MT_REWARD_GODMODE))
 				{
 					case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
 					case false: vPushNearbyEntities(victim, flTankPos);
@@ -568,28 +566,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 
 public Action MT_OnPlayerHitByVomitJar(int player, int thrower)
 {
-	if (MT_IsTankSupported(player) && g_esPlayer[player].g_bActivated && bIsSurvivor(thrower, MT_CHECK_INDEX|MT_CHECK_INGAME) && !g_esPlayer[thrower].g_bRewarded)
+	if (MT_IsTankSupported(player) && g_esPlayer[player].g_bActivated && bIsSurvivor(thrower, MT_CHECK_INDEX|MT_CHECK_INGAME) && !MT_DoesSurvivorHaveRewardType(thrower, MT_REWARD_DAMAGEBOOST))
 	{
 		return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
-}
-
-public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
-{
-	if (bIsSurvivor(survivor))
-	{
-		if (type & MT_REWARD_DAMAGEBOOST)
-		{
-			g_esPlayer[survivor].g_bRewarded = apply;
-		}
-
-		if (type & MT_REWARD_GODMODE)
-		{
-			g_esPlayer[survivor].g_bRewarded2 = apply;
-		}
-	}
 }
 
 public void MT_OnAbilityActivated(int tank)
@@ -749,8 +731,6 @@ static void vGodAbility(int tank)
 static void vRemoveGod(int tank)
 {
 	g_esPlayer[tank].g_bActivated = false;
-	g_esPlayer[tank].g_bRewarded = false;
-	g_esPlayer[tank].g_bRewarded2 = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iDuration = -1;

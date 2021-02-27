@@ -68,8 +68,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esPlayer
 {
 	bool g_bActivated;
-	bool g_bRewarded;
-	bool g_bRewarded2;
 
 	char g_sShieldHealthChars[4];
 
@@ -456,7 +454,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			bExplosiveDamage = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE);
 			bFireDamage = (damagetype & DMG_BURN) && (g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE);
 			bMeleeDamage = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE);
-			if (g_esPlayer[attacker].g_bRewarded || bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
+			if (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST) || bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
 			{
 				g_esPlayer[victim].g_flHealth -= damage;
 				if (g_esCache[victim].g_flShieldHealth == 0.0 || g_esPlayer[victim].g_flHealth < 1.0)
@@ -478,7 +476,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			static float flTankPos[3];
 			GetClientAbsOrigin(victim, flTankPos);
 
-			switch (bSurvivor && g_esPlayer[attacker].g_bRewarded2)
+			switch (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
 			{
 				case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
 				case false: vPushNearbyEntities(victim, flTankPos);
@@ -821,22 +819,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
-{
-	if (bIsSurvivor(survivor))
-	{
-		if (type & MT_REWARD_DAMAGEBOOST)
-		{
-			g_esPlayer[survivor].g_bRewarded = apply;
-		}
-
-		if (type & MT_REWARD_GODMODE)
-		{
-			g_esPlayer[survivor].g_bRewarded2 = apply;
-		}
-	}
-}
-
 public void MT_OnAbilityActivated(int tank)
 {
 	if ((MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)) || bIsPlayerIncapacitated(tank))
@@ -1011,8 +993,6 @@ static void vReset()
 
 static void vReset2(int tank)
 {
-	g_esPlayer[tank].g_bRewarded = false;
-	g_esPlayer[tank].g_bRewarded2 = false;
 	g_esPlayer[tank].g_flHealth = 0.0;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;

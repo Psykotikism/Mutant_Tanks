@@ -55,7 +55,6 @@ enum struct esPlayer
 	bool g_bAffected;
 	bool g_bFailed;
 	bool g_bNoAmmo;
-	bool g_bRewarded;
 
 	float g_flOpenAreasOnly;
 	float g_flRecoilChance;
@@ -611,7 +610,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		static int iSurvivorId, iSurvivor;
 		iSurvivorId = event.GetInt("userid");
 		iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor) && bIsGunWeapon(iSurvivor) && !g_esPlayer[iSurvivor].g_bRewarded && g_esPlayer[iSurvivor].g_bAffected)
+		if (bIsSurvivor(iSurvivor) && bIsGunWeapon(iSurvivor) && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_INFAMMO) && g_esPlayer[iSurvivor].g_bAffected)
 		{
 			static float flRecoil[3];
 			flRecoil[0] = GetRandomFloat(-20.0, -80.0);
@@ -619,14 +618,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			flRecoil[2] = GetRandomFloat(-25.0, 25.0);
 			SetEntPropVector(iSurvivor, Prop_Send, "m_vecPunchAngle", flRecoil);
 		}
-	}
-}
-
-public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
-{
-	if (bIsSurvivor(survivor) && (type & MT_REWARD_INFAMMO))
-	{
-		g_esPlayer[survivor].g_bRewarded = apply;
 	}
 }
 
@@ -733,7 +724,7 @@ static void vRecoilHit(int survivor, int tank, float random, float chance, int e
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !g_esPlayer[survivor].g_bRewarded)
+	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_INFAMMO))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -826,7 +817,6 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
-	g_esPlayer[tank].g_bRewarded = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }
