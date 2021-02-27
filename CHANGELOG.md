@@ -5,7 +5,7 @@
 ### Bug Fixes
 
 #### General
-- Fixed common infected developing wounds from blocked friendly-fire. (Thanks to Marttt for the code!)
+- Fixed Common infected developing wounds from blocked friendly-fire. (Thanks to Marttt for the code!)
 - Fixed Tanks spawned from the `sm_tank`/`sm_mt_tank` menu raising the wave count when they die.
 - Fixed clones, respawned Tanks, randomized Tanks, and Tanks spawned through the Mutant Tanks menu not being exempted from the `Type Limit` setting.
 - Fixed game modes not being detected properly.
@@ -108,7 +108,7 @@
 	- Fixed Tanks gaining health while in the dying animation.
 
 - Zombie
-	- Fixed the ability trying to spawn uncommon infected on L4D1.
+	- Fixed the ability trying to spawn Uncommon infected on L4D1.
 
 ### Changes
 
@@ -273,6 +273,7 @@
 - Added the `MT_OnPlayerEventKilled` forward.
 - Added the `MT_OnPlayerHitByVomitJar` forward.
 - Added the `MT_UnvomitPlayer` native.
+- Added the `MT_DoesSurvivorHaveRewardType` native.
 
 #### Abilities
 - Absorb
@@ -521,7 +522,7 @@
 - Fixed some potential errors caused by invalid weapon slots.
 - Fixed the SourceMod admin menu plugin not being optional.
 - Fixed rare cases where non-Mutant Tanks are counted as Mutant Tanks.
-- Fixed Tank rocks not breaking when hitting special and common infected.
+- Fixed Tank rocks not breaking when hitting special and Common infected.
 - Fixed the strong wind sound caused by Tank rock debris. (Thanks to Dragokas for the code!)
 
 #### Core Plugin
@@ -2261,7 +2262,7 @@ Files:
 
 Bug fixes:
 
-1. Fixed the `Witch` ability causing crashes when converting common infected into Witch minions.
+1. Fixed the `Witch` ability causing crashes when converting Common infected into Witch minions.
 
 Changes:
 
@@ -2275,7 +2276,7 @@ Changes:
 5. The `Splash` ability now damages nearby survivors every X seconds while the Super Tank is alive.
 6. Added the `Splash Interval` KeyValue setting to support the new Splash ability feature.
 7. The `Vampire` ability's `Vampire Health` KeyValue setting now only applies to the `range` ability. (When the Super Tank hits a survivor, he now gains the amount of damage as health.)
-8. The `Witch` ability's range used for detecting nearby common infected can now be configurable via the new `Witch Range` KeyValue setting.
+8. The `Witch` ability's range used for detecting nearby Common infected can now be configurable via the new `Witch Range` KeyValue setting.
 9. Changed a few lines of code.
 
 Files:
@@ -2843,7 +2844,7 @@ Bug fixes:
 
 Bug fixes:
 
-1. Fixed the `Common Tank` not spawning any common infected.
+1. Fixed the `Common Tank` not spawning any Common infected.
 2. Fixed the `Gravity Tank`'s gravity force not stopping upon death.
 3. Fixed the `Hypno Tank`'s effect instantly killing survivors (Now it sets survivors to 1 HP).
 4. Fixed the `Meteor Tank`'s meteor shower not working.

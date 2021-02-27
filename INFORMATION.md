@@ -3,8 +3,8 @@
 ## Notes
 > This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 
-- Maximum Tank health: 1,000,000 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 88-89 and recompile all the plugins, but expect potential bugs with higher values.) [Default: 65,535]
-- Maximum types: 500 (Increase/decrease the value in the `mutant_tanks.inc` file on line 87 and recompile all the plugins, but expect potential server lag with higher values.)
+- Maximum Tank health: 1,000,000 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 89-90 and recompile all the plugins, but expect potential bugs with higher values.) [Default: 65,535]
+- Maximum types: 500 (Increase/decrease the value in the `mutant_tanks.inc` file on line 88 and recompile all the plugins, but expect potential server lag with higher values.)
 - Most of the settings below can be overridden for each player.
 
 ## Sections
@@ -511,6 +511,10 @@
 			// - Reduced pushback from hitting Tanks with melee immunity
 			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
 			// 128: Health and ammo refill reward
+			// - Refill to 100% health
+			// - Automatically kill any current special infected attacker
+			// - Refill clip to max size
+			// - Refill magazine to max size
 			// 256: Respawn reward
 			// - Respawn and teleport to a teammate
 			// - Restore previous loadout
@@ -1866,6 +1870,10 @@
 			// - Reduced pushback from hitting Tanks with melee immunity
 			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
 			// 128: Health and ammo refill reward
+			// - Refill to 100% health
+			// - Automatically kill any current special infected attacker
+			// - Refill clip to max size
+			// - Refill magazine to max size
 			// 256: Respawn reward
 			// - Respawn and teleport to a teammate
 			// - Restore previous loadout
