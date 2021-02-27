@@ -8822,7 +8822,7 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_flShoveRate = 0.0;
 	g_esPlayer[survivor].g_flSpeedBoost = 0.0;
 	g_esPlayer[survivor].g_iCleanKills = 0;
-	g_esPlayer[survivor].g_iRewardTypes &= MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_SPEEDBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_ATTACKBOOST|MT_REWARD_GODMODE|MT_REWARD_INFAMMO;
+	g_esPlayer[survivor].g_iRewardTypes &= MT_REWARD_SPEEDBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_ATTACKBOOST|MT_REWARD_GODMODE|MT_REWARD_INFAMMO|MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
 	g_esPlayer[survivor].g_iShovePenalty = 0;
 	g_esPlayer[survivor].g_iSledgehammerRounds = 0;
 
@@ -8959,7 +8959,7 @@ static void vCalculateDeath(int tank, int survivor)
 					if (flPercentage >= g_esCache[tank].g_flRewardPercentage[2])
 					{
 						vChooseReward(iTeammate, tank, 2, bRepeat);
-						g_esPlayer[iTeammate].g_iRewardTypes &= MT_REWARD_SPEEDBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_ATTACKBOOST|MT_REWARD_GODMODE|MT_REWARD_INFAMMO;
+						g_esPlayer[iTeammate].g_iRewardTypes &= MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
 					}
 					else
 					{
@@ -8970,8 +8970,8 @@ static void vCalculateDeath(int tank, int survivor)
 		}
 
 		vResetDamage(tank);
-		g_esPlayer[survivor].g_iRewardTypes &= MT_REWARD_SPEEDBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_ATTACKBOOST|MT_REWARD_GODMODE|MT_REWARD_INFAMMO;
-		g_esPlayer[iAssistant].g_iRewardTypes &= MT_REWARD_SPEEDBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_ATTACKBOOST|MT_REWARD_GODMODE|MT_REWARD_INFAMMO;
+		g_esPlayer[survivor].g_iRewardTypes &= MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
+		g_esPlayer[iAssistant].g_iRewardTypes &= MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
 	}
 	else if (g_esCache[tank].g_iAnnounceDeath > 0)
 	{
