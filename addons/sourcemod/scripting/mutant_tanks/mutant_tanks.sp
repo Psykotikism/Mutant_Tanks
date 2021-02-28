@@ -5093,13 +5093,13 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			{
 				if (bDeveloper || g_esPlayer[victim].g_iThorns == 1)
 				{
-					if (bIsInfected(attacker))
+					if (bIsSpecialInfected(attacker))
 					{
 						static char sDamageType[32];
 						IntToString(damagetype, sDamageType, sizeof(sDamageType));
 						vDamagePlayer(attacker, victim, damage, sDamageType);
 					}
-					else if (bIsCommonInfected(attacker) || bIsWitch(attacker))
+					else if (bIsCommonInfected(attacker))
 					{
 						SDKHooks_TakeDamage(attacker, victim, victim, damage, damagetype);
 					}
@@ -5114,7 +5114,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				}
 			}
 		}
-		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsCommonInfected(victim) || bIsWitch(victim))
+		else if (bIsInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim))
 		{
 			static bool bPlayer, bSurvivor;
 			bPlayer = bIsValidClient(attacker);
@@ -5137,9 +5137,12 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				bBlockMelee = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1;
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
-					if (bRewarded && (bBlockBullets || bBlockHittables || bBlockMelee))
+					if (bRewarded)
 					{
-						vKnockbackTank(victim, attacker, damagetype);
+						if (bBlockBullets || bBlockHittables || bBlockMelee)
+						{
+							vKnockbackTank(victim, attacker, damagetype);
+						}
 
 						return Plugin_Continue;
 					}

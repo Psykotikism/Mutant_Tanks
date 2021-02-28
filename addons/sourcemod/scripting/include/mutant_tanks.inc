@@ -1709,7 +1709,7 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 	return false;
 }
 
-stock bool bIsBoomer(int boomer, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsBoomer(int boomer, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(boomer, flags) && GetEntProp(boomer, Prop_Send, "m_zombieClass") == 2;
 }
@@ -1729,7 +1729,7 @@ stock bool bIsBotSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT
 	return bIsSurvivor(bot, flags) && !bIsValidClient(bot, MT_CHECK_FAKECLIENT);
 }
 
-stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(charger, flags) && GetEngineVersion() == Engine_Left4Dead2 && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
@@ -1784,7 +1784,7 @@ stock bool bIsHumanSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_IN
 	return bIsSurvivor(survivor, flags) && !bHasIdlePlayer(survivor) && !bIsPlayerIdle(survivor);
 }
 
-stock bool bIsHunter(int hunter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsHunter(int hunter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(hunter, flags) && GetEntProp(hunter, Prop_Send, "m_zombieClass") == 3;
 }
@@ -1794,7 +1794,7 @@ stock bool bIsIdlePlayer(int bot, int survivor, int flags = MT_CHECK_INDEX|MT_CH
 	return bIsValidClient(survivor, flags) && GetClientTeam(bot) == 2;
 }
 
-stock bool bIsInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsValidClient(infected, flags) && GetClientTeam(infected) == 3;
 }
@@ -1804,7 +1804,7 @@ stock bool bIsInfectedGhost(int infected)
 	return GetEntProp(infected, Prop_Send, "m_isGhost") == 1;
 }
 
-stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(jockey, flags) && GetEngineVersion() == Engine_Left4Dead2 && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
 }
@@ -1856,17 +1856,17 @@ stock bool bIsPlayerIncapacitated(int survivor)
 	return GetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1) == 1;
 }
 
-stock bool bIsSmoker(int smoker, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsSmoker(int smoker, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(smoker, flags) && GetEntProp(smoker, Prop_Send, "m_zombieClass") == 1;
 }
 
-stock bool bIsSpecialInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsSpecialInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsSmoker(infected, flags) || bIsBoomer(infected, flags) || bIsHunter(infected, flags) || bIsSpitter(infected, flags) || bIsJockey(infected, flags) || bIsCharger(infected, flags);
 }
 
-stock bool bIsSpitter(int spitter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsSpitter(int spitter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(spitter, flags) && GetEngineVersion() == Engine_Left4Dead2 && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
 }
