@@ -1601,6 +1601,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -2655,9 +2656,16 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 
 public Action cmdMTCommandListener(int client, const char[] command, int argc)
 {
-	vLogMessage(MT_LOG_SERVER, _, "%s The \"%s\" command was used by %N", MT_TAG, command, client);
+	if (bIsSurvivor(client))
+	{
+		vLogMessage(MT_LOG_SERVER, _, "%s %N used the \"%s\" command.", MT_TAG, client, command);
 
-	return bIsValidClient(client) ? Plugin_Continue : Plugin_Stop;
+		return Plugin_Continue;
+	}
+
+	vLogMessage(MT_LOG_SERVER, _, "%s The \"%s\" command was intercepted to prevent errors.", MT_TAG, command);
+
+	return Plugin_Stop;
 }
 
 public Action cmdMTConfig(int client, int args)
