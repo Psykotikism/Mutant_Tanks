@@ -798,6 +798,21 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* CTerrorMeleeWeapon::TestMeleeSwingCollision(Vector const&) */
+			"CTerrorMeleeWeapon::TestMeleeSwingCollision"
+			{
+				"signature"	"CTerrorMeleeWeapon::TestMeleeSwingCollision"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"swingAngle"
+					{
+						"type"		"vectorptr"
+					}
+				}
+			}
 			/* CTerrorPlayer::DoAnimationEvent(PlayerAnimEvent_t, int) */
 			"CTerrorPlayer::DoAnimationEvent"
 			{
@@ -1172,6 +1187,13 @@
 				"library"	"server"
 				"linux"		"@_ZN18CTerrorMeleeWeapon15SecondaryAttackEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xD8\x85\xDB\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x7C\x06\x00\x00\x8B\xCE\xFF\xD2"
+			}
+			/* CTerrorMeleeWeapon::TestMeleeSwingCollision(Vector const&) */
+			"CTerrorMeleeWeapon::TestMeleeSwingCollision"
+			{
+				"library"	"server"
+				"linux"		"@_ZN18CTerrorMeleeWeapon23TestMeleeSwingCollisionERK6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x2A\x57\x89\x2A\x2A\xE8"
 			}
 			/* CTerrorPlayer::DoAnimationEvent(PlayerAnimEvent_t, int) */
 			"CTerrorPlayer::DoAnimationEvent"
