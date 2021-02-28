@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.83 (March 1, 2021)
+## Version 8.83 (March 10, 2021)
 
 ### Bug Fixes
 
@@ -14,6 +14,7 @@
 - Fixed each Tank death raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed AI Tanks in ghost mode not being forcefully spawned. (Thanks to yuzumi for reporting!)
 - Fixed Tank rocks breaking before leaving the Tank's hands. (Thanks to weffer for reporting!)
+- Fixed the errors regarding the `vocalize` command. (Thanks to ur5efj for reporting!)
 
 #### Core Plugin
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
@@ -116,6 +117,7 @@
 - Changed the method for checking idle Tanks. (Thanks to BHaType for the code and epzminion for the help!)
 - The hidden `z_burn_max` convar will no longer be automatically set to `1.0` while Mutant Tanks is running. (Use the new `ConVars` section to modify the convar setting yourself.)
 - Added extra failsafe checks to make sure offsets are retrieved properly before executing relevant code. (Thanks to yuzumi for the idea!)
+- Added a command listener to intercept the `vocalize` and `go_away_from_keyboard` commands and block them when the player is no longer on the server.
 - `Left 4 DHooks` is no longer required.
 
 #### Core Plugin
