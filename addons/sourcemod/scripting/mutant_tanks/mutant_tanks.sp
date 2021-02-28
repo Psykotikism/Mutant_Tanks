@@ -1601,7 +1601,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -8948,6 +8947,15 @@ static void vResetSurvivorStats(int survivor)
 	}
 }
 
+static void vResetSurvivorStats2(int survivor)
+{
+	g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_HEALTH;
+	g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_AMMO;
+	g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_REFILL;
+	g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_ITEM;
+	g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_RESPAWN;
+}
+
 static void vResetTank(int tank)
 {
 	ExtinguishEntity(tank);
@@ -9074,7 +9082,7 @@ static void vCalculateDeath(int tank, int survivor)
 					if (flPercentage >= g_esCache[tank].g_flRewardPercentage[2])
 					{
 						vChooseReward(iTeammate, tank, 2, bRepeat);
-						g_esPlayer[iTeammate].g_iRewardTypes &= ~MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
+						vResetSurvivorStats2(iTeammate);
 					}
 					else
 					{
@@ -9085,8 +9093,8 @@ static void vCalculateDeath(int tank, int survivor)
 		}
 
 		vResetDamage(tank);
-		g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
-		g_esPlayer[iAssistant].g_iRewardTypes &= ~MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ITEM|MT_REWARD_RESPAWN;
+		vResetSurvivorStats2(survivor);
+		vResetSurvivorStats2(iAssistant);
 	}
 	else if (g_esCache[tank].g_iAnnounceDeath > 0)
 	{
@@ -9169,16 +9177,24 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 
 			if (bIsSurvivor(survivor))
 			{
+				int iMode = GetEntProp(survivor, Prop_Data, "m_takedamage", 1);
 				if ((iType & MT_REWARD_HEALTH) && !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_HEALTH))
 				{
 					vSaveCaughtSurvivor(survivor);
 
-					int iMode = GetEntProp(survivor, Prop_Data, "m_takedamage", 1);
 					if (bIsPlayerDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth"))
 					{
-						SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
-						vCheatCommand(survivor, "give", "health");
-						SetEntProp(survivor, Prop_Data, "m_takedamage", iMode, 1);
+						if (iMode != 2)
+						{
+							SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
+							vCheatCommand(survivor, "give", "health");
+							SetEntProp(survivor, Prop_Data, "m_takedamage", iMode, 1);
+						}
+						else
+						{
+							vCheatCommand(survivor, "give", "health");
+						}
+
 						vRewardMessage(survivor, priority, "RewardHealth", "RewardHealth2", "RewardHealth3", sTankName);
 
 						g_esPlayer[survivor].g_bLastLife = false;
@@ -9199,12 +9215,18 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 					vSaveCaughtSurvivor(survivor);
 					vRefillAmmo(survivor);
 
-					int iMode = GetEntProp(survivor, Prop_Data, "m_takedamage", 1);
 					if (bIsPlayerDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth"))
 					{
-						SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
-						vCheatCommand(survivor, "give", "health");
-						SetEntProp(survivor, Prop_Data, "m_takedamage", iMode, 1);
+						if (iMode != 2)
+						{
+							SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
+							vCheatCommand(survivor, "give", "health");
+							SetEntProp(survivor, Prop_Data, "m_takedamage", iMode, 1);
+						}
+						else
+						{
+							vCheatCommand(survivor, "give", "health");
+						}
 					}
 
 					vRewardMessage(survivor, priority, "RewardRefill", "RewardRefill2", "RewardRefill3", sTankName);
