@@ -1509,6 +1509,9 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
+	AddCommandListener(cmdMTCommandListener, "go_away_from_keyboard");
+	AddCommandListener(cmdMTCommandListener, "vocalize");
+
 	RegAdminCmd("sm_mt_config", cmdMTConfig, ADMFLAG_ROOT, "View a section of the config file.");
 	RegConsoleCmd("sm_mt_config2", cmdMTConfig2, "View a section of the config file.");
 	RegConsoleCmd("sm_mt_dev", cmdMTDev, "Used only by and for the developer.");
@@ -2648,6 +2651,13 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 			}
 		}
 	}
+}
+
+public Action cmdMTCommandListener(int client, const char[] command, int argc)
+{
+	vLogMessage(MT_LOG_SERVER, _, "%s The \"%s\" command was used by %N", MT_TAG, command, client);
+
+	return bIsValidClient(client) ? Plugin_Continue : Plugin_Stop;
 }
 
 public Action cmdMTConfig(int client, int args)
