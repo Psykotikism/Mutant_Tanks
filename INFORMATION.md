@@ -481,7 +481,9 @@
 			// - Extra damage
 			// - Bypass Tank immunities
 			// - 50% damage resistance
+			// - Extended melee range
 			// - Sledgehammer rounds
+			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
 			// - Bypass shove penalty
 			// - Shoving Tanks does damage
@@ -732,6 +734,23 @@
 			// 3rd number = Height for teammates.
 			"Jump Height Reward"			"75.0,75.0,75.0"
 
+			// The melee range to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate ranges with commas (",").
+			// --
+			// Ranges limit: 3
+			// Character limit for each range: 6
+			// --
+			// Minimum value for each range: 0 (OFF)
+			// Maximum value for each range: 999999 (Highest)
+			// --
+			// 1st number = Range for killers.
+			// 2nd number = Range for assistants.
+			// 3rd number = Range for teammates.
+			"Melee Range Reward"			"100,100,100"
+
 			// The punch resistance to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -856,6 +875,23 @@
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
 			"Speed Boost Reward"			"1.25,1.25,1.25"
+
+			// Give thorns as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give thorns to killers.
+			// 2nd number = Give thorns to assistants.
+			// 3rd number = Give thorns to teammates.
+			"Thorns Reward"			"1,1,1"
 
 			// Include useful reward types depending on the status of the recipient.
 			// Note: This setting can be used for standard Tanks.
@@ -1840,7 +1876,9 @@
 			// - Extra damage
 			// - Bypass Tank immunities
 			// - 50% damage resistance
+			// - Extended melee range
 			// - Sledgehammer rounds
+			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
 			// - Bypass shove penalty
 			// - Shoving Tanks does damage
@@ -2008,7 +2046,7 @@
 			// 1st number = Give clean kills to killers.
 			// 2nd number = Give clean kills to assistants.
 			// 3rd number = Give clean kills to teammates.
-			"Clean Kills Reward"			"1,1,1"
+			"Clean Kills Reward"			"0,0,0"
 
 			// The damage boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2090,6 +2128,23 @@
 			// 2nd number = Height for assistants.
 			// 3rd number = Height for teammates.
 			"Jump Height Reward"			"0.0,0.0,0.0"
+
+			// The melee range to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate ranges with commas (",").
+			// --
+			// Ranges limit: 3
+			// Character limit for each range: 6
+			// --
+			// Minimum value for each range: 0 (OFF)
+			// Maximum value for each range: 999999 (Highest)
+			// --
+			// 1st number = Range for killers.
+			// 2nd number = Range for assistants.
+			// 3rd number = Range for teammates.
+			"Melee Range Reward"			"0,0,0"
 
 			// The punch resistance to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2215,6 +2270,23 @@
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
 			"Speed Boost Reward"			"0.0,0.0,0.0"
+
+			// Give thorns as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give thorns to killers.
+			// 2nd number = Give thorns to assistants.
+			// 3rd number = Give thorns to teammates.
+			"Thorns Reward"			"0,0,0"
 
 			// Include useful reward types depending on the status of the recipient.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

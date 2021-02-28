@@ -134,10 +134,13 @@
 - The damage boost reward now does the following:
 	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 	- Gives the recipient `50%` damage resistance throughout its duration.
-	- Gives the recipient sledgehammer rounds which knock back special infected and has a `33.33%` chance to knock back Tanks.
+	- Gives the recipient extended melee range. (Thanks to epzminion for the idea and Silvers for the code!)
+	- Gives the recipient sledgehammer rounds which knock back special infected and has a `33.33%` chance to knock back Tanks. (Thanks to epzminion for the code!)
+	- Allows the recipient to deal damage to attackers for each hit taken. (Thanks to epzminion for the help!)
 - The speed boost reward now does the following (Thanks to epzminion for the help!):
 	- Gives the recipient extra jump height.
 	- Blocks fall damage for the recipient within a certain height limit (`900` HMU).
+	- Use a different voiceline when falling.
 	- Blocks the deathfall camera for the recipient.
 - The godmode reward now does the following:
 	- Automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
@@ -178,11 +181,13 @@
 	- `Damage Resistance Reward`
 	- `Fall Voiceline Reward`
 	- `Jump Height Reward` (Thanks to epzminion for the help!)
+	- `Melee Range Reward` (Thanks to epzminion for the idea and Silvers for the code!)
 	- `Punch Resistance Reward` (Thanks to Silvers for the code!)
 	- `Shove Damage Reward`
 	- `Shove Penalty Reward`
 	- `Shove Rate Reward` (Thanks to epzminion for the help!)
 	- `Sledgehammer Rounds Reward` (Thanks to epzminion for the code!)
+	- `Thorns Reward` (Thanks to epzminion for the idea!)
 - Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by TheStarRocker.) [Thanks to Silvers for the code!]
 - Added the `ConVars` section under the `Plugin Settings` section which allows to change convar settings. (Requested by TheStarRocker.)
 - Added the following settings under the `Plugin Settings/General` section for global use (Requested by Maku.):
@@ -231,6 +236,7 @@
 	- `Fall Voiceline Reward`
 	- `Item Reward`
 	- `Jump Height Reward`
+	- `Melee Range Reward`
 	- `Punch Resistance Reward`
 	- `Respawn Loadout Reward`
 	- `Shove Damage Reward`
@@ -238,6 +244,7 @@
 	- `Shove Rate Reward`
 	- `Sledgehammer Rounds Reward`
 	- `Speed Boost Reward`
+	- `Thorns Reward`
 	- `Useful Rewards`
 	- `Aggressive Tanks`
 	- `Credit Igniters`
