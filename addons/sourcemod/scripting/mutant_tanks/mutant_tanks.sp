@@ -5030,13 +5030,12 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		}
 
-		static bool bPlayer, bDeveloper, bRewarded;
-		bPlayer = bIsValidClient(victim);
-		bDeveloper = bPlayer && bIsDeveloper(victim, 4);
-		bRewarded = bDeveloper || (bPlayer && (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST));
+		static bool bDeveloper, bRewarded;
 		static float flResistance;
 		if (bIsSurvivor(victim))
 		{
+			bDeveloper = bIsDeveloper(victim, 4);
+			bRewarded = bDeveloper || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST);
 			if (bIsDeveloper(victim, 11) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_GODMODE))
 			{
 				if (((damagetype & DMG_DROWN) && GetEntProp(victim, Prop_Send, "m_nWaterLevel") > 0) || ((damagetype & DMG_FALL) && !bIsSafeFalling(victim) && g_esPlayer[victim].g_bFatalFalling))
@@ -5055,19 +5054,6 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			else if ((bIsDeveloper(victim, 8) || bIsDeveloper(victim, 10)) && StrEqual(sClassname, "insect_swarm"))
 			{
 				return Plugin_Handled;
-			}
-			else if (bDeveloper || ((g_esPlayer[victim].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[victim].g_iThorns == 1))
-			{
-				if (bIsInfected(attacker))
-				{
-					static char sDamageType[32];
-					IntToString(damagetype, sDamageType, sizeof(sDamageType));
-					vDamagePlayer(attacker, victim, (damage * 2), sDamageType);
-				}
-				else if (bIsCommonInfected(attacker) || bIsWitch(attacker))
-				{
-					SDKHooks_TakeDamage(attacker, victim, victim, (damage * 2), damagetype);
-				}
 			}
 			else if (bIsTank(attacker))
 			{
@@ -5103,23 +5089,38 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					return Plugin_Changed;
 				}
 			}
-		}
-		else if (bRewarded)
-		{
-			flResistance = (bDeveloper && g_esDeveloper[victim].g_flDevDamageResistance > g_esPlayer[victim].g_flDamageResistance) ? g_esDeveloper[victim].g_flDevDamageResistance : g_esPlayer[victim].g_flDamageResistance;
-			if (flResistance > 0.0)
+			else if (bRewarded)
 			{
-				damage *= flResistance;
+				if (bDeveloper || g_esPlayer[victim].g_iThorns == 1)
+				{
+					if (bIsInfected(attacker))
+					{
+						static char sDamageType[32];
+						IntToString(damagetype, sDamageType, sizeof(sDamageType));
+						vDamagePlayer(attacker, victim, damage, sDamageType);
+					}
+					else if (bIsCommonInfected(attacker) || bIsWitch(attacker))
+					{
+						SDKHooks_TakeDamage(attacker, victim, victim, damage, damagetype);
+					}
+				}
 
-				return Plugin_Changed;
+				flResistance = (bDeveloper && g_esDeveloper[victim].g_flDevDamageResistance > g_esPlayer[victim].g_flDamageResistance) ? g_esDeveloper[victim].g_flDevDamageResistance : g_esPlayer[victim].g_flDamageResistance;
+				if (flResistance > 0.0)
+				{
+					damage *= flResistance;
+
+					return Plugin_Changed;
+				}
 			}
 		}
 		else if (bIsInfected(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsCommonInfected(victim) || bIsWitch(victim))
 		{
-			static bool bSurvivor;
+			static bool bPlayer, bSurvivor;
 			bPlayer = bIsValidClient(attacker);
 			bSurvivor = bIsSurvivor(attacker);
-			bDeveloper = bPlayer && bIsDeveloper(attacker, 4);
+			bDeveloper = bSurvivor && bIsDeveloper(attacker, 4);
+			bRewarded = bDeveloper || (bSurvivor && (g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST));
 			static float flDamage;
 			if (bIsTank(victim))
 			{
@@ -5136,14 +5137,14 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				bBlockMelee = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && g_esCache[victim].g_iMeleeImmunity == 1;
 				if (attacker == victim || bBlockBullets || bBlockExplosives || bBlockFire || bBlockHittables || bBlockMelee)
 				{
-					if (bSurvivor && (g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST))
+					if (bRewarded && (bBlockBullets || bBlockHittables || bBlockMelee))
 					{
 						vKnockbackTank(victim, attacker, damagetype);
 
 						return Plugin_Continue;
 					}
 
-					if (damagetype & DMG_BURN)
+					if (bBlockFire)
 					{
 						ExtinguishEntity(victim);
 					}
@@ -5168,11 +5169,6 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					return Plugin_Handled;
 				}
 
-				if (bSurvivor)
-				{
-					vKnockbackTank(victim, attacker, damagetype);
-				}
-
 				if ((damagetype & DMG_BURN) && g_esCache[victim].g_flBurnDuration > 0.0)
 				{
 					static int iFlame;
@@ -5188,21 +5184,29 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					}
 				}
 
-				if (bSurvivor && (damagetype & DMG_BURN) && g_esGeneral.g_iCreditIgniters == 0)
+				if (bSurvivor)
 				{
-					if (bIsTankSupported(victim) && (bDeveloper || (g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST)))
+					if ((damagetype & DMG_BULLET) || (damagetype & DMG_CLUB) || (damagetype & DMG_SLASH) || (damagetype & DMG_CRUSH))
 					{
-						flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
-						if (flDamage > 0.0)
-						{
-							damage *= flDamage;
-						}
+						vKnockbackTank(victim, attacker, damagetype);
 					}
 
-					inflictor = 0;
-					attacker = 0;
+					if ((damagetype & DMG_BURN) && g_esGeneral.g_iCreditIgniters == 0)
+					{
+						if (bIsTankSupported(victim) && bRewarded)
+						{
+							flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
+							if (flDamage > 0.0)
+							{
+								damage *= flDamage;
+							}
+						}
 
-					return Plugin_Changed;
+						inflictor = 0;
+						attacker = 0;
+
+						return Plugin_Changed;
+					}
 				}
 			}
 			else if (bSurvivor && (bIsDeveloper(attacker, 9) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iSledgehammerRounds == 1)) && (damagetype & DMG_BULLET))
@@ -5213,7 +5217,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				}
 				else if (bIsCommonInfected(victim))
 				{
-					if (bDeveloper || (g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST))
+					if (bRewarded)
 					{
 						flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
 						if (flDamage > 0.0)
@@ -5228,7 +5232,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				}
 			}
 
-			if (bSurvivor && (bDeveloper || (g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST)))
+			if (bRewarded)
 			{
 				flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
 				if (flDamage > 0.0)
