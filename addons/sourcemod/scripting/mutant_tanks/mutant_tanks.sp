@@ -2206,13 +2206,18 @@ public void OnConfigsExecuted()
 	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(0.1, tTimerRefreshRewards, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
+	g_esGeneral.g_flDefaultFirstAidHealPercent = g_esGeneral.g_cvMTFirstAidHealPercent.FloatValue;
 	g_esGeneral.g_flDefaultSurvivorReviveDuration = g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue;
 	g_esGeneral.g_flDefaultGunSwingInterval = g_esGeneral.g_cvMTGunSwingInterval.FloatValue;
-	g_esGeneral.g_iDefaultMeleeRange = g_esGeneral.g_cvMTMeleeRange.IntValue;
 	g_esGeneral.g_iDefaultSurvivorReviveHealth = g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue;
 	g_esGeneral.g_iChosenType = 0;
 	g_esGeneral.g_iRegularCount = 0;
 	g_esGeneral.g_iTankCount = 0;
+
+	if (g_bSecondGame)
+	{
+		g_esGeneral.g_iDefaultMeleeRange = g_esGeneral.g_cvMTMeleeRange.IntValue;
+	}
 
 	if (g_esGeneral.g_iConfigEnable == 1)
 	{
@@ -3668,7 +3673,7 @@ static void vDeveloperPanel(int developer)
 	pDevPanel.DrawText(sDisplay);
 
 	flValue = g_esDeveloper[developer].g_flDevHealPercent;
-	FormatEx(sDisplay, sizeof(sDisplay), "First Aid Kit Heal Percent: %.2f%% (%2.f)", flValue, (flValue / 100.0));
+	FormatEx(sDisplay, sizeof(sDisplay), "Heal Percent: %.2f%% (%.2f)", flValue, (flValue / 100.0));
 	pDevPanel.DrawText(sDisplay);
 
 	FormatEx(sDisplay, sizeof(sDisplay), "Jump Height: %.2f HMU", g_esDeveloper[developer].g_flDevJumpHeight);
@@ -12185,9 +12190,17 @@ static int iGetTypeCount(int type = 0)
 
 public MRESReturn mreActionCompletePre(int pThis, DHookParam hParams)
 {
-	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_HEALTH)))
+	if (g_esGeneral.g_cvMTFirstAidHealPercent != null)
 	{
-		vSetHealPercentCvar(true, pThis);
+		int iSurvivor = hParams.Get(1), iTeammate = hParams.Get(2);
+		if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_HEALTH)))
+		{
+			vSetHealPercentCvar(false, iSurvivor);
+		}
+		else if (bIsSurvivor(iTeammate) && (bIsDeveloper(iTeammate, 6) || (g_esPlayer[iTeammate].g_iRewardTypes & MT_REWARD_HEALTH)))
+		{
+			vSetHealPercentCvar(false, iTeammate);
+		}
 	}
 
 	return MRES_Ignored;
@@ -12195,7 +12208,10 @@ public MRESReturn mreActionCompletePre(int pThis, DHookParam hParams)
 
 public MRESReturn mreActionCompletePost(int pThis, DHookParam hParams)
 {
-	vSetHealPercentCvar(false);
+	if (g_esGeneral.g_cvMTFirstAidHealPercent != null)
+	{
+		vSetHealPercentCvar(true);
+	}
 
 	return MRES_Ignored;
 }
@@ -12477,9 +12493,13 @@ public MRESReturn mreFirstSurvivorLeftSafeAreaPost(DHookParam hParams)
 
 public MRESReturn mreFinishHealingPre(int pThis)
 {
-	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_HEALTH)))
+	if (g_esGeneral.g_cvMTFirstAidHealPercent != null)
 	{
-		vSetHealPercentCvar(true, pThis);
+		int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+		if (bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 6) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_HEALTH)))
+		{
+			vSetHealPercentCvar(false, iSurvivor);
+		}
 	}
 
 	return MRES_Ignored;
@@ -12487,7 +12507,10 @@ public MRESReturn mreFinishHealingPre(int pThis)
 
 public MRESReturn mreFinishHealingPost(int pThis)
 {
-	vSetHealPercentCvar(false);
+	if (g_esGeneral.g_cvMTFirstAidHealPercent != null)
+	{
+		vSetHealPercentCvar(true);
+	}
 
 	return MRES_Ignored;
 }
@@ -12602,9 +12625,9 @@ public MRESReturn mreReplaceTankPost(DHookParam hParams)
 
 public MRESReturn mreRevivedPre(int pThis)
 {
-	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_HEALTH)))
+	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_HEALTH)) && g_esGeneral.g_cvMTSurvivorReviveHealth != null)
 	{
-		vSetReviveHealthCvar(true, pThis);
+		vSetReviveHealthCvar(false, pThis);
 	}
 
 	return MRES_Ignored;
@@ -12612,7 +12635,10 @@ public MRESReturn mreRevivedPre(int pThis)
 
 public MRESReturn mreRevivedPost(int pThis)
 {
-	vSetReviveHealthCvar(false);
+	if (g_esGeneral.g_cvMTSurvivorReviveHealth != null)
+	{
+		vSetReviveHealthCvar(true);
+	}
 
 	return MRES_Ignored;
 }

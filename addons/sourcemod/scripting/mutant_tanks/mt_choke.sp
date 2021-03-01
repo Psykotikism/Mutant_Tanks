@@ -469,7 +469,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_flChokeDamage = 5.0;
 				g_esAbility[iIndex].g_flChokeDelay = 1.0;
 				g_esAbility[iIndex].g_iChokeDuration = 5;
-				g_esAbility[iIndex].g_flChokeHeight = 200.0;
+				g_esAbility[iIndex].g_flChokeHeight = 250.0;
 				g_esAbility[iIndex].g_iChokeHit = 0;
 				g_esAbility[iIndex].g_iChokeHitMode = 0;
 				g_esAbility[iIndex].g_flChokeRange = 150.0;
@@ -861,32 +861,6 @@ static void vReset2(int survivor, int tank, int messages)
 	g_esPlayer[survivor].g_bAffected = false;
 	g_esPlayer[survivor].g_iOwner = 0;
 
-	float flOrigin[3];
-	GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
-	flOrigin[2] -= g_esCache[tank].g_flChokeHeight;
-	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
-
-	bool bTeleport = true;
-	float flAngles[3];
-	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && !g_esPlayer[iSurvivor].g_bAffected && iSurvivor != survivor)
-		{
-			bTeleport = false;
-
-			GetClientAbsOrigin(iSurvivor, flOrigin);
-			GetClientEyeAngles(iSurvivor, flAngles);
-			TeleportEntity(survivor, flOrigin, flAngles, view_as<float>({0.0, 0.0, 0.0}));
-
-			break;
-		}
-	}
-
-	if (bTeleport)
-	{
-		TeleportEntity(survivor, g_esPlayer[survivor].g_flLastPosition, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-	}
-
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
 	SetEntityGravity(survivor, 1.0);
 
@@ -928,17 +902,16 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iMessage = pack.ReadCell(), iPos = pack.ReadCell();
-
 	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
+
+	float flVelocity[3], flHeight = g_esCache[iTank].g_flChokeHeight;
+	flVelocity[0] = 0.0;
+	flVelocity[1] = 0.0;
+	flVelocity[2] = (flHeight < 200.0) ? (flHeight * 1.5) : flHeight;
+	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
 	SetEntityGravity(iSurvivor, 0.1);
 
-	float flOrigin[3];
-	GetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
-	flOrigin[2] += g_esCache[iTank].g_flChokeHeight;
-	SetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
-
+	int iMessage = pack.ReadCell(), iPos = pack.ReadCell();
 	DataPack dpChokeDamage;
 	CreateDataTimer(1.0, tTimerChokeDamage, dpChokeDamage, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpChokeDamage.WriteCell(GetClientUserId(iSurvivor));
@@ -989,10 +962,13 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
+	SetEntityGravity(iSurvivor, 1.0);
+
 	static float flDamage;
 	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esCache[iTank].g_flChokeDamage;
 	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "16384");
-	SetEntityGravity(iSurvivor, 1.0);
 
 	return Plugin_Continue;
 }
