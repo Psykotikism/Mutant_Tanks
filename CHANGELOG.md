@@ -153,6 +153,10 @@
 	- Prevents the recipient from getting flung away by Chargers.
 	- Prevents the recipient from getting staggered.
 	- Blocks Smoker clouds, Boomer explosions, and Spitter acid puddles when they die (clean kills). (Thanks to epzminion for the help!)
+- The health reward now does the following:
+	- Gives the recipient a health boost when revived.
+	- Allows the recipient to heal their target back to max health.
+- The ammo reward now extends the recipient's max weapon clip and magazine sizes up to at least twice the default amount.
 
 #### Game Data
 - Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.

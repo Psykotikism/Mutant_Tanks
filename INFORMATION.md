@@ -471,7 +471,7 @@
 			// --
 			// -1: OFF
 			// 0: Random
-			// 1: Health reward
+			// 1: Health reward (temporary)
 			// - Refill to 100% health
 			// - Automatically kill any current special infected attacker
 			// - Heal back to 100% health with first aid kits.
@@ -501,9 +501,10 @@
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
 			// - Faster recovery
-			// 16: Ammo reward
+			// 16: Ammo reward (temporary)
 			// - Refill clip to max size
 			// - Refill magazine to max size
+			// - Extra clip and magazine size
 			// 32: Item reward
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers
@@ -1902,7 +1903,7 @@
 			// --
 			// -1: OFF
 			// 0: Random
-			// 1: Health reward
+			// 1: Health reward (temporary)
 			// - Refill to 100% health
 			// - Automatically kill any current special infected attacker
 			// - Heal back to 100% health with first aid kits.
@@ -1932,9 +1933,10 @@
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
 			// - Faster recovery
-			// 16: Ammo reward
+			// 16: Ammo reward (temporary)
 			// - Refill clip to max size
 			// - Refill magazine to max size
+			// - Extra clip and magazine size
 			// 32: Item reward
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers
