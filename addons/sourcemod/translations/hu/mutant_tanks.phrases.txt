@@ -664,17 +664,22 @@
 
 	"RewardHealth"
 	{
-		"hu"			"Most{default} kaptál{yellow} életet{default} mert megölted{olive} {1}{default}!"
+		"hu"			"Most{default} kaptál{yellow} életet növelést{default} mert megölted{olive} {1}{default}!"
 	}
 
 	"RewardHealth2"
 	{
-		"hu"			"Most{default} kaptál{yellow} életet{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
+		"hu"			"Most{default} kaptál{yellow} életet növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardHealth3"
 	{
-		"hu"			"Most{default} kaptál{yellow} életet{default} mert segítettél{olive} {1}{default}ellen!"
+		"hu"			"Most{default} kaptál{yellow} életet növelést{default} mert segítettél{olive} {1}{default}ellen!"
+	}
+
+	"RewardHealthEnd"
+	{
+		"hu"			"A{yellow} életet növelésed{default} véget ért!"
 	}
 
 	"RewardInfAmmo"

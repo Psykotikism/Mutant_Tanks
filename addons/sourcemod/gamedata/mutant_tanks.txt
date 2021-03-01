@@ -141,6 +141,14 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* CTerrorPlayer::OnRevived() */
+			"CTerrorPlayer::OnRevived"
+			{
+				"signature"	"CTerrorPlayer::OnRevived"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
 			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
 			"CTerrorPlayer::OnStaggered"
 			{
@@ -255,6 +263,7 @@
 		}
 		"Addresses"
 		{
+			/* CTerrorGameMovement::DoJump(Vector*) */
 			"DoJumpStart"
 			{
 				"signature"	"CTerrorGameMovement::DoJump"
@@ -267,10 +276,12 @@
 			{
 				"signature"	"CTerrorGameMovement::DoJump::Value"
 			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"Event_KilledStart"
 			{
 				"signature"	"CTerrorPlayer::Event_Killed"
 			}
+			/* CSmokeCloudSystem::FireGameEvent(IGameEvent *) */
 			"FireSmokerCloud"
 			{
 				"signature"	"CSmokeCloudSystem::FireGameEvent"
@@ -329,6 +340,14 @@
 	{
 		"Functions"
 		{
+			/* CFirstAidKit::FinishHealing() */
+			"CFirstAidKit::FinishHealing"
+			{
+				"signature"	"CFirstAidKit::FinishHealing"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
 			/* CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType) */
 			"CFirstAidKit::StartHealing"
 			{
@@ -570,6 +589,13 @@
 				"linux"		"@_ZN16CEnvRockLauncher16LaunchCurrentDirEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x86\x1C\x01\x00\x00\xC1\xE8\x0B\xA8\x01\x57\x74\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x96\x2A\x2A\x2A\x2A\x8B\x86\x2A\x2A\x2A\x2A\x89\x4C\x24\x18\x8B\x8E\x2A\x2A\x2A\x2A\xC1\xE9\x0B"
 			}
+			/* CFirstAidKit::FinishHealing() */
+			"CFirstAidKit::FinishHealing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CFirstAidKit13FinishHealingEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x55\x89\x5C\x24\x10\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\xED\x0F\x84"
+			}
 			/* CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType) */
 			"CFirstAidKit::StartHealing"
 			{
@@ -673,7 +699,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
-				"windows"	"\x83\x2A\x2A\x53\x55\x56\x57\x8B\x2A\x8B\x2A\x8B"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8A\x9F\xFD\x26\x00\x00"
 			}
 			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
 			"CTerrorPlayer::OnShovedBySurvivor"
@@ -731,7 +757,10 @@
 				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2E\x00\x00\x00\x56\x8D\xB3\x80\x2E\x00\x00"
 			}
-			/* SurvivorLegsMeetRescueVehicleArrival::Update(SurvivorBot*, float) */
+			/**
+			 * SurvivorLegsMeetRescueVehicleArrival::Update(SurvivorBot*, float)
+			 * Used for the "CDirector" address on Windows.
+			 **/
 			"SurvivorLegsMeetRescueVehicleArrival::Update"
 			{
 				"library"	"server"
@@ -787,6 +816,25 @@
 					"actionTrigger"
 					{
 						"type"		"int"
+					}
+				}
+			}
+			/* CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*) */
+			"CFirstAidKit::OnActionComplete"
+			{
+				"signature"	"CFirstAidKit::OnActionComplete"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"target"
+					{
+						"type"		"cbaseentity"
+					}
+					"subject"
+					{
+						"type"		"cbaseentity"
 					}
 				}
 			}
@@ -1119,7 +1167,10 @@
 				"linux"		"@_ZN9CDirector27OnFirstSurvivorLeftSafeAreaEP13CTerrorPlayer"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x2A\x2A\x57\x8B\x2A\x8B\x8F\x84\x05\x00\x00\x53\xE8"
 			}
-			/* CDirectorMusicBanks::OnRoundStart() */
+			/**
+			 * CDirectorMusicBanks::OnRoundStart()
+			 * Used for the "CDirector" address on Windows.
+			 ***/
 			"CDirectorMusicBanks::OnRoundStart"
 			{
 				"library"	"server"
@@ -1131,6 +1182,13 @@
 				"library"	"server"
 				"linux"		"@_ZN16CEnvRockLauncher16LaunchCurrentDirEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\xF1\x8B\x86\x38\x01\x00\x00\xC1\xE8\x0B\x57\xA8\x01\x74\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x96\x2A\x2A\x2A\x2A\x8B\x86\x2A\x2A\x2A\x2A\x89\x4D\xE8\x8B\x8E\x2A\x2A\x2A\x2A\xC1\xE9\x0B"
+			}
+			/* CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*) */
+			"CFirstAidKit::OnActionComplete"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CFirstAidKit16OnActionCompleteEP13CTerrorPlayerP11CBaseEntity"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x7D\x0C\x85\xFF\x74\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\xD2"
 			}
 			/* CSmokeCloudSystem::FireGameEvent(IGameEvent *) */
 			"CSmokeCloudSystem::FireGameEvent"

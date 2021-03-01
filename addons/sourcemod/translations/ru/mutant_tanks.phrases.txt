@@ -664,17 +664,22 @@
 
 	"RewardHealth"
 	{
-		"ru"			"Вы{default} получили{yellow} здоровье{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} усиление здоровье{default} за убийство{olive} {1}{default}!"
 	}
 
 	"RewardHealth2"
 	{
-		"ru"			"Вы{default} получили{yellow} здоровье{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} усиление здоровье{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardHealth3"
 	{
-		"ru"			"Вы{default} получили{yellow} здоровье{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} усиление здоровье{default} за помощь в убийстве{olive} {1}{default}!"
+	}
+
+	"RewardHealthEnd"
+	{
+		"ru"			"Ваше{yellow} усиление здоровье{default} закончилось!"
 	}
 
 	"RewardInfAmmo"

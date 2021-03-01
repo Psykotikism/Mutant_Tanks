@@ -746,19 +746,24 @@
 	"RewardHealth"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health{default} for killing{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} health boost{default} for killing{olive} {1}{default}!"
 	}
 
 	"RewardHealth2"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health{default} for assisting the most against{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} health boost{default} for assisting the most against{olive} {1}{default}!"
 	}
 
 	"RewardHealth3"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health{default} for assisting against{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} health boost{default} for assisting against{olive} {1}{default}!"
+	}
+
+	"RewardHealthEnd"
+	{
+		"en"			"Your{yellow} health boost{default} ended!"
 	}
 
 	"RewardInfAmmo"
