@@ -582,7 +582,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN17CSmokeCloudSystem13FireGameEventEP10IGameEvent" // change 57 to C3
-				"windows"	"\x83\xEC\x14\x56\x8B\x74\x24\x1C\x8B\x06" // change 83 to C3
+				"windows"	"\x83\xEC\x14\x56\x8B\x74\x24\x1C\x8B\x06" // change 83 ?? ?? to C2 04 00
 			}
 			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
 			"CTankClaw::OnPlayerHit"
