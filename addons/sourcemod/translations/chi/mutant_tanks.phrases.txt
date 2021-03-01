@@ -589,17 +589,22 @@
 
 	"RewardAmmo"
 	{
-		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 弹药{default}!"
+		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 弹药加成{default}!"
 	}
 
 	"RewardAmmo2"
 	{
-		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 弹药{default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default} 且频繁支援, 获得了{yellow} 弹药加成{default}!"
 	}
 
 	"RewardAmmo3"
 	{
-		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 弹药{default}!"
+		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 弹药加成{default}!"
+	}
+
+	"RewardAmmoEnd"
+	{
+		"chi"			"你的{yellow} 弹药加成{default} 结束了!"
 	}
 
 	"RewardAttackBoost"

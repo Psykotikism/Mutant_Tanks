@@ -589,17 +589,22 @@
 
 	"RewardAmmo"
 	{
-		"ru"			"Вы{default} получили{yellow} боеприпасы{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} боеприпасы здоровье{default} за убийство{olive} {1}{default}!"
 	}
 
 	"RewardAmmo2"
 	{
-		"ru"			"Вы{default} получили{yellow} боеприпасы{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} боеприпасы здоровье{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
 	}
 
 	"RewardAmmo3"
 	{
-		"ru"			"Вы{default} получили{yellow} боеприпасы{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили{yellow} боеприпасы здоровье{default} за помощь в убийстве{olive} {1}{default}!"
+	}
+
+	"RewardAmmoEnd"
+	{
+		"ru"			"Ваше{yellow} боеприпасы здоровье{default} закончилось!"
 	}
 
 	"RewardAttackBoost"

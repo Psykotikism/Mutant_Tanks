@@ -4,6 +4,33 @@
 	{
 		"Functions"
 		{
+			/* CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*) */
+			"CAmmoDef::MaxCarry"
+			{
+				"signature"	"CAmmoDef::MaxCarry"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"address"
+				"arguments"
+				{
+					"ammoType"
+					{
+						"type"		"int"
+					}
+					"player"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+			/* CBaseCombatWeapon::GetMaxClip1() const */
+			"CBaseCombatWeapon::GetMaxClip1"
+			{
+				"signature"	"CBaseCombatWeapon::GetMaxClip1"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"entity"
+			}
 			/* CDeathFallCamera::Enable(CBasePlayer*) */
 			"CDeathFallCamera::Enable"
 			{
@@ -561,6 +588,20 @@
 		}
 		"Signatures"
 		{
+			/* CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*) */
+			"CAmmoDef::MaxCarry"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8CAmmoDef8MaxCarryEiPK20CBaseCombatCharacter"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x7C\x2A\x3B\x41\x04\x7D\x2A\x6B\xC0\x34\x03\xC8\x8B\x41\x2C\x83\xF8\xFF\x75\x2A\x8B\x49\x38\x85\xC9\x74\x2A\x8B\x41\x1C\x8B\x40\x30\xC2\x08\x00"
+			}
+			/* CBaseCombatWeapon::GetMaxClip1() const */
+			"CBaseCombatWeapon::GetMaxClip1"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK17CBaseCombatWeapon11GetMaxClip1Ev"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x8B\x80\x60\x01\x00\x00\x83\x2A\x2A\xC3"
+			}
 			/* CDeathFallCamera::Enable(CBasePlayer*) */
 			"CDeathFallCamera::Enable"
 			{
@@ -1139,12 +1180,12 @@
 		}
 		"Signatures"
 		{
-			/* CDeathFallCamera::Enable(CBasePlayer*) */
-			"CDeathFallCamera::Enable"
+			/* CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*) */
+			"CAmmoDef::MaxCarry"
 			{
 				"library"	"server"
-				"linux"		"@_ZN16CDeathFallCamera6EnableEP11CBasePlayer"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\xF9\x8B\xCB\x89\x7D\xFC\xE8\x2A\x2A\x2A\x2A\x85\xC0\x74\x2A\x6A"
+				"linux"		"@_ZN8CAmmoDef8MaxCarryEiPK20CBaseCombatCharacter"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xF8\x01\x7C\x2A\x3B\x41\x04\x7D\x2A\x6B\xC0\x34\x03\xC8\x8B\x41\x2C\x83\xF8\xFF\x75\x2A\x8B\x49\x38\x85\xC9\x74\x2A\x8B\x41\x1C\x8B\x40\x30\x5D"
 			}
 			/* CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger) */
 			"CBaseBackpackItem::StartAction"
@@ -1152,6 +1193,20 @@
 				"library"	"server"
 				"linux"		"@_ZN17CBaseBackpackItem11StartActionENS_22BackpackItemActionTypeENS_25BackpackItemActionTriggerE"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\xF8\x85\xFF\x75\x2A\x5F\x32\xC0"
+			}
+			/* CBaseCombatWeapon::GetMaxClip1() const */
+			"CBaseCombatWeapon::GetMaxClip1"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK17CBaseCombatWeapon11GetMaxClip1Ev"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x8B\x80\x60\x01\x00\x00\x83\x2A\x2A\xC3"
+			}
+			/* CDeathFallCamera::Enable(CBasePlayer*) */
+			"CDeathFallCamera::Enable"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CDeathFallCamera6EnableEP11CBasePlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\xF9\x8B\xCB\x89\x7D\xFC\xE8\x2A\x2A\x2A\x2A\x85\xC0\x74\x2A\x6A"
 			}
 			/* CDirector::HasAnySurvivorLeftSafeArea() */
 			"CDirector::HasAnySurvivorLeftSafeArea"

@@ -589,17 +589,22 @@
 
 	"RewardAmmo"
 	{
-		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert megölted{olive} {1}{default}!"
+		"hu"			"Most{default} kaptál{yellow} lőszert növelést{default} mert megölted{olive} {1}{default}!"
 	}
 
 	"RewardAmmo2"
 	{
-		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
+		"hu"			"Most{default} kaptál{yellow} lőszert növelést{default} mert nagyrészt segítettél{olive} {1}{default}ellen!"
 	}
 
 	"RewardAmmo3"
 	{
-		"hu"			"Most{default} kaptál{yellow} lőszert{default} mert segítettél{olive} {1}{default}ellen!"
+		"hu"			"Most{default} kaptál{yellow} lőszert növelést{default} mert segítettél{olive} {1}{default}ellen!"
+	}
+
+	"RewardAmmoEnd"
+	{
+		"hu"			"A{yellow} lőszert növelésed{default} véget ért!"
 	}
 
 	"RewardAttackBoost"

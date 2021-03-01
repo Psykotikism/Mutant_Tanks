@@ -674,6 +674,11 @@
 		"en"			"You{default} received{yellow} ammunition{default} for assisting against{olive} {1}{default}!"
 	}
 
+	"RewardAmmoEnd"
+	{
+		"en"			"Your{yellow} ammunition boost{default} ended!"
+	}
+
 	"RewardAttackBoost"
 	{
 		"#format"		"{1:t}"
