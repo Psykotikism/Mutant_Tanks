@@ -17,6 +17,7 @@
 #undef REQUIRE_PLUGIN
 #tryinclude <adminmenu>
 #tryinclude <mt_clone>
+#tryinclude <WeaponHandling>
 #define REQUIRE_PLUGIN
 
 #pragma semicolon 1
@@ -258,51 +259,6 @@ enum ConfigState
 	ConfigState_Admin, // reached "STEAM_" or "[U:" section
 	ConfigState_Specific // reached specific sections
 };
-
-enum L4D2WeaponType 
-{
-	L4D2WeaponType_Unknown = 0,
-	L4D2WeaponType_Pistol,
-	L4D2WeaponType_Magnum,
-	L4D2WeaponType_Rifle,
-	L4D2WeaponType_RifleAk47,
-	L4D2WeaponType_RifleDesert,
-	L4D2WeaponType_RifleM60,
-	L4D2WeaponType_RifleSg552,
-	L4D2WeaponType_HuntingRifle,
-	L4D2WeaponType_SniperAwp,
-	L4D2WeaponType_SniperMilitary,
-	L4D2WeaponType_SniperScout,
-	L4D2WeaponType_SMG,
-	L4D2WeaponType_SMGSilenced,
-	L4D2WeaponType_SMGMp5,
-	L4D2WeaponType_Autoshotgun,
-	L4D2WeaponType_AutoshotgunSpas,
-	L4D2WeaponType_Pumpshotgun,
-	L4D2WeaponType_PumpshotgunChrome,
-	L4D2WeaponType_Molotov,
-	L4D2WeaponType_Pipebomb,
-	L4D2WeaponType_FirstAid,
-	L4D2WeaponType_Pills,
-	L4D2WeaponType_Gascan,
-	L4D2WeaponType_Oxygentank,
-	L4D2WeaponType_Propanetank,
-	L4D2WeaponType_Vomitjar,
-	L4D2WeaponType_Adrenaline,
-	L4D2WeaponType_Chainsaw,
-	L4D2WeaponType_Defibrilator,
-	L4D2WeaponType_GrenadeLauncher,
-	L4D2WeaponType_Melee,
-	L4D2WeaponType_UpgradeFire,
-	L4D2WeaponType_UpgradeExplosive,
-	L4D2WeaponType_BoomerClaw,
-	L4D2WeaponType_ChargerClaw,
-	L4D2WeaponType_HunterClaw,
-	L4D2WeaponType_JockeyClaw,
-	L4D2WeaponType_SmokerClaw,
-	L4D2WeaponType_SpitterClaw,
-	L4D2WeaponType_TankClaw
-}
 
 enum struct esGeneral
 {
@@ -2487,6 +2443,9 @@ public void OnMapEnd()
 
 public void OnPluginEnd()
 {
+	RemoveCommandListener(cmdMTCommandListener, "vocalize");
+	RemoveCommandListener(cmdMTCommandListener, "go_away_from_keyboard");
+
 	vMultiTargetFilters(false);
 	vClearSectionList();
 
@@ -12630,6 +12589,7 @@ public MRESReturn mreVomitedUponPre(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
+#if defined _WeaponHandling_included
 public void WH_OnMeleeSwing(int client, int weapon, float &speedmodifier)
 {
 	speedmodifier = flGetAttackBoost(client, speedmodifier);
@@ -12659,6 +12619,7 @@ public void WH_OnDeployModifier(int client, int weapon, L4D2WeaponType weapontyp
 {
 	speedmodifier = flGetAttackBoost(client, speedmodifier);
 }
+#endif
 
 public void vGameMode(const char[] output, int caller, int activator, float delay)
 {
