@@ -306,7 +306,7 @@
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 	- The ability automatically ends when the targeted survivor becomes incapacitated. (Requested by 3aljiyavslgazana.)
 	- Choked survivors can no longer attack, shove, or use/grab items. (Requested by 3aljiyavslgazana.)
-	- Choked survivors are now teleported to nearby teammates to avoid falling through the map after falling back down.
+	- Switched back to the old method with a more consistent fix. (Thanks to Mi.Cura for the idea!)
 
 - Clone
 	- Clones no longer reward survivors after dying. (Thanks to 3aljiyavslgazana for the idea!)

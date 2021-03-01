@@ -474,6 +474,8 @@
 			// 1: Health reward
 			// - Refill to 100% health
 			// - Automatically kill any current special infected attacker
+			// - Heal back to 100% health with first aid kits.
+			// - Receive 100% temporary health after being revived.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher
@@ -1903,6 +1905,8 @@
 			// 1: Health reward
 			// - Refill to 100% health
 			// - Automatically kill any current special infected attacker
+			// - Heal back to 100% health with first aid kits.
+			// - Receive 100% temporary health after being revived.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher
