@@ -828,7 +828,7 @@
 				"this"		"entity"
 				"arguments"
 				{
-					"target"
+					"healer"
 					{
 						"type"		"cbaseentity"
 					}
