@@ -182,9 +182,11 @@
 	- `Clean Kills Reward` (Thanks to epzminion for the help!)
 	- `Damage Resistance Reward`
 	- `Fall Voiceline Reward`
+	- `Heal Percent Reward` (Thanks to epzminion for the help!)
 	- `Jump Height Reward` (Thanks to epzminion for the help!)
 	- `Melee Range Reward` (Thanks to epzminion for the idea and Silvers for the code!)
 	- `Punch Resistance Reward` (Thanks to Silvers for the code!)
+	- `Revive Health Reward` (Thanks to epzminion for the help!)
 	- `Shove Damage Reward`
 	- `Shove Penalty Reward`
 	- `Shove Rate Reward` (Thanks to epzminion for the help!)
@@ -236,11 +238,13 @@
 	- `Damage Boost Reward`
 	- `Damage Resistance Reward`
 	- `Fall Voiceline Reward`
+	- `Heal Percent Reward`
 	- `Item Reward`
 	- `Jump Height Reward`
 	- `Melee Range Reward`
 	- `Punch Resistance Reward`
 	- `Respawn Loadout Reward`
+	- `Revive Health Reward`
 	- `Shove Damage Reward`
 	- `Shove Penalty Reward`
 	- `Shove Rate Reward`

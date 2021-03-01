@@ -694,12 +694,29 @@
 			// Separate voicelines sets with commas (",").
 			// --
 			// Item sets limit: 3
-			// Character limit for each set: 192
+			// Character limit for each set: 64
 			// --
-			// 1st set = Fall voiceline of killers.
-			// 2nd set = Fall voiceline of assistants.
-			// 3rd set = Fall voiceline of teammates.
+			// 1st set = Fall voiceline for killers.
+			// 2nd set = Fall voiceline for assistants.
+			// 3rd set = Fall voiceline for teammates.
 			"Fall Voiceline Reward"			"PlayerLaugh,PlayerLaugh,PlayerLaugh"
+
+			// The healing percentage from first aid kits to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate percentages with commas (",").
+			// --
+			// Percentages limit: 3
+			// Character limit for each percentage: 1
+			// --
+			// Minimum percentage for each: 0.0 (OFF)
+			// Maximum percentage for each: 100.0 (Highest)
+			// --
+			// 1st number = Heal percentage for killers.
+			// 2nd number = Heal percentage for assistants.
+			// 3rd number = Heal percentage for teammates.
+			"Heal Percent Reward"			"100.0,100.0,100.0"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -758,7 +775,7 @@
 			// Separate resistances with commas (",").
 			// --
 			// Resistances limit: 3
-			// Character limit for each resistance: 9
+			// Character limit for each resistance: 3
 			// --
 			// Minimum value for each resistance: 0.0 (OFF)
 			// Maximum value for each resistance: 1.0 (None)
@@ -784,6 +801,23 @@
 			// 2nd number = Restore loadouts for assistants.
 			// 3rd number = Restore loadouts for teammates.
 			"Respawn Loadout Reward"		"1,1,1"
+
+			// The revive health to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 12
+			// --
+			// Minimum value for each value: 0 (OFF)
+			// Maximum value for each value: 1,000,000 (Highest)
+			// --
+			// 1st number = Health for killers.
+			// 2nd number = Health for assistants.
+			// 3rd number = Health for teammates.
+			"Revive Health Reward"			"100,100,100"
 
 			// The shove damage multiplier against Chargers, Witches, and Tanks to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -2089,12 +2123,29 @@
 			// Separate voicelines sets with commas (",").
 			// --
 			// Item sets limit: 3
-			// Character limit for each set: 192
+			// Character limit for each set: 64
 			// --
-			// 1st set = Fall voiceline of killers.
-			// 2nd set = Fall voiceline of assistants.
-			// 3rd set = Fall voiceline of teammates.
+			// 1st set = Fall voiceline for killers.
+			// 2nd set = Fall voiceline for assistants.
+			// 3rd set = Fall voiceline for teammates.
 			"Fall Voiceline Reward"			""
+
+			// The healing percentage from first aid kits to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate percentages with commas (",").
+			// --
+			// Percentages limit: 3
+			// Character limit for each percentage: 1
+			// --
+			// Minimum percentage for each: 0.0 (OFF)
+			// Maximum percentage for each: 100.0 (Highest)
+			// --
+			// 1st number = Heal percentage for killers.
+			// 2nd number = Heal percentage for assistants.
+			// 3rd number = Heal percentage for teammates.
+			"Heal Percent Reward"			"100.0,100.0,100.0"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2153,7 +2204,7 @@
 			// Separate resistances with commas (",").
 			// --
 			// Resistances limit: 3
-			// Character limit for each resistance: 9
+			// Character limit for each resistance: 3
 			// --
 			// Minimum value for each resistance: 0.0 (OFF)
 			// Maximum value for each resistance: 1.0 (None)
@@ -2179,6 +2230,23 @@
 			// 2nd number = Restore loadouts for assistants.
 			// 3rd number = Restore loadouts for teammates.
 			"Respawn Loadout Reward"		"0,0,0"
+
+			// The revive health to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 12
+			// --
+			// Minimum value for each value: 0 (OFF)
+			// Maximum value for each value: 1,000,000 (Highest)
+			// --
+			// 1st number = Health for killers.
+			// 2nd number = Health for assistants.
+			// 3rd number = Health for teammates.
+			"Revive Health Reward"			"100,100,100"
 
 			// The shove damage multiplier against Chargers, Witches, and Tanks to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
