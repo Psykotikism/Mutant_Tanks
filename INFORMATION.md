@@ -472,10 +472,11 @@
 			// -1: OFF
 			// 0: Random
 			// 1: Health reward (temporary)
-			// - Refill to 100% health
-			// - Automatically kill any current special infected attacker
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
 			// - Heal back to 100% health with first aid kits.
 			// - Receive 100% temporary health after being revived.
+			// - Slowly regenerate back to full health.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher
@@ -488,7 +489,7 @@
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
 			// - Bypass shove penalty
-			// - Shoving Tanks does damage
+			// - Shoving Tanks does damage.
 			// - Faster shove interval
 			// - Faster shoot rate (guns)
 			// - Faster reload rate (guns)
@@ -507,21 +508,21 @@
 			// - Extra clip and magazine size
 			// 32: Item reward
 			// 64: God mode reward (temporary)
-			// - Automatically kill all special infected attackers
-			// - Immune to all types of damage
-			// - Cannot be flung away by Chargers
-			// - Cannot be pushed around
-			// - Cannot be vomited on by Boomers
+			// - Automatically kill all special infected attackers.
+			// - Immune to all types of damage.
+			// - Cannot be flung away by Chargers.
+			// - Cannot be pushed around.
+			// - Cannot be vomited on by Boomers.
 			// - Reduced pushback from Tank punches
-			// - Reduced pushback from hitting Tanks with melee immunity
+			// - Reduced pushback from hitting Tanks with melee immunity.
 			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
 			// 128: Health and ammo refill reward
-			// - Refill to 100% health
-			// - Automatically kill any current special infected attacker
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
 			// - Refill clip to max size
 			// - Refill magazine to max size
 			// 256: Respawn reward
-			// - Respawn and teleport to a teammate
+			// - Respawn and teleport to a teammate.
 			// - Restore previous loadout
 			// 512: Infinite primary ammo reward (temporary)
 			// 1023: All above rewards
@@ -1938,10 +1939,11 @@
 			// -1: OFF
 			// 0: Random
 			// 1: Health reward (temporary)
-			// - Refill to 100% health
-			// - Automatically kill any current special infected attacker
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
 			// - Heal back to 100% health with first aid kits.
 			// - Receive 100% temporary health after being revived.
+			// - Slowly regenerate back to full health.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher
@@ -1954,7 +1956,7 @@
 			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
 			// - Bypass shove penalty
-			// - Shoving Tanks does damage
+			// - Shoving Tanks does damage.
 			// - Faster shove interval
 			// - Faster shoot rate (guns)
 			// - Faster reload rate (guns)
@@ -1973,21 +1975,21 @@
 			// - Extra clip and magazine size
 			// 32: Item reward
 			// 64: God mode reward (temporary)
-			// - Automatically kill all special infected attackers
-			// - Immune to all types of damage
-			// - Cannot be flung away by Chargers
-			// - Cannot be pushed around
-			// - Cannot be vomited on by Boomers
+			// - Automatically kill all special infected attackers.
+			// - Immune to all types of damage.
+			// - Cannot be flung away by Chargers.
+			// - Cannot be pushed around.
+			// - Cannot be vomited on by Boomers.
 			// - Reduced pushback from Tank punches
-			// - Reduced pushback from hitting Tanks with melee immunity
+			// - Reduced pushback from hitting Tanks with melee immunity.
 			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
 			// 128: Health and ammo refill reward
-			// - Refill to 100% health
-			// - Automatically kill any current special infected attacker
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
 			// - Refill clip to max size
 			// - Refill magazine to max size
 			// 256: Respawn reward
-			// - Respawn and teleport to a teammate
+			// - Respawn and teleport to a teammate.
 			// - Restore previous loadout
 			// 512: Infinite primary ammo reward (temporary)
 			// 1023: All above rewards
