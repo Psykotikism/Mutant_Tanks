@@ -3603,19 +3603,19 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	}
 	else if (StrContains(keyword, "action", false) != -1 || StrContains(keyword, "actdur", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevActionDuration = flValue;
+		g_esDeveloper[guest].g_flDevActionDuration = flClamp(flValue, 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "attack", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevAttackBoost = flValue;
+		g_esDeveloper[guest].g_flDevAttackBoost = flClamp(flValue, 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "dmgboost", false) != -1 || StrContains(keyword, "damageboost", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevDamageBoost = flValue;
+		g_esDeveloper[guest].g_flDevDamageBoost = flClamp(flValue, 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "dmgres", false) != -1 || StrContains(keyword, "damageres", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevDamageResistance = flValue;
+		g_esDeveloper[guest].g_flDevDamageResistance = flClamp(flValue, 0.0, 0.99);
 	}
 	else if (StrContains(keyword, "fall", false) != -1 || StrContains(keyword, "scream", false) != -1 || StrContains(keyword, "voice", false) != -1 || StrContains(keyword, "line", false) != -1)
 	{
@@ -3623,15 +3623,15 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	}
 	else if (StrContains(keyword, "heal", false) != -1 || StrContains(keyword, "hppercent", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevHealPercent = flValue;
+		g_esDeveloper[guest].g_flDevHealPercent = flClamp(flValue, 0.0, 100.0);
 	}
 	else if (StrContains(keyword, "regenhp", false) != -1 || StrContains(keyword, "hpregen", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevHealthRegen = RoundToNearest(flValue);
+		g_esDeveloper[guest].g_iDevHealthRegen = iClamp(RoundToNearest(flValue), 0, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "jump", false) != -1 || StrContains(keyword, "height", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevJumpHeight = flValue;
+		g_esDeveloper[guest].g_flDevJumpHeight = flClamp(flValue, 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "loadout", false) != -1 || StrContains(keyword, "weapons", false) != -1)
 	{
@@ -3639,35 +3639,35 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	}
 	else if (StrContains(keyword, "melee", false) != -1 || StrContains(keyword, "range", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevMeleeRange = RoundToNearest(flValue);
+		g_esDeveloper[guest].g_iDevMeleeRange = iClamp(RoundToNearest(flValue), 0, 999999);
 	}
 	else if (StrContains(keyword, "punch", false) != -1 || StrContains(keyword, "force", false) != -1 || StrContains(keyword, "punchres", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevPunchResistance = flValue;
+		g_esDeveloper[guest].g_flDevPunchResistance = flClamp(flValue, 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "revivehp", false))
 	{
-		g_esDeveloper[guest].g_iDevReviveHealth = RoundToNearest(flValue);
+		g_esDeveloper[guest].g_iDevReviveHealth = iClamp(RoundToNearest(flValue), 0, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "rdur", false) != -1 || StrContains(keyword, "rewarddur", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevRewardDuration = flValue;
+		g_esDeveloper[guest].g_flDevRewardDuration = flClamp(flValue, 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "rtypes", false) != -1 || StrContains(keyword, "rewardtypes", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevRewardTypes = RoundToNearest(flValue);
+		g_esDeveloper[guest].g_iDevRewardTypes = iClamp(RoundToNearest(flValue), -1, 2147483647);
 	}
 	else if (StrContains(keyword, "sdmg", false) != -1 || StrContains(keyword, "shovedmg", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevShoveDamage = flValue;
+		g_esDeveloper[guest].g_flDevShoveDamage = flClamp(flValue, 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "srate", false) != -1 || StrContains(keyword, "shoverate", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevShoveRate = flValue;
+		g_esDeveloper[guest].g_flDevShoveRate = flClamp(flValue, 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "speed", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevSpeedBoost = flValue;
+		g_esDeveloper[guest].g_flDevSpeedBoost = flClamp(flValue, 0.0, 999999.0);
 	}
 
 	vDeveloperPanel(guest);
@@ -9428,7 +9428,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						}
 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_HEALTH;
-						g_esPlayer[survivor].g_flHealPercent = g_esCache[tank].g_flHealPercentReward[priority] / 100.0;
+						g_esPlayer[survivor].g_flHealPercent = g_esCache[tank].g_flHealPercentReward[priority];
 						g_esPlayer[survivor].g_iHealthRegen = g_esCache[tank].g_iHealthRegenReward[priority];
 						g_esPlayer[survivor].g_iReviveHealth = g_esCache[tank].g_iReviveHealthReward[priority];
 					}
@@ -13647,28 +13647,28 @@ public Action tTimerRegenerateHealth(Handle timer)
 	static int iHealth, iMaxHealth, iRegen;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (!bIsSurvivor(iSurvivor) || bIsPlayerDisabled(iSurvivor) || g_esPlayer[iSurvivor].g_flRewardTime[0] == -1.0)
+		if (!bIsSurvivor(iSurvivor) || bIsPlayerDisabled(iSurvivor))
 		{
 			continue;
 		}
 
 		bDeveloper = bIsDeveloper(iSurvivor, 6);
 		iRegen = (bDeveloper && g_esDeveloper[iSurvivor].g_iDevHealthRegen > g_esPlayer[iSurvivor].g_iHealthRegen) ? g_esDeveloper[iSurvivor].g_iDevHealthRegen : g_esPlayer[iSurvivor].g_iHealthRegen;
-		if ((!bDeveloper && !(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_HEALTH)) || iRegen == 0)
+		if ((!bDeveloper && (!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_HEALTH) || g_esPlayer[iSurvivor].g_flRewardTime[0] == -1.0)) || iRegen == 0)
 		{
 			continue;
 		}
 
 		iHealth = GetEntProp(iSurvivor, Prop_Data, "m_iHealth");
-		iMaxHealth = GetEntProp(iSurvivor, Prop_Send, "m_iMaxHealth");
-		switch (iHealth + g_esPlayer[iSurvivor].g_iHealthRegen > iMaxHealth)
+		iMaxHealth = GetEntProp(iSurvivor, Prop_Data, "m_iMaxHealth");
+		switch (iHealth + iRegen > iMaxHealth)
 		{
 			case true: SetEntProp(iSurvivor, Prop_Data, "m_iHealth", iMaxHealth);
-			case false: SetEntProp(iSurvivor, Prop_Data, "m_iHealth", iHealth + g_esPlayer[iSurvivor].g_iHealthRegen);
+			case false: SetEntProp(iSurvivor, Prop_Data, "m_iHealth", iHealth + iRegen);
 		}
 
 		flTempHealth = flGetTempHealth(iSurvivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue);
-		flHealth = flTempHealth - g_esPlayer[iSurvivor].g_iHealthRegen;
+		flHealth = flTempHealth - iRegen;
 		vSetTempHealth(iSurvivor, ((flHealth < 0.0) ? 0.0 : flHealth));
 		if (iHealth + flTempHealth > iMaxHealth)
 		{
