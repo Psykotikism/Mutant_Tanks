@@ -589,192 +589,192 @@
 
 	"RewardAmmo"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление боеприпасы{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} боеприпасы{default} за убийство{olive} '{1}'{default}!"
 	}
 
 	"RewardAmmo2"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление боеприпасы{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} боеприпасы{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardAmmo3"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление боеприпасы{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} боеприпасы{default} за помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardAmmoEnd"
 	{
-		"ru"			"Ваше{yellow} усиление боеприпасы{default} закончилось!"
+		"ru"			"Ваш бонус:{yellow} боеприпасы{default} закончился!"
 	}
 
 	"RewardAttackBoost"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление атаки{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление атаки{default} за убийство{olive} '{1}'{default}!"
 	}
 
 	"RewardAttackBoost2"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление атаки{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление атаки{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardAttackBoost3"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление атаки{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление атаки{default} за помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardAttackBoostEnd"
 	{
-		"ru"			"Ваше{yellow} усиление атаки{default} закончилось!"
+		"ru"			"Ваш бонус:{yellow} усиление атаки{default} закончился!"
 	}
 
 	"RewardDamageBoost"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление урона{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление урона{default} за убийство{olive} '{1}'{default}!"
 	}
 
 	"RewardDamageBoost2"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление урона{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление урона{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardDamageBoost3"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление урона{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление урона{default} за помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardDamageBoostEnd"
 	{
-		"ru"			"Ваше{yellow} усиление урона{default} закончилось!"
+		"ru"			"Ваш бонус:{yellow} усиление урона{default} закончился!"
 	}
 
 	"RewardGod"
 	{
-		"ru"			"Вы{default} получили{yellow} режим бога{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} режим бога{default} за убийство{olive} '{1}'{default}!"
 	}
 
 	"RewardGod2"
 	{
-		"ru"			"Вы{default} получили{yellow} режим бога{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} режим бога{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardGod3"
 	{
-		"ru"			"Вы{default} получили{yellow} режим бога{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} режим бога{default} за помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardGodEnd"
 	{
-		"ru"			"Ваш{yellow} режим бога{default} закончился!"
+		"ru"			"Ваш бонус:{yellow} режим бога{default} закончился!"
 	}
 
 	"RewardHealth"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление здоровье{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за убийство{olive} '{1}'{default}!"
 	}
 
 	"RewardHealth2"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление здоровье{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardHealth3"
 	{
-		"ru"			"Вы{default} получили{yellow} усиление здоровье{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardHealthEnd"
 	{
-		"ru"			"Ваше{yellow} усиление здоровье{default} закончилось!"
+		"ru"			"Ваш бонус:{yellow} усиление здоровье{default} закончилось!"
 	}
 
 	"RewardInfAmmo"
 	{
-		"ru"			"Вы{default} получили{yellow} бесконечный боезапас{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за убийство{olive} '{1}'{default}!"
 	}
 
 	"RewardInfAmmo2"
 	{
-		"ru"			"Вы{default} получили{yellow} бесконечный боезапас{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardInfAmmo3"
 	{
-		"ru"			"Вы{default} получили{yellow} бесконечный боезапас{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardInfAmmoEnd"
 	{
-		"ru"			"Ваш{yellow} бесконечный боезапас{default} закончился!"
+		"ru"			"Ваш бонус:{yellow} бесконечный боезапас{default} закончился!"
 	}
 
 	"RewardItem"
 	{
-		"ru"			"Вы{default} получили{yellow} {1}{default} за убийство{olive} {2}{default}!"
+		"ru"			"Вы{default} получили бонус: {yellow} {1}{default} за убийство{olive} '{2}'{default}!"
 	}
 
 	"RewardItem2"
 	{
-		"ru"			"Вы{default} получили{yellow} {1}{default} за наибольшую помощь в убийстве{olive} {2}{default}!"
+		"ru"			"Вы{default} получили бонус: {yellow} {1}{default} за наибольшую помощь в убийстве{olive} '{2}'{default}!"
 	}
 
 	"RewardItem3"
 	{
-		"ru"			"Вы{default} получили{yellow} {1}{default} за помощь в убийстве{olive} {2}{default}!"
+		"ru"			"Вы{default} получили бонус: {yellow} {1}{default} за помощь в убийстве{olive} '{2}'{default}!"
 	}
 
 	"RewardNone"
 	{
-		"ru"			"Вы{default} не нанесли достаточного урона{olive} {1}{default} для какой-либо награды."
+		"ru"			"Вы{default} не нанесли достаточного урона {olive} '{1}'{default} для какой-либо награды."
 	}
 
 	"RewardRefill"
 	{
-		"ru"			"Вы{default} получили{yellow} здоровье и боеприпасы{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} здоровье и боеприпасы{default} за убийство{olive} '{1}'{default}!"
 	}
 
 	"RewardRefill2"
 	{
-		"ru"			"Вы{default} получили{yellow} здоровье и боеприпасы{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} здоровье и боеприпасы{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardRefill3"
 	{
-		"ru"			"Вы{default} получили{yellow} здоровье и боеприпасы{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} здоровье и боеприпасы{default} за помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardRespawn"
 	{
-		"ru"			"Вы{default} получили {yellow} возрождение{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус: {yellow} возрождение{default} за убийство{olive} '{1}'{default}!"
 	}
 
 	"RewardRespawn2"
 	{
-		"ru"			"Вы{default} получили {yellow} возрождение{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус: {yellow} возрождение{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardRespawn3"
 	{
-		"ru"			"Вы{default} получили {yellow} возрождение{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус: {yellow} возрождение{default} за помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardSpeedBoost"
 	{
-		"ru"			"Вы{default} получили{yellow} ускорение{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} ускорение{default} за убийство{olive} '{1}'{default}!"
 	}
 
 	"RewardSpeedBoost2"
 	{
-		"ru"			"Вы{default} получили{yellow} ускорение{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} ускорение{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardSpeedBoost3"
 	{
-		"ru"			"Вы{default} получили{yellow} ускорение{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} ускорение{default} за помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardSpeedBoostEnd"
 	{
-		"ru"			"Ваше{yellow} ускорение{default} закончилось!"
+		"ru"			"Ваш бонус:{yellow} ускорение{default} закончился!"
 	}
 
 	"SpawnMessage"
@@ -1449,57 +1449,57 @@
 
 	"Drug"
 	{
-		"ru"			"{olive}{1}{mint} наложил наркотический эффект на{olive} {2}{mint}!"
+		"ru"			"{olive}{1}{mint} наложил одурманивающий эффект на{olive} {2}{mint}!"
 	}
 
 	"Drug2"
 	{
-		"ru"			"{olive}{1}{mint} больше не под наркотическим эффектом!"
+		"ru"			"{olive}{1}{mint} больше не под одурманивающий эффектом!"
 	}
 
 	"DrugAmmo"
 	{
-		"ru"			"Вы израсходовали все боеприпасы вашей способности наркотического эффекта."
+		"ru"			"Вы израсходовали все боеприпасы вашей способности одурманивающего эффекта."
 	}
 
 	"DrugDetails"
 	{
-		"ru"			"Вы накладываете наркотический эффект на выживших."
+		"ru"			"Вы накладываете одурманивающий эффект на выживших."
 	}
 
 	"DrugHuman"
 	{
-		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности наркотического эффекта!"
+		"ru"			"Вы активировали{olive} {1}{mint}/{olive}{2}{mint} от вашей способности одурманивающего эффекта!"
 	}
 
 	"DrugHuman2"
 	{
-		"ru"			"Не удалось активировать вашу способность наркотического эффекта. Попробуйте снова."
+		"ru"			"Не удалось активировать вашу способность одурманивающего эффекта. Попробуйте снова."
 	}
 
 	"DrugHuman3"
 	{
-		"ru"			"Для вашей способности наркотического эффекта нужно ещё{yellow} {1} сек.{mint} для перезарядки."
+		"ru"			"Для вашей способности одурманивающего эффекта нужно ещё{yellow} {1} сек.{mint} для перезарядки."
 	}
 
 	"DrugHuman4"
 	{
-		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность наркотического эффекта."
+		"ru"			"Рядом нет выживших, на которых можно было бы использовать вашу способность одурманивающего эффекта."
 	}
 
 	"DrugHuman5"
 	{
-		"ru"			"Ваша способность наркотического эффекта закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}"
+		"ru"			"Ваша способность одурманивающего эффекта закончилась, и её нужно перезарядить в течении{yellow} {1} сек.{mint}"
 	}
 
 	"DrugMenu"
 	{
-		"ru"			"Информация о способности наркотического эффекта"
+		"ru"			"Информация о способности одурманивающего эффекта"
 	}
 
 	"DrugMenu2"
 	{
-		"ru"			"Способность наркотического эффекта"
+		"ru"			"Способность одурманивающего эффекта"
 	}
 
 	"Drunk"
@@ -5079,12 +5079,12 @@
 
 	"Tank #16 Name"
 	{
-		"ru"			"Наркоманский танк"
+		"ru"			"Одурманивающий танк"
 	}
 
 	"Tank #16"
 	{
-		"ru"			"{mint}Этот Танк может использовать наркотики на выживших."
+		"ru"			"{mint}Этот Танк может использовать одурманивающие эффекты на выживших."
 	}
 
 	"Tank #17 Name"
@@ -5829,7 +5829,7 @@
 
 	"Tank #91 Name"
 	{
-		"ru"			"Танк ответной реакциии"
+		"ru"			"Танк ответной реакции"
 	}
 
 	"Tank #91"
@@ -5964,7 +5964,7 @@
 
 	"Tank #104"
 	{
-		"ru"			"{mint}Этот Танк может частично использовать наркотики на выживших и переодически вредить выжившим."
+		"ru"			"{mint}Этот Танк может частично использовать одурманивающие эффекты на выживших и переодически вредить выжившим."
 	}
 
 	"Tank #105 Name"
@@ -6009,12 +6009,12 @@
 
 	"Tank #109 Name"
 	{
-		"ru"			"Наркозависимый танк"
+		"ru"			"Одурманивающий танк-заразитель"
 	}
 
 	"Tank #109"
 	{
-		"ru"			"{mint}У этого Танка заразная зависимость."
+		"ru"			"{mint}У этого Танка заразная одурманивающая способность."
 	}
 
 	"Tank #110 Name"
