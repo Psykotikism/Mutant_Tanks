@@ -62,6 +62,7 @@ enum struct esPlayer
 	float g_flChokeHeight;
 	float g_flChokeRange;
 	float g_flChokeRangeChance;
+	float g_flLastPosition[3];
 	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
@@ -293,6 +294,23 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	{
 		FormatEx(buffer, size, "%T", "ChokeMenu2", client);
 	}
+}
+
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		return Plugin_Continue;
+	}
+
+	if (g_esPlayer[client].g_bAffected && ((buttons & IN_ATTACK) || (buttons & IN_ATTACK2) || (buttons & IN_USE)))
+	{
+		buttons &= IN_ATTACK;
+		buttons &= IN_ATTACK2;
+		buttons &= IN_USE;
+	}
+
+	return Plugin_Continue;
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -740,7 +758,7 @@ static void vChokeHit(int survivor, int tank, float random, float chance, int en
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -775,6 +793,7 @@ static void vChokeHit(int survivor, int tank, float random, float chance, int en
 				dpChokeLaunch.WriteCell(messages);
 				dpChokeLaunch.WriteCell(pos);
 
+				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", g_esPlayer[survivor].g_flLastPosition);
 				vEffect(survivor, tank, g_esCache[tank].g_iChokeEffect, flags);
 
 				if (g_esCache[tank].g_iChokeMessage & messages)
@@ -866,7 +885,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || !g_esPlayer[iSurvivor].g_bAffected)
+	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || bIsPlayerDisabled(iSurvivor) || !g_esPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;
@@ -883,14 +902,16 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	int iMessage = pack.ReadCell(), iPos = pack.ReadCell();
+	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 
-	float flOrigin[3];
-	GetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
-	flOrigin[2] += g_esCache[iTank].g_flChokeHeight;
-	SetEntPropVector(iSurvivor, Prop_Send, "m_vecOrigin", flOrigin);
+	float flVelocity[3], flHeight = g_esCache[iTank].g_flChokeHeight;
+	flVelocity[0] = 0.0;
+	flVelocity[1] = 0.0;
+	flVelocity[2] = (flHeight < 300.0) ? (flHeight * (300.0 / flHeight)) : flHeight;
+	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
 	SetEntityGravity(iSurvivor, 0.1);
 
+	int iMessage = pack.ReadCell(), iPos = pack.ReadCell();
 	DataPack dpChokeDamage;
 	CreateDataTimer(1.0, tTimerChokeDamage, dpChokeDamage, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	dpChokeDamage.WriteCell(GetClientUserId(iSurvivor));
@@ -922,7 +943,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
 	iMessage = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) || !g_esPlayer[iSurvivor].g_bAffected)
+	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esPlayer[iTank].g_iTankType, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags) || bIsPlayerDisabled(iSurvivor) || !g_esPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vReset2(iSurvivor, iTank, iMessage);
 
@@ -942,7 +963,6 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	}
 
 	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
-
 	SetEntityMoveType(iSurvivor, MOVETYPE_NONE);
 	SetEntityGravity(iSurvivor, 1.0);
 

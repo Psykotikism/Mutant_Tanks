@@ -143,7 +143,7 @@ public void OnClientPutInServer(int client)
 
 public void OnClientDisconnect(int client)
 {
-	if (bIsSpecialInfected(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_bMinion)
+	if (bIsSpecialInfected(client) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_bMinion)
 	{
 		g_esPlayer[g_esPlayer[client].g_iOwner].g_iCount--;
 		g_esPlayer[client].g_iOwner = 0;
@@ -506,19 +506,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
 		if (MT_IsTankSupported(iInfected, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			for (int iMinion = 1; iMinion <= MaxClients; iMinion++)
-			{
-				if (g_esPlayer[iMinion].g_iOwner == iInfected)
-				{
-					g_esPlayer[iMinion].g_iOwner = 0;
-
-					if (g_esPlayer[iMinion].g_bMinion && g_esCache[iInfected].g_iMinionRemove == 1 && bIsValidClient(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE))
-					{
-						ForcePlayerSuicide(iMinion);
-					}
-				}
-			}
-
+			vRemoveMinions(iInfected);
 			vRemoveMinion(iInfected);
 		}
 		else if (bIsSpecialInfected(iInfected) && g_esPlayer[iInfected].g_bMinion)
@@ -599,6 +587,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
+	vRemoveMinions(tank);
 	vRemoveMinion(tank);
 }
 
@@ -767,6 +756,25 @@ static void vRemoveMinion(int tank)
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCount = 0;
+}
+
+static void vRemoveMinions(int tank)
+{
+	if (g_esCache[tank].g_iMinionRemove == 1)
+	{
+		for (int iMinion = 1; iMinion <= MaxClients; iMinion++)
+		{
+			if (g_esPlayer[iMinion].g_iOwner == tank)
+			{
+				g_esPlayer[iMinion].g_iOwner = 0;
+
+				if (g_esPlayer[iMinion].g_bMinion && bIsValidClient(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+				{
+					ForcePlayerSuicide(iMinion);
+				}
+			}
+		}
+	}
 }
 
 static void vReset()

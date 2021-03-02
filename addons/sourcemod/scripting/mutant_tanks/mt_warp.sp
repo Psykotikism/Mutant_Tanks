@@ -1091,7 +1091,7 @@ static void vWarpRange(int tank)
 
 static bool bIsInsideSaferoom(int survivor)
 {
-	if (g_esGeneral.g_hSDKGetLastKnownArea != null)
+	if (g_esGeneral.g_hSDKGetLastKnownArea != null && g_esGeneral.g_iAttributeFlagsOffset != -1)
 	{
 		int iArea = SDKCall(g_esGeneral.g_hSDKGetLastKnownArea, survivor);
 		if (iArea)

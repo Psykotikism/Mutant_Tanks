@@ -59,6 +59,7 @@ enum struct esPlayer
 	float g_flFragileDamageBoost;
 	float g_flFragileExplosiveMultiplier;
 	float g_flFragileFireMultiplier;
+	float g_flFragileHittableMultiplier;
 	float g_flFragileMeleeMultiplier;
 	float g_flFragileSpeedBoost;
 	float g_flOpenAreasOnly;
@@ -90,6 +91,7 @@ enum struct esAbility
 	float g_flFragileDamageBoost;
 	float g_flFragileExplosiveMultiplier;
 	float g_flFragileFireMultiplier;
+	float g_flFragileHittableMultiplier;
 	float g_flFragileMeleeMultiplier;
 	float g_flFragileSpeedBoost;
 	float g_flOpenAreasOnly;
@@ -117,6 +119,7 @@ enum struct esCache
 	float g_flFragileDamageBoost;
 	float g_flFragileExplosiveMultiplier;
 	float g_flFragileFireMultiplier;
+	float g_flFragileHittableMultiplier;
 	float g_flFragileMeleeMultiplier;
 	float g_flFragileSpeedBoost;
 	float g_flOpenAreasOnly;
@@ -135,12 +138,40 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+Handle g_hSDKShovedBySurvivor;
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_fragile", cmdFragileInfo, "View information about the Fragile ability.");
+
+	GameData gdMutantTanks = new GameData("mutant_tanks");
+	if (gdMutantTanks == null)
+	{
+		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+
+		delete gdMutantTanks;
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnShovedBySurvivor"))
+	{
+		SetFailState("Failed to find signature: CTerrorPlayer::OnShovedBySurvivor");
+
+		delete gdMutantTanks;
+	}
+
+	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+	g_hSDKShovedBySurvivor = EndPrepSDKCall();
+	if (g_hSDKShovedBySurvivor == null)
+	{
+		LogError("%s Your \"CTerrorPlayer::OnShovedBySurvivor\" signature is outdated.", MT_TAG);
+	}
+
+	delete gdMutantTanks;
 
 	if (g_bLateLoad)
 	{
@@ -324,7 +355,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esPlayer[victim].g_bActivated)
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bIsSurvivor(attacker) && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
+			static bool bSurvivor;
+			bSurvivor = bIsSurvivor(attacker);
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
 			}
@@ -341,15 +374,31 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileExplosiveMultiplier;
 			}
-			else if (g_esCache[victim].g_flFragileFireMultiplier > 1.0 && (damagetype & DMG_BURN))
+			else if (g_esCache[victim].g_flFragileFireMultiplier > 1.0 && ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)))
 			{
 				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileFireMultiplier;
+			}
+			else if (g_esCache[victim].g_flFragileHittableMultiplier > 1.0 && (damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable"))
+			{
+				bChanged = true;
+				damage *= g_esCache[victim].g_flFragileHittableMultiplier;
 			}
 			else if (g_esCache[victim].g_flFragileMeleeMultiplier > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
 			{
 				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileMeleeMultiplier;
+
+				if (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_ATTACKBOOST) && GetRandomFloat(0.0, 100.0) <= 15.0 && g_hSDKShovedBySurvivor != null)
+				{
+					static float flTankOrigin[3], flSurvivorOrigin[3], flDirection[3];
+					GetClientAbsOrigin(attacker, flSurvivorOrigin);
+					GetClientAbsOrigin(victim, flTankOrigin);
+					MakeVectorFromPoints(flSurvivorOrigin, flTankOrigin, flDirection);
+					NormalizeVector(flDirection, flDirection);
+					SDKCall(g_hSDKShovedBySurvivor, victim, attacker, flDirection);
+					SetEntPropFloat(victim, Prop_Send, "m_flVelocityModifier", 0.4);
+				}
 			}
 
 			if (bChanged)
@@ -475,6 +524,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iFragileDuration = 5;
 				g_esAbility[iIndex].g_flFragileExplosiveMultiplier = 5.0;
 				g_esAbility[iIndex].g_flFragileFireMultiplier = 3.0;
+				g_esAbility[iIndex].g_flFragileHittableMultiplier = 1.5;
 				g_esAbility[iIndex].g_flFragileMeleeMultiplier = 1.5;
 				g_esAbility[iIndex].g_iFragileMode = 0;
 				g_esAbility[iIndex].g_flFragileSpeedBoost = 1.0;
@@ -503,6 +553,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iFragileDuration = 0;
 					g_esPlayer[iPlayer].g_flFragileExplosiveMultiplier = 0.0;
 					g_esPlayer[iPlayer].g_flFragileFireMultiplier = 0.0;
+					g_esPlayer[iPlayer].g_flFragileHittableMultiplier = 0.0;
 					g_esPlayer[iPlayer].g_flFragileMeleeMultiplier = 0.0;
 					g_esPlayer[iPlayer].g_iFragileMode = 0;
 					g_esPlayer[iPlayer].g_flFragileSpeedBoost = 0.0;
@@ -531,6 +582,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iFragileDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esPlayer[admin].g_iFragileDuration, value, 1, 999999);
 		g_esPlayer[admin].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esPlayer[admin].g_flFragileExplosiveMultiplier, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esPlayer[admin].g_flFragileFireMultiplier, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flFragileHittableMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileHittableMultiplier", "Fragile Hittable Multiplier", "Fragile_Hittable_Multiplier", "hittable", g_esPlayer[admin].g_flFragileHittableMultiplier, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esPlayer[admin].g_flFragileMeleeMultiplier, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_iFragileMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esPlayer[admin].g_iFragileMode, value, 0, 1);
 		g_esPlayer[admin].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esPlayer[admin].g_flFragileSpeedBoost, value, 0.1, 3.0);
@@ -565,6 +617,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iFragileDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esAbility[type].g_iFragileDuration, value, 1, 999999);
 		g_esAbility[type].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esAbility[type].g_flFragileExplosiveMultiplier, value, 1.0, 999999.0);
 		g_esAbility[type].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esAbility[type].g_flFragileFireMultiplier, value, 1.0, 999999.0);
+		g_esAbility[type].g_flFragileHittableMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileHittableMultiplier", "Fragile Hittable Multiplier", "Fragile_Hittable_Multiplier", "hittable", g_esAbility[type].g_flFragileHittableMultiplier, value, 1.0, 999999.0);
 		g_esAbility[type].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esAbility[type].g_flFragileMeleeMultiplier, value, 1.0, 999999.0);
 		g_esAbility[type].g_iFragileMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esAbility[type].g_iFragileMode, value, 0, 1);
 		g_esAbility[type].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esAbility[type].g_flFragileSpeedBoost, value, 0.1, 3.0);
@@ -592,6 +645,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_flFragileDamageBoost = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileDamageBoost, g_esAbility[type].g_flFragileDamageBoost);
 	g_esCache[tank].g_flFragileExplosiveMultiplier = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileExplosiveMultiplier, g_esAbility[type].g_flFragileExplosiveMultiplier);
 	g_esCache[tank].g_flFragileFireMultiplier = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileFireMultiplier, g_esAbility[type].g_flFragileFireMultiplier);
+	g_esCache[tank].g_flFragileHittableMultiplier = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileHittableMultiplier, g_esAbility[type].g_flFragileHittableMultiplier);
 	g_esCache[tank].g_flFragileMeleeMultiplier = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileMeleeMultiplier, g_esAbility[type].g_flFragileMeleeMultiplier);
 	g_esCache[tank].g_iFragileAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFragileAbility, g_esAbility[type].g_iFragileAbility);
 	g_esCache[tank].g_iFragileDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFragileDuration, g_esAbility[type].g_iFragileDuration);

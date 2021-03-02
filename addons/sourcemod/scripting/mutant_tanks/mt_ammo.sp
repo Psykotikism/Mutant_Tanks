@@ -54,7 +54,6 @@ enum struct esPlayer
 {
 	bool g_bFailed;
 	bool g_bNoAmmo;
-	bool g_bRewarded;
 
 	float g_flAmmoChance;
 	float g_flAmmoRange;
@@ -602,14 +601,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
-{
-	if (bIsSurvivor(survivor) && (type & MT_REWARD_INFAMMO))
-	{
-		g_esPlayer[survivor].g_bRewarded = apply;
-	}
-}
-
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
@@ -709,7 +700,7 @@ static void vAmmoHit(int survivor, int tank, float random, float chance, int ena
 
 	static int iSlot;
 	iSlot = GetPlayerWeaponSlot(survivor, 0);
-	if (enabled == 1 && bIsSurvivor(survivor) && !g_esPlayer[survivor].g_bRewarded && iSlot > MaxClients)
+	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE) && iSlot > MaxClients)
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -771,7 +762,6 @@ static void vRemoveAmmo(int tank)
 {
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
-	g_esPlayer[tank].g_bRewarded = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }

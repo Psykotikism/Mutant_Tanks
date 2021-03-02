@@ -659,19 +659,24 @@
 	"RewardAmmo"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition{default} for killing{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} ammunition boost{default} for killing{olive} {1}{default}!"
 	}
 
 	"RewardAmmo2"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition{default} for assisting the most against{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} ammunition boost{default} for assisting the most against{olive} {1}{default}!"
 	}
 
 	"RewardAmmo3"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition{default} for assisting against{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} ammunition boost{default} for assisting against{olive} {1}{default}!"
+	}
+
+	"RewardAmmoEnd"
+	{
+		"en"			"Your{yellow} ammunition boost{default} ended!"
 	}
 
 	"RewardAttackBoost"
@@ -746,19 +751,24 @@
 	"RewardHealth"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health{default} for killing{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} health boost{default} for killing{olive} {1}{default}!"
 	}
 
 	"RewardHealth2"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health{default} for assisting the most against{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} health boost{default} for assisting the most against{olive} {1}{default}!"
 	}
 
 	"RewardHealth3"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} health{default} for assisting against{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} health boost{default} for assisting against{olive} {1}{default}!"
+	}
+
+	"RewardHealthEnd"
+	{
+		"en"			"Your{yellow} health boost{default} ended!"
 	}
 
 	"RewardInfAmmo"
@@ -787,19 +797,19 @@
 	"RewardItem"
 	{
 		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received a(n){yellow} {1}{default} for killing{olive} {2}{default}!"
+		"en"			"You{default} received{yellow} {1}{default} for killing{olive} {2}{default}!"
 	}
 
 	"RewardItem2"
 	{
 		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received a(n){yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
+		"en"			"You{default} received{yellow} {1}{default} for assisting the most against{olive} {2}{default}!"
 	}
 
 	"RewardItem3"
 	{
 		"#format"		"{1:s},{2:t}"
-		"en"			"You{default} received a(n){yellow} {1}{default} for assisting against{olive} {2}{default}!"
+		"en"			"You{default} received{yellow} {1}{default} for assisting against{olive} {2}{default}!"
 	}
 
 	"RewardNone"

@@ -322,7 +322,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 			}
 
-			if (g_esPlayer[attacker].g_bAffected)
+			if (g_esPlayer[attacker].g_bAffected && !MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST))
 			{
 				EmitSoundToAll(SOUND_METAL, victim);
 
@@ -330,7 +330,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					static float flTankPos[3];
 					GetClientAbsOrigin(victim, flTankPos);
-					vPushNearbyEntities(victim, flTankPos);
+
+					switch (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
+					{
+						case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
+						case false: vPushNearbyEntities(victim, flTankPos);
+					}
 				}
 
 				return Plugin_Handled;
@@ -730,7 +735,7 @@ static void vNullifyHit(int survivor, int tank, float random, float chance, int 
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_DAMAGEBOOST))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{

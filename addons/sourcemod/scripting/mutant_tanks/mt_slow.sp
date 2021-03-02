@@ -632,6 +632,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
+public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
+{
+	if (bIsSurvivor(survivor) && apply && (type & MT_REWARD_SPEEDBOOST) && g_esPlayer[survivor].g_bAffected)
+	{
+		vStopSlow(survivor);
+	}
+}
+
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
@@ -688,10 +696,7 @@ static void vRemoveSlow(int tank)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iSurvivor].g_bAffected && g_esPlayer[iSurvivor].g_iOwner == tank)
 		{
-			g_esPlayer[iSurvivor].g_bAffected = false;
-			g_esPlayer[iSurvivor].g_iOwner = 0;
-
-			SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			vStopSlow(iSurvivor);
 		}
 	}
 
@@ -771,7 +776,7 @@ static void vSlowHit(int survivor, int tank, float random, float chance, int ena
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_SPEEDBOOST))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -835,6 +840,15 @@ static void vSlowHit(int survivor, int tank, float random, float chance, int ena
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "SlowAmmo");
 		}
 	}
+}
+
+static void vStopSlow(int survivor)
+{
+	g_esPlayer[survivor].g_bAffected = false;
+	g_esPlayer[survivor].g_iOwner = 0;
+
+	SetEntPropFloat(survivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	EmitSoundToAll(SOUND_DRIP, survivor);
 }
 
 public Action tTimerCombo(Handle timer, DataPack pack)
@@ -902,20 +916,12 @@ public Action tTimerStopSlow(Handle timer, DataPack pack)
 	int iTank = GetClientOfUserId(pack.ReadCell());
 	if (!MT_IsTankSupported(iTank) || !MT_IsCustomTankSupported(iTank) || !g_esPlayer[iSurvivor].g_bAffected)
 	{
-		g_esPlayer[iSurvivor].g_bAffected = false;
-		g_esPlayer[iSurvivor].g_iOwner = 0;
-
-		SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
-		EmitSoundToAll(SOUND_DRIP, iSurvivor);
+		vStopSlow(iSurvivor);
 
 		return Plugin_Stop;
 	}
 
-	g_esPlayer[iSurvivor].g_bAffected = false;
-	g_esPlayer[iSurvivor].g_iOwner = 0;
-
-	SetEntPropFloat(iSurvivor, Prop_Send, "m_flLaggedMovementValue", 1.0);
-	EmitSoundToAll(SOUND_DRIP, iSurvivor);
+	vStopSlow(iSurvivor);
 
 	int iMessage = pack.ReadCell();
 	if (g_esCache[iTank].g_iSlowMessage & iMessage)

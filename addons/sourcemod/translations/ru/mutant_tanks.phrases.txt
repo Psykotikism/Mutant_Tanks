@@ -602,6 +602,11 @@
 		"ru"			"Вы{default} получили бонус:{yellow} боеприпасы{default} за помощь в убийстве{olive} '{1}'{default}!"
 	}
 
+	"RewardAmmoEnd"
+	{
+		"ru"			"Ваш бонус:{yellow} боеприпасы{default} закончился!"
+	}
+
 	"RewardAttackBoost"
 	{
 		"ru"			"Вы{default} получили бонус:{yellow} усиление атаки{default} за убийство{olive} '{1}'{default}!"
@@ -664,17 +669,22 @@
 
 	"RewardHealth"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} здоровье{default} за убийство{olive} '{1}'{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за убийство{olive} '{1}'{default}!"
 	}
 
 	"RewardHealth2"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} здоровье{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardHealth3"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} здоровье{default} за помощь в убийстве{olive} '{1}'{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} усиление здоровья{default} за помощь в убийстве{olive} '{1}'{default}!"
+	}
+
+	"RewardHealthEnd"
+	{
+		"ru"			"Ваш бонус:{yellow} усиление здоровье{default} закончилось!"
 	}
 
 	"RewardInfAmmo"

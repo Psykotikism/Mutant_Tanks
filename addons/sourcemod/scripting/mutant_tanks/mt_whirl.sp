@@ -795,7 +795,7 @@ static void vWhirlHit(int survivor, int tank, float random, float chance, int en
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerHanging(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerHanging(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -971,7 +971,7 @@ public Action tTimerWhirl(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (!bIsHumanSurvivor(iSurvivor))
+	if (!bIsHumanSurvivor(iSurvivor) || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vStopWhirl(iSurvivor, iCamera);
 

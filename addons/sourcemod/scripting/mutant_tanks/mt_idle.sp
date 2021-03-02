@@ -59,9 +59,9 @@ enum struct esGeneral
 	DynamicDetour g_ddIdlePlayerDetour;
 	DynamicDetour g_ddSpecPlayerDetour;
 
-	Handle g_hSDKIdlePlayer;
-	Handle g_hSDKObservePlayer;
-	Handle g_hSDKSpecPlayer;
+	Handle g_hSDKGoAFK;
+	Handle g_hSDKSetObserverTarget;
+	Handle g_hSDKSetHumanSpectator;
 
 	int g_iSurvivorBot;
 }
@@ -181,25 +181,10 @@ public void OnPluginStart()
 		delete gdMutantTanks;
 	}
 
-	g_esGeneral.g_hSDKIdlePlayer = EndPrepSDKCall();
-	if (g_esGeneral.g_hSDKIdlePlayer == null)
+	g_esGeneral.g_hSDKGoAFK = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKGoAFK == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", MT_TAG);
-	}
-
-	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "SurvivorBot::SetHumanSpectator"))
-	{
-		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
-
-		delete gdMutantTanks;
-	}
-
-	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-	g_esGeneral.g_hSDKSpecPlayer = EndPrepSDKCall();
-	if (g_esGeneral.g_hSDKSpecPlayer == null)
-	{
-		LogError("%s Your \"SurvivorBot::SetHumanSpectator\" signature is outdated.", MT_TAG);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -211,10 +196,25 @@ public void OnPluginStart()
 	}
 
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	g_esGeneral.g_hSDKObservePlayer = EndPrepSDKCall();
-	if (g_esGeneral.g_hSDKObservePlayer == null)
+	g_esGeneral.g_hSDKSetObserverTarget = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKSetObserverTarget == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::SetObserverTarget\" offsets are outdated.", MT_TAG);
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "SurvivorBot::SetHumanSpectator"))
+	{
+		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
+
+		delete gdMutantTanks;
+	}
+
+	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+	g_esGeneral.g_hSDKSetHumanSpectator = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKSetHumanSpectator == null)
+	{
+		LogError("%s Your \"SurvivorBot::SetHumanSpectator\" signature is outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
@@ -369,7 +369,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public void OnEntityCreated(int entity, const char[] classname)
 {
-	if (g_esGeneral.g_bApplyFix && classname[0] == 's' && StrEqual(classname, "survivor_bot", false))
+	if (g_esGeneral.g_bApplyFix && StrEqual(classname, "survivor_bot", false))
 	{
 		g_esGeneral.g_iSurvivorBot = entity;
 	}
@@ -410,7 +410,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public MRESReturn mreIdlePlayerPre(int pThis, DHookReturn hReturn)
+public MRESReturn mreIdlePlayerPre(int pThis)
 {
 	if (g_esGeneral.g_bApplyFix)
 	{
@@ -420,18 +420,26 @@ public MRESReturn mreIdlePlayerPre(int pThis, DHookReturn hReturn)
 	g_esGeneral.g_bApplyFix = true;
 }
 
-public MRESReturn mreIdlePlayerPost(int pThis, DHookReturn hReturn)
+public MRESReturn mreIdlePlayerPost(int pThis)
 {
-	if (g_esGeneral.g_bApplyFix && g_esGeneral.g_iSurvivorBot > 0 && !bIsValidClient(g_esGeneral.g_iSurvivorBot, MT_CHECK_FAKECLIENT))
+	int iSurvivor = g_esGeneral.g_iSurvivorBot;
+	if (g_esGeneral.g_bApplyFix && iSurvivor > 0 && !bIsValidClient(iSurvivor, MT_CHECK_FAKECLIENT))
 	{
 		g_esGeneral.g_bIgnoreSpec = true;
 
-		SDKCall(g_esGeneral.g_hSDKSpecPlayer, g_esGeneral.g_iSurvivorBot, pThis);
-		SDKCall(g_esGeneral.g_hSDKObservePlayer, pThis, g_esGeneral.g_iSurvivorBot);
+		if (g_esGeneral.g_hSDKSetHumanSpectator != null)
+		{
+			SDKCall(g_esGeneral.g_hSDKSetHumanSpectator, iSurvivor, pThis);
+		}
 
-		vOfferTakeover(pThis, g_esGeneral.g_iSurvivorBot);
+		if (g_esGeneral.g_hSDKSetObserverTarget != null)
+		{
+			SDKCall(g_esGeneral.g_hSDKSetObserverTarget, pThis, iSurvivor);
+		}
 
-		g_esPlayer[g_esGeneral.g_iSurvivorBot].g_bAffected = false;
+		vOfferTakeover(pThis, iSurvivor);
+
+		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esGeneral.g_bIgnoreSpec = false;
 	}
 
@@ -875,7 +883,7 @@ static void vIdleHit(int survivor, int tank, float random, float chance, int ena
 		return;
 	}
 
-	if (enabled == 1 && bIsHumanSurvivor(survivor) && !bIsPlayerHanging(survivor))
+	if (enabled == 1 && bIsHumanSurvivor(survivor) && !bIsPlayerHanging(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -896,10 +904,10 @@ static void vIdleHit(int survivor, int tank, float random, float chance, int ena
 					}
 				}
 
-				switch (iGetHumanCount() > 1)
+				switch (iGetHumanCount() > 1 || g_esGeneral.g_hSDKGoAFK == null)
 				{
 					case true: FakeClientCommand(survivor, "go_away_from_keyboard");
-					case false: SDKCall(g_esGeneral.g_hSDKIdlePlayer, survivor);
+					case false: SDKCall(g_esGeneral.g_hSDKGoAFK, survivor);
 				}
 
 				if (bIsBotIdle(survivor))

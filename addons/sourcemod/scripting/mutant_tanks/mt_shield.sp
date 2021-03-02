@@ -452,9 +452,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			static bool bBulletDamage, bExplosiveDamage, bFireDamage, bMeleeDamage;
 			bBulletDamage = (damagetype & DMG_BULLET) && (g_esCache[victim].g_iShieldType & MT_SHIELD_BULLET);
 			bExplosiveDamage = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE);
-			bFireDamage = (damagetype & DMG_BURN) && (g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE);
+			bFireDamage = ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE);
 			bMeleeDamage = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE);
-			if (bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
+			if (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST) || bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
 			{
 				g_esPlayer[victim].g_flHealth -= damage;
 				if (g_esCache[victim].g_flShieldHealth == 0.0 || g_esPlayer[victim].g_flHealth < 1.0)
@@ -466,16 +466,21 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 		EmitSoundToAll(SOUND_METAL, victim);
 
-		if (damagetype & DMG_BURN)
+		if ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT))
 		{
 			ExtinguishEntity(victim);
 		}
 
-		if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
+		if (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && !(g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE))
 		{
 			static float flTankPos[3];
 			GetClientAbsOrigin(victim, flTankPos);
-			vPushNearbyEntities(victim, flTankPos);
+
+			switch (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
+			{
+				case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
+				case false: vPushNearbyEntities(victim, flTankPos);
+			}
 		}
 
 		return Plugin_Handled;

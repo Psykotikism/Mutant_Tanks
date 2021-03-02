@@ -55,8 +55,6 @@ enum struct esPlayer
 	bool g_bAffected;
 	bool g_bFailed;
 	bool g_bNoAmmo;
-	bool g_bRewarded;
-	bool g_bRewarded2;
 
 	float g_flBuryBuffer;
 	float g_flBuryChance;
@@ -137,7 +135,7 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKRevivePlayer;
+Handle g_hSDKRevive;
 
 public void OnPluginStart()
 {
@@ -162,8 +160,8 @@ public void OnPluginStart()
 		delete gdMutantTanks;
 	}
 
-	g_hSDKRevivePlayer = EndPrepSDKCall();
-	if (g_hSDKRevivePlayer == null)
+	g_hSDKRevive = EndPrepSDKCall();
+	if (g_hSDKRevive == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::OnRevived\" signature is outdated.", MT_TAG);
 	}
@@ -319,6 +317,23 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	{
 		FormatEx(buffer, size, "%T", "BuryMenu2", client);
 	}
+}
+
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		return Plugin_Continue;
+	}
+
+	if (g_esPlayer[client].g_bAffected && ((buttons & IN_ATTACK) || (buttons & IN_ATTACK2) || (buttons & IN_USE)))
+	{
+		buttons &= IN_ATTACK;
+		buttons &= IN_ATTACK2;
+		buttons &= IN_USE;
+	}
+
+	return Plugin_Continue;
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -663,19 +678,11 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply)
+public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
 {
-	if (bIsSurvivor(survivor))
+	if (bIsSurvivor(survivor) && apply & ((type & MT_REWARD_HEALTH) || (type & MT_REWARD_REFILL) || (type & MT_REWARD_GODMODE)) && g_esPlayer[survivor].g_bAffected)
 	{
-		if (type & MT_REWARD_GODMODE)
-		{
-			g_esPlayer[survivor].g_bRewarded = apply;
-		}
-
-		if (type & MT_REWARD_INFAMMO)
-		{
-			g_esPlayer[survivor].g_bRewarded2 = apply;
-		}
+		vStopBury(survivor, g_esPlayer[survivor].g_iOwner);
 	}
 }
 
@@ -779,7 +786,7 @@ static void vBuryHit(int survivor, int tank, float random, float chance, int ena
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && bIsEntityGrounded(survivor) && !g_esPlayer[survivor].g_bRewarded && !g_esPlayer[survivor].g_bRewarded2)
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && bIsEntityGrounded(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_INFAMMO))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -892,8 +899,6 @@ static void vReset2(int tank)
 	g_esPlayer[tank].g_bAffected = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
-	g_esPlayer[tank].g_bRewarded = false;
-	g_esPlayer[tank].g_bRewarded2 = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 }
@@ -908,9 +913,9 @@ static void vStopBury(int survivor, int tank)
 	flOrigin[2] += g_esCache[tank].g_flBuryHeight;
 	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 
-	if (bIsPlayerIncapacitated(survivor))
+	if (bIsPlayerIncapacitated(survivor) && g_hSDKRevive != null)
 	{
-		SDKCall(g_hSDKRevivePlayer, survivor);
+		SDKCall(g_hSDKRevive, survivor);
 
 		if (g_esCache[tank].g_flBuryBuffer > 0.0)
 		{
@@ -919,7 +924,7 @@ static void vStopBury(int survivor, int tank)
 		}
 	}
 
-	if (!g_esPlayer[survivor].g_bRewarded)
+	if (!MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
 	}
@@ -1005,7 +1010,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!bIsSurvivor(iSurvivor) || !g_esPlayer[iSurvivor].g_bAffected)
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;
@@ -1014,7 +1019,7 @@ public Action tTimerStopBury(Handle timer, DataPack pack)
 	}
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsTankSupported(iTank) || !MT_IsCustomTankSupported(iTank) || !g_esPlayer[iSurvivor].g_bAffected)
+	if (!MT_IsTankSupported(iTank) || !MT_IsCustomTankSupported(iTank))
 	{
 		vStopBury(iSurvivor, iTank);
 

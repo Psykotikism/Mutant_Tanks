@@ -1,11 +1,10 @@
 # Information
 
 ## Notes
-> This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples.
+> This file contains everything you need to know about each ability/setting. Use this guide to learn about every setting/feature available before asking about it or reporting an issue. The original config format will be used for examples. Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
 
-- Visit the [Wiki](https://github.com/Psykotikism/Mutant_Tanks/wiki) for more information, including examples and/or tutorials.
-- Maximum Tank health: 1,000,000 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 87-88 and recompile all the plugins, but expect potential bugs with higher values.) [Default: 65,535]
-- Maximum types: 500 (Increase/decrease the value in the `mutant_tanks.inc` file on line 86 and recompile all the plugins, but expect potential server lag with higher values.)
+- Maximum Tank health: 1,000,000 (Increase/decrease the value in the `mutant_tanks.inc` file on lines 89-90 and recompile all the plugins, but expect potential bugs with higher values.) [Default: 65,535]
+- Maximum types: 500 (Increase/decrease the value in the `mutant_tanks.inc` file on line 88 and recompile all the plugins, but expect potential server lag with higher values.)
 - Most of the settings below can be overridden for each player.
 
 ## Sections
@@ -308,6 +307,13 @@
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			// --
+			// Example: "0-0" (Do not choose from any Mutant Tank types.)
+			// Example: "1-25" (Choose a Mutant Tank type between 1 through 25.)
+			// Example: "50-0" (Automatically change to "0-0" because "50" is higher than "0".)
+			// Example: "1-1000" (Automatically change to "1-500" because "500" is the maximum number of Mutant Tank types allowed.)
+			// Example: "0" (Automatically change to "0-500" because the maximum range is not specified.)
+			// Example: "1000" (Automatically change to "500-500" because the maximum range is not specified and the minimum range exceeds the "500" limit.)
+			// --
 			// 0: OFF, use standard Tanks.
 			// 1-500: ON, the type that will spawn.
 			"Type Range"				"1-500"
@@ -465,15 +471,59 @@
 			// --
 			// -1: OFF
 			// 0: Random
-			// 1: Health reward
+			// 1: Health reward (temporary)
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
+			// - Heal back to 100% health with first aid kits.
+			// - Receive 100% temporary health after being revived.
+			// - Slowly regenerate back to full health.
 			// 2: Speed boost reward (temporary)
+			// - Run faster
+			// - Jump higher
 			// 4: Damage boost reward (temporary)
+			// - Extra damage
+			// - Bypass Tank immunities
+			// - 50% damage resistance
+			// - Extended melee range
+			// - Sledgehammer rounds
+			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
-			// 16: Ammo reward
+			// - Bypass shove penalty
+			// - Shoving Tanks does damage.
+			// - Faster shove interval
+			// - Faster shoot rate (guns)
+			// - Faster reload rate (guns)
+			// - Faster swing rate (melee)
+			// - Faster throw time (throwables)
+			// - Faster revive time
+			// - Faster healing time (first aid kit)
+			// - Faster defib time (defibrillator)
+			// - Faster deploy time (ammo upgrade packs)
+			// - Faster pour time (gas cans)
+			// - Faster delivery time (cola bottles)
+			// - Faster recovery
+			// 16: Ammo reward (temporary)
+			// - Refill clip to max size
+			// - Refill magazine to max size
+			// - Extra clip and magazine size
 			// 32: Item reward
 			// 64: God mode reward (temporary)
+			// - Automatically kill all special infected attackers.
+			// - Immune to all types of damage.
+			// - Cannot be flung away by Chargers.
+			// - Cannot be pushed around.
+			// - Cannot be vomited on by Boomers.
+			// - Reduced pushback from Tank punches
+			// - Reduced pushback from hitting Tanks with melee immunity.
+			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
 			// 128: Health and ammo refill reward
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
+			// - Refill clip to max size
+			// - Refill magazine to max size
 			// 256: Respawn reward
+			// - Respawn and teleport to a teammate.
+			// - Restore previous loadout
 			// 512: Infinite primary ammo reward (temporary)
 			// 1023: All above rewards
 			// 1024-2147483647: Reserved for third-party plugins
@@ -556,6 +606,40 @@
 			// 3rd number = Percentage of damage required for teammate rewards.
 			"Reward Percentage"			"10.0,10.0,10.0"
 
+			// The action duration to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate durations with commas (",").
+			// --
+			// Durations limit: 3
+			// Character limit for each duration: 9
+			// --
+			// Minimum value for each duration: 0.0 (OFF)
+			// Maximum value for each duration: 999999.0 (Slowest)
+			// --
+			// 1st number = Duration for killers.
+			// 2nd number = Duration for assistants.
+			// 3rd number = Duration for teammates.
+			"Action Duration Reward"		"2.0,2.0,2.0"
+
+			// Give ammo boost as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give ammo boost to killers.
+			// 2nd number = Give ammo boost to assistants.
+			// 3rd number = Give ammo boost to teammates.
+			"Ammo Boost Reward"			"1,1,1"
+
 			// The attack boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -565,13 +649,30 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Fastest)
 			// --
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
 			"Attack Boost Reward"			"1.25,1.25,1.25"
+
+			// Give clean kills (no Smoker clouds, Boomer explosions, and Spitter acide puddles) as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give clean kills to killers.
+			// 2nd number = Give clean kills to assistants.
+			// 3rd number = Give clean kills to teammates.
+			"Clean Kills Reward"			"1,1,1"
 
 			// The damage boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -582,13 +683,78 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Strongest)
 			// --
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
 			"Damage Boost Reward"			"1.25,1.25,1.25"
+
+			// The damage resistance to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate resistances with commas (",").
+			// --
+			// Resistances limit: 3
+			// Character limit for each resistance: 9
+			// --
+			// Minimum value for each resistance: 0.0 (OFF)
+			// Maximum value for each resistance: 1.0 (None)
+			// --
+			// 1st number = Resistance for killers.
+			// 2nd number = Resistance for assistants.
+			// 3rd number = Resistance for teammates.
+			"Damage Resistance Reward"		"0.5,0.5,0.5"
+
+			// The voiceline that plays when survivors are falling.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate voicelines sets with commas (",").
+			// --
+			// Item sets limit: 3
+			// Character limit for each set: 64
+			// --
+			// 1st set = Fall voiceline for killers.
+			// 2nd set = Fall voiceline for assistants.
+			// 3rd set = Fall voiceline for teammates.
+			"Fall Voiceline Reward"			"PlayerLaugh,PlayerLaugh,PlayerLaugh"
+
+			// The healing percentage from first aid kits to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate percentages with commas (",").
+			// --
+			// Percentages limit: 3
+			// Character limit for each percentage: 1
+			// --
+			// Minimum percentage for each: 0.0 (OFF)
+			// Maximum percentage for each: 100.0 (Highest)
+			// --
+			// 1st number = Heal percentage for killers.
+			// 2nd number = Heal percentage for assistants.
+			// 3rd number = Heal percentage for teammates.
+			"Heal Percent Reward"			"100.0,100.0,100.0"
+
+			// The amount of health to regenerate per second as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate amounts with commas (",").
+			// --
+			// Amounts limit: 3
+			// Character limit for each amount: 12
+			// --
+			// Minimum value for each amount: 0 (OFF)
+			// Maximum value for each amount: 1,000,000 (Highest)
+			// --
+			// 1st number = Amount for killers.
+			// 2nd number = Amount for assistants.
+			// 3rd number = Amount for teammates.
+			"Health Regen Reward"			"1,1,1"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -604,6 +770,58 @@
 			// 2nd set = Item set to reward assistants.
 			// 3rd set = Item set to reward teammates.
 			"Item Reward"				"first_aid_kit,first_aid_kit,first_aid_kit"
+
+			// The jump height to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: Any value above "150.0" may cause instant death from fall damage.
+			// --
+			// Separate heights with commas (",").
+			// --
+			// Heights limit: 3
+			// Character limit for each height: 9
+			// --
+			// Minimum value for each height: 0.0 (OFF)
+			// Maximum value for each height: 999999.0 (Highest)
+			// --
+			// 1st number = Height for killers.
+			// 2nd number = Height for assistants.
+			// 3rd number = Height for teammates.
+			"Jump Height Reward"			"75.0,75.0,75.0"
+
+			// The melee range to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate ranges with commas (",").
+			// --
+			// Ranges limit: 3
+			// Character limit for each range: 6
+			// --
+			// Minimum value for each range: 0 (OFF)
+			// Maximum value for each range: 999999 (Highest)
+			// --
+			// 1st number = Range for killers.
+			// 2nd number = Range for assistants.
+			// 3rd number = Range for teammates.
+			"Melee Range Reward"			"100,100,100"
+
+			// The punch resistance to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate resistances with commas (",").
+			// --
+			// Resistances limit: 3
+			// Character limit for each resistance: 3
+			// --
+			// Minimum value for each resistance: 0.0 (OFF)
+			// Maximum value for each resistance: 1.0 (None)
+			// --
+			// 1st number = Resistance for killers.
+			// 2nd number = Resistance for assistants.
+			// 3rd number = Resistance for teammates.
+			"Punch Resistance Reward"		"0.25,0.25,0.25"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting can be used for standard Tanks.
@@ -622,6 +840,97 @@
 			// 3rd number = Restore loadouts for teammates.
 			"Respawn Loadout Reward"		"1,1,1"
 
+			// The revive health to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 12
+			// --
+			// Minimum value for each value: 0 (OFF)
+			// Maximum value for each value: 1,000,000 (Highest)
+			// --
+			// 1st number = Health for killers.
+			// 2nd number = Health for assistants.
+			// 3rd number = Health for teammates.
+			"Revive Health Reward"			"100,100,100"
+
+			// The shove damage multiplier against Chargers, Witches, and Tanks to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: The max health of the target will be multiplied by this setting's value.
+			// --
+			// Separate multipliers with commas (",").
+			// --
+			// Multipliers limit: 3
+			// Character limit for each multiplier: 9
+			// --
+			// Minimum value for each multiplier: 0.0 (OFF)
+			// Maximum value for each multiplier: 999999.0 (Strongest)
+			// --
+			// 1st number = Multiplier for killers.
+			// 2nd number = Multiplier for assistants.
+			// 3rd number = Multiplier for teammates.
+			// --
+			// Example: 600 (default Charger health) * 0.025 (shove damage reward) = 15 damage per shove
+			"Shove Damage Reward"			"0.025,0.025,0.025"
+
+			// Remove shove penalty as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Remove shove penalty for killers.
+			// 2nd number = Remove shove penalty for assistants.
+			// 3rd number = Remove shove penalty for teammates.
+			"Shove Penalty Reward"			"1,1,1"
+
+			// The shove rate to reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: The value of "z_gun_swing_interval" will be multiplied by this setting's value.
+			// --
+			// Separate rates with commas (",").
+			// --
+			// Rates limit: 3
+			// Character limit for each rate: 9
+			// --
+			// Minimum value for each rate: 0.0 (OFF)
+			// Maximum value for each rate: 999999.0 (Slowest)
+			// --
+			// 1st number = Rate for killers.
+			// 2nd number = Rate for assistants.
+			// 3rd number = Rate for teammates.
+			// --
+			// Example: 0.7 (default "z_gun_swing_interval" value) * 0.7 (shove rate reward) = 0.49 rate
+			"Shove Rate Reward"			"0.7,0.7,0.7"
+
+			// Give sledgehammer rounds as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give sledgehammer rounds to killers.
+			// 2nd number = Give sledgehammer rounds to assistants.
+			// 3rd number = Give sledgehammer rounds to teammates.
+			"Sledgehammer Rounds Reward"		"1,1,1"
+
 			// The speed boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -631,13 +940,30 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Fastest)
 			// --
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
 			"Speed Boost Reward"			"1.25,1.25,1.25"
+
+			// Give thorns as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give thorns to killers.
+			// 2nd number = Give thorns to assistants.
+			// 3rd number = Give thorns to teammates.
+			"Thorns Reward"			"1,1,1"
 
 			// Include useful reward types depending on the status of the recipient.
 			// Note: This setting can be used for standard Tanks.
@@ -672,11 +998,20 @@
 			"Aggressive Tanks"			"0"
 
 			// (Left 4 Dead 2 only) Survivors will be credited when damaging Mutant Tanks with fire.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be used for standard Tanks.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Credit Igniters"			"1"
+
+			// (Co-Op modes only) Mutant Tanks in ghost mode will be forcefully spawned after this many seconds passes.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be used for standard Tanks.
+			// --
+			// Minimum: 0.0 (OFF)
+			// Maximum: 999999.0
+			"Force Spawn"				"0.0"
 
 			// (Versus modes only) The stasis mode of Mutant Tanks in competitive game modes.
 			// Note: Do not change this setting if you are unsure of how it works.
@@ -687,6 +1022,7 @@
 			"Stasis Mode"				"0"
 
 			// (Survival modes only) The delay in seconds before allowing Mutant Tanks to spawn.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// Minimum: 0.1
 			// Maximum: 999999.0
@@ -817,7 +1153,7 @@
 		}
 		"Enhancements"
 		{
-			// The Mutant Tank can only attack every time this many seconds passes.
+			// Every Mutant Tank can only attack every time this many seconds passes.
 			// Note: Default attack interval is 2.0 seconds.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -833,7 +1169,7 @@
 			// "forever" - 999999 seconds
 			"Attack Interval"			"0.0"
 
-			// The Mutant Tank's claw attacks do this much damage.
+			// Every Mutant Tank's claw attacks do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -847,7 +1183,7 @@
 			// "strongest" - 999999.0 damage
 			"Claw Damage"				"-1.0"
 
-			// The Mutant Tank's hittables do this much damage.
+			// Every Mutant Tank's hittables do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -861,7 +1197,21 @@
 			// "strongest" - 999999.0 damage
 			"Hittable Damage"			"-1.0"
 
-			// The Mutant Tank's rock throws do this much damage.
+			// Every Mutant Tank's punches have this much force.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 force
+			// "weakest" - 1.0 force
+			// "strongest" - 999999.0 force
+			"Punch Force"				"-1.0"
+
+			// Every Mutant Tank's rock throws do this much damage.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -875,7 +1225,7 @@
 			// "strongest" - 999999.0 damage
 			"Rock Damage"				"-1.0"
 
-			// Set the Mutant Tank's run speed.
+			// Set every Mutant Tank's run speed.
 			// Note: Default run speed is 1.0.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -885,7 +1235,7 @@
 			// Maximum: 3.0
 			"Run Speed"				"0.0"
 
-			// The Mutant Tank throws a rock every time this many seconds passes.
+			// Every Mutant Tank throws a rock every time this many seconds passes.
 			// Note: Default throw interval is 5.0 seconds.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
@@ -903,7 +1253,7 @@
 		}
 		"Immunities"
 		{
-			// Give the Mutant Tank bullet immunity.
+			// Give Mutant Tanks bullet immunity.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
 			// --
@@ -911,7 +1261,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Bullet Immunity"			"0"
 
-			// Give the Mutant Tank explosive immunity.
+			// Give Mutant Tanks explosive immunity.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
 			// --
@@ -919,7 +1269,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Explosive Immunity"			"0"
 
-			// Give the Mutant Tank fire immunity.
+			// Give Mutant Tanks fire immunity.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
 			// --
@@ -927,7 +1277,7 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Fire Immunity"				"0"
 
-			// Give the Mutant Tank hittable immunity.
+			// Give Mutant Tanks hittable immunity.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
 			// --
@@ -935,13 +1285,21 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Hittable Immunity"			"0"
 
-			// Give the Mutant Tank melee immunity.
+			// Give Mutant Tanks melee immunity.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Melee Immunity"			"0"
+
+			// Give Mutant Tanks vomit immunity.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Immunities" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Vomit Immunity"			"0"
 		}
 		"Administration"
 		{
@@ -1085,6 +1443,13 @@
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
 			// --
+			// Example: "0-0" (Do not choose from any Mutant Tank types.)
+			// Example: "1-25" (Choose a Mutant Tank type between 1 through 25.)
+			// Example: "50-0" (Automatically change to "0-0" because "50" is higher than "0".)
+			// Example: "1-1000" (Automatically change to "1-500" because "500" is the maximum number of Mutant Tank types allowed.)
+			// Example: "0" (Automatically change to "0-500" because the maximum range is not specified.)
+			// Example: "1000" (Automatically change to "500-500" because the maximum range is not specified and the minimum range exceeds the "500" limit.)
+			// --
 			// 0: OFF, use standard Tanks.
 			// 1-500: ON, the type that will spawn.
 			"Regular Type"				"1-500"
@@ -1122,6 +1487,13 @@
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
+			// --
+			// Example: "0-0" (Do not choose from any Mutant Tank types.)
+			// Example: "1-25" (Choose a Mutant Tank type between 1 through 25.)
+			// Example: "50-0" (Automatically change to "0-0" because "50" is higher than "0".)
+			// Example: "1-1000" (Automatically change to "1-500" because "500" is the maximum number of Mutant Tank types allowed.)
+			// Example: "0" (Automatically change to "0-500" because the maximum range is not specified.)
+			// Example: "1000" (Automatically change to "500-500" because the maximum range is not specified and the minimum range exceeds the "500" limit.)
 			// --
 			// 0: OFF, use standard Tanks.
 			// 1-500: ON, the type that will spawn.
@@ -1550,7 +1922,7 @@
 		}
 		"Rewards"
 		{
-			// Reward survivors for fighting Mutant Tanks.
+			// Reward survivors for fighting the Mutant Tank.
 			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
@@ -1566,15 +1938,59 @@
 			// --
 			// -1: OFF
 			// 0: Random
-			// 1: Health reward
+			// 1: Health reward (temporary)
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
+			// - Heal back to 100% health with first aid kits.
+			// - Receive 100% temporary health after being revived.
+			// - Slowly regenerate back to full health.
 			// 2: Speed boost reward (temporary)
+			// - Run faster
+			// - Jump higher
 			// 4: Damage boost reward (temporary)
+			// - Extra damage
+			// - Bypass Tank immunities
+			// - 50% damage resistance
+			// - Extended melee range
+			// - Sledgehammer rounds
+			// - Protected by thorns (deal damage towards attacker per hit taken)
 			// 8: Attack boost reward (temporary)
-			// 16: Ammo reward
+			// - Bypass shove penalty
+			// - Shoving Tanks does damage.
+			// - Faster shove interval
+			// - Faster shoot rate (guns)
+			// - Faster reload rate (guns)
+			// - Faster swing rate (melee)
+			// - Faster throw time (throwables)
+			// - Faster revive time
+			// - Faster healing time (first aid kit)
+			// - Faster defib time (defibrillator)
+			// - Faster deploy time (ammo upgrade packs)
+			// - Faster pour time (gas cans)
+			// - Faster delivery time (cola bottles)
+			// - Faster recovery
+			// 16: Ammo reward (temporary)
+			// - Refill clip to max size
+			// - Refill magazine to max size
+			// - Extra clip and magazine size
 			// 32: Item reward
 			// 64: God mode reward (temporary)
+			// - Automatically kill all special infected attackers.
+			// - Immune to all types of damage.
+			// - Cannot be flung away by Chargers.
+			// - Cannot be pushed around.
+			// - Cannot be vomited on by Boomers.
+			// - Reduced pushback from Tank punches
+			// - Reduced pushback from hitting Tanks with melee immunity.
+			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
 			// 128: Health and ammo refill reward
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
+			// - Refill clip to max size
+			// - Refill magazine to max size
 			// 256: Respawn reward
+			// - Respawn and teleport to a teammate.
+			// - Restore previous loadout
 			// 512: Infinite primary ammo reward (temporary)
 			// 1023: All above rewards
 			// 1024-2147483647: Reserved for third-party plugins
@@ -1584,7 +2000,7 @@
 			// 3rd number = Enable rewards for teammates.
 			"Reward Enabled"			"-1,-1,-1"
 
-			// The chance to reward survivors for killing Mutant Tanks.
+			// The chance to reward survivors for killing the Mutant Tank.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -1657,6 +2073,40 @@
 			// 3rd number = Percentage of damage required for teammate rewards.
 			"Reward Percentage"			"0.0,0.0,0.0"
 
+			// The action duration to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate durations with commas (",").
+			// --
+			// Durations limit: 3
+			// Character limit for each duration: 9
+			// --
+			// Minimum value for each duration: 0.0 (OFF)
+			// Maximum value for each duration: 999999.0 (Slowest)
+			// --
+			// 1st number = Duration for killers.
+			// 2nd number = Duration for assistants.
+			// 3rd number = Duration for teammates.
+			"Action Duration Reward"		"0.0,0.0,0.0"
+
+			// Give ammo boost as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give ammo boost to killers.
+			// 2nd number = Give ammo boost to assistants.
+			// 3rd number = Give ammo boost to teammates.
+			"Ammo Boost Reward"			"0,0,0"
+
 			// The attack boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -1666,13 +2116,30 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Fastest)
 			// --
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
 			"Attack Boost Reward"			"0.0,0.0,0.0"
+
+			// Give clean kills (no Smoker clouds, Boomer explosions, and Spitter acide puddles) as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give clean kills to killers.
+			// 2nd number = Give clean kills to assistants.
+			// 3rd number = Give clean kills to teammates.
+			"Clean Kills Reward"			"0,0,0"
 
 			// The damage boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -1683,13 +2150,78 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Strongest)
 			// --
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
 			"Damage Boost Reward"			"0.0,0.0,0.0"
+
+			// The damage resistance to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate resistances with commas (",").
+			// --
+			// Resistances limit: 3
+			// Character limit for each resistance: 9
+			// --
+			// Minimum value for each resistance: 0.0 (OFF)
+			// Maximum value for each resistance: 1.0 (None)
+			// --
+			// 1st number = Resistance for killers.
+			// 2nd number = Resistance for assistants.
+			// 3rd number = Resistance for teammates.
+			"Damage Resistance Reward"		"0.0,0.0,0.0"
+
+			// The voiceline that plays when survivors are falling.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate voicelines sets with commas (",").
+			// --
+			// Item sets limit: 3
+			// Character limit for each set: 64
+			// --
+			// 1st set = Fall voiceline for killers.
+			// 2nd set = Fall voiceline for assistants.
+			// 3rd set = Fall voiceline for teammates.
+			"Fall Voiceline Reward"			""
+
+			// The healing percentage from first aid kits to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate percentages with commas (",").
+			// --
+			// Percentages limit: 3
+			// Character limit for each percentage: 1
+			// --
+			// Minimum percentage for each: 0.0 (OFF)
+			// Maximum percentage for each: 100.0 (Highest)
+			// --
+			// 1st number = Heal percentage for killers.
+			// 2nd number = Heal percentage for assistants.
+			// 3rd number = Heal percentage for teammates.
+			"Heal Percent Reward"			"0.0,0.0,0.0"
+
+			// The amount of health to regenerate per second as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate amounts with commas (",").
+			// --
+			// Amounts limit: 3
+			// Character limit for each amount: 12
+			// --
+			// Minimum value for each amount: 0 (OFF)
+			// Maximum value for each amount: 1,000,000 (Highest)
+			// --
+			// 1st number = Amount for killers.
+			// 2nd number = Amount for assistants.
+			// 3rd number = Amount for teammates.
+			"Health Regen Reward"			"0,0,0"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -1705,6 +2237,58 @@
 			// 2nd set = Item set to reward assistants.
 			// 3rd set = Item set to reward teammates.
 			"Item Reward"				""
+
+			// The jump height to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: Any value above "150.0" may cause instant death from fall damage.
+			// --
+			// Separate heights with commas (",").
+			// --
+			// Heights limit: 3
+			// Character limit for each height: 9
+			// --
+			// Minimum value for each height: 0.0 (OFF)
+			// Maximum value for each height: 999999.0 (Highest)
+			// --
+			// 1st number = Height for killers.
+			// 2nd number = Height for assistants.
+			// 3rd number = Height for teammates.
+			"Jump Height Reward"			"0.0,0.0,0.0"
+
+			// The melee range to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate ranges with commas (",").
+			// --
+			// Ranges limit: 3
+			// Character limit for each range: 6
+			// --
+			// Minimum value for each range: 0 (OFF)
+			// Maximum value for each range: 999999 (Highest)
+			// --
+			// 1st number = Range for killers.
+			// 2nd number = Range for assistants.
+			// 3rd number = Range for teammates.
+			"Melee Range Reward"			"0,0,0"
+
+			// The punch resistance to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate resistances with commas (",").
+			// --
+			// Resistances limit: 3
+			// Character limit for each resistance: 3
+			// --
+			// Minimum value for each resistance: 0.0 (OFF)
+			// Maximum value for each resistance: 1.0 (None)
+			// --
+			// 1st number = Resistance for killers.
+			// 2nd number = Resistance for assistants.
+			// 3rd number = Resistance for teammates.
+			"Punch Resistance Reward"		"0.0,0.0,0.0"
 
 			// Restore the previous loadouts of survivors after respawning them.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -1723,6 +2307,97 @@
 			// 3rd number = Restore loadouts for teammates.
 			"Respawn Loadout Reward"		"0,0,0"
 
+			// The revive health to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 12
+			// --
+			// Minimum value for each value: 0 (OFF)
+			// Maximum value for each value: 1,000,000 (Highest)
+			// --
+			// 1st number = Health for killers.
+			// 2nd number = Health for assistants.
+			// 3rd number = Health for teammates.
+			"Revive Health Reward"			"0,0,0"
+
+			// The shove damage multiplier against Chargers, Witches, and Tanks to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: The max health of the target will be multiplied by this setting's value.
+			// --
+			// Separate multipliers with commas (",").
+			// --
+			// Multipliers limit: 3
+			// Character limit for each multiplier: 9
+			// --
+			// Minimum value for each multiplier: 0.0 (OFF)
+			// Maximum value for each multiplier: 999999.0 (Strongest)
+			// --
+			// 1st number = Multiplier for killers.
+			// 2nd number = Multiplier for assistants.
+			// 3rd number = Multiplier for teammates.
+			// --
+			// Example: 600 (default Charger health) * 0.025 (shove damage reward) = 15 damage per shove
+			"Shove Damage Reward"			"0.0,0.0,0.0"
+
+			// Remove shove penalty as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Remove shove penalty for killers.
+			// 2nd number = Remove shove penalty for assistants.
+			// 3rd number = Remove shove penalty for teammates.
+			"Shove Penalty Reward"			"0,0,0"
+
+			// The shove rate to reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: The value of "z_gun_swing_interval" will be multiplied by this setting's value.
+			// --
+			// Separate rates with commas (",").
+			// --
+			// Rates limit: 3
+			// Character limit for each rate: 9
+			// --
+			// Minimum value for each rate: 0.0 (OFF)
+			// Maximum value for each rate: 999999.0 (Slowest)
+			// --
+			// 1st number = Rate for killers.
+			// 2nd number = Rate for assistants.
+			// 3rd number = Rate for teammates.
+			// --
+			// Example: 0.7 (default "z_gun_swing_interval" value) * 0.7 (shove rate reward) = 0.49 rate
+			"Shove Rate Reward"			"0.0,0.0,0.0"
+
+			// Give sledgehammer rounds as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give sledgehammer rounds to killers.
+			// 2nd number = Give sledgehammer rounds to assistants.
+			// 3rd number = Give sledgehammer rounds to teammates.
+			"Sledgehammer Rounds Reward"		"0,0,0"
+
 			// The speed boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -1732,13 +2407,30 @@
 			// Boosts limit: 3
 			// Character limit for each boost: 9
 			// --
-			// Minimum value for each boost: 1.1
+			// Minimum value for each boost: 0.0 (OFF)
 			// Maximum value for each boost: 999999.0 (Fastest)
 			// --
 			// 1st number = Boost for killers.
 			// 2nd number = Boost for assistants.
 			// 3rd number = Boost for teammates.
 			"Speed Boost Reward"			"0.0,0.0,0.0"
+
+			// Give thorns as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give thorns to killers.
+			// 2nd number = Give thorns to assistants.
+			// 3rd number = Give thorns to teammates.
+			"Thorns Reward"			"0,0,0"
 
 			// Include useful reward types depending on the status of the recipient.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2666,6 +3358,20 @@
 			// "strongest" - 999999.0 damage
 			"Hittable Damage"			"-1.0"
 
+			// The Mutant Tank's punches have this much force.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// OFF: -1.0
+			// Minimum: 0.0
+			// Maximum: 999999.0
+			// --
+			// Keywords:
+			// "nodmg"/"friendly"/"harmless" - 0.0 force
+			// "weakest" - 1.0 force
+			// "strongest" - 999999.0 force
+			"Punch Force"				"-1.0"
+
 			// The Mutant Tank's rock throws do this much damage.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
@@ -2747,6 +3453,14 @@
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Melee Immunity"			"0"
+
+			// Give the Mutant Tank vomit immunity.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Immunities" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Vomit Immunity"			"0"
 		}
 	}
 }
@@ -2921,6 +3635,16 @@
 			// Minimum: 1.0
 			// Maximum: 999999.0
 			"Absorb Fire Divisor"			"200.0"
+
+			// The hittable damage received by the Mutant Tank is divided by this value.
+			// Note: Damage = Hittable damage/Absorb hittable divisor
+			// Example: Damage = 30.0/20.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Hittable damage/1.0 = Hittable damage)
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0
+			// Maximum: 999999.0
+			"Absorb Hittable Divisor"		"20.0"
 
 			// The melee damage received by the Mutant Tank is divided by this value.
 			// Note: Damage = Melee damage/Absorb melee divisor
@@ -4983,7 +5707,7 @@
 			// 1: ON, the clone can use abilities like real Mutant Tanks.
 			"Clone Mode"				"0"
 
-			// Remove all clones created by the Mutant Tank when it dies.
+			// Remove all clones created by the Mutant Tank when it dies or changes its Mutant Tank type.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -5011,6 +5735,13 @@
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
+			// --
+			// Example: "0-0" (Do not choose from any Mutant Tank types.)
+			// Example: "1-25" (Choose a Mutant Tank type between 1 through 25.)
+			// Example: "50-0" (Automatically change to "0-0" because "50" is higher than "0".)
+			// Example: "1-1000" (Automatically change to "1-500" because "500" is the maximum number of Mutant Tank types allowed.)
+			// Example: "0" (Automatically change to "0-500" because the maximum range is not specified.)
+			// Example: "1000" (Automatically change to "500-500" because the maximum range is not specified and the minimum range exceeds the "500" limit.)
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-500: ON, the type of the clone.
@@ -7285,6 +8016,16 @@
 			// Maximum: 999999.0
 			"Fragile Fire Multiplier"		"3.0"
 
+			// The hittable damage received by the Mutant Tank is multiplied by this value.
+			// Note: Damage = Hittable damage x Fragile hittable multiplier
+			// Example: Damage = 100.0 x 1.5 (150.0)
+			// Note: Use the value "1.0" to disable this setting. (Hittable damage x 1.0 = Hittable damage)
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0
+			// Maximum: 999999.0
+			"Fragile Hittable Multiplier"		"1.5"
+
 			// The melee damage received by the Mutant Tank is multiplied by this value.
 			// Note: Damage = Melee damage x Fragile melee multiplier
 			// Example: Damage = 100.0 x 1.5 (150.0)
@@ -8929,6 +9670,16 @@
 			// "survivor"/"hurt" - 2
 			"Hypno Hit Mode"			"0"
 
+			// The hittable damage reflected towards survivors by the Mutant Tank is divided by this value.
+			// Note: Damage = Hittable damage/Hypno hittable divisor
+			// Example: Damage = 30.0/20.0 (1.5)
+			// Note: Use the value "1.0" to disable this setting. (Hittable damage/1.0 = Hittable damage)
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Minimum: 1.0
+			// Maximum: 999999.0
+			"Hypno Hittable Divisor"		"20.0"
+
 			// The melee damage reflected towards survivors by the Mutant Tank is divided by this value.
 			// Note: Damage = Melee damage/Hypno melee divisor
 			// Example: Damage = 300.0/200.0 (1.5)
@@ -9218,7 +9969,6 @@
 		// - "Idle Chance"
 		// - "Idle Hit Mode"
 		// Requires "mt_idle.smx" to be installed.
-		// Requires DHooks to be installed.
 		"Idle Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -11609,7 +12359,7 @@
 			// "forever"/"death" - 999999 seconds
 			"Minion Lifetime"			"0.0"
 
-			// Remove all minions spawned by the Mutant Tank when it dies.
+			// Remove all minions spawned by the Mutant Tank when it dies or changes its Mutant Tank type.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -13609,7 +14359,6 @@
 	{
 		// The Mutant Tank respawns upon death.
 		// Requires "mt_respawn.smx" to be installed.
-		// Requires DHooks to be installed.
 		"Respawn Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -13719,6 +14468,13 @@
 			// --
 			// 1st number = Minimum value
 			// 2nd number = Maximum value
+			// --
+			// Example: "0-0" (Do not choose from any Mutant Tank types.)
+			// Example: "1-25" (Choose a Mutant Tank type between 1 through 25.)
+			// Example: "50-0" (Automatically change to "0-0" because "50" is higher than "0".)
+			// Example: "1-1000" (Automatically change to "1-500" because "500" is the maximum number of Mutant Tank types allowed.)
+			// Example: "0" (Automatically change to "0-500" because the maximum range is not specified.)
+			// Example: "1000" (Automatically change to "500-500" because the maximum range is not specified and the minimum range exceeds the "500" limit.)
 			// --
 			// 0: OFF, use the randomization feature.
 			// 1-500: ON, the type to respawn as.
@@ -16568,7 +17324,7 @@
 			// 64: Tank
 			"Throw Infected Options"		"0"
 
-			// Remove all special infected thrown by the Mutant Tank when it dies.
+			// Remove all special infected thrown by the Mutant Tank when it dies or changes its Mutant Tank type.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -16608,7 +17364,7 @@
 			// "forever"/"death" - 999999 seconds
 			"Throw Witch Lifetime"			"0.0"
 
-			// Remove all Witches thrown by the Mutant Tank when it dies.
+			// Remove all Witches thrown by the Mutant Tank when it dies or changes its Mutant Tank type.
 			// Note: This setting can be overridden for specific players.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -18057,7 +18813,7 @@
 			// "farthest" - 999999.0 range
 			"Witch Range"				"500.0"
 
-			// Remove all Witches spawned by the Mutant Tank when it dies.
+			// Remove all Witches spawned by the Mutant Tank when it dies or changes its Mutant Tank type.
 			// Note: This setting spawns a Witch on the Mutant Tank's corpse if it is set to "0".
 			// Note: This setting can be overridden for specific players.
 			// --

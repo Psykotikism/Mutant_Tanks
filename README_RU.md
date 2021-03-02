@@ -41,10 +41,8 @@
 ## Требования
 1. `SourceMod 1.11.0.6511` или выше
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
-4. Рекомендуется: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
-5. Необязательно: [VScript File Replacer](https://forums.alliedmods.net/showthread.php?t=318024)
-6. Терпение и знания по установке SourceMod плагинов.
+3. Рекомендуется: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
+4. Знания по установке SourceMod плагинов.
 
 ## Примечание
 1. Я не предоставляю поддержку для выделенного/локальных серверов, но плагин и его модули должны работать на них должным образом.
@@ -119,7 +117,7 @@ mt_pluginenabled "1"
 ```
 
 ## Настройки KeyValues
-> Просмотрите файл [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) для получения информации о каждой доступной настройке. (Более 1400 вариантов для настройки!)
+> Просмотрите файл [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) для получения информации о каждой доступной настройке. (Более 1,400 вариантов для настройки!)
 
 ## Пользовательские файлы конфигурации
 > Танки-мутанты имеет функции, позволяющие создавать и выполнять собственные файлы конфигурации.
@@ -152,7 +150,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #1"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -173,7 +171,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #1"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -194,7 +192,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #1"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -215,7 +213,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #1"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -238,7 +236,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #1"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -824,6 +822,26 @@ forward void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer
 forward void MT_OnMenuItemSelected(int client, const char[] info);
 
 /**
+ * Вызывается прямо перед смертью игрока.
+ * Используйте этот форвард, чтобы сделать что-нибудь, прежде чем игрок умрет.
+ *
+ * @param victim		Клиентский индекс умирающего игрока.
+ * @param attacker		Клиентский индекс убийцы.
+ **/
+forward void MT_OnPlayerEventKilled(int victim, int attacker);
+
+/**
+ * Вызывается непосредственно перед попаданием в игрока желчной бомбы (банку с рвотой).
+ * Используйте это форвард, чтобы сделать что-нибудь, прежде чем игрок получит удар.
+ *
+ * @param player		Клиентский индекс пораженного игрока.
+ * @param thrower		Клиентский индекс выжившего, бросившего желчную бомбу (банку с рвотой).
+ *
+ * @return			Plugin_Handled, чтобы игрок не попал, Plugin_Continue, чтобы разрешить.
+ **/
+forward Action MT_OnPlayerHitByVomitJar(int player, int thrower);
+
+/**
  * Вызывается перед чтением файла конфигурации.
  * Используйте этот forward, чтобы официально зарегистрировать плагин способности.
  *
@@ -866,8 +884,10 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param priority		1 = Убийца, 2 = Помощник в убийстве, который причинил наибольший ущерб, 3 = Товарищ по команде, который помог
  * @param duration		Срок действия награды.
  * @param apply			True, если награда дана, в противном случае - false.
+ *
+ * @return			Plugin_Handled, чтобы предотвратить выдачу или окончание награды, Plugin_Continue, чтобы разрешить.
  **/
-forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply);
+forward Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply);
 
 /**
  * Вызывается, когда камень танка-мутанта ломается.
@@ -919,6 +939,7 @@ Native'ы:
  * Возвращается, если может появиться определённый тип танка-мутанта.
  *
  * @param type			Тип танка-мутанта.
+ *
  * @return			True, если тип может появляться, иначе - false.
  * @error			Тип 0 или меньше.
  **/
@@ -928,14 +949,28 @@ native bool MT_CanTypeSpawn(int type);
  * Взрывает камень Танка на следующем кадре.
  *
  * @param rock			Индекс энтити камня.
+ *
  * @error			Недействительный индекс энтити.
  **/
 native void MT_DetonateTankRock(int rock);
 
 /**
+ * Возвращается, если у определенного выжившего активен тип награды.
+ *
+ * @param survivor		Клиентский индекс Выжившего.
+ * @param type			1 = Здоровье, 2 = Усилитель урона, 4 = Скорость, 8 = Боеприпасы, 16 = Предмет, 32 = Режим бога, 64 = Пополнение здоровья и боеприпасов, 128 = Возрождение,
+ *					255 = Все восемь наград, 256-2147483647 = Зарезервировано для сторонних плагинов
+ *
+ * @return			True, если у Выжившего активен тип награды, в противном случае - false.
+ * @error			Неверный индекс клиента, клиент не в игре, или тип 0 или меньше.
+ **/
+native bool MT_DoesSurvivorHaveRewardType(int survivor, int type);
+
+/**
  * Возвращается, если для эффективности определённого типа танка-мутанта требуется присутствие Выживших, контролируемых человеком.
  *
  * @param type			Тип танка-мутанта.
+ *
  * @return			True, если тип требует присутствия выживших, контролируемых человеком, в противном случае - false.
  * @error			Тип 0 или меньше.
  **/
@@ -947,6 +982,7 @@ native bool MT_DoesTypeRequireHumans(int type);
  * @param mode			1 = Глобальные флаги, 2 = Типовые флаги, 3 = Флаги глобального администратора, 4 = Флаги администратора для конкретных типов
  * @param type			Тип танка-мутанта. (Необязательно)
  * @param admin			Клиентский индекс админа. (Необязательно)
+ *
  * @return			Текущие флаги доступа.
  * @error			Неверный индекс клиента, клиент не в игре, клиент - бот или тип 0 или меньше.
  **/
@@ -959,6 +995,7 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
  * @param type			1 = Шанс, 2 = Урон, 3 = Задержка, 4 = Продолжительность, 5 = Интервал, 6 = Мин. радиус, 7 = Макс. радиус,
  *					8 = Радиус, 9 = Шанс радиуса, 10 = Радиус смерти, 11 = Шанс радиуса смерти, 12 = Шанс камня, 13 = Скорость
  * @param pos			Позиция в массиве параметров, из которой нужно получить значение. (0-9)
+ *
  * @return			Значение, сохранённое в настройке.
  * @error			Неверный индекс клиента или клиента нет в игре.
  **/
@@ -976,6 +1013,7 @@ native int MT_GetCurrentFinaleWave();
  *
  * @param tank			Клиентский индекс Танка.
  * @param mode			True, если ищется максимальный диапазон, в противном случае - false.
+ *
  * @return			Диапазон светящегося контура танка.
  * @error			Неверный индекс клиента или клиента нет в игре.
  **/
@@ -985,6 +1023,7 @@ native int MT_GetGlowRange(int tank, bool mode);
  * Возвращает тип светящегося контура танка-мутанта.
  *
  * @param tank			Клиентский индекс Танка.
+ *
  * @return			Тип светящегося контура танка.
  * @error			Неверный индекс клиента или клиента нет в игре.
  **/
@@ -996,6 +1035,7 @@ native int MT_GetGlowType(int tank);
  * @param mode			1 = Глобальные флаги, 2 = Типовые флаги, 3 = Флаги глобального администратора, 4 = Флаги администратора для конкретных типов
  * @param type			Тип танка-мутанта. (Необязательно)
  * @param admin			Клиентский индекс админа. (Необязательно)
+ *
  * @return			Текущие флаги иммунитета.
  * @error			Неверный индекс клиента, клиент не в игре, клиент - бот или тип 0 или меньше.
  **/
@@ -1025,6 +1065,7 @@ native int MT_GetMinType();
  * @param green			Отсылка зелёного цвета.
  * @param blue			Отсылка синего цвета.
  * @param alpha			Отсылка альфа-цвета.
+ *
  * @error			Неверный индекс клиента, клиент не в игре, или тип меньше 1 или больше 8.
  **/
 native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
@@ -1033,6 +1074,7 @@ native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue
  * Возвращает скорость бега танка-мутанта.
  *
  * @param tank			Клиентский индекс Танка.
+ *
  * @return			Скорость бега Танка.
  * @error			Неверный индекс клиента или клиента нет в игре.
  **/
@@ -1042,6 +1084,7 @@ native float MT_GetRunSpeed(int tank);
  * Возвращает увеличиваемый урон в зависимости от сложности.
  *
  * @param damage		Базовый увеличиваемый урон.
+ *
  * @return			Увеличиваемый урон в зависимости от сложности.
  **/
 native float MT_GetScaledDamage(float damage);
@@ -1050,6 +1093,7 @@ native float MT_GetScaledDamage(float damage);
  * Возвращает тип возрождения танка-мутанта.
  *
  * @param tank			Клиентский индекс Танка.
+ *
  * @return			Тип возрождения Танка.
  *					0 = Обычный, 1 = Босс, 2 = Случайно, 3 = Трансформация, 4 = Комбинированные способности
  * @error			Неверный индекс клиента, клиент не в игре или клиент - человек.
@@ -1065,6 +1109,7 @@ native int MT_GetSpawnType(int tank);
  * @param green			Отсылка зелёного цвета.
  * @param blue			Отсылка синего цвета.
  * @param alpha			Отсылка альфа-цвета.
+ *
  * @error			Неверный индекс клиента, клиент не в игре или тип меньше 1 или больше 2.
  **/
 native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
@@ -1074,6 +1119,7 @@ native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue
  *
  * @param tank			Клиентский индекс Танка.
  * @param buffer		Буфер для хранения пользовательского имени.
+ *
  * @error			Неверный индекс клиента или клиента нет в игре.
  **/
 native void MT_GetTankName(int tank, char[] buffer);
@@ -1082,6 +1128,7 @@ native void MT_GetTankName(int tank, char[] buffer);
  * Возвращает тип танка-мутанта.
  *
  * @param tank			Клиентский индекс Танка.
+ *
  * @return			Тип танка-мутанта.
  * @error			Неверный индекс клиента или клиента нет в игре.
  **/
@@ -1091,6 +1138,7 @@ native int MT_GetTankType(int tank);
  * Возвращает, если игрок-человек имеет доступ к типу танка-мутанта.
  *
  * @param admin			Клиентский индекс админа.
+ *
  * @return			True, если доступ есть у игрока-человека, в противном случае - false.
  * @error			Неверный индекс клиента, клиент не в игре или клиент является ботом.
  **/
@@ -1100,6 +1148,7 @@ native bool MT_HasAdminAccess(int admin);
  * Возвращает, если у определённого типа танка-мутанта есть шанс на появление.
  *
  * @param type			Тип танка-мутанта.
+ *
  * @return			True, если у типа есть шанс появления, в противном случае - false.
  * @error			Тип 0 или меньше.
  **/
@@ -1110,6 +1159,7 @@ native bool MT_HasChanceToSpawn(int type);
  *
  * @param entity		Индекс энтити.
  * @param mode			True, если подключаемая энтити, иначе false.
+ *
  * @error			Недействительный индекс энтити.
  **/
 native void MT_HideEntity(int entity, bool mode);
@@ -1119,6 +1169,7 @@ native void MT_HideEntity(int entity, bool mode);
  *
  * @param survivor		Клиентский индекс Выжившего.
  * @param tank			Клиентский индекс Танка.
+ *
  * @return			True, если Выживший человек имеет иммунитет, в противном случае - false.
  * @error			Неверный индекс Выжившего, Выживший не в игре, Выживший мёртв, Выживший - бот, Выживший бездействует,
  *					недействительный индекс танка или танк не в игре.
@@ -1136,6 +1187,7 @@ native bool MT_IsCorePluginEnabled();
  * Возвращает, если пользовательскому танку разрешено быть танком-мутантом.
  *
  * @param tank			Клиентский индекс Танка.
+ *
  * @return			True, если пользовательскому танку разрешено быть танком-мутантом, иначе - false.
  * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
  **/
@@ -1145,6 +1197,7 @@ native bool MT_IsCustomTankSupported(int tank);
  * Возвращается, если определённый тип танка-мутанта доступен только на финальных картах.
  *
  * @param type			Тип танка-мутанта.
+ *
  * @return			True, если тип доступен, в противном случае - false.
  * @error			Тип 0 или меньше.
  **/
@@ -1154,6 +1207,7 @@ native bool MT_IsFinaleType(int type);
  * Возвращается, если у танка-мутанта есть светящийся контур.
  *
  * @param tank			Клиентский индекс Танка.
+ *
  * @return			True, если Танк имеет светящийся контур, иначе - false.
  * @error			Неверный индекс клиента или клиента нет в игре.
  **/
@@ -1163,6 +1217,7 @@ native bool MT_IsGlowEnabled(int tank);
  * Возвращается, если мигает светящийся контур танка-мутанта.
  *
  * @param tank			Клиентский индекс Танка.
+ *
  * @return			True, если светящийся контур Танка мигает, иначе - false.
  * @error			Неверный индекс клиента или клиента нет в игре.
  **/
@@ -1172,6 +1227,7 @@ native bool MT_IsGlowFlashing(int tank);
  * Возвращается, если определённый тип танка-мутанта доступен только на нефинальных картах.
  *
  * @param type			Тип танка-мутанта.
+ *
  * @return			True, если тип доступен, в противном случае - false.
  * @error			Тип 0 или меньше.
  **/
@@ -1182,6 +1238,7 @@ native bool MT_IsNonFinaleType(int type);
  *
  * @param tank			Клиентский индекс Танка.
  * @param type			Режим бездействия Танка. 0 = Оба, 1 = Бездействие (ожидание Выживших), 2 = Ошибка(забагался, застрял и т.п.) (нет поведения)
+ *
  * @return			True, если Танк простаивает, иначе - false.
  * @error			Неверный индекс клиента, клиент не в игре, клиент мёртв или тип меньше 0 или больше 2.
  **/
@@ -1195,6 +1252,7 @@ native bool MT_IsTankIdle(int tank, int type = 0);
  *					MT_CHECK_INDEX = Индекс клиента, MT_CHECK_CONNECTED = Соединение, MT_CHECK_INGAME = Статус в игре,
  *					MT_CHECK_ALIVE = Состояние здоровья, MT_CHECK_INKICKQUEUE = Статус исключения из игры, MT_CHECK_FAKECLIENT = проверка бота
  *					По умолчанию: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE
+ *
  * @return			True, если Танку разрешено быть Танком-мутантом, в противном случае - false.
  * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
  **/
@@ -1204,6 +1262,7 @@ native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_ING
  * Возвращается, если включен определённый тип танка-мутанта.
  *
  * @param type			Тип танка-мутанта.
+ *
  * @return			True, если тип включен, иначе - false.
  * @error			Тип 0 или меньше.
  **/
@@ -1224,6 +1283,7 @@ native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ..
  * @param tank			Клиентский индекс Танка.
  * @param type			Тип танка-мутанта.
  * @param mode			True, если Танк должен физически трансформироваться в новый тип Танка-мутанта, в противном случае - false.
+ *
  * @error			Неверный индекс клиента, клиент не в игре, клиент мёртв или тип 0 или меньше.
  **/
 native void MT_SetTankType(int tank, int type, bool mode);
@@ -1233,6 +1293,7 @@ native void MT_SetTankType(int tank, int type, bool mode);
  *
  * @param tank			Клиентский индекс Танка.
  * @param type			Тип танка-мутанта.
+ *
  * @error			Неверный индекс клиента, клиент не в игре, или тип 0 или меньше.
  **/
 native void MT_SpawnTank(int tank, int type);
@@ -1246,6 +1307,15 @@ native void MT_SpawnTank(int tank, int type);
  * @param newHealth		Новое максимальное здоровье танка.
  **/
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
+
+/**
+ * Снимает эффект рвоты на игрока.
+ *
+ * @param player		Клиентский индекс Танка.
+ *
+ * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
+ **/
+native void MT_UnvomitPlayer(int player);
 ```
 
 - Способность клонирования
@@ -1255,7 +1325,9 @@ native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
  * Возвращается, если клон может использовать способности.
  *
  * @param tank			Клиентский индекс Танка.
+ *
  * @return			True, если клон может использовать способности, иначе - false.
+ * @error			Неверный индекс клиента.
  **/
 native bool MT_IsCloneSupported(int tank);
 
@@ -1263,6 +1335,7 @@ native bool MT_IsCloneSupported(int tank);
  * Возвращается, если Танк является клоном.
  *
  * @param tank			Клиентский индекс Танка.
+ *
  * @return			True, если Танк является клоном, иначе - false.
  * @error			Неверный индекс клиента.
  **/
@@ -1394,6 +1467,7 @@ sm_mt_version - Узнать текущую версию плагина.
 
 // Доступно только разработчику.
 sm_mt_config2 - Просмотр раздела файла конфигурации.
+sm_mt_dev - Используется только разработчиком и для него.
 sm_mt_list2 - Просмотр списка установленных способностей.
 sm_tank2 - Создать танка-мутанта.
 sm_mt_tank2 - Создать танка-мутанта.
@@ -1768,7 +1842,7 @@ mutant_tanks // 3-й формат
 
 4. Как мне изменить кнопки или добавить дополнительные кнопки?
 
-Отредактируйте 91-94 строки файла `mutant_tanks.inc` и перекомпилируйте каждый плагин способности.
+Отредактируйте 93-96 строки файла `mutant_tanks.inc` и перекомпилируйте каждый плагин способности.
 
 5. Что произойдёт, если у танка-мутанта есть несколько способностей, которые активируются одной и той же кнопкой?
 
@@ -1955,7 +2029,7 @@ Overrides
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku** - За сообщения о проблемах и предложения идей.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai** - За сообщения о проблемах.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer** - За сообщения о проблемах.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType** - За предложения идей.
 

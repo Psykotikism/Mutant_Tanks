@@ -46,11 +46,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_RESPAWN "Respawn Ability"
 
-DynamicDetour g_ddEventKilled;
-
 enum struct esPlayer
 {
 	bool g_bActivated;
+	bool g_bRespawning[3];
 
 	float g_flOpenAreasOnly;
 	float g_flRespawnChance;
@@ -115,24 +114,6 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks.phrases");
 
 	RegConsoleCmd("sm_mt_respawn", cmdRespawnInfo, "View information about the Respawn ability.");
-
-	GameData gdMutantTanks = new GameData("mutant_tanks");
-	if (gdMutantTanks == null)
-	{
-		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
-	}
-
-	g_ddEventKilled = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::Event_Killed");
-	if (g_ddEventKilled == null)
-	{
-		SetFailState("Failed to find signature: CTerrorPlayer::Event_Killed");
-
-		delete gdMutantTanks;
-	}
-
-	delete gdMutantTanks;
 }
 
 public void OnMapStart()
@@ -262,16 +243,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	{
 		FormatEx(buffer, size, "%T", "RespawnMenu2", client);
 	}
-}
-
-public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
-{
-	if (MT_IsTankSupported(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(pThis) && g_esCache[pThis].g_iRespawnAbility == 1 && g_esCache[pThis].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[pThis].g_flRespawnChance)
-	{
-		vRespawn(pThis);
-	}
-
-	return MRES_Ignored;
 }
 
 public void MT_OnPluginCheck(ArrayList &list)
@@ -448,7 +419,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);\
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flRespawnChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flRespawnChance, g_esAbility[type].g_flRespawnChance);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iHumanAbility, g_esAbility[type].g_iHumanAbility);
@@ -470,27 +441,6 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	if (oldTank != newTank)
 	{
 		vRemoveRespawn(oldTank);
-	}
-}
-
-public void MT_OnHookEvent(bool hooked)
-{
-	switch (hooked)
-	{
-		case true:
-		{
-			if (!g_ddEventKilled.Enable(Hook_Pre, mreEventKilledPre))
-			{
-				SetFailState("Failed to enable detour pre: CTerrorPlayer::Event_Killed");
-			}
-		}
-		case false:
-		{
-			if (!g_ddEventKilled.Disable(Hook_Pre, mreEventKilledPre))
-			{
-				SetFailState("Failed to disable detour pre: CTerrorPlayer::Event_Killed");
-			}
-		}
 	}
 }
 
@@ -520,6 +470,26 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		vReset();
 	}
+}
+
+public void MT_OnPlayerEventKilled(int victim, int attacker)
+{
+	if (MT_IsTankSupported(victim, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(victim) && g_esCache[victim].g_iRespawnAbility == 1 && g_esCache[victim].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esCache[victim].g_flRespawnChance)
+	{
+		vRespawn(victim);
+	}
+}
+
+public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
+{
+	if (apply && bIsValidClient(tank, MT_CHECK_INDEX) && g_esPlayer[tank].g_bRespawning[priority])
+	{
+		g_esPlayer[tank].g_bRespawning[priority] = false;
+
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
 }
 
 public void MT_OnButtonPressed(int tank, int button)
@@ -609,6 +579,9 @@ static void vRespawn(int tank)
 	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iRespawnAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
 	{
 		g_esPlayer[tank].g_bActivated = false;
+		g_esPlayer[tank].g_bRespawning[0] = true;
+		g_esPlayer[tank].g_bRespawning[1] = true;
+		g_esPlayer[tank].g_bRespawning[2] = true;
 		g_esPlayer[tank].g_iCount++;
 
 		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
@@ -645,7 +618,20 @@ static void vRespawn(int tank)
 				g_esPlayer[iTank].g_iAmmoCount = g_esPlayer[tank].g_iAmmoCount;
 				g_esPlayer[iTank].g_iCount = g_esPlayer[tank].g_iCount;
 
-				vRemoveRespawn(tank);
+				DataPack dpRespawn;
+				CreateDataTimer(0.1, tTimerRespawn, dpRespawn, TIMER_FLAG_NO_MAPCHANGE);
+				dpRespawn.WriteCell(GetClientUserId(iTank));
+				dpRespawn.WriteFloat(g_esCache[tank].g_flRespawnChance);
+				dpRespawn.WriteFloat(g_esCache[tank].g_flOpenAreasOnly);
+				dpRespawn.WriteCell(g_esCache[tank].g_iComboAbility);
+				dpRespawn.WriteCell(g_esCache[tank].g_iHumanAbility);
+				dpRespawn.WriteCell(g_esCache[tank].g_iHumanAmmo);
+				dpRespawn.WriteCell(g_esCache[tank].g_iRequiresHumans);
+				dpRespawn.WriteCell(g_esCache[tank].g_iRespawnAbility);
+				dpRespawn.WriteCell(g_esCache[tank].g_iRespawnAmount);
+				dpRespawn.WriteCell(g_esCache[tank].g_iRespawnMaxType);
+				dpRespawn.WriteCell(g_esCache[tank].g_iRespawnMinType);
+				dpRespawn.WriteCell(g_esCache[tank].g_iRespawnMessage);
 
 				break;
 			}
@@ -713,6 +699,35 @@ public Action tTimerCombo(Handle timer, int userid)
 	}
 
 	vRespawn(iTank);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerRespawn(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank))
+	{
+		return Plugin_Stop;
+	}
+
+	float flChance = pack.ReadFloat(), flOpenAreasOnly = pack.ReadFloat();
+	int iComboAbility = pack.ReadCell(), iHumanAbility = pack.ReadCell(), iHumanAmmo = pack.ReadCell(),
+		iRequiresHumans = pack.ReadCell(), iAbility = pack.ReadCell(), iAmount = pack.ReadCell(),
+		iMaxType = pack.ReadCell(), iMinType = pack.ReadCell(), iMessage = pack.ReadCell();
+	g_esCache[iTank].g_flRespawnChance = flChance;
+	g_esCache[iTank].g_iComboAbility = iComboAbility;
+	g_esCache[iTank].g_iHumanAbility = iHumanAbility;
+	g_esCache[iTank].g_iHumanAmmo = iHumanAmmo;
+	g_esCache[iTank].g_flOpenAreasOnly = flOpenAreasOnly;
+	g_esCache[iTank].g_iRequiresHumans = iRequiresHumans;
+	g_esCache[iTank].g_iRespawnAbility = iAbility;
+	g_esCache[iTank].g_iRespawnAmount = iAmount;
+	g_esCache[iTank].g_iRespawnMaxType = iMaxType;
+	g_esCache[iTank].g_iRespawnMinType = iMinType;
+	g_esCache[iTank].g_iRespawnMessage = iMessage;
 
 	return Plugin_Continue;
 }

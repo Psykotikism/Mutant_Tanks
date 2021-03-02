@@ -673,14 +673,13 @@ static void vLaser2(int tank, int pos = -1)
 		static float flSurvivorPos[3];
 		GetClientEyePosition(iSurvivor, flSurvivorPos);
 		flSurvivorPos[2] -= 15.0;
-
 		vAttachParticle2(flSurvivorPos, NULL_VECTOR, PARTICLE_ELECTRICITY, 3.0);
+
 		EmitSoundToAll((GetRandomInt(1, 2) == 1 ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flSurvivorPos, NULL_VECTOR, true, 0.0);
 		EmitSoundToAll((GetRandomInt(1, 2) == 1 ? SOUND_ELECTRICITY : SOUND_ELECTRICITY2), 0, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0, SNDPITCH_NORMAL, -1, flTankPos, NULL_VECTOR, true, 0.0);
 
 		static int iColor[4];
 		MT_GetTankColors(tank, GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
-
 		TE_SetupBeamPoints(flTankPos, flSurvivorPos, g_iLaserSprite, 0, 0, 0, 0.5, 5.0, 5.0, 1, 0.0, iColor, 0);
 		TE_SendToAll();
 
@@ -766,6 +765,8 @@ static void vReset3(int tank)
 static int iGetNearestSurvivor(int tank, float pos[3])
 {
 	static float flSurvivorPos[3];
+	static int iSurvivorCount, iSurvivors[MAXPLAYERS + 1];
+	iSurvivorCount = 0;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
@@ -773,12 +774,12 @@ static int iGetNearestSurvivor(int tank, float pos[3])
 			GetClientEyePosition(iSurvivor, flSurvivorPos);
 			if (GetVectorDistance(pos, flSurvivorPos) <= g_esCache[tank].g_flLaserRange && bVisiblePosition(pos, flSurvivorPos, tank, 1))
 			{
-				return iSurvivor;
+				iSurvivors[iSurvivorCount++] = iSurvivor;
 			}
 		}
 	}
 
-	return 0;
+	return iSurvivors[GetRandomInt(0, iSurvivorCount - 1)];
 }
 
 public Action tTimerCombo(Handle timer, DataPack pack)

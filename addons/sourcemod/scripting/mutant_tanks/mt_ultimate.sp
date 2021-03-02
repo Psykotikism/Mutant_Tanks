@@ -405,7 +405,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				static float flTankPos[3];
 				GetClientAbsOrigin(victim, flTankPos);
-				vPushNearbyEntities(victim, flTankPos);
+
+				switch (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
+				{
+					case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
+					case false: vPushNearbyEntities(victim, flTankPos);
+				}
 			}
 
 			return Plugin_Handled;
@@ -792,15 +797,18 @@ static void vUltimate(int tank, int pos = -1)
 		EmitSoundToAll(SOUND_ELECTRICITY, tank);
 		EmitSoundToAll(SOUND_EXPLOSION, tank);
 
-		if (g_bSecondGame)
+		switch (g_bSecondGame)
 		{
-			EmitSoundToAll(SOUND_GROWL2, tank);
-			EmitSoundToAll(SOUND_SMASH2, tank);
-		}
-		else
-		{
-			EmitSoundToAll(SOUND_GROWL1, tank);
-			EmitSoundToAll(SOUND_SMASH1, tank);
+			case true:
+			{
+				EmitSoundToAll(SOUND_GROWL2, tank);
+				EmitSoundToAll(SOUND_SMASH2, tank);
+			}
+			case false:
+			{
+				EmitSoundToAll(SOUND_GROWL1, tank);
+				EmitSoundToAll(SOUND_SMASH1, tank);
+			}
 		}
 
 		static int iValue, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
