@@ -14,7 +14,7 @@
 - Fixed each Tank death raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed AI Tanks in ghost mode not being forcefully spawned. (Thanks to yuzumi for reporting!)
 - Fixed Tank rocks breaking before leaving the Tank's hands. (Thanks to weffer for reporting!)
-- Fixed the errors regarding the `vocalize` command. (Thanks to ur5efj for reporting!)
+- Fixed the errors regarding Tank props. (Thanks to ur5efj for reporting!)
 
 #### Core Plugin
 - Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
@@ -36,6 +36,9 @@
 - Fixed the `Item Reward` setting not being read properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 #### Abilities
+- Absorb
+	- Fixed all types of fire damage not being detected.
+
 - Bury
 	- Fixed survivors not being revived when receiving the godmode reward.
 	- Fixed survivors not being healed when receiving the health or refill reward. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -47,13 +50,21 @@
 - Clone
 	- Fixed clone deaths raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
+- Fragile
+	- Fixed all types of fire damage not being detected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
 - Heal
 	- Fixed players with the godmode reward being affected.
 	- Fixed total health being miscalculated.
 	- Fixed Tanks gaining health while in the dying animation.
+	- Fixed the errors regarding the `StopSound` function. (Thanks to ur5efj for reporting!)
+	- Fixed all types of fire damage not being detected.
 
 - Hit
 	- Fixed the ability not working when the `Human Ability` setting is disabled.
+
+- Hypno
+	- Fixed all types of fire damage not being detected.
 
 - Kamikaze
 	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -70,6 +81,9 @@
 	- Fixed Tanks gaining health while in the dying animation.
 	- Fixed the `Medic Health` and `Medic Max Health` settings not being read entirely. (Thanks to TheStarRocker for testing and reporting!)
 
+- Pyro
+	- Fixed all types of fire damage not being detected.
+
 - Recoil
 	- Fixed the ability affecting all weapons instead of just guns.
 
@@ -85,6 +99,9 @@
 
 - Rocket
 	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Shield
+	- Fixed all types of fire damage not being detected.
 
 - Smash
 	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -107,6 +124,7 @@
 - Xiphos
 	- Fixed total health being miscalculated.
 	- Fixed Tanks gaining health while in the dying animation.
+	- Fixed all types of fire damage not being detected.
 
 - Zombie
 	- Fixed the ability trying to spawn Uncommon infected on L4D1.
@@ -156,6 +174,7 @@
 - The health reward now does the following:
 	- Gives the recipient a health boost when revived.
 	- Allows the recipient to heal their target back to max health.
+	- Slowly regenerates the player's health back to full health.
 - The ammo reward now extends the recipient's max weapon clip and magazine sizes up to at least twice the default amount.
 
 #### Game Data
@@ -183,10 +202,12 @@
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Attack Boost Reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 	- `Action Duration Reward` (Thanks to epzminion for the help!)
+	- `Ammo Boost Reward` (Thanks to epzminion for the help!)
 	- `Clean Kills Reward` (Thanks to epzminion for the help!)
 	- `Damage Resistance Reward`
 	- `Fall Voiceline Reward`
 	- `Heal Percent Reward` (Thanks to epzminion for the help!)
+	- `Health Regen Reward` (Thanks to Silvers for the code!)
 	- `Jump Height Reward` (Thanks to epzminion for the help!)
 	- `Melee Range Reward` (Thanks to epzminion for the idea and Silvers for the code!)
 	- `Punch Resistance Reward` (Thanks to Silvers for the code!)
@@ -237,12 +258,14 @@
 	- `Reward Duration`
 	- `Reward Percentage`
 	- `Action Duration Reward`
+	- `Ammo Boost Reward`
 	- `Attack Boost Reward`
 	- `Clean Kills Reward`
 	- `Damage Boost Reward`
 	- `Damage Resistance Reward`
 	- `Fall Voiceline Reward`
 	- `Heal Percent Reward`
+	- `Health Regen Reward`
 	- `Item Reward`
 	- `Jump Height Reward`
 	- `Melee Range Reward`
@@ -297,6 +320,7 @@
 	- The pushback effect no longer triggers for melee attacks unless the Tank takes at least one damage. (Requested by 3aljiyavslgazana.)
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 	- Added the `Absorb Hittable Divisor` setting.
+	- Any damage below `1` dealt to Tanks with this ability activated will automatically round up to `1`.
 
 - Aimless
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -337,6 +361,7 @@
 - Hypno
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 	- Added the `Hypno Hittable Divisor` setting.
+	- Any damage below `1` dealt to Tanks with this ability activated will automatically round up to `1`.
 
 - Idle
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -389,6 +414,9 @@
 
 - Witch
 	- Witches are removed when their Tank owner changes its Mutant Tank type if the `Witch Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
+
+- Xiphos
+	- Any damage below `1` dealt to Tanks with this ability activated will automatically round up to `1`.
 
 - Yell
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)

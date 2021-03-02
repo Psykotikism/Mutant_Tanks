@@ -622,6 +622,23 @@
 			// 3rd number = Duration for teammates.
 			"Action Duration Reward"		"2.0,2.0,2.0"
 
+			// Give ammo boost as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give ammo boost to killers.
+			// 2nd number = Give ammo boost to assistants.
+			// 3rd number = Give ammo boost to teammates.
+			"Ammo Boost Reward"			"1,1,1"
+
 			// The attack boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -720,6 +737,23 @@
 			// 2nd number = Heal percentage for assistants.
 			// 3rd number = Heal percentage for teammates.
 			"Heal Percent Reward"			"100.0,100.0,100.0"
+
+			// The amount of health to regenerate per second as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate amounts with commas (",").
+			// --
+			// Amounts limit: 3
+			// Character limit for each amount: 12
+			// --
+			// Minimum value for each amount: 0 (OFF)
+			// Maximum value for each amount: 1,000,000 (Highest)
+			// --
+			// 1st number = Amount for killers.
+			// 2nd number = Amount for assistants.
+			// 3rd number = Amount for teammates.
+			"Health Regen Reward"			"1,1,1"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -2054,6 +2088,23 @@
 			// 3rd number = Duration for teammates.
 			"Action Duration Reward"		"0.0,0.0,0.0"
 
+			// Give ammo boost as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give ammo boost to killers.
+			// 2nd number = Give ammo boost to assistants.
+			// 3rd number = Give ammo boost to teammates.
+			"Ammo Boost Reward"			"0,0,0"
+
 			// The attack boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -2151,7 +2202,24 @@
 			// 1st number = Heal percentage for killers.
 			// 2nd number = Heal percentage for assistants.
 			// 3rd number = Heal percentage for teammates.
-			"Heal Percent Reward"			"100.0,100.0,100.0"
+			"Heal Percent Reward"			"0.0,0.0,0.0"
+
+			// The amount of health to regenerate per second as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate amounts with commas (",").
+			// --
+			// Amounts limit: 3
+			// Character limit for each amount: 12
+			// --
+			// Minimum value for each amount: 0 (OFF)
+			// Maximum value for each amount: 1,000,000 (Highest)
+			// --
+			// 1st number = Amount for killers.
+			// 2nd number = Amount for assistants.
+			// 3rd number = Amount for teammates.
+			"Health Regen Reward"			"0,0,0"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2252,7 +2320,7 @@
 			// 1st number = Health for killers.
 			// 2nd number = Health for assistants.
 			// 3rd number = Health for teammates.
-			"Revive Health Reward"			"100,100,100"
+			"Revive Health Reward"			"0,0,0"
 
 			// The shove damage multiplier against Chargers, Witches, and Tanks to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
