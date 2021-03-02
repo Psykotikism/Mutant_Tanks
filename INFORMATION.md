@@ -1291,6 +1291,7 @@
 
 			// Enable the Mutant Tank.
 			// Note: This setting determines full availability. Even if other spawn settings are enabled while this is disabled, the Mutant Tank will stay disabled.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// --
 			// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from the "Plugin Settings/General" section decide.
 			// 0/"disabled"/"false"/"off"/"no": OFF
@@ -1325,6 +1326,7 @@
 			// The Mutant Tank can spawn.
 			// Note: The Mutant Tank will still appear on the Mutant Tanks menu and other Mutant Tanks can still transform into the Mutant Tank.
 			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// --
 			// -1/"ignore"/"exclude"/"filter"/"remove": Let the setting with the same name from the "Plugin Settings/General" section decide.
 			// 0/"disabled"/"false"/"off"/"no": OFF

@@ -1182,7 +1182,7 @@ public any aNative_IsTankSupported(Handle plugin, int numParams)
 public any aNative_IsTypeEnabled(Handle plugin, int numParams)
 {
 	int iType = iClamp(GetNativeCell(1), 1, MT_MAXTYPES);
-	return bIsTankEnabled(_, iType) && bIsTypeAvailable(iType);
+	return bIsTankEnabled(iType) && bIsTypeAvailable(iType);
 }
 
 public any aNative_LogMessage(Handle plugin, int numParams)
@@ -1630,7 +1630,7 @@ public void OnClientPostAdminCheck(int client)
 	{
 		if (bIsDeveloper(client))
 		{
-			g_esGeneral.g_iDeveloperAccess = 1533;
+			g_esGeneral.g_iDeveloperAccess = 509;
 		}
 
 		vLoadConfigs(g_esGeneral.g_sSavePath, 3);
@@ -3286,7 +3286,7 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(_, iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
+	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), _, iType);
@@ -3302,18 +3302,9 @@ public Action cmdTank(int client, int args)
 
 public Action cmdTank2(int client, int args)
 {
-	if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client))
 	{
-		if (!bIsDeveloper(client))
-		{
-			MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
-
-			return Plugin_Handled;
-		}
-	}
-	else
-	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
 
 		return Plugin_Handled;
 	}
@@ -3348,7 +3339,7 @@ public Action cmdTank2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(_, iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
+	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), _, iType);
@@ -3408,7 +3399,7 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(_, iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
+	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), _, iType);
@@ -3454,7 +3445,7 @@ static void vTank(int admin, char[] type, bool spawn = false, bool log = true, i
 					vGetTranslatedName(sPhrase, sizeof(sPhrase), _, iIndex);
 					SetGlobalTransTarget(admin);
 					FormatEx(sTankName, sizeof(sTankName), "%T", sPhrase, admin);
-					if (!bIsTankEnabled(_, iIndex) || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly) || StrContains(sTankName, type, false) == -1)
+					if (!bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly) || StrContains(sTankName, type, false) == -1)
 					{
 						continue;
 					}
@@ -3652,7 +3643,7 @@ static void vTankMenu(int admin, bool adminmenu = false, int item = 0)
 
 	for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 	{
-		if (iIndex <= 0 || !bIsTankEnabled(_, iIndex) || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly))
+		if (iIndex <= 0 || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly))
 		{
 			continue;
 		}
@@ -3701,7 +3692,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			else
 			{
 				int iIndex = StringToInt(sInfo);
-				if (bIsTankEnabled(_, iIndex) && bHasCoreAdminAccess(param1, iIndex) && g_esTank[iIndex].g_iMenuEnabled == 1 && bIsTypeAvailable(iIndex, param1) && !bAreHumansRequired(iIndex) && bCanTypeSpawn(iIndex) && !bIsAreaNarrow(param1, g_esTank[iIndex].g_flOpenAreasOnly))
+				if (bIsTankEnabled(iIndex) && bHasCoreAdminAccess(param1, iIndex) && g_esTank[iIndex].g_iMenuEnabled == 1 && bIsTypeAvailable(iIndex, param1) && !bAreHumansRequired(iIndex) && bCanTypeSpawn(iIndex) && !bIsAreaNarrow(param1, g_esTank[iIndex].g_flOpenAreasOnly))
 				{
 					vQueueTank(param1, iIndex, false);
 				}
@@ -3764,7 +3755,7 @@ public void OnEntityDestroyed(int entity)
 		{
 			static int iThrower;
 			iThrower = GetEntPropEnt(entity, Prop_Data, "m_hThrower");
-			if (bIsTankSupported(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && bIsTankEnabled(iThrower))
+			if (bIsTankSupported(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esCache[iThrower].g_iTankEnabled == 1)
 			{
 				Call_StartForward(g_esGeneral.g_gfRockBreakForward);
 				Call_PushCell(iThrower);
@@ -3873,7 +3864,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		return Plugin_Continue;
 	}
 
-	if (bIsSurvivor(client) && (bIsDeveloper(client, 10) || g_esPlayer[client].g_bRewardedInfAmmo))
+	if (bIsSurvivor(client) && (bIsDeveloper(client, 7) || g_esPlayer[client].g_bRewardedInfAmmo))
 	{
 		vRefillAmmo(client);
 	}
@@ -4014,12 +4005,11 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
 		}
 
-		static bool bDeveloper, bModify;
-		bDeveloper = bIsValidClient(victim) && bIsDeveloper(victim, 6);
-		bModify = bIsHumanSurvivor(victim) && bDeveloper;
+		static bool bDeveloper;
+		bDeveloper = bIsValidClient(victim) && (bIsDeveloper(victim, 4) || g_esPlayer[victim].g_bRewardedDamage);
 		if (bIsSurvivor(victim))
 		{
-			if (g_esPlayer[victim].g_bRewardedGod && GetEntProp(victim, Prop_Data, "m_takedamage", 1) != 2)
+			if (bIsDeveloper(victim, 9) || (g_esPlayer[victim].g_bRewardedGod && GetEntProp(victim, Prop_Data, "m_takedamage", 1) != 2))
 			{
 				return Plugin_Handled;
 			}
@@ -4032,26 +4022,26 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					if (StrEqual(sClassname, "weapon_tank_claw") && g_esCache[attacker].g_flClawDamage >= 0.0)
 					{
 						damage = flGetScaledDamage(g_esCache[attacker].g_flClawDamage);
-						damage = bModify ? (damage * 0.5) : damage;
+						damage = bDeveloper ? (damage * 0.5) : damage;
 
 						return (g_esCache[attacker].g_flClawDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 					}
 					else if ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable") && g_esCache[attacker].g_flHittableDamage >= 0.0)
 					{
 						damage = flGetScaledDamage(g_esCache[attacker].g_flHittableDamage);
-						damage = bModify ? (damage * 0.5) : damage;
+						damage = bDeveloper ? (damage * 0.5) : damage;
 
 						return (g_esCache[attacker].g_flHittableDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 					}
 					else if (StrEqual(sClassname, "tank_rock") && !bIsValidEntity(iTank) && g_esCache[attacker].g_flRockDamage >= 0.0)
 					{
 						damage = flGetScaledDamage(g_esCache[attacker].g_flRockDamage);
-						damage = bModify ? (damage * 0.5) : damage;
+						damage = bDeveloper ? (damage * 0.5) : damage;
 
 						return (g_esCache[attacker].g_flRockDamage > 0.0) ? Plugin_Changed : Plugin_Handled;
 					}
 				}
-				else if (bModify)
+				else if (bDeveloper)
 				{
 					damage *= 0.5;
 
@@ -4059,7 +4049,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				}
 			}
 		}
-		else if (bModify)
+		else if (bDeveloper)
 		{
 			damage *= 0.5;
 
@@ -5867,7 +5857,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "choke_start") || StrEqual(name, "lunge_pounce") || StrEqual(name, "tongue_grab") || StrEqual(name, "charger_carry_start") || StrEqual(name, "charger_pummel_start") || StrEqual(name, "jockey_ride"))
 		{
 			int iSpecial = GetClientOfUserId(event.GetInt("userid")), iSurvivor = GetClientOfUserId(event.GetInt("victim"));
-			if (bIsSpecialInfected(iSpecial) && bIsSurvivor(iSurvivor) && GetEntProp(iSurvivor, Prop_Data, "m_takedamage", 1) != 2 && g_esPlayer[iSurvivor].g_bRewardedGod)
+			if (bIsSpecialInfected(iSpecial) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 8) || (GetEntProp(iSurvivor, Prop_Data, "m_takedamage", 1) != 2 && g_esPlayer[iSurvivor].g_bRewardedGod)))
 			{
 				vSaveCaughtSurvivor(iSurvivor);
 			}
@@ -6004,7 +5994,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		else if (StrEqual(name, "player_jump"))
 		{
 			int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-			if (bIsHumanSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 8))
+			if (bIsSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 5))
 			{
 				SetEntityGravity(iSurvivor, 0.75);
 			}
@@ -7918,7 +7908,7 @@ static void vSaveCaughtSurvivor(int survivor)
 
 	if (iSpecial > 0)
 	{
-		ForcePlayerSuicide(iSpecial);
+		SDKHooks_TakeDamage(iSpecial, survivor, survivor, float(GetEntProp(iSpecial, Prop_Data, "m_iHealth")));
 	}
 }
 
@@ -7978,6 +7968,11 @@ static void vSetupDeveloper(int developer, bool setup)
 		{
 			SDKHook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 		}
+
+		if (bIsDeveloper(developer, 9))
+		{
+			SetEntProp(developer, Prop_Data, "m_takedamage", 0, 1);
+		}
 	}
 	else
 	{
@@ -7987,6 +7982,7 @@ static void vSetupDeveloper(int developer, bool setup)
 		{
 			SetEntityGravity(developer, 1.0);
 			SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
+			SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
 		}
 	}
 }
@@ -9240,7 +9236,7 @@ public void vRespawnFrame(int userid)
 {
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(userid);
-	if (g_esGeneral.g_bPluginEnabled && bIsHumanSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsDeveloper(iSurvivor, 9))
+	if (g_esGeneral.g_bPluginEnabled && bIsHumanSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && bIsDeveloper(iSurvivor, 10))
 	{
 		bRespawnSurvivor(iSurvivor, true);
 	}
@@ -9254,7 +9250,7 @@ public void vRockThrowFrame(int ref)
 	{
 		static int iThrower;
 		iThrower = GetEntPropEnt(iRock, Prop_Data, "m_hThrower");
-		if (bIsTankSupported(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && bIsTankEnabled(iThrower))
+		if (bIsTankSupported(iThrower) && bHasCoreAdminAccess(iThrower) && !bIsTankIdle(iThrower) && g_esCache[iThrower].g_iTankEnabled == 1)
 		{
 			SetEntityRenderColor(iRock, iGetRandomColor(g_esCache[iThrower].g_iRockColor[0]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[1]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[2]), iGetRandomColor(g_esCache[iThrower].g_iRockColor[3]));
 			vSetRockModel(iThrower, iRock);
@@ -9583,14 +9579,14 @@ static bool bIsSpawnEnabled(int type)
 	return (g_esGeneral.g_iSpawnEnabled <= 0 && g_esTank[type].g_iSpawnEnabled == 1) || (g_esGeneral.g_iSpawnEnabled == 1 && g_esTank[type].g_iSpawnEnabled != 0);
 }
 
-static bool bIsTankEnabled(int tank = 0, int type = 0)
+static bool bIsTankEnabled(int type)
 {
 	if ((g_esGeneral.g_iTankEnabled <= 0 && g_esTank[type].g_iTankEnabled <= 0) || (g_esGeneral.g_iTankEnabled == 1 && g_esTank[type].g_iTankEnabled == 0))
 	{
 		return false;
 	}
 
-	return (tank > 0 && g_esCache[tank].g_iTankEnabled == 1) || (g_esGeneral.g_iTankEnabled <= 0 && g_esTank[type].g_iTankEnabled == 1) || (g_esGeneral.g_iTankEnabled == 1 && g_esTank[type].g_iTankEnabled != 0);
+	return (g_esGeneral.g_iTankEnabled <= 0 && g_esTank[type].g_iTankEnabled == 1) || (g_esGeneral.g_iTankEnabled == 1 && g_esTank[type].g_iTankEnabled != 0);
 }
 
 static bool bIsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
@@ -9711,7 +9707,7 @@ static bool bRespawnSurvivor(int survivor, bool restore)
 
 static float flGetAttackBoost(int survivor, float speedmodifier)
 {
-	if (bIsDeveloper(survivor, 7) || g_esPlayer[survivor].g_bRewardedAttack)
+	if (bIsDeveloper(survivor, 6) || g_esPlayer[survivor].g_bRewardedAttack)
 	{
 		static float flBoost;
 		flBoost = g_esPlayer[survivor].g_flAttackBoost;
@@ -9784,8 +9780,8 @@ static int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 
 		switch (exclude)
 		{
-			case 1: bCondition = !bIsTankEnabled(_, iIndex) || !bHasCoreAdminAccess(tank, iIndex) || !bIsSpawnEnabled(iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || GetRandomFloat(0.1, 100.0) > g_esTank[iIndex].g_flTankChance || (g_esGeneral.g_iSpawnLimit > 0 && iGetTypeCount() >= g_esGeneral.g_iSpawnLimit) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
-			case 2: bCondition = !bIsTankEnabled(_, iIndex) || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || !bIsSpawnEnabled(iIndex) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly);
+			case 1: bCondition = !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank, iIndex) || !bIsSpawnEnabled(iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || GetRandomFloat(0.1, 100.0) > g_esTank[iIndex].g_flTankChance || (g_esGeneral.g_iSpawnLimit > 0 && iGetTypeCount() >= g_esGeneral.g_iSpawnLimit) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
+			case 2: bCondition = !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || !bIsSpawnEnabled(iIndex) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly);
 		}
 
 		if (bCondition)
@@ -10262,7 +10258,7 @@ public Action tTimerBloodEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_BLOOD) || !g_esPlayer[iTank].g_bBlood)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_BLOOD) || !g_esPlayer[iTank].g_bBlood)
 	{
 		g_esPlayer[iTank].g_bBlood = false;
 
@@ -10288,7 +10284,7 @@ public Action tTimerBlurEffect(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || !(g_esCache[iTank].g_iPropsAttached & MT_PROP_BLUR) || !g_esPlayer[iTank].g_bBlur)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !(g_esCache[iTank].g_iPropsAttached & MT_PROP_BLUR) || !g_esPlayer[iTank].g_bBlur)
 	{
 		g_esPlayer[iTank].g_bBlur = false;
 
@@ -10316,7 +10312,7 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 
 	static int iTank;
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bIsCustomTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || !g_esPlayer[iTank].g_bBoss)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bIsCustomTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !g_esPlayer[iTank].g_bBoss)
 	{
 		vSpawnModes(iTank, false);
 
@@ -10376,7 +10372,7 @@ public Action tTimerElectricEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ELECTRICITY) || !g_esPlayer[iTank].g_bElectric)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ELECTRICITY) || !g_esPlayer[iTank].g_bElectric)
 	{
 		g_esPlayer[iTank].g_bElectric = false;
 
@@ -10412,7 +10408,7 @@ public Action tTimerFireEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_FIRE) || !g_esPlayer[iTank].g_bFire)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_FIRE) || !g_esPlayer[iTank].g_bFire)
 	{
 		g_esPlayer[iTank].g_bFire = false;
 
@@ -10446,7 +10442,7 @@ public Action tTimerIceEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ICE) || !g_esPlayer[iTank].g_bIce)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_ICE) || !g_esPlayer[iTank].g_bIce)
 	{
 		g_esPlayer[iTank].g_bIce = false;
 
@@ -10494,7 +10490,7 @@ public Action tTimerMeteorEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_METEOR) || !g_esPlayer[iTank].g_bMeteor)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_METEOR) || !g_esPlayer[iTank].g_bMeteor)
 	{
 		g_esPlayer[iTank].g_bMeteor = false;
 
@@ -10514,7 +10510,7 @@ public Action tTimerRandomize(Handle timer, DataPack pack)
 	iTank = GetClientOfUserId(pack.ReadCell());
 	static float flTime;
 	flTime = pack.ReadFloat();
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || !bIsCustomTankSupported(iTank) || !g_esPlayer[iTank].g_bRandomized || (flTime + g_esCache[iTank].g_flRandomDuration < GetEngineTime()))
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !bIsCustomTankSupported(iTank) || !g_esPlayer[iTank].g_bRandomized || (flTime + g_esCache[iTank].g_flRandomDuration < GetEngineTime()))
 	{
 		vSpawnModes(iTank, false);
 
@@ -10662,7 +10658,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 
 	static int iTank;
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || g_esCache[iTank].g_iRockEffects == 0)
+	if (!bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || g_esCache[iTank].g_iRockEffects == 0)
 	{
 		return Plugin_Stop;
 	}
@@ -10702,7 +10698,7 @@ public Action tTimerSmokeEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SMOKE) || !g_esPlayer[iTank].g_bSmoke)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SMOKE) || !g_esPlayer[iTank].g_bSmoke)
 	{
 		g_esPlayer[iTank].g_bSmoke = false;
 
@@ -10718,7 +10714,7 @@ public Action tTimerSpitEffect(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SPIT) || !g_esPlayer[iTank].g_bSpit)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !(g_esCache[iTank].g_iBodyEffects & MT_PARTICLE_SPIT) || !g_esPlayer[iTank].g_bSpit)
 	{
 		g_esPlayer[iTank].g_bSpit = false;
 
@@ -10837,7 +10833,7 @@ public Action tTimerTankWave(Handle timer)
 public Action tTimerTransform(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || !bIsTankEnabled(iTank) || !bIsCustomTankSupported(iTank) || !g_esPlayer[iTank].g_bTransformed)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsTankSupported(iTank) || !bHasCoreAdminAccess(iTank) || g_esCache[iTank].g_iTankEnabled <= 0 || !bIsCustomTankSupported(iTank) || !g_esPlayer[iTank].g_bTransformed)
 	{
 		vSpawnModes(iTank, false);
 
@@ -10861,7 +10857,7 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTankSupported(iTank) || !bIsTankEnabled(iTank))
+	if (!bIsTankSupported(iTank) || g_esCache[iTank].g_iTankEnabled <= 0)
 	{
 		vSpawnModes(iTank, false);
 
