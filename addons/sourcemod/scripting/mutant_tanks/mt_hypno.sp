@@ -348,26 +348,31 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					bChanged = true;
 					damage /= g_esCache[victim].g_flHypnoBulletDivisor;
+					if (damage < 1.0) damage = 1.0;
 				}
 				else if (g_esCache[victim].g_flHypnoExplosiveDivisor > 1.0 && ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)))
 				{
 					bChanged = true;
 					damage /= g_esCache[victim].g_flHypnoExplosiveDivisor;
+					if (damage < 1.0) damage = 1.0;
 				}
-				else if (g_esCache[victim].g_flHypnoFireDivisor > 1.0 && (damagetype & DMG_BURN))
+				else if (g_esCache[victim].g_flHypnoFireDivisor > 1.0 && ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)))
 				{
 					bChanged = true;
 					damage /= g_esCache[victim].g_flHypnoFireDivisor;
+					if (damage < 1.0) damage = 1.0;
 				}
 				else if (g_esCache[victim].g_flHypnoHittableDivisor > 1.0 && (damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable"))
 				{
 					bChanged = true;
 					damage /= g_esCache[victim].g_flHypnoHittableDivisor;
+					if (damage < 1.0) damage = 1.0;
 				}
 				else if (g_esCache[victim].g_flHypnoMeleeDivisor > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
 				{
 					bChanged = true;
 					damage /= g_esCache[victim].g_flHypnoMeleeDivisor;
+					if (damage < 1.0) damage = 1.0;
 
 					static float flTankPos[3];
 					GetClientAbsOrigin(victim, flTankPos);

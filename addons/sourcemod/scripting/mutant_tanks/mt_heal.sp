@@ -712,7 +712,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 				SetEntProp(iSurvivor, Prop_Send, "m_bIsOnThirdStrike", 0);
 			}
 
-			vStopSound(iSurvivor, SOUND_HEARTBEAT);
+			StopSound(iSurvivor, SNDCHAN_STATIC, SOUND_HEARTBEAT);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -732,9 +732,12 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_incapacitated") || StrEqual(name, "player_spawn"))
 	{
 		int iUserId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iUserId);
-		if (bIsSurvivor(iPlayer))
+		if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vStopSound(iPlayer, SOUND_HEARTBEAT);
+			StopSound(iPlayer, SNDCHAN_STATIC, SOUND_HEARTBEAT);
+			StopSound(iPlayer, SNDCHAN_STATIC, SOUND_HEARTBEAT);
+			StopSound(iPlayer, SNDCHAN_STATIC, SOUND_HEARTBEAT);
+			StopSound(iPlayer, SNDCHAN_STATIC, SOUND_HEARTBEAT);
 		}
 		else if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{

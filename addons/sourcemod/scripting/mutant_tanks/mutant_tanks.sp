@@ -329,6 +329,7 @@ enum struct esGeneral
 	ConVar g_cvMTGunSwingInterval;
 	ConVar g_cvMTHuntingRifleAmmo;
 	ConVar g_cvMTMeleeRange;
+	ConVar g_cvMTPainPillsDecayRate;
 	ConVar g_cvMTPluginEnabled;
 	ConVar g_cvMTShotgunAmmo;
 	ConVar g_cvMTSMGAmmo;
@@ -457,6 +458,7 @@ enum struct esGeneral
 	int g_iActionOffset;
 	int g_iAggressiveTanks;
 	int g_iAllowDeveloper;
+	int g_iAmmoBoostReward[3];
 	int g_iAnnounceArrival;
 	int g_iAnnounceDeath;
 	int g_iAnnounceKill;
@@ -494,6 +496,7 @@ enum struct esGeneral
 	int g_iFinaleWave[10];
 	int g_iFireImmunity;
 	int g_iGameModeTypes;
+	int g_iHealthRegenReward[3];
 	int g_iHittableImmunity;
 	int g_iHumanCooldown;
 	int g_iIdleCheckMode;
@@ -582,6 +585,7 @@ enum struct esDeveloper
 	float g_flDevSpeedBoost;
 
 	int g_iDevAccess;
+	int g_iDevHealthRegen;
 	int g_iDevMeleeRange;
 	int g_iDevReviveHealth;
 	int g_iDevRewardTypes;
@@ -698,6 +702,8 @@ enum struct esPlayer
 	float g_flTransformDuration;
 
 	int g_iAccessFlags;
+	int g_iAmmoBoost;
+	int g_iAmmoBoostReward[3];
 	int g_iAnnounceArrival;
 	int g_iAnnounceDeath;
 	int g_iAnnounceKill;
@@ -735,6 +741,8 @@ enum struct esPlayer
 	int g_iGlowMaxRange;
 	int g_iGlowMinRange;
 	int g_iGlowType;
+	int g_iHealthRegen;
+	int g_iHealthRegenReward[3];
 	int g_iHittableImmunity;
 	int g_iImmunityFlags;
 	int g_iKillMessage;
@@ -848,6 +856,7 @@ enum struct esTank
 
 	int g_iAbilityCount;
 	int g_iAccessFlags;
+	int g_iAmmoBoostReward[3];
 	int g_iAnnounceArrival;
 	int g_iAnnounceDeath;
 	int g_iAnnounceKill;
@@ -879,6 +888,7 @@ enum struct esTank
 	int g_iGlowMaxRange;
 	int g_iGlowMinRange;
 	int g_iGlowType;
+	int g_iHealthRegenReward[3];
 	int g_iHittableImmunity;
 	int g_iHumanSupport;
 	int g_iImmunityFlags;
@@ -975,6 +985,7 @@ enum struct esCache
 	float g_flTransformDelay;
 	float g_flTransformDuration;
 
+	int g_iAmmoBoostReward[3];
 	int g_iAnnounceArrival;
 	int g_iAnnounceDeath;
 	int g_iAnnounceKill;
@@ -1005,6 +1016,7 @@ enum struct esCache
 	int g_iGlowMaxRange;
 	int g_iGlowMinRange;
 	int g_iGlowType;
+	int g_iHealthRegenReward[3];
 	int g_iHittableImmunity;
 	int g_iKillMessage;
 	int g_iLightColor[4];
@@ -1523,6 +1535,7 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTHuntingRifleAmmo = FindConVar("ammo_huntingrifle_max");
 	g_esGeneral.g_cvMTGameMode = FindConVar("mp_gamemode");
 	g_esGeneral.g_cvMTGameTypes = FindConVar("sv_gametypes");
+	g_esGeneral.g_cvMTPainPillsDecayRate = FindConVar("pain_pills_decay_rate");
 	g_esGeneral.g_cvMTShotgunAmmo = g_bSecondGame ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
 	g_esGeneral.g_cvMTSMGAmmo = FindConVar("ammo_smg_max");
 	g_esGeneral.g_cvMTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
@@ -2217,8 +2230,9 @@ public void OnConfigsExecuted()
 	vPluginStatus();
 	vResetTimers();
 	vCacheCvars();
-	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(0.1, tTimerRefreshRewards, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+	CreateTimer(1.0, tTimerRegenerateHealth, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 	g_esGeneral.g_flDefaultFirstAidHealPercent = g_esGeneral.g_cvMTFirstAidHealPercent.FloatValue;
 	g_esGeneral.g_flDefaultSurvivorReviveDuration = g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue;
@@ -3611,6 +3625,10 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	{
 		g_esDeveloper[guest].g_flDevHealPercent = flValue;
 	}
+	else if (StrContains(keyword, "regenhp", false) != -1 || StrContains(keyword, "hpregen", false) != -1)
+	{
+		g_esDeveloper[guest].g_iDevHealthRegen = RoundToNearest(flValue);
+	}
 	else if (StrContains(keyword, "jump", false) != -1 || StrContains(keyword, "height", false) != -1)
 	{
 		g_esDeveloper[guest].g_flDevJumpHeight = flValue;
@@ -3621,7 +3639,7 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	}
 	else if (StrContains(keyword, "melee", false) != -1 || StrContains(keyword, "range", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevMeleeRange = iClamp(RoundToNearest(flValue), 0, 999999);
+		g_esDeveloper[guest].g_iDevMeleeRange = RoundToNearest(flValue);
 	}
 	else if (StrContains(keyword, "punch", false) != -1 || StrContains(keyword, "force", false) != -1 || StrContains(keyword, "punchres", false) != -1)
 	{
@@ -3629,7 +3647,7 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	}
 	else if (StrContains(keyword, "revivehp", false))
 	{
-		g_esDeveloper[guest].g_iDevReviveHealth = iClamp(RoundToNearest(flValue), 0, MT_MAXHEALTH);
+		g_esDeveloper[guest].g_iDevReviveHealth = RoundToNearest(flValue);
 	}
 	else if (StrContains(keyword, "rdur", false) != -1 || StrContains(keyword, "rewarddur", false) != -1)
 	{
@@ -3637,7 +3655,7 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	}
 	else if (StrContains(keyword, "rtypes", false) != -1 || StrContains(keyword, "rewardtypes", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevRewardTypes = iClamp(RoundToNearest(flValue), 0, 2147483647);
+		g_esDeveloper[guest].g_iDevRewardTypes = RoundToNearest(flValue);
 	}
 	else if (StrContains(keyword, "sdmg", false) != -1 || StrContains(keyword, "shovedmg", false) != -1)
 	{
@@ -3688,6 +3706,9 @@ static void vDeveloperPanel(int developer)
 
 	flValue = g_esDeveloper[developer].g_flDevHealPercent;
 	FormatEx(sDisplay, sizeof(sDisplay), "Heal Percent: %.2f%% (%.2f)", flValue, (flValue / 100.0));
+	pDevPanel.DrawText(sDisplay);
+
+	FormatEx(sDisplay, sizeof(sDisplay), "Health Regen: %i HP/s", g_esDeveloper[developer].g_iDevHealthRegen);
 	pDevPanel.DrawText(sDisplay);
 
 	FormatEx(sDisplay, sizeof(sDisplay), "Jump Height: %.2f HMU", g_esDeveloper[developer].g_flDevJumpHeight);
@@ -5491,6 +5512,8 @@ static void vCacheSettings(int tank)
 		{
 			g_esCache[tank].g_flActionDurationReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flActionDurationReward[iPos], g_esGeneral.g_flActionDurationReward[iPos]);
 			g_esCache[tank].g_flActionDurationReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flActionDurationReward[iPos], g_esCache[tank].g_flActionDurationReward[iPos]);
+			g_esCache[tank].g_iAmmoBoostReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iAmmoBoostReward[iPos], g_esGeneral.g_iAmmoBoostReward[iPos]);
+			g_esCache[tank].g_iAmmoBoostReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iAmmoBoostReward[iPos], g_esCache[tank].g_iAmmoBoostReward[iPos]);
 			g_esCache[tank].g_flAttackBoostReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flAttackBoostReward[iPos], g_esGeneral.g_flAttackBoostReward[iPos]);
 			g_esCache[tank].g_flAttackBoostReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flAttackBoostReward[iPos], g_esCache[tank].g_flAttackBoostReward[iPos]);
 			g_esCache[tank].g_iCleanKillsReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iCleanKillsReward[iPos], g_esGeneral.g_iCleanKillsReward[iPos]);
@@ -5501,6 +5524,8 @@ static void vCacheSettings(int tank)
 			g_esCache[tank].g_flDamageResistanceReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flDamageResistanceReward[iPos], g_esCache[tank].g_flDamageResistanceReward[iPos]);
 			g_esCache[tank].g_flHealPercentReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flHealPercentReward[iPos], g_esGeneral.g_flHealPercentReward[iPos]);
 			g_esCache[tank].g_flHealPercentReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flHealPercentReward[iPos], g_esCache[tank].g_flHealPercentReward[iPos]);
+			g_esCache[tank].g_iHealthRegenReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iHealthRegenReward[iPos], g_esGeneral.g_iHealthRegenReward[iPos]);
+			g_esCache[tank].g_iHealthRegenReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iHealthRegenReward[iPos], g_esCache[tank].g_iHealthRegenReward[iPos]);
 			g_esCache[tank].g_flJumpHeightReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flJumpHeightReward[iPos], g_esGeneral.g_flJumpHeightReward[iPos]);
 			g_esCache[tank].g_flJumpHeightReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flJumpHeightReward[iPos], g_esCache[tank].g_flJumpHeightReward[iPos]);
 			g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMeleeRangeReward[iPos], g_esGeneral.g_iMeleeRangeReward[iPos]);
@@ -5903,11 +5928,13 @@ public void SMCParseStart(SMCParser smc)
 				g_esGeneral.g_iRewardEffect[iPos] = 15;
 				g_esGeneral.g_flRewardPercentage[iPos] = 10.0;
 				g_esGeneral.g_flActionDurationReward[iPos] = 2.0;
+				g_esGeneral.g_iAmmoBoostReward[iPos] = 1;
 				g_esGeneral.g_flAttackBoostReward[iPos] = 1.25;
 				g_esGeneral.g_iCleanKillsReward[iPos] = 1;
 				g_esGeneral.g_flDamageBoostReward[iPos] = 1.25;
 				g_esGeneral.g_flDamageResistanceReward[iPos] = 0.5;
 				g_esGeneral.g_flHealPercentReward[iPos] = 100.0;
+				g_esGeneral.g_iHealthRegenReward[iPos] = 1;
 				g_esGeneral.g_flJumpHeightReward[iPos] = 75.0;
 				g_esGeneral.g_iMeleeRangeReward[iPos] = 150;
 				g_esGeneral.g_flPunchResistanceReward[iPos] = 0.25;
@@ -6016,11 +6043,13 @@ public void SMCParseStart(SMCParser smc)
 					g_esTank[iIndex].g_iRewardEffect[iPos] = 0;
 					g_esTank[iIndex].g_flRewardPercentage[iPos] = 0.0;
 					g_esTank[iIndex].g_flActionDurationReward[iPos] = 0.0;
+					g_esTank[iIndex].g_iAmmoBoostReward[iPos] = 0;
 					g_esTank[iIndex].g_flAttackBoostReward[iPos] = 0.0;
 					g_esTank[iIndex].g_iCleanKillsReward[iPos] = 0;
 					g_esTank[iIndex].g_flDamageBoostReward[iPos] = 0.0;
 					g_esTank[iIndex].g_flDamageResistanceReward[iPos] = 0.0;
 					g_esTank[iIndex].g_flHealPercentReward[iPos] = 0.0;
+					g_esTank[iIndex].g_iHealthRegenReward[iPos] = 0;
 					g_esTank[iIndex].g_flJumpHeightReward[iPos] = 0.0;
 					g_esTank[iIndex].g_iMeleeRangeReward[iPos] = 0;
 					g_esTank[iIndex].g_flPunchResistanceReward[iPos] = 0.0;
@@ -6167,11 +6196,13 @@ public void SMCParseStart(SMCParser smc)
 						g_esPlayer[iPlayer].g_iRewardEffect[iPos] = 0;
 						g_esPlayer[iPlayer].g_flRewardPercentage[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_flActionDurationReward[iPos] = 0.0;
+						g_esPlayer[iPlayer].g_iAmmoBoostReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_flAttackBoostReward[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iCleanKillsReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_flDamageBoostReward[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_flDamageResistanceReward[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_flHealPercentReward[iPos] = 0.0;
+						g_esPlayer[iPlayer].g_iHealthRegenReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_flJumpHeightReward[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_flPunchResistanceReward[iPos] = 0.0;
@@ -6429,6 +6460,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						{
 							g_esGeneral.g_flActionDurationReward[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 999999.0) : g_esGeneral.g_flActionDurationReward[iPos];
 						}
+						else if (StrEqual(key, "AmmoBoostReward", false) || StrEqual(key, "Ammo Boost Reward", false) || StrEqual(key, "Ammo_Boost_Reward", false) || StrEqual(key, "ammoboost", false))
+						{
+							g_esGeneral.g_iAmmoBoostReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 1) : g_esGeneral.g_iAmmoBoostReward[iPos];
+						}
 						else if (StrEqual(key, "AttackBoostReward", false) || StrEqual(key, "Attack Boost Reward", false) || StrEqual(key, "Attack_Boost_Reward", false) || StrEqual(key, "attackboost", false))
 						{
 							g_esGeneral.g_flAttackBoostReward[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 999999.0) : g_esGeneral.g_flAttackBoostReward[iPos];
@@ -6457,6 +6492,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						else if (StrEqual(key, "HealPercentReward", false) || StrEqual(key, "Heal Percent Reward", false) || StrEqual(key, "Heal_Percent_Reward", false) || StrEqual(key, "healpercent", false))
 						{
 							g_esGeneral.g_flHealPercentReward[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_esGeneral.g_flHealPercentReward[iPos];
+						}
+						else if (StrEqual(key, "HealthRegenReward", false) || StrEqual(key, "Health Regen Reward", false) || StrEqual(key, "Health_Regen_Reward", false) || StrEqual(key, "healthregen", false))
+						{
+							g_esGeneral.g_iHealthRegenReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, MT_MAXHEALTH) : g_esGeneral.g_iHealthRegenReward[iPos];
 						}
 						else if (StrEqual(key, "ItemReward", false) || StrEqual(key, "Item Reward", false) || StrEqual(key, "Item_Reward", false) || StrEqual(key, "item", false))
 						{
@@ -6796,6 +6835,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								{
 									g_esPlayer[iPlayer].g_flActionDurationReward[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 999999.0) : g_esPlayer[iPlayer].g_flActionDurationReward[iPos];
 								}
+								else if (StrEqual(key, "AmmoBoostReward", false) || StrEqual(key, "Ammo Boost Reward", false) || StrEqual(key, "Ammo_Boost_Reward", false) || StrEqual(key, "ammoboost", false))
+								{
+									g_esPlayer[iPlayer].g_iAmmoBoostReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 1) : g_esPlayer[iPlayer].g_iAmmoBoostReward[iPos];
+								}
 								else if (StrEqual(key, "AttackBoostReward", false) || StrEqual(key, "Attack Boost Reward", false) || StrEqual(key, "Attack_Boost_Reward", false) || StrEqual(key, "attackboost", false))
 								{
 									g_esPlayer[iPlayer].g_flAttackBoostReward[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 999999.0) : g_esPlayer[iPlayer].g_flAttackBoostReward[iPos];
@@ -6824,6 +6867,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								else if (StrEqual(key, "HealPercentReward", false) || StrEqual(key, "Heal Percent Reward", false) || StrEqual(key, "Heal_Percent_Reward", false) || StrEqual(key, "healpercent", false))
 								{
 									g_esPlayer[iPlayer].g_flHealPercentReward[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_esPlayer[iPlayer].g_flHealPercentReward[iPos];
+								}
+								else if (StrEqual(key, "HealthRegenReward", false) || StrEqual(key, "Health Regen Reward", false) || StrEqual(key, "Health_Regen_Reward", false) || StrEqual(key, "hpregen", false))
+								{
+									g_esPlayer[iPlayer].g_iHealthRegenReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, MT_MAXHEALTH) : g_esPlayer[iPlayer].g_iHealthRegenReward[iPos];
 								}
 								else if (StrEqual(key, "ItemReward", false) || StrEqual(key, "Item Reward", false) || StrEqual(key, "Item_Reward", false) || StrEqual(key, "item", false))
 								{
@@ -7638,6 +7685,10 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 				{
 					g_esTank[type].g_flActionDurationReward[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 999999.0) : g_esTank[type].g_flActionDurationReward[iPos];
 				}
+				else if (StrEqual(key, "AmmoBoostReward", false) || StrEqual(key, "Ammo Boost Reward", false) || StrEqual(key, "Ammo_Boost_Reward", false) || StrEqual(key, "ammoboost", false))
+				{
+					g_esTank[type].g_iAmmoBoostReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 1) : g_esTank[type].g_iAmmoBoostReward[iPos];
+				}
 				else if (StrEqual(key, "AttackBoostReward", false) || StrEqual(key, "Attack Boost Reward", false) || StrEqual(key, "Attack_Boost_Reward", false) || StrEqual(key, "attackboost", false))
 				{
 					g_esTank[type].g_flAttackBoostReward[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 999999.0) : g_esTank[type].g_flAttackBoostReward[iPos];
@@ -7666,6 +7717,10 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 				else if (StrEqual(key, "HealPercentReward", false) || StrEqual(key, "Heal Percent Reward", false) || StrEqual(key, "Heal_Percent_Reward", false) || StrEqual(key, "healpercent", false))
 				{
 					g_esTank[type].g_flHealPercentReward[iPos] = (sSet[iPos][0] != '\0') ? flClamp(StringToFloat(sSet[iPos]), 0.0, 100.0) : g_esTank[type].g_flHealPercentReward[iPos];
+				}
+				else if (StrEqual(key, "HealthRegenReward", false) || StrEqual(key, "Health Regen Reward", false) || StrEqual(key, "Health_Regen_Reward", false) || StrEqual(key, "hpregen", false))
+				{
+					g_esTank[type].g_iHealthRegenReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, MT_MAXHEALTH) : g_esTank[type].g_iHealthRegenReward[iPos];
 				}
 				else if (StrEqual(key, "ItemReward", false) || StrEqual(key, "Item Reward", false) || StrEqual(key, "Item_Reward", false) || StrEqual(key, "item", false))
 				{
@@ -7960,26 +8015,38 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 	}
 }
 
+static void vVocalize(int survivor, const char[] voiceline)
+{
+	switch (g_bSecondGame)
+	{
+		case true:
+		{
+			int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
+			FakeClientCommand(survivor, "vocalize %s #%i", voiceline, iTimestamp);
+		}
+		case false: FakeClientCommand(survivor, "vocalize %s", voiceline);
+	}
+}
+
 static void vVocalizeDeath(int killer, int assistant, int tank)
 {
 	if (g_esCache[tank].g_iVocalizeDeath == 1)
 	{
-		int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
 		if (bIsSurvivor(killer))
 		{
-			FakeClientCommand(killer, "vocalize PlayerHurrah #%i", iTimestamp);
+			vVocalize(killer, "PlayerHurrah");
 		}
 
 		if (bIsSurvivor(assistant) && assistant != killer)
 		{
-			FakeClientCommand(assistant, "vocalize PlayerTaunt #%i", iTimestamp);
+			vVocalize(assistant, "PlayerTaunt");
 		}
 
 		for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 		{
 			if (bIsSurvivor(iTeammate, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[iTeammate].g_iTankDamage[tank] > 0.0 && iTeammate != killer && iTeammate != assistant)
 			{
-				FakeClientCommand(iTeammate, "vocalize PlayerNiceJob #%i", iTimestamp);
+				vVocalize(iTeammate, "PlayerNiceJob");
 			}
 		}
 	}
@@ -8713,8 +8780,6 @@ static void vSurvivorReactions(int tank)
 {
 	static char sModel[40];
 	static float flTankPos[3], flSurvivorPos[3];
-	static int iTimestamp;
-	iTimestamp = RoundToNearest(GetGameTime() * 10.0);
 	GetClientAbsOrigin(tank, flTankPos);
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -8737,14 +8802,14 @@ static void vSurvivorReactions(int tank)
 
 					switch (sModel[29])
 					{
-						case 'b', 'd', 'c', 'h': FakeClientCommand(iSurvivor, "vocalize C2M1Falling #%i", iTimestamp);
-						case 'v', 'n', 'e', 'a': FakeClientCommand(iSurvivor, "vocalize PlaneCrashResponse #%i", iTimestamp);
+						case 'b', 'd', 'c', 'h': vVocalize(iSurvivor, "C2M1Falling");
+						case 'v', 'n', 'e', 'a': vVocalize(iSurvivor, "PlaneCrashResponse");
 					}
 				}
-				case 2: FakeClientCommand(iSurvivor, "vocalize PlayerYellRun #%i", iTimestamp);
-				case 3: FakeClientCommand(iSurvivor, "vocalize %s #%i", (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
-				case 4: FakeClientCommand(iSurvivor, "vocalize PlayerBackUp #%i", iTimestamp);
-				case 5: FakeClientCommand(iSurvivor, "vocalize PlayerEmphaticGo #%i", iTimestamp);
+				case 2: vVocalize(iSurvivor, "PlayerYellRun");
+				case 3: vVocalize(iSurvivor, (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"));
+				case 4: vVocalize(iSurvivor, "PlayerBackUp");
+				case 5: vVocalize(iSurvivor, "PlayerEmphaticGo");
 			}
 		}
 	}
@@ -9088,13 +9153,17 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_flAttackBoost = 0.0;
 	g_esPlayer[survivor].g_flDamageBoost = 0.0;
 	g_esPlayer[survivor].g_flDamageResistance = 0.0;
+	g_esPlayer[survivor].g_flHealPercent = 0.0;
 	g_esPlayer[survivor].g_flJumpHeight = 0.0;
 	g_esPlayer[survivor].g_flPreFallZ = 0.0;
 	g_esPlayer[survivor].g_flShoveDamage = 0.0;
 	g_esPlayer[survivor].g_flShoveRate = 0.0;
 	g_esPlayer[survivor].g_flSpeedBoost = 0.0;
+	g_esPlayer[survivor].g_iAmmoBoost = 0;
 	g_esPlayer[survivor].g_iCleanKills = 0;
+	g_esPlayer[survivor].g_iHealthRegen = 0;
 	g_esPlayer[survivor].g_iMeleeRange = 0;
+	g_esPlayer[survivor].g_iReviveHealth = 0;
 	g_esPlayer[survivor].g_iRewardTypes = 0;
 	g_esPlayer[survivor].g_iShovePenalty = 0;
 	g_esPlayer[survivor].g_iSledgehammerRounds = 0;
@@ -9359,7 +9428,8 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						}
 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_HEALTH;
-						g_esPlayer[survivor].g_flHealPercent = g_esCache[tank].g_flHealPercentReward[priority];
+						g_esPlayer[survivor].g_flHealPercent = g_esCache[tank].g_flHealPercentReward[priority] / 100.0;
+						g_esPlayer[survivor].g_iHealthRegen = g_esCache[tank].g_iHealthRegenReward[priority];
 						g_esPlayer[survivor].g_iReviveHealth = g_esCache[tank].g_iReviveHealthReward[priority];
 					}
 					else if (repeat)
@@ -9379,6 +9449,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						vRewardMessage(survivor, priority, "RewardAmmo", "RewardAmmo2", "RewardAmmo3", sTankName);
 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_AMMO;
+						g_esPlayer[survivor].g_iAmmoBoost = g_esCache[tank].g_iAmmoBoostReward[priority];
 					}
 					else if (repeat)
 					{
@@ -9503,7 +9574,6 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_DAMAGEBOOST;
 						g_esPlayer[survivor].g_flDamageBoost = g_esCache[tank].g_flDamageBoostReward[priority];
 						g_esPlayer[survivor].g_flDamageResistance = g_esCache[tank].g_flDamageResistanceReward[priority];
-						g_esPlayer[survivor].g_flHealPercent = g_esCache[tank].g_flHealPercentReward[priority] / 100.0;
 						g_esPlayer[survivor].g_iMeleeRange = g_esCache[tank].g_iMeleeRangeReward[priority];
 						g_esPlayer[survivor].g_iSledgehammerRounds = g_esCache[tank].g_iSledgehammerRoundsReward[priority];
 						g_esPlayer[survivor].g_iThorns = g_esCache[tank].g_iThornsReward[priority];
@@ -9528,7 +9598,6 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						g_esPlayer[survivor].g_flAttackBoost = g_esCache[tank].g_flAttackBoostReward[priority];
 						g_esPlayer[survivor].g_flShoveDamage = g_esCache[tank].g_flShoveDamageReward[priority];
 						g_esPlayer[survivor].g_flShoveRate = g_esCache[tank].g_flShoveRateReward[priority];
-						g_esPlayer[survivor].g_iReviveHealth = g_esCache[tank].g_iReviveHealthReward[priority];
 						g_esPlayer[survivor].g_iShovePenalty = g_esCache[tank].g_iShovePenaltyReward[priority];
 					}
 					else if (repeat)
@@ -9721,6 +9790,7 @@ static void vDeveloperSettings()
 		g_esDeveloper[iDeveloper].g_flDevShoveRate = 0.4;
 		g_esDeveloper[iDeveloper].g_flDevSpeedBoost = 1.25;
 		g_esDeveloper[iDeveloper].g_iDevAccess = 0;
+		g_esDeveloper[iDeveloper].g_iDevHealthRegen = 1;
 		g_esDeveloper[iDeveloper].g_iDevMeleeRange = 150;
 		g_esDeveloper[iDeveloper].g_iDevReviveHealth = 100;
 		g_esDeveloper[iDeveloper].g_iDevRewardTypes = MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ATTACKBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_INFAMMO;
@@ -9879,7 +9949,7 @@ static void vRefillMagazine(int survivor, int weapon)
 	static int iAmmo;
 	iAmmo = 0;
 
-	if (bIsDeveloper(survivor, 6) || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO))
+	if (bIsDeveloper(survivor, 6) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[survivor].g_iAmmoBoost == 1))
 	{
 		iAmmo = iGetExtraAmmo(0, weapon, true);
 	}
@@ -9897,7 +9967,10 @@ static void vRefillMagazine(int survivor, int weapon)
 		}
 	}
 
-	SetEntProp(survivor, Prop_Send, "m_iAmmo", iAmmo, _, iGetWeaponOffset(weapon));
+	if (iAmmo > 0)
+	{
+		SetEntProp(survivor, Prop_Send, "m_iAmmo", iAmmo, _, iGetWeaponOffset(weapon));
+	}
 }
 
 static void vSaveWeapons(int survivor)
@@ -10454,7 +10527,7 @@ static void vSetProps(int tank)
 			else if (bIsValidEntRef(g_esPlayer[tank].g_iOzTank[iOzTank]))
 			{
 				g_esPlayer[tank].g_iOzTank[iOzTank] = EntRefToEntIndex(g_esPlayer[tank].g_iOzTank[iOzTank]);
-				if (g_esCache[tank].g_iPropsAttached & MT_PROP_OXYGENTANK)
+				if (bIsValidEntity(g_esPlayer[tank].g_iOzTank[iOzTank]) && (g_esCache[tank].g_iPropsAttached & MT_PROP_OXYGENTANK))
 				{
 					SetEntityRenderColor(g_esPlayer[tank].g_iOzTank[iOzTank], iGetRandomColor(g_esCache[tank].g_iOzTankColor[0]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[1]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[2]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[3]));
 				}
@@ -10472,7 +10545,7 @@ static void vSetProps(int tank)
 				if (bIsValidEntRef(g_esPlayer[tank].g_iFlame[iOzTank]))
 				{
 					g_esPlayer[tank].g_iFlame[iOzTank] = EntRefToEntIndex(g_esPlayer[tank].g_iFlame[iOzTank]);
-					if (g_esCache[tank].g_iPropsAttached & MT_PROP_FLAME)
+					if (bIsValidEntity(g_esPlayer[tank].g_iFlame[iOzTank]) && (g_esCache[tank].g_iPropsAttached & MT_PROP_FLAME))
 					{
 						SetEntityRenderColor(g_esPlayer[tank].g_iFlame[iOzTank], iGetRandomColor(g_esCache[tank].g_iFlameColor[0]), iGetRandomColor(g_esCache[tank].g_iFlameColor[1]), iGetRandomColor(g_esCache[tank].g_iFlameColor[2]), iGetRandomColor(g_esCache[tank].g_iFlameColor[3]));
 					}
@@ -10542,7 +10615,7 @@ static void vSetProps(int tank)
 			else if (bIsValidEntRef(g_esPlayer[tank].g_iRock[iRock]))
 			{
 				g_esPlayer[tank].g_iRock[iRock] = EntRefToEntIndex(g_esPlayer[tank].g_iRock[iRock]);
-				if (g_esCache[tank].g_iPropsAttached & MT_PROP_ROCK)
+				if (bIsValidEntity(g_esPlayer[tank].g_iRock[iRock]) && (g_esCache[tank].g_iPropsAttached & MT_PROP_ROCK))
 				{
 					SetEntityRenderColor(g_esPlayer[tank].g_iRock[iRock], iGetRandomColor(g_esCache[tank].g_iRockColor[0]), iGetRandomColor(g_esCache[tank].g_iRockColor[1]), iGetRandomColor(g_esCache[tank].g_iRockColor[2]), iGetRandomColor(g_esCache[tank].g_iRockColor[3]));
 					vSetRockModel(tank, g_esPlayer[tank].g_iRock[iRock]);
@@ -10603,7 +10676,7 @@ static void vSetProps(int tank)
 			else if (bIsValidEntRef(g_esPlayer[tank].g_iTire[iTire]))
 			{
 				g_esPlayer[tank].g_iTire[iTire] = EntRefToEntIndex(g_esPlayer[tank].g_iTire[iTire]);
-				if (g_esCache[tank].g_iPropsAttached & MT_PROP_TIRE)
+				if (bIsValidEntity(g_esPlayer[tank].g_iTire[iTire]) && (g_esCache[tank].g_iPropsAttached & MT_PROP_TIRE))
 				{
 					SetEntityRenderColor(g_esPlayer[tank].g_iTire[iTire], iGetRandomColor(g_esCache[tank].g_iTireColor[0]), iGetRandomColor(g_esCache[tank].g_iTireColor[1]), iGetRandomColor(g_esCache[tank].g_iTireColor[2]), iGetRandomColor(g_esCache[tank].g_iTireColor[3]));
 				}
@@ -10657,7 +10730,7 @@ static void vSetProps(int tank)
 		else if (bIsValidEntRef(g_esPlayer[tank].g_iPropaneTank))
 		{
 			g_esPlayer[tank].g_iPropaneTank = EntRefToEntIndex(g_esPlayer[tank].g_iPropaneTank);
-			if (g_esCache[tank].g_iPropsAttached & MT_PROP_PROPANETANK)
+			if (bIsValidEntity(g_esPlayer[tank].g_iPropaneTank) && (g_esCache[tank].g_iPropsAttached & MT_PROP_PROPANETANK))
 			{
 				SetEntityRenderColor(g_esPlayer[tank].g_iPropaneTank, iGetRandomColor(g_esCache[tank].g_iPropTankColor[0]), iGetRandomColor(g_esCache[tank].g_iPropTankColor[1]), iGetRandomColor(g_esCache[tank].g_iPropTankColor[2]), iGetRandomColor(g_esCache[tank].g_iPropTankColor[3]));
 			}
@@ -10833,16 +10906,15 @@ static void vAnnounceArrival(int tank, const char[] name)
 
 		if (g_esCache[tank].g_iVocalizeArrival == 1 || g_esCache[tank].g_iArrivalSound == 1)
 		{
-			int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
 				if (g_esCache[tank].g_iVocalizeArrival == 1 && bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 				{
 					switch (GetRandomInt(1, 3))
 					{
-						case 1: FakeClientCommand(iPlayer, "vocalize PlayerYellRun #%i", iTimestamp);
-						case 2: FakeClientCommand(iPlayer, "vocalize %s #%i", (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"), iTimestamp);
-						case 3: FakeClientCommand(iPlayer, "vocalize PlayerBackUp #%i", iTimestamp);
+						case 1: vVocalize(iPlayer, "PlayerYellRun");
+						case 2: vVocalize(iPlayer, (g_bSecondGame ? "PlayerWarnTank" : "PlayerAlsoWarnTank"));
+						case 3: vVocalize(iPlayer, "PlayerBackUp");
 					}
 				}
 
@@ -10908,16 +10980,15 @@ static void vAnnounceDeath(int tank, int killer, int assistant, float percentage
 
 		if (g_esCache[tank].g_iVocalizeDeath == 1 || g_esCache[tank].g_iDeathSound == 1)
 		{
-			int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
 			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 			{
 				if (bAnnounce && g_esCache[tank].g_iVocalizeDeath == 1 && bIsSurvivor(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 				{
 					switch (GetRandomInt(1, 3))
 					{
-						case 1: FakeClientCommand(iPlayer, "vocalize PlayerHurrah #%i", iTimestamp);
-						case 2: FakeClientCommand(iPlayer, "vocalize PlayerTaunt #%i", iTimestamp);
-						case 3: FakeClientCommand(iPlayer, "vocalize PlayerNiceJob #%i", iTimestamp);
+						case 1: vVocalize(iPlayer, "PlayerHurrah");
+						case 2: vVocalize(iPlayer, "PlayerTaunt");
+						case 3: vVocalize(iPlayer, "PlayerNiceJob");
 					}
 				}
 
@@ -11282,7 +11353,7 @@ public void vPlayerSpawnFrame(DataPack pack)
 	if (bIsSurvivor(iPlayer) && bIsDeveloper(iPlayer, _, true) && !g_esPlayer[iPlayer].g_bSetup)
 	{
 		g_esPlayer[iPlayer].g_bSetup = true;
-		g_esDeveloper[iPlayer].g_iDevAccess = 1789;
+		g_esDeveloper[iPlayer].g_iDevAccess = (!CheckCommandAccess(iPlayer, "sm_mt_dev", ADMFLAG_ROOT, false) || g_esDeveloper[iPlayer].g_iDevAccess > 0) ? 1789 : 0;
 		vSetupDeveloper(iPlayer, _, true);
 	}
 	else if (bIsTank(iPlayer) && !g_esPlayer[iPlayer].g_bFirstSpawn)
@@ -12546,8 +12617,7 @@ public MRESReturn mreFallingPre(int pThis)
 
 			char sVoiceLine[64];
 			sVoiceLine = (bIsDeveloper(pThis) && g_esDeveloper[pThis].g_sDevVoiceline[0] != '\0') ? g_esDeveloper[pThis].g_sDevVoiceline : g_esPlayer[pThis].g_sFallVoiceline;
-			int iTimestamp = RoundToNearest(GetGameTime() * 10.0);
-			FakeClientCommand(pThis, "vocalize %s #%i", sVoiceLine, iTimestamp);
+			vVocalize(pThis, sVoiceLine);
 		}
 	}
 
@@ -12631,13 +12701,13 @@ public MRESReturn mreFlingPre(int pThis, DHookParam hParams)
 
 public MRESReturn mreGetMaxClip1Pre(int pThis, DHookReturn hReturn)
 {
-	int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
-	if (bIsSurvivor(iSurvivor))
+	int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner"), iAmmo = iGetExtraAmmo(0, pThis, false);
+	if (bIsSurvivor(iSurvivor) && iAmmo > 0)
 	{
 		bool bDeveloper = bIsDeveloper(iSurvivor, 6);
-		if (bDeveloper || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO))
+		if (bDeveloper || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[iSurvivor].g_iAmmoBoost == 1))
 		{
-			hReturn.Value = iGetExtraAmmo(0, pThis, false);
+			hReturn.Value = iAmmo;
 
 			return MRES_Override;
 		}
@@ -12690,13 +12760,13 @@ public MRESReturn mreLeaveStasisPost(int pThis)
 
 public MRESReturn mreMaxCarryPre(int pThis, DHookReturn hReturn, DHookParam hParams)
 {
-	int iSurvivor = hParams.Get(2);
-	if (bIsSurvivor(iSurvivor))
+	int iSurvivor = hParams.Get(2), iAmmo = iGetExtraAmmo(hParams.Get(1), 0, true);
+	if (bIsSurvivor(iSurvivor) && iAmmo > 0)
 	{
 		bool bDeveloper = bIsDeveloper(iSurvivor, 6);
-		if (bDeveloper || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO))
+		if (bDeveloper || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[iSurvivor].g_iAmmoBoost == 1))
 		{
-			hReturn.Value = iGetExtraAmmo(hParams.Get(1), 0, true);
+			hReturn.Value = iAmmo;
 
 			return MRES_Override;
 		}
@@ -12944,13 +13014,13 @@ public MRESReturn mreStartRevivingPre(int pThis, DHookParam hParams)
 	if (g_esGeneral.g_cvMTSurvivorReviveDuration != null)
 	{
 		int iTarget = hParams.Get(1);
-		if (bIsSurvivor(iTarget))
-		{
-			vSetReviveDurationCvar(iTarget);
-		}
-		else if (bIsSurvivor(pThis))
+		if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 6) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_ATTACKBOOST)))
 		{
 			vSetReviveDurationCvar(pThis);
+		}
+		else if (bIsSurvivor(iTarget) && (bIsDeveloper(iTarget, 6) || (g_esPlayer[iTarget].g_iRewardTypes & MT_REWARD_ATTACKBOOST)))
+		{
+			vSetReviveDurationCvar(iTarget);
 		}
 	}
 
@@ -13559,6 +13629,50 @@ public Action tTimerRefreshRewards(Handle timer)
 					vRewardSurvivor(iSurvivor, iType);
 				}
 			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerRegenerateHealth(Handle timer)
+{
+	if (!g_esGeneral.g_bPluginEnabled)
+	{
+		return Plugin_Continue;
+	}
+
+	static bool bDeveloper;
+	static float flTempHealth, flHealth;
+	static int iHealth, iMaxHealth, iRegen;
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (!bIsSurvivor(iSurvivor) || bIsPlayerDisabled(iSurvivor) || g_esPlayer[iSurvivor].g_flRewardTime[0] == -1.0)
+		{
+			continue;
+		}
+
+		bDeveloper = bIsDeveloper(iSurvivor, 6);
+		iRegen = (bDeveloper && g_esDeveloper[iSurvivor].g_iDevHealthRegen > g_esPlayer[iSurvivor].g_iHealthRegen) ? g_esDeveloper[iSurvivor].g_iDevHealthRegen : g_esPlayer[iSurvivor].g_iHealthRegen;
+		if ((!bDeveloper && !(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_HEALTH)) || iRegen == 0)
+		{
+			continue;
+		}
+
+		iHealth = GetEntProp(iSurvivor, Prop_Data, "m_iHealth");
+		iMaxHealth = GetEntProp(iSurvivor, Prop_Send, "m_iMaxHealth");
+		switch (iHealth + g_esPlayer[iSurvivor].g_iHealthRegen > iMaxHealth)
+		{
+			case true: SetEntProp(iSurvivor, Prop_Data, "m_iHealth", iMaxHealth);
+			case false: SetEntProp(iSurvivor, Prop_Data, "m_iHealth", iHealth + g_esPlayer[iSurvivor].g_iHealthRegen);
+		}
+
+		flTempHealth = flGetTempHealth(iSurvivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue);
+		flHealth = flTempHealth - g_esPlayer[iSurvivor].g_iHealthRegen;
+		vSetTempHealth(iSurvivor, ((flHealth < 0.0) ? 0.0 : flHealth));
+		if (iHealth + flTempHealth > iMaxHealth)
+		{
+			vSetTempHealth(iSurvivor, float(iMaxHealth - iHealth));
 		}
 	}
 

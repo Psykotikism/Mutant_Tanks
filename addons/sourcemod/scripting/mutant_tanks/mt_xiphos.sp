@@ -268,9 +268,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					damage /= 20.0;
 				}
-				else if (damagetype & DMG_BURN)
+				else if ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT))
 				{
 					damage /= 200.0;
+				}
+				else if ((damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable"))
+				{
+					damage /= 20.0;
 				}
 				else if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
 				{
@@ -411,7 +415,7 @@ static void vXiphos(int attacker, int victim, float damage, bool tank)
 {
 	static int iTank, iDamage, iHealth, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
 	iTank = tank ? attacker : victim;
-	iDamage = RoundToNearest(damage);
+	iDamage = (damage < 1.0) ? 1 : RoundToNearest(damage);
 	iHealth = GetEntProp(attacker, Prop_Data, "m_iHealth");
 	iMaxHealth = tank ? MT_MAXHEALTH : g_esCache[iTank].g_iXiphosMaxHealth;
 	iMaxHealth = (!tank && g_esCache[iTank].g_iXiphosMaxHealth == 0) ? GetEntProp(attacker, Prop_Data, "m_iMaxHealth") : iMaxHealth;

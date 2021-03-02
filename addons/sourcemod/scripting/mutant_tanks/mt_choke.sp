@@ -907,7 +907,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	float flVelocity[3], flHeight = g_esCache[iTank].g_flChokeHeight;
 	flVelocity[0] = 0.0;
 	flVelocity[1] = 0.0;
-	flVelocity[2] = (flHeight < 200.0) ? (flHeight * 1.5) : flHeight;
+	flVelocity[2] = (flHeight < 300.0) ? (flHeight * (300.0 / flHeight)) : flHeight;
 	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
 	SetEntityGravity(iSurvivor, 0.1);
 

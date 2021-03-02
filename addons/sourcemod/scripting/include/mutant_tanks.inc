@@ -1473,6 +1473,12 @@ stock void vSetEntityParent(int entity, int parent, bool owner = false)
 	}
 }
 
+stock void vSetTempHealth(int survivor, float health)
+{
+	SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", (health < 0.0) ? 0.0 : health);
+	SetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime", GetGameTime());
+}
+
 stock void vSetVector(float target[3], float x, float y, float z)
 {
 	target[0] = x;
@@ -2338,12 +2344,12 @@ stock float flGetSettingValue(bool apply, bool human, float playerVal, float typ
 	return (overrideLevel == 1) ? -1.0 : 0.0;
 }
 
-stock float flGetTemporaryHealth(int player, float decay)
+stock float flGetTempHealth(int survivor, float decayRate)
 {
-	static float flHealth;
-	flHealth = GetEntPropFloat(player, Prop_Send, "m_healthBuffer");
-	flHealth -= (GetGameTime() - GetEntPropFloat(player, Prop_Send, "m_healthBufferTime")) * decay;
-	return (flHealth < 0.0) ? 0.0 : flHealth;
+	static float flTempHealth;
+	flTempHealth = GetEntPropFloat(survivor, Prop_Send, "m_healthBuffer");
+	flTempHealth -= (GetGameTime() - GetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime")) * decayRate;
+	return (flTempHealth < 0.0) ? 0.0 : flTempHealth;
 }
 
 stock int iClamp(int value, int min, int max)

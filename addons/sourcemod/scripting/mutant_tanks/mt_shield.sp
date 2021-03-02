@@ -452,7 +452,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			static bool bBulletDamage, bExplosiveDamage, bFireDamage, bMeleeDamage;
 			bBulletDamage = (damagetype & DMG_BULLET) && (g_esCache[victim].g_iShieldType & MT_SHIELD_BULLET);
 			bExplosiveDamage = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE);
-			bFireDamage = (damagetype & DMG_BURN) && (g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE);
+			bFireDamage = ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE);
 			bMeleeDamage = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE);
 			if (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST) || bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
 			{
@@ -466,7 +466,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 		EmitSoundToAll(SOUND_METAL, victim);
 
-		if (damagetype & DMG_BURN)
+		if ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT))
 		{
 			ExtinguishEntity(victim);
 		}
