@@ -659,19 +659,19 @@
 	"RewardAmmo"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition{default} for killing{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} ammunition boost{default} for killing{olive} {1}{default}!"
 	}
 
 	"RewardAmmo2"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition{default} for assisting the most against{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} ammunition boost{default} for assisting the most against{olive} {1}{default}!"
 	}
 
 	"RewardAmmo3"
 	{
 		"#format"		"{1:t}"
-		"en"			"You{default} received{yellow} ammunition{default} for assisting against{olive} {1}{default}!"
+		"en"			"You{default} received{yellow} ammunition boost{default} for assisting against{olive} {1}{default}!"
 	}
 
 	"RewardAmmoEnd"
