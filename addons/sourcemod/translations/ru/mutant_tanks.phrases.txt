@@ -679,17 +679,17 @@
 
 	"RewardInfAmmo"
 	{
-		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за убийство{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за убийство{olive} '{1}'{default}!"
 	}
 
 	"RewardInfAmmo2"
 	{
-		"ru"			"Вы{default} получили{yellow} бесконечный боезапас{default} за наибольшую помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за наибольшую помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardInfAmmo3"
 	{
-		"ru"			"Вы{default} получили{yellow} бесконечный боезапас{default} за помощь в убийстве{olive} {1}{default}!"
+		"ru"			"Вы{default} получили бонус:{yellow} бесконечный боезапас{default} за помощь в убийстве{olive} '{1}'{default}!"
 	}
 
 	"RewardInfAmmoEnd"
