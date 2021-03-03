@@ -2706,16 +2706,14 @@ public void vMTVersionMenu(TopMenu topmenu, TopMenuAction action, TopMenuObject 
 
 public Action cmdMTCommandListener(int client, const char[] command, int argc)
 {
-	if (bIsSurvivor(client))
+	if (!bIsSurvivor(client))
 	{
-		vLogMessage(MT_LOG_SERVER, _, "%s %N used the \"%s\" command.", MT_TAG, client, command);
+		vLogMessage(MT_LOG_SERVER, _, "%s The \"%s\" command was intercepted to prevent errors.", MT_TAG, command);
 
-		return Plugin_Continue;
+		return Plugin_Stop;
 	}
 
-	vLogMessage(MT_LOG_SERVER, _, "%s The \"%s\" command was intercepted to prevent errors.", MT_TAG, command);
-
-	return Plugin_Stop;
+	return Plugin_Continue;
 }
 
 public Action cmdMTConfig(int client, int args)
