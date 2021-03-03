@@ -480,6 +480,7 @@
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher
+			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
 			// - Extra damage
 			// - Bypass Tank immunities
@@ -507,7 +508,7 @@
 			// - Refill clip to max size
 			// - Refill magazine to max size
 			// - Extra clip and magazine size
-			// - Receive one of the special ammo (incendiary or explosive).
+			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// 32: Item reward
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
@@ -751,7 +752,7 @@
 			// Character limit for each amount: 12
 			// --
 			// Minimum value for each amount: 0 (OFF)
-			// Maximum value for each amount: 1,000,000 (Highest)
+			// Maximum value for each amount: 1000000 (Highest)
 			// --
 			// 1st number = Amount for killers.
 			// 2nd number = Amount for assistants.
@@ -791,7 +792,7 @@
 			// 3rd number = Height for teammates.
 			"Jump Height Reward"			"75.0,75.0,75.0"
 
-			// Give lady killer as a reward to survivors.
+			// Allow a number of Witches to be instantly killed as a reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
@@ -801,11 +802,11 @@
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
-			// Maximum value for each: 1 (ON)
+			// Maximum value for each: 999999 (Highest)
 			// --
-			// 1st number = Give lady killer to killers.
-			// 2nd number = Give lady killer to assistants.
-			// 3rd number = Give lady killer to teammates.
+			// 1st number = Number of lady killer bullets to give to killers.
+			// 2nd number = Number of lady killer bullets to give to assistants.
+			// 3rd number = Number of lady killer bullets to give to teammates.
 			"Lady Killer Reward"			"1,1,1"
 
 			// The melee range to reward to survivors.
@@ -868,8 +869,8 @@
 			// Values limit: 3
 			// Character limit for each value: 12
 			// --
-			// Minimum value for each value: 0 (OFF)
-			// Maximum value for each value: 1,000,000 (Highest)
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1000000 (Highest)
 			// --
 			// 1st number = Health for killers.
 			// 2nd number = Health for assistants.
@@ -950,7 +951,7 @@
 			// 3rd number = Give sledgehammer rounds to teammates.
 			"Sledgehammer Rounds Reward"		"1,1,1"
 
-			// Give special ammo as a reward to survivors.
+			// Give special ammo as a reward to survivors. (Only available in Left 4 Dead 2.)
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
@@ -1988,6 +1989,7 @@
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher
+			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
 			// - Extra damage
 			// - Bypass Tank immunities
@@ -2015,7 +2017,7 @@
 			// - Refill clip to max size
 			// - Refill magazine to max size
 			// - Extra clip and magazine size
-			// - Receive one of the special ammo (incendiary or explosive).
+			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
 			// 32: Item reward
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
@@ -2259,7 +2261,7 @@
 			// Character limit for each amount: 12
 			// --
 			// Minimum value for each amount: 0 (OFF)
-			// Maximum value for each amount: 1,000,000 (Highest)
+			// Maximum value for each amount: 1000000 (Highest)
 			// --
 			// 1st number = Amount for killers.
 			// 2nd number = Amount for assistants.
@@ -2299,7 +2301,7 @@
 			// 3rd number = Height for teammates.
 			"Jump Height Reward"			"0.0,0.0,0.0"
 
-			// Give lady killer as a reward to survivors.
+			// Allow a number of Witches to be instantly killed as a reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
@@ -2309,12 +2311,12 @@
 			// Character limit for each value: 1
 			// --
 			// Minimum value for each: 0 (OFF)
-			// Maximum value for each: 1 (ON)
+			// Maximum value for each: 999999 (Highest)
 			// --
-			// 1st number = Give lady killer to killers.
-			// 2nd number = Give lady killer to assistants.
-			// 3rd number = Give lady killer to teammates.
-			"Lady Killer Reward"			"1,1,1"
+			// 1st number = Number of lady killer bullets to give to killers.
+			// 2nd number = Number of lady killer bullets to give to assistants.
+			// 3rd number = Number of lady killer bullets to give to teammates.
+			"Lady Killer Reward"			"0,0,0"
 
 			// The melee range to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2376,8 +2378,8 @@
 			// Values limit: 3
 			// Character limit for each value: 12
 			// --
-			// Minimum value for each value: 0 (OFF)
-			// Maximum value for each value: 1,000,000 (Highest)
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1000000 (Highest)
 			// --
 			// 1st number = Health for killers.
 			// 2nd number = Health for assistants.
@@ -2458,7 +2460,7 @@
 			// 3rd number = Give sledgehammer rounds to teammates.
 			"Sledgehammer Rounds Reward"		"0,0,0"
 
-			// Give special ammo as a reward to survivors.
+			// Give special ammo as a reward to survivors. (Only available in Left 4 Dead 2.)
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --

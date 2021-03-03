@@ -163,7 +163,7 @@
 	- Blocks fall damage for the recipient within a certain height limit (`900` HMU).
 	- Use a different voiceline when falling.
 	- Blocks the deathfall camera for the recipient.
-	- Gives the recipient the adrenaline effect until the reward ends on L4D2 only.
+	- Gives the recipient the adrenaline effect until the reward ends. (Exclusive to Left 4 Dead 2.) [Thanks to Lux for the code!]
 - The damage boost reward now does the following:
 	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 	- Gives the recipient `50%` damage resistance throughout its duration.
@@ -221,7 +221,7 @@
 	- `Shove Penalty Reward`
 	- `Shove Rate Reward` (Thanks to epzminion for the help!)
 	- `Sledgehammer Rounds Reward` (Thanks to epzminion for the code!)
-	- `Special Ammo Reward`
+	- `Special Ammo Reward` (Exclusive to Left 4 Dead 2.)
 	- `Thorns Reward` (Thanks to epzminion for the idea!)
 - Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by TheStarRocker.) [Thanks to Silvers for the code!]
 - Added the `ConVars` section under the `Plugin Settings` section which allows to change convar settings. (Requested by TheStarRocker.)
