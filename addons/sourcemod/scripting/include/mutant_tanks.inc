@@ -1376,7 +1376,7 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 
 stock void vExternalView(int player, float time)
 {
-	if (GetEngineVersion() == Engine_Left4Dead2 && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") != 99999.3)
+	if (bIsSecondGame() && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") != 99999.3)
 	{
 		SetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView", GetGameTime() + time);
 	}
@@ -1462,6 +1462,24 @@ stock void vRemoveWeapons(int survivor)
 	}
 }
 
+stock void vSetAdrenalineTime(int survivor, float duration)
+{
+	if (!bIsSecondGame())
+	{
+		return;
+	}
+
+	static int iTimerAddress = -1;
+	if (iTimerAddress == -1)
+	{
+		iTimerAddress = FindSendPropInfo("CTerrorPlayer", "m_bAdrenalineActive") - 12;
+	}
+
+	SetEntDataFloat(survivor, (iTimerAddress + 4), duration);
+	SetEntDataFloat(survivor, (iTimerAddress + 8), (GetGameTime() + duration));
+	SetEntProp(survivor, Prop_Send, "m_bAdrenalineActive", (duration <= 0.0 ? 0 : 1), 1);
+}
+
 stock void vSetEntityParent(int entity, int parent, bool owner = false)
 {
 	SetVariantString("!activator");
@@ -1493,8 +1511,7 @@ stock void vSetWounds(int common, int type = -1)
 		return;
 	}
 
-	bool bSecondGame = GetEngineVersion() == Engine_Left4Dead2;
-	if (bSecondGame && HasEntProp(common, Prop_Send, "m_iRequestedWound1"))
+	if (bIsSecondGame() && HasEntProp(common, Prop_Send, "m_iRequestedWound1"))
 	{
 		SetEntProp(common, Prop_Send, "m_iRequestedWound1", type);
 		SetEntProp(common, Prop_Send, "m_iRequestedWound2", type);
@@ -1737,7 +1754,7 @@ stock bool bIsBotSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT
 
 stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	return bIsInfected(charger, flags) && GetEngineVersion() == Engine_Left4Dead2 && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
+	return bIsInfected(charger, flags) && bIsSecondGame() && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
 
 stock bool bIsCommonInfected(int common)
@@ -1812,7 +1829,7 @@ stock bool bIsInfectedGhost(int infected)
 
 stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	return bIsInfected(jockey, flags) && GetEngineVersion() == Engine_Left4Dead2 && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
+	return bIsInfected(jockey, flags) && bIsSecondGame() && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
 }
 
 stock bool bIsPlayerBurning(int player)
@@ -1862,6 +1879,17 @@ stock bool bIsPlayerIncapacitated(int survivor)
 	return GetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1) == 1;
 }
 
+stock bool bIsSecondGame()
+{
+	static EngineVersion evEngine = Engine_Unknown;
+	if (evEngine == Engine_Unknown)
+	{
+		evEngine = GetEngineVersion();
+	}
+
+	return evEngine == Engine_Left4Dead2;
+}
+
 stock bool bIsSmoker(int smoker, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(smoker, flags) && GetEntProp(smoker, Prop_Send, "m_zombieClass") == 1;
@@ -1874,7 +1902,7 @@ stock bool bIsSpecialInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_
 
 stock bool bIsSpitter(int spitter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	return bIsInfected(spitter, flags) && GetEngineVersion() == Engine_Left4Dead2 && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
+	return bIsInfected(spitter, flags) && bIsSecondGame() && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
 }
 
 stock bool bIsSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
@@ -1887,7 +1915,7 @@ stock bool bIsSurvivorCaught(int survivor)
 	static int iSpecial;
 	iSpecial = GetEntPropEnt(survivor, Prop_Send, "m_pounceAttacker");
 	iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_tongueOwner") : iSpecial;
-	if (GetEngineVersion() == Engine_Left4Dead2)
+	if (bIsSecondGame())
 	{
 		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_pummelAttacker") : iSpecial;
 		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_carryAttacker") : iSpecial;
@@ -1899,7 +1927,7 @@ stock bool bIsSurvivorCaught(int survivor)
 
 stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	int iClass = (GetEngineVersion() == Engine_Left4Dead2) ? 8 : 5;
+	int iClass = bIsSecondGame() ? 8 : 5;
 	return bIsInfected(tank, flags) && GetEntProp(tank, Prop_Send, "m_zombieClass") == iClass;
 }
 
@@ -1918,7 +1946,7 @@ stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGA
 		}
 	}
 
-	return bIsPlayerIncapacitated(tank) || (GetEngineVersion() == Engine_Left4Dead2 && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0;
+	return bIsPlayerIncapacitated(tank) || (bIsSecondGame() && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0;
 }
 
 stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
@@ -2146,6 +2174,30 @@ stock float flClamp(float value, float min, float max)
 	}
 
 	return value;
+}
+
+stock float flGetAdrenalineTime(int survivor)
+{
+	if (!bIsSecondGame())
+	{
+		return -1.0;
+	}
+
+	static int iTimerAddress = -1;
+	if (iTimerAddress == -1)
+	{
+		iTimerAddress = FindSendPropInfo("CTerrorPlayer", "m_bAdrenalineActive") - 12;
+	}
+
+	static float flTime, flDuration;
+	flTime = GetGameTime();
+	flDuration = GetEntDataFloat(survivor, iTimerAddress + 8);
+	if (flDuration <= flTime)
+	{
+		return -1.0;
+	}
+
+	return flDuration - flTime;
 }
 
 stock float flGetAngle(float angle1[3], float angle2[3])
@@ -2728,8 +2780,6 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, i
 
 stock int iGetWeaponOffset(int weapon)
 {
-	static bool bSecondGame;
-	bSecondGame = GetEngineVersion() == Engine_Left4Dead2;
 	static char sWeapon[32];
 	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 	if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_sg552"))
@@ -2746,7 +2796,7 @@ stock int iGetWeaponOffset(int weapon)
 	}
 	else if (StrEqual(sWeapon, "weapon_pumpshotgun"))
 	{
-		return bSecondGame ? 7 : 6;
+		return bIsSecondGame() ? 7 : 6;
 	}
 	else if (StrEqual(sWeapon, "weapon_shotgun_spas"))
 	{
@@ -2754,11 +2804,11 @@ stock int iGetWeaponOffset(int weapon)
 	}
 	else if (StrEqual(sWeapon, "weapon_autoshotgun"))
 	{
-		return bSecondGame ? 8 : 6;
+		return bIsSecondGame() ? 8 : 6;
 	}
 	else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
 	{
-		return bSecondGame ? 9 : 2;
+		return bIsSecondGame() ? 9 : 2;
 	}
 	else if (StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_awp"))
 	{
