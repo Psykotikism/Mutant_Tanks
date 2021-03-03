@@ -151,17 +151,26 @@
 - The `Reward` system now validates all reward settings before applying them to recipients.
 - Added the `sm_mt_dev` command for developer use.
 - Decreased the delay for custom configs from `3` to `1.5` seconds.
+- The health reward now does the following:
+	- Gives the recipient more health when revived.
+	- Allows the recipient to heal their target back to max health.
+	- Slowly regenerates the player's health back to full health.
+- The ammo reward now does the following:
+	- Extends the recipient's max weapon clip and magazine sizes up to at least twice the default amount.
+	- Gives the recipient one of the special ammo (incendiary or explosive).
+- The speed boost reward now does the following (Thanks to epzminion for the help!):
+	- Gives the recipient extra jump height.
+	- Blocks fall damage for the recipient within a certain height limit (`900` HMU).
+	- Use a different voiceline when falling.
+	- Blocks the deathfall camera for the recipient.
+	- Gives the recipient the adrenaline effect until the reward ends on L4D2 only.
 - The damage boost reward now does the following:
 	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 	- Gives the recipient `50%` damage resistance throughout its duration.
 	- Gives the recipient extended melee range. (Thanks to epzminion for the idea and Silvers for the code!)
 	- Gives the recipient sledgehammer rounds which knock back special infected and has a `33.33%` chance to knock back Tanks. (Thanks to epzminion for the code!)
 	- Allows the recipient to deal damage to attackers for each hit taken. (Thanks to epzminion for the help!)
-- The speed boost reward now does the following (Thanks to epzminion for the help!):
-	- Gives the recipient extra jump height.
-	- Blocks fall damage for the recipient within a certain height limit (`900` HMU).
-	- Use a different voiceline when falling.
-	- Blocks the deathfall camera for the recipient.
+	- Allows the recipient to instantly kill Witches.
 - The godmode reward now does the following:
 	- Automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
 	- Fully blocks all damage from registering. (Requested by 3aljiyavslgazana.)
@@ -171,11 +180,6 @@
 	- Prevents the recipient from getting flung away by Chargers.
 	- Prevents the recipient from getting staggered.
 	- Blocks Smoker clouds, Boomer explosions, and Spitter acid puddles when they die (clean kills). (Thanks to epzminion for the help!)
-- The health reward now does the following:
-	- Gives the recipient more health when revived.
-	- Allows the recipient to heal their target back to max health.
-	- Slowly regenerates the player's health back to full health.
-- The ammo reward now extends the recipient's max weapon clip and magazine sizes up to at least twice the default amount.
 
 #### Game Data
 - Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.
@@ -209,6 +213,7 @@
 	- `Heal Percent Reward` (Thanks to epzminion for the help!)
 	- `Health Regen Reward` (Thanks to Silvers for the code!)
 	- `Jump Height Reward` (Thanks to epzminion for the help!)
+	- `Lady Killer Reward`
 	- `Melee Range Reward` (Thanks to epzminion for the idea and Silvers for the code!)
 	- `Punch Resistance Reward` (Thanks to Silvers for the code!)
 	- `Revive Health Reward` (Thanks to epzminion for the help!)
@@ -216,6 +221,7 @@
 	- `Shove Penalty Reward`
 	- `Shove Rate Reward` (Thanks to epzminion for the help!)
 	- `Sledgehammer Rounds Reward` (Thanks to epzminion for the code!)
+	- `Special Ammo Reward`
 	- `Thorns Reward` (Thanks to epzminion for the idea!)
 - Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by TheStarRocker.) [Thanks to Silvers for the code!]
 - Added the `ConVars` section under the `Plugin Settings` section which allows to change convar settings. (Requested by TheStarRocker.)
@@ -268,6 +274,7 @@
 	- `Health Regen Reward`
 	- `Item Reward`
 	- `Jump Height Reward`
+	- `Lady Killer Reward`
 	- `Melee Range Reward`
 	- `Punch Resistance Reward`
 	- `Respawn Loadout Reward`
@@ -276,6 +283,7 @@
 	- `Shove Penalty Reward`
 	- `Shove Rate Reward`
 	- `Sledgehammer Rounds Reward`
+	- `Special Ammo Reward`
 	- `Speed Boost Reward`
 	- `Thorns Reward`
 	- `Useful Rewards`

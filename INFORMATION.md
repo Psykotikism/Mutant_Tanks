@@ -484,6 +484,7 @@
 			// - Extra damage
 			// - Bypass Tank immunities
 			// - 50% damage resistance
+			// - Automatically kill Witches.
 			// - Extended melee range
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
@@ -506,6 +507,7 @@
 			// - Refill clip to max size
 			// - Refill magazine to max size
 			// - Extra clip and magazine size
+			// - Receive one of the special ammo (incendiary or explosive).
 			// 32: Item reward
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
@@ -789,6 +791,23 @@
 			// 3rd number = Height for teammates.
 			"Jump Height Reward"			"75.0,75.0,75.0"
 
+			// Give lady killer as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give lady killer to killers.
+			// 2nd number = Give lady killer to assistants.
+			// 3rd number = Give lady killer to teammates.
+			"Lady Killer Reward"			"1,1,1"
+
 			// The melee range to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -930,6 +949,28 @@
 			// 2nd number = Give sledgehammer rounds to assistants.
 			// 3rd number = Give sledgehammer rounds to teammates.
 			"Sledgehammer Rounds Reward"		"1,1,1"
+
+			// Give special ammo as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 3
+			// --
+			// 0: OFF
+			// 1: Incendiary ammo
+			// 2: Explosive ammo
+			// 4: Random
+			// --
+			// 1st number = Give special ammo to killers.
+			// 2nd number = Give special ammo to assistants.
+			// 3rd number = Give special ammo to teammates.
+			"Special Ammo Reward"			"1,1,1"
 
 			// The speed boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1951,6 +1992,7 @@
 			// - Extra damage
 			// - Bypass Tank immunities
 			// - 50% damage resistance
+			// - Automatically kill Witches.
 			// - Extended melee range
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
@@ -1973,6 +2015,7 @@
 			// - Refill clip to max size
 			// - Refill magazine to max size
 			// - Extra clip and magazine size
+			// - Receive one of the special ammo (incendiary or explosive).
 			// 32: Item reward
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
@@ -2256,6 +2299,23 @@
 			// 3rd number = Height for teammates.
 			"Jump Height Reward"			"0.0,0.0,0.0"
 
+			// Give lady killer as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give lady killer to killers.
+			// 2nd number = Give lady killer to assistants.
+			// 3rd number = Give lady killer to teammates.
+			"Lady Killer Reward"			"1,1,1"
+
 			// The melee range to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -2397,6 +2457,28 @@
 			// 2nd number = Give sledgehammer rounds to assistants.
 			// 3rd number = Give sledgehammer rounds to teammates.
 			"Sledgehammer Rounds Reward"		"0,0,0"
+
+			// Give special ammo as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 3
+			// --
+			// 0: OFF
+			// 1: Incendiary ammo
+			// 2: Explosive ammo
+			// 4: Random
+			// --
+			// 1st number = Give special ammo to killers.
+			// 2nd number = Give special ammo to assistants.
+			// 3rd number = Give special ammo to teammates.
+			"Special Ammo Reward"			"0,0,0"
 
 			// The speed boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
