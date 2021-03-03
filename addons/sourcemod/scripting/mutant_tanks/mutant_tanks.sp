@@ -752,6 +752,7 @@ enum struct esPlayer
 	int g_iImmunityFlags;
 	int g_iKillMessage;
 	int g_iLadyKiller;
+	int g_iLadyKillerCount;
 	int g_iLadyKillerReward[3];
 	int g_iLastButtons;
 	int g_iLight[10];
@@ -3704,6 +3705,7 @@ static void vDeveloperPanel(int developer, int level = 0)
 
 	static char sDisplay[PLATFORM_MAX_PATH];
 	FormatEx(sDisplay, sizeof(sDisplay), "%s Developer Panel", MT_CONFIG_SECTION_MAIN);
+	static float flValue;
 
 	Panel pDevPanel = new Panel();
 	pDevPanel.SetTitle(sDisplay);
@@ -3719,7 +3721,6 @@ static void vDeveloperPanel(int developer, int level = 0)
 			FormatEx(sDisplay, sizeof(sDisplay), "Action Duration: %.2f second(s)", g_esDeveloper[developer].g_flDevActionDuration);
 			pDevPanel.DrawText(sDisplay);
 
-			static float flValue;
 			flValue = g_esDeveloper[developer].g_flDevAttackBoost;
 			FormatEx(sDisplay, sizeof(sDisplay), "Attack Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
@@ -3774,7 +3775,6 @@ static void vDeveloperPanel(int developer, int level = 0)
 			FormatEx(sDisplay, sizeof(sDisplay), "Reward Types: %i", g_esDeveloper[developer].g_iDevRewardTypes);
 			pDevPanel.DrawText(sDisplay);
 
-			static float flValue;
 			flValue = g_esDeveloper[developer].g_flDevShoveDamage;
 			FormatEx(sDisplay, sizeof(sDisplay), "Shove Damage: %.2f%% (%.2f)", (flValue * 100), flValue);
 			pDevPanel.DrawText(sDisplay);
@@ -5326,8 +5326,10 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					}
 				}
 			}
-			else if (bSurvivor && (bIsDeveloper(attacker, 11) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iLadyKiller == 1)) && bIsWitch(victim))
+			else if (bSurvivor && (bIsDeveloper(attacker, 11) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iLadyKillerCount < g_esPlayer[attacker].g_iLadyKiller)) && bIsWitch(victim))
 			{
+				g_esPlayer[attacker].g_iLadyKillerCount++;
+
 				EmitSoundToClient(attacker, SOUND_LADYKILLER, attacker, SNDCHAN_AUTO, SNDLEVEL_NORMAL);
 				damage = float(GetEntProp(victim, Prop_Data, "m_iHealth"));
 
@@ -9259,6 +9261,7 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_iCleanKills = 0;
 	g_esPlayer[survivor].g_iHealthRegen = 0;
 	g_esPlayer[survivor].g_iLadyKiller = 0;
+	g_esPlayer[survivor].g_iLadyKillerCount = 0;
 	g_esPlayer[survivor].g_iMeleeRange = 0;
 	g_esPlayer[survivor].g_iReviveHealth = 0;
 	g_esPlayer[survivor].g_iRewardTypes = 0;
@@ -9683,6 +9686,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						g_esPlayer[survivor].g_flDamageBoost = g_esCache[tank].g_flDamageBoostReward[priority];
 						g_esPlayer[survivor].g_flDamageResistance = g_esCache[tank].g_flDamageResistanceReward[priority];
 						g_esPlayer[survivor].g_iLadyKiller = g_esCache[tank].g_iLadyKillerReward[priority];
+						g_esPlayer[survivor].g_iLadyKillerCount = 0;
 						g_esPlayer[survivor].g_iMeleeRange = g_esCache[tank].g_iMeleeRangeReward[priority];
 						g_esPlayer[survivor].g_iSledgehammerRounds = g_esCache[tank].g_iSledgehammerRoundsReward[priority];
 						g_esPlayer[survivor].g_iThorns = g_esCache[tank].g_iThornsReward[priority];
