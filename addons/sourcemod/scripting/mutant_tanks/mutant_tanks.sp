@@ -9793,6 +9793,11 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 
 			if ((iType & MT_REWARD_AMMO) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO))
 			{
+				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
+				{
+					vRefillAmmo(survivor, true);
+				}
+
 				if (bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
 				{
 					MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardAmmoEnd");
@@ -10057,7 +10062,7 @@ static void vGiveWeapons(int survivor)
 	g_esPlayer[survivor].g_sWeaponPills[0] = '\0';
 }
 
-static void vRefillAmmo(int survivor)
+static void vRefillAmmo(int survivor, bool reset = false)
 {
 	static int iSlot;
 	iSlot = GetPlayerWeaponSlot(survivor, 0);
@@ -10067,7 +10072,10 @@ static void vRefillAmmo(int survivor)
 		{
 			static int iClip;
 			iClip = SDKCall(g_esGeneral.g_hSDKGetMaxClip1, iSlot);
-			SetEntProp(iSlot, Prop_Send, "m_iClip1", iClip);
+			if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= iClip))
+			{
+				SetEntProp(iSlot, Prop_Send, "m_iClip1", iClip);
+			}
 
 			if (g_bSecondGame)
 			{
@@ -10080,21 +10088,26 @@ static void vRefillAmmo(int survivor)
 			}
 		}
 
-		vRefillMagazine(survivor, iSlot);
+		vRefillMagazine(survivor, iSlot, reset);
 	}
 }
 
-static void vRefillMagazine(int survivor, int weapon)
+static void vRefillMagazine(int survivor, int weapon, bool reset)
 {
 	static int iAmmo;
 	iAmmo = 0;
 
-	if (bIsDeveloper(survivor, 6) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[survivor].g_iAmmoBoost == 1))
+	if (!reset && (bIsDeveloper(survivor, 6) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[survivor].g_iAmmoBoost == 1)))
 	{
 		iAmmo = iGetExtraAmmo(0, weapon, true);
 	}
 	else
 	{
+		if (reset && GetEntProp(survivor, Prop_Send, "m_iAmmo", _, iGetWeaponOffset(weapon)) <= iGetExtraAmmo(0, weapon, true, true))
+		{
+			return;
+		}
+
 		switch (iGetWeaponType(weapon))
 		{
 			case MT_WEAPON_ASSAULTRIFLE: iAmmo = g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue;
@@ -12346,34 +12359,67 @@ static int iGetConfigSectionNumber(const char[] section, int size)
 	return -1;
 }
 
-static int iGetExtraAmmo(int type, int weapon, bool reserve)
+static int iGetExtraAmmo(int type, int weapon, bool reserve, bool reset = false)
 {
 	int iType = (type > 0 || weapon <= MaxClients) ? type : GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
 	if (g_bSecondGame)
 	{
-		switch (iType)
+		if (reset)
 		{
-			case 1: return 30; // pistol
-			case 2: return 16; // pistol_magnum
-			case 3: return reserve ? 700 : 100; // rifle/rifle_ak47/rifle_desert/rifle_sg552
-			case 5: return reserve ? 800 : 100; // smg/smg_silenced/smg_mp5
-			case 6: return 300; // rifle_m60
-			case 7: return reserve ? 150 : 16; // pumpshotgun/shotgun_chrome
-			case 8: return reserve ? 200 : 20; // autoshotgun/shotgun_spas
-			case 9: return reserve ? 300 : 30; // hunting_rifle
-			case 10: return reserve ? 360 : 60; // sniper_military/sniper_awp/sniper_scout
-			case 17: return reserve ? 60 : 2; // grenade_launcher
+			switch (iType)
+			{
+				case 1: return 15; // pistol
+				case 2: return 8; // pistol_magnum
+				case 3: return reserve ? 360 : 50; // rifle/rifle_ak47/rifle_desert/rifle_sg552
+				case 5: return reserve ? 650 : 50; // smg/smg_silenced/smg_mp5
+				case 6: return 150; // rifle_m60
+				case 7: return reserve ? 72 : 8; // pumpshotgun/shotgun_chrome
+				case 8: return reserve ? 90 : 10; // autoshotgun/shotgun_spas
+				case 9: return reserve ? 150 : 15; // hunting_rifle
+				case 10: return reserve ? 180 : 30; // sniper_military/sniper_awp/sniper_scout
+				case 17: return reserve ? 30 : 1; // grenade_launcher
+			}
+		}
+		else
+		{
+			switch (iType)
+			{
+				case 1: return 30; // pistol
+				case 2: return 16; // pistol_magnum
+				case 3: return reserve ? 700 : 100; // rifle/rifle_ak47/rifle_desert/rifle_sg552
+				case 5: return reserve ? 800 : 100; // smg/smg_silenced/smg_mp5
+				case 6: return 300; // rifle_m60
+				case 7: return reserve ? 150 : 16; // pumpshotgun/shotgun_chrome
+				case 8: return reserve ? 200 : 20; // autoshotgun/shotgun_spas
+				case 9: return reserve ? 300 : 30; // hunting_rifle
+				case 10: return reserve ? 360 : 60; // sniper_military/sniper_awp/sniper_scout
+				case 17: return reserve ? 60 : 2; // grenade_launcher
+			}
 		}
 	}
 	else
 	{
-		switch (iType)
+		if (reset)
 		{
-			case 1: return 30; // pistol
-			case 2: return reserve ? 300 : 30; // hunting_rifle
-			case 3: return reserve ? 700 : 100; // rifle
-			case 5: return reserve ? 800 : 100; // smg
-			case 6: return reserve ? 200 : 20; // pumpshotgun/autoshotgun
+			switch (iType)
+			{
+				case 1: return 15; // pistol
+				case 2: return reserve ? 150 : 15; // hunting_rifle
+				case 3: return reserve ? 360 : 50; // rifle
+				case 5: return reserve ? 650 : 50; // smg
+				case 6: return reserve ? 128 : 10; // pumpshotgun/autoshotgun
+			}
+		}
+		else
+		{
+			switch (iType)
+			{
+				case 1: return 30; // pistol
+				case 2: return reserve ? 300 : 30; // hunting_rifle
+				case 3: return reserve ? 700 : 100; // rifle
+				case 5: return reserve ? 800 : 100; // smg
+				case 6: return reserve ? 200 : 20; // pumpshotgun/autoshotgun
+			}
 		}
 	}
 
