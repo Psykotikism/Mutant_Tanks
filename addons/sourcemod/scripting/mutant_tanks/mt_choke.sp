@@ -53,16 +53,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esPlayer
 {
 	bool g_bAffected;
+	bool g_bBlockFall;
 	bool g_bFailed;
 	bool g_bNoAmmo;
 
 	float g_flChokeChance;
 	float g_flChokeDamage;
 	float g_flChokeDelay;
-	float g_flChokeHeight;
 	float g_flChokeRange;
 	float g_flChokeRangeChance;
-	float g_flLastPosition[3];
 	float g_flOpenAreasOnly;
 
 	int g_iAccessFlags;
@@ -91,7 +90,6 @@ enum struct esAbility
 	float g_flChokeChance;
 	float g_flChokeDamage;
 	float g_flChokeDelay;
-	float g_flChokeHeight;
 	float g_flChokeRange;
 	float g_flChokeRangeChance;
 	float g_flOpenAreasOnly;
@@ -118,7 +116,6 @@ enum struct esCache
 	float g_flChokeChance;
 	float g_flChokeDamage;
 	float g_flChokeDelay;
-	float g_flChokeHeight;
 	float g_flChokeRange;
 	float g_flChokeRangeChance;
 	float g_flOpenAreasOnly;
@@ -142,6 +139,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_choke", cmdChokeInfo, "View information about the Choke ability.");
 
@@ -315,32 +313,41 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		static char sClassname[32];
-		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
-		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esCache[attacker].g_iChokeHitMode == 0 || g_esCache[attacker].g_iChokeHitMode == 1) && bIsSurvivor(victim) && g_esCache[attacker].g_iComboAbility == 0)
+		if (bIsSurvivor(victim) && (damagetype & DMG_FALL) && g_esPlayer[victim].g_bBlockFall)
 		{
-			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
-			{
-				return Plugin_Continue;
-			}
+			g_esPlayer[victim].g_bBlockFall = false;
 
-			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
-			{
-				vChokeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esCache[attacker].g_flChokeChance, g_esCache[attacker].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
-			}
+			return Plugin_Handled;
 		}
-		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esCache[victim].g_iChokeHitMode == 0 || g_esCache[victim].g_iChokeHitMode == 2) && bIsSurvivor(attacker) && g_esCache[victim].g_iComboAbility == 0)
+		else if (bIsValidEntity(inflictor))
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
+			static char sClassname[32];
+			GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esCache[attacker].g_iChokeHitMode == 0 || g_esCache[attacker].g_iChokeHitMode == 1) && bIsSurvivor(victim) && g_esCache[attacker].g_iComboAbility == 0)
 			{
-				return Plugin_Continue;
-			}
+				if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
+				{
+					return Plugin_Continue;
+				}
 
-			if (StrEqual(sClassname, "weapon_melee"))
+				if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+				{
+					vChokeHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esCache[attacker].g_flChokeChance, g_esCache[attacker].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+				}
+			}
+			else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && (g_esCache[victim].g_iChokeHitMode == 0 || g_esCache[victim].g_iChokeHitMode == 2) && bIsSurvivor(attacker) && g_esCache[victim].g_iComboAbility == 0)
 			{
-				vChokeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esCache[victim].g_flChokeChance, g_esCache[victim].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
+				{
+					return Plugin_Continue;
+				}
+
+				if (StrEqual(sClassname, "weapon_melee"))
+				{
+					vChokeHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esCache[victim].g_flChokeChance, g_esCache[victim].g_iChokeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				}
 			}
 		}
 	}
@@ -469,7 +476,6 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_flChokeDamage = 5.0;
 				g_esAbility[iIndex].g_flChokeDelay = 1.0;
 				g_esAbility[iIndex].g_iChokeDuration = 5;
-				g_esAbility[iIndex].g_flChokeHeight = 200.0;
 				g_esAbility[iIndex].g_iChokeHit = 0;
 				g_esAbility[iIndex].g_iChokeHitMode = 0;
 				g_esAbility[iIndex].g_flChokeRange = 150.0;
@@ -497,7 +503,6 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_flChokeDamage = 0.0;
 					g_esPlayer[iPlayer].g_flChokeDelay = 0.0;
 					g_esPlayer[iPlayer].g_iChokeDuration = 0;
-					g_esPlayer[iPlayer].g_flChokeHeight = 0.0;
 					g_esPlayer[iPlayer].g_iChokeHit = 0;
 					g_esPlayer[iPlayer].g_iChokeHitMode = 0;
 					g_esPlayer[iPlayer].g_flChokeRange = 0.0;
@@ -525,7 +530,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_flChokeDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esPlayer[admin].g_flChokeDamage, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flChokeDelay = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDelay", "Choke Delay", "Choke_Delay", "delay", g_esPlayer[admin].g_flChokeDelay, value, 0.1, 999999.0);
 		g_esPlayer[admin].g_iChokeDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDuration", "Choke Duration", "Choke_Duration", "duration", g_esPlayer[admin].g_iChokeDuration, value, 1, 999999);
-		g_esPlayer[admin].g_flChokeHeight = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHeight", "Choke Height", "Choke_Height", "height", g_esPlayer[admin].g_flChokeHeight, value, 0.1, 999999.0);
 		g_esPlayer[admin].g_iChokeHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHit", "Choke Hit", "Choke_Hit", "hit", g_esPlayer[admin].g_iChokeHit, value, 0, 1);
 		g_esPlayer[admin].g_iChokeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHitMode", "Choke Hit Mode", "Choke_Hit_Mode", "hitmode", g_esPlayer[admin].g_iChokeHitMode, value, 0, 2);
 		g_esPlayer[admin].g_flChokeRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esPlayer[admin].g_flChokeRange, value, 1.0, 999999.0);
@@ -559,7 +563,6 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_flChokeDamage = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDamage", "Choke Damage", "Choke_Damage", "damage", g_esAbility[type].g_flChokeDamage, value, 1.0, 999999.0);
 		g_esAbility[type].g_flChokeDelay = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDelay", "Choke Delay", "Choke_Delay", "delay", g_esAbility[type].g_flChokeDelay, value, 0.1, 999999.0);
 		g_esAbility[type].g_iChokeDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeDuration", "Choke Duration", "Choke_Duration", "duration", g_esAbility[type].g_iChokeDuration, value, 1, 999999);
-		g_esAbility[type].g_flChokeHeight = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHeight", "Choke Height", "Choke_Height", "height", g_esAbility[type].g_flChokeHeight, value, 0.1, 999999.0);
 		g_esAbility[type].g_iChokeHit = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHit", "Choke Hit", "Choke_Hit", "hit", g_esAbility[type].g_iChokeHit, value, 0, 1);
 		g_esAbility[type].g_iChokeHitMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeHitMode", "Choke Hit Mode", "Choke_Hit_Mode", "hitmode", g_esAbility[type].g_iChokeHitMode, value, 0, 2);
 		g_esAbility[type].g_flChokeRange = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "ChokeRange", "Choke Range", "Choke_Range", "range", g_esAbility[type].g_flChokeRange, value, 1.0, 999999.0);
@@ -585,7 +588,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esCache[tank].g_flChokeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flChokeChance, g_esAbility[type].g_flChokeChance);
 	g_esCache[tank].g_flChokeDamage = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flChokeDamage, g_esAbility[type].g_flChokeDamage);
 	g_esCache[tank].g_flChokeDelay = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flChokeDelay, g_esAbility[type].g_flChokeDelay);
-	g_esCache[tank].g_flChokeHeight = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flChokeHeight, g_esAbility[type].g_flChokeHeight);
 	g_esCache[tank].g_flChokeRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flChokeRange, g_esAbility[type].g_flChokeRange);
 	g_esCache[tank].g_flChokeRangeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flChokeRangeChance, g_esAbility[type].g_flChokeRangeChance);
 	g_esCache[tank].g_iChokeAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iChokeAbility, g_esAbility[type].g_iChokeAbility);
@@ -659,6 +661,16 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		vReset();
 	}
+}
+
+public Action MT_OnFatalFalling(int survivor)
+{
+	if (bIsSurvivor(survivor) && g_esPlayer[survivor].g_bBlockFall)
+	{
+		g_esPlayer[survivor].g_bBlockFall = false;
+	}
+
+	return Plugin_Continue;
 }
 
 public void MT_OnAbilityActivated(int tank)
@@ -793,7 +805,6 @@ static void vChokeHit(int survivor, int tank, float random, float chance, int en
 				dpChokeLaunch.WriteCell(messages);
 				dpChokeLaunch.WriteCell(pos);
 
-				GetEntPropVector(survivor, Prop_Send, "m_vecOrigin", g_esPlayer[survivor].g_flLastPosition);
 				vEffect(survivor, tank, g_esCache[tank].g_iChokeEffect, flags);
 
 				if (g_esCache[tank].g_iChokeMessage & messages)
@@ -836,6 +847,7 @@ static void vRemoveChoke(int tank)
 		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME) && g_esPlayer[iSurvivor].g_bAffected && g_esPlayer[iSurvivor].g_iOwner == tank)
 		{
 			g_esPlayer[iSurvivor].g_bAffected = false;
+			g_esPlayer[iSurvivor].g_bBlockFall = false;
 			g_esPlayer[iSurvivor].g_iOwner = 0;
 		}
 	}
@@ -859,6 +871,7 @@ static void vReset()
 static void vReset2(int survivor, int tank, int messages)
 {
 	g_esPlayer[survivor].g_bAffected = false;
+	g_esPlayer[survivor].g_bBlockFall = true;
 	g_esPlayer[survivor].g_iOwner = 0;
 
 	SetEntityMoveType(survivor, MOVETYPE_WALK);
@@ -874,6 +887,7 @@ static void vReset2(int survivor, int tank, int messages)
 static void vReset3(int tank)
 {
 	g_esPlayer[tank].g_bAffected = false;
+	g_esPlayer[tank].g_bBlockFall = false;
 	g_esPlayer[tank].g_bFailed = false;
 	g_esPlayer[tank].g_bNoAmmo = false;
 	g_esPlayer[tank].g_iAmmoCount = 0;
@@ -902,13 +916,10 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+	g_esPlayer[iSurvivor].g_bBlockFall = true;
 
-	float flVelocity[3], flHeight = g_esCache[iTank].g_flChokeHeight;
-	flVelocity[0] = 0.0;
-	flVelocity[1] = 0.0;
-	flVelocity[2] = (flHeight < 300.0) ? (flHeight * (300.0 / flHeight)) : flHeight;
-	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
+	TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 300.0}));
 	SetEntityGravity(iSurvivor, 0.1);
 
 	int iMessage = pack.ReadCell(), iPos = pack.ReadCell();

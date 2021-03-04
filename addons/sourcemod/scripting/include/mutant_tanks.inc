@@ -276,6 +276,16 @@ forward void MT_OnDisplayMenu(Menu menu);
 forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast);
 
 /**
+ * Called when a survivor is falling in a fatal zone.
+ * Use this forward to check if the current map has death fall cameras (fatal falls).
+ *
+ * @param survivor		Client index of the survivor.
+ *
+ * @return			Plugin_Handled to prevent the death fall camera from triggering, Plugin_Continue to allow.
+ **/
+forward Action MT_OnFatalFalling(int survivor);
+
+/**
  * Called when the core plugin is hooking/unhooking events.
  * Use this forward to hook/unhook events.
  *
