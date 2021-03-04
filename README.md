@@ -150,7 +150,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -171,7 +171,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -192,7 +192,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -213,7 +213,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -236,7 +236,7 @@ Here's our final entry:
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -781,6 +781,16 @@ forward void MT_OnDisplayMenu(Menu menu);
  * @param dontBroadcast		True if event was not broadcast to clients, false otherwise.
  **/
 forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast);
+
+/**
+ * Called when a survivor is falling in a fatal zone.
+ * Use this forward to check if the current map has death fall cameras (fatal falls).
+ *
+ * @param survivor		Client index of the survivor.
+ *
+ * @return			Plugin_Handled to prevent the death fall camera from triggering, Plugin_Continue to allow.
+ **/
+forward Action MT_OnFatalFalling(int survivor);
 
 /**
  * Called when the core plugin is hooking/unhooking events.

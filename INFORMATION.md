@@ -1055,7 +1055,7 @@
 			// Maximum: 999999.0
 			"Force Spawn"				"0.0"
 
-			// (Versus modes only) The stasis mode of Mutant Tanks in competitive game modes.
+			// The stasis mode of Mutant Tanks when spawning.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be used for standard Tanks.
 			// --
@@ -1064,6 +1064,7 @@
 			"Stasis Mode"				"0"
 
 			// (Survival modes only) The delay in seconds before allowing Mutant Tanks to spawn.
+			// Note: The survival timer starts when the first panic event is triggered, which is the same method used by this setting to delay Mutant Tanks from spawning.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// Minimum: 0.1
@@ -5583,17 +5584,6 @@
 			// "minute" - 1 minute
 			// "forever" - 999999 seconds
 			"Choke Duration"			"5"
-
-			// The Mutant Tank brings survivors this high up into the air.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// Minimum: 0.1
-			// Maximum: 999999.0
-			// --
-			// Keywords:
-			// "shortest" - 0.1 height
-			// "tallest" - 999999.0 height
-			"Choke Height"				"200.0"
 
 			// Enable the Mutant Tank's claw/rock attack.
 			// Note: This setting can be overridden for specific players.

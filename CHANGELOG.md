@@ -27,6 +27,7 @@
 - Fixed survivors with the godmode reward surviving underwater. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed the `Boss` feature not calculating the Tank's total health properly.
 - Fixed the `Reward` system notifying recipients twice when they do not do enough damage to Tanks. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed the `Reward` system not detecting recipients' incapacitation/black and white counter after using `give health`. (Thanks to Silvers for the code!)
 
 #### Game Data
 - Fixed some detours crashing servers due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -44,7 +45,7 @@
 	- Fixed survivors not being healed when receiving the health or refill reward. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Choke
-	- Fixed choked survivors not always being lifted off the ground while being choked. (Thanks to 3aljiyavslgazana for testing and reporting!)
+	- Fixed choked survivors not always being lifted off the ground while being choked. (Thanks to 3aljiyavslgazana and Mi.Cura for testing and reporting!)
 	- Fixed choked survivors being stuck under the floor when the ability ends.
 
 - Clone
@@ -158,11 +159,11 @@
 - The ammo reward now does the following:
 	- Extends the recipient's max weapon clip and magazine sizes up to at least twice the default amount.
 	- Gives the recipient one of the special ammo (incendiary or explosive).
-- The speed boost reward now does the following (Thanks to epzminion for the help!):
-	- Gives the recipient extra jump height.
-	- Blocks fall damage for the recipient within a certain height limit (`900` HMU).
+- The speed boost reward now does the following:
+	- Gives the recipient extra jump height. (Thanks to epzminion for the help!)
+	- Blocks fall damage for the recipient within a certain height limit (`900` HMU). (Thanks to epzminion for the code!)
 	- Use a different voiceline when falling.
-	- Blocks the deathfall camera for the recipient.
+	- Blocks the deathfall camera for the recipient. (Thanks to epzminion for the help!)
 	- Gives the recipient the adrenaline effect until the reward ends. (Exclusive to Left 4 Dead 2.) [Thanks to Lux for the code!]
 - The damage boost reward now does the following:
 	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
@@ -170,7 +171,7 @@
 	- Gives the recipient extended melee range. (Thanks to epzminion for the idea and Silvers for the code!)
 	- Gives the recipient sledgehammer rounds which knock back special infected and has a `33.33%` chance to knock back Tanks. (Thanks to epzminion for the code!)
 	- Allows the recipient to deal damage to attackers for each hit taken. (Thanks to epzminion for the help!)
-	- Allows the recipient to instantly kill Witches.
+	- Allows the recipient to instantly kill Witches (limited uses). (Thanks to epzminion for the idea!)
 - The godmode reward now does the following:
 	- Automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
 	- Fully blocks all damage from registering. (Requested by 3aljiyavslgazana.)
@@ -203,6 +204,7 @@
 - Added the following new options for the `Reward Enabled` setting:
 	- `Attack boost reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 	- `Infinite primary ammo reward` (Thanks to epzminion for helping!)
+- The `Stasis Mode` setting now works in all game mode types. (Requested by yuzumi.)
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Attack Boost Reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 	- `Action Duration Reward` (Thanks to epzminion for the help!)
@@ -213,7 +215,7 @@
 	- `Heal Percent Reward` (Thanks to epzminion for the help!)
 	- `Health Regen Reward` (Thanks to Silvers for the code!)
 	- `Jump Height Reward` (Thanks to epzminion for the help!)
-	- `Lady Killer Reward`
+	- `Lady Killer Reward` (Thanks to epzminion for the idea!)
 	- `Melee Range Reward` (Thanks to epzminion for the idea and Silvers for the code!)
 	- `Punch Resistance Reward` (Thanks to Silvers for the code!)
 	- `Revive Health Reward` (Thanks to epzminion for the help!)
@@ -315,9 +317,11 @@
 - Updated Simplified Chinese translations. (Thanks to yuzumi!)
 - Updated Hungarian translations. (Thanks to KasperH/Ladis!)
 - Updated Russian translations. (Thanks to Blueberry/Kleiner!)
+- Moved the `Tank # Name`, `Tank #`, `STEAM_ID Name`, and `STEAM_ID` phrases to the `mutant_tanks_names.phrases.txt` file. (Requested by yuzumi.)
 
 #### Natives & Forwards
 - Updated the `MT_OnRewardSurvivor` forward.
+- Added the `MT_OnFatalFalling` forward.
 - Added the `MT_OnPlayerEventKilled` forward.
 - Added the `MT_OnPlayerHitByVomitJar` forward.
 - Added the `MT_UnvomitPlayer` native.
@@ -342,7 +346,8 @@
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 	- The ability automatically ends when the targeted survivor becomes incapacitated. (Requested by 3aljiyavslgazana.)
 	- Choked survivors can no longer attack, shove, or use/grab items. (Requested by 3aljiyavslgazana.)
-	- Switched back to the old method with a more consistent fix. (Thanks to Mi.Cura for the idea!)
+	- Blocked survivors from taking non-fatal fall damage after the ability ends.
+	- Removed the `Choke Height` setting.
 
 - Clone
 	- Clones no longer reward survivors after dying. (Thanks to 3aljiyavslgazana for the idea!)
@@ -430,6 +435,9 @@
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 ### Files
+
+#### Requirements
+- The `mutant_tanks_names.phrases` translation file is now used by all the plugins.
 
 #### Updates
 - Updated config files.

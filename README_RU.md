@@ -150,7 +150,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -171,7 +171,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -192,7 +192,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -213,7 +213,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -236,7 +236,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -783,6 +783,16 @@ forward void MT_OnDisplayMenu(Menu menu);
 forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast);
 
 /**
+* Вызывается, когда выживший падает в смертельной зоне.
+* Используйте этот forward, чтобы проверить, есть ли на текущей карте камеры смертельного падения (выведения из строя).
+*
+* @param survivor		Клиентский индекс выжившего.
+*
+* @return			Plugin_Handled, чтобы предотвратить срабатывание камеры смертельного падения, Plugin_Continue, чтобы разрешить.
+**/
+forward Action MT_OnFatalFalling(int survivor);
+
+/**
  * Вызывается, когда основной плагин подключает/отключает события.
  * Используйте этот forward, чтобы перехватить/отцепить события
  *
@@ -822,23 +832,23 @@ forward void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer
 forward void MT_OnMenuItemSelected(int client, const char[] info);
 
 /**
- * Вызывается прямо перед смертью игрока.
- * Используйте этот форвард, чтобы сделать что-нибудь, прежде чем игрок умрет.
- *
- * @param victim		Клиентский индекс умирающего игрока.
- * @param attacker		Клиентский индекс убийцы.
- **/
+* Вызывается прямо перед смертью игрока.
+* Используйте это forward, чтобы сделать что-нибудь, прежде чем игрок умрёт.
+*
+* @param victim			Клиентский индекс умирающего игрока.
+* @param attacker		Клиентский индекс убийцы.
+**/
 forward void MT_OnPlayerEventKilled(int victim, int attacker);
 
 /**
- * Вызывается непосредственно перед попаданием в игрока желчной бомбы (банку с рвотой).
- * Используйте это форвард, чтобы сделать что-нибудь, прежде чем игрок получит удар.
- *
- * @param player		Клиентский индекс пораженного игрока.
- * @param thrower		Клиентский индекс выжившего, бросившего желчную бомбу (банку с рвотой).
- *
- * @return			Plugin_Handled, чтобы игрок не попал, Plugin_Continue, чтобы разрешить.
- **/
+* Вызывается непосредственно перед попаданием в игрока желчной бомбы (баночки с рвотой).
+* Используйте это forward, чтобы сделать что-нибудь, прежде чем в игрока попадёт эта банка.
+*
+* @param player			Клиентский индекс поражённого игрока.
+* @param thrower		Клиентский индекс выжившего, который бросил желчную бомбу (банку с рвотой).
+*
+* @return			Plugin_Handled, чтобы предотвратить попадание в игрока, Plugin_Continue, чтобы разрешить.
+**/
 forward Action MT_OnPlayerHitByVomitJar(int player, int thrower);
 
 /**
@@ -885,7 +895,7 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param duration		Срок действия награды.
  * @param apply			True, если награда дана, в противном случае - false.
  *
- * @return			Plugin_Handled, чтобы предотвратить выдачу или окончание награды, Plugin_Continue, чтобы разрешить.
+ * @return			Plugin_Handled, чтобы предотвратить выдачу или прекращение вознаграждения, Plugin_Continue, чтобы разрешить.
  **/
 forward Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply);
 
@@ -955,14 +965,14 @@ native bool MT_CanTypeSpawn(int type);
 native void MT_DetonateTankRock(int rock);
 
 /**
- * Возвращается, если у определенного выжившего активен тип награды.
+ * Возвращается, если у определённого выжившего активен тип награды.
  *
- * @param survivor		Клиентский индекс Выжившего.
- * @param type			1 = Здоровье, 2 = Усилитель урона, 4 = Скорость, 8 = Боеприпасы, 16 = Предмет, 32 = Режим бога, 64 = Пополнение здоровья и боеприпасов, 128 = Возрождение,
+ * @param survivor		Клиентский индекс выжившего.
+ * @param type			1 = Здоровье, 2 = Усиление урона, 4 = Ускорение, 8 = Боеприпасы, 16 = Предмет, 32 = Режим бога, 64 = Здоровье и пополнение боеприпасов, 128 = Возрождение,
  *					255 = Все восемь наград, 256-2147483647 = Зарезервировано для сторонних плагинов
  *
- * @return			True, если у Выжившего активен тип награды, в противном случае - false.
- * @error			Неверный индекс клиента, клиент не в игре, или тип 0 или меньше.
+ * @return			True, если у выжившего активен тип награды, в противном случае - false.
+ * @error			Неверный индекс клиента, клиента нет в игре или тип равен 0 или меньше.
  **/
 native bool MT_DoesSurvivorHaveRewardType(int survivor, int type);
 
@@ -1309,12 +1319,12 @@ native void MT_SpawnTank(int tank, int type);
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
 
 /**
- * Снимает эффект рвоты на игрока.
- *
- * @param player		Клиентский индекс Танка.
- *
- * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
- **/
+* Снимает эффект рвоты на игрока.
+*
+* @param player			Клиентский индекс игрока.
+*
+* @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
+**/
 native void MT_UnvomitPlayer(int player);
 ```
 
