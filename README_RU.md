@@ -150,7 +150,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -171,7 +171,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -192,7 +192,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -213,7 +213,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -236,7 +236,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -783,13 +783,13 @@ forward void MT_OnDisplayMenu(Menu menu);
 forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast);
 
 /**
-* Вызывается, когда выживший падает в смертельной зоне.
-* Используйте этот forward, чтобы проверить, есть ли на текущей карте камеры смертельного падения (выведения из строя).
-*
-* @param survivor		Клиентский индекс выжившего.
-*
-* @return			Plugin_Handled, чтобы предотвратить срабатывание камеры смертельного падения, Plugin_Continue, чтобы разрешить.
-**/
+ * Вызывается, когда выживший падает в смертельной зоне.
+ * Используйте этот forward, чтобы проверить, есть ли на текущей карте камеры смертельного падения (выведения из строя).
+ *
+ * @param survivor		Клиентский индекс выжившего.
+ *
+ * @return			Plugin_Handled, чтобы предотвратить срабатывание камеры смертельного падения, Plugin_Continue, чтобы разрешить.
+ **/
 forward Action MT_OnFatalFalling(int survivor);
 
 /**
@@ -832,23 +832,23 @@ forward void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer
 forward void MT_OnMenuItemSelected(int client, const char[] info);
 
 /**
-* Вызывается прямо перед смертью игрока.
-* Используйте это forward, чтобы сделать что-нибудь, прежде чем игрок умрёт.
-*
-* @param victim			Клиентский индекс умирающего игрока.
-* @param attacker		Клиентский индекс убийцы.
-**/
+ * Вызывается прямо перед смертью игрока.
+ * Используйте это forward, чтобы сделать что-нибудь, прежде чем игрок умрёт.
+ *
+ * @param victim		Клиентский индекс умирающего игрока.
+ * @param attacker		Клиентский индекс убийцы.
+ **/
 forward void MT_OnPlayerEventKilled(int victim, int attacker);
 
 /**
-* Вызывается непосредственно перед попаданием в игрока желчной бомбы (баночки с рвотой).
-* Используйте это forward, чтобы сделать что-нибудь, прежде чем в игрока попадёт эта банка.
-*
-* @param player			Клиентский индекс поражённого игрока.
-* @param thrower		Клиентский индекс выжившего, который бросил желчную бомбу (банку с рвотой).
-*
-* @return			Plugin_Handled, чтобы предотвратить попадание в игрока, Plugin_Continue, чтобы разрешить.
-**/
+ * Вызывается непосредственно перед попаданием в игрока желчной бомбы (баночки с рвотой).
+ * Используйте это forward, чтобы сделать что-нибудь, прежде чем в игрока попадёт эта банка.
+ *
+ * @param player		Клиентский индекс поражённого игрока.
+ * @param thrower		Клиентский индекс выжившего, который бросил желчную бомбу (банку с рвотой).
+ *
+ * @return			Plugin_Handled, чтобы предотвратить попадание в игрока, Plugin_Continue, чтобы разрешить.
+ **/
 forward Action MT_OnPlayerHitByVomitJar(int player, int thrower);
 
 /**
@@ -1319,12 +1319,12 @@ native void MT_SpawnTank(int tank, int type);
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
 
 /**
-* Снимает эффект рвоты на игрока.
-*
-* @param player			Клиентский индекс игрока.
-*
-* @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
-**/
+ * Снимает эффект рвоты на игрока.
+ *
+ * @param player		Клиентский индекс игрока.
+ *
+ * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
+ **/
 native void MT_UnvomitPlayer(int player);
 ```
 

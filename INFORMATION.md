@@ -1039,7 +1039,7 @@
 			// 1: ON, force Mutant Tanks to attack immediately.
 			"Aggressive Tanks"			"0"
 
-			// (Left 4 Dead 2 only) Survivors will be credited when damaging Mutant Tanks with fire.
+			// Survivors will be credited when damaging Mutant Tanks with fire.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be used for standard Tanks.
 			// --
