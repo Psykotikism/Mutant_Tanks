@@ -1665,14 +1665,14 @@ public void OnPluginStart()
 					LogError("%s Failed to load offset: CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon", MT_TAG);
 				}
 
-				bRegisterPatch(gdMutantTanks, "Boomer4CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer4", 0xE8, { 0x90, 0x90, 0x90, 0x90, 0x90 }, 5); // block the function with NOPs
-				bRegisterPatch(gdMutantTanks, "Boomer5CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer5", 0xE8, { 0x90, 0x90, 0x90, 0x90, 0x90 }, 5); // block the function with NOPs
-				bRegisterPatch(gdMutantTanks, "Boomer6CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer6", 0xE8, { 0x90, 0x90, 0x90, 0x90, 0x90 }, 5); // block the function with NOPs
+				bRegisterPatch(gdMutantTanks, "Boomer4CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer4", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
+				bRegisterPatch(gdMutantTanks, "Boomer5CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer5", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
+				bRegisterPatch(gdMutantTanks, "Boomer6CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer6", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
 
 				switch (g_esGeneral.g_bLinux)
 				{
-					case true: bRegisterPatch(gdMutantTanks, "SpitterCleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::SpitterPuddle", 0x8B, { 0xE9, 0x60, 0x02, 0x00, 0x00 }, 5); // do a long jump (260h) to skip the function
-					case false: bRegisterPatch(gdMutantTanks, "SpitterCleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::SpitterPuddle", 0x8B, { 0xE9, 0x1A, 0x01, 0x00, 0x00 }, 5); // do a long jump (11Ah) to skip the function
+					case true: bRegisterPatch(gdMutantTanks, "SpitterCleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::SpitterPuddle", 0x8B, {0xE9, 0x60, 0x02, 0x00, 0x00}, 5); // do a long jump (260h) to skip the function
+					case false: bRegisterPatch(gdMutantTanks, "SpitterCleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::SpitterPuddle", 0x8B, {0xE9, 0x1A, 0x01, 0x00, 0x00}, 5); // do a long jump (11Ah) to skip the function
 				}
 
 				g_esGeneral.g_ddActionCompleteDetour = DynamicDetour.FromConf(gdMutantTanks, "CFirstAidKit::OnActionComplete");
@@ -1892,17 +1892,17 @@ public void OnPluginStart()
 					{
 						switch (g_esGeneral.g_bLinux)
 						{
-							case true: bRegisterPatch(gdMutantTanks, "DoJumpStart1", "DoJumpStart", "CTerrorGameMovement::DoJump::Start", 0xF2, { 0xF3 }, 1); // first value: make the function accept a float instead of a double
-							case false: bRegisterPatch(gdMutantTanks, "DoJumpStart1", "DoJumpStart", "CTerrorGameMovement::DoJump::Start", 0xDD, { 0xD9 }, 1); // first value: make the function accept a float instead of a double
+							case true: bRegisterPatch(gdMutantTanks, "DoJumpStart1", "DoJumpStart", "CTerrorGameMovement::DoJump::Start", 0xF2, {0xF3}, 1); // first value: make the function accept a float instead of a double
+							case false: bRegisterPatch(gdMutantTanks, "DoJumpStart1", "DoJumpStart", "CTerrorGameMovement::DoJump::Start", 0xDD, {0xD9}, 1); // first value: make the function accept a float instead of a double
 						}
 					}
-					case false: bRegisterPatch(gdMutantTanks, "DoJumpStart1", "DoJumpStart", "CTerrorGameMovement::DoJump::Start", 0xDD, { 0xD9 }, 1); // first value: make the function accept a float instead of a double
+					case false: bRegisterPatch(gdMutantTanks, "DoJumpStart1", "DoJumpStart", "CTerrorGameMovement::DoJump::Start", 0xDD, {0xD9}, 1); // first value: make the function accept a float instead of a double
 				}
 			}
 
 			if (!g_esGeneral.g_bLinux)
 			{
-				bRegisterPatch(gdMutantTanks, "DoJumpStart2", "DoJumpStart", "CTerrorGameMovement::DoJump::Start2", 0xDC, { 0xD8 }, 1); // second value: make the function accept a float instead of a double
+				bRegisterPatch(gdMutantTanks, "DoJumpStart2", "DoJumpStart", "CTerrorGameMovement::DoJump::Start2", 0xDC, {0xD8}, 1); // second value: make the function accept a float instead of a double
 			}
 
 			g_esGeneral.g_iEventKilledAttackerOffset = gdMutantTanks.GetOffset("CTerrorPlayer::Event_Killed::Attacker");
@@ -1965,34 +1965,34 @@ public void OnPluginStart()
 				LogError("%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
 			}
 
-			bRegisterPatch(gdMutantTanks, "Boomer1CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer1", 0xE8, { 0x90, 0x90, 0x90, 0x90, 0x90 }, 5); // block the function with NOPs
-			bRegisterPatch(gdMutantTanks, "Boomer2CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer2", 0xE8, { 0x90, 0x90, 0x90, 0x90, 0x90 }, 5); // block the function with NOPs
-			bRegisterPatch(gdMutantTanks, "Boomer3CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer3", 0xE8, { 0x90, 0x90, 0x90, 0x90, 0x90 }, 5); // block the function with NOPs
-			bRegisterPatch(gdMutantTanks, "Smoker3CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker3", 0xE8, { 0x90, 0x90, 0x90, 0x90, 0x90 }, 5); // block the function with NOPs
+			bRegisterPatch(gdMutantTanks, "Boomer1CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer1", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
+			bRegisterPatch(gdMutantTanks, "Boomer2CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer2", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
+			bRegisterPatch(gdMutantTanks, "Boomer3CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer3", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
+			bRegisterPatch(gdMutantTanks, "Smoker3CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker3", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
 
 			switch (g_esGeneral.g_bLinux)
 			{
 				case true:
 				{
-					bRegisterPatch(gdMutantTanks, "Smoker1CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker1", 0xE8, { 0x90, 0x90, 0x90, 0x90, 0x90 }, 5); // block the function with NOPs
-					bRegisterPatch(gdMutantTanks, "Smoker2CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker2", 0xE8, { 0x90, 0x90, 0x90, 0x90, 0x90 }, 5); // block the function with NOPs
+					bRegisterPatch(gdMutantTanks, "Smoker1CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker1", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
+					bRegisterPatch(gdMutantTanks, "Smoker2CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker2", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
 				}
 				case false:
 				{
-					bRegisterPatch(gdMutantTanks, "Smoker1CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker1", 0xD9, { 0xEB, 0x12 }, 2); // do a short jump (12h) to skip the function
-					bRegisterPatch(gdMutantTanks, "Smoker2CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker2", 0x8B, { 0xEB, 0x3A }, 2); // do a short jump (3Ah) to skip the function
+					bRegisterPatch(gdMutantTanks, "Smoker1CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker1", 0xD9, {0xEB, 0x12}, 2); // do a short jump (12h) to skip the function
+					bRegisterPatch(gdMutantTanks, "Smoker2CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker2", 0x8B, {0xEB, 0x3A}, 2); // do a short jump (3Ah) to skip the function
 				}
 			}
 
 			switch (g_bSecondGame)
 			{
-				case true: bRegisterPatch(gdMutantTanks, "Smoker4CleanKill", "FireSmokerCloud", "", 0x55, { 0xC3 }, 1); // make the function return early
+				case true: bRegisterPatch(gdMutantTanks, "Smoker4CleanKill", "FireSmokerCloud", "", 0x55, {0xC3}, 1); // make the function return early
 				case false:
 				{
 					switch (g_esGeneral.g_bLinux)
 					{
-						case true: bRegisterPatch(gdMutantTanks, "Smoker4CleanKill", "FireSmokerCloud", "", 0x57, { 0xC3 }, 1); // make the function return early
-						case false: bRegisterPatch(gdMutantTanks, "Smoker4CleanKill", "FireSmokerCloud", "", 0x83, { 0xC2, 0x04, 0x00 }, 3); // make function return early
+						case true: bRegisterPatch(gdMutantTanks, "Smoker4CleanKill", "FireSmokerCloud", "", 0x57, {0xC3}, 1); // make the function return early
+						case false: bRegisterPatch(gdMutantTanks, "Smoker4CleanKill", "FireSmokerCloud", "", 0x83, {0xC2, 0x04, 0x00}, 3); // make function return early
 					}
 				}
 			}
@@ -12704,20 +12704,31 @@ public MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 		bool bDeveloper = bIsDeveloper(iSurvivor, 5);
 		if (bDeveloper || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 		{
-			static int iIndex[2] = { -1, -1 };
+			bool bApply[2];
+			static int iIndex[2] = {-1, -1};
 			if (g_bSecondGame || (!g_bSecondGame && !g_esGeneral.g_bLinux))
 			{
 				if (iIndex[0] == -1) iIndex[0] = iGetPatchIndex("DoJumpStart1");
 				if (iIndex[0] != -1) bInstallPatch(iIndex[0]);
+				if (iIndex[0] != -1) bApply[0] = g_bPatchInstalled[iIndex[0]];
+			}
+			else
+			{
+				bApply[0] = true;
 			}
 
 			if (!g_esGeneral.g_bLinux)
 			{
 				if (iIndex[1] == -1) iIndex[1] = iGetPatchIndex("DoJumpStart2");
 				if (iIndex[1] != -1) bInstallPatch(iIndex[1]);
+				if (iIndex[1] != -1) bApply[1] = g_bPatchInstalled[iIndex[1]];
+			}
+			else
+			{
+				bApply[1] = true;
 			}
 
-			if (g_bPatchInstalled[iIndex[0]] && g_bPatchInstalled[iIndex[1]] && !g_esGeneral.g_bPatchDoJumpValue)
+			if (bApply[0] && bApply[1] && !g_esGeneral.g_bPatchDoJumpValue)
 			{
 				float flHeight = (bDeveloper && g_esDeveloper[iSurvivor].g_flDevJumpHeight > g_esPlayer[iSurvivor].g_flJumpHeight) ? g_esDeveloper[iSurvivor].g_flDevJumpHeight : g_esPlayer[iSurvivor].g_flJumpHeight;
 				if (flHeight > 0.0)
@@ -12735,20 +12746,31 @@ public MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 
 public MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
 {
-	static int iIndex[2] = { -1, -1 };
+	bool bApply[2];
+	static int iIndex[2] = {-1, -1};
 	if (g_bSecondGame || (!g_bSecondGame && !g_esGeneral.g_bLinux))
 	{
 		if (iIndex[0] == -1) iIndex[0] = iGetPatchIndex("DoJumpStart1");
 		if (iIndex[0] != -1) bRemovePatch(iIndex[0]);
+		if (iIndex[0] != -1) bApply[0] = g_bPatchInstalled[iIndex[0]];
+	}
+	else
+	{
+		bApply[0] = false;
 	}
 
 	if (!g_esGeneral.g_bLinux)
 	{
 		if (iIndex[1] == -1) iIndex[1] = iGetPatchIndex("DoJumpStart2");
 		if (iIndex[1] != -1) bRemovePatch(iIndex[1]);
+		if (iIndex[1] != -1) bApply[1] = g_bPatchInstalled[iIndex[1]];
+	}
+	else
+	{
+		bApply[1] = false;
 	}
 
-	if (!g_bPatchInstalled[iIndex[0]] && !g_bPatchInstalled[iIndex[1]] && g_esGeneral.g_bPatchDoJumpValue)
+	if (!bApply[0] && !bApply[1] && g_esGeneral.g_bPatchDoJumpValue)
 	{
 		g_esGeneral.g_bPatchDoJumpValue = false;
 		StoreToAddress(g_esGeneral.g_adDoJumpValue, g_esGeneral.g_iOriginalJumpHeight, NumberType_Int32);
@@ -12820,7 +12842,7 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 		{
 			bool bBoomer = bIsBoomer(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME), bSmoker = bIsSmoker(pThis, MT_CHECK_INDEX|MT_CHECK_INGAME);
 			char sName[32];
-			static int iIndex[11] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+			static int iIndex[11] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 			int iLimit = g_bSecondGame ? 6 : 3;
 			for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
 			{
@@ -12857,7 +12879,7 @@ public MRESReturn mreEventKilledPre(int pThis, DHookParam hParams)
 public MRESReturn mreEventKilledPost(int pThis, DHookParam hParams)
 {
 	char sName[32];
-	static int iIndex[11] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+	static int iIndex[11] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 	int iLimit = g_bSecondGame ? 6 : 3;
 	for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
 	{
