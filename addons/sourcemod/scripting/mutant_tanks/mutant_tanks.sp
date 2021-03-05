@@ -9953,17 +9953,17 @@ static void vRewardItemMessage(int survivor, int priority, const char[] loadout,
 
 static void vRewardLadyKillerMessage(int survivor, int tank, int priority)
 {
-	int iLimit = 999999, iUseCount = g_esPlayer[survivor].g_iLadyKillerCount, iUses = g_esPlayer[survivor].g_iLadyKiller - iUseCount,
+	int iLimit = 999999, iUses = g_esPlayer[survivor].g_iLadyKiller - g_esPlayer[survivor].g_iLadyKillerCount,
 	iNewUses = g_esCache[tank].g_iLadyKillerReward[priority] + iUses,
 	iFinalUses = iClamp(iNewUses, 0, iLimit),
-	iReceivedUses = (iNewUses > iLimit) ? (iLimit - iUses) : iNewUses;
+	iReceivedUses = (iNewUses > iLimit) ? (iLimit - iUses) : g_esCache[tank].g_iLadyKillerReward[priority];
 	if (iReceivedUses > 0)
 	{
 		MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardLadyKiller", iReceivedUses);
 	}
 
 	g_esPlayer[survivor].g_iLadyKiller = iFinalUses;
-	g_esPlayer[survivor].g_iLadyKillerCount = iUseCount;
+	g_esPlayer[survivor].g_iLadyKillerCount = 0;
 }
 
 static void vRewardMessage(int survivor, int priority, const char[] phrase1, const char[] phrase2, const char[] phrase3, const char[] namePhrase)
