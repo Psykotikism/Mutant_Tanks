@@ -1617,6 +1617,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -1631,6 +1632,8 @@ public void OnPluginStart()
 		}
 		case false:
 		{
+			g_esGeneral.g_bLinux = gdMutantTanks.GetOffset("OS") == 1;
+
 			if (g_bSecondGame)
 			{
 				StartPrepSDKCall(SDKCall_Entity);
@@ -1737,8 +1740,6 @@ public void OnPluginStart()
 					LogError("%s Failed to find signature: CFirstAidKit::StartHealing", MT_TAG);
 				}
 			}
-
-			g_esGeneral.g_bLinux = gdMutantTanks.GetOffset("OS") == 1;
 
 			g_esGeneral.g_adDirector = gdMutantTanks.GetAddress("CDirector");
 			if (g_esGeneral.g_adDirector == Address_Null)
@@ -10059,13 +10060,20 @@ static void vGiveSpecialAmmo(int survivor)
 			int iAmmoType = GetEntProp(iSlot, Prop_Send, "m_iPrimaryAmmoType");
 			if (iAmmoType != 6 && iAmmoType != 17) // rifle_m60 and grenade_launcher
 			{
+				int iUpgrades = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
+
 				switch (iType)
 				{
-					case 1: SetEntProp(iSlot, Prop_Send, "m_upgradeBitVec", MT_UPGRADE_INCENDIARY);
-					case 2: SetEntProp(iSlot, Prop_Send, "m_upgradeBitVec", MT_UPGRADE_EXPLOSIVE);
-					case 3: SetEntProp(iSlot, Prop_Send, "m_upgradeBitVec", ((GetRandomInt(1, 2) == 2) ? MT_UPGRADE_INCENDIARY : MT_UPGRADE_EXPLOSIVE));
+					case 1: iUpgrades = (iUpgrades & MT_UPGRADE_LASERSIGHT) ? MT_UPGRADE_LASERSIGHT|MT_UPGRADE_INCENDIARY : MT_UPGRADE_INCENDIARY;
+					case 2: iUpgrades = (iUpgrades & MT_UPGRADE_LASERSIGHT) ? MT_UPGRADE_LASERSIGHT|MT_UPGRADE_EXPLOSIVE : MT_UPGRADE_EXPLOSIVE;
+					case 3:
+					{
+						int iSpecialAmmo = (GetRandomInt(1, 2) == 2) ? MT_UPGRADE_INCENDIARY : MT_UPGRADE_EXPLOSIVE;
+						iUpgrades = (iUpgrades & MT_UPGRADE_LASERSIGHT) ? MT_UPGRADE_LASERSIGHT|iSpecialAmmo : iSpecialAmmo;
+					}
 				}
 
+				SetEntProp(iSlot, Prop_Send, "m_upgradeBitVec", iUpgrades);
 				SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", GetEntProp(iSlot, Prop_Send, "m_iClip1"));
 			}
 		}
