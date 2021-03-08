@@ -10365,7 +10365,6 @@ static void vGiveWeapons(int survivor)
 		g_esPlayer[survivor].g_iWeaponInfo[iPos] = 0;
 	}
 
-	g_esPlayer[survivor].g_bDualWielding = false;
 	g_esPlayer[survivor].g_iWeaponInfo2 = -1;
 	g_esPlayer[survivor].g_sWeaponPrimary[0] = '\0';
 	g_esPlayer[survivor].g_sWeaponSecondary[0] = '\0';
@@ -10408,6 +10407,9 @@ static void vRefillAmmo(int survivor, bool reset = false)
 		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
 		if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
 		{
+			g_esPlayer[survivor].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(iSlot, Prop_Send, "m_isDualWielding") > 0;
+			g_esPlayer[survivor].g_iMaxClip[1] *= g_esPlayer[survivor].g_bDualWielding ? 2 : 1;
+
 			if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[1]))
 			{
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iMaxClip[1]);
