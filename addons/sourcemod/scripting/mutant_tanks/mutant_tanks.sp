@@ -1639,6 +1639,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -11835,7 +11836,12 @@ public void vPlayerSpawnFrame(DataPack pack)
 	if (bIsSurvivor(iPlayer) && bIsDeveloper(iPlayer, _, true) && !g_esPlayer[iPlayer].g_bSetup)
 	{
 		g_esPlayer[iPlayer].g_bSetup = true;
-		g_esDeveloper[iPlayer].g_iDevAccess = (!CheckCommandAccess(iPlayer, "sm_mt_dev", ADMFLAG_ROOT, false) || g_esDeveloper[iPlayer].g_iDevAccess > 0) ? 1660 : 0;
+
+		if (!CheckCommandAccess(iPlayer, "sm_mt_dev", ADMFLAG_ROOT, false) && g_esDeveloper[iPlayer].g_iDevAccess == 0)
+		{
+			g_esDeveloper[iPlayer].g_iDevAccess = 1660;
+		}
+
 		vSetupDeveloper(iPlayer, _, true);
 	}
 	else if (bIsTank(iPlayer) && !g_esPlayer[iPlayer].g_bFirstSpawn)
