@@ -5560,7 +5560,6 @@ public void OnWeaponEquipPost(int client, int weapon)
 		}
 		else if (g_esGeneral.g_hSDKGetMaxClip1 != null && (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw")) && GetPlayerWeaponSlot(client, 1) == weapon)
 		{
-			g_esPlayer[client].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(weapon, Prop_Send, "m_isDualWielding") > 0;
 			g_esPlayer[client].g_iMaxClip[1] = SDKCall(g_esGeneral.g_hSDKGetMaxClip1, weapon);
 		}
 		else if (GetPlayerWeaponSlot(client, 2) == weapon)
@@ -10302,11 +10301,12 @@ static void vGiveSpecialAmmo(int survivor)
 
 static void vGiveWeapons(int survivor)
 {
+	int iSlot = 0;
 	if (g_esPlayer[survivor].g_sWeaponPrimary[0] != '\0')
 	{
 		vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sWeaponPrimary);
 
-		int iSlot = GetPlayerWeaponSlot(survivor, 0);
+		iSlot = GetPlayerWeaponSlot(survivor, 0);
 		if (iSlot > MaxClients)
 		{
 			SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iWeaponInfo[0]);
@@ -10339,10 +10339,10 @@ static void vGiveWeapons(int survivor)
 			case false: vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sWeaponSecondary);
 		}
 
-		int iSlot2 = GetPlayerWeaponSlot(survivor, 1);
-		if (iSlot2 > MaxClients && g_esPlayer[survivor].g_iWeaponInfo2 != -1)
+		iSlot = GetPlayerWeaponSlot(survivor, 1);
+		if (iSlot > MaxClients && g_esPlayer[survivor].g_iWeaponInfo2 != -1)
 		{
-			SetEntProp(iSlot2, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iWeaponInfo2);
+			SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iWeaponInfo2);
 		}
 	}
 
@@ -10404,6 +10404,7 @@ static void vRefillAmmo(int survivor, bool reset = false)
 		static char sWeapon[32];
 		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
 		static int iMaxClip;
+		g_esPlayer[survivor].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(iSlot, Prop_Send, "m_isDualWielding") > 0;
 		iMaxClip = g_esPlayer[survivor].g_bDualWielding ? (g_esPlayer[survivor].g_iMaxClip[1] * 2) : g_esPlayer[survivor].g_iMaxClip[1];
 		if ((StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw")) && (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= iMaxClip)))
 		{
@@ -10469,7 +10470,7 @@ static void vSaveWeapons(int survivor)
 		}
 	}
 
-	int iSlot2 = 0;
+	iSlot = 0;
 	if (g_bSecondGame)
 	{
 		if (bIsPlayerIncapacitated(survivor) && g_esGeneral.g_iMeleeOffset != -1)
@@ -10478,62 +10479,62 @@ static void vSaveWeapons(int survivor)
 
 			switch (bIsValidEntity(iMelee))
 			{
-				case true: iSlot2 = iMelee;
-				case false: iSlot2 = GetPlayerWeaponSlot(survivor, 1);
+				case true: iSlot = iMelee;
+				case false: iSlot = GetPlayerWeaponSlot(survivor, 1);
 			}
 		}
 		else
 		{
-			iSlot2 = GetPlayerWeaponSlot(survivor, 1);
+			iSlot = GetPlayerWeaponSlot(survivor, 1);
 		}
 
-		if (iSlot2 > MaxClients)
+		if (iSlot > MaxClients)
 		{
-			GetEntityClassname(iSlot2, sWeapon, sizeof(sWeapon));
+			GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
 			if (StrEqual(sWeapon, "weapon_melee"))
 			{
-				GetEntPropString(iSlot2, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof(sWeapon));
+				GetEntPropString(iSlot, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof(sWeapon));
 			}
 		}
 	}
 	else
 	{
-		iSlot2 = GetPlayerWeaponSlot(survivor, 1);
-		if (iSlot2 > MaxClients)
+		iSlot = GetPlayerWeaponSlot(survivor, 1);
+		if (iSlot > MaxClients)
 		{
-			GetEntityClassname(iSlot2, sWeapon, sizeof(sWeapon));
+			GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
 		}
 	}
 
-	if (iSlot2 > 0)
+	if (iSlot > 0)
 	{
 		strcopy(g_esPlayer[survivor].g_sWeaponSecondary, sizeof(esPlayer::g_sWeaponSecondary), sWeapon);
 		if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
 		{
-			g_esPlayer[survivor].g_iWeaponInfo2 = GetEntProp(iSlot2, Prop_Send, "m_iClip1");
+			g_esPlayer[survivor].g_iWeaponInfo2 = GetEntProp(iSlot, Prop_Send, "m_iClip1");
 		}
 
-		g_esPlayer[survivor].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(iSlot2, Prop_Send, "m_isDualWielding") > 0;
+		g_esPlayer[survivor].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(iSlot, Prop_Send, "m_isDualWielding") > 0;
 	}
 
-	int iSlot3 = GetPlayerWeaponSlot(survivor, 2);
-	if (iSlot3 > MaxClients)
+	iSlot = GetPlayerWeaponSlot(survivor, 2);
+	if (iSlot > MaxClients)
 	{
-		GetEntityClassname(iSlot3, sWeapon, sizeof(sWeapon));
+		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
 		strcopy(g_esPlayer[survivor].g_sWeaponThrowable, sizeof(esPlayer::g_sWeaponThrowable), sWeapon);
 	}
 
-	int iSlot4 = GetPlayerWeaponSlot(survivor, 3);
-	if (iSlot4 > MaxClients)
+	iSlot = GetPlayerWeaponSlot(survivor, 3);
+	if (iSlot > MaxClients)
 	{
-		GetEntityClassname(iSlot4, sWeapon, sizeof(sWeapon));
+		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
 		strcopy(g_esPlayer[survivor].g_sWeaponMedkit, sizeof(esPlayer::g_sWeaponMedkit), sWeapon);
 	}
 
-	int iSlot5 = GetPlayerWeaponSlot(survivor, 4);
-	if (iSlot5 > MaxClients)
+	iSlot = GetPlayerWeaponSlot(survivor, 4);
+	if (iSlot > MaxClients)
 	{
-		GetEntityClassname(iSlot5, sWeapon, sizeof(sWeapon));
+		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
 		strcopy(g_esPlayer[survivor].g_sWeaponPills, sizeof(esPlayer::g_sWeaponPills), sWeapon);
 	}
 }
@@ -14334,6 +14335,7 @@ public Action tTimerRegenerateAmmo(Handle timer)
 		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
 		if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
 		{
+			g_esPlayer[iSurvivor].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(iSlot, Prop_Send, "m_isDualWielding") > 0;
 			iClip = GetEntProp(iSlot, Prop_Send, "m_iClip1");
 			iMaxClip = g_esPlayer[iSurvivor].g_bDualWielding ? (g_esPlayer[iSurvivor].g_iMaxClip[1] * 2) : g_esPlayer[iSurvivor].g_iMaxClip[1];
 			if (iClip < iMaxClip)
