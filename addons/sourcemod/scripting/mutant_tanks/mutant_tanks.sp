@@ -5560,6 +5560,7 @@ public void OnWeaponEquipPost(int client, int weapon)
 		}
 		else if (g_esGeneral.g_hSDKGetMaxClip1 != null && (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw")) && GetPlayerWeaponSlot(client, 1) == weapon)
 		{
+			g_esPlayer[client].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(weapon, Prop_Send, "m_isDualWielding") > 0;
 			g_esPlayer[client].g_iMaxClip[1] = SDKCall(g_esGeneral.g_hSDKGetMaxClip1, weapon);
 		}
 		else if (GetPlayerWeaponSlot(client, 2) == weapon)
@@ -10379,21 +10380,18 @@ static void vRefillAmmo(int survivor, bool reset = false)
 	iSlot = GetPlayerWeaponSlot(survivor, 0);
 	if (iSlot > MaxClients)
 	{
-		if (g_esGeneral.g_hSDKGetMaxClip1 != null)
+		if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[0]))
 		{
-			if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[0]))
-			{
-				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iMaxClip[0]);
-			}
+			SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iMaxClip[0]);
+		}
 
-			if (g_bSecondGame)
+		if (g_bSecondGame)
+		{
+			static int iUpgrades;
+			iUpgrades = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
+			if ((iUpgrades & MT_UPGRADE_INCENDIARY) || (iUpgrades & MT_UPGRADE_EXPLOSIVE))
 			{
-				static int iUpgrades;
-				iUpgrades = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
-				if ((iUpgrades & MT_UPGRADE_INCENDIARY) || (iUpgrades & MT_UPGRADE_EXPLOSIVE))
-				{
-					SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", g_esPlayer[survivor].g_iMaxClip[0]);
-				}
+				SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", g_esPlayer[survivor].g_iMaxClip[0]);
 			}
 		}
 
@@ -10401,14 +10399,13 @@ static void vRefillAmmo(int survivor, bool reset = false)
 	}
 
 	iSlot = GetPlayerWeaponSlot(survivor, 1);
-	if (iSlot > MaxClients && g_esGeneral.g_hSDKGetMaxClip1 != null)
+	if (iSlot > MaxClients)
 	{
 		static char sWeapon[32];
 		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
 		if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
 		{
 			g_esPlayer[survivor].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(iSlot, Prop_Send, "m_isDualWielding") > 0;
-			g_esPlayer[survivor].g_iMaxClip[1] *= g_esPlayer[survivor].g_bDualWielding ? 2 : 1;
 
 			if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[1]))
 			{
@@ -12728,8 +12725,9 @@ static int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool re
 {
 	if (weapon > MaxClients)
 	{
-		static bool bRewarded;
-		bRewarded = bIsSurvivor(survivor) ? (bIsDeveloper(survivor, 6) || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO)) : false;
+		static bool bRewarded, bSurvivor;
+		bSurvivor = bIsSurvivor(survivor);
+		bRewarded = bSurvivor ? (bIsDeveloper(survivor, 6) || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO)) : false;
 		static int iType;
 		iType = (type > 0 || weapon <= MaxClients) ? type : GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
 
@@ -12752,7 +12750,14 @@ static int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool re
 			{
 				switch (iType)
 				{
-					case 1: return (bRewarded || !reset) ? 30 : 15; // pistol
+					case 1:
+					{
+						switch (bSurvivor && g_esPlayer[survivor].g_bDualWielding)
+						{
+							case true: return (bRewarded || !reset) ? 60 : 30; // pistol
+							case false: return (bRewarded || !reset) ? 30 : 15; // pistol
+						}
+					}
 					case 2: return (bRewarded || !reset) ? 16 : 8; // pistol_magnum
 					case 3: return (bRewarded || !reset) ? 100 : 50; // rifle/rifle_ak47/rifle_desert/rifle_sg552
 					case 5: return (bRewarded || !reset) ? 100 : 50; // smg/smg_silenced/smg_mp5
@@ -12781,7 +12786,14 @@ static int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool re
 			{
 				switch (iType)
 				{
-					case 1: return (bRewarded || !reset) ? 30 : 15; // pistol
+					case 1:
+					{
+						switch (bSurvivor && g_esPlayer[survivor].g_bDualWielding)
+						{
+							case true: return (bRewarded || !reset) ? 60 : 30; // pistol
+							case false: return (bRewarded || !reset) ? 30 : 15; // pistol
+						}
+					}
 					case 2: return (bRewarded || !reset) ? 30 : 15; // hunting_rifle
 					case 3: return (bRewarded || !reset) ? 100 : 50; // rifle
 					case 5: return (bRewarded || !reset) ? 100 : 50; // smg
