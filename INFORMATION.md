@@ -486,6 +486,7 @@
 			// - Bypass Tank immunities
 			// - 50% damage resistance
 			// - Automatically kill Witches.
+			// - Hollowpoint ammo
 			// - Extended melee range
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
@@ -509,6 +510,7 @@
 			// - Refill magazine to max size
 			// - Extra clip and magazine size
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
+			// - Slowly regenerate back to full capacity.
 			// 32: Item reward
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
@@ -527,7 +529,7 @@
 			// 256: Respawn reward
 			// - Respawn and teleport to a teammate.
 			// - Restore previous loadout
-			// 512: Infinite primary ammo reward (temporary)
+			// 512: Infinite ammo reward (temporary)
 			// 1023: All above rewards
 			// 1024-2147483647: Reserved for third-party plugins
 			// --
@@ -642,6 +644,23 @@
 			// 2nd number = Give ammo boost to assistants.
 			// 3rd number = Give ammo boost to teammates.
 			"Ammo Boost Reward"			"1,1,1"
+
+			// The amount of ammo to regenerate per second as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate amounts with commas (",").
+			// --
+			// Amounts limit: 3
+			// Character limit for each amount: 12
+			// --
+			// Minimum value for each amount: 0 (OFF)
+			// Maximum value for each amount: 999999 (Highest)
+			// --
+			// 1st number = Amount for killers.
+			// 2nd number = Amount for assistants.
+			// 3rd number = Amount for teammates.
+			"Ammo Regen Reward"			"1,1,1"
 
 			// The attack boost to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -758,6 +777,23 @@
 			// 2nd number = Amount for assistants.
 			// 3rd number = Amount for teammates.
 			"Health Regen Reward"			"1,1,1"
+
+			// Give hollowpoint ammo as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give hollowpoint ammo to killers.
+			// 2nd number = Give hollowpoint ammo to assistants.
+			// 3rd number = Give hollowpoint ammo to teammates.
+			"Hollowpoint Ammo Reward"		"1,1,1"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1574,7 +1610,7 @@
 		{
 			// All convars (except the ones provided by Mutant Tanks) can be modified in this section.
 			// Each time the config file is read, the convars in this section will be modified with their associated values.
-			// This is a very powerful feature so use it as you would with your listenserver.cfg/server.cfg file.
+			// This is a very powerful feature so use it as you would with your server.cfg/listenserver.cfg file.
 			// Here are some examples:
 
 			// This will fail because the convar is provided by Mutant Tanks.
@@ -1996,6 +2032,7 @@
 			// - Bypass Tank immunities
 			// - 50% damage resistance
 			// - Automatically kill Witches.
+			// - Hollowpoint ammo
 			// - Extended melee range
 			// - Sledgehammer rounds
 			// - Protected by thorns (deal damage towards attacker per hit taken)
@@ -2019,6 +2056,7 @@
 			// - Refill magazine to max size
 			// - Extra clip and magazine size
 			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
+			// - Slowly regenerate back to full capacity.
 			// 32: Item reward
 			// 64: God mode reward (temporary)
 			// - Automatically kill all special infected attackers.
@@ -2037,7 +2075,7 @@
 			// 256: Respawn reward
 			// - Respawn and teleport to a teammate.
 			// - Restore previous loadout
-			// 512: Infinite primary ammo reward (temporary)
+			// 512: Infinite ammo reward (temporary)
 			// 1023: All above rewards
 			// 1024-2147483647: Reserved for third-party plugins
 			// --
@@ -2152,6 +2190,23 @@
 			// 2nd number = Give ammo boost to assistants.
 			// 3rd number = Give ammo boost to teammates.
 			"Ammo Boost Reward"			"0,0,0"
+
+			// The amount of ammo to regenerate per second as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate amounts with commas (",").
+			// --
+			// Amounts limit: 3
+			// Character limit for each amount: 12
+			// --
+			// Minimum value for each amount: 0 (OFF)
+			// Maximum value for each amount: 999999 (Highest)
+			// --
+			// 1st number = Amount for killers.
+			// 2nd number = Amount for assistants.
+			// 3rd number = Amount for teammates.
+			"Ammo Regen Reward"			"1,1,1"
 
 			// The attack boost to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2268,6 +2323,23 @@
 			// 2nd number = Amount for assistants.
 			// 3rd number = Amount for teammates.
 			"Health Regen Reward"			"0,0,0"
+
+			// Give hollowpoint ammo as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Give hollowpoint ammo to killers.
+			// 2nd number = Give hollowpoint ammo to assistants.
+			// 3rd number = Give hollowpoint ammo to teammates.
+			"Hollowpoint Ammo Reward"		"0,0,0"
 
 			// The item(s) to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

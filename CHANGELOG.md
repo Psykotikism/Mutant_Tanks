@@ -28,6 +28,7 @@
 - Fixed the `Boss` feature not calculating the Tank's total health properly.
 - Fixed the `Reward` system notifying recipients twice when they do not do enough damage to Tanks. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed the `Reward` system not detecting recipients' incapacitation/black and white counter after using `give health`. (Thanks to Silvers for the code!)
+- Fixed damage toward Common infected and Witches not being hooked on late loads.
 
 #### Game Data
 - Fixed some detours crashing servers due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -58,7 +59,6 @@
 	- Fixed players with the godmode reward being affected.
 	- Fixed total health being miscalculated.
 	- Fixed Tanks gaining health while in the dying animation.
-	- Fixed the errors regarding the `StopSound` function. (Thanks to ur5efj for reporting!)
 	- Fixed all types of fire damage not being detected.
 
 - Hit
@@ -127,6 +127,9 @@
 	- Fixed Tanks gaining health while in the dying animation.
 	- Fixed all types of fire damage not being detected.
 
+- Yell
+	- Fixed the errors regarding the sound hook. (Thanks to ur5efj for reporting!)
+
 - Zombie
 	- Fixed the ability trying to spawn Uncommon infected on L4D1.
 
@@ -159,6 +162,7 @@
 - The ammo reward now does the following:
 	- Extends the recipient's max weapon clip and magazine sizes up to at least twice the default amount.
 	- Gives the recipient one of the special ammo (incendiary or explosive).
+	- Slowly regenerates the player's ammo back to full capacity.
 - The speed boost reward now does the following:
 	- Gives the recipient extra jump height. (Thanks to epzminion for the help!)
 	- Blocks fall damage for the recipient within a certain height limit (`900` HMU). (Thanks to epzminion for the code!)
@@ -169,6 +173,7 @@
 	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 	- Gives the recipient `50%` damage resistance throughout its duration.
 	- Gives the recipient extended melee range. (Thanks to epzminion for the idea and Silvers for the code!)
+	- Gives the recipient hollowpoint ammo which atomize Common infected and Witches. (Thanks to epzminion for the code!)
 	- Gives the recipient sledgehammer rounds which knock back special infected and has a `33.33%` chance to knock back Tanks. (Thanks to epzminion for the code!)
 	- Allows the recipient to deal damage to attackers for each hit taken. (Thanks to epzminion for the help!)
 	- Allows the recipient to instantly kill Witches (limited uses). (Thanks to epzminion for the idea!)
@@ -203,17 +208,19 @@
 - Added the `Survival Delay` setting under the `Plugin Settings/Competitive` section. (Requested by Tonblader.)
 - Added the following new options for the `Reward Enabled` setting:
 	- `Attack boost reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
-	- `Infinite primary ammo reward` (Thanks to epzminion for helping!)
+	- `Infinite ammo reward` (Thanks to epzminion for helping!)
 - The `Stasis Mode` setting now works in all game mode types. (Requested by yuzumi.)
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Attack Boost Reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 	- `Action Duration Reward` (Thanks to epzminion for the help!)
 	- `Ammo Boost Reward` (Thanks to epzminion for the help!)
+	- `Ammo Regen Reward`
 	- `Clean Kills Reward` (Thanks to epzminion for the help!)
 	- `Damage Resistance Reward`
 	- `Fall Voiceline Reward`
 	- `Heal Percent Reward` (Thanks to epzminion for the help!)
 	- `Health Regen Reward` (Thanks to Silvers for the code!)
+	- `Hollowpoint Ammo Reward` (Thanks to epzminion for the code!)
 	- `Jump Height Reward` (Thanks to epzminion for the help!)
 	- `Lady Killer Reward` (Thanks to epzminion for the idea!)
 	- `Melee Range Reward` (Thanks to epzminion for the idea and Silvers for the code!)
@@ -267,6 +274,7 @@
 	- `Reward Percentage`
 	- `Action Duration Reward`
 	- `Ammo Boost Reward`
+	- `Ammo Regen Reward`
 	- `Attack Boost Reward`
 	- `Clean Kills Reward`
 	- `Damage Boost Reward`
@@ -274,6 +282,7 @@
 	- `Fall Voiceline Reward`
 	- `Heal Percent Reward`
 	- `Health Regen Reward`
+	- `Hollowpoint Ammo Reward`
 	- `Item Reward`
 	- `Jump Height Reward`
 	- `Lady Killer Reward`
@@ -336,6 +345,9 @@
 
 - Aimless
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Ammo
+	- Survivors with no ammunition are no longer affected.
 
 - Bury
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
