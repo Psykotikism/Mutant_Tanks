@@ -9,7 +9,7 @@
 - Fixed Tanks spawned from the `sm_tank`/`sm_mt_tank` menu raising the wave count when they die.
 - Fixed clones, respawned Tanks, randomized Tanks, and Tanks spawned through the Mutant Tanks menu not being exempted from the `Type Limit` setting.
 - Fixed game modes not being detected properly.
-- Fixed the L4D1 Tank model not being precached in L4D2.
+- Fixed some models, sounds, and particles being precached in the wrong game.
 - Fixed Tank deaths raising the wave count while there are still other Tanks alive. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed each Tank death raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed AI Tanks in ghost mode not being forcefully spawned. (Thanks to yuzumi for reporting!)
@@ -145,6 +145,7 @@
 #### Core Plugin
 - Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
 - Added extra copies of the `Body Effects` setting's electric jolt option.
+- Added a slime trail coming out of the Tank's mouth as part of the `Body Effects` setting's acid trail option.
 - Increased verbosity of logging for admin commands.
 - The vocalizer feature for Tank deaths now requires the `Vocalize Death` setting to be enabled.
 - Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
@@ -403,6 +404,7 @@
 
 - Puke
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Added a Boomer puke fountain-like visual effect for the range and upon-death abilities. (Requested by 3aljiyavslgazana.)
 
 - Respawn
 	- Replaced the detour for the `CTerrorPlayer::Event_Killed` function with the new `MT_OnPlayerEventKilled` forward.
