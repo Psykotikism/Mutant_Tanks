@@ -7621,9 +7621,19 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 
 			vExecuteFinaleConfigs(name);
 		}
-		else if (StrEqual(name, "finale_rush") || StrEqual(name, "finale_radio_start") || StrEqual(name, "finale_radio_damaged") || StrEqual(name, "finale_bridge_lowering") || StrEqual(name, "finale_win"))
+		else if (StrEqual(name, "finale_rush") || StrEqual(name, "finale_radio_start") || StrEqual(name, "finale_radio_damaged") || StrEqual(name, "finale_bridge_lowering"))
 		{
 			vExecuteFinaleConfigs(name);
+		}
+		else if (StrEqual(name, "finale_win"))
+		{
+			vExecuteFinaleConfigs(name);
+
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+			{
+				g_esPlayer[iSurvivor].g_iLadyKiller = 0;
+				g_esPlayer[iSurvivor].g_iLadyKillerCount = 0;
+			}
 		}
 		else if (StrEqual(name, "heal_success"))
 		{
