@@ -701,7 +701,7 @@ static void vAmmoHit(int survivor, int tank, float random, float chance, int ena
 
 	static int iSlot;
 	iSlot = GetPlayerWeaponSlot(survivor, 0);
-	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE) && iSlot > MaxClients)
+	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE) && iSlot > MaxClients && (GetEntProp(survivor, Prop_Send, "m_iAmmo", _, iGetWeaponOffset(iSlot)) > 0 || GetEntProp(iSlot, Prop_Send, "m_iClip1") > 0))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{

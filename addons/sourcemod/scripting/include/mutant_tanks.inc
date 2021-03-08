@@ -147,16 +147,6 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_UPGRADE_EXPLOSIVE (1 << 1) // explosive ammo
 #define MT_UPGRADE_LASERSIGHT (1 << 2) // laser sight
 
-// Weapon types
-#define MT_WEAPON_UNKNOWN 0
-#define MT_WEAPON_ASSAULTRIFLE 1
-#define MT_WEAPON_GRENADELAUNCHER 2
-#define MT_WEAPON_HUNTINGRIFLE 3
-#define MT_WEAPON_SMG 4
-#define MT_WEAPON_SNIPERRIFLE 5
-#define MT_WEAPON_TIER1SHOTGUN 6
-#define MT_WEAPON_TIER2SHOTGUN 7
-
 // Entity mask information
 #define MAX_EDICT_BITS 11
 #define NUM_ENT_ENTRY_BITS (MAX_EDICT_BITS + 1)
@@ -2830,42 +2820,6 @@ stock int iGetWeaponOffset(int weapon)
 	}
 
 	return 0;
-}
-
-stock int iGetWeaponType(int weapon)
-{
-	static char sWeapon[32];
-	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
-	if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_sg552"))
-	{
-		return MT_WEAPON_ASSAULTRIFLE;
-	}
-	else if (StrEqual(sWeapon, "weapon_autoshotgun") || StrEqual(sWeapon, "weapon_shotgun_spas"))
-	{
-		return MT_WEAPON_TIER2SHOTGUN;
-	}
-	else if (StrEqual(sWeapon, "weapon_grenade_launcher"))
-	{
-		return MT_WEAPON_GRENADELAUNCHER;
-	}
-	else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
-	{
-		return MT_WEAPON_HUNTINGRIFLE;
-	}
-	else if (StrEqual(sWeapon, "weapon_pumpshotgun") || StrEqual(sWeapon, "weapon_shotgun_chrome"))
-	{
-		return MT_WEAPON_TIER1SHOTGUN;
-	}
-	else if (StrEqual(sWeapon, "weapon_smg") || StrEqual(sWeapon, "weapon_smg_silenced") || StrEqual(sWeapon, "weapon_smg_mp5"))
-	{
-		return MT_WEAPON_SMG;
-	}
-	else if (StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_awp"))
-	{
-		return MT_WEAPON_SNIPERRIFLE;
-	}
-
-	return MT_WEAPON_UNKNOWN;
 }
 
 stock int iGetWitchCount()

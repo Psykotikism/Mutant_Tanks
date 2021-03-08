@@ -569,7 +569,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	{
 		g_esCache[tank].g_iMedicHealth[iPos] = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMedicHealth[iPos], g_esAbility[type].g_iMedicHealth[iPos]);
 		g_esCache[tank].g_iMedicMaxHealth[iPos] = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMedicMaxHealth[iPos], g_esAbility[type].g_iMedicMaxHealth[iPos]);
-	
+
 		if (iPos < sizeof(esCache::g_iMedicFieldColor))
 		{
 			g_esCache[tank].g_iMedicFieldColor[iPos] = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMedicFieldColor[iPos], g_esAbility[type].g_iMedicFieldColor[iPos]);

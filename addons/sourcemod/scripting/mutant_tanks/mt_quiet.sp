@@ -332,7 +332,7 @@ public Action QuietSoundHook(int clients[MAXPLAYERS], int &numClients, char samp
 	{
 		for (int iSurvivor = 0; iSurvivor < numClients; iSurvivor++)
 		{
-			if (bIsHumanSurvivor(clients[iSurvivor], MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esPlayer[clients[iSurvivor]].g_bAffected)
+			if (bIsHumanSurvivor(clients[iSurvivor]) && g_esPlayer[clients[iSurvivor]].g_bAffected)
 			{
 				for (int iPlayer = iSurvivor; iPlayer < numClients - 1; iPlayer++)
 				{

@@ -650,7 +650,7 @@ public void MT_OnButtonReleased(int tank, int button)
 			if (g_esCache[tank].g_iHumanMode == 1 && g_esPlayer[tank].g_bActivated && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < GetTime()))
 			{
 				g_esPlayer[tank].g_bActivated = false;
-			
+
 				vReset2(tank);
 			}
 		}

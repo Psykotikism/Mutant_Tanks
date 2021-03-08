@@ -343,7 +343,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action YellSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
-	if (MT_IsCorePluginEnabled() && StrContains(sample, "player", false) != -1)
+	if (MT_IsCorePluginEnabled() && StrContains(sample, "player", false) != -1 && bIsValidClient(entity))
 	{
 		for (int iSurvivor = 0; iSurvivor < numClients; iSurvivor++)
 		{

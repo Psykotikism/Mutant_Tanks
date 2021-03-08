@@ -909,7 +909,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 
 				return;
 			}
-			
+
 			if (buttons & IN_FORWARD)
 			{
 				GetAngleVectors(flEyeAngles, flTemp, NULL_VECTOR, NULL_VECTOR);
@@ -1157,7 +1157,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 
 		if (flDistance3 < flBase2)
 		{
-			flDistance3 = flBase2;	
+			flDistance3 = flBase2;
 		}
 
 		if (flDistance4 < flBase2)

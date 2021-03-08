@@ -103,6 +103,8 @@ enum struct esGeneral
 	ConVar g_cvMTShotgunAmmo;
 	ConVar g_cvMTSMGAmmo;
 	ConVar g_cvMTSniperRifleAmmo;
+
+	Handle g_hSDKGetMaxClip1;
 }
 
 esGeneral g_esGeneral;
@@ -189,6 +191,31 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTShotgunAmmo = g_bSecondGame ? FindConVar("ammo_shotgun_max") : FindConVar("ammo_buckshot_max");
 	g_esGeneral.g_cvMTSMGAmmo = FindConVar("ammo_smg_max");
 	g_esGeneral.g_cvMTSniperRifleAmmo = FindConVar("ammo_sniperrifle_max");
+
+	GameData gdMutantTanks = new GameData("mutant_tanks");
+	if (gdMutantTanks == null)
+	{
+		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+
+		delete gdMutantTanks;
+	}
+
+	int iOffset = gdMutantTanks.GetOffset("CBaseCombatWeapon::GetMaxClip1");
+	if (iOffset == -1)
+	{
+		LogError("%s Failed to load offset: CBaseCombatWeapon::GetMaxClip1", MT_TAG);
+	}
+
+	StartPrepSDKCall(SDKCall_Entity);
+	PrepSDKCall_SetVirtual(iOffset);
+	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_ByValue);
+	g_esGeneral.g_hSDKGetMaxClip1 = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKGetMaxClip1 == null)
+	{
+		LogError("%s Your \"CBaseCombatWeapon::GetMaxClip1\" offsets are outdated.", MT_TAG);
+	}
+
+	delete gdMutantTanks;
 }
 
 public void OnMapStart()
@@ -657,24 +684,38 @@ static void vDropWeapon(int tank, int value, float random, int pos = -1)
 				TeleportEntity(iDrop, flPos, flAngles, NULL_VECTOR);
 				DispatchSpawn(iDrop);
 
-				static int iAmmo, iClip;
+				static int iAmmo, iClip, iType;
 				iAmmo = 0;
 				iClip = 0;
+				iType = GetEntProp(iDrop, Prop_Send, "m_iPrimaryAmmoType");
 
-				switch (iGetWeaponType(iDrop))
+				if (g_bSecondGame)
 				{
-					case MT_WEAPON_ASSAULTRIFLE: iAmmo = g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue;
-					case MT_WEAPON_GRENADELAUNCHER: iAmmo = g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue;
-					case MT_WEAPON_HUNTINGRIFLE: iAmmo = g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue;
-					case MT_WEAPON_SMG: iAmmo = g_esGeneral.g_cvMTSMGAmmo.IntValue;
-					case MT_WEAPON_SNIPERRIFLE: iAmmo = g_esGeneral.g_cvMTSniperRifleAmmo.IntValue;
-					case MT_WEAPON_TIER1SHOTGUN: iAmmo = g_esGeneral.g_cvMTShotgunAmmo.IntValue;
-					case MT_WEAPON_TIER2SHOTGUN: iAmmo = g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue;
+					switch (iType)
+					{
+						case 3: iAmmo = g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue; // rifle/rifle_ak47/rifle_desert/rifle_sg552
+						case 5: iAmmo = g_esGeneral.g_cvMTSMGAmmo.IntValue; // smg/smg_silenced/smg_mp5
+						case 7: iAmmo = g_esGeneral.g_cvMTShotgunAmmo.IntValue; // pumpshotgun/shotgun_chrome
+						case 8: iAmmo = g_esGeneral.g_cvMTAutoShotgunAmmo.IntValue; // autoshotgun/shotgun_spas
+						case 9: iAmmo = g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue; // hunting_rifle
+						case 10: iAmmo = g_esGeneral.g_cvMTSniperRifleAmmo.IntValue; // sniper_military/sniper_awp/sniper_scout
+						case 17: iAmmo = g_esGeneral.g_cvMTGrenadeLauncherAmmo.IntValue; // grenade_launcher
+					}
+				}
+				else
+				{
+					switch (iType)
+					{
+						case 2: iAmmo = g_esGeneral.g_cvMTHuntingRifleAmmo.IntValue; // hunting_rifle
+						case 3: iAmmo = g_esGeneral.g_cvMTAssaultRifleAmmo.IntValue; // rifle
+						case 5: iAmmo = g_esGeneral.g_cvMTSMGAmmo.IntValue; // smg
+						case 6: iAmmo = g_esGeneral.g_cvMTShotgunAmmo.IntValue; // pumpshotgun/autoshotgun
+					}
 				}
 
-				if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flDropClipChance)
+				if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flDropClipChance && g_esGeneral.g_hSDKGetMaxClip1 != null)
 				{
-					iClip = iAmmo;
+					iClip = SDKCall(g_esGeneral.g_hSDKGetMaxClip1, iDrop);
 				}
 
 				if (iClip > 0)

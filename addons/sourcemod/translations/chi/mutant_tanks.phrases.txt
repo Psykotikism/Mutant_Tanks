@@ -686,7 +686,7 @@
 	{
 		"chi"			"你的{yellow} 生命值加成{default} 结束了!"
 	}
-	
+
 	"RewardInfAmmo"
 	{
 		"chi"			"你击杀了{olive} {1}{default}, 获得了{yellow} 无限弹药{default}!"
@@ -706,7 +706,7 @@
 	{
 		"chi"			"你的{yellow} 无限弹药{default} 已结束!"
 	}
-	
+
 	"RewardItem"
 	{
 		"chi"			"你击杀了{olive} {2}{default}, 获得了{yellow} {1}{default}!"
