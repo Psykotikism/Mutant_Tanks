@@ -10403,14 +10403,11 @@ static void vRefillAmmo(int survivor, bool reset = false)
 	{
 		static char sWeapon[32];
 		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
-		if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
+		static int iMaxClip;
+		iMaxClip = g_esPlayer[survivor].g_bDualWielding ? (g_esPlayer[survivor].g_iMaxClip[1] * 2) : g_esPlayer[survivor].g_iMaxClip[1];
+		if ((StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw")) && (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= iMaxClip)))
 		{
-			g_esPlayer[survivor].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(iSlot, Prop_Send, "m_isDualWielding") > 0;
-
-			if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[1]))
-			{
-				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iMaxClip[1]);
-			}
+			SetEntProp(iSlot, Prop_Send, "m_iClip1", iMaxClip);
 		}
 	}
 
@@ -12750,14 +12747,7 @@ static int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool re
 			{
 				switch (iType)
 				{
-					case 1:
-					{
-						switch (bSurvivor && g_esPlayer[survivor].g_bDualWielding)
-						{
-							case true: return (bRewarded || !reset) ? 60 : 30; // pistol
-							case false: return (bRewarded || !reset) ? 30 : 15; // pistol
-						}
-					}
+					case 1: return (bRewarded || !reset) ? 30 : 15; // pistol
 					case 2: return (bRewarded || !reset) ? 16 : 8; // pistol_magnum
 					case 3: return (bRewarded || !reset) ? 100 : 50; // rifle/rifle_ak47/rifle_desert/rifle_sg552
 					case 5: return (bRewarded || !reset) ? 100 : 50; // smg/smg_silenced/smg_mp5
@@ -12786,14 +12776,7 @@ static int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool re
 			{
 				switch (iType)
 				{
-					case 1:
-					{
-						switch (bSurvivor && g_esPlayer[survivor].g_bDualWielding)
-						{
-							case true: return (bRewarded || !reset) ? 60 : 30; // pistol
-							case false: return (bRewarded || !reset) ? 30 : 15; // pistol
-						}
-					}
+					case 1: return (bRewarded || !reset) ? 30 : 15; // pistol
 					case 2: return (bRewarded || !reset) ? 30 : 15; // hunting_rifle
 					case 3: return (bRewarded || !reset) ? 100 : 50; // rifle
 					case 5: return (bRewarded || !reset) ? 100 : 50; // smg
@@ -14275,7 +14258,7 @@ public Action tTimerRegenerateAmmo(Handle timer)
 
 	static bool bDeveloper;
 	static char sWeapon[32];
-	static int iAmmo, iAmmoOffset, iMaxAmmo, iClip, iRegen, iSlot, iSpecialAmmo, iUpgrades;
+	static int iAmmo, iAmmoOffset, iMaxAmmo, iClip, iMaxClip, iRegen, iSlot, iSpecialAmmo, iUpgrades;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
 		if (!bIsSurvivor(iSurvivor))
@@ -14352,14 +14335,15 @@ public Action tTimerRegenerateAmmo(Handle timer)
 		if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
 		{
 			iClip = GetEntProp(iSlot, Prop_Send, "m_iClip1");
-			if (iClip < g_esPlayer[iSurvivor].g_iMaxClip[1])
+			iMaxClip = g_esPlayer[iSurvivor].g_bDualWielding ? (g_esPlayer[iSurvivor].g_iMaxClip[1] * 2) : g_esPlayer[iSurvivor].g_iMaxClip[1];
+			if (iClip < iMaxClip)
 			{
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", (iClip + iRegen));
 			}
 
-			if (iClip + iRegen > g_esPlayer[iSurvivor].g_iMaxClip[1])
+			if (iClip + iRegen > iMaxClip)
 			{
-				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[iSurvivor].g_iMaxClip[1]);
+				SetEntProp(iSlot, Prop_Send, "m_iClip1", iMaxClip);
 			}
 		}
 	}
