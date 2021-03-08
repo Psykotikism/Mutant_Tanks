@@ -3713,22 +3713,19 @@ static void vSetupLoadout(int developer, bool usual)
 			ExplodeString(g_esDeveloper[developer].g_sDevLoadout, ";", sSet, sizeof(sSet), sizeof(sSet[]));
 			vCheatCommand(developer, "give", "health");
 
-			switch (g_bSecondGame)
+			switch (g_bSecondGame && StrContains(sSet[1], "pistol") == -1 && StrContains(sSet[1], "chainsaw") == -1)
 			{
-				case true: vGiveRandomMeleeWeapon(developer, usual, sSet[1]);
+				case true: if (sSet[1][0] != '\0') vGiveRandomMeleeWeapon(developer, usual, sSet[1]);
 				case false:
 				{
-					vCheatCommand(developer, "give", sSet[1]);
-					vCheatCommand(developer, "give", sSet[5]);
+					if (sSet[1][0] != '\0') vCheatCommand(developer, "give", sSet[1]);
+					if (sSet[5][0] != '\0') vCheatCommand(developer, "give", sSet[5]);
 				}
 			}
 
-			for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+			for (int iPos = 0; iPos < sizeof(sSet) - 1; iPos++)
 			{
-				if (iPos != 1 && sSet[iPos][0] != '\0')
-				{
-					vCheatCommand(developer, "give", sSet[iPos]);
-				}
+				if (iPos != 1 && sSet[iPos][0] != '\0') vCheatCommand(developer, "give", sSet[iPos]);
 			}
 		}
 		else
@@ -10234,6 +10231,11 @@ static void vGiveRandomMeleeWeapon(int survivor, bool specific, const char[] nam
 		char sName[32];
 		for (int iType = 1; iType < 13; iType++)
 		{
+			if (GetPlayerWeaponSlot(survivor, 1) > MaxClients)
+			{
+				break;
+			}
+
 			switch (iType)
 			{
 				case 1: sName = "machete";
@@ -10252,11 +10254,6 @@ static void vGiveRandomMeleeWeapon(int survivor, bool specific, const char[] nam
 			}
 
 			vCheatCommand(survivor, "give", sName);
-
-			if (GetPlayerWeaponSlot(survivor, 1) > MaxClients)
-			{
-				break;
-			}
 		}
 	}
 }
@@ -10413,22 +10410,13 @@ static void vRefillAmmo(int survivor, bool reset = false)
 	}
 
 	iSlot = GetPlayerWeaponSlot(survivor, 2);
-	if (!bIsValidEntity(iSlot))
-	{
-		vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredThrowable);
-	}
+	if (!bIsValidEntity(iSlot)) vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredThrowable);
 
 	iSlot = GetPlayerWeaponSlot(survivor, 3);
-	if (!bIsValidEntity(iSlot))
-	{
-		vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredMedkit);
-	}
+	if (!bIsValidEntity(iSlot)) vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredMedkit);
 
 	iSlot = GetPlayerWeaponSlot(survivor, 4);
-	if (!bIsValidEntity(iSlot))
-	{
-		vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredPills);
-	}
+	if (!bIsValidEntity(iSlot)) vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredPills);
 }
 
 static void vRefillMagazine(int survivor, int weapon, bool reset)
