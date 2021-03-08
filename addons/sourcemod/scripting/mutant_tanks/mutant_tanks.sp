@@ -1532,7 +1532,11 @@ public void OnPluginStart()
 	g_esGeneral.g_gfSettingsCachedForward = new GlobalForward("MT_OnSettingsCached", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfTypeChosenForward = new GlobalForward("MT_OnTypeChosen", ET_Event, Param_CellByRef, Param_Cell);
 
-	vDeveloperSettings();
+	for (int iDeveloper = 1; iDeveloper <= MaxClients; iDeveloper++)
+	{
+		vDeveloperSettings(iDeveloper);
+	}
+
 	vMultiTargetFilters(true);
 
 	LoadTranslations("common.phrases");
@@ -2257,6 +2261,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakePlayerDamage);
 	SDKHook(client, SDKHook_WeaponEquipPost, OnWeaponEquipPost);
 
+	vDeveloperSettings(client);
 	vReset3(client);
 	vCacheSettings(client);
 	vResetCore(client);
@@ -2290,6 +2295,7 @@ public void OnClientDisconnect(int client)
 
 public void OnClientDisconnect_Post(int client)
 {
+	vDeveloperSettings(client);
 	vReset3(client);
 	vResetCore(client);
 
@@ -3575,7 +3581,7 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 			SDKHook(developer, SDKHook_PostThinkPost, OnPlayerPostThinkPost);
 		}
 
-		if (bIsDeveloper(developer, 7) || bIsDeveloper(developer, 9) || bIsDeveloper(developer, 11))
+		if (bIsDeveloper(developer, 7) || bIsDeveloper(developer, 11))
 		{
 			vGiveSpecialAmmo(developer);
 		}
@@ -5425,56 +5431,65 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			}
 			else if (bSurvivor && (damagetype & DMG_BULLET))
 			{
-				if (bRewarded && (bIsCommonInfected(victim) || bIsWitch(victim)))
+				bDeveloper = bIsDeveloper(attacker, 9);
+				bRewarded = !!(g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST);
+				if (bDeveloper || bRewarded)
 				{
-					if (bDeveloper || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iHollowpointAmmo == 1))
+					if (bDeveloper || (bRewarded && g_esPlayer[attacker].g_iHollowpointAmmo == 1))
 					{
-						if (g_bSecondGame)
+						if (bIsCommonInfected(victim) || bIsWitch(victim))
 						{
-							if (GetEntProp(victim, Prop_Data, "m_iHealth") <= damage)
+							if (g_bSecondGame)
 							{
-								static float flOrigin[3], flAngles[3];
-								GetEntPropVector(victim, Prop_Data, "m_vecOrigin", flOrigin);
-								GetEntPropVector(victim, Prop_Data, "m_angRotation", flAngles);
-								flOrigin[2] += 48.0;
+								if (GetEntProp(victim, Prop_Data, "m_iHealth") <= damage)
+								{
+									static float flOrigin[3], flAngles[3];
+									GetEntPropVector(victim, Prop_Data, "m_vecOrigin", flOrigin);
+									GetEntPropVector(victim, Prop_Data, "m_angRotation", flAngles);
+									flOrigin[2] += 48.0;
 
-								RequestFrame(vInfectedTransmitFrame, EntIndexToEntRef(victim));
-								vAttachParticle2(flOrigin, flAngles, PARTICLE_GORE, 0.2);
+									RequestFrame(vInfectedTransmitFrame, EntIndexToEntRef(victim));
+									vAttachParticle2(flOrigin, flAngles, PARTICLE_GORE, 0.2);
+								}
 							}
-						}
-						else
-						{
-							damagetype |= DMG_DISSOLVE;
-						}
-
-						return Plugin_Changed;
-					}
-				}
-
-				if (bIsDeveloper(attacker, 9) || ((g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[attacker].g_iSledgehammerRounds == 1))
-				{
-					if (bIsSpecialInfected(victim))
-					{
-						vPerformKnockback(victim, attacker);
-					}
-					else if (bIsCommonInfected(victim) || bIsWitch(victim))
-					{
-						if (bRewarded)
-						{
-							flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
-							if (flDamage > 0.0)
+							else
 							{
-								damage *= flDamage;
+								damagetype |= DMG_DISSOLVE;
 							}
+
+							return Plugin_Changed;
 						}
+					}
 
-						damagetype |= DMG_BUCKSHOT;
+					if (bDeveloper || (bRewarded && g_esPlayer[attacker].g_iSledgehammerRounds == 1))
+					{
+						if (bIsSpecialInfected(victim))
+						{
+							vPerformKnockback(victim, attacker);
+						}
+						else if (bIsCommonInfected(victim) || bIsWitch(victim))
+						{
+							bRewarded = bDeveloper || (bSurvivor && (g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST));
+							if (bRewarded)
+							{
+								bDeveloper = bSurvivor && bIsDeveloper(attacker, 4);
+								flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
+								if (flDamage > 0.0)
+								{
+									damage *= flDamage;
+								}
+							}
 
-						return Plugin_Changed;
+							damagetype |= DMG_BUCKSHOT;
+
+							return Plugin_Changed;
+						}
 					}
 				}
 			}
 
+			bDeveloper = bSurvivor && bIsDeveloper(attacker, 4);
+			bRewarded = bDeveloper || (bSurvivor && (g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST));
 			if (bRewarded)
 			{
 				flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
@@ -10176,32 +10191,29 @@ static void vRewardMessage(int survivor, int priority, const char[] phrase1, con
 	}
 }
 
-static void vDeveloperSettings()
+static void vDeveloperSettings(int developer)
 {
-	for (int iDeveloper = 1; iDeveloper <= MaxClients; iDeveloper++)
-	{
-		g_esDeveloper[iDeveloper].g_sDevLoadout = g_bSecondGame ? "autoshotgun;machete;molotov;first_aid_kit;pain_pills" : "autoshotgun;pistol;molotov;first_aid_kit;pain_pills;pistol";
-		g_esDeveloper[iDeveloper].g_sDevVoiceline = "PlayerLaugh";
-		g_esDeveloper[iDeveloper].g_flDevActionDuration = 2.0;
-		g_esDeveloper[iDeveloper].g_flDevAttackBoost = 1.25;
-		g_esDeveloper[iDeveloper].g_flDevDamageBoost = 1.75;
-		g_esDeveloper[iDeveloper].g_flDevDamageResistance = 0.5;
-		g_esDeveloper[iDeveloper].g_flDevHealPercent = 100.0;
-		g_esDeveloper[iDeveloper].g_flDevJumpHeight = 100.0;
-		g_esDeveloper[iDeveloper].g_flDevPunchResistance = 0.0;
-		g_esDeveloper[iDeveloper].g_flDevRewardDuration = 60.0;
-		g_esDeveloper[iDeveloper].g_flDevShoveDamage = 0.025;
-		g_esDeveloper[iDeveloper].g_flDevShoveRate = 0.4;
-		g_esDeveloper[iDeveloper].g_flDevSpeedBoost = 1.25;
-		g_esDeveloper[iDeveloper].g_iDevAccess = 0;
-		g_esDeveloper[iDeveloper].g_iDevAmmoRegen = 1;
-		g_esDeveloper[iDeveloper].g_iDevHealthRegen = 1;
-		g_esDeveloper[iDeveloper].g_iDevMeleeRange = 150;
-		g_esDeveloper[iDeveloper].g_iDevPanelLevel = 0;
-		g_esDeveloper[iDeveloper].g_iDevReviveHealth = 100;
-		g_esDeveloper[iDeveloper].g_iDevRewardTypes = MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ATTACKBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_INFAMMO;
-		g_esDeveloper[iDeveloper].g_iDevSpecialAmmo = 1;
-	}
+	g_esDeveloper[developer].g_sDevLoadout = g_bSecondGame ? "autoshotgun;machete;molotov;first_aid_kit;pain_pills" : "autoshotgun;pistol;molotov;first_aid_kit;pain_pills;pistol";
+	g_esDeveloper[developer].g_sDevVoiceline = "PlayerLaugh";
+	g_esDeveloper[developer].g_flDevActionDuration = 2.0;
+	g_esDeveloper[developer].g_flDevAttackBoost = 1.25;
+	g_esDeveloper[developer].g_flDevDamageBoost = 1.75;
+	g_esDeveloper[developer].g_flDevDamageResistance = 0.5;
+	g_esDeveloper[developer].g_flDevHealPercent = 100.0;
+	g_esDeveloper[developer].g_flDevJumpHeight = 100.0;
+	g_esDeveloper[developer].g_flDevPunchResistance = 0.0;
+	g_esDeveloper[developer].g_flDevRewardDuration = 60.0;
+	g_esDeveloper[developer].g_flDevShoveDamage = 0.025;
+	g_esDeveloper[developer].g_flDevShoveRate = 0.4;
+	g_esDeveloper[developer].g_flDevSpeedBoost = 1.25;
+	g_esDeveloper[developer].g_iDevAccess = 0;
+	g_esDeveloper[developer].g_iDevAmmoRegen = 1;
+	g_esDeveloper[developer].g_iDevHealthRegen = 1;
+	g_esDeveloper[developer].g_iDevMeleeRange = 150;
+	g_esDeveloper[developer].g_iDevPanelLevel = 0;
+	g_esDeveloper[developer].g_iDevReviveHealth = 100;
+	g_esDeveloper[developer].g_iDevRewardTypes = MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ATTACKBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_INFAMMO;
+	g_esDeveloper[developer].g_iDevSpecialAmmo = 1;
 }
 
 static void vGiveRandomMeleeWeapon(int survivor, bool specific, const char[] name = "")
@@ -10251,7 +10263,7 @@ static void vGiveRandomMeleeWeapon(int survivor, bool specific, const char[] nam
 
 static void vGiveSpecialAmmo(int survivor)
 {
-	int iType = ((bIsDeveloper(survivor, 7) || bIsDeveloper(survivor, 9) || bIsDeveloper(survivor, 11)) && g_esDeveloper[survivor].g_iDevSpecialAmmo > g_esPlayer[survivor].g_iSpecialAmmo) ? g_esDeveloper[survivor].g_iDevSpecialAmmo : g_esPlayer[survivor].g_iSpecialAmmo;
+	int iType = ((bIsDeveloper(survivor, 7) || bIsDeveloper(survivor, 11)) && g_esDeveloper[survivor].g_iDevSpecialAmmo > g_esPlayer[survivor].g_iSpecialAmmo) ? g_esDeveloper[survivor].g_iDevSpecialAmmo : g_esPlayer[survivor].g_iSpecialAmmo;
 	if (g_bSecondGame && iType > 0)
 	{
 		int iSlot = GetPlayerWeaponSlot(survivor, 0);
@@ -12026,7 +12038,7 @@ static void vInstallPermanentPatches()
 {
 	for (int iPos = 0; iPos < g_iPatchCount; iPos++)
 	{
-		if (g_sPatchName[iPos][0] != '\0' && g_bPermanentPatch[iPos])
+		if (g_sPatchName[iPos][0] != '\0' && g_bPermanentPatch[iPos] && !g_bPatchInstalled[iPos])
 		{
 			bInstallPatch(iPos);
 		}
@@ -12037,7 +12049,7 @@ static void vRemovePermanentPatches()
 {
 	for (int iPos = 0; iPos < g_iPatchCount; iPos++)
 	{
-		if (g_bPatchInstalled[iPos])
+		if (g_bPermanentPatch[iPos] && g_bPatchInstalled[iPos])
 		{
 			bRemovePatch(iPos);
 		}
@@ -12177,12 +12189,12 @@ static bool bIsCustomTankSupported(int tank)
  * 2 - 1 - immune to abilities, access to all tanks (off by default)
  * 4 - 2 - loadout on initial spawn
  * 8 - 3 - all rewards/effects
- * 16 - 4 - damage boost/resistance, less punch force
+ * 16 - 4 - damage boost/resistance, less punch force, ammo regen
  * 32 - 5 - speed boost, jump height, auto-revive
  * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recover, full health when healing/reviving
- * 128 - 7 - infinite ammo, special ammo (off by default)
+ * 128 - 7 - infinite ammo, health regen, special ammo (off by default)
  * 256 - 8 - block puke/fling/stagger/punch/acid puddle (off by default)
- * 512 - 9 - sledgehammer rounds, tank melee knockback, shove damage against tank/charger/witch, special ammo
+ * 512 - 9 - sledgehammer rounds, hollowpoint ammo, tank melee knockback, shove damage against tank/charger/witch
  * 1024 - 10 - respawn upon death, clean kills, puke/acid puddle
  * 2048 - 11 - auto-insta-kill SI attackers, god mode, no damage, lady killer, special ammo (off by default)
  **/
@@ -14263,7 +14275,7 @@ public Action tTimerRegenerateAmmo(Handle timer)
 			continue;
 		}
 
-		bDeveloper = bIsDeveloper(iSurvivor, 6);
+		bDeveloper = bIsDeveloper(iSurvivor, 4);
 		iRegen = (bDeveloper && g_esDeveloper[iSurvivor].g_iDevAmmoRegen > g_esPlayer[iSurvivor].g_iAmmoRegen) ? g_esDeveloper[iSurvivor].g_iDevAmmoRegen : g_esPlayer[iSurvivor].g_iAmmoRegen;
 		if ((!bDeveloper && (!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO) || g_esPlayer[iSurvivor].g_flRewardTime[1] == -1.0)) || iRegen == 0)
 		{
@@ -14364,7 +14376,7 @@ public Action tTimerRegenerateHealth(Handle timer)
 			continue;
 		}
 
-		bDeveloper = bIsDeveloper(iSurvivor, 6);
+		bDeveloper = bIsDeveloper(iSurvivor, 7);
 		iRegen = (bDeveloper && g_esDeveloper[iSurvivor].g_iDevHealthRegen > g_esPlayer[iSurvivor].g_iHealthRegen) ? g_esDeveloper[iSurvivor].g_iDevHealthRegen : g_esPlayer[iSurvivor].g_iHealthRegen;
 		if ((!bDeveloper && (!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_HEALTH) || g_esPlayer[iSurvivor].g_flRewardTime[0] == -1.0)) || iRegen == 0)
 		{
