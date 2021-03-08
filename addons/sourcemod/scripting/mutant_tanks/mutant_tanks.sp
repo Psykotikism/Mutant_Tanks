@@ -2261,7 +2261,6 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakePlayerDamage);
 	SDKHook(client, SDKHook_WeaponEquipPost, OnWeaponEquipPost);
 
-	vDeveloperSettings(client);
 	vReset3(client);
 	vCacheSettings(client);
 	vResetCore(client);
@@ -2295,7 +2294,6 @@ public void OnClientDisconnect(int client)
 
 public void OnClientDisconnect_Post(int client)
 {
-	vDeveloperSettings(client);
 	vReset3(client);
 	vResetCore(client);
 
@@ -7695,6 +7693,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				g_esPlayer[iSurvivor].g_iLadyKiller = 0;
 				g_esPlayer[iSurvivor].g_iLadyKillerCount = 0;
+
+				vDeveloperSettings(iSurvivor);
 			}
 		}
 		else if (StrEqual(name, "player_death"))
