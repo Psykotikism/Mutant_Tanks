@@ -1259,7 +1259,7 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 	}
 }
 
-stock int iCreateParticle(int player, const char[] particlename, float pause, float duration, bool fireUser2)
+stock int iCreateParticle(int player, const char[] particlename, float pos[3], float angle[3], float pause, float duration, const char[] attachment = "")
 {
 	static int iEffect;
 	iEffect = CreateEntityByName("info_particle_system");
@@ -1267,32 +1267,31 @@ stock int iCreateParticle(int player, const char[] particlename, float pause, fl
 	{
 		DispatchKeyValue(iEffect, "effect_name", particlename);
 		vSetEntityParent(iEffect, player);
-		TeleportEntity(iEffect, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, NULL_VECTOR);
+		TeleportEntity(iEffect, pos, angle, NULL_VECTOR);
 		DispatchSpawn(iEffect);
 		ActivateEntity(iEffect);
 		AcceptEntityInput(iEffect, "Start");
 
-		static char sVariant[64];
-		SetVariantString("OnUser1 !self:Start::0.0:-1");
-		AcceptEntityInput(iEffect, "AddOutput");
-
-		FormatEx(sVariant, sizeof(sVariant), "OnUser2 !self:Stop::%f:-1", pause);
-		SetVariantString(sVariant);
-		AcceptEntityInput(iEffect, "AddOutput");
-
-		FormatEx(sVariant, sizeof(sVariant), "OnUser2 !self:FireUser1::%f:-1", pause + 0.1);
-		SetVariantString(sVariant);
-		AcceptEntityInput(iEffect, "AddOutput");
-
-		if (fireUser2)
+		if (attachment[0] != '\0')
 		{
-			FormatEx(sVariant, sizeof(sVariant), "OnUser2 !self:FireUser2::%f:-1", pause + 0.1);
-			SetVariantString(sVariant);
-			AcceptEntityInput(iEffect, "AddOutput");
+			SetVariantString(attachment);
+			AcceptEntityInput(iEffect, "SetParentAttachment");
 		}
 
+		static char sVariant[64];
+		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:Stop::%f:-1", pause);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
+
+		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:FireUser2::%f:-1", pause + 0.5);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
 		AcceptEntityInput(iEffect, "FireUser1");
-		AcceptEntityInput(iEffect, "FireUser2");
+
+		SetVariantString("OnUser2 !self:Start::0:-1");
+		AcceptEntityInput(iEffect, "AddOutput");
+		SetVariantString("OnUser2 !self:FireUser1::0:-1");
+		AcceptEntityInput(iEffect, "AddOutput");
 
 		FormatEx(sVariant, sizeof(sVariant), "OnUser3 !self:Kill::%f:-1", duration);
 		SetVariantString(sVariant);

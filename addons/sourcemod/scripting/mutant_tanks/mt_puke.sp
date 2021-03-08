@@ -43,6 +43,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 
 #define PARTICLE_BLOOD "boomer_explode_D"
+#define PARTICLE_FOUNTAIN "boomer_vomit"
 
 #define MT_CONFIG_SECTION "pukeability"
 #define MT_CONFIG_SECTION2 "puke ability"
@@ -187,6 +188,7 @@ public void OnPluginStart()
 public void OnMapStart()
 {
 	iPrecacheParticle(PARTICLE_BLOOD);
+	iPrecacheParticle(PARTICLE_FOUNTAIN);
 
 	vReset();
 }
@@ -749,11 +751,22 @@ static void vPukeAbility(int tank, float random, int pos = -1)
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeHuman4");
 			}
 		}
+		else if (random <= flChance)
+		{
+			vPukeFountain(tank);
+		}
 	}
 	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeAmmo");
 	}
+}
+
+static void vPukeFountain(int tank)
+{
+	static float flTankPos[3], flTankAngles[3] = {-90.0, 0.0, 0.0};
+	flTankPos[2] = 70.0;
+	iCreateParticle(tank, PARTICLE_FOUNTAIN, flTankPos, flTankAngles, 0.95, 1.0);
 }
 
 static void vPukeHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags)
@@ -826,6 +839,7 @@ static void vPukeRange(int tank, int value, float random, int pos = -1)
 		}
 
 		vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
+		vPukeFountain(tank);
 
 		static float flTankPos[3], flSurvivorPos[3], flRange;
 		GetClientAbsOrigin(tank, flTankPos);

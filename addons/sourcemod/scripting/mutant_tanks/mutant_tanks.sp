@@ -94,17 +94,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 
 #define MODEL_CONCRETE_CHUNK "models/props_debris/concrete_chunk01a.mdl"
-#define MODEL_FIREWORKCRATE "models/props_junk/explosive_box001.mdl"
+#define MODEL_FIREWORKCRATE "models/props_junk/explosive_box001.mdl" // Only available in L4D2
 #define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
 #define MODEL_JETPACK "models/props_equipment/oxygentank01.mdl"
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
 #define MODEL_TANK_MAIN "models/infected/hulk.mdl"
 #define MODEL_TANK_DLC "models/infected/hulk_dlc3.mdl"
-#define MODEL_TANK_L4D1 "models/infected/hulk_l4d1.mdl"
+#define MODEL_TANK_L4D1 "models/infected/hulk_l4d1.mdl" // Only available in L4D2
 #define MODEL_TIRES "models/props_vehicles/tire001c_car.mdl"
 #define MODEL_TREE_TRUNK "models/props_foliage/tree_trunk.mdl"
 #define MODEL_WITCH "models/infected/witch.mdl"
-#define MODEL_WITCHBRIDE "models/infected/witch_bride.mdl"
+#define MODEL_WITCHBRIDE "models/infected/witch_bride.mdl" // Only available in L4D2
 
 #define PARTICLE_ACHIEVED "achieved"
 #define PARTICLE_BLOOD "boomer_explode_D"
@@ -115,18 +115,19 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define PARTICLE_ICE "apc_wheel_smoke1"
 #define PARTICLE_METEOR "smoke_medium_01"
 #define PARTICLE_SMOKE "smoker_smokecloud"
-#define PARTICLE_SPIT "spitter_projectile"
+#define PARTICLE_SPIT "spitter_projectile" // Only available in L4D2
+#define PARTICLE_SPIT2 "spitter_slime_trail" // Only available in L4D2
 
 #define SOUND_ACHIEVEMENT "ui/pickup_misc42.wav"
 #define SOUND_DEATH "ui/pickup_scifi37.wav"
 #define SOUND_ELECTRICITY "items/suitchargeok1.wav"
 #define SOUND_EXPLOSION2 "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_2.wav" // Only available in L4D2
-#define SOUND_EXPLOSION1 "animation/van_inside_debris.wav"
+#define SOUND_EXPLOSION1 "animation/van_inside_debris.wav" // Only used in L4D1
 #define SOUND_LADYKILLER "ui/alert_clink.wav"
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #define SOUND_MISSILE "player/tank/attack/thrown_missile_loop_1.wav"
 #define SOUND_SPAWN "ui/pickup_secret01.wav"
-#define SOUND_SPIT "player/spitter/voice/warn/spitter_spit_02.wav"
+#define SOUND_SPIT "player/spitter/voice/warn/spitter_spit_02.wav" // Only available in L4D2
 
 #define SPRITE_EXPLODE "sprites/zerogxplode.spr"
 
@@ -278,13 +279,6 @@ enum struct esGeneral
 	bool g_bFinaleEnded;
 	bool g_bForceSpawned;
 	bool g_bHideNameChange;
-	bool g_bIgnoreHealPercent;
-	bool g_bIgnoreMeleeRange;
-	bool g_bIgnorePushScale;
-	bool g_bIgnoreReviveDuration;
-	bool g_bIgnoreReviveHealth;
-	bool g_bIgnoreSwingInterval;
-	bool g_bIgnoreUseDuration;
 	bool g_bLinux;
 	bool g_bMapStarted;
 	bool g_bPatchDoJumpStart[2];
@@ -1592,11 +1586,6 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTGameModeTypes.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTPluginEnabled.AddChangeHook(vMTPluginStatusCvar);
 	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
-	g_esGeneral.g_cvMTFirstAidHealPercent.AddChangeHook(vMTHealPercentCvar);
-	g_esGeneral.g_cvMTFirstAidKitUseDuration.AddChangeHook(vMTUseDurationCvar);
-	g_esGeneral.g_cvMTSurvivorReviveDuration.AddChangeHook(vMTReviveDurationCvar);
-	g_esGeneral.g_cvMTSurvivorReviveHealth.AddChangeHook(vMTReviveHealthCvar);
-	g_esGeneral.g_cvMTGunSwingInterval.AddChangeHook(vMTSwingIntervalCvar);
 
 	if (g_bSecondGame)
 	{
@@ -1607,14 +1596,6 @@ public void OnPluginStart()
 		g_esGeneral.g_cvMTMeleeRange = FindConVar("melee_range");
 		g_esGeneral.g_cvMTPhysicsPushScale = FindConVar("phys_pushscale");
 		g_esGeneral.g_cvMTUpgradePackUseDuration = FindConVar("upgrade_pack_use_duration");
-
-		g_esGeneral.g_cvMTAmmoPackUseDuration.AddChangeHook(vMTUseDurationCvar);
-		g_esGeneral.g_cvMTColaBottlesUseDuration.AddChangeHook(vMTUseDurationCvar);
-		g_esGeneral.g_cvMTDefibrillatorUseDuration.AddChangeHook(vMTUseDurationCvar);
-		g_esGeneral.g_cvMTGasCanUseDuration.AddChangeHook(vMTUseDurationCvar);
-		g_esGeneral.g_cvMTMeleeRange.AddChangeHook(vMTMeleeRangeCvar);
-		g_esGeneral.g_cvMTPhysicsPushScale.AddChangeHook(vMTPushScaleCvar);
-		g_esGeneral.g_cvMTUpgradePackUseDuration.AddChangeHook(vMTUseDurationCvar);
 	}
 
 	char sDate[32];
@@ -1643,7 +1624,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -2207,33 +2187,36 @@ public void OnMapStart()
 	PrecacheModel(MODEL_TANK_DLC, true);
 
 	PrecacheModel(MODEL_CONCRETE_CHUNK, true);
-	PrecacheModel(MODEL_FIREWORKCRATE, true);
 	PrecacheModel(MODEL_GASCAN, true);
 	PrecacheModel(MODEL_JETPACK, true);
 	PrecacheModel(MODEL_PROPANETANK, true);
 	PrecacheModel(MODEL_TIRES, true);
 	PrecacheModel(MODEL_TREE_TRUNK, true);
 	PrecacheModel(MODEL_WITCH, true);
-	PrecacheModel(MODEL_WITCHBRIDE, true);
 
 	iPrecacheParticle(PARTICLE_ACHIEVED);
 	iPrecacheParticle(PARTICLE_BLOOD);
 	iPrecacheParticle(PARTICLE_ELECTRICITY);
 	iPrecacheParticle(PARTICLE_FIRE);
 	iPrecacheParticle(PARTICLE_FIREWORK);
-	iPrecacheParticle(PARTICLE_GORE);
 	iPrecacheParticle(PARTICLE_ICE);
 	iPrecacheParticle(PARTICLE_METEOR);
 	iPrecacheParticle(PARTICLE_SMOKE);
-	iPrecacheParticle(PARTICLE_SPIT);
 
 	switch (g_bSecondGame)
 	{
 		case true:
 		{
+			PrecacheModel(MODEL_FIREWORKCRATE, true);
+			PrecacheModel(MODEL_TANK_L4D1, true);
+			PrecacheModel(MODEL_WITCHBRIDE, true);
+
 			PrecacheSound(SOUND_EXPLOSION2, true);
 			PrecacheSound(SOUND_SPIT, true);
-			PrecacheModel(MODEL_TANK_L4D1, true);
+
+			iPrecacheParticle(PARTICLE_GORE);
+			iPrecacheParticle(PARTICLE_SPIT);
+			iPrecacheParticle(PARTICLE_SPIT2);
 		}
 		case false: PrecacheSound(SOUND_EXPLOSION1, true);
 	}
@@ -2305,25 +2288,14 @@ public void OnConfigsExecuted()
 	vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 	vPluginStatus();
 	vResetTimers();
-	vCacheCvars();
 	CreateTimer(0.1, tTimerRefreshRewards, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerReloadConfigs, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerRegenerateAmmo, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerRegenerateHealth, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
-	g_esGeneral.g_flDefaultFirstAidHealPercent = g_esGeneral.g_cvMTFirstAidHealPercent.FloatValue;
-	g_esGeneral.g_flDefaultSurvivorReviveDuration = g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue;
-	g_esGeneral.g_flDefaultGunSwingInterval = g_esGeneral.g_cvMTGunSwingInterval.FloatValue;
-	g_esGeneral.g_iDefaultSurvivorReviveHealth = g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue;
 	g_esGeneral.g_iChosenType = 0;
 	g_esGeneral.g_iRegularCount = 0;
 	g_esGeneral.g_iTankCount = 0;
-
-	if (g_bSecondGame)
-	{
-		g_esGeneral.g_flDefaultPhysicsPushScale = g_esGeneral.g_cvMTPhysicsPushScale.FloatValue;
-		g_esGeneral.g_iDefaultMeleeRange = g_esGeneral.g_cvMTMeleeRange.IntValue;
-	}
 
 	if (g_esGeneral.g_iConfigEnable == 1)
 	{
@@ -5610,20 +5582,6 @@ static void vPerformKnockback(int special, int survivor)
 	}
 
 	SetEntPropFloat(special, Prop_Send, "m_flVelocityModifier", 0.4);
-}
-
-static void vCacheCvars()
-{
-	g_esGeneral.g_flDefaultFirstAidKitUseDuration = g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue;
-
-	if (g_bSecondGame)
-	{
-		g_esGeneral.g_flDefaultAmmoPackUseDuration = g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue;
-		g_esGeneral.g_flDefaultColaBottlesUseDuration = g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue;
-		g_esGeneral.g_flDefaultDefibrillatorUseDuration = g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue;
-		g_esGeneral.g_flDefaultGasCanUseDuration = g_esGeneral.g_cvMTGasCanUseDuration.FloatValue;
-		g_esGeneral.g_flDefaultUpgradePackUseDuration = g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue;
-	}
 }
 
 static void vCacheSettings(int tank)
@@ -9273,21 +9231,17 @@ static void vRemoveDamage(int victim, int damagetype)
 
 static void vRemoveEffects(int survivor)
 {
-	int iEffect = g_esPlayer[survivor].g_iEffect[0];
-	if (bIsValidEntRef(iEffect))
+	int iEffect = -1;
+	for (int iPos = 0; iPos < sizeof(esPlayer::g_iEffect); iPos++)
 	{
-		RemoveEntity(iEffect);
+		iEffect = g_esPlayer[survivor].g_iEffect[iPos];
+		if (bIsValidEntRef(iEffect))
+		{
+			RemoveEntity(iEffect);
+		}
+
+		g_esPlayer[survivor].g_iEffect[iPos] = INVALID_ENT_REFERENCE;
 	}
-
-	g_esPlayer[survivor].g_iEffect[0] = INVALID_ENT_REFERENCE;
-
-	iEffect = g_esPlayer[survivor].g_iEffect[1];
-	if (bIsValidEntRef(iEffect))
-	{
-		RemoveEntity(iEffect);
-	}
-
-	g_esPlayer[survivor].g_iEffect[1] = INVALID_ENT_REFERENCE;
 }
 
 static void vRemoveGlow(int tank)
@@ -10047,12 +10001,12 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 				int iEffect = g_esCache[tank].g_iRewardEffect[priority];
 				if (bDeveloper || (iEffect & MT_EFFECT_TROPHY))
 				{
-					g_esPlayer[survivor].g_iEffect[0] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_ACHIEVED, 1.5, 1.5, true));
+					g_esPlayer[survivor].g_iEffect[0] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_ACHIEVED, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 1.5, 1.5));
 				}
 
 				if (bDeveloper || (iEffect & MT_EFFECT_FIREWORKS))
 				{
-					g_esPlayer[survivor].g_iEffect[1] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_FIREWORK, 2.0, 1.5, false));
+					g_esPlayer[survivor].g_iEffect[1] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_FIREWORK, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 2.0, 1.5));
 				}
 
 				if (bDeveloper || (iEffect & MT_EFFECT_SOUND))
@@ -10619,27 +10573,81 @@ static void vSetColor(int tank, int type = 0, bool change = true, bool revert = 
 
 static void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 {
-	if (!reset)
-	{
-		g_esGeneral.g_bIgnoreUseDuration = true;
-	}
-
 	if (g_esGeneral.g_hSDKGetUseAction != null)
 	{
-		switch (SDKCall(g_esGeneral.g_hSDKGetUseAction, item))
+		int iType = SDKCall(g_esGeneral.g_hSDKGetUseAction, item);
+		if (reset)
 		{
-			case 1: g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultFirstAidKitUseDuration : duration; // first_aid_kit
-			case 2: g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultAmmoPackUseDuration : duration; // ammo_pack
-			case 4: g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultDefibrillatorUseDuration : duration; // defibrillator
-			case 6, 7: g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultUpgradePackUseDuration : duration; // upgrade_pack
-			case 8: g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultGasCanUseDuration : duration; // gas_can
-			case 9: g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = reset ? g_esGeneral.g_flDefaultColaBottlesUseDuration : duration; // cola_bottles
+			switch (iType)
+			{
+				case 1:
+				{
+					g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = g_esGeneral.g_flDefaultFirstAidKitUseDuration; // first_aid_kit
+					g_esGeneral.g_flDefaultFirstAidKitUseDuration = -1.0;
+				}
+				case 2:
+				{
+					g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = g_esGeneral.g_flDefaultAmmoPackUseDuration; // ammo_pack
+					g_esGeneral.g_flDefaultAmmoPackUseDuration = -1.0;
+				}
+				case 4:
+				{
+					g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = g_esGeneral.g_flDefaultDefibrillatorUseDuration; // defibrillator
+					g_esGeneral.g_flDefaultDefibrillatorUseDuration = -1.0;
+				}
+				case 6, 7:
+				{
+					g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = g_esGeneral.g_flDefaultUpgradePackUseDuration; // upgrade_pack
+					g_esGeneral.g_flDefaultUpgradePackUseDuration = -1.0;
+				}
+				case 8:
+				{
+					g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = g_esGeneral.g_flDefaultGasCanUseDuration; // gas_can
+					g_esGeneral.g_flDefaultGasCanUseDuration = -1.0;
+				}
+				case 9:
+				{
+					g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = g_esGeneral.g_flDefaultColaBottlesUseDuration; // cola_bottles
+					g_esGeneral.g_flDefaultColaBottlesUseDuration = -1.0;
+				}
+			}
 		}
-	}
-
-	if (reset)
-	{
-		g_esGeneral.g_bIgnoreUseDuration = false;
+		else
+		{
+			switch (iType)
+			{
+				case 1:
+				{
+					g_esGeneral.g_flDefaultFirstAidKitUseDuration = g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue;
+					g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = duration; // first_aid_kit
+				}
+				case 2:
+				{
+					g_esGeneral.g_flDefaultAmmoPackUseDuration = g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue;
+					g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = duration; // ammo_pack
+				}
+				case 4:
+				{
+					g_esGeneral.g_flDefaultDefibrillatorUseDuration = g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue;
+					g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = duration; // defibrillator
+				}
+				case 6, 7:
+				{
+					g_esGeneral.g_flDefaultUpgradePackUseDuration = g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue;
+					g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = duration; // upgrade_pack
+				}
+				case 8:
+				{
+					g_esGeneral.g_flDefaultGasCanUseDuration = g_esGeneral.g_cvMTGasCanUseDuration.FloatValue;
+					g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = duration; // gas_can
+				}
+				case 9:
+				{
+					g_esGeneral.g_flDefaultColaBottlesUseDuration = g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue;
+					g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = duration; // cola_bottles
+				}
+			}
+		}
 	}
 }
 
@@ -10650,7 +10658,7 @@ static void vSetHealPercentCvar(bool reset, int survivor = 0)
 		if (g_esGeneral.g_cvMTFirstAidHealPercent != null)
 		{
 			g_esGeneral.g_cvMTFirstAidHealPercent.FloatValue = g_esGeneral.g_flDefaultFirstAidHealPercent;
-			g_esGeneral.g_bIgnoreHealPercent = false;
+			g_esGeneral.g_flDefaultFirstAidHealPercent = -1.0;
 		}
 	}
 	else
@@ -10661,7 +10669,7 @@ static void vSetHealPercentCvar(bool reset, int survivor = 0)
 			float flPercent = (bDeveloper && g_esDeveloper[survivor].g_flDevHealPercent > g_esPlayer[survivor].g_flHealPercent) ? g_esDeveloper[survivor].g_flDevHealPercent : g_esPlayer[survivor].g_flHealPercent;
 			if (flPercent > 0.0)
 			{
-				g_esGeneral.g_bIgnoreHealPercent = true;
+				g_esGeneral.g_flDefaultFirstAidHealPercent = g_esGeneral.g_cvMTFirstAidHealPercent.FloatValue;
 				g_esGeneral.g_cvMTFirstAidHealPercent.FloatValue = flPercent / 100.0;
 			}
 		}
@@ -10676,7 +10684,6 @@ static void vSetReviveDurationCvar(int survivor)
 		float flDuration = (bDeveloper && g_esDeveloper[survivor].g_flDevActionDuration > g_esPlayer[survivor].g_flActionDuration) ? g_esDeveloper[survivor].g_flDevActionDuration : g_esPlayer[survivor].g_flActionDuration;
 		if (flDuration > 0.0)
 		{
-			g_esGeneral.g_bIgnoreReviveDuration = true;
 			g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue = flDuration;
 		}
 	}
@@ -10689,7 +10696,7 @@ static void vSetReviveHealthCvar(bool reset, int survivor = 0)
 		if (g_esGeneral.g_cvMTSurvivorReviveHealth != null)
 		{
 			g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue = g_esGeneral.g_iDefaultSurvivorReviveHealth;
-			g_esGeneral.g_bIgnoreReviveHealth = false;
+			g_esGeneral.g_iDefaultSurvivorReviveHealth = -1;
 		}
 	}
 	else
@@ -10700,7 +10707,7 @@ static void vSetReviveHealthCvar(bool reset, int survivor = 0)
 			int iHealth = (bDeveloper && g_esDeveloper[survivor].g_iDevReviveHealth > g_esPlayer[survivor].g_iReviveHealth) ? g_esDeveloper[survivor].g_iDevReviveHealth : g_esPlayer[survivor].g_iReviveHealth;
 			if (iHealth > 0)
 			{
-				g_esGeneral.g_bIgnoreReviveHealth = true;
+				g_esGeneral.g_iDefaultSurvivorReviveHealth = g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue;
 				g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue = iHealth;
 			}
 		}
@@ -13269,7 +13276,7 @@ public MRESReturn mreFireBulletPre(int pThis)
 	iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
 	if (bIsSurvivor(iSurvivor, 9) || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[iSurvivor].g_iSledgehammerRounds == 1) && g_esGeneral.g_cvMTPhysicsPushScale != null)
 	{
-		g_esGeneral.g_bIgnorePushScale = true;
+		g_esGeneral.g_flDefaultPhysicsPushScale = g_esGeneral.g_cvMTPhysicsPushScale.FloatValue;
 		g_esGeneral.g_cvMTPhysicsPushScale.FloatValue = 5.0;
 	}
 
@@ -13281,7 +13288,7 @@ public MRESReturn mreFireBulletPost(int pThis)
 	if (g_esGeneral.g_cvMTPhysicsPushScale != null)
 	{
 		g_esGeneral.g_cvMTPhysicsPushScale.FloatValue = g_esGeneral.g_flDefaultPhysicsPushScale;
-		g_esGeneral.g_bIgnorePushScale = false;
+		g_esGeneral.g_flDefaultPhysicsPushScale = -1.0;
 	}
 
 	return MRES_Ignored;
@@ -13463,8 +13470,8 @@ public MRESReturn mreSecondaryAttackPre(int pThis)
 			flMultiplier = (bDeveloper && g_esDeveloper[iSurvivor].g_flDevShoveRate > g_esPlayer[iSurvivor].g_flShoveRate) ? g_esDeveloper[iSurvivor].g_flDevShoveRate : g_esPlayer[iSurvivor].g_flShoveRate;
 			if (flMultiplier > 0.0)
 			{
-				g_esGeneral.g_bIgnoreSwingInterval = true;
-				g_esGeneral.g_cvMTGunSwingInterval.FloatValue = g_esGeneral.g_flDefaultGunSwingInterval * flMultiplier;
+				g_esGeneral.g_flDefaultGunSwingInterval = g_esGeneral.g_cvMTGunSwingInterval.FloatValue;
+				g_esGeneral.g_cvMTGunSwingInterval.FloatValue *= flMultiplier;
 			}
 		}
 	}
@@ -13477,7 +13484,7 @@ public MRESReturn mreSecondaryAttackPost(int pThis)
 	if (g_esGeneral.g_cvMTGunSwingInterval != null)
 	{
 		g_esGeneral.g_cvMTGunSwingInterval.FloatValue = g_esGeneral.g_flDefaultGunSwingInterval;
-		g_esGeneral.g_bIgnoreSwingInterval = false;
+		g_esGeneral.g_flDefaultGunSwingInterval = -1.0;
 	}
 
 	return MRES_Ignored;
@@ -13596,7 +13603,7 @@ public MRESReturn mreStartHealingPre(int pThis, DHookParam hParams)
 			float flDuration = (bDeveloper && g_esDeveloper[iSurvivor].g_flDevActionDuration > g_esPlayer[iSurvivor].g_flActionDuration) ? g_esDeveloper[iSurvivor].g_flDevActionDuration : g_esPlayer[iSurvivor].g_flActionDuration;
 			if (flDuration > 0.0)
 			{
-				g_esGeneral.g_bIgnoreUseDuration = true;
+				g_esGeneral.g_flDefaultFirstAidKitUseDuration = g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue;
 				g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = flDuration;
 			}
 		}
@@ -13610,7 +13617,7 @@ public MRESReturn mreStartHealingPost(int pThis, DHookParam hParams)
 	if (g_esGeneral.g_cvMTFirstAidKitUseDuration != null)
 	{
 		g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = g_esGeneral.g_flDefaultFirstAidKitUseDuration;
-		g_esGeneral.g_bIgnoreUseDuration = false;
+		g_esGeneral.g_flDefaultFirstAidKitUseDuration = -1.0;
 	}
 
 	return MRES_Ignored;
@@ -13639,7 +13646,7 @@ public MRESReturn mreStartRevivingPost(int pThis, DHookParam hParams)
 	if (g_esGeneral.g_cvMTSurvivorReviveDuration != null)
 	{
 		g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue = g_esGeneral.g_flDefaultSurvivorReviveDuration;
-		g_esGeneral.g_bIgnoreReviveDuration = false;
+		g_esGeneral.g_flDefaultSurvivorReviveDuration = -1.0;
 	}
 
 	return MRES_Ignored;
@@ -13687,7 +13694,7 @@ public MRESReturn mreTestMeleeSwingCollisionPre(int pThis, DHookParam hParams)
 			int iRange = (bDeveloper && g_esDeveloper[iSurvivor].g_iDevMeleeRange > g_esPlayer[iSurvivor].g_iMeleeRange) ? g_esDeveloper[iSurvivor].g_iDevMeleeRange : g_esPlayer[iSurvivor].g_iMeleeRange;
 			if (iRange > 0)
 			{
-				g_esGeneral.g_bIgnoreMeleeRange = true;
+				g_esGeneral.g_iDefaultMeleeRange = g_esGeneral.g_cvMTMeleeRange.IntValue;
 				g_esGeneral.g_cvMTMeleeRange.IntValue = iRange;
 			}
 		}
@@ -13701,7 +13708,7 @@ public MRESReturn mreTestMeleeSwingCollisionPost(int pThis, DHookParam hParams)
 	if (g_esGeneral.g_cvMTMeleeRange != null)
 	{
 		g_esGeneral.g_cvMTMeleeRange.IntValue = g_esGeneral.g_iDefaultMeleeRange;
-		g_esGeneral.g_bIgnoreMeleeRange = false;
+		g_esGeneral.g_iDefaultMeleeRange = -1;
 	}
 
 	return MRES_Ignored;
@@ -13787,62 +13794,6 @@ public void vMTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 			g_esGeneral.g_iFileTimeOld[1] = GetFileTime(sDifficultyConfig, FileTime_LastChange);
 			g_esGeneral.g_iFileTimeNew[1] = g_esGeneral.g_iFileTimeOld[1];
 		}
-	}
-}
-
-public void vMTHealPercentCvar(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	if (!g_esGeneral.g_bIgnoreHealPercent)
-	{
-		g_esGeneral.g_flDefaultFirstAidHealPercent = g_esGeneral.g_cvMTFirstAidHealPercent.FloatValue;
-	}
-}
-
-public void vMTUseDurationCvar(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	if (!g_esGeneral.g_bIgnoreUseDuration)
-	{
-		vCacheCvars();
-	}
-}
-
-public void vMTReviveDurationCvar(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	if (!g_esGeneral.g_bIgnoreReviveDuration)
-	{
-		g_esGeneral.g_flDefaultSurvivorReviveDuration = g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue;
-	}
-}
-
-public void vMTReviveHealthCvar(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	if (!g_esGeneral.g_bIgnoreReviveHealth)
-	{
-		g_esGeneral.g_iDefaultSurvivorReviveHealth = g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue;
-	}
-}
-
-public void vMTSwingIntervalCvar(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	if (!g_esGeneral.g_bIgnoreSwingInterval)
-	{
-		g_esGeneral.g_flDefaultGunSwingInterval = g_esGeneral.g_cvMTGunSwingInterval.FloatValue;
-	}
-}
-
-public void vMTMeleeRangeCvar(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	if (!g_esGeneral.g_bIgnoreMeleeRange)
-	{
-		g_esGeneral.g_iDefaultMeleeRange = g_esGeneral.g_cvMTMeleeRange.IntValue;
-	}
-}
-
-public void vMTPushScaleCvar(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	if (!g_esGeneral.g_bIgnorePushScale)
-	{
-		g_esGeneral.g_flDefaultPhysicsPushScale = g_esGeneral.g_cvMTPhysicsPushScale.FloatValue;
 	}
 }
 
@@ -14564,6 +14515,7 @@ public Action tTimerSpitEffect(Handle timer, int userid)
 	}
 
 	vAttachParticle(iTank, PARTICLE_SPIT, 2.0, 30.0);
+	iCreateParticle(iTank, PARTICLE_SPIT2, NULL_VECTOR, NULL_VECTOR, 0.95, 2.0, "mouth");
 
 	return Plugin_Continue;
 }
