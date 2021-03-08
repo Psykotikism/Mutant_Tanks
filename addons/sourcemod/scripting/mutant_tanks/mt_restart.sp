@@ -694,12 +694,26 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveRestart(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			vRemoveRestart(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_spawn"))
+	{
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vRemoveRestart(iPlayer);
+		}
+		else if (bIsSurvivor(iPlayer) && !g_esPlayer[iPlayer].g_bRecorded && bIsSurvivorInCheckpoint(iPlayer, true))
+		{
+			g_esPlayer[iPlayer].g_bRecorded = true;
+
+			GetClientAbsOrigin(iPlayer, g_esPlayer[iPlayer].g_flPosition);
 		}
 	}
 	else if (StrEqual(name, "player_left_checkpoint"))
@@ -710,13 +724,14 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		g_esPlayer[GetClientOfUserId(event.GetInt("userid"))].g_bCheckpoint = true;
 	}
-	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	else if (StrEqual(name, "mission_lost"))
 	{
 		vReset();
 	}
-
-	if (StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	else if (StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
+		vReset();
+
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++ )
 		{
 			switch (bIsSurvivor(iPlayer, MT_CHECK_INGAME))
@@ -724,17 +739,6 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 				case true: g_esPlayer[iPlayer].g_bCheckpoint = true;
 				case false: g_esPlayer[iPlayer].g_bCheckpoint = false;
 			}
-		}
-	}
-
-	if (StrEqual(name, "player_spawn"))
-	{
-		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsSurvivor(iSurvivor) && !g_esPlayer[iSurvivor].g_bRecorded && bIsSurvivorInCheckpoint(iSurvivor, true))
-		{
-			g_esPlayer[iSurvivor].g_bRecorded = true;
-
-			GetClientAbsOrigin(iSurvivor, g_esPlayer[iSurvivor].g_flPosition);
 		}
 	}
 }

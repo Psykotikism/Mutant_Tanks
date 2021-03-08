@@ -619,7 +619,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveDrug(iTank);
 		}
 	}
-	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	else if (StrEqual(name, "player_death"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
 		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
@@ -627,18 +627,21 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			vRemoveDrug(iTank);
 		}
 	}
+	else if (StrEqual(name, "player_spawn"))
+	{
+		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
+		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vRemoveDrug(iPlayer);
+		}
+		else if (bIsHumanSurvivor(iPlayer))
+		{
+			vDrug(iPlayer, false, g_flDrugAngles);
+		}
+	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
 	{
 		vReset();
-	}
-
-	if (StrEqual(name, "player_spawn"))
-	{
-		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (bIsHumanSurvivor(iSurvivor))
-		{
-			vDrug(iSurvivor, false, g_flDrugAngles);
-		}
 	}
 }
 

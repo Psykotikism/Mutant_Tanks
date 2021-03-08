@@ -10382,11 +10382,9 @@ static void vRefillAmmo(int survivor, bool reset = false)
 	{
 		if (g_esGeneral.g_hSDKGetMaxClip1 != null)
 		{
-			static int iMaxClip;
-			iMaxClip = SDKCall(g_esGeneral.g_hSDKGetMaxClip1, iSlot);
-			if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= iMaxClip))
+			if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[0]))
 			{
-				SetEntProp(iSlot, Prop_Send, "m_iClip1", iMaxClip);
+				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iMaxClip[0]);
 			}
 
 			if (g_bSecondGame)
@@ -10395,7 +10393,7 @@ static void vRefillAmmo(int survivor, bool reset = false)
 				iUpgrades = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
 				if ((iUpgrades & MT_UPGRADE_INCENDIARY) || (iUpgrades & MT_UPGRADE_EXPLOSIVE))
 				{
-					SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", iMaxClip);
+					SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", g_esPlayer[survivor].g_iMaxClip[0]);
 				}
 			}
 		}
@@ -10410,11 +10408,9 @@ static void vRefillAmmo(int survivor, bool reset = false)
 		GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
 		if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
 		{
-			static int iMaxClip;
-			iMaxClip = SDKCall(g_esGeneral.g_hSDKGetMaxClip1, iSlot);
-			if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= iMaxClip))
+			if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[1]))
 			{
-				SetEntProp(iSlot, Prop_Send, "m_iClip1", iMaxClip);
+				SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iMaxClip[1]);
 			}
 		}
 	}
@@ -11856,7 +11852,12 @@ public void vPlayerSpawnFrame(DataPack pack)
 	}
 	else if (bIsTank(iPlayer) && !g_esPlayer[iPlayer].g_bFirstSpawn)
 	{
-		if (bIsTankInStasis(iPlayer) && g_esGeneral.g_iStasisMode == 1 && g_esGeneral.g_hSDKLeaveStasis != null)
+		if (g_bSecondGame)
+		{
+			g_esPlayer[iPlayer].g_bStasis = bIsTankInStasis(iPlayer) || (g_esGeneral.g_hSDKIsInStasis != null && SDKCall(g_esGeneral.g_hSDKIsInStasis, iPlayer));
+		}
+
+		if (g_esPlayer[iPlayer].g_bStasis && g_esGeneral.g_iStasisMode == 1 && g_esGeneral.g_hSDKLeaveStasis != null)
 		{
 			SDKCall(g_esGeneral.g_hSDKLeaveStasis, iPlayer);
 		}
@@ -11959,7 +11960,7 @@ public void vTankSpawnFrame(DataPack pack)
 	{
 		vCacheSettings(iTank);
 
-		if (!bIsInfectedGhost(iTank) && !bIsTankInStasis(iTank))
+		if (!bIsInfectedGhost(iTank) && !g_esPlayer[iTank].g_bStasis)
 		{
 			g_esPlayer[iTank].g_bKeepCurrentType = false;
 
@@ -12352,7 +12353,7 @@ static bool bIsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAM
 
 static bool bIsTankIdle(int tank, int type = 0)
 {
-	if (bIsTank(tank) && !bIsTank(tank, MT_CHECK_FAKECLIENT) && !bIsInfectedGhost(tank) && !bIsTankInStasis(tank))
+	if (bIsTank(tank) && !bIsTank(tank, MT_CHECK_FAKECLIENT) && !bIsInfectedGhost(tank) && !g_esPlayer[tank].g_bStasis)
 	{
 		Address adTank = GetEntityAddress(tank);
 		if (adTank != Address_Null && g_esGeneral.g_iIntentionOffset != -1)
@@ -12385,11 +12386,6 @@ static bool bIsTankIdle(int tank, int type = 0)
 	}
 
 	return false;
-}
-
-static bool bIsTankInStasis(int tank)
-{
-	return g_esPlayer[tank].g_bStasis || (g_bSecondGame && ((g_esGeneral.g_hSDKIsInStasis != null && SDKCall(g_esGeneral.g_hSDKIsInStasis, tank)) || bIsTankStasis(tank)));
 }
 
 static bool bIsTankInThirdPerson(int tank)

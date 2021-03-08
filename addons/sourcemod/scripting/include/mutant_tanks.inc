@@ -1931,9 +1931,9 @@ stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK
 	return bIsInfected(tank, flags) && GetEntProp(tank, Prop_Send, "m_zombieClass") == iClass;
 }
 
-stock bool bIsTankStasis(int tank)
+stock bool bIsTankInStasis(int tank)
 {
-	return GetEntProp(tank, Prop_Data, "m_bIsInStasis") == 1;
+	return bIsSecondGame() && GetEntProp(tank, Prop_Data, "m_bIsInStasis") == 1;
 }
 
 stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT)
