@@ -790,8 +790,19 @@ static void vPukeHit(int survivor, int tank, float random, float chance, int ena
 					}
 				}
 
-				SDKCall(g_hSDKVomitUpon, survivor, tank, true);
-				vEffect(survivor, tank, g_esCache[tank].g_iPukeEffect, flags);
+				if (flags & MT_ATTACK_RANGE)
+				{
+					DataPack dpPukeHit;
+					CreateDataTimer(1.5, tTimerPukeHit, dpPukeHit, TIMER_FLAG_NO_MAPCHANGE);
+					dpPukeHit.WriteCell(GetClientUserId(survivor));
+					dpPukeHit.WriteCell(GetClientUserId(tank));
+					dpPukeHit.WriteCell(flags);
+				}
+				else
+				{
+					SDKCall(g_hSDKVomitUpon, survivor, tank, true);
+					vEffect(survivor, tank, g_esCache[tank].g_iPukeEffect, flags);
+				}
 
 				if (g_esCache[tank].g_iPukeMessage & messages)
 				{
@@ -844,7 +855,10 @@ static void vPukeRange(int tank, int value, float random, int pos = -1)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
-					SDKCall(g_hSDKVomitUpon, iSurvivor, tank, true);
+					DataPack dpPukeRange;
+					CreateDataTimer(1.5, tTimerPukeRange, dpPukeRange, TIMER_FLAG_NO_MAPCHANGE);
+					dpPukeRange.WriteCell(GetClientUserId(iSurvivor));
+					dpPukeRange.WriteCell(GetClientUserId(tank));
 				}
 			}
 		}
@@ -914,6 +928,55 @@ public Action tTimerCombo2(Handle timer, DataPack pack)
 	{
 		vPukeHit(iSurvivor, iTank, flRandom, flChance, g_esCache[iTank].g_iPukeHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
 	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerPukeHit(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	static int iSurvivor;
+	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!bIsSurvivor(iSurvivor))
+	{
+		return Plugin_Stop;
+	}
+
+	static int iTank;
+	iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esCache[iTank].g_iPukeAbility == 0)
+	{
+		return Plugin_Stop;
+	}
+
+	static int iFlags;
+	iFlags = pack.ReadCell();
+	SDKCall(g_hSDKVomitUpon, iSurvivor, iTank, true);
+	vEffect(iSurvivor, iTank, g_esCache[iTank].g_iPukeEffect, iFlags);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerPukeRange(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	static int iSurvivor;
+	iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!bIsSurvivor(iSurvivor))
+	{
+		return Plugin_Stop;
+	}
+
+	static int iTank;
+	iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !bIsValidClient(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return Plugin_Stop;
+	}
+
+	SDKCall(g_hSDKVomitUpon, iSurvivor, iTank, true);
 
 	return Plugin_Continue;
 }

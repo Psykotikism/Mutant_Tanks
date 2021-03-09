@@ -1460,7 +1460,7 @@ public any aNative_TankMaxHealth(Handle plugin, int numParams)
 public any aNative_UnvomitPlayer(Handle plugin, int numParams)
 {
 	int iPlayer = GetNativeCell(1);
-	if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && GetClientTeam(iPlayer) > 1 && g_esGeneral.g_hSDKITExpired != null && g_esPlayer[iPlayer].g_bVomited)
+	if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && GetClientTeam(iPlayer) > 1 && g_esPlayer[iPlayer].g_bVomited && g_esGeneral.g_hSDKITExpired != null)
 	{
 		SDKCall(g_esGeneral.g_hSDKITExpired, iPlayer);
 	}
@@ -3570,7 +3570,15 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 
 		switch (bIsDeveloper(developer, 11) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_GODMODE))
 		{
-			case true: SetEntProp(developer, Prop_Data, "m_takedamage", 0, 1);
+			case true:
+			{
+				if (g_esPlayer[developer].g_bVomited && g_esGeneral.g_hSDKITExpired != null)
+				{
+					SDKCall(g_esGeneral.g_hSDKITExpired, developer);
+				}
+
+				SetEntProp(developer, Prop_Data, "m_takedamage", 0, 1);
+			}
 			case false: SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
 		}
 	}
