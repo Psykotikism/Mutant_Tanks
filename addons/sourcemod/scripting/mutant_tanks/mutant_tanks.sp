@@ -10946,7 +10946,7 @@ static void vSetProps(int tank)
 					DispatchKeyValueVector(g_esPlayer[tank].g_iOzTank[iOzTank], "angles", flAngles);
 					vSetEntityParent(g_esPlayer[tank].g_iOzTank[iOzTank], tank, true);
 
-					static float flOrigin2[3], flAngles2[3];
+					static float flOrigin2[3], flAngles2[3] = {0.0, 0.0, 90.0};
 
 					switch (iOzTank)
 					{
@@ -10962,7 +10962,6 @@ static void vSetProps(int tank)
 						}
 					}
 
-					vSetVector(flAngles2, 0.0, 0.0, 90.0);
 					AcceptEntityInput(g_esPlayer[tank].g_iOzTank[iOzTank], "SetParentAttachment");
 					AcceptEntityInput(g_esPlayer[tank].g_iOzTank[iOzTank], "Enable");
 					AcceptEntityInput(g_esPlayer[tank].g_iOzTank[iOzTank], "DisableCollision");
@@ -10992,10 +10991,7 @@ static void vSetProps(int tank)
 							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Rate", "555");
 							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "JetLength", "40");
 
-							static float flOrigin3[3], flAngles3[3];
-							vSetVector(flOrigin3, -2.0, 0.0, 28.0);
-							vSetVector(flAngles3, -90.0, 0.0, -90.0);
-
+							static float flOrigin3[3] = {-2.0, 0.0, 28.0}, flAngles3[3] = {-90.0, 0.0, -90.0};
 							AcceptEntityInput(g_esPlayer[tank].g_iFlame[iOzTank], "TurnOn");
 							TeleportEntity(g_esPlayer[tank].g_iFlame[iOzTank], flOrigin3, flAngles3, NULL_VECTOR);
 							DispatchSpawn(g_esPlayer[tank].g_iFlame[iOzTank]);
