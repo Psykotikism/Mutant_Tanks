@@ -1624,6 +1624,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -10928,8 +10929,8 @@ static void vSetProps(int tank)
 			}
 		}
 
-		GetClientEyePosition(tank, flOrigin);
-		GetClientAbsAngles(tank, flAngles);
+		GetEntPropVector(tank, Prop_Send, "m_vecOrigin", flOrigin);
+		GetEntPropVector(tank, Prop_Send, "m_angRotation", flAngles);
 
 		for (int iOzTank = 0; iOzTank < sizeof(esPlayer::g_iOzTank); iOzTank++)
 		{
@@ -10940,36 +10941,32 @@ static void vSetProps(int tank)
 				{
 					SetEntityModel(g_esPlayer[tank].g_iOzTank[iOzTank], MODEL_JETPACK);
 					SetEntityRenderColor(g_esPlayer[tank].g_iOzTank[iOzTank], iGetRandomColor(g_esCache[tank].g_iOzTankColor[0]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[1]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[2]), iGetRandomColor(g_esCache[tank].g_iOzTankColor[3]));
+
+					DispatchKeyValueVector(g_esPlayer[tank].g_iOzTank[iOzTank], "origin", flOrigin);
+					DispatchKeyValueVector(g_esPlayer[tank].g_iOzTank[iOzTank], "angles", flAngles);
 					vSetEntityParent(g_esPlayer[tank].g_iOzTank[iOzTank], tank, true);
+
+					static float flOrigin2[3], flAngles2[3];
 
 					switch (iOzTank)
 					{
 						case 0:
 						{
 							SetVariantString("rfoot");
-							vSetVector(flOrigin, 0.0, 30.0, 8.0);
+							vSetVector(flOrigin2, 0.0, 30.0, 8.0);
 						}
 						case 1:
 						{
 							SetVariantString("lfoot");
-							vSetVector(flOrigin, 0.0, 30.0, -8.0);
+							vSetVector(flOrigin2, 0.0, 30.0, -8.0);
 						}
 					}
 
+					vSetVector(flAngles2, 0.0, 0.0, 90.0);
 					AcceptEntityInput(g_esPlayer[tank].g_iOzTank[iOzTank], "SetParentAttachment");
-
-					static float flAngles2[3];
-					vSetVector(flAngles2, 0.0, 0.0, 1.0);
-					GetVectorAngles(flAngles2, flAngles2);
-					vCopyVector(flAngles, flAngles2);
-					flAngles2[2] += 90.0;
-					DispatchKeyValueVector(g_esPlayer[tank].g_iOzTank[iOzTank], "origin", flOrigin);
-					DispatchKeyValueVector(g_esPlayer[tank].g_iOzTank[iOzTank], "angles", flAngles2);
-
 					AcceptEntityInput(g_esPlayer[tank].g_iOzTank[iOzTank], "Enable");
 					AcceptEntityInput(g_esPlayer[tank].g_iOzTank[iOzTank], "DisableCollision");
-
-					TeleportEntity(g_esPlayer[tank].g_iOzTank[iOzTank], flOrigin, NULL_VECTOR, flAngles2);
+					TeleportEntity(g_esPlayer[tank].g_iOzTank[iOzTank], flOrigin2, flAngles2, NULL_VECTOR);
 					DispatchSpawn(g_esPlayer[tank].g_iOzTank[iOzTank]);
 
 					SDKHook(g_esPlayer[tank].g_iOzTank[iOzTank], SDKHook_SetTransmit, OnPropSetTransmit);
@@ -10981,6 +10978,8 @@ static void vSetProps(int tank)
 						if (bIsValidEntity(g_esPlayer[tank].g_iFlame[iOzTank]))
 						{
 							SetEntityRenderColor(g_esPlayer[tank].g_iFlame[iOzTank], iGetRandomColor(g_esCache[tank].g_iFlameColor[0]), iGetRandomColor(g_esCache[tank].g_iFlameColor[1]), iGetRandomColor(g_esCache[tank].g_iFlameColor[2]), iGetRandomColor(g_esCache[tank].g_iFlameColor[3]));
+
+							DispatchKeyValueVector(g_esPlayer[tank].g_iFlame[iOzTank], "origin", flOrigin);
 							vSetEntityParent(g_esPlayer[tank].g_iFlame[iOzTank], g_esPlayer[tank].g_iOzTank[iOzTank], true);
 
 							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "spawnflags", "1");
@@ -10993,14 +10992,13 @@ static void vSetProps(int tank)
 							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "Rate", "555");
 							DispatchKeyValue(g_esPlayer[tank].g_iFlame[iOzTank], "JetLength", "40");
 
-							static float flOrigin2[3], flAngles3[3];
-							vSetVector(flOrigin2, -2.0, 0.0, 26.0);
-							vSetVector(flAngles3, 0.0, 0.0, 1.0);
-							GetVectorAngles(flAngles3, flAngles3);
+							static float flOrigin3[3], flAngles3[3];
+							vSetVector(flOrigin3, -2.0, 0.0, 28.0);
+							vSetVector(flAngles3, -90.0, 0.0, -90.0);
 
-							TeleportEntity(g_esPlayer[tank].g_iFlame[iOzTank], flOrigin2, flAngles3, NULL_VECTOR);
-							DispatchSpawn(g_esPlayer[tank].g_iFlame[iOzTank]);
 							AcceptEntityInput(g_esPlayer[tank].g_iFlame[iOzTank], "TurnOn");
+							TeleportEntity(g_esPlayer[tank].g_iFlame[iOzTank], flOrigin3, flAngles3, NULL_VECTOR);
+							DispatchSpawn(g_esPlayer[tank].g_iFlame[iOzTank]);
 
 							SDKHook(g_esPlayer[tank].g_iFlame[iOzTank], SDKHook_SetTransmit, OnPropSetTransmit);
 							g_esPlayer[tank].g_iFlame[iOzTank] = EntIndexToEntRef(g_esPlayer[tank].g_iFlame[iOzTank]);
@@ -11517,10 +11515,10 @@ static void vFlashlightProp(int tank, float origin[3], float angles[3])
 
 		angles[0] += 90.0;
 		flOrigin2[2] -= 120.0;
+		AcceptEntityInput(g_esPlayer[tank].g_iFlashlight, "TurnOn");
 		TeleportEntity(g_esPlayer[tank].g_iFlashlight, flOrigin2, angles, NULL_VECTOR);
 		DispatchSpawn(g_esPlayer[tank].g_iFlashlight);
 		vSetEntityParent(g_esPlayer[tank].g_iFlashlight, tank, true);
-		AcceptEntityInput(g_esPlayer[tank].g_iFlashlight, "TurnOn");
 
 		SDKHook(g_esPlayer[tank].g_iFlashlight, SDKHook_SetTransmit, OnPropSetTransmit);
 		g_esPlayer[tank].g_iFlashlight = EntIndexToEntRef(g_esPlayer[tank].g_iFlashlight);
@@ -11557,7 +11555,7 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		DispatchKeyValue(g_esPlayer[tank].g_iLight[light], "maxspeed", "100");
 		DispatchKeyValueFloat(g_esPlayer[tank].g_iLight[light], "HDRColorScale", 0.7);
 
-		static float flOrigin[3], flAngles[3];
+		static float flOrigin[3] = {0.0, 0.0, 70.0}, flAngles[3] = {-45.0, 0.0, 0.0};
 		if (light < 3)
 		{
 			static char sParentName[64], sTargetName[64];
@@ -11594,7 +11592,6 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 		else
 		{
 			vSetEntityParent(g_esPlayer[tank].g_iLight[light], tank, true);
-			flAngles[0] = -45.0;
 
 			switch (light)
 			{
@@ -11605,9 +11602,6 @@ static void vLightProp(int tank, int light, float origin[3], float angles[3])
 				case 5: flAngles[1] = 300.0;
 				case 6: flAngles[1] = 360.0;
 			}
-
-			flAngles[2] = 0.0;
-			flOrigin[2] = 70.0;
 		}
 
 		AcceptEntityInput(g_esPlayer[tank].g_iLight[light], "Enable");

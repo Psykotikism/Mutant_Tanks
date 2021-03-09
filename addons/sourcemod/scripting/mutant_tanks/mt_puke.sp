@@ -753,20 +753,13 @@ static void vPukeAbility(int tank, float random, int pos = -1)
 		}
 		else if (random <= flChance)
 		{
-			vPukeFountain(tank);
+			iCreateParticle(tank, PARTICLE_FOUNTAIN, view_as<float>({0.0, 0.0, 70.0}), view_as<float>({-90.0, 0.0, 0.0}), 0.95, 1.0);
 		}
 	}
 	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "PukeAmmo");
 	}
-}
-
-static void vPukeFountain(int tank)
-{
-	static float flTankPos[3], flTankAngles[3] = {-90.0, 0.0, 0.0};
-	flTankPos[2] = 70.0;
-	iCreateParticle(tank, PARTICLE_FOUNTAIN, flTankPos, flTankAngles, 0.95, 1.0);
 }
 
 static void vPukeHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags)
@@ -839,7 +832,7 @@ static void vPukeRange(int tank, int value, float random, int pos = -1)
 		}
 
 		vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
-		vPukeFountain(tank);
+		iCreateParticle(tank, PARTICLE_FOUNTAIN, view_as<float>({0.0, 0.0, 70.0}), view_as<float>({-90.0, 0.0, 0.0}), 0.95, 1.0);
 
 		static float flTankPos[3], flSurvivorPos[3], flRange;
 		GetClientAbsOrigin(tank, flTankPos);
