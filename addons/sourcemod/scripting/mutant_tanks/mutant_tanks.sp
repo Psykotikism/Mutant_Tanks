@@ -1624,7 +1624,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -2294,7 +2293,19 @@ public void OnConfigsExecuted()
 	CreateTimer(1.0, tTimerRegenerateAmmo, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	CreateTimer(1.0, tTimerRegenerateHealth, _, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
+	g_esGeneral.g_flDefaultAmmoPackUseDuration = -1.0;
+	g_esGeneral.g_flDefaultColaBottlesUseDuration = -1.0;
+	g_esGeneral.g_flDefaultDefibrillatorUseDuration = -1.0;
+	g_esGeneral.g_flDefaultFirstAidHealPercent = -1.0;
+	g_esGeneral.g_flDefaultFirstAidKitUseDuration = -1.0;
+	g_esGeneral.g_flDefaultGasCanUseDuration = -1.0;
+	g_esGeneral.g_flDefaultGunSwingInterval = -1.0;
+	g_esGeneral.g_flDefaultPhysicsPushScale = -1.0;
+	g_esGeneral.g_flDefaultSurvivorReviveDuration = -1.0;
+	g_esGeneral.g_flDefaultUpgradePackUseDuration = -1.0;
 	g_esGeneral.g_iChosenType = 0;
+	g_esGeneral.g_iDefaultMeleeRange = -1;
+	g_esGeneral.g_iDefaultSurvivorReviveHealth = -1;
 	g_esGeneral.g_iRegularCount = 0;
 	g_esGeneral.g_iTankCount = 0;
 
@@ -10583,33 +10594,51 @@ static void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 			{
 				case 1:
 				{
-					g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = g_esGeneral.g_flDefaultFirstAidKitUseDuration; // first_aid_kit
-					g_esGeneral.g_flDefaultFirstAidKitUseDuration = -1.0;
+					if (g_esGeneral.g_flDefaultFirstAidKitUseDuration != -1.0)
+					{
+						g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = g_esGeneral.g_flDefaultFirstAidKitUseDuration; // first_aid_kit
+						g_esGeneral.g_flDefaultFirstAidKitUseDuration = -1.0;
+					}
 				}
 				case 2:
 				{
-					g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = g_esGeneral.g_flDefaultAmmoPackUseDuration; // ammo_pack
-					g_esGeneral.g_flDefaultAmmoPackUseDuration = -1.0;
+					if (g_esGeneral.g_flDefaultAmmoPackUseDuration != -1.0)
+					{
+						g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = g_esGeneral.g_flDefaultAmmoPackUseDuration; // ammo_pack
+						g_esGeneral.g_flDefaultAmmoPackUseDuration = -1.0;
+					}
 				}
 				case 4:
 				{
-					g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = g_esGeneral.g_flDefaultDefibrillatorUseDuration; // defibrillator
-					g_esGeneral.g_flDefaultDefibrillatorUseDuration = -1.0;
+					if (g_esGeneral.g_flDefaultDefibrillatorUseDuration != -1.0)
+					{
+						g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = g_esGeneral.g_flDefaultDefibrillatorUseDuration; // defibrillator
+						g_esGeneral.g_flDefaultDefibrillatorUseDuration = -1.0;
+					}
 				}
 				case 6, 7:
 				{
-					g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = g_esGeneral.g_flDefaultUpgradePackUseDuration; // upgrade_pack
-					g_esGeneral.g_flDefaultUpgradePackUseDuration = -1.0;
+					if (g_esGeneral.g_flDefaultUpgradePackUseDuration != -1.0)
+					{
+						g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = g_esGeneral.g_flDefaultUpgradePackUseDuration; // upgrade_pack
+						g_esGeneral.g_flDefaultUpgradePackUseDuration = -1.0;
+					}
 				}
 				case 8:
 				{
-					g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = g_esGeneral.g_flDefaultGasCanUseDuration; // gas_can
-					g_esGeneral.g_flDefaultGasCanUseDuration = -1.0;
+					if (g_esGeneral.g_flDefaultGasCanUseDuration != -1.0)
+					{
+						g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = g_esGeneral.g_flDefaultGasCanUseDuration; // gas_can
+						g_esGeneral.g_flDefaultGasCanUseDuration = -1.0;
+					}
 				}
 				case 9:
 				{
-					g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = g_esGeneral.g_flDefaultColaBottlesUseDuration; // cola_bottles
-					g_esGeneral.g_flDefaultColaBottlesUseDuration = -1.0;
+					if (g_esGeneral.g_flDefaultColaBottlesUseDuration != -1.0)
+					{
+						g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = g_esGeneral.g_flDefaultColaBottlesUseDuration; // cola_bottles
+						g_esGeneral.g_flDefaultColaBottlesUseDuration = -1.0;
+					}
 				}
 			}
 		}
@@ -10619,33 +10648,51 @@ static void vSetDurationCvars(int item, bool reset, float duration = 1.0)
 			{
 				case 1:
 				{
-					g_esGeneral.g_flDefaultFirstAidKitUseDuration = g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue;
-					g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = duration; // first_aid_kit
+					if (g_esGeneral.g_cvMTFirstAidKitUseDuration != null)
+					{
+						g_esGeneral.g_flDefaultFirstAidKitUseDuration = g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue;
+						g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = duration; // first_aid_kit
+					}
 				}
 				case 2:
 				{
-					g_esGeneral.g_flDefaultAmmoPackUseDuration = g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue;
-					g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = duration; // ammo_pack
+					if (g_esGeneral.g_cvMTAmmoPackUseDuration != null)
+					{
+						g_esGeneral.g_flDefaultAmmoPackUseDuration = g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue;
+						g_esGeneral.g_cvMTAmmoPackUseDuration.FloatValue = duration; // ammo_pack
+					}
 				}
 				case 4:
 				{
-					g_esGeneral.g_flDefaultDefibrillatorUseDuration = g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue;
-					g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = duration; // defibrillator
+					if (g_esGeneral.g_cvMTDefibrillatorUseDuration != null)
+					{
+						g_esGeneral.g_flDefaultDefibrillatorUseDuration = g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue;
+						g_esGeneral.g_cvMTDefibrillatorUseDuration.FloatValue = duration; // defibrillator
+					}
 				}
 				case 6, 7:
 				{
-					g_esGeneral.g_flDefaultUpgradePackUseDuration = g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue;
-					g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = duration; // upgrade_pack
+					if (g_esGeneral.g_cvMTUpgradePackUseDuration != null)
+					{
+						g_esGeneral.g_flDefaultUpgradePackUseDuration = g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue;
+						g_esGeneral.g_cvMTUpgradePackUseDuration.FloatValue = duration; // upgrade_pack
+					}
 				}
 				case 8:
 				{
-					g_esGeneral.g_flDefaultGasCanUseDuration = g_esGeneral.g_cvMTGasCanUseDuration.FloatValue;
-					g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = duration; // gas_can
+					if (g_esGeneral.g_cvMTGasCanUseDuration != null)
+					{
+						g_esGeneral.g_flDefaultGasCanUseDuration = g_esGeneral.g_cvMTGasCanUseDuration.FloatValue;
+						g_esGeneral.g_cvMTGasCanUseDuration.FloatValue = duration; // gas_can
+					}
 				}
 				case 9:
 				{
-					g_esGeneral.g_flDefaultColaBottlesUseDuration = g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue;
-					g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = duration; // cola_bottles
+					if (g_esGeneral.g_cvMTColaBottlesUseDuration != null)
+					{
+						g_esGeneral.g_flDefaultColaBottlesUseDuration = g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue;
+						g_esGeneral.g_cvMTColaBottlesUseDuration.FloatValue = duration; // cola_bottles
+					}
 				}
 			}
 		}
@@ -10656,7 +10703,7 @@ static void vSetHealPercentCvar(bool reset, int survivor = 0)
 {
 	if (reset)
 	{
-		if (g_esGeneral.g_cvMTFirstAidHealPercent != null)
+		if (g_esGeneral.g_flDefaultFirstAidHealPercent != -1.0)
 		{
 			g_esGeneral.g_cvMTFirstAidHealPercent.FloatValue = g_esGeneral.g_flDefaultFirstAidHealPercent;
 			g_esGeneral.g_flDefaultFirstAidHealPercent = -1.0;
@@ -10685,6 +10732,7 @@ static void vSetReviveDurationCvar(int survivor)
 		float flDuration = (bDeveloper && g_esDeveloper[survivor].g_flDevActionDuration > g_esPlayer[survivor].g_flActionDuration) ? g_esDeveloper[survivor].g_flDevActionDuration : g_esPlayer[survivor].g_flActionDuration;
 		if (flDuration > 0.0)
 		{
+			g_esGeneral.g_flDefaultSurvivorReviveDuration = g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue;
 			g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue = flDuration;
 		}
 	}
@@ -10694,7 +10742,7 @@ static void vSetReviveHealthCvar(bool reset, int survivor = 0)
 {
 	if (reset)
 	{
-		if (g_esGeneral.g_cvMTSurvivorReviveHealth != null)
+		if (g_esGeneral.g_iDefaultSurvivorReviveHealth != -1)
 		{
 			g_esGeneral.g_cvMTSurvivorReviveHealth.IntValue = g_esGeneral.g_iDefaultSurvivorReviveHealth;
 			g_esGeneral.g_iDefaultSurvivorReviveHealth = -1;
@@ -12921,7 +12969,7 @@ public MRESReturn mreActionCompletePre(int pThis, DHookParam hParams)
 
 public MRESReturn mreActionCompletePost(int pThis, DHookParam hParams)
 {
-	if (g_esGeneral.g_cvMTFirstAidHealPercent != null)
+	if (g_esGeneral.g_flDefaultFirstAidHealPercent != -1.0)
 	{
 		vSetHealPercentCvar(true);
 	}
@@ -13252,7 +13300,7 @@ public MRESReturn mreFinishHealingPre(int pThis)
 
 public MRESReturn mreFinishHealingPost(int pThis)
 {
-	if (g_esGeneral.g_cvMTFirstAidHealPercent != null)
+	if (g_esGeneral.g_flDefaultFirstAidHealPercent != -1.0)
 	{
 		vSetHealPercentCvar(true);
 	}
@@ -13275,7 +13323,7 @@ public MRESReturn mreFireBulletPre(int pThis)
 
 public MRESReturn mreFireBulletPost(int pThis)
 {
-	if (g_esGeneral.g_cvMTPhysicsPushScale != null)
+	if (g_esGeneral.g_flDefaultPhysicsPushScale != -1.0)
 	{
 		g_esGeneral.g_cvMTPhysicsPushScale.FloatValue = g_esGeneral.g_flDefaultPhysicsPushScale;
 		g_esGeneral.g_flDefaultPhysicsPushScale = -1.0;
@@ -13471,7 +13519,7 @@ public MRESReturn mreSecondaryAttackPre(int pThis)
 
 public MRESReturn mreSecondaryAttackPost(int pThis)
 {
-	if (g_esGeneral.g_cvMTGunSwingInterval != null)
+	if (g_esGeneral.g_flDefaultGunSwingInterval != -1.0)
 	{
 		g_esGeneral.g_cvMTGunSwingInterval.FloatValue = g_esGeneral.g_flDefaultGunSwingInterval;
 		g_esGeneral.g_flDefaultGunSwingInterval = -1.0;
@@ -13604,7 +13652,7 @@ public MRESReturn mreStartHealingPre(int pThis, DHookParam hParams)
 
 public MRESReturn mreStartHealingPost(int pThis, DHookParam hParams)
 {
-	if (g_esGeneral.g_cvMTFirstAidKitUseDuration != null)
+	if (g_esGeneral.g_flDefaultFirstAidKitUseDuration != -1.0)
 	{
 		g_esGeneral.g_cvMTFirstAidKitUseDuration.FloatValue = g_esGeneral.g_flDefaultFirstAidKitUseDuration;
 		g_esGeneral.g_flDefaultFirstAidKitUseDuration = -1.0;
@@ -13633,7 +13681,7 @@ public MRESReturn mreStartRevivingPre(int pThis, DHookParam hParams)
 
 public MRESReturn mreStartRevivingPost(int pThis, DHookParam hParams)
 {
-	if (g_esGeneral.g_cvMTSurvivorReviveDuration != null)
+	if (g_esGeneral.g_flDefaultSurvivorReviveDuration != -1.0)
 	{
 		g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue = g_esGeneral.g_flDefaultSurvivorReviveDuration;
 		g_esGeneral.g_flDefaultSurvivorReviveDuration = -1.0;
@@ -13695,7 +13743,7 @@ public MRESReturn mreTestMeleeSwingCollisionPre(int pThis, DHookParam hParams)
 
 public MRESReturn mreTestMeleeSwingCollisionPost(int pThis, DHookParam hParams)
 {
-	if (g_esGeneral.g_cvMTMeleeRange != null)
+	if (g_esGeneral.g_iDefaultMeleeRange != -1)
 	{
 		g_esGeneral.g_cvMTMeleeRange.IntValue = g_esGeneral.g_iDefaultMeleeRange;
 		g_esGeneral.g_iDefaultMeleeRange = -1;
