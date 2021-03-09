@@ -29,6 +29,7 @@
 - Fixed the `Reward` system notifying recipients twice when they do not do enough damage to Tanks. (Thanks to 3aljiyavslgazana for testing and reporting!)
 - Fixed the `Reward` system not detecting recipients' incapacitation/black and white counter after using `give health`. (Thanks to Silvers for the code!)
 - Fixed damage toward Common infected and Witches not being hooked on late loads.
+- Fixed props not being attached to Tanks properly.
 
 #### Game Data
 - Fixed some detours crashing servers due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -51,6 +52,9 @@
 
 - Clone
 	- Fixed clone deaths raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Drop
+	- Fixed weapons not being attached properly.
 
 - Fragile
 	- Fixed all types of fire damage not being detected. (Thanks to 3aljiyavslgazana for testing and reporting!)
