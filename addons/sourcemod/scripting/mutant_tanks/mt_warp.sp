@@ -164,8 +164,6 @@ public void OnPluginStart()
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
 	}
 
 	g_esGeneral.g_iAttributeFlagsOffset = gdMutantTanks.GetOffset("WitchLocomotion::IsAreaTraversable::m_attributeFlags");
@@ -177,9 +175,9 @@ public void OnPluginStart()
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::GetLastKnownArea"))
 	{
-		SetFailState("Failed to load offset: CTerrorPlayer::GetLastKnownArea");
-
 		delete gdMutantTanks;
+
+		SetFailState("Failed to load offset: CTerrorPlayer::GetLastKnownArea");
 	}
 
 	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);

@@ -191,14 +191,14 @@ public void OnPluginStart()
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
 	}
 
 	int iOffset = gdMutantTanks.GetOffset("CBaseCombatWeapon::GetMaxClip1");
 	if (iOffset == -1)
 	{
-		LogError("%s Failed to load offset: CBaseCombatWeapon::GetMaxClip1", MT_TAG);
+		delete gdMutantTanks;
+
+		SetFailState("Failed to load offset: CBaseCombatWeapon::GetMaxClip1");
 	}
 
 	StartPrepSDKCall(SDKCall_Entity);

@@ -154,16 +154,14 @@ public void OnPluginStart()
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnStaggered"))
 	{
-		SetFailState("Failed to find signature: CTerrorPlayer::OnStaggered");
-
 		delete gdMutantTanks;
+
+		SetFailState("Failed to find signature: CTerrorPlayer::OnStaggered");
 	}
 
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);

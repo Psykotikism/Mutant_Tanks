@@ -81,10 +81,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MT_IsTankSupported", aNative_IsTankSupported);
 	CreateNative("MT_IsTypeEnabled", aNative_IsTypeEnabled);
 	CreateNative("MT_LogMessage", aNative_LogMessage);
+	CreateNative("MT_RespawnSurvivor", aNative_RespawnSurvivor);
 	CreateNative("MT_SetTankType", aNative_SetTankType);
+	CreateNative("MT_ShoveBySurvivor", aNative_ShoveBySurvivor);
 	CreateNative("MT_SpawnTank", aNative_SpawnTank);
 	CreateNative("MT_TankMaxHealth", aNative_TankMaxHealth);
 	CreateNative("MT_UnvomitPlayer", aNative_UnvomitPlayer);
+	CreateNative("MT_VomitPlayer", aNative_VomitPlayer);
 
 	RegPluginLibrary("mutant_tanks");
 
@@ -453,6 +456,7 @@ enum struct esGeneral
 	Handle g_hSDKRockDetonate;
 	Handle g_hSDKRoundRespawn;
 	Handle g_hSDKShovedBySurvivor;
+	Handle g_hSDKVomitedUpon;
 	Handle g_hSurvivalTimer;
 	Handle g_hTankWaveTimer;
 
@@ -1399,6 +1403,15 @@ public any aNative_LogMessage(Handle plugin, int numParams)
 	}
 }
 
+public any aNative_RespawnSurvivor(Handle plugin, int numParams)
+{
+	int iSurvivor = GetNativeCell(1);
+	if (bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esGeneral.g_hSDKRoundRespawn != null)
+	{
+		vRespawnSurvivor(iSurvivor);
+	}
+}
+
 public any aNative_SetTankType(Handle plugin, int numParams)
 {
 	int iTank = GetNativeCell(1), iType = iClamp(GetNativeCell(2), 1, MT_MAXTYPES);
@@ -1423,6 +1436,17 @@ public any aNative_SetTankType(Handle plugin, int numParams)
 				vCacheSettings(iTank);
 			}
 		}
+	}
+}
+
+public any aNative_ShoveBySurvivor(Handle plugin, int numParams)
+{
+	int iSpecial = GetNativeCell(1), iSurvivor = GetNativeCell(2);
+	float flDirection[3];
+	GetNativeArray(3, flDirection, sizeof(flDirection));
+	if (bIsInfected(iSpecial) && bIsSurvivor(iSurvivor) && g_esGeneral.g_hSDKShovedBySurvivor != null)
+	{
+		SDKCall(g_esGeneral.g_hSDKShovedBySurvivor, iSpecial, iSurvivor, flDirection);
 	}
 }
 
@@ -1463,6 +1487,15 @@ public any aNative_UnvomitPlayer(Handle plugin, int numParams)
 	if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && GetClientTeam(iPlayer) > 1 && g_esPlayer[iPlayer].g_bVomited && g_esGeneral.g_hSDKITExpired != null)
 	{
 		SDKCall(g_esGeneral.g_hSDKITExpired, iPlayer);
+	}
+}
+
+public any aNative_VomitPlayer(Handle plugin, int numParams)
+{
+	int iPlayer = GetNativeCell(1), iBoomer = GetNativeCell(2);
+	if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && GetClientTeam(iPlayer) > 1 && bIsValidClient(iBoomer, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esGeneral.g_hSDKVomitedUpon != null)
+	{
+		SDKCall(g_esGeneral.g_hSDKVomitedUpon, iPlayer, iBoomer, true);
 	}
 }
 
@@ -1614,12 +1647,7 @@ public void OnPluginStart()
 			vLoadConfigs(g_esGeneral.g_sSavePath, 1);
 			g_esGeneral.g_iFileTimeOld[0] = GetFileTime(g_esGeneral.g_sSavePath, FileTime_LastChange);
 		}
-		case false:
-		{
-			SetFailState("Unable to load config file: %s", g_esGeneral.g_sSavePath);
-
-			return;
-		}
+		case false: SetFailState("Unable to load the \"%s\" config file.", g_esGeneral.g_sSavePath);
 	}
 
 	HookEvent("round_start", vEventHandler);
@@ -1632,9 +1660,9 @@ public void OnPluginStart()
 	{
 		case true:
 		{
-			SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
 			delete gdMutantTanks;
+
+			SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 		}
 		case false:
 		{
@@ -1672,16 +1700,6 @@ public void OnPluginStart()
 				if (g_esGeneral.g_iMeleeOffset == -1)
 				{
 					LogError("%s Failed to load offset: CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon", MT_TAG);
-				}
-
-				bRegisterPatch(gdMutantTanks, "Boomer4CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer4", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
-				bRegisterPatch(gdMutantTanks, "Boomer5CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer5", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
-				bRegisterPatch(gdMutantTanks, "Boomer6CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer6", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
-
-				switch (g_esGeneral.g_bLinux)
-				{
-					case true: bRegisterPatch(gdMutantTanks, "SpitterCleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::SpitterPuddle", 0x8B, {0xE9, 0x60, 0x02, 0x00, 0x00}, 5); // do a long jump (260h) to skip the function
-					case false: bRegisterPatch(gdMutantTanks, "SpitterCleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::SpitterPuddle", 0x8B, {0xE9, 0x1A, 0x01, 0x00, 0x00}, 5); // do a long jump (11Ah) to skip the function
 				}
 
 				g_esGeneral.g_ddActionCompleteDetour = DynamicDetour.FromConf(gdMutantTanks, "CFirstAidKit::OnActionComplete");
@@ -1734,12 +1752,6 @@ public void OnPluginStart()
 			}
 			else
 			{
-				switch (g_esGeneral.g_bLinux)
-				{
-					case true: bRegisterPatch(gdMutantTanks, "InfectedInjured", "OnInjuredStart", "InfectedExecAction::OnInjured::Requirement", 0x2A, {0xF6, 0x86, 0x3B, 0x00, 0x00, 0x00, 0x04}, 7, true);
-					case false: bRegisterPatch(gdMutantTanks, "InfectedInjured", "OnInjuredStart", "InfectedExecAction::OnInjured::Requirement", 0x2A, {0x90, 0x90, 0x90, 0x90, 0xF7, 0x47, 0x38, 0x00, 0x00, 0x00, 0x04}, 11, true);
-				}
-
 				g_esGeneral.g_ddFinishHealingDetour = DynamicDetour.FromConf(gdMutantTanks, "CFirstAidKit::FinishHealing");
 				if (g_esGeneral.g_ddFinishHealingDetour == null)
 				{
@@ -1891,6 +1903,20 @@ public void OnPluginStart()
 			}
 
 			StartPrepSDKCall(SDKCall_Player);
+			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon"))
+			{
+				LogError("%s Failed to find signature: CTerrorPlayer::OnVomitedUpon", MT_TAG);
+			}
+
+			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+			g_esGeneral.g_hSDKVomitedUpon = EndPrepSDKCall();
+			if (g_esGeneral.g_hSDKVomitedUpon == null)
+			{
+				LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
+			}
+
+			StartPrepSDKCall(SDKCall_Player);
 			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "Tank::LeaveStasis"))
 			{
 				LogError("%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
@@ -1901,27 +1927,6 @@ public void OnPluginStart()
 			if (g_esGeneral.g_hSDKLeaveStasis == null)
 			{
 				LogError("%s Your \"Tank::LeaveStasis\" signature is outdated.", MT_TAG);
-			}
-
-			if (g_bSecondGame || (!g_bSecondGame && !g_esGeneral.g_bLinux))
-			{
-				switch (g_bSecondGame)
-				{
-					case true:
-					{
-						switch (g_esGeneral.g_bLinux)
-						{
-							case true: bRegisterPatch(gdMutantTanks, "DoJumpStart1", "DoJumpStart", "CTerrorGameMovement::DoJump::Start", 0xF2, {0xF3}, 1); // first value: make the function accept a float instead of a double
-							case false: bRegisterPatch(gdMutantTanks, "DoJumpStart1", "DoJumpStart", "CTerrorGameMovement::DoJump::Start", 0xDD, {0xD9}, 1); // first value: make the function accept a float instead of a double
-						}
-					}
-					case false: bRegisterPatch(gdMutantTanks, "DoJumpStart1", "DoJumpStart", "CTerrorGameMovement::DoJump::Start", 0xDD, {0xD9}, 1); // first value: make the function accept a float instead of a double
-				}
-			}
-
-			if (!g_esGeneral.g_bLinux)
-			{
-				bRegisterPatch(gdMutantTanks, "DoJumpStart2", "DoJumpStart", "CTerrorGameMovement::DoJump::Start2", 0xDC, {0xD8}, 1); // second value: make the function accept a float instead of a double
 			}
 
 			g_esGeneral.g_iEventKilledAttackerOffset = gdMutantTanks.GetOffset("CTerrorPlayer::Event_Killed::Attacker");
@@ -1984,38 +1989,7 @@ public void OnPluginStart()
 				LogError("%s Your \"TankIdle::GetName\" offsets are outdated.", MT_TAG);
 			}
 
-			bRegisterPatch(gdMutantTanks, "Boomer1CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer1", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
-			bRegisterPatch(gdMutantTanks, "Boomer2CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer2", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
-			bRegisterPatch(gdMutantTanks, "Boomer3CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Boomer3", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
-			bRegisterPatch(gdMutantTanks, "Smoker3CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker3", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
-
-			switch (g_esGeneral.g_bLinux)
-			{
-				case true:
-				{
-					bRegisterPatch(gdMutantTanks, "Smoker1CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker1", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
-					bRegisterPatch(gdMutantTanks, "Smoker2CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker2", 0xE8, {0x90, 0x90, 0x90, 0x90, 0x90}, 5); // block the function with NOPs
-				}
-				case false:
-				{
-					bRegisterPatch(gdMutantTanks, "Smoker1CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker1", 0xD9, {0xEB, 0x12}, 2); // do a short jump (12h) to skip the function
-					bRegisterPatch(gdMutantTanks, "Smoker2CleanKill", "Event_KilledStart", "CTerrorPlayer::Event_Killed::Smoker2", 0x8B, {0xEB, 0x3A}, 2); // do a short jump (3Ah) to skip the function
-				}
-			}
-
-			switch (g_bSecondGame)
-			{
-				case true: bRegisterPatch(gdMutantTanks, "Smoker4CleanKill", "FireSmokerCloud", "", 0x55, {0xC3}, 1); // make the function return early
-				case false:
-				{
-					switch (g_esGeneral.g_bLinux)
-					{
-						case true: bRegisterPatch(gdMutantTanks, "Smoker4CleanKill", "FireSmokerCloud", "", 0x57, {0xC3}, 1); // make the function return early
-						case false: bRegisterPatch(gdMutantTanks, "Smoker4CleanKill", "FireSmokerCloud", "", 0x83, {0xC2, 0x04, 0x00}, 3); // make function return early
-					}
-				}
-			}
-
+			vRegisterPatches(gdMutantTanks);
 			vInstallPermanentPatches();
 
 			g_esGeneral.g_ddDeathFallCameraEnableDetour = DynamicDetour.FromConf(gdMutantTanks, "CDeathFallCamera::Enable");
@@ -7548,7 +7522,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (StrEqual(name, "choke_start") || StrEqual(name, "lunge_pounce") || StrEqual(name, "tongue_grab") || StrEqual(name, "charger_carry_start") || StrEqual(name, "charger_pummel_start") || StrEqual(name, "jockey_ride"))
 		{
-			int iSpecialId = event.GetInt("userid"), iSpecial = GetClientOfUserId(iSpecialId), iSurvivorId = event.GetInt("victim"), iSurvivor = GetClientOfUserId(iSurvivorId);
+			int iSpecialId = event.GetInt("userid"), iSpecial = GetClientOfUserId(iSpecialId),
+				iSurvivorId = event.GetInt("victim"), iSurvivor = GetClientOfUserId(iSurvivorId);
 			if (bIsSpecialInfected(iSpecial) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
 			{
 				vSaveCaughtSurvivor(iSurvivor);
@@ -7684,7 +7659,8 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 		}
 		else if (StrEqual(name, "player_death"))
 		{
-			int iVictimId = event.GetInt("userid"), iVictim = GetClientOfUserId(iVictimId), iAttackerId = event.GetInt("attacker"), iAttacker = GetClientOfUserId(iAttackerId);
+			int iVictimId = event.GetInt("userid"), iVictim = GetClientOfUserId(iVictimId),
+				iAttackerId = event.GetInt("attacker"), iAttacker = GetClientOfUserId(iAttackerId);
 			if (bIsTank(iVictim, MT_CHECK_INDEX|MT_CHECK_INGAME))
 			{
 				g_esPlayer[iVictim].g_bDied = true;
@@ -8995,7 +8971,7 @@ static void vLogCommand(int admin, int type, const char[] activity, any ...)
 
 static void vLogMessage(int type, bool timestamp = true, const char[] message, any ...)
 {
-	if (g_esGeneral.g_iLogMessages & type)
+	if (type == -1 || (g_esGeneral.g_iLogMessages & type))
 	{
 		static Action aResult;
 		aResult = Plugin_Continue;
@@ -10421,6 +10397,18 @@ static void vRefillMagazine(int survivor, int weapon, bool reset)
 	if (iAmmo > 0)
 	{
 		SetEntProp(survivor, Prop_Send, "m_iAmmo", iAmmo, _, iAmmoOffset);
+	}
+}
+
+static void vRespawnSurvivor(int survivor)
+{
+	if (g_esGeneral.g_hSDKRoundRespawn != null)
+	{
+		static int iIndex = -1;
+		if (iIndex == -1) iIndex = iGetPatchIndex("RespawnStats");
+		if (iIndex != -1) bInstallPatch(iIndex);
+		SDKCall(g_esGeneral.g_hSDKRoundRespawn, survivor);
+		if (iIndex != -1) bRemovePatch(iIndex);
 	}
 }
 
@@ -12105,6 +12093,127 @@ static void vRemovePermanentPatches()
 	}
 }
 
+static void vRegisterPatches(GameData dataHandle)
+{
+	g_iPatchCount = 0;
+
+	char sFilePath[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sFilePath, sizeof(sFilePath), "data/mutant_tanks/mutant_tanks_patches.cfg");
+	if (!FileExists(sFilePath, true))
+	{
+		LogError("%s Unable to load the \"%s\" config file.", MT_TAG, sFilePath);
+
+		return;
+	}
+
+	KeyValues kvPatches = new KeyValues("MTPatches");
+	if (!kvPatches.ImportFromFile(sFilePath))
+	{
+		LogError("%s Unable to read the \"%s\" config file.", MT_TAG, sFilePath);
+
+		delete kvPatches;
+
+		return;
+	}
+
+	if (g_bSecondGame)
+	{
+		if (!kvPatches.JumpToKey("left4dead2"))
+		{
+			delete kvPatches;
+
+			return;
+		}
+	}
+	else
+	{
+		if (!kvPatches.JumpToKey("left4dead"))
+		{
+			delete kvPatches;
+
+			return;
+		}
+	}
+
+	if (!kvPatches.GotoFirstSubKey())
+	{
+		LogError("%s The \"%s\" config file contains invalid data.", MT_TAG, sFilePath);
+
+		delete kvPatches;
+
+		return;
+	}
+
+	bool bLog, bPermanent;
+	char sName[128], sSignature[128], sOffset[128], sVerify[5], sBytes[192], sLog[4], sType[10];
+	int iCheckByte, iBytes[MT_MAX_PATCH_LEN], iLength;
+
+	do
+	{
+		kvPatches.GetSectionName(sName, sizeof(sName));
+		kvPatches.GetString("log", sLog, sizeof(sLog));
+		kvPatches.GetString("type", sType, sizeof(sType));
+		kvPatches.GetString("signature", sSignature, sizeof(sSignature));
+		kvPatches.GetString("offset", sOffset, sizeof(sOffset));
+		/*kvPatches.GetString("verify", sVerify, sizeof(sVerify));
+		kvPatches.GetString("bytes", sBytes, sizeof(sBytes));
+		iLength = kvPatches.GetNum("length");*/
+
+		if (g_esGeneral.g_bLinux)
+		{
+			if (kvPatches.JumpToKey("linux"))
+			{
+				kvPatches.GetString("verify", sVerify, sizeof(sVerify)/*, sVerify*/);
+				kvPatches.GetString("bytes", sBytes, sizeof(sBytes)/*, sBytes*/);
+				iLength = kvPatches.GetNum("length"/*, iLength*/);
+
+				kvPatches.GoBack();
+			}
+		}
+		else
+		{
+			if (kvPatches.JumpToKey("windows"))
+			{
+				kvPatches.GetString("verify", sVerify, sizeof(sVerify)/*, sVerify*/);
+				kvPatches.GetString("bytes", sBytes, sizeof(sBytes)/*, sBytes*/);
+				iLength = kvPatches.GetNum("length"/*, iLength*/);
+
+				kvPatches.GoBack();
+			}
+		}
+
+		if (sName[0] == '\0' || (!StrEqual(sLog, "yes") && !StrEqual(sLog, "no")) || (!StrEqual(sType, "permanent") && !StrEqual(sType, "ondemand")) || sSignature[0] == '\0' || sVerify[0] == '\0' || sBytes[0] == '\0' || iLength == 0)
+		{
+			LogError("%s The \"%s\" config file contains invalid data.", MT_TAG, sFilePath);
+
+			continue;
+		}
+
+		bLog = (sLog[0] == 'y');
+		if (bLog) vLogMessage(-1, _, "%s Reading bytes: %s - %s", MT_TAG, sVerify, sBytes);
+		ReplaceString(sVerify, sizeof(sVerify), "\\x", " ", false);
+		TrimString(sVerify);
+		ReplaceString(sBytes, sizeof(sBytes), "\\x", " ", false);
+		TrimString(sBytes);
+		if (bLog) vLogMessage(-1, _, "%s Storing bytes: %s - %s", MT_TAG, sVerify, sBytes);
+		iCheckByte = (iGetDecimalFromHex(sVerify[0]) << 4) + iGetDecimalFromHex(sVerify[1]);
+
+		for (int iPos = 0; iPos < MT_MAX_PATCH_LEN; iPos++)
+		{
+			switch (iPos < iLength)
+			{
+				case true: iBytes[iPos] = (iGetDecimalFromHex(sBytes[iPos * 3]) << 4) + iGetDecimalFromHex(sBytes[(iPos * 3) + 1]);
+				case false: iBytes[iPos] = 0;
+			}
+		}
+
+		bPermanent = (sType[0] == 'p');
+		bRegisterPatch(dataHandle, sName, sSignature, sOffset, iCheckByte, iBytes, iLength, bLog, bPermanent);
+	} while (kvPatches.GotoNextKey());
+
+	delete kvPatches;
+}
+
 static bool bAreHumansRequired(int type)
 {
 	static int iCount;
@@ -12465,7 +12574,7 @@ static bool bIsTypeAvailable(int type, int tank = 0)
 	return g_esTank[type].g_iAbilityCount == -1 || (g_esTank[type].g_iAbilityCount > 0 && iPluginCount > 0);
 }
 
-static bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] sigName, const char[] offsetName, int checkByte, int[] bytes, int length, bool permanent = false)
+static bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] sigName, const char[] offsetName, int checkByte, int[] bytes, int length, bool log = false, bool permanent = false)
 {
 	if (iGetPatchIndex(name) >= 0)
 	{
@@ -12527,6 +12636,8 @@ static bool bRegisterPatch(GameData dataHandle, const char[] name, const char[] 
 	g_iPatchLength[g_iPatchCount] = length;
 	g_iPatchCount++;
 
+	if (log) vLogMessage(-1, _, "%s Registered the \"%s\" patch.", MT_TAG, name);
+
 	return true;
 }
 
@@ -12575,7 +12686,7 @@ static bool bRespawnSurvivor(int survivor, bool restore)
 
 		if (bTeleport)
 		{
-			SDKCall(g_esGeneral.g_hSDKRoundRespawn, survivor);
+			vRespawnSurvivor(survivor);
 			TeleportEntity(survivor, flOrigin, flAngles, NULL_VECTOR);
 
 			if (restore)
@@ -12767,6 +12878,27 @@ static int iGetConfigSectionNumber(const char[] section, int size)
 		{
 			return iPos;
 		}
+	}
+
+	return -1;
+}
+
+static int iGetDecimalFromHex(int character)
+{
+	if (IsCharNumeric(character))
+	{
+		return (character - '0');
+	}
+	else if (IsCharAlpha(character))
+	{
+		static int iLetter;
+		iLetter = CharToUpper(character);
+		if (iLetter < 'A' || iLetter > 'F')
+		{
+			return -1;
+		}
+
+		return (iLetter - 'A' + 10);
 	}
 
 	return -1;

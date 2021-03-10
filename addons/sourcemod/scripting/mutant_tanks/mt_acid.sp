@@ -56,14 +56,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_ACID "Acid Ability"
 
-enum struct esGeneral
-{
-	Handle g_hSDKSpitterProjectileCreate;
-	Handle g_hSDKVomitUpon;
-}
-
-esGeneral g_esGeneral;
-
 enum struct esPlayer
 {
 	bool g_bFailed;
@@ -154,6 +146,8 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+Handle g_hSDKSpitterProjectileCreate;
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -162,60 +156,37 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_mt_acid", cmdAcidInfo, "View information about the Acid ability.");
 
-	GameData gdMutantTanks = new GameData("mutant_tanks");
-	if (gdMutantTanks == null)
+	if (g_bSecondGame)
 	{
-		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+		GameData gdMutantTanks = new GameData("mutant_tanks");
+		if (gdMutantTanks == null)
+		{
+			SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+		}
+
+		StartPrepSDKCall(SDKCall_Static);
+		if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CSpitterProjectile::Create"))
+		{
+			delete gdMutantTanks;
+
+			SetFailState("Failed to find signature: CSpitterProjectile::Create");
+		}
+
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
+
+		g_hSDKSpitterProjectileCreate = EndPrepSDKCall();
+		if (g_hSDKSpitterProjectileCreate == null)
+		{
+			LogError("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
+		}
 
 		delete gdMutantTanks;
 	}
-
-	switch (g_bSecondGame)
-	{
-		case true:
-		{
-			StartPrepSDKCall(SDKCall_Static);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CSpitterProjectile::Create"))
-			{
-				SetFailState("Failed to find signature: CSpitterProjectile::Create");
-
-				delete gdMutantTanks;
-			}
-
-			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
-
-			g_esGeneral.g_hSDKSpitterProjectileCreate = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKSpitterProjectileCreate == null)
-			{
-				LogError("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
-			}
-		}
-		case false:
-		{
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon"))
-			{
-				SetFailState("Failed to find signature: CTerrorPlayer::OnVomitedUpon");
-
-				delete gdMutantTanks;
-			}
-
-			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-			g_esGeneral.g_hSDKVomitUpon = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKVomitUpon == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
-			}
-		}
-	}
-
-	delete gdMutantTanks;
 
 	if (g_bLateLoad)
 	{
@@ -791,7 +762,7 @@ public void MT_OnRockBreak(int tank, int rock)
 
 static void vAcid(int survivor, int tank)
 {
-	if (g_esGeneral.g_hSDKSpitterProjectileCreate == null || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+	if (g_hSDKSpitterProjectileCreate == null || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -799,7 +770,7 @@ static void vAcid(int survivor, int tank)
 	static float flOrigin[3], flAngles[3];
 	GetClientAbsOrigin(survivor, flOrigin);
 	GetClientAbsAngles(survivor, flAngles);
-	SDKCall(g_esGeneral.g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
+	SDKCall(g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
 }
 
 static void vAcidAbility(int tank, float random, int pos = -1)
@@ -893,15 +864,12 @@ static void vAcidHit(int survivor, int tank, float random, float chance, int ena
 					}
 					case false:
 					{
-						if (g_esGeneral.g_hSDKVomitUpon != null)
-						{
-							SDKCall(g_esGeneral.g_hSDKVomitUpon, survivor, tank, true);
+						MT_VomitPlayer(survivor, tank);
 
-							if (g_esCache[tank].g_iAcidMessage & messages)
-							{
-								MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
-								MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
-							}
+						if (g_esCache[tank].g_iAcidMessage & messages)
+						{
+							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
 						}
 					}
 				}
@@ -943,22 +911,19 @@ static void vAcidRange(int tank, int value, float random, int pos = -1)
 			case true: vAcid(tank, tank);
 			case false:
 			{
-				if (g_esGeneral.g_hSDKVomitUpon != null)
-				{
-					vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
+				vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
 
-					static float flTankPos[3], flSurvivorPos[3], flRange;
-					GetClientAbsOrigin(tank, flTankPos);
-					flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esCache[tank].g_flAcidDeathRange;
-					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				static float flTankPos[3], flSurvivorPos[3], flRange;
+				GetClientAbsOrigin(tank, flTankPos);
+				flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esCache[tank].g_flAcidDeathRange;
+				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+				{
+					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 					{
-						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
+						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+						if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 						{
-							GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-							if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
-							{
-								SDKCall(g_esGeneral.g_hSDKVomitUpon, iSurvivor, tank, true);
-							}
+							MT_VomitPlayer(iSurvivor, tank);
 						}
 					}
 				}
@@ -971,12 +936,12 @@ static void vAcidRockBreak(int tank, int rock, float random, int pos = -1)
 {
 	static float flChance;
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 12, pos) : g_esCache[tank].g_flAcidRockChance;
-	if (g_esGeneral.g_hSDKSpitterProjectileCreate != null && random <= flChance)
+	if (g_hSDKSpitterProjectileCreate != null && random <= flChance)
 	{
 		static float flOrigin[3], flAngles[3];
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] += 40.0;
-		SDKCall(g_esGeneral.g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
+		SDKCall(g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
 
 		if (g_esCache[tank].g_iAcidMessage & MT_MESSAGE_SPECIAL)
 		{

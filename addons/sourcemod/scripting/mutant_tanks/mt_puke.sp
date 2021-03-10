@@ -135,8 +135,6 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKVomitUpon;
-
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -144,32 +142,6 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_puke", cmdPukeInfo, "View information about the Puke ability.");
-
-	GameData gdMutantTanks = new GameData("mutant_tanks");
-	if (gdMutantTanks == null)
-	{
-		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
-	}
-
-	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon"))
-	{
-		SetFailState("Failed to find signature: CTerrorPlayer::OnVomitedUpon");
-
-		delete gdMutantTanks;
-	}
-
-	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	g_hSDKVomitUpon = EndPrepSDKCall();
-	if (g_hSDKVomitUpon == null)
-	{
-		LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
-	}
-
-	delete gdMutantTanks;
 
 	if (g_bLateLoad)
 	{
@@ -769,7 +741,7 @@ static void vPukeHit(int survivor, int tank, float random, float chance, int ena
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE) && g_hSDKVomitUpon != null)
+	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -793,14 +765,14 @@ static void vPukeHit(int survivor, int tank, float random, float chance, int ena
 				if (flags & MT_ATTACK_RANGE)
 				{
 					DataPack dpPukeHit;
-					CreateDataTimer(1.5, tTimerPukeHit, dpPukeHit, TIMER_FLAG_NO_MAPCHANGE);
+					CreateDataTimer(1.0, tTimerPukeHit, dpPukeHit, TIMER_FLAG_NO_MAPCHANGE);
 					dpPukeHit.WriteCell(GetClientUserId(survivor));
 					dpPukeHit.WriteCell(GetClientUserId(tank));
 					dpPukeHit.WriteCell(flags);
 				}
 				else
 				{
-					SDKCall(g_hSDKVomitUpon, survivor, tank, true);
+					MT_VomitPlayer(survivor, tank);
 					vEffect(survivor, tank, g_esCache[tank].g_iPukeEffect, flags);
 				}
 
@@ -837,7 +809,7 @@ static void vPukeRange(int tank, int value, float random, int pos = -1)
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esCache[tank].g_flPukeDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iPukeDeath == 1 && random <= flChance)
 	{
-		if (g_hSDKVomitUpon == null || g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
+		if (g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -856,7 +828,7 @@ static void vPukeRange(int tank, int value, float random, int pos = -1)
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
 					DataPack dpPukeRange;
-					CreateDataTimer(1.5, tTimerPukeRange, dpPukeRange, TIMER_FLAG_NO_MAPCHANGE);
+					CreateDataTimer(1.0, tTimerPukeRange, dpPukeRange, TIMER_FLAG_NO_MAPCHANGE);
 					dpPukeRange.WriteCell(GetClientUserId(iSurvivor));
 					dpPukeRange.WriteCell(GetClientUserId(tank));
 				}
@@ -952,7 +924,7 @@ public Action tTimerPukeHit(Handle timer, DataPack pack)
 
 	static int iFlags;
 	iFlags = pack.ReadCell();
-	SDKCall(g_hSDKVomitUpon, iSurvivor, iTank, true);
+	MT_VomitPlayer(iSurvivor, iTank);
 	vEffect(iSurvivor, iTank, g_esCache[iTank].g_iPukeEffect, iFlags);
 
 	return Plugin_Continue;
@@ -976,7 +948,7 @@ public Action tTimerPukeRange(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	SDKCall(g_hSDKVomitUpon, iSurvivor, iTank, true);
+	MT_VomitPlayer(iSurvivor, iTank);
 
 	return Plugin_Continue;
 }

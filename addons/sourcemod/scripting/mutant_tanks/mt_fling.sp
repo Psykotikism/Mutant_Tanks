@@ -56,14 +56,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_FLING "Fling Ability"
 
-enum struct esGeneral
-{
-	Handle g_hSDKFling;
-	Handle g_hSDKVomitUpon;
-}
-
-esGeneral g_esGeneral;
-
 enum struct esPlayer
 {
 	bool g_bFailed;
@@ -149,6 +141,8 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+Handle g_hSDKFling;
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -157,59 +151,35 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_mt_fling", cmdFlingInfo, "View information about the Fling ability.");
 
-	GameData gdMutantTanks = new GameData("mutant_tanks");
-	if (gdMutantTanks == null)
+	if (g_bSecondGame)
 	{
-		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+		GameData gdMutantTanks = new GameData("mutant_tanks");
+		if (gdMutantTanks == null)
+		{
+			SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+		}
+
+		StartPrepSDKCall(SDKCall_Player);
+		if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::Fling"))
+		{
+			delete gdMutantTanks;
+
+			SetFailState("Failed to find signature: CTerrorPlayer::Fling");
+		}
+
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+
+		g_hSDKFling = EndPrepSDKCall();
+		if (g_hSDKFling == null)
+		{
+			LogError("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
+		}
 
 		delete gdMutantTanks;
 	}
-
-	switch (g_bSecondGame)
-	{
-		case true:
-		{
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::Fling"))
-			{
-				SetFailState("Failed to find signature: CTerrorPlayer::Fling");
-
-				delete gdMutantTanks;
-			}
-
-			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-
-			g_esGeneral.g_hSDKFling = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKFling == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
-			}
-		}
-		case false:
-		{
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon"))
-			{
-				SetFailState("Failed to find signature: CTerrorPlayer::OnVomitedUpon");
-
-				delete gdMutantTanks;
-			}
-
-			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-
-			g_esGeneral.g_hSDKVomitUpon = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKVomitUpon == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
-			}
-		}
-	}
-
-	delete gdMutantTanks;
 
 	if (g_bLateLoad)
 	{
@@ -771,7 +741,7 @@ static void vFling(int survivor, int tank)
 	flVelocity[1] = (flRatio[1] * -1) * g_esCache[tank].g_flFlingForce;
 	flVelocity[2] = g_esCache[tank].g_flFlingForce;
 
-	SDKCall(g_esGeneral.g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
+	SDKCall(g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
 }
 
 static void vFlingAbility(int tank, float random, int pos = -1)
@@ -857,7 +827,7 @@ static void vFlingHit(int survivor, int tank, float random, float chance, int en
 				{
 					case true:
 					{
-						if (g_esGeneral.g_hSDKFling != null)
+						if (g_hSDKFling != null)
 						{
 							vFling(survivor, tank);
 
@@ -870,15 +840,12 @@ static void vFlingHit(int survivor, int tank, float random, float chance, int en
 					}
 					case false:
 					{
-						if (g_esGeneral.g_hSDKVomitUpon != null)
-						{
-							SDKCall(g_esGeneral.g_hSDKVomitUpon, survivor, tank, true);
+						MT_VomitPlayer(survivor, tank);
 
-							if (g_esCache[tank].g_iFlingMessage & messages)
-							{
-								MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
-								MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
-							}
+						if (g_esCache[tank].g_iFlingMessage & messages)
+						{
+							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
 						}
 					}
 				}
@@ -917,20 +884,12 @@ static void vFlingRange(int tank, int value, float random, int pos = -1)
 		{
 			case true:
 			{
-				if (g_esGeneral.g_hSDKFling == null)
+				if (g_hSDKFling == null)
 				{
 					return;
 				}
 			}
-			case false:
-			{
-				if (g_esGeneral.g_hSDKVomitUpon == null)
-				{
-					return;
-				}
-
-				vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
-			}
+			case false: vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
 		}
 
 		static float flTankPos[3];
@@ -949,7 +908,7 @@ static void vFlingRange(int tank, int value, float random, int pos = -1)
 					switch (g_bSecondGame)
 					{
 						case true: vFling(iSurvivor, tank);
-						case false: SDKCall(g_esGeneral.g_hSDKVomitUpon, iSurvivor, tank, true);
+						case false: MT_VomitPlayer(iSurvivor, tank);
 					}
 				}
 			}

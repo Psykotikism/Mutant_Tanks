@@ -57,7 +57,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 enum struct esGeneral
 {
 	Handle g_hSDKGetLastKnownArea;
-	Handle g_hSDKRoundRespawn;
 
 	int g_iFlowOffset;
 }
@@ -161,8 +160,6 @@ public void OnPluginStart()
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
 	}
 
 	g_esGeneral.g_iFlowOffset = gdMutantTanks.GetOffset("WitchLocomotion::IsAreaTraversable::m_flow");
@@ -174,9 +171,9 @@ public void OnPluginStart()
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::GetLastKnownArea"))
 	{
-		SetFailState("Failed to load offset: CTerrorPlayer::GetLastKnownArea");
-
 		delete gdMutantTanks;
+
+		SetFailState("Failed to load offset: CTerrorPlayer::GetLastKnownArea");
 	}
 
 	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
@@ -184,20 +181,6 @@ public void OnPluginStart()
 	if (g_esGeneral.g_hSDKGetLastKnownArea == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::GetLastKnownArea\" offsets are outdated.", MT_TAG);
-	}
-
-	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::RoundRespawn"))
-	{
-		SetFailState("Failed to find signature: CTerrorPlayer::RoundRespawn");
-
-		delete gdMutantTanks;
-	}
-
-	g_esGeneral.g_hSDKRoundRespawn = EndPrepSDKCall();
-	if (g_esGeneral.g_hSDKRoundRespawn == null)
-	{
-		LogError("%s Your \"CTerrorPlayer::RoundRespawn\" signature is outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
@@ -866,7 +849,7 @@ static void vRestartHit(int survivor, int tank, float random, float chance, int 
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE) && g_esGeneral.g_hSDKRoundRespawn != null)
+	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -890,7 +873,7 @@ static void vRestartHit(int survivor, int tank, float random, float chance, int 
 				static char sItems[5][64];
 				ReplaceString(g_esCache[tank].g_sRestartLoadout, sizeof(esAbility::g_sRestartLoadout), " ", "");
 				ExplodeString(g_esCache[tank].g_sRestartLoadout, ",", sItems, sizeof(sItems), sizeof(sItems[]));
-				SDKCall(g_esGeneral.g_hSDKRoundRespawn, survivor);
+				MT_RespawnSurvivor(survivor);
 				vRemoveWeapons(survivor);
 
 				for (int iItem = 0; iItem < sizeof(sItems); iItem++)

@@ -149,16 +149,14 @@ public void OnPluginStart()
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnRevived"))
 	{
-		SetFailState("Failed to find signature: CTerrorPlayer::OnRevived");
-
 		delete gdMutantTanks;
+
+		SetFailState("Failed to find signature: CTerrorPlayer::OnRevived");
 	}
 
 	g_hSDKRevive = EndPrepSDKCall();

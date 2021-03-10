@@ -140,16 +140,14 @@ public void OnPluginStart()
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::Deafen"))
 	{
-		SetFailState("Failed to load offset: CTerrorPlayer::Deafen");
-
 		delete gdMutantTanks;
+
+		SetFailState("Failed to load offset: CTerrorPlayer::Deafen");
 	}
 
 	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
@@ -180,8 +178,6 @@ public void OnMapStart()
 	PrecacheSound(SOUND_YELL11, true);
 
 	vReset();
-
-	AddNormalSoundHook(YellSoundHook);
 }
 
 public void OnClientPutInServer(int client)
@@ -197,8 +193,6 @@ public void OnClientDisconnect_Post(int client)
 public void OnMapEnd()
 {
 	vReset();
-
-	RemoveNormalSoundHook(YellSoundHook);
 }
 
 public Action cmdYellInfo(int client, int args)
@@ -336,30 +330,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		}
 
 		vReset2(client);
-	}
-
-	return Plugin_Continue;
-}
-
-public Action YellSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
-{
-	if (MT_IsCorePluginEnabled() && StrContains(sample, "player", false) != -1 && bIsValidClient(entity))
-	{
-		for (int iSurvivor = 0; iSurvivor < numClients; iSurvivor++)
-		{
-			if (bIsHumanSurvivor(clients[iSurvivor]) && g_esPlayer[clients[iSurvivor]].g_bAffected)
-			{
-				for (int iPlayer = iSurvivor; iPlayer < numClients - 1; iPlayer++)
-				{
-					clients[iPlayer] = clients[iPlayer + 1];
-				}
-
-				numClients--;
-				iSurvivor--;
-			}
-		}
-
-		return (numClients > 0) ? Plugin_Changed : Plugin_Stop;
 	}
 
 	return Plugin_Continue;

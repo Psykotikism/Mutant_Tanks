@@ -154,32 +154,30 @@ public void OnPluginStart()
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
 	}
 
 	g_esGeneral.g_ddIdlePlayerDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::GoAwayFromKeyboard");
 	if (g_esGeneral.g_ddIdlePlayerDetour == null)
 	{
-		SetFailState("Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard");
-
 		delete gdMutantTanks;
+
+		SetFailState("Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard");
 	}
 
 	g_esGeneral.g_ddSpecPlayerDetour = DynamicDetour.FromConf(gdMutantTanks, "SurvivorBot::SetHumanSpectator");
 	if (g_esGeneral.g_ddSpecPlayerDetour == null)
 	{
-		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
-
 		delete gdMutantTanks;
+
+		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::GoAwayFromKeyboard"))
 	{
-		SetFailState("Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard");
-
 		delete gdMutantTanks;
+
+		SetFailState("Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard");
 	}
 
 	g_esGeneral.g_hSDKGoAFK = EndPrepSDKCall();
@@ -191,9 +189,9 @@ public void OnPluginStart()
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::SetObserverTarget"))
 	{
-		SetFailState("Failed to load offset: CTerrorPlayer::SetObserverTarget");
-
 		delete gdMutantTanks;
+
+		SetFailState("Failed to load offset: CTerrorPlayer::SetObserverTarget");
 	}
 
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
@@ -206,9 +204,9 @@ public void OnPluginStart()
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "SurvivorBot::SetHumanSpectator"))
 	{
-		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
-
 		delete gdMutantTanks;
+
+		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
 	}
 
 	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);

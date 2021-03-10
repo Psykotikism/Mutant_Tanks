@@ -63,10 +63,13 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_IsTankSupported");
 	MarkNativeAsOptional("MT_IsTypeEnabled");
 	MarkNativeAsOptional("MT_LogMessage");
+	MarkNativeAsOptional("MT_RespawnSurvivor");
 	MarkNativeAsOptional("MT_SetTankType");
+	MarkNativeAsOptional("MT_ShoveBySurvivor");
 	MarkNativeAsOptional("MT_SpawnTank");
 	MarkNativeAsOptional("MT_TankMaxHealth");
 	MarkNativeAsOptional("MT_UnvomitPlayer");
+	MarkNativeAsOptional("MT_VomitPlayer");
 }
 #endif
 
@@ -766,6 +769,15 @@ native bool MT_IsTypeEnabled(int type);
 native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ...);
 
 /**
+ * Respawns a survivor.
+ *
+ * @param survivor		Client index of the survivor.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_RespawnSurvivor(int survivor);
+
+/**
  * Sets a Tank's Mutant Tank type.
  *
  * @param tank			Client index of the Tank.
@@ -775,6 +787,16 @@ native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ..
  * @error			Invalid client index, client is not in-game, client is dead, or type is 0 or less.
  **/
 native void MT_SetTankType(int tank, int type, bool mode);
+
+/**
+ * Shoves a special infected toward a certain direction.
+ *
+ * @param special		Client index of the special infected.
+ * @param survivor		Client index of the survivor.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_ShoveBySurvivor(int special, int survivor, float direction[3]);
 
 /**
  * Spawns a Tank with the specified Mutant Tank type.
@@ -804,6 +826,16 @@ native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
  * @error			Invalid client index, client is not in-game, or client is dead.
  **/
 native void MT_UnvomitPlayer(int player);
+
+/**
+ * Sets the vomit effect on a player.
+ *
+ * @param player		Client index of the player.
+ * @param boomer		Client index of the Boomer.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_VomitPlayer(int player, int boomer);
 
 /**
  * Called every second to trigger the Super Tank's ability.
@@ -1720,6 +1752,7 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
+
 					return true;
 				}
 			}
@@ -2152,6 +2185,7 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
+
 			return false;
 		}
 
@@ -2234,6 +2268,7 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
+
 				return flUnits;
 			}
 

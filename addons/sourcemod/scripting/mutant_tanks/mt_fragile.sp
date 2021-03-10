@@ -138,8 +138,6 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKShovedBySurvivor;
-
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -147,32 +145,6 @@ public void OnPluginStart()
 	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_fragile", cmdFragileInfo, "View information about the Fragile ability.");
-
-	GameData gdMutantTanks = new GameData("mutant_tanks");
-	if (gdMutantTanks == null)
-	{
-		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
-	}
-
-	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnShovedBySurvivor"))
-	{
-		SetFailState("Failed to find signature: CTerrorPlayer::OnShovedBySurvivor");
-
-		delete gdMutantTanks;
-	}
-
-	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-	g_hSDKShovedBySurvivor = EndPrepSDKCall();
-	if (g_hSDKShovedBySurvivor == null)
-	{
-		LogError("%s Your \"CTerrorPlayer::OnShovedBySurvivor\" signature is outdated.", MT_TAG);
-	}
-
-	delete gdMutantTanks;
 
 	if (g_bLateLoad)
 	{
@@ -390,14 +362,14 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileMeleeMultiplier;
 
-				if (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_ATTACKBOOST) && GetRandomFloat(0.0, 100.0) <= 15.0 && g_hSDKShovedBySurvivor != null)
+				if (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_ATTACKBOOST) && GetRandomFloat(0.0, 100.0) <= 15.0)
 				{
 					static float flTankOrigin[3], flSurvivorOrigin[3], flDirection[3];
 					GetClientAbsOrigin(attacker, flSurvivorOrigin);
 					GetClientAbsOrigin(victim, flTankOrigin);
 					MakeVectorFromPoints(flSurvivorOrigin, flTankOrigin, flDirection);
 					NormalizeVector(flDirection, flDirection);
-					SDKCall(g_hSDKShovedBySurvivor, victim, attacker, flDirection);
+					MT_ShoveBySurvivor(victim, attacker, flDirection);
 					SetEntPropFloat(victim, Prop_Send, "m_flVelocityModifier", 0.4);
 				}
 			}
