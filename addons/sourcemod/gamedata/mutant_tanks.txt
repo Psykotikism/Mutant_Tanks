@@ -321,6 +321,10 @@
 			{
 				"signature"	"CTerrorPlayer::OnFalling::Sound"
 			}
+			"RoundRespawnStart"
+			{
+				"signature"	"CTerrorPlayer::RoundRespawn"
+			}
 		}
 		"Offsets"
 		{
@@ -559,6 +563,12 @@
 			{
 				"windows"	"309"
 				"linux"		"310"
+			}
+			/* CTerrorPlayer::RoundRespawn() */
+			"CTerrorPlayer::RoundRespawn::StatsCondition"
+			{
+				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
+				"linux"		"35" // start at 75 and patch 1 byte with JNS (0x79)
 			}
 			/* CTerrorPlayer::SetObserverTarget(CBaseEntity*) */
 			"CTerrorPlayer::SetObserverTarget"
@@ -1166,6 +1176,12 @@
 			{
 				"windows"	"330"
 				"linux"		"331"
+			}
+			/* CTerrorPlayer::RoundRespawn() */
+			"CTerrorPlayer::RoundRespawn::StatsCondition"
+			{
+				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
+				"linux"		"25" // start at 75 and patch 1 byte with JNS (0x79)
 			}
 			/* CTerrorPlayer::SetObserverTarget(CBaseEntity*) */
 			"CTerrorPlayer::SetObserverTarget"
