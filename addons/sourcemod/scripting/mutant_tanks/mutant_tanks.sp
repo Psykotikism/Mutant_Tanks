@@ -1652,18 +1652,14 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
 
 	switch (gdMutantTanks == null)
 	{
-		case true:
-		{
-			delete gdMutantTanks;
-
-			SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-		}
+		case true: SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 		case false:
 		{
 			g_esGeneral.g_bLinux = gdMutantTanks.GetOffset("OS") == 1;
@@ -8382,227 +8378,227 @@ static void vPluginStatus()
 
 		if (!g_esGeneral.g_ddDeathFallCameraEnableDetour.Enable(Hook_Pre, mreDeathFallCameraEnablePre))
 		{
-			LogError("Failed to enable detour pre: CDeathFallCamera::Enable");
+			LogError("%s Failed to enable detour pre: CDeathFallCamera::Enable", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddDoJumpDetour.Enable(Hook_Pre, mreDoJumpPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorGameMovement::DoJump");
+			LogError("%s Failed to enable detour pre: CTerrorGameMovement::DoJump", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddDoJumpDetour.Enable(Hook_Post, mreDoJumpPost))
 		{
-			LogError("Failed to enable detour post: CTerrorGameMovement::DoJump");
+			LogError("%s Failed to enable detour post: CTerrorGameMovement::DoJump", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddEnterGhostStateDetour.Enable(Hook_Post, mreEnterGhostStatePost))
 		{
-			LogError("Failed to enable detour post: CTerrorPlayer::OnEnterGhostState");
+			LogError("%s Failed to enable detour post: CTerrorPlayer::OnEnterGhostState", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddEnterStasisDetour.Enable(Hook_Post, mreEnterStasisPost))
 		{
-			LogError("Failed to enable detour post: Tank::EnterStasis");
+			LogError("%s Failed to enable detour post: Tank::EnterStasis", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddEventKilledDetour.Enable(Hook_Pre, mreEventKilledPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorPlayer::Event_Killed");
+			LogError("%s Failed to enable detour pre: CTerrorPlayer::Event_Killed", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddEventKilledDetour.Enable(Hook_Post, mreEventKilledPost))
 		{
-			LogError("Failed to enable detour post: CTerrorPlayer::Event_Killed");
+			LogError("%s Failed to enable detour post: CTerrorPlayer::Event_Killed", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddFallingDetour.Enable(Hook_Pre, mreFallingPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorPlayer::OnFalling");
+			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnFalling", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddFallingDetour.Enable(Hook_Post, mreFallingPost))
 		{
-			LogError("Failed to enable detour post: CTerrorPlayer::OnFalling");
+			LogError("%s Failed to enable detour post: CTerrorPlayer::OnFalling", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Enable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
 		{
-			LogError("Failed to enable detour post: CDirector::OnFirstSurvivorLeftSafeArea");
+			LogError("%s Failed to enable detour post: CDirector::OnFirstSurvivorLeftSafeArea", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddGetMaxClip1Detour.Enable(Hook_Pre, mreGetMaxClip1Pre))
 		{
-			LogError("Failed to enable detour pre: CBaseCombatWeapon::GetMaxClip1");
+			LogError("%s Failed to enable detour pre: CBaseCombatWeapon::GetMaxClip1", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddLauncherDirectionDetour.Enable(Hook_Pre, mreLaunchDirectionPre))
 		{
-			LogError("Failed to enable detour pre: CEnvRockLauncher::LaunchCurrentDir");
+			LogError("%s Failed to enable detour pre: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddLeaveStasisDetour.Enable(Hook_Post, mreLeaveStasisPost))
 		{
-			LogError("Failed to enable detour post: Tank::LeaveStasis");
+			LogError("%s Failed to enable detour post: Tank::LeaveStasis", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddMaxCarryDetour.Enable(Hook_Pre, mreMaxCarryPre))
 		{
-			LogError("Failed to enable detour pre: CAmmoDef::MaxCarry");
+			LogError("%s Failed to enable detour pre: CAmmoDef::MaxCarry", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddPlayerHitDetour.Enable(Hook_Pre, mrePlayerHitPre))
 		{
-			LogError("Failed to enable detour pre: CTankClaw::OnPlayerHit");
+			LogError("%s Failed to enable detour pre: CTankClaw::OnPlayerHit", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddPlayerHitDetour.Enable(Hook_Post, mrePlayerHitPost))
 		{
-			LogError("Failed to enable detour post: CTankClaw::OnPlayerHit");
+			LogError("%s Failed to enable detour post: CTankClaw::OnPlayerHit", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddReplaceTankDetour.Enable(Hook_Post, mreReplaceTankPost))
 		{
-			LogError("Failed to enable detour post: ZombieManager::ReplaceTank");
+			LogError("%s Failed to enable detour post: ZombieManager::ReplaceTank", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddRevivedDetour.Enable(Hook_Pre, mreRevivedPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorPlayer::OnRevived");
+			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnRevived", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddRevivedDetour.Enable(Hook_Post, mreRevivedPost))
 		{
-			LogError("Failed to enable detour post: CTerrorPlayer::OnRevived");
+			LogError("%s Failed to enable detour post: CTerrorPlayer::OnRevived", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddSecondaryAttackDetour.Enable(Hook_Pre, mreSecondaryAttackPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorWeapon::SecondaryAttack");
+			LogError("%s Failed to enable detour pre: CTerrorWeapon::SecondaryAttack", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddSecondaryAttackDetour.Enable(Hook_Post, mreSecondaryAttackPost))
 		{
-			LogError("Failed to enable detour post: CTerrorWeapon::SecondaryAttack");
+			LogError("%s Failed to enable detour post: CTerrorWeapon::SecondaryAttack", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddSpawnTankDetour.Enable(Hook_Pre, mreSpawnTankPre))
 		{
-			LogError("Failed to enable detour pre: ZombieManager::SpawnTank");
+			LogError("%s Failed to enable detour pre: ZombieManager::SpawnTank", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddStaggerDetour.Enable(Hook_Pre, mreStaggerPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorPlayer::OnStaggered");
+			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnStaggered", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddStartRevivingDetour.Enable(Hook_Pre, mreStartRevivingPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorPlayer::StartReviving");
+			LogError("%s Failed to enable detour pre: CTerrorPlayer::StartReviving", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddStartRevivingDetour.Enable(Hook_Post, mreStartRevivingPost))
 		{
-			LogError("Failed to enable detour post: CTerrorPlayer::StartReviving");
+			LogError("%s Failed to enable detour post: CTerrorPlayer::StartReviving", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddTankRockCreateDetour.Enable(Hook_Post, mreTankRockCreatePost))
 		{
-			LogError("Failed to enable detour post: CTankRock::Create");
+			LogError("%s Failed to enable detour post: CTankRock::Create", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddVomitedUponDetour.Enable(Hook_Pre, mreVomitedUponPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorPlayer::OnVomitedUpon");
+			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnVomitedUpon", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddActionCompleteDetour.Enable(Hook_Pre, mreActionCompletePre))
 		{
-			LogError("Failed to enable detour pre: CFirstAidKit::OnActionComplete");
+			LogError("%s Failed to enable detour pre: CFirstAidKit::OnActionComplete", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddActionCompleteDetour.Enable(Hook_Post, mreActionCompletePost))
 		{
-			LogError("Failed to enable detour post: CFirstAidKit::OnActionComplete");
+			LogError("%s Failed to enable detour post: CFirstAidKit::OnActionComplete", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddDoAnimationEventDetour.Enable(Hook_Pre, mreDoAnimationEventPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorPlayer::DoAnimationEvent");
+			LogError("%s Failed to enable detour pre: CTerrorPlayer::DoAnimationEvent", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddFireBulletDetour.Enable(Hook_Pre, mreFireBulletPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorGun::FireBullet");
+			LogError("%s Failed to enable detour pre: CTerrorGun::FireBullet", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddFireBulletDetour.Enable(Hook_Post, mreFireBulletPost))
 		{
-			LogError("Failed to enable detour post: CTerrorGun::FireBullet");
+			LogError("%s Failed to enable detour post: CTerrorGun::FireBullet", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddFlingDetour.Enable(Hook_Pre, mreFlingPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorPlayer::Fling");
+			LogError("%s Failed to enable detour pre: CTerrorPlayer::Fling", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddHitByVomitJarDetour.Enable(Hook_Pre, mreHitByVomitJarPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorPlayer::OnHitByVomitJar");
+			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnHitByVomitJar", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Enable(Hook_Pre, mreSecondaryAttackPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorMeleeWeapon::SecondaryAttack");
+			LogError("%s Failed to enable detour pre: CTerrorMeleeWeapon::SecondaryAttack", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Enable(Hook_Post, mreSecondaryAttackPost))
 		{
-			LogError("Failed to enable detour post: CTerrorMeleeWeapon::SecondaryAttack");
+			LogError("%s Failed to enable detour post: CTerrorMeleeWeapon::SecondaryAttack", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Enable(Hook_Pre, mreStartActionPre))
 		{
-			LogError("Failed to enable detour pre: CBaseBackpackItem::StartAction");
+			LogError("%s Failed to enable detour pre: CBaseBackpackItem::StartAction", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Enable(Hook_Post, mreStartActionPost))
 		{
-			LogError("Failed to enable detour post: CBaseBackpackItem::StartAction");
+			LogError("%s Failed to enable detour post: CBaseBackpackItem::StartAction", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddTestMeleeSwingCollisionDetour.Enable(Hook_Pre, mreTestMeleeSwingCollisionPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorMeleeWeapon::TestMeleeSwingCollision");
+			LogError("%s Failed to enable detour pre: CTerrorMeleeWeapon::TestMeleeSwingCollision", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddTestMeleeSwingCollisionDetour.Enable(Hook_Post, mreTestMeleeSwingCollisionPost))
 		{
-			LogError("Failed to enable detour post: CTerrorMeleeWeapon::TestMeleeSwingCollision");
+			LogError("%s Failed to enable detour post: CTerrorMeleeWeapon::TestMeleeSwingCollision", MT_TAG);
 		}
 
 		if (!g_bSecondGame && !g_esGeneral.g_ddFinishHealingDetour.Enable(Hook_Pre, mreFinishHealingPre))
 		{
-			LogError("Failed to enable detour pre: CFirstAidKit::FinishHealing");
+			LogError("%s Failed to enable detour pre: CFirstAidKit::FinishHealing", MT_TAG);
 		}
 
 		if (!g_bSecondGame && !g_esGeneral.g_ddFinishHealingDetour.Enable(Hook_Post, mreFinishHealingPost))
 		{
-			LogError("Failed to enable detour post: CFirstAidKit::FinishHealing");
+			LogError("%s Failed to enable detour post: CFirstAidKit::FinishHealing", MT_TAG);
 		}
 
 		if (!g_bSecondGame && !g_esGeneral.g_ddSetMainActivityDetour.Enable(Hook_Pre, mreSetMainActivityPre))
 		{
-			LogError("Failed to enable detour pre: CTerrorPlayer::SetMainActivity");
+			LogError("%s Failed to enable detour pre: CTerrorPlayer::SetMainActivity", MT_TAG);
 		}
 
 		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Enable(Hook_Pre, mreStartHealingPre))
 		{
-			LogError("Failed to enable detour pre: CFirstAidKit::StartHealing");
+			LogError("%s Failed to enable detour pre: CFirstAidKit::StartHealing", MT_TAG);
 		}
 
 		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Enable(Hook_Post, mreStartHealingPost))
 		{
-			LogError("Failed to enable detour post: CFirstAidKit::StartHealing");
+			LogError("%s Failed to enable detour post: CFirstAidKit::StartHealing", MT_TAG);
 		}
 	}
 	else if (g_esGeneral.g_bPluginEnabled && (!bPluginAllowed || !bPluginEnabled))
@@ -8613,227 +8609,227 @@ static void vPluginStatus()
 
 		if (!g_esGeneral.g_ddDeathFallCameraEnableDetour.Disable(Hook_Pre, mreDeathFallCameraEnablePre))
 		{
-			LogError("Failed to disable detour pre: CDeathFallCamera::Enable");
+			LogError("%s Failed to disable detour pre: CDeathFallCamera::Enable", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddDoJumpDetour.Disable(Hook_Pre, mreDoJumpPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorGameMovement::DoJump");
+			LogError("%s Failed to disable detour pre: CTerrorGameMovement::DoJump", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddDoJumpDetour.Disable(Hook_Post, mreDoJumpPost))
 		{
-			LogError("Failed to disable detour post: CTerrorGameMovement::DoJump");
+			LogError("%s Failed to disable detour post: CTerrorGameMovement::DoJump", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddEnterGhostStateDetour.Disable(Hook_Post, mreEnterGhostStatePost))
 		{
-			LogError("Failed to disable detour post: CTerrorPlayer::OnEnterGhostState");
+			LogError("%s Failed to disable detour post: CTerrorPlayer::OnEnterGhostState", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddEnterStasisDetour.Disable(Hook_Post, mreEnterStasisPost))
 		{
-			LogError("Failed to disable detour post: Tank::EnterStasis");
+			LogError("%s Failed to disable detour post: Tank::EnterStasis", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddEventKilledDetour.Disable(Hook_Pre, mreEventKilledPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorPlayer::Event_Killed");
+			LogError("%s Failed to disable detour pre: CTerrorPlayer::Event_Killed", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddEventKilledDetour.Disable(Hook_Post, mreEventKilledPost))
 		{
-			LogError("Failed to disable detour post: CTerrorPlayer::Event_Killed");
+			LogError("%s Failed to disable detour post: CTerrorPlayer::Event_Killed", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddFallingDetour.Disable(Hook_Pre, mreFallingPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorPlayer::OnFalling");
+			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnFalling", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddFallingDetour.Disable(Hook_Post, mreFallingPost))
 		{
-			LogError("Failed to disable detour post: CTerrorPlayer::OnFalling");
+			LogError("%s Failed to disable detour post: CTerrorPlayer::OnFalling", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Disable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
 		{
-			LogError("Failed to disable detour post: CDirector::OnFirstSurvivorLeftSafeArea");
+			LogError("%s Failed to disable detour post: CDirector::OnFirstSurvivorLeftSafeArea", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddGetMaxClip1Detour.Disable(Hook_Pre, mreGetMaxClip1Pre))
 		{
-			LogError("Failed to disable detour pre: CBaseCombatWeapon::GetMaxClip1");
+			LogError("%s Failed to disable detour pre: CBaseCombatWeapon::GetMaxClip1", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddLauncherDirectionDetour.Disable(Hook_Pre, mreLaunchDirectionPre))
 		{
-			LogError("Failed to disable detour pre: CEnvRockLauncher::LaunchCurrentDir");
+			LogError("%s Failed to disable detour pre: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddLeaveStasisDetour.Disable(Hook_Post, mreLeaveStasisPost))
 		{
-			LogError("Failed to disable detour post: Tank::LeaveStasis");
+			LogError("%s Failed to disable detour post: Tank::LeaveStasis", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddMaxCarryDetour.Disable(Hook_Pre, mreMaxCarryPre))
 		{
-			LogError("Failed to disable detour pre: CAmmoDef::MaxCarry");
+			LogError("%s Failed to disable detour pre: CAmmoDef::MaxCarry", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddPlayerHitDetour.Disable(Hook_Pre, mrePlayerHitPre))
 		{
-			LogError("Failed to disable detour pre: CTankClaw::OnPlayerHit");
+			LogError("%s Failed to disable detour pre: CTankClaw::OnPlayerHit", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddPlayerHitDetour.Disable(Hook_Post, mrePlayerHitPost))
 		{
-			LogError("Failed to disable detour post: CTankClaw::OnPlayerHit");
+			LogError("%s Failed to disable detour post: CTankClaw::OnPlayerHit", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddReplaceTankDetour.Disable(Hook_Post, mreReplaceTankPost))
 		{
-			LogError("Failed to disable detour post: ZombieManager::ReplaceTank");
+			LogError("%s Failed to disable detour post: ZombieManager::ReplaceTank", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddRevivedDetour.Disable(Hook_Pre, mreRevivedPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorPlayer::OnRevived");
+			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnRevived", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddRevivedDetour.Disable(Hook_Post, mreRevivedPost))
 		{
-			LogError("Failed to disable detour post: CTerrorPlayer::OnRevived");
+			LogError("%s Failed to disable detour post: CTerrorPlayer::OnRevived", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddSecondaryAttackDetour.Disable(Hook_Pre, mreSecondaryAttackPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorWeapon::SecondaryAttack");
+			LogError("%s Failed to disable detour pre: CTerrorWeapon::SecondaryAttack", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddSecondaryAttackDetour.Disable(Hook_Post, mreSecondaryAttackPost))
 		{
-			LogError("Failed to disable detour post: CTerrorWeapon::SecondaryAttack");
+			LogError("%s Failed to disable detour post: CTerrorWeapon::SecondaryAttack", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddSpawnTankDetour.Disable(Hook_Pre, mreSpawnTankPre))
 		{
-			LogError("Failed to disable detour pre: ZombieManager::SpawnTank");
+			LogError("%s Failed to disable detour pre: ZombieManager::SpawnTank", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddStaggerDetour.Disable(Hook_Pre, mreStaggerPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorPlayer::OnStaggered");
+			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnStaggered", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddStartRevivingDetour.Disable(Hook_Pre, mreStartRevivingPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorPlayer::StartReviving");
+			LogError("%s Failed to disable detour pre: CTerrorPlayer::StartReviving", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddStartRevivingDetour.Disable(Hook_Post, mreStartRevivingPost))
 		{
-			LogError("Failed to disable detour post: CTerrorPlayer::StartReviving");
+			LogError("%s Failed to disable detour post: CTerrorPlayer::StartReviving", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddTankRockCreateDetour.Disable(Hook_Post, mreTankRockCreatePost))
 		{
-			LogError("Failed to disable detour post: CTankRock::Create");
+			LogError("%s Failed to disable detour post: CTankRock::Create", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddVomitedUponDetour.Disable(Hook_Pre, mreVomitedUponPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorPlayer::OnVomitedUpon");
+			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnVomitedUpon", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddActionCompleteDetour.Disable(Hook_Pre, mreActionCompletePre))
 		{
-			LogError("Failed to disable detour pre: CFirstAidKit::OnActionComplete");
+			LogError("%s Failed to disable detour pre: CFirstAidKit::OnActionComplete", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddActionCompleteDetour.Disable(Hook_Post, mreActionCompletePost))
 		{
-			LogError("Failed to disable detour post: CFirstAidKit::OnActionComplete");
+			LogError("%s Failed to disable detour post: CFirstAidKit::OnActionComplete", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddDoAnimationEventDetour.Disable(Hook_Pre, mreDoAnimationEventPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorPlayer::DoAnimationEvent");
+			LogError("%s Failed to disable detour pre: CTerrorPlayer::DoAnimationEvent", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddFireBulletDetour.Disable(Hook_Pre, mreFireBulletPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorGun::FireBullet");
+			LogError("%s Failed to disable detour pre: CTerrorGun::FireBullet", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddFireBulletDetour.Disable(Hook_Post, mreFireBulletPost))
 		{
-			LogError("Failed to disable detour post: CTerrorGun::FireBullet");
+			LogError("%s Failed to disable detour post: CTerrorGun::FireBullet", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddFlingDetour.Disable(Hook_Pre, mreFlingPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorPlayer::Fling");
+			LogError("%s Failed to disable detour pre: CTerrorPlayer::Fling", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddHitByVomitJarDetour.Disable(Hook_Pre, mreHitByVomitJarPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorPlayer::OnHitByVomitJar");
+			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnHitByVomitJar", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Disable(Hook_Pre, mreSecondaryAttackPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorMeleeWeapon::SecondaryAttack");
+			LogError("%s Failed to disable detour pre: CTerrorMeleeWeapon::SecondaryAttack", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Disable(Hook_Post, mreSecondaryAttackPost))
 		{
-			LogError("Failed to disable detour post: CTerrorMeleeWeapon::SecondaryAttack");
+			LogError("%s Failed to disable detour post: CTerrorMeleeWeapon::SecondaryAttack", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Disable(Hook_Pre, mreStartActionPre))
 		{
-			LogError("Failed to disable detour pre: CBaseBackpackItem::StartAction");
+			LogError("%s Failed to disable detour pre: CBaseBackpackItem::StartAction", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Disable(Hook_Post, mreStartActionPost))
 		{
-			LogError("Failed to disable detour post: CBaseBackpackItem::StartAction");
+			LogError("%s Failed to disable detour post: CBaseBackpackItem::StartAction", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddTestMeleeSwingCollisionDetour.Disable(Hook_Pre, mreTestMeleeSwingCollisionPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorMeleeWeapon::TestMeleeSwingCollision");
+			LogError("%s Failed to disable detour pre: CTerrorMeleeWeapon::TestMeleeSwingCollision", MT_TAG);
 		}
 
 		if (g_bSecondGame && !g_esGeneral.g_ddTestMeleeSwingCollisionDetour.Disable(Hook_Post, mreTestMeleeSwingCollisionPost))
 		{
-			LogError("Failed to disable detour post: CTerrorMeleeWeapon::TestMeleeSwingCollision");
+			LogError("%s Failed to disable detour post: CTerrorMeleeWeapon::TestMeleeSwingCollision", MT_TAG);
 		}
 
 		if (!g_bSecondGame && !g_esGeneral.g_ddFinishHealingDetour.Disable(Hook_Pre, mreFinishHealingPre))
 		{
-			LogError("Failed to disable detour pre: CFirstAidKit::FinishHealing");
+			LogError("%s Failed to disable detour pre: CFirstAidKit::FinishHealing", MT_TAG);
 		}
 
 		if (!g_bSecondGame && !g_esGeneral.g_ddFinishHealingDetour.Disable(Hook_Post, mreFinishHealingPost))
 		{
-			LogError("Failed to disable detour post: CFirstAidKit::FinishHealing");
+			LogError("%s Failed to disable detour post: CFirstAidKit::FinishHealing", MT_TAG);
 		}
 
 		if (!g_bSecondGame && !g_esGeneral.g_ddSetMainActivityDetour.Disable(Hook_Pre, mreSetMainActivityPre))
 		{
-			LogError("Failed to disable detour pre: CTerrorPlayer::SetMainActivity");
+			LogError("%s Failed to disable detour pre: CTerrorPlayer::SetMainActivity", MT_TAG);
 		}
 
 		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Disable(Hook_Pre, mreStartHealingPre))
 		{
-			LogError("Failed to disable detour pre: CFirstAidKit::StartHealing");
+			LogError("%s Failed to disable detour pre: CFirstAidKit::StartHealing", MT_TAG);
 		}
 
 		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Disable(Hook_Post, mreStartHealingPost))
 		{
-			LogError("Failed to disable detour post: CFirstAidKit::StartHealing");
+			LogError("%s Failed to disable detour post: CFirstAidKit::StartHealing", MT_TAG);
 		}
 	}
 }
