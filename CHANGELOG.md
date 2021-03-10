@@ -32,7 +32,7 @@
 - Fixed props not being attached to Tanks properly.
 
 #### Game Data
-- Fixed some detours crashing servers due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed some detours causing crashes due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 #### Settings
 - Fixed the `Boss Health Stages` setting not being read entirely.
@@ -191,6 +191,7 @@
 	- Prevents the recipient from getting flung away by Chargers.
 	- Prevents the recipient from getting staggered.
 	- Blocks Smoker clouds, Boomer explosions, and Spitter acid puddles when they die (clean kills). (Thanks to epzminion for the help!)
+- The respawn reward no longer resets the recipient's stats. (Thanks to Dragokas for the code and gamedata info!)
 
 #### Game Data
 - Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.
@@ -338,6 +339,9 @@
 - Added the `MT_OnFatalFalling` forward.
 - Added the `MT_OnPlayerEventKilled` forward.
 - Added the `MT_OnPlayerHitByVomitJar` forward.
+- Added the `MT_RespawnSurvivor` native.
+- Added the `MT_ShoveBySurvivor` native.
+- Added the `MT_VomitPlayer` native.
 - Added the `MT_UnvomitPlayer` native.
 - Added the `MT_DoesSurvivorHaveRewardType` native.
 
@@ -414,6 +418,9 @@
 	- Replaced the detour for the `CTerrorPlayer::Event_Killed` function with the new `MT_OnPlayerEventKilled` forward.
 	- Tanks that respawn no longer give out rewards until their final deaths. (Thanks to 3aljiyavslgazana for suggesting!)
 
+- Restart
+	- Respawned survivors no longer have their stats reset. (Thanks to Dragokas for the code and gamedata info!)
+
 - Shield
 	- The damage boost reward now allows the recipient to bypass all types of shields that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 	- Shields that can be damaged by melee weapons will no longer create pushback effects when hit by melee weapons. (Requested by 3aljiyavslgazana.)
@@ -456,6 +463,7 @@
 
 #### Requirements
 - The `mutant_tanks_names.phrases` translation file is now used by all the plugins.
+- The `mutant_tanks_patches.cfg` config file is now used by the core plugin.
 
 #### Updates
 - Updated config files.

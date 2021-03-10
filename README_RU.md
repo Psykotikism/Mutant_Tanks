@@ -1288,6 +1288,15 @@ native bool MT_IsTypeEnabled(int type);
 native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ...);
 
 /**
+ * Возрождает выжившего.
+ *
+ * @param survivor		Клиентский индекс Выжившего.
+ *
+ * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
+ **/
+native void MT_RespawnSurvivor(int survivor);
+
+/**
  * Устанавливает танк Тип танка-мутанта.
  *
  * @param tank			Клиентский индекс Танка.
@@ -1297,6 +1306,17 @@ native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ..
  * @error			Неверный индекс клиента, клиент не в игре, клиент мёртв или тип 0 или меньше.
  **/
 native void MT_SetTankType(int tank, int type, bool mode);
+
+/**
+ * Толкает особого заражённого в определенном направлении.
+ *
+ * @param special		Клиентский индекс особого заражённого.
+ * @param survivor		Клиентский индекс Выжившего.
+ * @param direction		Направление толчка.
+ *
+ * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
+ **/
+native void MT_ShoveBySurvivor(int special, int survivor, float direction[3]);
 
 /**
  * Создаёт Танка с указанным типом танка-мутанта.
@@ -1326,6 +1346,16 @@ native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
  * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
  **/
 native void MT_UnvomitPlayer(int player);
+
+/**
+ * Устанавливает эффект рвоты на игрока.
+ *
+ * @param player		Клиентский индекс игрока.
+ * @param boomer		Клиентский индекс Толстяка.
+ *
+ * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
+ **/
+native void MT_VomitPlayer(int player);
 ```
 
 - Способность клонирования
@@ -1852,7 +1882,7 @@ mutant_tanks // 3-й формат
 
 4. Как мне изменить кнопки или добавить дополнительные кнопки?
 
-Отредактируйте 93-96 строки файла `mutant_tanks.inc` и перекомпилируйте каждый плагин способности.
+Отредактируйте `96-99` строки файла `mutant_tanks.inc` и перекомпилируйте каждый плагин способности.
 
 5. Что произойдёт, если у танка-мутанта есть несколько способностей, которые активируются одной и той же кнопкой?
 

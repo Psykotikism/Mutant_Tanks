@@ -1288,6 +1288,15 @@ native bool MT_IsTypeEnabled(int type);
 native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ...);
 
 /**
+ * Respawns a survivor.
+ *
+ * @param survivor		Client index of the survivor.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_RespawnSurvivor(int survivor);
+
+/**
  * Sets a Tank's Mutant Tank type.
  *
  * @param tank			Client index of the Tank.
@@ -1297,6 +1306,17 @@ native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ..
  * @error			Invalid client index, client is not in-game, client is dead, or type is 0 or less.
  **/
 native void MT_SetTankType(int tank, int type, bool mode);
+
+/**
+ * Shoves a special infected toward a certain direction.
+ *
+ * @param special		Client index of the special infected.
+ * @param survivor		Client index of the survivor.
+ * @param direction		Direction of the shove.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_ShoveBySurvivor(int special, int survivor, float direction[3]);
 
 /**
  * Spawns a Tank with the specified Mutant Tank type.
@@ -1326,6 +1346,16 @@ native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
  * @error			Invalid client index, client is not in-game, or client is dead.
  **/
 native void MT_UnvomitPlayer(int player);
+
+/**
+ * Sets the vomit effect on a player.
+ *
+ * @param player		Client index of the player.
+ * @param boomer		Client index of the Boomer.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_VomitPlayer(int player);
 ```
 
 - Clone ability
@@ -1852,7 +1882,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 93-96 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines `96-99` of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
