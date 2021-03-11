@@ -364,6 +364,7 @@ enum struct esGeneral
 	DynamicDetour g_ddSecondaryAttackDetour;
 	DynamicDetour g_ddSecondaryAttackDetour2;
 	DynamicDetour g_ddSetMainActivityDetour;
+	DynamicDetour g_ddShovedBySurvivorDetour;
 	DynamicDetour g_ddSpawnTankDetour;
 	DynamicDetour g_ddStaggerDetour;
 	DynamicDetour g_ddStartHealingDetour;
@@ -432,6 +433,7 @@ enum struct esGeneral
 	GlobalForward g_gfMenuItemSelectedForward;
 	GlobalForward g_gfPlayerEventKilledForward;
 	GlobalForward g_gfPlayerHitByVomitJarForward;
+	GlobalForward g_gfPlayerShovedBySurvivorForward;
 	GlobalForward g_gfPluginCheckForward;
 	GlobalForward g_gfPluginEndForward;
 	GlobalForward g_gfPostTankSpawnForward;
@@ -1549,6 +1551,7 @@ public void OnPluginStart()
 	g_esGeneral.g_gfMenuItemSelectedForward = new GlobalForward("MT_OnMenuItemSelected", ET_Ignore, Param_Cell, Param_String);
 	g_esGeneral.g_gfPlayerEventKilledForward = new GlobalForward("MT_OnPlayerEventKilled", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfPlayerHitByVomitJarForward = new GlobalForward("MT_OnPlayerHitByVomitJar", ET_Event, Param_Cell, Param_Cell);
+	g_esGeneral.g_gfPlayerShovedBySurvivorForward = new GlobalForward("MT_OnPlayerShovedBySurvivor", ET_Event, Param_Cell, Param_Cell, Param_Array);
 	g_esGeneral.g_gfPluginCheckForward = new GlobalForward("MT_OnPluginCheck", ET_Ignore, Param_Array);
 	g_esGeneral.g_gfPluginEndForward = new GlobalForward("MT_OnPluginEnd", ET_Ignore);
 	g_esGeneral.g_gfPostTankSpawnForward = new GlobalForward("MT_OnPostTankSpawn", ET_Ignore, Param_Cell);
@@ -1652,7 +1655,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -2076,6 +2078,12 @@ public void OnPluginStart()
 			if (g_esGeneral.g_ddSecondaryAttackDetour == null)
 			{
 				LogError("%s Failed to find signature: CTerrorWeapon::SecondaryAttack", MT_TAG);
+			}
+
+			g_esGeneral.g_ddShovedBySurvivorDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnShovedBySurvivor");
+			if (g_esGeneral.g_ddShovedBySurvivorDetour == null)
+			{
+				LogError("%s Failed to find signature: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
 			}
 
 			g_esGeneral.g_ddSpawnTankDetour = DynamicDetour.FromConf(gdMutantTanks, "ZombieManager::SpawnTank");
@@ -5305,9 +5313,9 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				{
 					if (bRewarded)
 					{
-						if (bBlockBullets || bBlockHittables || bBlockMelee)
+						if (bBlockBullets || bBlockMelee)
 						{
-							vKnockbackTank(victim, attacker, damagetype);
+							vKnockbackTank(victim, attacker);
 						}
 
 						flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
@@ -5363,9 +5371,9 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 				if (bSurvivor)
 				{
-					if ((damagetype & DMG_BULLET) || (damagetype & DMG_CLUB) || (damagetype & DMG_SLASH) || (damagetype & DMG_CRUSH))
+					if ((damagetype & DMG_BULLET) || (damagetype & DMG_CLUB) || (damagetype & DMG_SLASH))
 					{
-						vKnockbackTank(victim, attacker, damagetype);
+						vKnockbackTank(victim, attacker);
 					}
 
 					if ((damagetype & DMG_BURN) && g_esGeneral.g_iCreditIgniters == 0)
@@ -5551,9 +5559,9 @@ public Action RockSoundHook(int clients[MAXPLAYERS], int &numClients, char sampl
 	return Plugin_Continue;
 }
 
-static void vKnockbackTank(int tank, int survivor, int damagetype)
+static void vKnockbackTank(int tank, int survivor)
 {
-	if ((bIsDeveloper(survivor, 9) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[survivor].g_iSledgehammerRounds == 1)) && !bIsPlayerIncapacitated(tank) && (damagetype & DMG_CLUB) && GetRandomFloat(0.0, 100.0) <= 33.3)
+	if ((bIsDeveloper(survivor, 9) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[survivor].g_iSledgehammerRounds == 1)) && !bIsPlayerIncapacitated(tank) && GetRandomFloat(0.0, 100.0) <= 10.0)
 	{
 		vPerformKnockback(tank, survivor);
 	}
@@ -8481,6 +8489,11 @@ static void vPluginStatus()
 			LogError("%s Failed to enable detour post: CTerrorWeapon::SecondaryAttack", MT_TAG);
 		}
 
+		if (!g_esGeneral.g_ddShovedBySurvivorDetour.Enable(Hook_Pre, mreShovedBySurvivorPre))
+		{
+			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
+		}
+
 		if (!g_esGeneral.g_ddSpawnTankDetour.Enable(Hook_Pre, mreSpawnTankPre))
 		{
 			LogError("%s Failed to enable detour pre: ZombieManager::SpawnTank", MT_TAG);
@@ -8710,6 +8723,11 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddSecondaryAttackDetour.Disable(Hook_Post, mreSecondaryAttackPost))
 		{
 			LogError("%s Failed to disable detour post: CTerrorWeapon::SecondaryAttack", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_ddShovedBySurvivorDetour.Disable(Hook_Pre, mreShovedBySurvivorPre))
+		{
+			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddSpawnTankDetour.Disable(Hook_Pre, mreSpawnTankPre))
@@ -9735,30 +9753,13 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 			if (bIsSurvivor(survivor))
 			{
 				float flDuration = GetGameTime() + flTime;
-				int iMode = GetEntProp(survivor, Prop_Data, "m_takedamage", 1);
 				if (iType & MT_REWARD_HEALTH)
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_HEALTH))
 					{
 						vSaveCaughtSurvivor(survivor);
+						vRefillHealth(survivor);
 						vRewardMessage(survivor, priority, "RewardHealth", "RewardHealth2", "RewardHealth3", sTankName);
-
-						if (bIsPlayerDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth"))
-						{
-							if (iMode != 2)
-							{
-								SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
-								vCheatCommand(survivor, "give", "health");
-								SetEntProp(survivor, Prop_Data, "m_takedamage", iMode, 1);
-							}
-							else
-							{
-								vCheatCommand(survivor, "give", "health");
-							}
-
-							g_esPlayer[survivor].g_bLastLife = false;
-							g_esPlayer[survivor].g_iReviveCount = 0;
-						}
 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_HEALTH;
 						g_esPlayer[survivor].g_flHealPercent = g_esCache[tank].g_flHealPercentReward[priority];
@@ -9768,6 +9769,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 					else if (repeat)
 					{
 						vSaveCaughtSurvivor(survivor);
+						vRefillHealth(survivor);
 						vRewardMessage(survivor, priority, "RewardHealth", "RewardHealth2", "RewardHealth3", sTankName);
 					}
 
@@ -9957,25 +9959,9 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 				{
 					vSaveCaughtSurvivor(survivor);
 					vRefillAmmo(survivor);
-
-					if (bIsPlayerDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth"))
-					{
-						if (iMode != 2)
-						{
-							SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
-							vCheatCommand(survivor, "give", "health");
-							SetEntProp(survivor, Prop_Data, "m_takedamage", iMode, 1);
-						}
-						else
-						{
-							vCheatCommand(survivor, "give", "health");
-						}
-					}
-
+					vRefillHealth(survivor);
 					vRewardMessage(survivor, priority, "RewardRefill", "RewardRefill2", "RewardRefill3", sTankName);
 
-					g_esPlayer[survivor].g_bLastLife = false;
-					g_esPlayer[survivor].g_iReviveCount = 0;
 					g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_REFILL;
 				}
 
@@ -10366,6 +10352,27 @@ static void vRefillAmmo(int survivor, bool reset = false)
 
 	iSlot = GetPlayerWeaponSlot(survivor, 4);
 	if (!bIsValidEntity(iSlot)) vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredPills);
+}
+
+static void vRefillHealth(int survivor)
+{
+	if (bIsPlayerDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth"))
+	{
+		int iMode = GetEntProp(survivor, Prop_Data, "m_takedamage", 1);
+		if (iMode != 2)
+		{
+			SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
+			vCheatCommand(survivor, "give", "health");
+			SetEntProp(survivor, Prop_Data, "m_takedamage", iMode, 1);
+		}
+		else
+		{
+			vCheatCommand(survivor, "give", "health");
+		}
+
+		g_esPlayer[survivor].g_bLastLife = false;
+		g_esPlayer[survivor].g_iReviveCount = 0;
+	}
 }
 
 static void vRefillMagazine(int survivor, int weapon, bool reset)
@@ -13659,6 +13666,27 @@ public MRESReturn mreSecondaryAttackPost(int pThis)
 	{
 		g_esGeneral.g_cvMTGunSwingInterval.FloatValue = g_esGeneral.g_flDefaultGunSwingInterval;
 		g_esGeneral.g_flDefaultGunSwingInterval = -1.0;
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreShovedBySurvivorPre(int pThis, DHookParam hParams)
+{
+	Action aResult = Plugin_Continue;
+	int iSurvivor = hParams.Get(1);
+	float flDirection[3];
+	hParams.GetVector(2, flDirection);
+
+	Call_StartForward(g_esGeneral.g_gfPlayerShovedBySurvivorForward);
+	Call_PushCell(pThis);
+	Call_PushCell(iSurvivor);
+	Call_PushArray(flDirection, sizeof(flDirection));
+	Call_Finish(aResult);
+
+	if (aResult == Plugin_Handled)
+	{
+		return MRES_Supercede;
 	}
 
 	return MRES_Ignored;

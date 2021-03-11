@@ -441,7 +441,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		static bool bSurvivor;
 		bSurvivor = bIsSurvivor(attacker);
-		if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
+		if ((damagetype & DMG_FALL) || ((damagetype & DMG_DROWN) && GetEntProp(victim, Prop_Send, "m_nWaterLevel") > 0) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
 		{
 			vShieldAbility(victim, false);
 
@@ -818,6 +818,26 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	{
 		vReset();
 	}
+}
+
+public Action MT_OnPlayerHitByVomitJar(int player, int thrower)
+{
+	if (MT_IsTankSupported(player) && g_esPlayer[player].g_bActivated && bIsSurvivor(thrower, MT_CHECK_INDEX|MT_CHECK_INGAME) && !MT_DoesSurvivorHaveRewardType(thrower, MT_REWARD_DAMAGEBOOST))
+	{
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+
+public Action MT_OnPlayerShovedBySurvivor(int player, int survivor, float direction[3])
+{
+	if (MT_IsTankSupported(player) && g_esPlayer[player].g_bActivated && !(g_esCache[player].g_iShieldType & MT_SHIELD_MELEE) && bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
 }
 
 public void MT_OnAbilityActivated(int tank)

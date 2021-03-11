@@ -765,7 +765,7 @@ static void vPukeHit(int survivor, int tank, float random, float chance, int ena
 				if (flags & MT_ATTACK_RANGE)
 				{
 					DataPack dpPukeHit;
-					CreateDataTimer(1.0, tTimerPukeHit, dpPukeHit, TIMER_FLAG_NO_MAPCHANGE);
+					CreateDataTimer(0.75, tTimerPukeHit, dpPukeHit, TIMER_FLAG_NO_MAPCHANGE);
 					dpPukeHit.WriteCell(GetClientUserId(survivor));
 					dpPukeHit.WriteCell(GetClientUserId(tank));
 					dpPukeHit.WriteCell(flags);
@@ -828,7 +828,7 @@ static void vPukeRange(int tank, int value, float random, int pos = -1)
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
 					DataPack dpPukeRange;
-					CreateDataTimer(1.0, tTimerPukeRange, dpPukeRange, TIMER_FLAG_NO_MAPCHANGE);
+					CreateDataTimer(0.75, tTimerPukeRange, dpPukeRange, TIMER_FLAG_NO_MAPCHANGE);
 					dpPukeRange.WriteCell(GetClientUserId(iSurvivor));
 					dpPukeRange.WriteCell(GetClientUserId(tank));
 				}
