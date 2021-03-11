@@ -123,7 +123,7 @@
 				"this"		"address"
 				"arguments"
 				{
-					"vec"
+					"velocity"
 					{
 						"type"		"vectorptr"
 					}
@@ -175,6 +175,25 @@
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
+			}
+			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
+			"CTerrorPlayer::OnShovedBySurvivor"
+			{
+				"signature"	"CTerrorPlayer::OnShovedBySurvivor"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"a1" //Changed from "player" to be compatible with Left 4 DHooks Direct
+					{
+						"type"		"cbaseentity"
+					}
+					"a2" //Changed from "direction" to be compatible with Left 4 DHooks Direct
+					{
+						"type"		"vectorptr"
+					}
+				}
 			}
 			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
 			"CTerrorPlayer::OnStaggered"
@@ -768,7 +787,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer18OnShovedBySurvivorEPS_RK6Vector"
-				"windows"	"\x81\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x8C\x24\x2A\x2A\x2A\x2A\x85\xC9"
 			}
 			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
 			"CTerrorPlayer::OnStaggered"
@@ -1439,7 +1458,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer18OnShovedBySurvivorEPS_RK6Vector"
-				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x2A\x56\x57\x8B\x7D\x2A\x8B\xF1"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x2A\x56\x57\x8B\x7D\x2A\x8B\xF1\x89\x5D\x80"
 			}
 			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
 			"CTerrorPlayer::OnStaggered"
