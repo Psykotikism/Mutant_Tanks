@@ -459,6 +459,7 @@
 			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
+			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
@@ -2005,6 +2006,7 @@
 			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
 			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
 			// Link: https://forums.alliedmods.net/showthread.php?t=319947
+			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --

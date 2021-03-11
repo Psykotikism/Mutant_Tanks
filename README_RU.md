@@ -43,6 +43,7 @@
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Знания по установке SourceMod плагинов.
+5. Терпение
 
 ## Примечание
 1. Я не предоставляю поддержку для выделенного/локальных серверов, но плагин и его модули должны работать на них должным образом.
@@ -852,6 +853,19 @@ forward void MT_OnPlayerEventKilled(int victim, int attacker);
 forward Action MT_OnPlayerHitByVomitJar(int player, int thrower);
 
 /**
+ * Вызывается прямо перед тем, как выживший толкнёт игрока.
+ * Используйте этот forward, чтобы сделать что-нибудь до того, как игрока толкнёт.
+ * Примечание: L4D2 вызывает это только для особых заражённых.
+ *
+ * @param player		Клиентский индекс игрока.
+ * @param survivor		Клиентский индекс Выжившего.
+ * @param direction		Направление толчка.
+ *
+ * @return			Plugin_Handled, чтобы игрока не толкало, Plugin_Continue, чтобы разрешить.
+ **/
+forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, float direction[3]);
+
+/**
  * Вызывается перед чтением файла конфигурации.
  * Используйте этот forward, чтобы официально зарегистрировать плагин способности.
  *
@@ -1308,15 +1322,15 @@ native void MT_RespawnSurvivor(int survivor);
 native void MT_SetTankType(int tank, int type, bool mode);
 
 /**
- * Толкает особого заражённого в определенном направлении.
+ * Толкает игрока в определенном направлении.
  *
- * @param special		Клиентский индекс особого заражённого.
+ * @param player		Клиентский индекс игрока.
  * @param survivor		Клиентский индекс Выжившего.
  * @param direction		Направление толчка.
  *
  * @error			Неверный индекс клиента, клиента нет в игре или он мёртв.
  **/
-native void MT_ShoveBySurvivor(int special, int survivor, float direction[3]);
+native void MT_ShoveBySurvivor(int player, int survivor, float direction[3]);
 
 /**
  * Создаёт Танка с указанным типом танка-мутанта.
@@ -1329,7 +1343,7 @@ native void MT_ShoveBySurvivor(int special, int survivor, float direction[3]);
 native void MT_SpawnTank(int tank, int type);
 
 /**
- * Получить или установить максимальное здоровье танка.
+ * Получает или устанавливает максимальное здоровье танка.
  *
  * @param tank			Клиентский индекс Танка.
  * @param mode			1 = Получить максимальное здоровье танка, 2 = Получить максимальное сохранённое здоровье танка,

@@ -196,6 +196,7 @@
 #### Game Data
 - Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.
 - Updated and added addresses, detours, offsets, and signatures.
+- The core plugin now uses `mutant_tanks_patches.txt` gamedata file for patching certain functions.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
@@ -339,6 +340,7 @@
 - Added the `MT_OnFatalFalling` forward.
 - Added the `MT_OnPlayerEventKilled` forward.
 - Added the `MT_OnPlayerHitByVomitJar` forward.
+- Added the `MT_OnPlayerShovedBySurvivor` forward.
 - Added the `MT_RespawnSurvivor` native.
 - Added the `MT_ShoveBySurvivor` native.
 - Added the `MT_VomitPlayer` native.
@@ -412,7 +414,7 @@
 
 - Puke
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
-	- Added a Boomer puke fountain-like visual effect for the range and upon-death abilities. (Requested by 3aljiyavslgazana.)
+	- Added a Boomer puke fountain-like visual effect for the range and upon-death abilities. (Requested by 3aljiyavslgazana.) [Thanks to Marttt for the code!]
 
 - Respawn
 	- Replaced the detour for the `CTerrorPlayer::Event_Killed` function with the new `MT_OnPlayerEventKilled` forward.
@@ -463,7 +465,7 @@
 
 #### Requirements
 - The `mutant_tanks_names.phrases` translation file is now used by all the plugins.
-- The `mutant_tanks_patches.cfg` config file is now used by the core plugin.
+- The `mutant_tanks_patches.txt` gamedata file is now used by the core plugin.
 
 #### Updates
 - Updated config files.

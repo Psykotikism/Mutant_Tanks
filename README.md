@@ -43,6 +43,7 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Knowledge of installing SourceMod plugins.
+5. Patience
 
 ## Notes
 1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
@@ -852,6 +853,19 @@ forward void MT_OnPlayerEventKilled(int victim, int attacker);
 forward Action MT_OnPlayerHitByVomitJar(int player, int thrower);
 
 /**
+ * Called right before a player is shoved by a survivor.
+ * Use this forward to do anything before the player is shoved.
+ * Note: Left 4 Dead 2 only calls this for special infected.
+ *
+ * @param player		Client index of the player.
+ * @param survivor		Client index of the survivor.
+ * @param direction		Direction of the shove.
+ *
+ * @return			Plugin_Handled to prevent the player from being shoved, Plugin_Continue to allow.
+ **/
+forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, float direction[3]);
+
+/**
  * Called before the config file is read.
  * Use this forward to officially register an ability's plugin.
  *
@@ -1308,15 +1322,15 @@ native void MT_RespawnSurvivor(int survivor);
 native void MT_SetTankType(int tank, int type, bool mode);
 
 /**
- * Shoves a special infected toward a certain direction.
+ * Shoves a player toward a certain direction.
  *
- * @param special		Client index of the special infected.
+ * @param player		Client index of the player.
  * @param survivor		Client index of the survivor.
  * @param direction		Direction of the shove.
  *
  * @error			Invalid client index, client is not in-game, or client is dead.
  **/
-native void MT_ShoveBySurvivor(int special, int survivor, float direction[3]);
+native void MT_ShoveBySurvivor(int player, int survivor, float direction[3]);
 
 /**
  * Spawns a Tank with the specified Mutant Tank type.
@@ -1329,7 +1343,7 @@ native void MT_ShoveBySurvivor(int special, int survivor, float direction[3]);
 native void MT_SpawnTank(int tank, int type);
 
 /**
- * Get or set a Tank's max health.
+ * Gets or sets a Tank's max health.
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Get the Tank's max health, 2 = Get the Tank's stored max health,
