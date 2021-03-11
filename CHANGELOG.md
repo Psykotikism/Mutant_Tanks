@@ -196,7 +196,7 @@
 #### Game Data
 - Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.
 - Updated and added addresses, detours, offsets, and signatures.
-- The core plugin now uses `mutant_tanks_patches.txt` gamedata file for patching certain functions.
+- The core plugin now uses `mutant_tanks_patches.cfg` config file for patching certain functions.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
@@ -465,7 +465,7 @@
 
 #### Requirements
 - The `mutant_tanks_names.phrases` translation file is now used by all the plugins.
-- The `mutant_tanks_patches.txt` gamedata file is now used by the core plugin.
+- The `mutant_tanks_patches.cfg` config file is now used by the core plugin.
 
 #### Updates
 - Updated config files.
