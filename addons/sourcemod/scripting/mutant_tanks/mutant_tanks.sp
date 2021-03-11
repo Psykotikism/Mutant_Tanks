@@ -10152,7 +10152,7 @@ static void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_iDevPanelLevel = 0;
 	g_esDeveloper[developer].g_iDevReviveHealth = 100;
 	g_esDeveloper[developer].g_iDevRewardTypes = MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ATTACKBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_INFAMMO;
-	g_esDeveloper[developer].g_iDevSpecialAmmo = 1;
+	g_esDeveloper[developer].g_iDevSpecialAmmo = 0;
 }
 
 static void vGiveRandomMeleeWeapon(int survivor, bool specific, const char[] name = "")
