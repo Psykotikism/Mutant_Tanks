@@ -505,6 +505,7 @@ enum struct esGeneral
 	int g_iFinaleWave[10];
 	int g_iFireImmunity;
 	int g_iGameModeTypes;
+	int g_iGameType;
 	int g_iHealthRegenReward[3];
 	int g_iHittableImmunity;
 	int g_iHollowpointAmmoReward[3];
@@ -755,6 +756,7 @@ enum struct esPlayer
 	int g_iFlameColor[4];
 	int g_iFlashlight;
 	int g_iFlashlightColor[4];
+	int g_iGameType;
 	int g_iGlowColor[3];
 	int g_iGlowEnabled;
 	int g_iGlowFlashing;
@@ -912,6 +914,7 @@ enum struct esTank
 	int g_iFireImmunity;
 	int g_iFlameColor[4];
 	int g_iFlashlightColor[4];
+	int g_iGameType;
 	int g_iGlowColor[3];
 	int g_iGlowEnabled;
 	int g_iGlowFlashing;
@@ -1044,6 +1047,7 @@ enum struct esCache
 	int g_iFireImmunity;
 	int g_iFlameColor[4];
 	int g_iFlashlightColor[4];
+	int g_iGameType;
 	int g_iGlowColor[3];
 	int g_iGlowEnabled;
 	int g_iGlowFlashing;
@@ -1102,7 +1106,7 @@ int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1, g_iOriginalBytes[MT_MAXPATCH
 public any aNative_CanTypeSpawn(Handle plugin, int numParams)
 {
 	int iType = iClamp(GetNativeCell(1), 1, MT_MAXTYPES);
-	return (g_esGeneral.g_iSpawnEnabled == 1 || g_esTank[iType].g_iSpawnEnabled == 1) && bCanTypeSpawn(iType);
+	return (g_esGeneral.g_iSpawnEnabled == 1 || g_esTank[iType].g_iSpawnEnabled == 1) && bCanTypeSpawn(iType) && bIsRightGame(iType);
 }
 
 public any aNative_DetonateTankRock(Handle plugin, int numParams)
@@ -2798,10 +2802,17 @@ public Action cmdMTConfig(int client, int args)
 		{
 			char sFilename[PLATFORM_MAX_PATH];
 			GetCmdArg(2, sFilename, sizeof(sFilename));
-			BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
-			if (!FileExists(g_esGeneral.g_sChosenPath, true))
+			if (StrContains(sFilename, "mutant_tanks_patches", false) != -1)
 			{
 				BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+			}
+			else
+			{
+				BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
+				if (!FileExists(g_esGeneral.g_sChosenPath, true))
+				{
+					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+				}
 			}
 		}
 	}
@@ -2870,10 +2881,17 @@ public Action cmdMTConfig2(int client, int args)
 		{
 			char sFilename[PLATFORM_MAX_PATH];
 			GetCmdArg(2, sFilename, sizeof(sFilename));
-			BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
-			if (!FileExists(g_esGeneral.g_sChosenPath, true))
+			if (StrContains(sFilename, "mutant_tanks_patches", false) != -1)
 			{
 				BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+			}
+			else
+			{
+				BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
+				if (!FileExists(g_esGeneral.g_sChosenPath, true))
+				{
+					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+				}
 			}
 		}
 	}
@@ -4356,7 +4374,7 @@ public Action cmdTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
+	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bIsRightGame(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), _, iType);
@@ -4409,7 +4427,7 @@ public Action cmdTank2(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
+	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bIsRightGame(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), _, iType);
@@ -4469,7 +4487,7 @@ public Action cmdMutantTank(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bHasCoreAdminAccess(client, iType)))
+	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bIsRightGame(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), _, iType);
@@ -4515,7 +4533,7 @@ static void vTank(int admin, char[] type, bool spawn = false, bool log = true, i
 					vGetTranslatedName(sPhrase, sizeof(sPhrase), _, iIndex);
 					SetGlobalTransTarget(admin);
 					FormatEx(sTankName, sizeof(sTankName), "%T", sPhrase, admin);
-					if (!bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly) || StrContains(sTankName, type, false) == -1)
+					if (!bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || !bIsRightGame(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly) || StrContains(sTankName, type, false) == -1)
 					{
 						continue;
 					}
@@ -4713,7 +4731,7 @@ static void vTankMenu(int admin, bool adminmenu = false, int item = 0)
 
 	for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 	{
-		if (iIndex <= 0 || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly))
+		if (iIndex <= 0 || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || !bIsRightGame(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly))
 		{
 			continue;
 		}
@@ -4762,7 +4780,7 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 			else
 			{
 				int iIndex = StringToInt(sInfo);
-				if (bIsTankEnabled(iIndex) && bHasCoreAdminAccess(param1, iIndex) && g_esTank[iIndex].g_iMenuEnabled == 1 && bIsTypeAvailable(iIndex, param1) && !bAreHumansRequired(iIndex) && bCanTypeSpawn(iIndex) && !bIsAreaNarrow(param1, g_esTank[iIndex].g_flOpenAreasOnly))
+				if (bIsTankEnabled(iIndex) && bHasCoreAdminAccess(param1, iIndex) && g_esTank[iIndex].g_iMenuEnabled == 1 && bIsTypeAvailable(iIndex, param1) && !bAreHumansRequired(iIndex) && bCanTypeSpawn(iIndex) && bIsRightGame(iIndex) && !bIsAreaNarrow(param1, g_esTank[iIndex].g_flOpenAreasOnly))
 				{
 					vQueueTank(param1, iIndex, false);
 				}
@@ -5661,6 +5679,8 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iExtraHealth = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, 2);
 	g_esCache[tank].g_iFireImmunity = iGetSettingValue(bAccess, true, g_esTank[iType].g_iFireImmunity, g_esGeneral.g_iFireImmunity);
 	g_esCache[tank].g_iFireImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iFireImmunity, g_esCache[tank].g_iFireImmunity);
+	g_esCache[tank].g_iGameType = iGetSettingValue(bAccess, true, g_esTank[iType].g_iGameType, g_esGeneral.g_iGameType);
+	g_esCache[tank].g_iGameType = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGameType, g_esCache[tank].g_iGameType);
 	g_esCache[tank].g_iGlowEnabled = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGlowEnabled, g_esTank[iType].g_iGlowEnabled);
 	g_esCache[tank].g_iGlowFlashing = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGlowFlashing, g_esTank[iType].g_iGlowFlashing);
 	g_esCache[tank].g_iGlowMaxRange = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGlowMaxRange, g_esTank[iType].g_iGlowMaxRange);
@@ -6035,6 +6055,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iIdleCheckMode = 2;
 		g_esGeneral.g_iLogCommands = 31;
 		g_esGeneral.g_iLogMessages = 0;
+		g_esGeneral.g_iGameType = 0;
 		g_esGeneral.g_iTankEnabled = -1;
 		g_esGeneral.g_iTankModel = 0;
 		g_esGeneral.g_flBurnDuration = 0.0;
@@ -6160,6 +6181,7 @@ public void SMCParseStart(SMCParser smc)
 			FormatEx(g_esTank[iIndex].g_sTankName, sizeof(esTank::g_sTankName), "Tank", iIndex);
 
 			g_esTank[iIndex].g_iAbilityCount = -1;
+			g_esTank[iIndex].g_iGameType = 0;
 			g_esTank[iIndex].g_iTankEnabled = -1;
 			g_esTank[iIndex].g_flTankChance = 100.0;
 			g_esTank[iIndex].g_iTankNote = 0;
@@ -6325,6 +6347,7 @@ public void SMCParseStart(SMCParser smc)
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 			{
 				g_esPlayer[iPlayer].g_sTankName[0] = '\0';
+				g_esPlayer[iPlayer].g_iGameType = 0;
 				g_esPlayer[iPlayer].g_iTankModel = 0;
 				g_esPlayer[iPlayer].g_flBurnDuration = 0.0;
 				g_esPlayer[iPlayer].g_flBurntSkin = -1.0;
@@ -6568,6 +6591,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_iLogCommands = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "LogCommands", "Log Commands", "Log_Commands", "logcmds", g_esGeneral.g_iLogCommands, value, 0, 31);
 				g_esGeneral.g_iLogMessages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "LogMessages", "Log Messages", "Log_Messages", "logmsgs", g_esGeneral.g_iLogMessages, value, 0, 31);
 				g_esGeneral.g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGeneral.g_iRequiresHumans, value, 0, 32);
+				g_esGeneral.g_iGameType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "GameType", "Game Type", "Game_Type", "game", g_esGeneral.g_iGameType, value, 0, 2);
 				g_esGeneral.g_iTankEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankEnabled", "Tank Enabled", "Tank_Enabled", "tenabled", g_esGeneral.g_iTankEnabled, value, -1, 1);
 				g_esGeneral.g_iTankModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esGeneral.g_iTankModel, value, 0, 7);
 				g_esGeneral.g_flBurnDuration = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esGeneral.g_flBurnDuration, value, 0.0, 999999.0);
@@ -6958,6 +6982,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				{
 					if (StrEqual(g_esPlayer[iPlayer].g_sSteamID32, g_esGeneral.g_sCurrentSection, false) || StrEqual(g_esPlayer[iPlayer].g_sSteam3ID, g_esGeneral.g_sCurrentSection, false))
 					{
+						g_esPlayer[iPlayer].g_iGameType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "GameType", "Game Type", "Game_Type", "game", g_esPlayer[iPlayer].g_iGameType, value, 0, 2);
 						g_esPlayer[iPlayer].g_iTankModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esPlayer[iPlayer].g_iTankModel, value, 0, 7);
 						g_esPlayer[iPlayer].g_flBurnDuration = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esPlayer[iPlayer].g_flBurnDuration, value, 0.0, 999999.0);
 						g_esPlayer[iPlayer].g_flBurntSkin = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esPlayer[iPlayer].g_flBurntSkin, value, -1.0, 1.0);
@@ -7869,6 +7894,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 {
 	if (1 <= type <= MT_MAXTYPES)
 	{
+		g_esTank[type].g_iGameType = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "GameType", "Game Type", "Game_Type", "game", g_esTank[type].g_iGameType, value, 0, 2);
 		g_esTank[type].g_iTankEnabled = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "TankEnabled", "Tank Enabled", "Tank_Enabled", "tenabled", g_esTank[type].g_iTankEnabled, value, -1, 1);
 		g_esTank[type].g_flTankChance = flGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "TankChance", "Tank Chance", "Tank_Chance", "chance", g_esTank[type].g_flTankChance, value, 0.0, 100.0);
 		g_esTank[type].g_iTankModel = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esTank[type].g_iTankModel, value, 0, 7);
@@ -12462,6 +12488,22 @@ static bool bIsPluginEnabled()
 	return true;
 }
 
+static bool bIsRightGame(int type)
+{
+	static int iType;
+	iType = g_esCache[type].g_iGameType;
+	if (iType > 0)
+	{
+		switch (iType)
+		{
+			case 1: return !g_bSecondGame;
+			case 2: return g_bSecondGame;
+		}
+	}
+
+	return true;
+}
+
 static bool bIsSafeFalling(int survivor)
 {
 	if (g_esPlayer[survivor].g_bFalling)
@@ -12802,8 +12844,8 @@ static int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 
 		switch (exclude)
 		{
-			case 1: bCondition = !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank, iIndex) || !bIsSpawnEnabled(iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || GetRandomFloat(0.1, 100.0) > g_esTank[iIndex].g_flTankChance || (g_esGeneral.g_iSpawnLimit > 0 && iGetTypeCount() >= g_esGeneral.g_iSpawnLimit) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
-			case 2: bCondition = !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || !bIsSpawnEnabled(iIndex) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly);
+			case 1: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank, iIndex) || !bIsSpawnEnabled(iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || GetRandomFloat(0.1, 100.0) > g_esTank[iIndex].g_flTankChance || (g_esGeneral.g_iSpawnLimit > 0 && iGetTypeCount() >= g_esGeneral.g_iSpawnLimit) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
+			case 2: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || !bIsSpawnEnabled(iIndex) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly);
 		}
 
 		if (bCondition)

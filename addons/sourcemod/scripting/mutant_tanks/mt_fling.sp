@@ -25,20 +25,15 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad, g_bSecondGame;
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	switch (GetEngineVersion())
+	if (GetEngineVersion() != Engine_Left4Dead2)
 	{
-		case Engine_Left4Dead: g_bSecondGame = false;
-		case Engine_Left4Dead2: g_bSecondGame = true;
-		default:
-		{
-			strcopy(error, err_max, "\"[MT] Fling Ability\" only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[MT] Fling Ability\" only supports Left 4 Dead 2.");
 
-			return APLRes_SilentFailure;
-		}
+		return APLRes_SilentFailure;
 	}
 
 	g_bLateLoad = late;
@@ -151,35 +146,32 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_mt_fling", cmdFlingInfo, "View information about the Fling ability.");
 
-	if (g_bSecondGame)
+	GameData gdMutantTanks = new GameData("mutant_tanks");
+	if (gdMutantTanks == null)
 	{
-		GameData gdMutantTanks = new GameData("mutant_tanks");
-		if (gdMutantTanks == null)
-		{
-			SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-		}
-
-		StartPrepSDKCall(SDKCall_Player);
-		if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::Fling"))
-		{
-			delete gdMutantTanks;
-
-			SetFailState("Failed to find signature: CTerrorPlayer::Fling");
-		}
-
-		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-
-		g_hSDKFling = EndPrepSDKCall();
-		if (g_hSDKFling == null)
-		{
-			LogError("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
-		}
-
-		delete gdMutantTanks;
+		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::Fling"))
+	{
+		delete gdMutantTanks;
+
+		SetFailState("Failed to find signature: CTerrorPlayer::Fling");
+	}
+
+	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+
+	g_hSDKFling = EndPrepSDKCall();
+	if (g_hSDKFling == null)
+	{
+		LogError("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
+	}
+
+	delete gdMutantTanks;
 
 	if (g_bLateLoad)
 	{
@@ -818,36 +810,15 @@ static void vFlingHit(int survivor, int tank, float random, float chance, int en
 					}
 				}
 
+				vFling(survivor, tank);
 				vEffect(survivor, tank, g_esCache[tank].g_iFlingEffect, flags);
 
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
-
-				switch (g_bSecondGame)
+				if (g_esCache[tank].g_iFlingMessage & messages)
 				{
-					case true:
-					{
-						if (g_hSDKFling != null)
-						{
-							vFling(survivor, tank);
-
-							if (g_esCache[tank].g_iFlingMessage & messages)
-							{
-								MT_PrintToChatAll("%s %t", MT_TAG2, "Fling", sTankName, survivor);
-								MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fling", LANG_SERVER, sTankName, survivor);
-							}
-						}
-					}
-					case false:
-					{
-						MT_VomitPlayer(survivor, tank);
-
-						if (g_esCache[tank].g_iFlingMessage & messages)
-						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
-						}
-					}
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Fling", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fling", LANG_SERVER, sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
@@ -875,21 +846,9 @@ static void vFlingRange(int tank, int value, float random, int pos = -1)
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esCache[tank].g_flFlingDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlingDeath == 1 && random <= flChance)
 	{
-		if (g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+		if (g_hSDKFling == null || g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
-		}
-
-		switch (g_bSecondGame)
-		{
-			case true:
-			{
-				if (g_hSDKFling == null)
-				{
-					return;
-				}
-			}
-			case false: vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
 		}
 
 		static float flTankPos[3];
@@ -905,11 +864,7 @@ static void vFlingRange(int tank, int value, float random, int pos = -1)
 				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRange)
 				{
-					switch (g_bSecondGame)
-					{
-						case true: vFling(iSurvivor, tank);
-						case false: MT_VomitPlayer(iSurvivor, tank);
-					}
+					vFling(iSurvivor, tank);
 				}
 			}
 		}
