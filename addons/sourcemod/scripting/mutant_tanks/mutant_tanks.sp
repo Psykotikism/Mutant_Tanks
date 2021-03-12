@@ -505,7 +505,6 @@ enum struct esGeneral
 	int g_iFinaleWave[10];
 	int g_iFireImmunity;
 	int g_iGameModeTypes;
-	int g_iGameType;
 	int g_iHealthRegenReward[3];
 	int g_iHittableImmunity;
 	int g_iHollowpointAmmoReward[3];
@@ -756,7 +755,6 @@ enum struct esPlayer
 	int g_iFlameColor[4];
 	int g_iFlashlight;
 	int g_iFlashlightColor[4];
-	int g_iGameType;
 	int g_iGlowColor[3];
 	int g_iGlowEnabled;
 	int g_iGlowFlashing;
@@ -1047,7 +1045,6 @@ enum struct esCache
 	int g_iFireImmunity;
 	int g_iFlameColor[4];
 	int g_iFlashlightColor[4];
-	int g_iGameType;
 	int g_iGlowColor[3];
 	int g_iGlowEnabled;
 	int g_iGlowFlashing;
@@ -1099,7 +1096,7 @@ Address g_adPatchAddress[MT_MAXPATCHES];
 
 bool g_bPatchInstalled[MT_MAXPATCHES], g_bPermanentPatch[MT_MAXPATCHES];
 
-char g_sPatchName[MT_MAXPATCHES][32];
+char g_sPatchName[MT_MAXPATCHES][64];
 
 int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1, g_iOriginalBytes[MT_MAXPATCHES][MT_MAX_PATCH_LEN], g_iPatchBytes[MT_MAXPATCHES][MT_MAX_PATCH_LEN], g_iPatchCount = 0, g_iPatchLength[MT_MAXPATCHES], g_iPatchOffset[MT_MAXPATCHES];
 
@@ -5679,8 +5676,6 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iExtraHealth = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iExtraHealth, g_esCache[tank].g_iExtraHealth, 2);
 	g_esCache[tank].g_iFireImmunity = iGetSettingValue(bAccess, true, g_esTank[iType].g_iFireImmunity, g_esGeneral.g_iFireImmunity);
 	g_esCache[tank].g_iFireImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iFireImmunity, g_esCache[tank].g_iFireImmunity);
-	g_esCache[tank].g_iGameType = iGetSettingValue(bAccess, true, g_esTank[iType].g_iGameType, g_esGeneral.g_iGameType);
-	g_esCache[tank].g_iGameType = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGameType, g_esCache[tank].g_iGameType);
 	g_esCache[tank].g_iGlowEnabled = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGlowEnabled, g_esTank[iType].g_iGlowEnabled);
 	g_esCache[tank].g_iGlowFlashing = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGlowFlashing, g_esTank[iType].g_iGlowFlashing);
 	g_esCache[tank].g_iGlowMaxRange = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iGlowMaxRange, g_esTank[iType].g_iGlowMaxRange);
@@ -6055,7 +6050,6 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iIdleCheckMode = 2;
 		g_esGeneral.g_iLogCommands = 31;
 		g_esGeneral.g_iLogMessages = 0;
-		g_esGeneral.g_iGameType = 0;
 		g_esGeneral.g_iTankEnabled = -1;
 		g_esGeneral.g_iTankModel = 0;
 		g_esGeneral.g_flBurnDuration = 0.0;
@@ -6347,7 +6341,6 @@ public void SMCParseStart(SMCParser smc)
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 			{
 				g_esPlayer[iPlayer].g_sTankName[0] = '\0';
-				g_esPlayer[iPlayer].g_iGameType = 0;
 				g_esPlayer[iPlayer].g_iTankModel = 0;
 				g_esPlayer[iPlayer].g_flBurnDuration = 0.0;
 				g_esPlayer[iPlayer].g_flBurntSkin = -1.0;
@@ -6591,7 +6584,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_iLogCommands = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "LogCommands", "Log Commands", "Log_Commands", "logcmds", g_esGeneral.g_iLogCommands, value, 0, 31);
 				g_esGeneral.g_iLogMessages = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "LogMessages", "Log Messages", "Log_Messages", "logmsgs", g_esGeneral.g_iLogMessages, value, 0, 31);
 				g_esGeneral.g_iRequiresHumans = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esGeneral.g_iRequiresHumans, value, 0, 32);
-				g_esGeneral.g_iGameType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "GameType", "Game Type", "Game_Type", "game", g_esGeneral.g_iGameType, value, 0, 2);
 				g_esGeneral.g_iTankEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankEnabled", "Tank Enabled", "Tank_Enabled", "tenabled", g_esGeneral.g_iTankEnabled, value, -1, 1);
 				g_esGeneral.g_iTankModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esGeneral.g_iTankModel, value, 0, 7);
 				g_esGeneral.g_flBurnDuration = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esGeneral.g_flBurnDuration, value, 0.0, 999999.0);
@@ -6982,7 +6974,6 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				{
 					if (StrEqual(g_esPlayer[iPlayer].g_sSteamID32, g_esGeneral.g_sCurrentSection, false) || StrEqual(g_esPlayer[iPlayer].g_sSteam3ID, g_esGeneral.g_sCurrentSection, false))
 					{
-						g_esPlayer[iPlayer].g_iGameType = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "GameType", "Game Type", "Game_Type", "game", g_esPlayer[iPlayer].g_iGameType, value, 0, 2);
 						g_esPlayer[iPlayer].g_iTankModel = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankModel", "Tank Model", "Tank_Model", "model", g_esPlayer[iPlayer].g_iTankModel, value, 0, 7);
 						g_esPlayer[iPlayer].g_flBurnDuration = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esPlayer[iPlayer].g_flBurnDuration, value, 0.0, 999999.0);
 						g_esPlayer[iPlayer].g_flBurntSkin = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esPlayer[iPlayer].g_flBurntSkin, value, -1.0, 1.0);
@@ -12491,7 +12482,7 @@ static bool bIsPluginEnabled()
 static bool bIsRightGame(int type)
 {
 	static int iType;
-	iType = g_esCache[type].g_iGameType;
+	iType = g_esTank[type].g_iGameType;
 	if (iType > 0)
 	{
 		switch (iType)
