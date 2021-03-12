@@ -216,7 +216,7 @@
 	- `Attack boost reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 	- `Infinite ammo reward` (Thanks to epzminion for helping!)
 - The `Stasis Mode` setting now works in all game mode types. (Requested by yuzumi.)
-- Added the `Game Type` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections.
+- Added the `Game Type` setting under the `Tank #/General` sections.
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Attack Boost Reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 	- `Action Duration Reward` (Thanks to epzminion for the help!)

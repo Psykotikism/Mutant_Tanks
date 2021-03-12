@@ -235,14 +235,6 @@
 			// 1-32: ON, the number of human survivors required to be present for all Mutant Tanks to be effective.
 			"Requires Humans"			"0"
 
-			// Restrict all Mutant Tanks to this game.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
-			// --
-			// 0: OFF
-			// 1: Left 4 Dead 1 only.
-			// 2: Left 4 Dead 2 only.
-			"Game Type"				"0"
-
 			// Enable all Mutant Tanks.
 			// Note: This setting determines full availability. Even if other spawn settings are enabled while this is disabled, all Mutant Tanks will stay disabled.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
@@ -1750,7 +1742,7 @@
 			"Tank Name"				"Tank #1"
 
 			// Restrict the Mutant Tank to this game.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: Do not change this setting if you are unsure of how it works.
 			// --
 			// 0: OFF
 			// 1: Left 4 Dead 1 only.
