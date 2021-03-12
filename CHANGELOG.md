@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.83 (March 25, 2021)
+## Version 8.83 (April 1, 2021)
 
 ### Bug Fixes
 
@@ -196,7 +196,6 @@
 #### Game Data
 - Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.
 - Updated and added addresses, detours, offsets, and signatures.
-- The core plugin now uses `mutant_tanks_patches.cfg` config file for patching certain functions.
 
 #### Settings
 - Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
@@ -217,6 +216,7 @@
 	- `Attack boost reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 	- `Infinite ammo reward` (Thanks to epzminion for helping!)
 - The `Stasis Mode` setting now works in all game mode types. (Requested by yuzumi.)
+- Added the `Game Type` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections.
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Attack Boost Reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 	- `Action Duration Reward` (Thanks to epzminion for the help!)
@@ -249,13 +249,13 @@
 	- `Damage Boost Reward`
 	- `Speed Boost Reward`
 - Added the following keywords for the `Tank Enabled` and `Spawn Enabled` settings:
-	- `ignore`/`exclude`/`filter`/`remove` - -1
+	- `ignore`/`exclude`/`filter`/`remove` - `-1`
 - Added the `Vomit Immunity` setting under the `Tank #/Immunities` and `STEAM_ID/Immunities` sections. (Thanks to epzminion for the help, Marttt for the idea, and Silvers for the signatures!)
 - Added the `Punch Force` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to 3aljiyavslgazana for the idea and Silvers for the code and signatures!)
 - Added the following keywords for the `Punch Force` setting:
-	- `nodmg`/`friendly`/`harmless` - 0.0 force
-	- `weakest` - 1.0 force
-	- `strongest` - 999999.0 force
+	- `nodmg`/`friendly`/`harmless` - `0.0` force
+	- `weakest` - `1.0` force
+	- `strongest` - `999999.0` force
 - Added the `Force Spawn` setting under the `Plugin Settings/Competitive` section. (Requested by yuzumi.)
 - The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by Shadowart.):
 	- `Finales Only`
@@ -354,6 +354,9 @@
 	- Added the `Absorb Hittable Divisor` setting.
 	- Any damage below `1` dealt to Tanks with this ability activated will automatically round up to `1`.
 
+- Acid
+	- The ability is now exclusive to Left 4 Dead 2.
+
 - Aimless
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
@@ -379,6 +382,7 @@
 
 - Fling
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- The ability is now exclusive to Left 4 Dead 2.
 
 - Fragile
 	- Added the `Fragile Hittable Multiplier` setting.
@@ -427,6 +431,7 @@
 	- The damage boost reward now allows the recipient to bypass all types of shields that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
 	- Shields that can be damaged by melee weapons will no longer create pushback effects when hit by melee weapons. (Requested by 3aljiyavslgazana.)
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+	- Tanks are immune to bile bombs while the shield is active. (Requested by 3aljiyavslgazana.)
 
 - Shove
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -460,6 +465,7 @@
 
 - Yell
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- The ability no longer blocks player sounds when active.
 
 ### Files
 
@@ -835,58 +841,58 @@
 - Updated some of the default Mutant Tank types.
 - Added two more default Mutant Tank types: `Trap Tank` and `Drug Addict Tank`
 - Added the following keywords for toggle settings:
-	- `enabled`/`true`/`on`/`yes` - 1
-	- `disabled`/`false`/`off`/`no` - 0
+	- `enabled`/`true`/`on`/`yes` - `1`
+	- `disabled`/`false`/`off`/`no` - `0`
 - Added the following keywords for chance settings:
-	- `never` - 0% chance
-	- `sometimes`/`unlikely`/`seldom` - 33.3% chance
-	- `maybe` - 50% chance
-	- `often`/`likely`/`frequently` - 66.6% chance
-	- `always` - 100% chance
+	- `never` - `0%` chance
+	- `sometimes`/`unlikely`/`seldom` - `33.3%` chance
+	- `maybe` - `50%` chance
+	- `often`/`likely`/`frequently` - `66.6%` chance
+	- `always` - `100%` chance
 - Added the following keywords for damage settings:
-	- `nodmg`/`friendly`/`harmless` - 0.0 damage
-	- `weakest` - 1.0 damage
-	- `strongest` - 999999.0 damage
+	- `nodmg`/`friendly`/`harmless` - `0.0` damage
+	- `weakest` - `1.0` damage
+	- `strongest` - `999999.0` damage
 - Added the following keywords for cooldown, delay, duration, interval, and lifetime settings:
-	- `never`/`disabled`/`false`/`off`/`no` - 0 seconds
-	- `milli`/`millisecond` - 0.1 seconds
-	- `second` - 1 second
-	- `minute` - 1 minute
-	- `forever` - 999999 minutes
+	- `never`/`disabled`/`false`/`off`/`no` - `0` seconds
+	- `milli`/`millisecond` - `0.1` seconds
+	- `second` - `1` second
+	- `minute` - `1` minute
+	- `forever` - `999999` minutes
 - Added the following keywords for height settings:
-	- `shortest` - 0.1 height
-	- `tallest` - 999999.0 height
+	- `shortest` - `0.1` height
+	- `tallest` - `999999.0` height
 - Added the following keywords for `Open Areas Only` settings:
-	- `disabled`/`false`/`off`/`no` - 0.0 range
-	- `farthest` - 999999.0 range
+	- `disabled`/`false`/`off`/`no` - `0.0` range
+	- `farthest` - `999999.0` range
 - Added the following keywords for range settings:
-	- `closest` - 1.0 range
-	- `farthest` - 999999.0 range
+	- `closest` - `1.0` range
+	- `farthest` - `999999.0` range
 - Added the following keywords for hit mode settings:
-	- `both`/`all` - 0
-	- `tank`/`attack` - 1
-	- `survivor`/`hurt` - 2
+	- `both`/`all` - `0`
+	- `tank`/`attack` - `1`
+	- `survivor`/`hurt` - `2`
 - Added the following keywords for `Ability Effect` settings:
-	- `none`/`off` - 0
-	- `attack` - 1
-	- `hurt` - 2
-	- `attack,hurt` - 3
-	- `range` - 4
-	- `attack,range` - 5
-	- `hurt,range` - 6
-	- `attack,hurt,range`/`all` - 7
+	- `none`/`off` - `0`
+	- `attack` - `1`
+	- `hurt` - `2`
+	- `attack,hurt` - `3`
+	- `range` - `4`
+	- `attack,range` - `5`
+	- `hurt,range` - `6`
+	- `attack,hurt,range`/`all` - `7`
 - Added the following keywords for `Ability Message` settings:
-	- `none`/`off` - 0
-	- `hit` - 1
-	- `ability` - 2
-	- `both`/`all`/`hit,ability` - 3
-	- `rock` - 4
-	- `hit,rock` - 5
-	- `ability,rock` - 6
-	- `hit,ability,rock`/`all` - 7
+	- `none`/`off` - `0`
+	- `hit` - `1`
+	- `ability` - `2`
+	- `both`/`all`/`hit,ability` - `3`
+	- `rock` - `4`
+	- `hit,rock` - `5`
+	- `ability,rock` - `6`
+	- `hit,ability,rock`/`all` - `7`
 - Added the following keywords for `Human Ammo` settings:
-	- `none`/`off` - 0 ammo
-	- `infinite` - 999999 ammo
+	- `none`/`off` - `0` ammo
+	- `infinite` - `999999` ammo
 - Added the `default` keyword for each setting to force the default value set by Mutant Tanks.
 - Added the `min` keyword for each setting to force the minimum value set by Mutant Tanks.
 - Added the `max` keyword for each setting to force the maximum value set by Mutant Tanks.

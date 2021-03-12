@@ -151,7 +151,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -172,7 +172,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -193,7 +193,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -214,7 +214,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
@@ -237,7 +237,7 @@ Here's our final entry:
 ```
 "Mutant Tanks"
 {
-	"Tank #420"
+	"Tank #69"
 	{
 		"General"
 		{
