@@ -4961,7 +4961,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 		if (bIsDeveloper(client, 7) || (g_esPlayer[client].g_iRewardTypes & MT_REWARD_INFAMMO))
 		{
-			vRefillAmmo(client);
+			vRefillAmmo(client, true);
 		}
 
 		if (GetEntProp(client, Prop_Send, "m_hGroundEntity") < 0)
@@ -10070,7 +10070,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 			{
 				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
 				{
-					vRefillAmmo(survivor, true);
+					vRefillAmmo(survivor, _, true);
 				}
 
 				if (bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
@@ -10323,7 +10323,7 @@ static void vGiveWeapons(int survivor)
 	g_esPlayer[survivor].g_sWeaponPills[0] = '\0';
 }
 
-static void vRefillAmmo(int survivor, bool reset = false)
+static void vRefillAmmo(int survivor, bool all = false, bool reset = false)
 {
 	static int iSlot;
 	iSlot = GetPlayerWeaponSlot(survivor, 0);
@@ -10361,14 +10361,17 @@ static void vRefillAmmo(int survivor, bool reset = false)
 		}
 	}
 
-	iSlot = GetPlayerWeaponSlot(survivor, 2);
-	if (!bIsValidEntity(iSlot)) vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredThrowable);
+	if (all)
+	{
+		iSlot = GetPlayerWeaponSlot(survivor, 2);
+		if (!bIsValidEntity(iSlot)) vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredThrowable);
 
-	iSlot = GetPlayerWeaponSlot(survivor, 3);
-	if (!bIsValidEntity(iSlot)) vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredMedkit);
+		iSlot = GetPlayerWeaponSlot(survivor, 3);
+		if (!bIsValidEntity(iSlot)) vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredMedkit);
 
-	iSlot = GetPlayerWeaponSlot(survivor, 4);
-	if (!bIsValidEntity(iSlot)) vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredPills);
+		iSlot = GetPlayerWeaponSlot(survivor, 4);
+		if (!bIsValidEntity(iSlot)) vCheatCommand(survivor, "give", g_esPlayer[survivor].g_sStoredPills);
+	}
 }
 
 static void vRefillHealth(int survivor)
