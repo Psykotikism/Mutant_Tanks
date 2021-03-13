@@ -1118,7 +1118,21 @@ public any aNative_DetonateTankRock(Handle plugin, int numParams)
 public any aNative_DoesSurvivorHaveRewardType(Handle plugin, int numParams)
 {
 	int iSurvivor = GetNativeCell(1), iType = GetNativeCell(2);
-	return bIsSurvivor(iSurvivor) && (g_esPlayer[iSurvivor].g_iRewardTypes & iType);
+	if (bIsSurvivor(iSurvivor) && iType > 0)
+	{
+		if (iType & MT_REWARD_HEALTH) return bIsDeveloper(iSurvivor, 6) || bIsDeveloper(iSurvivor, 7) || (g_esPlayer[iSurvivor].g_iRewardTypes & iType);
+		else if (iType & MT_REWARD_SPEEDBOOST) return bIsDeveloper(iSurvivor, 5) || (g_esPlayer[iSurvivor].g_iRewardTypes & iType);
+		else if (iType & MT_REWARD_DAMAGEBOOST) return bIsDeveloper(iSurvivor, 4) || (g_esPlayer[iSurvivor].g_iRewardTypes & iType);
+		else if (iType & MT_REWARD_ATTACKBOOST) return bIsDeveloper(iSurvivor, 6) || (g_esPlayer[iSurvivor].g_iRewardTypes & iType);
+		else if (iType & MT_REWARD_AMMO) return bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6) || (g_esPlayer[iSurvivor].g_iRewardTypes & iType);
+		else if (iType & MT_REWARD_ITEM) return !!(g_esPlayer[iSurvivor].g_iRewardTypes & iType);
+		else if (iType & MT_REWARD_GODMODE) return bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & iType);
+		else if (iType & MT_REWARD_REFILL) return !!(g_esPlayer[iSurvivor].g_iRewardTypes & iType);
+		else if (iType & MT_REWARD_RESPAWN) return bIsDeveloper(iSurvivor, 10) || (g_esPlayer[iSurvivor].g_iRewardTypes & iType);
+		else if (iType & MT_REWARD_INFAMMO) return bIsDeveloper(iSurvivor, 7) || (g_esPlayer[iSurvivor].g_iRewardTypes & iType);
+	}
+
+	return false;
 }
 
 public any aNative_DoesTypeRequireHumans(Handle plugin, int numParams)
@@ -12372,7 +12386,7 @@ static bool bIsCustomTankSupported(int tank)
  * 8 - 3 - all rewards/effects
  * 16 - 4 - damage boost/resistance, less punch force, ammo regen
  * 32 - 5 - speed boost, jump height, auto-revive
- * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recover, full health when healing/reviving
+ * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recover, full health when healing/reviving, ammo regen
  * 128 - 7 - infinite ammo, health regen, special ammo (off by default)
  * 256 - 8 - block puke/fling/stagger/punch/acid puddle (off by default)
  * 512 - 9 - sledgehammer rounds, hollowpoint ammo, tank melee knockback, shove damage against tank/charger/witch
@@ -14456,7 +14470,7 @@ public Action tTimerRegenerateAmmo(Handle timer)
 			continue;
 		}
 
-		bDeveloper = bIsDeveloper(iSurvivor, 4);
+		bDeveloper = bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6);
 		iRegen = (bDeveloper && g_esDeveloper[iSurvivor].g_iDevAmmoRegen > g_esPlayer[iSurvivor].g_iAmmoRegen) ? g_esDeveloper[iSurvivor].g_iDevAmmoRegen : g_esPlayer[iSurvivor].g_iAmmoRegen;
 		if ((!bDeveloper && (!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO) || g_esPlayer[iSurvivor].g_flRewardTime[1] == -1.0)) || iRegen == 0)
 		{
