@@ -1670,6 +1670,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -4087,7 +4088,7 @@ static void vListAbilities(int admin)
 				switch (bHuman)
 				{
 					case true: MT_PrintToChat(admin, "%s %t", MT_TAG3, "AbilityInstalled", sFilename);
-					case false: PrintToServer("%s %T", MT_TAG, "AbilityInstalled2", LANG_SERVER, sFilename);
+					case false: MT_PrintToServer("%s %T", MT_TAG, "AbilityInstalled2", LANG_SERVER, sFilename);
 				}
 			}
 		}
@@ -4096,7 +4097,7 @@ static void vListAbilities(int admin)
 			switch (bHuman)
 			{
 				case true: MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoAbilities");
-				case false: PrintToServer("%s %T", MT_TAG, "NoAbilities", LANG_SERVER);
+				case false: MT_PrintToServer("%s %T", MT_TAG, "NoAbilities", LANG_SERVER);
 			}
 		}
 	}
@@ -4105,7 +4106,7 @@ static void vListAbilities(int admin)
 		switch (bHuman)
 		{
 			case true: MT_PrintToChat(admin, "%s %t", MT_TAG2, "NoAbilities");
-			case false: PrintToServer("%s %T", MT_TAG, "NoAbilities", LANG_SERVER);
+			case false: MT_PrintToServer("%s %T", MT_TAG, "NoAbilities", LANG_SERVER);
 		}
 	}
 }
@@ -4300,7 +4301,7 @@ static void vReloadConfig(int admin)
 	switch (bIsValidClient(admin, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		case true: MT_PrintToChat(admin, "%s %t", MT_TAG3, "ReloadedConfig");
-		case false: PrintToServer("%s %T", MT_TAG, "ReloadedConfig", LANG_SERVER);
+		case false: MT_PrintToServer("%s %T", MT_TAG, "ReloadedConfig", LANG_SERVER);
 	}
 }
 
@@ -9034,16 +9035,7 @@ static void vLogMessage(int type, bool timestamp = true, const char[] message, a
 				static char sBuffer[255], sMessage[255];
 				SetGlobalTransTarget(LANG_SERVER);
 				VFormat(sBuffer, sizeof(sBuffer), message, 4);
-
-				ReplaceString(sBuffer, sizeof(sBuffer), "{default}", "");
-				ReplaceString(sBuffer, sizeof(sBuffer), "\x01", "");
-				ReplaceString(sBuffer, sizeof(sBuffer), "{mint}", "");
-				ReplaceString(sBuffer, sizeof(sBuffer), "\x03", "");
-				ReplaceString(sBuffer, sizeof(sBuffer), "{yellow}", "");
-				ReplaceString(sBuffer, sizeof(sBuffer), "\x04", "");
-				ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
-				ReplaceString(sBuffer, sizeof(sBuffer), "\x05", "");
-				ReplaceString(sBuffer, sizeof(sBuffer), "{percent}", "%%");
+				MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
 
 				switch (timestamp)
 				{
@@ -9057,7 +9049,7 @@ static void vLogMessage(int type, bool timestamp = true, const char[] message, a
 					case false: vSaveMessage(sBuffer);
 				}
 
-				PrintToServer(sBuffer);
+				MT_PrintToServer(sBuffer);
 			}
 		}
 	}
