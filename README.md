@@ -43,7 +43,6 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Knowledge of installing SourceMod plugins.
-5. Patience
 
 ## Notes
 1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
@@ -1413,16 +1412,10 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 
 	static char sBuffer[255], sMessage[255];
 	SetGlobalTransTarget(client);
-	FormatEx(sBuffer, sizeof(sBuffer), "\x01%s", message);
-	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);
-
-	ReplaceString(sMessage, sizeof(sMessage), "{default}", "\x01");
-	ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
-	ReplaceString(sMessage, sizeof(sMessage), "{yellow}", "\x04");
-	ReplaceString(sMessage, sizeof(sMessage), "{olive}", "\x05");
-	ReplaceString(sMessage, sizeof(sMessage), "{percent}", "%%");
-
-	PrintToChat(client, sMessage);
+	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
+	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), false);
+	PrintToChat(client, sBuffer);
 }
 
 stock void MT_PrintToChatAll(const char[] message, any ...)
@@ -1434,9 +1427,34 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 		{
 			SetGlobalTransTarget(iPlayer);
 			VFormat(sBuffer, sizeof(sBuffer), message, 2);
-
 			MT_PrintToChat(iPlayer, sBuffer);
 		}
+	}
+}
+
+stock void MT_PrintToServer(const char[] message, any ...)
+{
+	static char sBuffer[255];
+	SetGlobalTransTarget(LANG_SERVER);
+	VFormat(sBuffer, sizeof(sBuffer), message, 2);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+	PrintToServer(sBuffer);
+}
+
+stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
+{
+	ReplaceString(buffer, size, "{default}", (empty ? "" : "\x01"));
+	ReplaceString(buffer, size, "{mint}", (empty ? "" : "\x03"));
+	ReplaceString(buffer, size, "{yellow}", (empty ? "" : "\x04"));
+	ReplaceString(buffer, size, "{olive}", (empty ? "" : "\x05"));
+	ReplaceString(buffer, size, "{percent}", "%%");
+
+	if (empty)
+	{
+		ReplaceString(buffer, size, "\x01", "");
+		ReplaceString(buffer, size, "\x03", "");
+		ReplaceString(buffer, size, "\x04", "");
+		ReplaceString(buffer, size, "\x05", "");
 	}
 }
 
@@ -1448,15 +1466,11 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 
 	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
 	{
-		ReplaceString(sBuffer, sizeof(sBuffer), "{default}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{mint}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{yellow}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{percent}", "%%");
+		MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
 
 		switch (client == 0)
 		{
-			case true: PrintToServer(sBuffer);
+			case true: MT_PrintToServer(sBuffer);
 			case false: PrintToConsole(client, sBuffer);
 		}
 	}
