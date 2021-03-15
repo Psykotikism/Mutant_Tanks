@@ -13538,13 +13538,13 @@ public MRESReturn mreFlingPre(int pThis, DHookParam hParams)
 
 public MRESReturn mreGetMaxClip1Pre(int pThis, DHookReturn hReturn)
 {
-	int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner"), iAmmo = iGetMaxAmmo(iSurvivor, 0, pThis, false);
-	if (bIsSurvivor(iSurvivor) && iAmmo > 0)
+	int iSurvivor = GetEntPropEnt(pThis, Prop_Send, "m_hOwner"), iClip = iGetMaxAmmo(iSurvivor, 0, pThis, false);
+	if (bIsSurvivor(iSurvivor) && iClip > 0)
 	{
 		bool bDeveloper = bIsDeveloper(iSurvivor, 6);
 		if (bDeveloper || ((g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[iSurvivor].g_iAmmoBoost == 1))
 		{
-			hReturn.Value = iAmmo;
+			hReturn.Value = iClip;
 
 			return MRES_Override;
 		}

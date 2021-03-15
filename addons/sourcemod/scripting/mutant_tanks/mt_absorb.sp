@@ -333,35 +333,32 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbBulletDivisor;
-				if (damage < 1.0) damage = 1.0;
 			}
 			else if (g_esCache[victim].g_flAbsorbExplosiveDivisor > 1.0 && ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)))
 			{
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbExplosiveDivisor;
-				if (damage < 1.0) damage = 1.0;
 			}
 			else if (g_esCache[victim].g_flAbsorbFireDivisor > 1.0 && ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)))
 			{
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbFireDivisor;
-				if (damage < 1.0) damage = 1.0;
 			}
 			else if (g_esCache[victim].g_flAbsorbHittableDivisor > 1.0 && (damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable"))
 			{
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbHittableDivisor;
-				if (damage < 1.0) damage = 1.0;
 			}
 			else if (g_esCache[victim].g_flAbsorbMeleeDivisor > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
 			{
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbMeleeDivisor;
-				if (damage < 1.0) damage = 1.0;
 			}
 
 			if (bChanged)
 			{
+				if (damage < 1.0) damage = 1.0;
+
 				return Plugin_Changed;
 			}
 		}
