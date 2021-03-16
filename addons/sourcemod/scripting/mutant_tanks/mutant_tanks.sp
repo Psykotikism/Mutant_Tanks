@@ -12198,6 +12198,10 @@ static void vRegisterPatches(GameData dataHandle)
 
 				kvPatches.GoBack();
 			}
+			else
+			{
+				continue;
+			}
 		}
 		else
 		{
@@ -12208,6 +12212,10 @@ static void vRegisterPatches(GameData dataHandle)
 				iLength = kvPatches.GetNum("length"/*, iLength*/);
 
 				kvPatches.GoBack();
+			}
+			else
+			{
+				continue;
 			}
 		}
 
