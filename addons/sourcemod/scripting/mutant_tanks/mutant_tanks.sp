@@ -5426,6 +5426,8 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			}
 			else if (bSurvivor && (damagetype & DMG_BULLET))
 			{
+				static bool bChanged;
+				bChanged = false;
 				bDeveloper = bIsDeveloper(attacker, 9);
 				bRewarded = !!(g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_DAMAGEBOOST);
 				if (bDeveloper || bRewarded)
@@ -5449,10 +5451,9 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 							}
 							else
 							{
+								bChanged = true;
 								damagetype |= DMG_DISSOLVE;
 							}
-
-							return Plugin_Changed;
 						}
 					}
 
@@ -5471,14 +5472,19 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 								flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
 								if (flDamage > 0.0)
 								{
+									bChanged = true;
 									damage *= flDamage;
 								}
 							}
 
+							bChanged = true;
 							damagetype |= DMG_BUCKSHOT;
-
-							return Plugin_Changed;
 						}
+					}
+
+					if (bChanged)
+					{
+						return Plugin_Changed;
 					}
 				}
 			}
