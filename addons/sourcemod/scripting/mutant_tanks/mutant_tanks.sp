@@ -10036,11 +10036,6 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 
 			if ((iType & MT_REWARD_SPEEDBOOST) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 			{
-				if (bIsSurvivor(survivor, MT_CHECK_ALIVE) && !bIsDeveloper(survivor, 5) && flGetAdrenalineTime(survivor) > 0.0)
-				{
-					vSetAdrenalineTime(survivor, 0.0);
-				}
-
 				if (bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
 				{
 					MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardSpeedBoostEnd");
@@ -10048,6 +10043,11 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 
 				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_SPEEDBOOST;
 				g_esPlayer[survivor].g_flRewardTime[2] = -1.0;
+
+				if (bIsSurvivor(survivor, MT_CHECK_ALIVE) && !bIsDeveloper(survivor, 5) && flGetAdrenalineTime(survivor) > 0.0)
+				{
+					vSetAdrenalineTime(survivor, 0.0);
+				}
 			}
 
 			if ((iType & MT_REWARD_DAMAGEBOOST) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST))
@@ -10074,11 +10074,6 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 
 			if ((iType & MT_REWARD_AMMO) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO))
 			{
-				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
-				{
-					vRefillAmmo(survivor, _, true);
-				}
-
 				if (bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
 				{
 					MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardAmmoEnd");
@@ -10086,15 +10081,15 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 
 				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_AMMO;
 				g_esPlayer[survivor].g_flRewardTime[1] = -1.0;
+
+				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
+				{
+					vRefillAmmo(survivor, _, true);
+				}
 			}
 
 			if ((iType & MT_REWARD_GODMODE) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_GODMODE))
 			{
-				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
-				{
-					SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
-				}
-
 				if (bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
 				{
 					MT_PrintToChat(survivor, "%s %t", MT_TAG2, "RewardGodEnd");
@@ -10102,6 +10097,11 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 
 				g_esPlayer[survivor].g_iRewardTypes &= ~MT_REWARD_GODMODE;
 				g_esPlayer[survivor].g_flRewardTime[5] = -1.0;
+
+				if (bIsSurvivor(survivor, MT_CHECK_ALIVE))
+				{
+					SetEntProp(survivor, Prop_Data, "m_takedamage", 2, 1);
+				}
 			}
 
 			if ((iType & MT_REWARD_INFAMMO) && (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_INFAMMO))
@@ -10403,13 +10403,12 @@ static void vRefillHealth(int survivor)
 
 static void vRefillMagazine(int survivor, int weapon, bool reset)
 {
-	static int iAmmo, iAmmoOffset;
-	iAmmo = 0;
+	static int iAmmoOffset, iNewAmmo;
 	iAmmoOffset = iGetWeaponOffset(weapon);
-
+	iNewAmmo = 0;
 	if (!reset && (bIsDeveloper(survivor, 6) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO) && g_esPlayer[survivor].g_iAmmoBoost == 1)))
 	{
-		iAmmo = iGetMaxAmmo(survivor, 0, weapon, true, reset);
+		iNewAmmo = iGetMaxAmmo(survivor, 0, weapon, true, reset);
 	}
 	else
 	{
@@ -10420,12 +10419,12 @@ static void vRefillMagazine(int survivor, int weapon, bool reset)
 			return;
 		}
 
-		iAmmo = iMaxAmmo;
+		iNewAmmo = iMaxAmmo;
 	}
 
-	if (iAmmo > 0)
+	if (iNewAmmo > 0)
 	{
-		SetEntProp(survivor, Prop_Send, "m_iAmmo", iAmmo, _, iAmmoOffset);
+		SetEntProp(survivor, Prop_Send, "m_iAmmo", iNewAmmo, _, iAmmoOffset);
 	}
 }
 
@@ -12966,7 +12965,6 @@ static int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool re
 		bRewarded = bSurvivor ? (bIsDeveloper(survivor, 6) || (g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO)) : false;
 		static int iType;
 		iType = (type > 0 || weapon <= MaxClients) ? type : GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
-
 		if (g_bSecondGame)
 		{
 			if (reserve)
