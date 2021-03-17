@@ -13029,19 +13029,6 @@ static int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool re
 	return 0;
 }
 
-static int iGetMaxClip(int survivor, int weapon)
-{
-	if (bIsSurvivor(survivor) && weapon > MaxClients && GetEntProp(weapon, Prop_Send, "m_bInReload") == 1)
-	{
-		static int iType;
-		iType = GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
-		if (g_bSecondGame && (iType == 7 || iType == 8)) return g_esPlayer[survivor].g_iMaxClip[0] - 3;
-		else if (iType == 6) return g_esPlayer[survivor].g_iMaxClip[0] - 3;
-	}
-
-	return g_esPlayer[survivor].g_iMaxClip[0];
-}
-
 static int iGetMessageType(int setting)
 {
 	static int iMessageCount, iMessages[10], iFlag;
@@ -14500,7 +14487,7 @@ public Action tTimerRegenerateAmmo(Handle timer)
 		}
 
 		iClip = GetEntProp(iSlot, Prop_Send, "m_iClip1");
-		if (iClip < iGetMaxClip(iSurvivor, iSlot))
+		if (iClip < g_esPlayer[iSurvivor].g_iMaxClip[0] && GetEntProp(iSlot, Prop_Send, "m_bInReload") == 0)
 		{
 			SetEntProp(iSlot, Prop_Send, "m_iClip1", (iClip + iRegen));
 		}
