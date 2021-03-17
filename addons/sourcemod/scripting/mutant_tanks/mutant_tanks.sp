@@ -5482,10 +5482,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 						}
 					}
 
-					if (bChanged)
-					{
-						return Plugin_Changed;
-					}
+					if (bChanged) return Plugin_Changed;
 				}
 			}
 
@@ -13032,6 +13029,19 @@ static int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool re
 	return 0;
 }
 
+static int iGetMaxClip(int survivor, int weapon)
+{
+	if (bIsSurvivor(survivor) && weapon > MaxClients && GetEntProp(weapon, Prop_Send, "m_bInReload") == 1)
+	{
+		static int iType;
+		iType = GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
+		if (g_bSecondGame && (iType == 7 || iType == 8)) return g_esPlayer[survivor].g_iMaxClip[0] - 3;
+		else if (iType == 6) return g_esPlayer[survivor].g_iMaxClip[0] - 3;
+	}
+
+	return g_esPlayer[survivor].g_iMaxClip[0];
+}
+
 static int iGetMessageType(int setting)
 {
 	static int iMessageCount, iMessages[10], iFlag;
@@ -13983,32 +13993,32 @@ public MRESReturn mreVomitedUponPre(int pThis, DHookParam hParams)
 #if defined _WeaponHandling_included
 public void WH_OnMeleeSwing(int client, int weapon, float &speedmodifier)
 {
-	speedmodifier = flGetAttackBoost(client, speedmodifier);
+	speedmodifier *= flGetAttackBoost(client, speedmodifier);
 }
 
 public void WH_OnStartThrow(int client, int weapon, L4D2WeaponType weapontype, float &speedmodifier)
 {
-	speedmodifier = flGetAttackBoost(client, speedmodifier);
+	speedmodifier *= flGetAttackBoost(client, speedmodifier);
 }
 
 public void WH_OnReadyingThrow(int client, int weapon, L4D2WeaponType weapontype, float &speedmodifier)
 {
-	speedmodifier = flGetAttackBoost(client, speedmodifier);
+	speedmodifier *= flGetAttackBoost(client, speedmodifier);
 }
 
 public void WH_OnReloadModifier(int client, int weapon, L4D2WeaponType weapontype, float &speedmodifier)
 {
-	speedmodifier = flGetAttackBoost(client, speedmodifier);
+	speedmodifier *= flGetAttackBoost(client, speedmodifier);
 }
 
 public void WH_OnGetRateOfFire(int client, int weapon, L4D2WeaponType weapontype, float &speedmodifier)
 {
-	speedmodifier = flGetAttackBoost(client, speedmodifier);
+	speedmodifier *= flGetAttackBoost(client, speedmodifier);
 }
 
 public void WH_OnDeployModifier(int client, int weapon, L4D2WeaponType weapontype, float &speedmodifier)
 {
-	speedmodifier = flGetAttackBoost(client, speedmodifier);
+	speedmodifier *= flGetAttackBoost(client, speedmodifier);
 }
 #endif
 
@@ -14490,7 +14500,7 @@ public Action tTimerRegenerateAmmo(Handle timer)
 		}
 
 		iClip = GetEntProp(iSlot, Prop_Send, "m_iClip1");
-		if (iClip < g_esPlayer[iSurvivor].g_iMaxClip[0])
+		if (iClip < iGetMaxClip(iSurvivor, iSlot))
 		{
 			SetEntProp(iSlot, Prop_Send, "m_iClip1", (iClip + iRegen));
 		}
