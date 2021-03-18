@@ -12200,10 +12200,7 @@ static void vRegisterPatches(GameData dataHandle)
 
 				kvPatches.GoBack();
 			}
-			else
-			{
-				continue;
-			}
+			else continue;
 		}
 		else
 		{
@@ -12215,10 +12212,7 @@ static void vRegisterPatches(GameData dataHandle)
 
 				kvPatches.GoBack();
 			}
-			else
-			{
-				continue;
-			}
+			else continue;
 		}
 
 		if (sName[0] == '\0' || (!StrEqual(sLog, "yes") && !StrEqual(sLog, "no")) || (!StrEqual(sType, "permanent") && !StrEqual(sType, "ondemand")) || sSignature[0] == '\0' || sVerify[0] == '\0' || sBytes[0] == '\0' || iLength == 0)
@@ -12335,6 +12329,7 @@ static bool bInstallPatch(int index)
 	for (int iPos = 0; iPos < g_iPatchLength[index]; iPos++)
 	{
 		g_iOriginalBytes[index][iPos] = LoadFromAddress(g_adPatchAddress[index] + view_as<Address>(g_iPatchOffset[index] + iPos), NumberType_Int8);
+
 		StoreToAddress(g_adPatchAddress[index] + view_as<Address>(g_iPatchOffset[index] + iPos), g_iPatchBytes[index][iPos], NumberType_Int8);
 	}
 
@@ -13253,6 +13248,7 @@ public MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 				{
 					g_esGeneral.g_bPatchDoJumpValue = true;
 					g_esGeneral.g_iOriginalJumpHeight = LoadFromAddress(g_esGeneral.g_adDoJumpValue, NumberType_Int32);
+
 					StoreToAddress(g_esGeneral.g_adDoJumpValue, view_as<int>(flHeight), NumberType_Int32);
 				}
 			}
@@ -13291,6 +13287,7 @@ public MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
 	if (!bApply[0] && !bApply[1] && g_esGeneral.g_bPatchDoJumpValue)
 	{
 		g_esGeneral.g_bPatchDoJumpValue = false;
+
 		StoreToAddress(g_esGeneral.g_adDoJumpValue, g_esGeneral.g_iOriginalJumpHeight, NumberType_Int32);
 	}
 
