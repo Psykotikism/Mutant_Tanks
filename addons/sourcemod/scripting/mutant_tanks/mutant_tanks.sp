@@ -3599,6 +3599,7 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 		{
 			if (!(g_esPlayer[developer].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 			{
+				vSetAdrenalineTime(developer, -1.0);
 				SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
 			}
 
@@ -5345,7 +5346,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 					{
 						if (bBlockBullets || bBlockMelee)
 						{
-							vKnockbackTank(victim, attacker);
+							vKnockbackTank(victim, attacker, damagetype);
 						}
 
 						flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
@@ -5403,7 +5404,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 				{
 					if ((damagetype & DMG_BULLET) || (damagetype & DMG_CLUB) || (damagetype & DMG_SLASH))
 					{
-						vKnockbackTank(victim, attacker);
+						vKnockbackTank(victim, attacker, damagetype);
 					}
 
 					if ((damagetype & DMG_BURN) && g_esGeneral.g_iCreditIgniters == 0)
@@ -5592,9 +5593,11 @@ public Action RockSoundHook(int clients[MAXPLAYERS], int &numClients, char sampl
 	return Plugin_Continue;
 }
 
-static void vKnockbackTank(int tank, int survivor)
+static void vKnockbackTank(int tank, int survivor, int damagetype)
 {
-	if ((bIsDeveloper(survivor, 9) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[survivor].g_iSledgehammerRounds == 1)) && !bIsPlayerIncapacitated(tank) && GetRandomFloat(0.0, 100.0) <= 10.0)
+	static float flResult;
+	flResult = (damagetype & DMG_BULLET) ? 1.0 : 10.0;
+	if ((bIsDeveloper(survivor, 9) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[survivor].g_iSledgehammerRounds == 1)) && !bIsPlayerIncapacitated(tank) && GetRandomFloat(0.0, 100.0) <= flResult)
 	{
 		vPerformKnockback(tank, survivor);
 	}
