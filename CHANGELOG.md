@@ -33,6 +33,7 @@
 
 #### Game Data
 - Fixed some detours causing crashes due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed some signatures not having enough wildcarded bytes for detours.
 
 #### Settings
 - Fixed the `Boss Health Stages` setting not being read entirely.
@@ -176,10 +177,10 @@
 	- Gives the recipient the adrenaline effect until the reward ends. (Exclusive to Left 4 Dead 2.) [Thanks to Lux for the code!]
 - The damage boost reward now does the following:
 	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
-	- Gives the recipient `50%` damage resistance throughout its duration.
+	- Gives the recipient damage resistance throughout its duration.
 	- Gives the recipient extended melee range. (Thanks to epzminion for the idea and Silvers for the code!)
-	- Gives the recipient hollowpoint ammo which atomize Common infected and Witches. (Thanks to epzminion for the code!)
-	- Gives the recipient sledgehammer rounds which knock back special infected and has a `33.33%` chance to knock back Tanks. (Thanks to epzminion for the code!)
+	- Gives the recipient hollowpoint ammo which atomizes Common infected and Witches. (Thanks to epzminion for the code!)
+	- Gives the recipient sledgehammer rounds which knock back special infected and has a `1%-10%` chance to knock back Tanks. (Thanks to epzminion for the code!)
 	- Allows the recipient to deal damage to attackers for each hit taken. (Thanks to epzminion for the help!)
 	- Allows the recipient to instantly kill Witches (limited uses). (Thanks to epzminion for the idea!)
 - The godmode reward now does the following:
@@ -195,10 +196,12 @@
 
 #### Game Data
 - Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.
-- Updated several signatures for detours.
+- Updated several signatures for detours. (Thanks to epzminion for the help!)
 
 #### Settings
-- Added the `Reward Effect` setting under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
+- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+	- `Reward Bots` (Thanks to Mi.Cura for the idea!)
+	- `Reward Effect` (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
 - Added the `Log Commands` setting under the `Plugin Settings/General` section. (Requested by 3aljiyavslgazana.)
 - Added the following settings under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
 	- `Arrival Sound` (Thanks to Tank Rush for the idea!)
@@ -275,6 +278,7 @@
 	- `Vocalize Arrival`
 	- `Vocalize Death`
 	- `Reward Enabled`
+	- `Reward Bots`
 	- `Reward Effect`
 	- `Reward Chance`
 	- `Reward Duration`

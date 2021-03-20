@@ -485,7 +485,7 @@
 			// 4: Damage boost reward (temporary)
 			// - Extra damage
 			// - Bypass Tank immunities
-			// - 50% damage resistance
+			// - Damage resistance
 			// - Automatically kill Witches.
 			// - Hollowpoint ammo
 			// - Extended melee range
@@ -538,6 +538,23 @@
 			// 2nd number = Enable rewards for assistants.
 			// 3rd number = Enable rewards for teammates.
 			"Reward Enabled"			"-1,-1,-1"
+
+			// Reward bots for fighting Mutant Tanks.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate chances with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Reward killers.
+			// 2nd number = Reward assistants.
+			// 3rd number = Reward teammates.
+			"Reward Bots"				"0,0,0"
 
 			// The chance to reward survivors for killing Mutant Tanks.
 			// Note: This setting can be used for standard Tanks.
@@ -2040,7 +2057,7 @@
 			// 4: Damage boost reward (temporary)
 			// - Extra damage
 			// - Bypass Tank immunities
-			// - 50% damage resistance
+			// - Damage resistance
 			// - Automatically kill Witches.
 			// - Hollowpoint ammo
 			// - Extended melee range
@@ -2093,6 +2110,23 @@
 			// 2nd number = Enable rewards for assistants.
 			// 3rd number = Enable rewards for teammates.
 			"Reward Enabled"			"-1,-1,-1"
+
+			// Reward bots for fighting Mutant Tanks.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate chances with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0 (OFF)
+			// Maximum value for each: 1 (ON)
+			// --
+			// 1st number = Reward killers.
+			// 2nd number = Reward assistants.
+			// 3rd number = Reward teammates.
+			"Reward Bots"				"0,0,0"
 
 			// The chance to reward survivors for killing the Mutant Tank.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
