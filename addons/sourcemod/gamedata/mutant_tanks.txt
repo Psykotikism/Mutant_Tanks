@@ -55,7 +55,7 @@
 				"this"		"ignore"
 				"arguments"
 				{
-					"a1" //Changed from "survivor" to be compatible with Left 4 DHooks Direct
+					"a1" // Changed from "survivor" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"cbaseentity"
 					}
@@ -185,11 +185,11 @@
 				"this"		"entity"
 				"arguments"
 				{
-					"a1" //Changed from "player" to be compatible with Left 4 DHooks Direct
+					"a1" // Changed from "player" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"cbaseentity"
 					}
-					"a2" //Changed from "direction" to be compatible with Left 4 DHooks Direct
+					"a2" // Changed from "direction" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"vectorptr"
 					}
@@ -223,7 +223,7 @@
 				"this"		"entity"
 				"arguments"
 				{
-					"revivee" //Changed from "target" to be compatible with Left 4 Fix
+					"revivee" // Changed from "target" to be compatible with Left 4 Fix
 					{
 						"type"		"cbaseentity"
 					}
@@ -246,7 +246,7 @@
 				"this"		"entity"
 				"arguments"
 				{
-					"AFKPlayer" //Changed from "player" to be compatible with Left 4 Fix
+					"AFKPlayer" // Changed from "player" to be compatible with Left 4 Fix
 					{
 						"type"		"cbaseentity"
 					}
@@ -277,11 +277,11 @@
 				"this"		"ignore"
 				"arguments"
 				{
-					"a1" //Changed from "oldTank" to be compatible with Left 4 DHooks Direct
+					"a1" // Changed from "oldTank" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"cbaseentity"
 					}
-					"a2" //Changed from "newTank" to be compatible with Left 4 DHooks Direct
+					"a2" // Changed from "newTank" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"cbaseentity"
 					}
@@ -296,11 +296,11 @@
 				"this"		"ignore"
 				"arguments"
 				{
-					"a1" //Changed from "origin" to be compatible with Left 4 DHooks Direct
+					"a1" // Changed from "origin" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"vectorptr"
 					}
-					"a2" //Changed from "angles" to be compatible with Left 4 DHooks Direct
+					"a2" // Changed from "angles" to be compatible with Left 4 DHooks Direct
 					{
 						"type"		"vectorptr"
 					}
@@ -843,7 +843,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2E\x00\x00\x00\x56\x8D\xB3\x80\x2E\x00\x00"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8D\xB3\x80\x2E\x00\x00"
 			}
 			/**
 			 * SurvivorLegsMeetRescueVehicleArrival::Update(SurvivorBot*, float)
@@ -1486,7 +1486,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x08\x8B\x83\x58\x2E\x00\x00"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x08\x8B\x83\x58\x2E\x00\x00"
 			}
 			/* CTerrorWeapon::SecondaryAttack() */
 			"CTerrorWeapon::SecondaryAttack"
