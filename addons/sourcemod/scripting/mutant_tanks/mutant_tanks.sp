@@ -122,7 +122,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define PARTICLE_SPIT2 "spitter_slime_trail" // Only available in L4D2
 
 #define SOUND_ACHIEVEMENT "ui/pickup_misc42.wav"
-#define SOUND_COMMON "common/null.wav"
 #define SOUND_DAMAGE "player/damage1.wav"
 #define SOUND_DAMAGE2 "player/damage2.wav"
 #define SOUND_DEATH "ui/pickup_scifi37.wav"
@@ -132,6 +131,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define SOUND_LADYKILLER "ui/alert_clink.wav"
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
 #define SOUND_MISSILE "player/tank/attack/thrown_missile_loop_1.wav"
+#define SOUND_NULL "common/null.wav"
 #define SOUND_SPAWN "ui/pickup_secret01.wav"
 #define SOUND_SPIT "player/spitter/voice/warn/spitter_spit_02.wav" // Only available in L4D2
 
@@ -2220,12 +2220,12 @@ public void OnMapStart()
 	}
 
 	PrecacheSound(SOUND_ACHIEVEMENT, true);
-	PrecacheSound(SOUND_COMMON, true);
 	PrecacheSound(SOUND_DAMAGE, true);
 	PrecacheSound(SOUND_DAMAGE2, true);
 	PrecacheSound(SOUND_DEATH, true);
 	PrecacheSound(SOUND_ELECTRICITY, true);
 	PrecacheSound(SOUND_METAL, true);
+	PrecacheSound(SOUND_NULL, true);
 	PrecacheSound(SOUND_SPAWN, true);
 
 	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
@@ -5596,7 +5596,7 @@ public Action FallSoundHook(int clients[MAXPLAYERS], int &numClients, char sampl
 {
 	if (g_esGeneral.g_bPluginEnabled && bIsSurvivor(entity) && (bIsDeveloper(entity, 5) || bIsDeveloper(entity, 11) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_GODMODE)) && g_esPlayer[entity].g_bFallDamage && !g_esPlayer[entity].g_bFatalFalling)
 	{
-		if (g_esPlayer[entity].g_bFalling && StrEqual(sample, SOUND_COMMON, false))
+		if (g_esPlayer[entity].g_bFalling && StrEqual(sample, SOUND_NULL, false))
 		{
 			return Plugin_Stop;
 		}
