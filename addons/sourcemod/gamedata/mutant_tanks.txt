@@ -144,14 +144,6 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::GoAwayFromKeyboard() */
-			"CTerrorPlayer::GoAwayFromKeyboard"
-			{
-				"signature"	"CTerrorPlayer::GoAwayFromKeyboard"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"entity"
-			}
 			/* CTerrorPlayer::OnEnterGhostState() */
 			"CTerrorPlayer::OnEnterGhostState"
 			{
@@ -236,21 +228,6 @@
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
-			}
-			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
-			"SurvivorBot::SetHumanSpectator"
-			{
-				"signature"	"SurvivorBot::SetHumanSpectator"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"entity"
-				"arguments"
-				{
-					"AFKPlayer" // Changed from "player" to be compatible with Left 4 Fix
-					{
-						"type"		"cbaseentity"
-					}
-				}
 			}
 			/* Tank::EnterStasis() */
 			"Tank::EnterStasis"
@@ -589,12 +566,6 @@
 				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
 				"linux"		"35" // start at 75 and patch 1 byte with JNS (0x79)
 			}
-			/* CTerrorPlayer::SetObserverTarget(CBaseEntity*) */
-			"CTerrorPlayer::SetObserverTarget"
-			{
-				"windows"	"375"
-				"linux"		"376"
-			}
 			/* InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&) */
 			"InfectedExecAction::OnInjured::Requirement"
 			{
@@ -837,13 +808,6 @@
 				"library"	"server"
 				"linux"		"@_ZN18InfectedExecAction9OnInjuredEP8InfectedRK15CTakeDamageInfo"
 				"windows"	"\x83\xEC\x0C\x53\x55\x8B\x6C\x24\x1C\x56\x57\x8B"
-			}
-			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
-			"SurvivorBot::SetHumanSpectator"
-			{
-				"library"	"server"
-				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8D\xB3\x80\x2E\x00\x00"
 			}
 			/**
 			 * SurvivorLegsMeetRescueVehicleArrival::Update(SurvivorBot*, float)
@@ -1202,12 +1166,6 @@
 				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
 				"linux"		"25" // start at 75 and patch 1 byte with JNS (0x79)
 			}
-			/* CTerrorPlayer::SetObserverTarget(CBaseEntity*) */
-			"CTerrorPlayer::SetObserverTarget"
-			{
-				"windows"	"402"
-				"linux"		"403"
-			}
 			/* Tank::GetIntentionInterface() const */
 			"Tank::GetIntentionInterface"
 			{
@@ -1494,13 +1452,6 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorWeapon15SecondaryAttackEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xF0\x85\xF6\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F\x85\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2"
-			}
-			/* SurvivorBot::SetHumanSpectator(CTerrorPlayer*) */
-			"SurvivorBot::SetHumanSpectator"
-			{
-				"library"	"server"
-				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xBE\x44\x43\x00\x00\x00\x7E\x2A\x32\xC0\x5E\x5D\xC2\x04\x00"
 			}
 			/* Tank::EnterStasis() */
 			"Tank::EnterStasis"
