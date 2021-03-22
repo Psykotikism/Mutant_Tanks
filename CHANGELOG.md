@@ -409,7 +409,7 @@
 - Idle
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
-	- Removed idle fix code. (Use [Lux's plugin](https://forums.alliedmods.net/showthread.php?t=326742) instead.)
+	- Removed idle fix code. (Use [Lux's "Survivor_AFK_Fix" plugin](https://forums.alliedmods.net/showthread.php?t=326742) instead.)
 
 - Minion
 	- Minions are removed when their Tank owner changes its Mutant Tank type if the `Minion Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
