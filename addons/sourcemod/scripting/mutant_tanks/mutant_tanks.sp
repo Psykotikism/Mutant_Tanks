@@ -122,6 +122,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define PARTICLE_SPIT2 "spitter_slime_trail" // Only available in L4D2
 
 #define SOUND_ACHIEVEMENT "ui/pickup_misc42.wav"
+#define SOUND_COMMON "common/null.wav"
+#define SOUND_DAMAGE "player/damage1.wav"
+#define SOUND_DAMAGE2 "player/damage2.wav"
 #define SOUND_DEATH "ui/pickup_scifi37.wav"
 #define SOUND_ELECTRICITY "items/suitchargeok1.wav"
 #define SOUND_EXPLOSION2 "weapons/grenade_launcher/grenadefire/grenade_launcher_explode_2.wav" // Only available in L4D2
@@ -284,9 +287,7 @@ enum struct esGeneral
 	bool g_bHideNameChange;
 	bool g_bLinux;
 	bool g_bMapStarted;
-	bool g_bPatchDoJumpStart[2];
 	bool g_bPatchDoJumpValue;
-	bool g_bPatchEventKilled[13];
 	bool g_bPatchFallingSound;
 	bool g_bPluginEnabled;
 	bool g_bUsedParser;
@@ -622,6 +623,7 @@ enum struct esPlayer
 	bool g_bDied;
 	bool g_bDualWielding;
 	bool g_bElectric;
+	bool g_bFallDamage;
 	bool g_bFalling;
 	bool g_bFallTracked;
 	bool g_bFatalFalling;
@@ -1674,7 +1676,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -2181,13 +2182,12 @@ public void OnMapStart()
 {
 	g_esGeneral.g_bMapStarted = true;
 
-	PrecacheModel(MODEL_TANK_MAIN, true);
-	PrecacheModel(MODEL_TANK_DLC, true);
-
 	PrecacheModel(MODEL_CONCRETE_CHUNK, true);
 	PrecacheModel(MODEL_GASCAN, true);
 	PrecacheModel(MODEL_JETPACK, true);
 	PrecacheModel(MODEL_PROPANETANK, true);
+	PrecacheModel(MODEL_TANK_MAIN, true);
+	PrecacheModel(MODEL_TANK_DLC, true);
 	PrecacheModel(MODEL_TIRES, true);
 	PrecacheModel(MODEL_TREE_TRUNK, true);
 	PrecacheModel(MODEL_WITCH, true);
@@ -2220,6 +2220,9 @@ public void OnMapStart()
 	}
 
 	PrecacheSound(SOUND_ACHIEVEMENT, true);
+	PrecacheSound(SOUND_COMMON, true);
+	PrecacheSound(SOUND_DAMAGE, true);
+	PrecacheSound(SOUND_DAMAGE2, true);
 	PrecacheSound(SOUND_DEATH, true);
 	PrecacheSound(SOUND_ELECTRICITY, true);
 	PrecacheSound(SOUND_METAL, true);
@@ -2231,6 +2234,8 @@ public void OnMapStart()
 
 	vReset();
 	vToggleLogging(1);
+
+	AddNormalSoundHook(FallSoundHook);
 	AddNormalSoundHook(RockSoundHook);
 }
 
@@ -2575,6 +2580,8 @@ public void OnMapEnd()
 
 	vReset();
 	vToggleLogging(0);
+
+	RemoveNormalSoundHook(FallSoundHook);
 	RemoveNormalSoundHook(RockSoundHook);
 }
 
@@ -5583,6 +5590,25 @@ public void OnWeaponEquipPost(int client, int weapon)
 			strcopy(g_esPlayer[client].g_sStoredPills, sizeof(esPlayer::g_sStoredPills), sWeapon);
 		}
 	}
+}
+
+public Action FallSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
+{
+	if (g_esGeneral.g_bPluginEnabled && bIsSurvivor(entity) && (bIsDeveloper(entity, 5) || bIsDeveloper(entity, 11) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[entity].g_iRewardTypes & MT_REWARD_GODMODE)) && g_esPlayer[entity].g_bFallDamage && !g_esPlayer[entity].g_bFatalFalling)
+	{
+		if (g_esPlayer[entity].g_bFalling && StrEqual(sample, SOUND_COMMON, false))
+		{
+			return Plugin_Stop;
+		}
+		else if (0 <= StrContains(sample, SOUND_DAMAGE, false) <= 1 || 0 <= StrContains(sample, SOUND_DAMAGE2, false) <= 1)
+		{
+			g_esPlayer[entity].g_bFallDamage = false;
+
+			return Plugin_Stop;
+		}
+	}
+
+	return Plugin_Continue;
 }
 
 public Action RockSoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
@@ -9540,6 +9566,7 @@ static void vResetSpeed(int tank, bool mode = true)
 
 static void vResetSurvivorStats(int survivor)
 {
+	g_esPlayer[survivor].g_bFallDamage = false;
 	g_esPlayer[survivor].g_bFalling = false;
 	g_esPlayer[survivor].g_bFallTracked = false;
 	g_esPlayer[survivor].g_bFatalFalling = false;
@@ -13456,6 +13483,7 @@ public MRESReturn mreFallingPre(int pThis)
 {
 	if (bIsSurvivor(pThis) && !g_esPlayer[pThis].g_bFalling)
 	{
+		g_esPlayer[pThis].g_bFallDamage = true;
 		g_esPlayer[pThis].g_bFalling = true;
 
 		if ((bIsDeveloper(pThis, 5) || bIsDeveloper(pThis, 11) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_SPEEDBOOST) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_GODMODE)) && !g_esGeneral.g_bPatchFallingSound)

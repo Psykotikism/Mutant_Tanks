@@ -51,23 +51,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define MT_MENU_IDLE "Idle Ability"
 
-enum struct esGeneral
-{
-	bool g_bApplyFix;
-	bool g_bIgnoreSpec;
-
-	DynamicDetour g_ddIdlePlayerDetour;
-	DynamicDetour g_ddSpecPlayerDetour;
-
-	Handle g_hSDKGoAFK;
-	Handle g_hSDKSetObserverTarget;
-	Handle g_hSDKSetHumanSpectator;
-
-	int g_iSurvivorBot;
-}
-
-esGeneral g_esGeneral;
-
 enum struct esPlayer
 {
 	bool g_bAffected;
@@ -142,6 +125,8 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+Handle g_hSDKGoAFK;
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
@@ -156,22 +141,6 @@ public void OnPluginStart()
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
 	}
 
-	g_esGeneral.g_ddIdlePlayerDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::GoAwayFromKeyboard");
-	if (g_esGeneral.g_ddIdlePlayerDetour == null)
-	{
-		delete gdMutantTanks;
-
-		SetFailState("Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard");
-	}
-
-	g_esGeneral.g_ddSpecPlayerDetour = DynamicDetour.FromConf(gdMutantTanks, "SurvivorBot::SetHumanSpectator");
-	if (g_esGeneral.g_ddSpecPlayerDetour == null)
-	{
-		delete gdMutantTanks;
-
-		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
-	}
-
 	StartPrepSDKCall(SDKCall_Player);
 	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::GoAwayFromKeyboard"))
 	{
@@ -180,40 +149,10 @@ public void OnPluginStart()
 		SetFailState("Failed to find signature: CTerrorPlayer::GoAwayFromKeyboard");
 	}
 
-	g_esGeneral.g_hSDKGoAFK = EndPrepSDKCall();
-	if (g_esGeneral.g_hSDKGoAFK == null)
+	g_hSDKGoAFK = EndPrepSDKCall();
+	if (g_hSDKGoAFK == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::GoAwayFromKeyboard\" signature is outdated.", MT_TAG);
-	}
-
-	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Virtual, "CTerrorPlayer::SetObserverTarget"))
-	{
-		delete gdMutantTanks;
-
-		SetFailState("Failed to load offset: CTerrorPlayer::SetObserverTarget");
-	}
-
-	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	g_esGeneral.g_hSDKSetObserverTarget = EndPrepSDKCall();
-	if (g_esGeneral.g_hSDKSetObserverTarget == null)
-	{
-		LogError("%s Your \"CTerrorPlayer::SetObserverTarget\" offsets are outdated.", MT_TAG);
-	}
-
-	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "SurvivorBot::SetHumanSpectator"))
-	{
-		delete gdMutantTanks;
-
-		SetFailState("Failed to find signature: SurvivorBot::SetHumanSpectator");
-	}
-
-	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-	g_esGeneral.g_hSDKSetHumanSpectator = EndPrepSDKCall();
-	if (g_esGeneral.g_hSDKSetHumanSpectator == null)
-	{
-		LogError("%s Your \"SurvivorBot::SetHumanSpectator\" signature is outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
@@ -366,14 +305,6 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 	}
 }
 
-public void OnEntityCreated(int entity, const char[] classname)
-{
-	if (g_esGeneral.g_bApplyFix && StrEqual(classname, "survivor_bot", false))
-	{
-		g_esGeneral.g_iSurvivorBot = entity;
-	}
-}
-
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
@@ -407,55 +338,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 
 	return Plugin_Continue;
-}
-
-public MRESReturn mreIdlePlayerPre(int pThis)
-{
-	if (g_esGeneral.g_bApplyFix)
-	{
-		LogError("Something went wrong with \"CTerrorPlayer::GoAwayFromKeyboard\"");
-	}
-
-	g_esGeneral.g_bApplyFix = true;
-}
-
-public MRESReturn mreIdlePlayerPost(int pThis)
-{
-	int iSurvivor = g_esGeneral.g_iSurvivorBot;
-	if (g_esGeneral.g_bApplyFix && iSurvivor > 0 && !bIsValidClient(iSurvivor, MT_CHECK_FAKECLIENT))
-	{
-		g_esGeneral.g_bIgnoreSpec = true;
-
-		if (g_esGeneral.g_hSDKSetHumanSpectator != null)
-		{
-			SDKCall(g_esGeneral.g_hSDKSetHumanSpectator, iSurvivor, pThis);
-		}
-
-		if (g_esGeneral.g_hSDKSetObserverTarget != null)
-		{
-			SDKCall(g_esGeneral.g_hSDKSetObserverTarget, pThis, iSurvivor);
-		}
-
-		vOfferTakeover(pThis, iSurvivor);
-
-		g_esPlayer[iSurvivor].g_bAffected = false;
-		g_esGeneral.g_bIgnoreSpec = false;
-	}
-
-	g_esGeneral.g_iSurvivorBot = 0;
-	g_esGeneral.g_bApplyFix = false;
-
-	return MRES_Ignored;
-}
-
-public MRESReturn mreSpecPlayerPre(int pThis, DHookParam hParams)
-{
-	if (!g_esGeneral.g_bApplyFix || g_esGeneral.g_bIgnoreSpec || g_esGeneral.g_iSurvivorBot <= 0)
-	{
-		return MRES_Ignored;
-	}
-
-	return MRES_Supercede;
 }
 
 public void MT_OnPluginCheck(ArrayList &list)
@@ -702,47 +584,6 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	}
 }
 
-public void MT_OnHookEvent(bool hooked)
-{
-	switch (hooked)
-	{
-		case true:
-		{
-			if (!g_esGeneral.g_ddIdlePlayerDetour.Enable(Hook_Pre, mreIdlePlayerPre))
-			{
-				SetFailState("Failed to enable detour pre: CTerrorPlayer::GoAwayFromKeyboard");
-			}
-
-			if (!g_esGeneral.g_ddIdlePlayerDetour.Enable(Hook_Post, mreIdlePlayerPost))
-			{
-				SetFailState("Failed to enable detour post: CTerrorPlayer::GoAwayFromKeyboard");
-			}
-
-			if (!g_esGeneral.g_ddSpecPlayerDetour.Enable(Hook_Pre, mreSpecPlayerPre))
-			{
-				SetFailState("Failed to enable detour pre: SurvivorBot::SetHumanSpectator");
-			}
-		}
-		case false:
-		{
-			if (!g_esGeneral.g_ddIdlePlayerDetour.Disable(Hook_Pre, mreIdlePlayerPre))
-			{
-				SetFailState("Failed to disable detour pre: CTerrorPlayer::GoAwayFromKeyboard");
-			}
-
-			if (!g_esGeneral.g_ddIdlePlayerDetour.Disable(Hook_Post, mreIdlePlayerPost))
-			{
-				SetFailState("Failed to disable detour post: CTerrorPlayer::GoAwayFromKeyboard");
-			}
-
-			if (!g_esGeneral.g_ddSpecPlayerDetour.Disable(Hook_Pre, mreSpecPlayerPre))
-			{
-				SetFailState("Failed to disable detour pre: SurvivorBot::SetHumanSpectator");
-			}
-		}
-	}
-}
-
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "bot_player_replace"))
@@ -903,10 +744,10 @@ static void vIdleHit(int survivor, int tank, float random, float chance, int ena
 					}
 				}
 
-				switch (iGetHumanCount() > 1 || g_esGeneral.g_hSDKGoAFK == null)
+				switch (iGetHumanCount() > 1 || g_hSDKGoAFK == null)
 				{
 					case true: FakeClientCommand(survivor, "go_away_from_keyboard");
-					case false: SDKCall(g_esGeneral.g_hSDKGoAFK, survivor);
+					case false: SDKCall(g_hSDKGoAFK, survivor);
 				}
 
 				if (bIsBotIdle(survivor))
@@ -941,24 +782,6 @@ static void vIdleHit(int survivor, int tank, float random, float chance, int ena
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "IdleAmmo");
 		}
 	}
-}
-
-static void vOfferTakeover(int survivor, int bot)
-{
-	static char sValue[2];
-	static int iCharacter;
-	iCharacter = GetEntProp(bot, Prop_Send, "m_survivorCharacter", 1);
-	IntToString(iCharacter, sValue, sizeof(sValue));
-
-	static BfWrite bfWrite;
-	bfWrite = view_as<BfWrite>(StartMessageOne("VGUIMenu", survivor));
-	bfWrite.WriteString("takeover_survivor_bar");
-	bfWrite.WriteByte(true);
-	bfWrite.WriteByte(1);
-	bfWrite.WriteString("character");
-	bfWrite.WriteString(sValue);
-
-	EndMessage();
 }
 
 static void vRemoveIdle(int tank)
