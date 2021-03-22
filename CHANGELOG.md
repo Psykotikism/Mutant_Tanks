@@ -33,7 +33,6 @@
 
 #### Game Data
 - Fixed some detours causing crashes due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
-- Fixed some signatures not having enough wildcarded bytes for detours.
 
 #### Settings
 - Fixed the `Boss Health Stages` setting not being read entirely.
@@ -410,6 +409,7 @@
 - Idle
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Removed idle fix code. (Use [Lux's plugin](https://forums.alliedmods.net/showthread.php?t=326742) instead.)
 
 - Minion
 	- Minions are removed when their Tank owner changes its Mutant Tank type if the `Minion Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
