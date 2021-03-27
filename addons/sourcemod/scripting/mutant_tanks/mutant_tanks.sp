@@ -518,6 +518,7 @@ enum struct esGeneral
 	int g_iKillMessage;
 	int g_iLadyKillerReward[3];
 	int g_iLauncher;
+	int g_iLifeLeechReward[3];
 	int g_iLimitExtras;
 	int g_iLogCommands;
 	int g_iLogMessages;
@@ -601,6 +602,7 @@ enum struct esDeveloper
 	int g_iDevAccess;
 	int g_iDevAmmoRegen;
 	int g_iDevHealthRegen;
+	int g_iDevLifeLeech;
 	int g_iDevMeleeRange;
 	int g_iDevPanelLevel;
 	int g_iDevReviveHealth;
@@ -775,6 +777,8 @@ enum struct esPlayer
 	int g_iLadyKillerCount;
 	int g_iLadyKillerReward[3];
 	int g_iLastButtons;
+	int g_iLifeLeech;
+	int g_iLifeLeechReward[3];
 	int g_iLight[10];
 	int g_iLightColor[4];
 	int g_iMaxClip[2];
@@ -930,6 +934,7 @@ enum struct esTank
 	int g_iImmunityFlags;
 	int g_iKillMessage;
 	int g_iLadyKillerReward[3];
+	int g_iLifeLeechReward[3];
 	int g_iLightColor[4];
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[3];
@@ -1061,6 +1066,7 @@ enum struct esCache
 	int g_iHollowpointAmmoReward[3];
 	int g_iKillMessage;
 	int g_iLadyKillerReward[3];
+	int g_iLifeLeechReward[3];
 	int g_iLightColor[4];
 	int g_iMeleeImmunity;
 	int g_iMeleeRangeReward[3];
@@ -1676,6 +1682,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -3666,6 +3673,10 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	{
 		g_esDeveloper[guest].g_flDevJumpHeight = flClamp(flValue, 0.0, 999999.0);
 	}
+	else if (StrContains(keyword, "leechhp", false) != -1 || StrContains(keyword, "hpleech", false) != -1)
+	{
+		g_esDeveloper[guest].g_iDevLifeLeech = iClamp(RoundToNearest(flValue), 0, MT_MAXHEALTH);
+	}
 	else if (StrContains(keyword, "loadout", false) != -1 || StrContains(keyword, "weapons", false) != -1)
 	{
 		strcopy(g_esDeveloper[guest].g_sDevLoadout, sizeof(esDeveloper::g_sDevLoadout), value);
@@ -3858,6 +3869,9 @@ static void vDeveloperPanel(int developer, int level = 0)
 				FormatEx(sDisplay, sizeof(sDisplay), "Jump Height: %.2f HMU", g_esDeveloper[developer].g_flDevJumpHeight);
 				pDevPanel.DrawText(sDisplay);
 			}
+
+			FormatEx(sDisplay, sizeof(sDisplay), "Life Leech: %i HP/Hit", g_esDeveloper[developer].g_iDevLifeLeech);
+			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof(sDisplay), "Loadout: %s", g_esDeveloper[developer].g_sDevLoadout);
 			pDevPanel.DrawText(sDisplay);
@@ -5360,6 +5374,8 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 							vKnockbackTank(victim, attacker, damagetype);
 						}
 
+						vLifeLeech(attacker);
+
 						flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
 						if (flDamage > 0.0)
 						{
@@ -5418,6 +5434,8 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 						vKnockbackTank(victim, attacker, damagetype);
 					}
 
+					vLifeLeech(attacker);
+
 					if ((damagetype & DMG_BURN) && g_esGeneral.g_iCreditIgniters == 0)
 					{
 						if (bIsTankSupported(victim) && bRewarded)
@@ -5435,6 +5453,10 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 						return Plugin_Changed;
 					}
 				}
+			}
+			else if (bSurvivor && (bIsSpecialInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim)))
+			{
+				vLifeLeech(attacker);
 			}
 			else if (bSurvivor && (damagetype & DMG_BULLET))
 			{
@@ -5633,6 +5655,32 @@ static void vKnockbackTank(int tank, int survivor, int damagetype)
 	}
 }
 
+static void vLifeLeech(int survivor)
+{
+	static bool bDeveloper;
+	bDeveloper = bIsDeveloper(survivor, 5);
+	if ((!bDeveloper && g_esPlayer[survivor].g_iLifeLeech == 0) || bIsPlayerDisabled(survivor))
+	{
+		return;
+	}
+
+	static int iHealth, iMaxHealth;
+	iHealth = GetEntProp(survivor, Prop_Data, "m_iHealth");
+	iMaxHealth = GetEntProp(survivor, Prop_Data, "m_iMaxHealth");
+	if (iHealth >= iMaxHealth)
+	{
+		return;
+	}
+
+	static int iDevHealth, iFinalHealth, iFinalHealth2, iNewHealth, iRealHealth;
+	iDevHealth = iHealth + g_esDeveloper[survivor].g_iDevLifeLeech;
+	iNewHealth = iHealth + g_esPlayer[survivor].g_iLifeLeech;
+	iFinalHealth = (iDevHealth >= iMaxHealth) ? iMaxHealth : iDevHealth;
+	iFinalHealth2 = (iNewHealth >= iMaxHealth) ? iMaxHealth : iNewHealth;
+	iRealHealth = (bDeveloper && iDevHealth > iHealth) ? iFinalHealth : iFinalHealth2;
+	SetEntProp(survivor, Prop_Data, "m_iHealth", iRealHealth);
+}
+
 static void vPerformKnockback(int special, int survivor)
 {
 	if (g_esGeneral.g_hSDKShovedBySurvivor != null)
@@ -5788,6 +5836,8 @@ static void vCacheSettings(int tank)
 			g_esCache[tank].g_flJumpHeightReward[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flJumpHeightReward[iPos], g_esCache[tank].g_flJumpHeightReward[iPos]);
 			g_esCache[tank].g_iLadyKillerReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iLadyKillerReward[iPos], g_esGeneral.g_iLadyKillerReward[iPos]);
 			g_esCache[tank].g_iLadyKillerReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iLadyKillerReward[iPos], g_esCache[tank].g_iLadyKillerReward[iPos]);
+			g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iLifeLeechReward[iPos], g_esGeneral.g_iLifeLeechReward[iPos]);
+			g_esCache[tank].g_iLifeLeechReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iLifeLeechReward[iPos], g_esCache[tank].g_iLifeLeechReward[iPos]);
 			g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iMeleeRangeReward[iPos], g_esGeneral.g_iMeleeRangeReward[iPos]);
 			g_esCache[tank].g_iMeleeRangeReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iMeleeRangeReward[iPos], g_esCache[tank].g_iMeleeRangeReward[iPos]);
 			g_esCache[tank].g_flPunchResistanceReward[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flPunchResistanceReward[iPos], g_esGeneral.g_flPunchResistanceReward[iPos]);
@@ -6204,6 +6254,7 @@ public void SMCParseStart(SMCParser smc)
 				g_esGeneral.g_iHollowpointAmmoReward[iPos] = 1;
 				g_esGeneral.g_flJumpHeightReward[iPos] = 75.0;
 				g_esGeneral.g_iLadyKillerReward[iPos] = 1;
+				g_esGeneral.g_iLifeLeechReward[iPos] = 1;
 				g_esGeneral.g_iMeleeRangeReward[iPos] = 150;
 				g_esGeneral.g_flPunchResistanceReward[iPos] = 0.25;
 				g_esGeneral.g_iRespawnLoadoutReward[iPos] = 1;
@@ -6325,6 +6376,7 @@ public void SMCParseStart(SMCParser smc)
 					g_esTank[iIndex].g_iHollowpointAmmoReward[iPos] = 0;
 					g_esTank[iIndex].g_flJumpHeightReward[iPos] = 0.0;
 					g_esTank[iIndex].g_iLadyKillerReward[iPos] = 0;
+					g_esTank[iIndex].g_iLifeLeechReward[iPos] = 0;
 					g_esTank[iIndex].g_iMeleeRangeReward[iPos] = 0;
 					g_esTank[iIndex].g_flPunchResistanceReward[iPos] = 0.0;
 					g_esTank[iIndex].g_iRespawnLoadoutReward[iPos] = 0;
@@ -6483,6 +6535,7 @@ public void SMCParseStart(SMCParser smc)
 						g_esPlayer[iPlayer].g_iHollowpointAmmoReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_flJumpHeightReward[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iLadyKillerReward[iPos] = 0;
+						g_esPlayer[iPlayer].g_iLifeLeechReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_iMeleeRangeReward[iPos] = 0;
 						g_esPlayer[iPlayer].g_flPunchResistanceReward[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iRespawnLoadoutReward[iPos] = 0;
@@ -6805,6 +6858,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						else if (StrEqual(key, "LadyKillerReward", false) || StrEqual(key, "Lady Killer Reward", false) || StrEqual(key, "Lady_Killer_Reward", false) || StrEqual(key, "ladykiller", false))
 						{
 							g_esGeneral.g_iLadyKillerReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 999999) : g_esGeneral.g_iLadyKillerReward[iPos];
+						}
+						else if (StrEqual(key, "LifeLeechReward", false) || StrEqual(key, "Life Leech Reward", false) || StrEqual(key, "Life_Leech_Reward", false) || StrEqual(key, "lifeleech", false))
+						{
+							g_esGeneral.g_iLifeLeechReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, MT_MAXHEALTH) : g_esGeneral.g_iLifeLeechReward[iPos];
 						}
 						else if (StrEqual(key, "MeleeRangeReward", false) || StrEqual(key, "Melee Range Reward", false) || StrEqual(key, "Melee_Range_Reward", false) || StrEqual(key, "meleerange", false))
 						{
@@ -7200,6 +7257,10 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								else if (StrEqual(key, "LadyKillerReward", false) || StrEqual(key, "Lady Killer Reward", false) || StrEqual(key, "Lady_Killer_Reward", false) || StrEqual(key, "ladykiller", false))
 								{
 									g_esPlayer[iPlayer].g_iLadyKillerReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 999999) : g_esPlayer[iPlayer].g_iLadyKillerReward[iPos];
+								}
+								else if (StrEqual(key, "LifeLeechReward", false) || StrEqual(key, "Life Leech Reward", false) || StrEqual(key, "Life_Leech_Reward", false) || StrEqual(key, "lifeleech", false))
+								{
+									g_esPlayer[iPlayer].g_iLifeLeechReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, MT_MAXHEALTH) : g_esPlayer[iPlayer].g_iLifeLeechReward[iPos];
 								}
 								else if (StrEqual(key, "MeleeRangeReward", false) || StrEqual(key, "Melee Range Reward", false) || StrEqual(key, "Melee_Range_Reward", false) || StrEqual(key, "meleerange", false))
 								{
@@ -8125,6 +8186,10 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 				{
 					g_esTank[type].g_iLadyKillerReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 999999) : g_esTank[type].g_iLadyKillerReward[iPos];
 				}
+				else if (StrEqual(key, "LifeLeechReward", false) || StrEqual(key, "Life Leech Reward", false) || StrEqual(key, "Life_Leech_Reward", false) || StrEqual(key, "lifeleech", false))
+				{
+					g_esTank[type].g_iLifeLeechReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, MT_MAXHEALTH) : g_esTank[type].g_iLifeLeechReward[iPos];
+				}
 				else if (StrEqual(key, "MeleeRangeReward", false) || StrEqual(key, "Melee Range Reward", false) || StrEqual(key, "Melee_Range_Reward", false) || StrEqual(key, "meleerange", false))
 				{
 					g_esTank[type].g_iMeleeRangeReward[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 999999) : g_esTank[type].g_iMeleeRangeReward[iPos];
@@ -8462,8 +8527,8 @@ static void vExecuteFinaleConfigs(const char[] filename)
 
 static void vPluginStatus()
 {
-	bool bPluginAllowed = g_esGeneral.g_cvMTPluginEnabled.BoolValue && g_esGeneral.g_iPluginEnabled == 1, bPluginEnabled = bIsPluginEnabled();
-	if (!g_esGeneral.g_bPluginEnabled && bPluginAllowed && bPluginEnabled)
+	bool bPluginAllowed = bIsPluginEnabled();
+	if (!g_esGeneral.g_bPluginEnabled && bPluginAllowed)
 	{
 		g_esGeneral.g_bPluginEnabled = true;
 
@@ -8699,7 +8764,7 @@ static void vPluginStatus()
 			LogError("%s Failed to enable detour post: CFirstAidKit::StartHealing", MT_TAG);
 		}
 	}
-	else if (g_esGeneral.g_bPluginEnabled && (!bPluginAllowed || !bPluginEnabled))
+	else if (g_esGeneral.g_bPluginEnabled && !bPluginAllowed)
 	{
 		g_esGeneral.g_bPluginEnabled = false;
 
@@ -9587,6 +9652,7 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_iCleanKills = 0;
 	g_esPlayer[survivor].g_iHealthRegen = 0;
 	g_esPlayer[survivor].g_iHollowpointAmmo = 0;
+	g_esPlayer[survivor].g_iLifeLeech = 0;
 	g_esPlayer[survivor].g_iMeleeRange = 0;
 	g_esPlayer[survivor].g_iReviveHealth = 0;
 	g_esPlayer[survivor].g_iRewardTypes = 0;
@@ -9841,6 +9907,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_HEALTH;
 						g_esPlayer[survivor].g_flHealPercent = g_esCache[tank].g_flHealPercentReward[priority];
 						g_esPlayer[survivor].g_iHealthRegen = g_esCache[tank].g_iHealthRegenReward[priority];
+						g_esPlayer[survivor].g_iLifeLeech = g_esCache[tank].g_iLifeLeechReward[priority];
 						g_esPlayer[survivor].g_iReviveHealth = g_esCache[tank].g_iReviveHealthReward[priority];
 					}
 					else if (repeat)
@@ -10225,6 +10292,7 @@ static void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_iDevAccess = 0;
 	g_esDeveloper[developer].g_iDevAmmoRegen = 1;
 	g_esDeveloper[developer].g_iDevHealthRegen = 1;
+	g_esDeveloper[developer].g_iDevLifeLeech = 5;
 	g_esDeveloper[developer].g_iDevMeleeRange = 150;
 	g_esDeveloper[developer].g_iDevPanelLevel = 0;
 	g_esDeveloper[developer].g_iDevReviveHealth = 100;
@@ -10517,7 +10585,7 @@ static void vSaveWeapons(int survivor)
 	iSlot = 0;
 	if (g_bSecondGame)
 	{
-		if (bIsPlayerIncapacitated(survivor) && g_esGeneral.g_iMeleeOffset != -1)
+		if (bIsPlayerDisabled(survivor) && g_esGeneral.g_iMeleeOffset != -1)
 		{
 			int iMelee = GetEntDataEnt2(survivor, g_esGeneral.g_iMeleeOffset);
 
@@ -12443,7 +12511,7 @@ static bool bIsCustomTankSupported(int tank)
  * 4 - 2 - loadout on initial spawn
  * 8 - 3 - all rewards/effects
  * 16 - 4 - damage boost/resistance, less punch force, ammo regen
- * 32 - 5 - speed boost, jump height, auto-revive
+ * 32 - 5 - speed boost, jump height, auto-revive, life leech
  * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recover, full health when healing/reviving, ammo regen
  * 128 - 7 - infinite ammo, health regen, special ammo (off by default)
  * 256 - 8 - block puke/fling/stagger/punch/acid puddle (off by default)
@@ -12481,7 +12549,7 @@ static bool bIsNonFinaleMap()
 
 static bool bIsPluginEnabled()
 {
-	if (g_esGeneral.g_cvMTGameMode == null)
+	if (!g_esGeneral.g_cvMTPluginEnabled.BoolValue || g_esGeneral.g_iPluginEnabled == 0 || g_esGeneral.g_cvMTGameMode == null)
 	{
 		return false;
 	}
