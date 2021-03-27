@@ -2117,8 +2117,8 @@ Examples:
 
 **SourceMod Team** - For continually updating/improving SourceMod.
 
-# 3rd-Party Revisions Notice
+## 3rd-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
 
-# Final Words
+## Final Words
 Enjoy all my hard work and have fun with it!

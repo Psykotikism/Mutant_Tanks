@@ -478,6 +478,7 @@
 			// - Heal back to 100% health with first aid kits.
 			// - Receive 100% temporary health after being revived.
 			// - Slowly regenerate back to full health.
+			// - Leech health off of any infected per hit.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher
@@ -862,6 +863,23 @@
 			// 2nd number = Number of lady killer bullets to give to assistants.
 			// 3rd number = Number of lady killer bullets to give to teammates.
 			"Lady Killer Reward"			"1,1,1"
+
+			// The amount of health to leech per hit as a reward to survivors.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate amounts with commas (",").
+			// --
+			// Amounts limit: 3
+			// Character limit for each amount: 12
+			// --
+			// Minimum value for each amount: 0 (OFF)
+			// Maximum value for each amount: 1000000 (Highest)
+			// --
+			// 1st number = Amount for killers.
+			// 2nd number = Amount for assistants.
+			// 3rd number = Amount for teammates.
+			"Life Leech Reward"			"1,1,1"
 
 			// The melee range to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -2050,6 +2068,7 @@
 			// - Heal back to 100% health with first aid kits.
 			// - Receive 100% temporary health after being revived.
 			// - Slowly regenerate back to full health.
+			// - Leech health off of any infected per hit.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher
@@ -2434,6 +2453,23 @@
 			// 2nd number = Number of lady killer bullets to give to assistants.
 			// 3rd number = Number of lady killer bullets to give to teammates.
 			"Lady Killer Reward"			"0,0,0"
+
+			// The amount of health to leech per hit as a reward to survivors.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate amounts with commas (",").
+			// --
+			// Amounts limit: 3
+			// Character limit for each amount: 12
+			// --
+			// Minimum value for each amount: 0 (OFF)
+			// Maximum value for each amount: 1000000 (Highest)
+			// --
+			// 1st number = Amount for killers.
+			// 2nd number = Amount for assistants.
+			// 3rd number = Amount for teammates.
+			"Life Leech Reward"			"0,0,0"
 
 			// The melee range to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

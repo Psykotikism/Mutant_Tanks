@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.83 (April 1, 2021)
+## Version 8.83 (March 31, 2021)
 
 ### Bug Fixes
 
@@ -33,6 +33,7 @@
 
 #### Game Data
 - Fixed some detours causing crashes due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed some signatures not having enough wildcarded bytes for detours.
 
 #### Settings
 - Fixed the `Boss Health Stages` setting not being read entirely.
@@ -164,6 +165,7 @@
 	- Gives the recipient more health when revived.
 	- Allows the recipient to heal their target back to max health.
 	- Slowly regenerates the player's health back to full health.
+	- Allows the recipient to leech health off enemies per hit.
 - The ammo reward now does the following:
 	- Extends the recipient's max weapon clip and magazine sizes up to at least twice the default amount.
 	- Gives the recipient one of the special ammo (incendiary or explosive).
@@ -226,12 +228,13 @@
 	- `Ammo Regen Reward`
 	- `Clean Kills Reward` (Thanks to epzminion for the help!)
 	- `Damage Resistance Reward`
-	- `Fall Voiceline Reward`
+	- `Fall Voiceline Reward` (Thanks to epzminion for the help!)
 	- `Heal Percent Reward` (Thanks to epzminion for the help!)
 	- `Health Regen Reward` (Thanks to Silvers for the code!)
 	- `Hollowpoint Ammo Reward` (Thanks to epzminion for the code!)
 	- `Jump Height Reward` (Thanks to epzminion for the help!)
 	- `Lady Killer Reward` (Thanks to epzminion for the idea!)
+	- `Life Leech Reward` (Thanks to epzminion for the idea!)
 	- `Melee Range Reward` (Thanks to epzminion for the idea and Silvers for the code!)
 	- `Punch Resistance Reward` (Thanks to Silvers for the code!)
 	- `Revive Health Reward` (Thanks to epzminion for the help!)
@@ -296,6 +299,7 @@
 	- `Item Reward`
 	- `Jump Height Reward`
 	- `Lady Killer Reward`
+	- `Life Leech Reward`
 	- `Melee Range Reward`
 	- `Punch Resistance Reward`
 	- `Respawn Loadout Reward`
