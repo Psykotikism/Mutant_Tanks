@@ -575,6 +575,16 @@ public Action MT_OnPlayerHitByVomitJar(int player, int thrower)
 	return Plugin_Continue;
 }
 
+public Action MT_OnPlayerShovedBySurvivor(int player, int survivor, float direction[3])
+{
+	if (MT_IsTankSupported(player) && g_esPlayer[player].g_bActivated && bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+
 public void MT_OnAbilityActivated(int tank)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))

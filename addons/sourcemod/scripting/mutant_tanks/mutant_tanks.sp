@@ -618,6 +618,7 @@ enum struct esPlayer
 	bool g_bArtificial;
 	bool g_bAttacked;
 	bool g_bAttackedAgain;
+	bool g_bBlockLeech[MAXPLAYERS + 1];
 	bool g_bBlood;
 	bool g_bBlur;
 	bool g_bBoss;
@@ -777,6 +778,7 @@ enum struct esPlayer
 	int g_iLadyKillerCount;
 	int g_iLadyKillerReward[3];
 	int g_iLastButtons;
+	int g_iLeechDamageType[MAXPLAYERS + 1];
 	int g_iLifeLeech;
 	int g_iLifeLeechReward[3];
 	int g_iLight[10];
@@ -5374,8 +5376,6 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 							vKnockbackTank(victim, attacker, damagetype);
 						}
 
-						vLifeLeech(attacker);
-
 						flDamage = (bDeveloper && g_esDeveloper[attacker].g_flDevDamageBoost > g_esPlayer[attacker].g_flDamageBoost) ? g_esDeveloper[attacker].g_flDevDamageBoost : g_esPlayer[attacker].g_flDamageBoost;
 						if (flDamage > 0.0)
 						{
@@ -5434,8 +5434,6 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 						vKnockbackTank(victim, attacker, damagetype);
 					}
 
-					vLifeLeech(attacker);
-
 					if ((damagetype & DMG_BURN) && g_esGeneral.g_iCreditIgniters == 0)
 					{
 						if (bIsTankSupported(victim) && bRewarded)
@@ -5456,7 +5454,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 			}
 			else if (bSurvivor && (bIsSpecialInfected(victim) || bIsCommonInfected(victim) || bIsWitch(victim)))
 			{
-				vLifeLeech(attacker);
+				vLifeLeech(attacker, damagetype);
 			}
 			else if (bSurvivor && (damagetype & DMG_BULLET))
 			{
@@ -5647,6 +5645,9 @@ public Action RockSoundHook(int clients[MAXPLAYERS], int &numClients, char sampl
 
 static void vKnockbackTank(int tank, int survivor, int damagetype)
 {
+	g_esPlayer[tank].g_bBlockLeech[survivor] = true;
+	g_esPlayer[tank].g_iLeechDamageType[survivor] = damagetype;
+
 	static float flResult;
 	flResult = (damagetype & DMG_BULLET) ? 1.0 : 10.0;
 	if ((bIsDeveloper(survivor, 9) || ((g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_DAMAGEBOOST) && g_esPlayer[survivor].g_iSledgehammerRounds == 1)) && !bIsPlayerIncapacitated(tank) && GetRandomFloat(0.0, 100.0) <= flResult)
@@ -5655,32 +5656,55 @@ static void vKnockbackTank(int tank, int survivor, int damagetype)
 	}
 }
 
-static void vLifeLeech(int survivor)
+static void vLifeLeech(int survivor, int damagetype = 0, int tank = 0, int type = 5)
 {
-	static bool bDeveloper;
-	bDeveloper = bIsDeveloper(survivor, 5);
-	if ((!bDeveloper && g_esPlayer[survivor].g_iLifeLeech == 0) || bIsPlayerDisabled(survivor))
+	if (!bIsSurvivor(survivor) || bIsPlayerDisabled(survivor) || (bIsTank(tank) && (bIsPlayerIncapacitated(tank) || bIsCustomTank(tank))) || (damagetype != 0 && !(damagetype & DMG_CLUB) && !(damagetype & DMG_SLASH)))
 	{
 		return;
 	}
 
+	static bool bDeveloper;
+	bDeveloper = bIsDeveloper(survivor, type);
+	static int iLeech;
+
+	switch (type)
+	{
+		case 5: iLeech = (bDeveloper && g_esDeveloper[survivor].g_iDevLifeLeech > g_esPlayer[survivor].g_iLifeLeech) ? g_esDeveloper[survivor].g_iDevLifeLeech : g_esPlayer[survivor].g_iLifeLeech;
+		case 7: iLeech = (bDeveloper && g_esDeveloper[survivor].g_iDevHealthRegen > g_esPlayer[survivor].g_iHealthRegen) ? g_esDeveloper[survivor].g_iDevHealthRegen : g_esPlayer[survivor].g_iHealthRegen;
+		default: return;
+	}
+
+	if ((!bDeveloper && (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_HEALTH) || g_esPlayer[survivor].g_flRewardTime[0] == -1.0)) || iLeech == 0)
+	{
+		return;
+	}
+
+	static float flTempHealth;
+	flTempHealth = flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue);
 	static int iHealth, iMaxHealth;
 	iHealth = GetEntProp(survivor, Prop_Data, "m_iHealth");
 	iMaxHealth = GetEntProp(survivor, Prop_Data, "m_iMaxHealth");
-	if (iHealth >= iMaxHealth)
+	if (g_esPlayer[survivor].g_iReviveCount > 0 || g_esPlayer[survivor].g_bLastLife)
 	{
-		return;
+		switch (flTempHealth + iLeech > iMaxHealth)
+		{
+			case true: vSetTempHealth(survivor, float(iMaxHealth));
+			case false: vSetTempHealth(survivor, (flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue) + iHealth));
+		}
+	}
+	else
+	{
+		switch (iHealth + iLeech > iMaxHealth)
+		{
+			case true: SetEntProp(survivor, Prop_Data, "m_iHealth", iMaxHealth);
+			case false: SetEntProp(survivor, Prop_Data, "m_iHealth", (iHealth + iLeech));
+		}
+
+		static float flHealth;
+		flHealth = flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue) - iLeech;
+		vSetTempHealth(survivor, ((flHealth < 0.0) ? 0.0 : flHealth));
 	}
 
-	static int iDevHealth, iFinalHealth, iFinalHealth2, iNewHealth, iRealHealth;
-	iDevHealth = iHealth + g_esDeveloper[survivor].g_iDevLifeLeech;
-	iNewHealth = iHealth + g_esPlayer[survivor].g_iLifeLeech;
-	iFinalHealth = (iDevHealth >= iMaxHealth) ? iMaxHealth : iDevHealth;
-	iFinalHealth2 = (iNewHealth >= iMaxHealth) ? iMaxHealth : iNewHealth;
-	iRealHealth = (bDeveloper && iDevHealth > iHealth) ? iFinalHealth : iFinalHealth2;
-	SetEntProp(survivor, Prop_Data, "m_iHealth", iRealHealth);
-
-	iHealth = GetEntProp(survivor, Prop_Data, "m_iHealth");
 	if (iHealth + flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue) > iMaxHealth)
 	{
 		vSetTempHealth(survivor, float(iMaxHealth - iHealth));
@@ -9560,6 +9584,12 @@ static void vReset3(int tank)
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iOldTankType = 0;
 	g_esPlayer[tank].g_iTankType = 0;
+
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		g_esPlayer[tank].g_bBlockLeech[iSurvivor] = false;
+		g_esPlayer[tank].g_iLeechDamageType[iSurvivor] = 0;
+	}
 
 	vResetSurvivorStats(tank);
 }
@@ -13873,6 +13903,14 @@ public MRESReturn mreShovedBySurvivorPre(int pThis, DHookParam hParams)
 		return MRES_Supercede;
 	}
 
+	if (g_esPlayer[pThis].g_bBlockLeech[iSurvivor] && g_esPlayer[pThis].g_iLeechDamageType[iSurvivor] != 0)
+	{
+		vLifeLeech(iSurvivor, g_esPlayer[pThis].g_iLeechDamageType[iSurvivor], pThis);
+
+		g_esPlayer[pThis].g_bBlockLeech[iSurvivor] = false;
+		g_esPlayer[pThis].g_iLeechDamageType[iSurvivor] = 0;
+	}
+
 	return MRES_Ignored;
 }
 
@@ -14697,50 +14735,9 @@ public Action tTimerRegenerateHealth(Handle timer)
 		return Plugin_Continue;
 	}
 
-	static bool bDeveloper;
-	static float flTempHealth, flHealth;
-	static int iHealth, iMaxHealth, iRegen;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (!bIsSurvivor(iSurvivor) || bIsPlayerDisabled(iSurvivor))
-		{
-			continue;
-		}
-
-		bDeveloper = bIsDeveloper(iSurvivor, 7);
-		iRegen = (bDeveloper && g_esDeveloper[iSurvivor].g_iDevHealthRegen > g_esPlayer[iSurvivor].g_iHealthRegen) ? g_esDeveloper[iSurvivor].g_iDevHealthRegen : g_esPlayer[iSurvivor].g_iHealthRegen;
-		if ((!bDeveloper && (!(g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_HEALTH) || g_esPlayer[iSurvivor].g_flRewardTime[0] == -1.0)) || iRegen == 0)
-		{
-			continue;
-		}
-
-		flTempHealth = flGetTempHealth(iSurvivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue);
-		iHealth = GetEntProp(iSurvivor, Prop_Data, "m_iHealth");
-		iMaxHealth = GetEntProp(iSurvivor, Prop_Data, "m_iMaxHealth");
-		if (g_esPlayer[iSurvivor].g_iReviveCount > 0 || g_esPlayer[iSurvivor].g_bLastLife)
-		{
-			switch (flTempHealth + iRegen > iMaxHealth)
-			{
-				case true: vSetTempHealth(iSurvivor, float(iMaxHealth));
-				case false: vSetTempHealth(iSurvivor, (flGetTempHealth(iSurvivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue) + iHealth));
-			}
-		}
-		else
-		{
-			switch (iHealth + iRegen > iMaxHealth)
-			{
-				case true: SetEntProp(iSurvivor, Prop_Data, "m_iHealth", iMaxHealth);
-				case false: SetEntProp(iSurvivor, Prop_Data, "m_iHealth", (iHealth + iRegen));
-			}
-
-			flHealth = flGetTempHealth(iSurvivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue) - iRegen;
-			vSetTempHealth(iSurvivor, ((flHealth < 0.0) ? 0.0 : flHealth));
-		}
-
-		if (iHealth + flGetTempHealth(iSurvivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue) > iMaxHealth)
-		{
-			vSetTempHealth(iSurvivor, float(iMaxHealth - iHealth));
-		}
+		vLifeLeech(iSurvivor, _, _, 7);
 	}
 
 	return Plugin_Continue;
