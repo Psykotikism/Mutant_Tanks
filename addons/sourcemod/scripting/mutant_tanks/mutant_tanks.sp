@@ -5679,6 +5679,12 @@ static void vLifeLeech(int survivor)
 	iFinalHealth2 = (iNewHealth >= iMaxHealth) ? iMaxHealth : iNewHealth;
 	iRealHealth = (bDeveloper && iDevHealth > iHealth) ? iFinalHealth : iFinalHealth2;
 	SetEntProp(survivor, Prop_Data, "m_iHealth", iRealHealth);
+
+	iHealth = GetEntProp(survivor, Prop_Data, "m_iHealth");
+	if (iHealth + flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue) > iMaxHealth)
+	{
+		vSetTempHealth(survivor, float(iMaxHealth - iHealth));
+	}
 }
 
 static void vPerformKnockback(int special, int survivor)
