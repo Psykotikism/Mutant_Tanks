@@ -478,7 +478,7 @@
 			// - Heal back to 100% health with first aid kits.
 			// - Receive 100% temporary health after being revived.
 			// - Slowly regenerate back to full health.
-			// - Leech health off of any infected per hit.
+			// - Leech health off of any infected per melee hit.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher
@@ -2068,7 +2068,7 @@
 			// - Heal back to 100% health with first aid kits.
 			// - Receive 100% temporary health after being revived.
 			// - Slowly regenerate back to full health.
-			// - Leech health off of any infected per hit.
+			// - Leech health off of any infected per melee hit.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
 			// - Jump higher

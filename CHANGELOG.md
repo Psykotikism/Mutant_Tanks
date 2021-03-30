@@ -33,7 +33,6 @@
 
 #### Game Data
 - Fixed some detours causing crashes due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
-- Fixed some signatures not having enough wildcarded bytes for detours.
 
 #### Settings
 - Fixed the `Boss Health Stages` setting not being read entirely.
@@ -59,6 +58,9 @@
 
 - Fragile
 	- Fixed all types of fire damage not being detected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- God
+	- Fixed Tanks not being extinguished from fires while the ability is activated. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Heal
 	- Fixed players with the godmode reward being affected.
