@@ -55,7 +55,7 @@
 				"this"		"ignore"
 				"arguments"
 				{
-					"a1" // Changed from "survivor" to be compatible with Left 4 DHooks Direct
+					"survivor"
 					{
 						"type"		"cbaseentity"
 					}
@@ -177,11 +177,11 @@
 				"this"		"entity"
 				"arguments"
 				{
-					"a1" // Changed from "player" to be compatible with Left 4 DHooks Direct
+					"player"
 					{
 						"type"		"cbaseentity"
 					}
-					"a2" // Changed from "direction" to be compatible with Left 4 DHooks Direct
+					"direction"
 					{
 						"type"		"vectorptr"
 					}
@@ -254,11 +254,11 @@
 				"this"		"ignore"
 				"arguments"
 				{
-					"a1" // Changed from "oldTank" to be compatible with Left 4 DHooks Direct
+					"oldTank"
 					{
 						"type"		"cbaseentity"
 					}
-					"a2" // Changed from "newTank" to be compatible with Left 4 DHooks Direct
+					"newTank"
 					{
 						"type"		"cbaseentity"
 					}
@@ -273,11 +273,11 @@
 				"this"		"ignore"
 				"arguments"
 				{
-					"a1" // Changed from "origin" to be compatible with Left 4 DHooks Direct
+					"origin"
 					{
 						"type"		"vectorptr"
 					}
-					"a2" // Changed from "angles" to be compatible with Left 4 DHooks Direct
+					"angles"
 					{
 						"type"		"vectorptr"
 					}
