@@ -13,6 +13,10 @@
 #include <sdkhooks>
 #include <mutant_tanks>
 
+#undef REQUIRE_PLUGIN
+#tryinclude <left4dhooks>
+#define REQUIRE_PLUGIN
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -50,6 +54,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
 
 #define MT_MENU_FLING "Fling Ability"
+
+enum struct esGeneral
+{
+	bool g_bLeft4DHooksInstalled;
+
+	Handle g_hSDKFling;
+}
+
+esGeneral g_esGeneral;
 
 enum struct esPlayer
 {
@@ -136,7 +149,26 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKFling;
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
 
 public void OnPluginStart()
 {
@@ -165,8 +197,8 @@ public void OnPluginStart()
 	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 
-	g_hSDKFling = EndPrepSDKCall();
-	if (g_hSDKFling == null)
+	g_esGeneral.g_hSDKFling = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKFling == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
 	}
@@ -733,7 +765,11 @@ static void vFling(int survivor, int tank)
 	flVelocity[1] = (flRatio[1] * -1) * g_esCache[tank].g_flFlingForce;
 	flVelocity[2] = g_esCache[tank].g_flFlingForce;
 
-	SDKCall(g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
+	switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKFling == null)
+	{
+		case true: L4D2_CTerrorPlayer_Fling(survivor, tank, flVelocity);
+		case false: SDKCall(g_esGeneral.g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
+	}
 }
 
 static void vFlingAbility(int tank, float random, int pos = -1)
@@ -846,7 +882,7 @@ static void vFlingRange(int tank, int value, float random, int pos = -1)
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esCache[tank].g_flFlingDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlingDeath == 1 && random <= flChance)
 	{
-		if (g_hSDKFling == null || g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+		if (g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}

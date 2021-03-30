@@ -677,15 +677,6 @@ public void MT_OnCopyStats(int oldTank, int newTank)
 	}
 }
 
-public void MT_OnHookEvent(bool hooked)
-{
-	switch (hooked)
-	{
-		case true: HookEvent("heal_success", MT_OnEventFired);
-		case false: UnhookEvent("heal_success", MT_OnEventFired);
-	}
-}
-
 public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 {
 	if (StrEqual(name, "bot_player_replace"))

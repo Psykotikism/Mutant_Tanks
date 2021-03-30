@@ -315,12 +315,17 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 			EmitSoundToAll(SOUND_METAL, victim);
 
+			if ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT))
+			{
+				ExtinguishEntity(victim);
+			}
+
 			if ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB))
 			{
 				static float flTankPos[3];
 				GetClientAbsOrigin(victim, flTankPos);
 
-				switch (bSurvivor && MT_DoesSurvivorHaveRewardType(victim, MT_REWARD_GODMODE))
+				switch (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
 				{
 					case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
 					case false: vPushNearbyEntities(victim, flTankPos);

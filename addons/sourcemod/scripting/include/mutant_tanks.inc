@@ -1693,7 +1693,7 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 
 		switch (client == 0)
 		{
-			case true: MT_PrintToServer(sBuffer);
+			case true: PrintToServer(sBuffer);
 			case false: PrintToConsole(client, sBuffer);
 		}
 	}

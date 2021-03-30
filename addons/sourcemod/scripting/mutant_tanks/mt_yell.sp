@@ -12,6 +12,10 @@
 #include <sourcemod>
 #include <mutant_tanks>
 
+#undef REQUIRE_PLUGIN
+#tryinclude <left4dhooks>
+#define REQUIRE_PLUGIN
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -56,6 +60,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
 
 #define MT_MENU_YELL "Yell Ability"
+
+enum struct esGeneral
+{
+	bool g_bLeft4DHooksInstalled;
+
+	Handle g_hSDKDeafen;
+}
+
+esGeneral g_esGeneral;
 
 enum struct esPlayer
 {
@@ -126,7 +139,26 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKDeafen;
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
 
 public void OnPluginStart()
 {
@@ -154,8 +186,8 @@ public void OnPluginStart()
 	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 
-	g_hSDKDeafen = EndPrepSDKCall();
-	if (g_hSDKDeafen == null)
+	g_esGeneral.g_hSDKDeafen = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKDeafen == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::Deafen\" offsets are outdated.", MT_TAG);
 	}
@@ -810,9 +842,10 @@ static void vYell3(int survivor)
 	EmitSoundToClient(survivor, SOUND_YELL10);
 	EmitSoundToClient(survivor, SOUND_YELL11);
 
-	if (g_hSDKDeafen != null)
+	switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKDeafen == null)
 	{
-		SDKCall(g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
+		case true: L4D_Deafen(survivor);
+		case false: SDKCall(g_esGeneral.g_hSDKDeafen, survivor, 1.0, 0.0, 0.01);
 	}
 }
 
@@ -862,7 +895,7 @@ public Action tTimerYell(Handle timer, DataPack pack)
 
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor) || !g_esPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE) || g_hSDKDeafen == null)
+	if (!bIsSurvivor(iSurvivor) || !g_esPlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;

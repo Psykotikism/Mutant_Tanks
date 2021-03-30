@@ -16,6 +16,7 @@
 
 #undef REQUIRE_PLUGIN
 #tryinclude <adminmenu>
+#tryinclude <left4dhooks>
 #tryinclude <mt_clone>
 #tryinclude <WeaponHandling>
 #define REQUIRE_PLUGIN
@@ -285,6 +286,7 @@ enum struct esGeneral
 	bool g_bFinaleEnded;
 	bool g_bForceSpawned;
 	bool g_bHideNameChange;
+	bool g_bLeft4DHooksInstalled;
 	bool g_bLinux;
 	bool g_bMapStarted;
 	bool g_bPatchDoJumpValue;
@@ -1513,24 +1515,36 @@ public any aNative_TankMaxHealth(Handle plugin, int numParams)
 public any aNative_UnvomitPlayer(Handle plugin, int numParams)
 {
 	int iPlayer = GetNativeCell(1);
-	if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && GetClientTeam(iPlayer) > 1 && g_esPlayer[iPlayer].g_bVomited && g_esGeneral.g_hSDKITExpired != null)
+	if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && GetClientTeam(iPlayer) > 1 && g_esPlayer[iPlayer].g_bVomited)
 	{
-		SDKCall(g_esGeneral.g_hSDKITExpired, iPlayer);
+		switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKITExpired == null)
+		{
+			case true: L4D_OnITExpired(iPlayer);
+			case false: SDKCall(g_esGeneral.g_hSDKITExpired, iPlayer);
+		}
 	}
 }
 
 public any aNative_VomitPlayer(Handle plugin, int numParams)
 {
 	int iPlayer = GetNativeCell(1), iBoomer = GetNativeCell(2);
-	if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && GetClientTeam(iPlayer) > 1 && bIsValidClient(iBoomer, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esGeneral.g_hSDKVomitedUpon != null)
+	if (bIsValidClient(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && GetClientTeam(iPlayer) > 1 && bIsValidClient(iBoomer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
-		SDKCall(g_esGeneral.g_hSDKVomitedUpon, iPlayer, iBoomer, true);
+		switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKVomitedUpon == null)
+		{
+			case true: L4D_CTerrorPlayer_OnVomitedUpon(iPlayer, iBoomer);
+			case false: SDKCall(g_esGeneral.g_hSDKVomitedUpon, iPlayer, iBoomer, true);
+		}
 	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "mt_clone", false))
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = true;
+	}
+	else if (StrEqual(name, "mt_clone", false))
 	{
 		g_esGeneral.g_bCloneInstalled = true;
 	}
@@ -1542,7 +1556,11 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "mt_clone", false))
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = false;
+	}
+	else if (StrEqual(name, "mt_clone", false))
 	{
 		g_esGeneral.g_bCloneInstalled = false;
 	}
@@ -1555,6 +1573,7 @@ public void OnLibraryRemoved(const char[] name)
 public void OnAllPluginsLoaded()
 {
 	g_esGeneral.g_bCloneInstalled = LibraryExists("mt_clone");
+	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
 	g_esGeneral.g_bWeaponHandlingInstalled = LibraryExists("WeaponHandling");
 }
 
@@ -1682,6 +1701,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -3582,9 +3602,13 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 		{
 			case true:
 			{
-				if (g_esPlayer[developer].g_bVomited && g_esGeneral.g_hSDKITExpired != null)
+				if (g_esPlayer[developer].g_bVomited)
 				{
-					SDKCall(g_esGeneral.g_hSDKITExpired, developer);
+					switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKITExpired == null)
+					{
+						case true: L4D_OnITExpired(developer);
+						case false: SDKCall(g_esGeneral.g_hSDKITExpired, developer);
+					}
 				}
 
 				SetEntProp(developer, Prop_Data, "m_takedamage", 0, 1);
@@ -5384,7 +5408,7 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 							static float flTankPos[3];
 							GetClientAbsOrigin(victim, flTankPos);
 
-							switch (bSurvivor && (g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_GODMODE))
+							switch (bSurvivor && (bIsDeveloper(attacker, 11) || (g_esPlayer[attacker].g_iRewardTypes & MT_REWARD_GODMODE)))
 							{
 								case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
 								case false: vPushNearbyEntities(victim, flTankPos);
@@ -6065,15 +6089,29 @@ static void vLoadConfigs(const char[] savepath, int mode)
 		Call_Finish();
 	}
 
+	static bool bFinish;
+	bFinish = true;
 	Call_StartForward(g_esGeneral.g_gfAbilityCheckForward);
 
 	for (int iPos = 0; iPos < sizeof(esGeneral::g_alAbilitySections); iPos++)
 	{
 		g_esGeneral.g_alAbilitySections[iPos] = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
-		Call_PushArrayEx(g_esGeneral.g_alAbilitySections[iPos], MT_MAXABILITIES + 1, SM_PARAM_COPYBACK);
+
+		switch (g_esGeneral.g_alAbilitySections[iPos] != null)
+		{
+			case true: Call_PushArrayEx(g_esGeneral.g_alAbilitySections[iPos], MT_MAXABILITIES + 1, SM_PARAM_COPYBACK);
+			case false:
+			{
+				bFinish = false;
+
+				Call_Cancel();
+
+				break;
+			}
+		}
 	}
 
-	Call_Finish();
+	if (bFinish) Call_Finish();
 
 	for (int iPos = 0; iPos < MT_MAXABILITIES; iPos++)
 	{
@@ -7854,17 +7892,25 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				CreateTimer(10.0, tTimerKillStuckTank, iPlayerId, TIMER_FLAG_NO_MAPCHANGE);
 				vCombineAbilitiesForward(iPlayer, MT_COMBO_UPONINCAP);
 			}
-			else if (bIsSurvivor(iPlayer) && (bIsDeveloper(iPlayer, 5) || (g_esPlayer[iPlayer].g_iRewardTypes & MT_REWARD_GODMODE)) && g_esGeneral.g_hSDKRevive != null)
+			else if (bIsSurvivor(iPlayer) && (bIsDeveloper(iPlayer, 5) || (g_esPlayer[iPlayer].g_iRewardTypes & MT_REWARD_GODMODE)))
 			{
-				SDKCall(g_esGeneral.g_hSDKRevive, iPlayer);
+				switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKRevive == null)
+				{
+					case true: L4D_ReviveSurvivor(iPlayer);
+					case false: SDKCall(g_esGeneral.g_hSDKRevive, iPlayer);
+				}
 			}
 		}
 		else if (StrEqual(name, "player_ledge_grab"))
 		{
 			int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-			if (bIsSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 5) && g_esGeneral.g_hSDKRevive != null)
+			if (bIsSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 5))
 			{
-				SDKCall(g_esGeneral.g_hSDKRevive, iSurvivor);
+				switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKRevive == null)
+				{
+					case true: L4D_ReviveSurvivor(iSurvivor);
+					case false: SDKCall(g_esGeneral.g_hSDKRevive, iSurvivor);
+				}
 			}
 		}
 		else if (StrEqual(name, "player_now_it"))
@@ -8539,11 +8585,6 @@ static void vPluginStatus()
 			LogError("%s Failed to enable detour post: CTerrorGameMovement::DoJump", MT_TAG);
 		}
 
-		if (!g_esGeneral.g_ddEnterGhostStateDetour.Enable(Hook_Post, mreEnterGhostStatePost))
-		{
-			LogError("%s Failed to enable detour post: CTerrorPlayer::OnEnterGhostState", MT_TAG);
-		}
-
 		if (!g_esGeneral.g_ddEnterStasisDetour.Enable(Hook_Post, mreEnterStasisPost))
 		{
 			LogError("%s Failed to enable detour post: Tank::EnterStasis", MT_TAG);
@@ -8567,11 +8608,6 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddFallingDetour.Enable(Hook_Post, mreFallingPost))
 		{
 			LogError("%s Failed to enable detour post: CTerrorPlayer::OnFalling", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Enable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
-		{
-			LogError("%s Failed to enable detour post: CDirector::OnFirstSurvivorLeftSafeArea", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddGetMaxClip1Detour.Enable(Hook_Pre, mreGetMaxClip1Pre))
@@ -8604,11 +8640,6 @@ static void vPluginStatus()
 			LogError("%s Failed to enable detour post: CTankClaw::OnPlayerHit", MT_TAG);
 		}
 
-		if (!g_esGeneral.g_ddReplaceTankDetour.Enable(Hook_Post, mreReplaceTankPost))
-		{
-			LogError("%s Failed to enable detour post: ZombieManager::ReplaceTank", MT_TAG);
-		}
-
 		if (!g_esGeneral.g_ddRevivedDetour.Enable(Hook_Pre, mreRevivedPre))
 		{
 			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnRevived", MT_TAG);
@@ -8627,21 +8658,6 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddSecondaryAttackDetour.Enable(Hook_Post, mreSecondaryAttackPost))
 		{
 			LogError("%s Failed to enable detour post: CTerrorWeapon::SecondaryAttack", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddShovedBySurvivorDetour.Enable(Hook_Pre, mreShovedBySurvivorPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddSpawnTankDetour.Enable(Hook_Pre, mreSpawnTankPre))
-		{
-			LogError("%s Failed to enable detour pre: ZombieManager::SpawnTank", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddStaggerDetour.Enable(Hook_Pre, mreStaggerPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnStaggered", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddStartRevivingDetour.Enable(Hook_Pre, mreStartRevivingPre))
@@ -8753,6 +8769,39 @@ static void vPluginStatus()
 		{
 			LogError("%s Failed to enable detour post: CFirstAidKit::StartHealing", MT_TAG);
 		}
+
+		if (!g_esGeneral.g_bLeft4DHooksInstalled)
+		{
+			if (!g_esGeneral.g_ddEnterGhostStateDetour.Enable(Hook_Post, mreEnterGhostStatePost))
+			{
+				LogError("%s Failed to enable detour post: CTerrorPlayer::OnEnterGhostState", MT_TAG);
+			}
+
+			if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Enable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
+			{
+				LogError("%s Failed to enable detour post: CDirector::OnFirstSurvivorLeftSafeArea", MT_TAG);
+			}
+
+			if (!g_esGeneral.g_ddReplaceTankDetour.Enable(Hook_Post, mreReplaceTankPost))
+			{
+				LogError("%s Failed to enable detour post: ZombieManager::ReplaceTank", MT_TAG);
+			}
+
+			if (!g_esGeneral.g_ddShovedBySurvivorDetour.Enable(Hook_Pre, mreShovedBySurvivorPre))
+			{
+				LogError("%s Failed to enable detour pre: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
+			}
+
+			if (!g_esGeneral.g_ddSpawnTankDetour.Enable(Hook_Pre, mreSpawnTankPre))
+			{
+				LogError("%s Failed to enable detour pre: ZombieManager::SpawnTank", MT_TAG);
+			}
+
+			if (!g_esGeneral.g_ddStaggerDetour.Enable(Hook_Pre, mreStaggerPre))
+			{
+				LogError("%s Failed to enable detour pre: CTerrorPlayer::OnStaggered", MT_TAG);
+			}
+		}
 	}
 	else if (g_esGeneral.g_bPluginEnabled && !bPluginAllowed)
 	{
@@ -8773,11 +8822,6 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddDoJumpDetour.Disable(Hook_Post, mreDoJumpPost))
 		{
 			LogError("%s Failed to disable detour post: CTerrorGameMovement::DoJump", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddEnterGhostStateDetour.Disable(Hook_Post, mreEnterGhostStatePost))
-		{
-			LogError("%s Failed to disable detour post: CTerrorPlayer::OnEnterGhostState", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddEnterStasisDetour.Disable(Hook_Post, mreEnterStasisPost))
@@ -8803,11 +8847,6 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddFallingDetour.Disable(Hook_Post, mreFallingPost))
 		{
 			LogError("%s Failed to disable detour post: CTerrorPlayer::OnFalling", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Disable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
-		{
-			LogError("%s Failed to disable detour post: CDirector::OnFirstSurvivorLeftSafeArea", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddGetMaxClip1Detour.Disable(Hook_Pre, mreGetMaxClip1Pre))
@@ -8840,11 +8879,6 @@ static void vPluginStatus()
 			LogError("%s Failed to disable detour post: CTankClaw::OnPlayerHit", MT_TAG);
 		}
 
-		if (!g_esGeneral.g_ddReplaceTankDetour.Disable(Hook_Post, mreReplaceTankPost))
-		{
-			LogError("%s Failed to disable detour post: ZombieManager::ReplaceTank", MT_TAG);
-		}
-
 		if (!g_esGeneral.g_ddRevivedDetour.Disable(Hook_Pre, mreRevivedPre))
 		{
 			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnRevived", MT_TAG);
@@ -8863,21 +8897,6 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddSecondaryAttackDetour.Disable(Hook_Post, mreSecondaryAttackPost))
 		{
 			LogError("%s Failed to disable detour post: CTerrorWeapon::SecondaryAttack", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddShovedBySurvivorDetour.Disable(Hook_Pre, mreShovedBySurvivorPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddSpawnTankDetour.Disable(Hook_Pre, mreSpawnTankPre))
-		{
-			LogError("%s Failed to disable detour pre: ZombieManager::SpawnTank", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddStaggerDetour.Disable(Hook_Pre, mreStaggerPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnStaggered", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddStartRevivingDetour.Disable(Hook_Pre, mreStartRevivingPre))
@@ -8988,6 +9007,39 @@ static void vPluginStatus()
 		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Disable(Hook_Post, mreStartHealingPost))
 		{
 			LogError("%s Failed to disable detour post: CFirstAidKit::StartHealing", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_bLeft4DHooksInstalled)
+		{
+			if (!g_esGeneral.g_ddEnterGhostStateDetour.Disable(Hook_Post, mreEnterGhostStatePost))
+			{
+				LogError("%s Failed to disable detour post: CTerrorPlayer::OnEnterGhostState", MT_TAG);
+			}
+
+			if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Disable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
+			{
+				LogError("%s Failed to disable detour post: CDirector::OnFirstSurvivorLeftSafeArea", MT_TAG);
+			}
+
+			if (!g_esGeneral.g_ddReplaceTankDetour.Disable(Hook_Post, mreReplaceTankPost))
+			{
+				LogError("%s Failed to disable detour post: ZombieManager::ReplaceTank", MT_TAG);
+			}
+
+			if (!g_esGeneral.g_ddShovedBySurvivorDetour.Disable(Hook_Pre, mreShovedBySurvivorPre))
+			{
+				LogError("%s Failed to disable detour pre: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
+			}
+
+			if (!g_esGeneral.g_ddSpawnTankDetour.Disable(Hook_Pre, mreSpawnTankPre))
+			{
+				LogError("%s Failed to disable detour pre: ZombieManager::SpawnTank", MT_TAG);
+			}
+
+			if (!g_esGeneral.g_ddStaggerDetour.Disable(Hook_Pre, mreStaggerPre))
+			{
+				LogError("%s Failed to disable detour pre: CTerrorPlayer::OnStaggered", MT_TAG);
+			}
 		}
 	}
 }
@@ -9157,7 +9209,7 @@ static void vLogMessage(int type, bool timestamp = true, const char[] message, a
 					case false: vSaveMessage(sBuffer);
 				}
 
-				MT_PrintToServer(sBuffer);
+				PrintToServer(sBuffer);
 			}
 		}
 	}
@@ -10073,9 +10125,13 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						g_esPlayer[survivor].g_flPunchResistance = g_esCache[tank].g_flPunchResistanceReward[priority];
 						g_esPlayer[survivor].g_iCleanKills = g_esCache[tank].g_iCleanKillsReward[priority];
 
-						if (g_esPlayer[survivor].g_bVomited && g_esGeneral.g_hSDKITExpired != null)
+						if (g_esPlayer[survivor].g_bVomited)
 						{
-							SDKCall(g_esGeneral.g_hSDKITExpired, survivor);
+							switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKITExpired == null)
+							{
+								case true: L4D_OnITExpired(survivor);
+								case false: SDKCall(g_esGeneral.g_hSDKITExpired, survivor);
+							}
 						}
 					}
 					else if (repeat)
@@ -10466,9 +10522,11 @@ static void vRefillAmmo(int survivor, bool all = false, bool reset = false)
 	iSlot = GetPlayerWeaponSlot(survivor, 0);
 	if (iSlot > MaxClients)
 	{
-		if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= g_esPlayer[survivor].g_iMaxClip[0]))
+		static int iMaxClip;
+		iMaxClip = iGetMaxAmmo(survivor, 0, iSlot, false, true);
+		if (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= iMaxClip))
 		{
-			SetEntProp(iSlot, Prop_Send, "m_iClip1", g_esPlayer[survivor].g_iMaxClip[0]);
+			SetEntProp(iSlot, Prop_Send, "m_iClip1", iMaxClip);
 		}
 
 		if (g_bSecondGame)
@@ -10477,7 +10535,7 @@ static void vRefillAmmo(int survivor, bool all = false, bool reset = false)
 			iUpgrades = GetEntProp(iSlot, Prop_Send, "m_upgradeBitVec");
 			if ((iUpgrades & MT_UPGRADE_INCENDIARY) || (iUpgrades & MT_UPGRADE_EXPLOSIVE))
 			{
-				SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", g_esPlayer[survivor].g_iMaxClip[0]);
+				SetEntProp(iSlot, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", iMaxClip);
 			}
 		}
 
@@ -14079,6 +14137,93 @@ public MRESReturn mreVomitedUponPre(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
+#if defined _l4dh_included
+public void L4D_OnEnterGhostState(int client)
+{
+	if (bIsTank(client))
+	{
+		g_esPlayer[client].g_bKeepCurrentType = true;
+
+		if (g_esGeneral.g_iCurrentMode == 1 && g_esGeneral.g_flForceSpawn > 0.0)
+		{
+			CreateTimer(g_esGeneral.g_flForceSpawn, tTimerForceSpawnTank, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
+}
+
+public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
+{
+	vResetTimers(true);
+}
+
+public void L4D_OnReplaceTank(int tank, int newtank)
+{
+	g_esPlayer[newtank].g_bReplaceSelf = true;
+
+	vSetColor(newtank, g_esPlayer[tank].g_iTankType);
+	vCopyTankStats(tank, newtank);
+	vTankSpawn(newtank, -1);
+	vReset2(tank, 0);
+	vReset3(tank);
+	vCacheSettings(tank);
+}
+
+public Action L4D_OnShovedBySurvivor(int client, int victim, const float vecDir[3])
+{
+	Action aResult = Plugin_Continue;
+	Call_StartForward(g_esGeneral.g_gfPlayerShovedBySurvivorForward);
+	Call_PushCell(victim);
+	Call_PushCell(client);
+	Call_PushArray(vecDir, 3);
+	Call_Finish(aResult);
+
+	return aResult;
+}
+
+public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
+{
+	if (g_esGeneral.g_iLimitExtras == 0 || g_esGeneral.g_bForceSpawned)
+	{
+		return Plugin_Continue;
+	}
+
+	bool bBlock = false;
+	int iCount = iGetTankCount(true), iCount2 = iGetTankCount(false);
+
+	switch (bIsFinaleMap())
+	{
+		case true:
+		{
+			switch (g_esGeneral.g_iTankWave)
+			{
+				case 0: bBlock = false;
+				default:
+				{
+					switch (g_esGeneral.g_iFinaleAmount)
+					{
+						case 0: bBlock = (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount) || (0 < g_esGeneral.g_iFinaleWave[g_esGeneral.g_iTankWave - 1] <= iCount2);
+						default: bBlock = (0 < g_esGeneral.g_iFinaleAmount <= iCount) || (0 < g_esGeneral.g_iFinaleAmount <= iCount2);
+					}
+				}
+			}
+		}
+		case false: bBlock = (0 < g_esGeneral.g_iRegularAmount <= iCount) || (0 < g_esGeneral.g_iRegularAmount <= iCount2);
+	}
+
+	return bBlock ? Plugin_Handled : Plugin_Continue;
+}
+
+public Action L4D2_OnStagger(int target, int source)
+{
+	if (bIsSurvivor(target) && (bIsDeveloper(target, 8) || (g_esPlayer[target].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+#endif
+
 #if defined _WeaponHandling_included
 public void WH_OnMeleeSwing(int client, int weapon, float &speedmodifier)
 {
@@ -14383,10 +14528,15 @@ public Action tTimerForceSpawnTank(Handle timer, int userid)
 	}
 
 	int iAbility = -1;
-	if (g_esGeneral.g_hSDKMaterializeGhost != null)
+
+	switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKMaterializeGhost == null)
 	{
-		SDKCall(g_esGeneral.g_hSDKMaterializeGhost, iTank);
-		iAbility = GetEntPropEnt(iTank, Prop_Send, "m_customAbility");
+		case true: iAbility = L4D_MaterializeFromGhost(iTank);
+		case false:
+		{
+			SDKCall(g_esGeneral.g_hSDKMaterializeGhost, iTank);
+			iAbility = GetEntPropEnt(iTank, Prop_Send, "m_customAbility");
+		}
 	}
 
 	switch (iAbility)

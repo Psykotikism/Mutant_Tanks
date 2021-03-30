@@ -13,6 +13,10 @@
 #include <sdkhooks>
 #include <mutant_tanks>
 
+#undef REQUIRE_PLUGIN
+#tryinclude <left4dhooks>
+#define REQUIRE_PLUGIN
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -49,6 +53,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
 
 #define MT_MENU_SHOVE "Shove Ability"
+
+enum struct esGeneral
+{
+	bool g_bLeft4DHooksInstalled;
+
+	Handle g_hSDKStagger;
+}
+
+esGeneral g_esGeneral;
 
 enum struct esPlayer
 {
@@ -140,7 +153,26 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKStagger;
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
 
 public void OnPluginStart()
 {
@@ -166,8 +198,8 @@ public void OnPluginStart()
 
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_Pointer);
-	g_hSDKStagger = EndPrepSDKCall();
-	if (g_hSDKStagger == null)
+	g_esGeneral.g_hSDKStagger = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKStagger == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::OnStaggered\" signature is outdated.", MT_TAG);
 	}
@@ -825,7 +857,7 @@ static void vShoveHit(int survivor, int tank, float random, float chance, int en
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE) && g_hSDKStagger != null)
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
@@ -896,7 +928,7 @@ static void vShoveRange(int tank, int value, float random, int pos = -1)
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esCache[tank].g_flShoveDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iShoveDeath == 1 && random <= flChance)
 	{
-		if (g_hSDKStagger == null || g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
+		if (g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -911,7 +943,11 @@ static void vShoveRange(int tank, int value, float random, int pos = -1)
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
 				{
-					SDKCall(g_hSDKStagger, iSurvivor, tank, flTankPos);
+					switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKStagger == null)
+					{
+						case true: L4D_StaggerPlayer(iSurvivor, tank, flTankPos);
+						case false: SDKCall(g_esGeneral.g_hSDKStagger, iSurvivor, tank, flTankPos);
+					}
 				}
 			}
 		}
@@ -973,7 +1009,7 @@ public Action tTimerShove(Handle timer, DataPack pack)
 
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || g_hSDKStagger == null)
+	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor))
 	{
 		g_esPlayer[iSurvivor].g_bAffected = false;
 		g_esPlayer[iSurvivor].g_iOwner = 0;
@@ -1006,7 +1042,12 @@ public Action tTimerShove(Handle timer, DataPack pack)
 
 	static float flOrigin[3];
 	GetClientAbsOrigin(iTank, flOrigin);
-	SDKCall(g_hSDKStagger, iSurvivor, iTank, flOrigin);
+
+	switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKStagger == null)
+	{
+		case true: L4D_StaggerPlayer(iSurvivor, iTank, flOrigin);
+		case false: SDKCall(g_esGeneral.g_hSDKStagger, iSurvivor, iTank, flOrigin);
+	}
 
 	return Plugin_Continue;
 }

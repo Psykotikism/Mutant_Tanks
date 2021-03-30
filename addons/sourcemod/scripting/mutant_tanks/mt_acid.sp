@@ -13,6 +13,10 @@
 #include <sdkhooks>
 #include <mutant_tanks>
 
+#undef REQUIRE_PLUGIN
+#tryinclude <left4dhooks>
+#define REQUIRE_PLUGIN
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -50,6 +54,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
 
 #define MT_MENU_ACID "Acid Ability"
+
+enum struct esGeneral
+{
+	bool g_bLeft4DHooksInstalled;
+
+	Handle g_hSDKSpitterProjectileCreate;
+}
+
+esGeneral g_esGeneral;
 
 enum struct esPlayer
 {
@@ -141,7 +154,26 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKSpitterProjectileCreate;
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
 
 public void OnPluginStart()
 {
@@ -172,8 +204,8 @@ public void OnPluginStart()
 	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 	PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 
-	g_hSDKSpitterProjectileCreate = EndPrepSDKCall();
-	if (g_hSDKSpitterProjectileCreate == null)
+	g_esGeneral.g_hSDKSpitterProjectileCreate = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKSpitterProjectileCreate == null)
 	{
 		LogError("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
 	}
@@ -754,7 +786,7 @@ public void MT_OnRockBreak(int tank, int rock)
 
 static void vAcid(int survivor, int tank)
 {
-	if (g_hSDKSpitterProjectileCreate == null || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
+	if (bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -762,7 +794,12 @@ static void vAcid(int survivor, int tank)
 	static float flOrigin[3], flAngles[3];
 	GetClientAbsOrigin(survivor, flOrigin);
 	GetClientAbsAngles(survivor, flAngles);
-	SDKCall(g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
+
+	switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKSpitterProjectileCreate == null)
+	{
+		case true: L4D2_SpitterPrj(tank, flOrigin, flAngles);
+		case false: SDKCall(g_esGeneral.g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
+	}
 }
 
 static void vAcidAbility(int tank, float random, int pos = -1)
@@ -888,12 +925,17 @@ static void vAcidRockBreak(int tank, int rock, float random, int pos = -1)
 {
 	static float flChance;
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 12, pos) : g_esCache[tank].g_flAcidRockChance;
-	if (g_hSDKSpitterProjectileCreate != null && random <= flChance)
+	if (random <= flChance)
 	{
 		static float flOrigin[3], flAngles[3];
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] += 40.0;
-		SDKCall(g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
+
+		switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKSpitterProjectileCreate == null)
+		{
+			case true: L4D2_SpitterPrj(tank, flOrigin, flAngles);
+			case false: SDKCall(g_esGeneral.g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
+		}
 
 		if (g_esCache[tank].g_iAcidMessage & MT_MESSAGE_SPECIAL)
 		{

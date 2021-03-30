@@ -13,6 +13,10 @@
 #include <sdkhooks>
 #include <mutant_tanks>
 
+#undef REQUIRE_PLUGIN
+#tryinclude <left4dhooks>
+#define REQUIRE_PLUGIN
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -56,6 +60,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esGeneral
 {
+	bool g_bLeft4DHooksInstalled;
+
 	Handle g_hSDKGetLastKnownArea;
 
 	int g_iFlowOffset;
@@ -147,6 +153,27 @@ enum struct esCache
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
 
 public void OnPluginStart()
 {
@@ -959,8 +986,13 @@ static void vRestartHit(int survivor, int tank, float random, float chance, int 
 
 static bool bIsSurvivorInCheckpoint(int survivor, bool start)
 {
+	if (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKGetLastKnownArea == null)
+	{
+		return start ? (L4D_IsInFirstCheckpoint(survivor) || GetEntProp(survivor, Prop_Send, "m_isInMissionStartArea") == 1) : L4D_IsInLastCheckpoint(survivor);
+	}
+
 	bool bReturn = false;
-	if (g_esPlayer[survivor].g_bCheckpoint && g_esGeneral.g_hSDKGetLastKnownArea != null && g_esGeneral.g_iFlowOffset != -1)
+	if (g_esPlayer[survivor].g_bCheckpoint && g_esGeneral.g_iFlowOffset != -1)
 	{
 		int iArea = SDKCall(g_esGeneral.g_hSDKGetLastKnownArea, survivor);
 		if (iArea)

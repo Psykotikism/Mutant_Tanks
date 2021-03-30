@@ -464,10 +464,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (MT_IsCorePluginEnabled() && MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esPlayer[victim].g_bActivated && damage > 0.0)
 	{
-		static bool bCommon, bSpecial, bSurvivor;
+		static bool bCommon, bSpecial, bSurvivor, bRewarded;
 		bCommon = bIsCommonInfected(attacker);
 		bSpecial = bIsSpecialInfected(attacker);
 		bSurvivor = bIsSurvivor(attacker);
+		bRewarded = bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST);
 		if ((damagetype & DMG_FALL) || ((damagetype & DMG_DROWN) && GetEntProp(victim, Prop_Send, "m_nWaterLevel") > 0) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
 		{
 			vShieldAbility(victim, false);
@@ -482,7 +483,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			bExplosiveDamage = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE);
 			bFireDamage = ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_FIRE);
 			bMeleeDamage = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE);
-			if ((bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST)) || bSpecial || bCommon || bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
+			if (bRewarded || bSpecial || bCommon || bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
 			{
 				g_esPlayer[victim].g_flHealth -= damage;
 				if (g_esCache[victim].g_flShieldHealth == 0.0 || g_esPlayer[victim].g_flHealth < 1.0)
@@ -501,6 +502,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 		if (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && !(g_esCache[victim].g_iShieldType & MT_SHIELD_MELEE))
 		{
+			if (bRewarded) return Plugin_Handled;
+
 			static float flTankPos[3];
 			GetClientAbsOrigin(victim, flTankPos);
 

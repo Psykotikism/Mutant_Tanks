@@ -13,6 +13,10 @@
 #include <sdkhooks>
 #include <mutant_tanks>
 
+#undef REQUIRE_PLUGIN
+#tryinclude <left4dhooks>
+#define REQUIRE_PLUGIN
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -49,6 +53,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_CONFIG_SECTIONS MT_CONFIG_SECTION, MT_CONFIG_SECTION2, MT_CONFIG_SECTION3, MT_CONFIG_SECTION4
 
 #define MT_MENU_BURY "Bury Ability"
+
+enum struct esGeneral
+{
+	bool g_bLeft4DHooksInstalled;
+
+	Handle g_hSDKRevive;
+}
+
+esGeneral g_esGeneral;
 
 enum struct esPlayer
 {
@@ -135,7 +148,26 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Handle g_hSDKRevive;
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
 
 public void OnPluginStart()
 {
@@ -159,8 +191,8 @@ public void OnPluginStart()
 		SetFailState("Failed to find signature: CTerrorPlayer::OnRevived");
 	}
 
-	g_hSDKRevive = EndPrepSDKCall();
-	if (g_hSDKRevive == null)
+	g_esGeneral.g_hSDKRevive = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKRevive == null)
 	{
 		LogError("%s Your \"CTerrorPlayer::OnRevived\" signature is outdated.", MT_TAG);
 	}
@@ -912,9 +944,13 @@ static void vStopBury(int survivor, int tank)
 	flOrigin[2] += g_esCache[tank].g_flBuryHeight;
 	SetEntPropVector(survivor, Prop_Send, "m_vecOrigin", flOrigin);
 
-	if (bIsPlayerIncapacitated(survivor) && g_hSDKRevive != null)
+	if (bIsPlayerIncapacitated(survivor))
 	{
-		SDKCall(g_hSDKRevive, survivor);
+		switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKRevive == null)
+		{
+			case true: L4D_ReviveSurvivor(survivor);
+			case false: SDKCall(g_esGeneral.g_hSDKRevive, survivor);
+		}
 
 		if (g_esCache[tank].g_flBuryBuffer > 0.0)
 		{

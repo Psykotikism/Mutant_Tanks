@@ -13,6 +13,10 @@
 #include <sdkhooks>
 #include <mutant_tanks>
 
+#undef REQUIRE_PLUGIN
+#tryinclude <left4dhooks>
+#define REQUIRE_PLUGIN
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -57,6 +61,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esGeneral
 {
+	bool g_bLeft4DHooksInstalled;
+
 	Handle g_hSDKGetLastKnownArea;
 
 	int g_iAttributeFlagsOffset;
@@ -151,6 +157,27 @@ enum struct esCache
 }
 
 esCache g_esCache[MAXPLAYERS + 1];
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
 
 public void OnPluginStart()
 {
@@ -1090,7 +1117,12 @@ static void vWarpRange(int tank)
 
 static bool bIsInsideSaferoom(int survivor)
 {
-	if (g_esGeneral.g_hSDKGetLastKnownArea != null && g_esGeneral.g_iAttributeFlagsOffset != -1)
+	if (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKGetLastKnownArea == null)
+	{
+		return L4D_IsInLastCheckpoint(survivor);
+	}
+
+	if (g_esGeneral.g_iAttributeFlagsOffset != -1)
 	{
 		int iArea = SDKCall(g_esGeneral.g_hSDKGetLastKnownArea, survivor);
 		if (iArea)
