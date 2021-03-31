@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -132,6 +132,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_fly", cmdFlyInfo, "View information about the Fly ability.");
 
@@ -291,7 +292,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || !g_esPlayer[client].g_bActivated || (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || g_esPlayer[client].g_iDuration == -1)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || !g_esPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || g_esPlayer[client].g_iDuration == -1)
 	{
 		return Plugin_Continue;
 	}
@@ -308,9 +309,9 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		if (MT_IsTankSupported(attacker) && (!MT_IsTankSupported(attacker, MT_CHECK_FAKECLIENT) || g_esCache[attacker].g_iHumanAbility == 2) && MT_IsCustomTankSupported(attacker) && g_esCache[attacker].g_iFlyAbility == 1 && bIsSurvivor(victim))
+		if (MT_IsTankSupported(attacker) && (!bIsTank(attacker, MT_CHECK_FAKECLIENT) || g_esCache[attacker].g_iHumanAbility == 2) && MT_IsCustomTankSupported(attacker) && g_esCache[attacker].g_iFlyAbility == 1 && bIsSurvivor(victim))
 		{
 			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iAccessFlags, g_esPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esPlayer[attacker].g_iTankType, g_esAbility[g_esPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esPlayer[victim].g_iImmunityFlags))
 			{
@@ -331,7 +332,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				}
 			}
 		}
-		else if (MT_IsTankSupported(victim) && (!MT_IsTankSupported(victim, MT_CHECK_FAKECLIENT) || g_esCache[victim].g_iHumanAbility == 2) && MT_IsCustomTankSupported(victim) && g_esCache[victim].g_iFlyAbility == 1 && bIsSurvivor(attacker))
+		else if (MT_IsTankSupported(victim) && (!bIsTank(victim, MT_CHECK_FAKECLIENT) || g_esCache[victim].g_iHumanAbility == 2) && MT_IsCustomTankSupported(victim) && g_esCache[victim].g_iFlyAbility == 1 && bIsSurvivor(attacker))
 		{
 			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
 			{
@@ -372,7 +373,7 @@ public Action StartTouch(int tank, int other)
 
 public void MT_OnPluginCheck(ArrayList &list)
 {
-	char sName[32];
+	char sName[128];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
 }
@@ -385,7 +386,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -554,7 +555,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flFlyChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFlyChance, g_esAbility[type].g_flFlyChance);
 	g_esCache[tank].g_flFlySpeed = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFlySpeed, g_esAbility[type].g_flFlySpeed);
 	g_esCache[tank].g_iFlyAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFlyAbility, g_esAbility[type].g_iFlyAbility);
@@ -605,7 +606,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 	else if (StrEqual(name, "player_jump"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && (!MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) || g_esCache[iTank].g_iHumanAbility == 2))
+		if (MT_IsTankSupported(iTank) && (!bIsTank(iTank, MT_CHECK_FAKECLIENT) || g_esCache[iTank].g_iHumanAbility == 2))
 		{
 			if (g_esCache[iTank].g_iFlyAbility == 1 && (g_esCache[iTank].g_iFlyType == 0 || (g_esCache[iTank].g_iFlyType & MT_FLY_JUMP)) && !g_esPlayer[iTank].g_bActivated)
 			{
@@ -634,7 +635,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlyAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlyAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
 	{
 		vFlyAbility(tank);
 	}
@@ -724,7 +725,7 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 
 public void MT_OnRockThrow(int tank, int rock)
 {
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility == 2) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlyAbility == 1 && (g_esCache[tank].g_iFlyType == 0 || (g_esCache[tank].g_iFlyType & MT_FLY_THROW)) && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility == 2) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlyAbility == 1 && (g_esCache[tank].g_iFlyType == 0 || (g_esCache[tank].g_iFlyType & MT_FLY_THROW)) && !g_esPlayer[tank].g_bActivated)
 	{
 		if (bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)))
 		{
@@ -745,7 +746,7 @@ static void vFly(int tank, bool announce, int pos = -1)
 {
 	if (bIsAreaNarrow(tank))
 	{
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman6");
 		}
@@ -777,7 +778,7 @@ static void vFly(int tank, bool announce, int pos = -1)
 	SDKUnhook(tank, SDKHook_StartTouch, StartTouch);
 	SDKHook(tank, SDKHook_StartTouch, StartTouch);
 
-	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility > 0)
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility > 0)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman", g_esPlayer[tank].g_iAmmoCount, g_esCache[tank].g_iHumanAmmo);
 	}
@@ -798,18 +799,18 @@ static void vFlyAbility(int tank)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flFlyChance)
 		{
 			vFly(tank, true);
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyHuman2");
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlyAmmo");
 	}
@@ -828,7 +829,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 
 		static float flSpeed;
 		flSpeed = (g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition != -1) ? MT_GetCombinationSetting(tank, 13, g_esAbility[g_esPlayer[tank].g_iTankType].g_iComboPosition) : g_esCache[tank].g_flFlySpeed;
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT))
+		if (bIsTank(tank, MT_CHECK_FAKECLIENT))
 		{
 			if (buttons & IN_USE)
 			{
@@ -908,7 +909,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 
 				return;
 			}
-			
+
 			if (buttons & IN_FORWARD)
 			{
 				GetAngleVectors(flEyeAngles, flTemp, NULL_VECTOR, NULL_VECTOR);
@@ -984,7 +985,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 		NormalizeVector(flVelocity, flVelocity);
 
 		static int iTarget;
-		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT))
 		{
 			iTarget = iGetFlyTarget(flPos, flVelocity, tank);
 		}
@@ -1156,7 +1157,7 @@ static void vFlyThink(int tank, int buttons, float duration)
 
 		if (flDistance3 < flBase2)
 		{
-			flDistance3 = flBase2;	
+			flDistance3 = flBase2;
 		}
 
 		if (flDistance4 < flBase2)
@@ -1255,13 +1256,10 @@ static void vFlyThink(int tank, int buttons, float duration)
 
 		static float flVelocity3[3];
 		AddVectors(flVelocity, flFront, flVelocity3);
-
 		NormalizeVector(flVelocity3, flVelocity3);
 		ScaleVector(flVelocity3, flSpeed);
-
 		SetEntityMoveType(tank, MOVETYPE_FLY);
 		vCopyVector(flVelocity3, g_esPlayer[tank].g_flCurrentVelocity);
-
 		TeleportEntity(tank, NULL_VECTOR, NULL_VECTOR, flVelocity3);
 	}
 }
@@ -1325,7 +1323,7 @@ static void vStopFly(int tank)
 
 	static int iTime;
 	iTime = GetTime();
-	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) && g_esCache[tank].g_iHumanAbility == 1 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
+	if (bIsTank(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(tank) || bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) && g_esCache[tank].g_iHumanAbility == 1 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 	{
 		vReset3(tank);
 	}

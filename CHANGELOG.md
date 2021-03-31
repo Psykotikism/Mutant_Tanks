@@ -1,5 +1,494 @@
 # Changelog
 
+## Version 8.83 (March 31, 2021)
+
+### Bug Fixes
+
+#### General
+- Fixed Common infected developing wounds from blocked friendly-fire. (Thanks to Marttt for the code!)
+- Fixed Tanks spawned from the `sm_tank`/`sm_mt_tank` menu raising the wave count when they die.
+- Fixed clones, respawned Tanks, randomized Tanks, and Tanks spawned through the Mutant Tanks menu not being exempted from the `Type Limit` setting.
+- Fixed game modes not being detected properly.
+- Fixed some models, sounds, and particles being precached in the wrong game.
+- Fixed Tank deaths raising the wave count while there are still other Tanks alive. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed each Tank death raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed AI Tanks in ghost mode not being forcefully spawned. (Thanks to yuzumi for reporting!)
+- Fixed Tank rocks breaking before leaving the Tank's hands. (Thanks to weffer for reporting!)
+- Fixed the errors regarding Tank props. (Thanks to ur5efj for reporting!)
+
+#### Core Plugin
+- Fixed the `sm_mutanttank` command not being accessible to non-admin Tanks. (Thanks to yuzumi for reporting!)
+- Fixed the Mutant Tank type selection menu not appearing for human-controlled Tanks in competitive modes. (Thanks to yuzumi for reporting!)
+- Fixed Tanks not being setup properly when exiting ghost mode. (Thanks to yuzumi for reporting!)
+- Fixed Tank arrivals being announced when they are in ghost mode.
+- Fixed the Tank spawner not allowing multiple copies of the same Mutant Tank type to spawn.
+- Fixed inconsistent access levels for some developer commands.
+- Fixed survivors with the godmode reward not being saved from special infected when given the health or refill reward.
+- Fixed survivors with the godmode reward surviving underwater. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed the `Boss` feature not calculating the Tank's total health properly.
+- Fixed the `Reward` system notifying recipients twice when they do not do enough damage to Tanks. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fixed the `Reward` system not detecting recipients' incapacitation/black and white counter after using `give health`. (Thanks to Silvers for the code!)
+- Fixed damage toward Common infected and Witches not being hooked on late loads.
+- Fixed props not being attached to Tanks properly.
+
+#### Game Data
+- Fixed some detours causing crashes due to having different argument names from other plugins. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+#### Settings
+- Fixed the `Boss Health Stages` setting not being read entirely.
+- Fixed the `Item Reward` setting not being read properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+#### Abilities
+- Absorb
+	- Fixed all types of fire damage not being detected.
+
+- Bury
+	- Fixed survivors not being revived when receiving the godmode reward.
+	- Fixed survivors not being healed when receiving the health or refill reward. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Choke
+	- Fixed choked survivors not always being lifted off the ground while being choked. (Thanks to 3aljiyavslgazana and Mi.Cura for testing and reporting!)
+	- Fixed choked survivors being stuck under the floor when the ability ends.
+
+- Clone
+	- Fixed clone deaths raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Drop
+	- Fixed weapons not being attached properly.
+
+- Fragile
+	- Fixed all types of fire damage not being detected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- God
+	- Fixed Tanks not being extinguished from fires while the ability is activated. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Heal
+	- Fixed players with the godmode reward being affected.
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+	- Fixed all types of fire damage not being detected.
+
+- Hit
+	- Fixed the ability not working when the `Human Ability` setting is disabled.
+
+- Hypno
+	- Fixed all types of fire damage not being detected.
+
+- Kamikaze
+	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Laser
+	- Fixed the ability always targeting the first player that joined the server.
+
+- Leech
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+
+- Medic
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+	- Fixed the `Medic Health` and `Medic Max Health` settings not being read entirely. (Thanks to TheStarRocker for testing and reporting!)
+
+- Pyro
+	- Fixed all types of fire damage not being detected.
+
+- Recoil
+	- Fixed the ability affecting all weapons instead of just guns.
+
+- Regen
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+
+- Respawn
+	- Fixed Tanks not respawning when dying as a different type. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Restart
+	- Fixed players with the godmode reward being affected.
+
+- Rocket
+	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Shield
+	- Fixed all types of fire damage not being detected.
+
+- Smash
+	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Smite
+	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+
+- Ultimate
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+
+- Undead
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+
+- Vampire
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+
+- Xiphos
+	- Fixed total health being miscalculated.
+	- Fixed Tanks gaining health while in the dying animation.
+	- Fixed all types of fire damage not being detected.
+
+- Yell
+	- Fixed the errors regarding the sound hook. (Thanks to ur5efj for reporting!)
+
+- Zombie
+	- Fixed the ability trying to spawn Uncommon infected on L4D1.
+
+### Changes
+
+#### General
+- Changed the method for checking idle Tanks. (Thanks to BHaType for the code and epzminion for the help!)
+- The hidden `z_burn_max` convar will no longer be automatically set to `1.0` while Mutant Tanks is running. (Use the new `ConVars` section to modify the convar setting instead.)
+- Added extra failsafe checks to make sure offsets are retrieved properly before executing relevant code. (Thanks to yuzumi for the idea!)
+- Added a command listener to intercept the `vocalize` and `go_away_from_keyboard` commands and block them when the player is no longer on the server.
+- `Left 4 DHooks` is now optional again.
+
+#### Core Plugin
+- Increased the height of the shockwave effect during boss transformations. (Requested by 3aljiyavslgazana.)
+- Added extra copies of the `Body Effects` setting's electric jolt option.
+- Added a slime trail coming out of the Tank's mouth as part of the `Body Effects` setting's acid trail option.
+- Increased verbosity of logging for admin commands.
+- The vocalizer feature for Tank deaths now requires the `Vocalize Death` setting to be enabled.
+- Changed the method for logging the admin commands. (Thanks to Mi.Cura for the idea!)
+- Rewards that have a duration can now have their duration extended when received again. (Requested by 3aljiyavslgazana.)
+- The health display will no longer show the maximum health going over the value set in `mutant_tanks.inc`.
+- The `Boss` feature's evolution now triggers a slow-motion effect for almost a second.
+- The melee immunity feature's pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+- The `Reward` system now validates all reward settings before applying them to recipients.
+- Added the `sm_mt_dev` command for developer use.
+- Decreased the delay for custom configs from `3` to `1.5` seconds.
+- The health reward now does the following:
+	- Gives the recipient more health when revived.
+	- Allows the recipient to heal their target back to max health.
+	- Slowly regenerates the player's health back to full health.
+	- Allows the recipient to leech health off enemies per hit.
+- The ammo reward now does the following:
+	- Extends the recipient's max weapon clip and magazine sizes up to at least twice the default amount.
+	- Gives the recipient one of the special ammo (incendiary or explosive).
+	- Slowly regenerates the player's ammo back to full capacity.
+- The speed boost reward now does the following:
+	- Gives the recipient extra jump height. (Thanks to epzminion for the help!)
+	- Blocks fall damage for the recipient within a certain height limit (`900` HMU). (Thanks to epzminion for the code!)
+	- Use a different voiceline when falling.
+	- Blocks the deathfall camera for the recipient. (Thanks to epzminion for the help!)
+	- Gives the recipient the adrenaline effect until the reward ends. (Exclusive to Left 4 Dead 2.) [Thanks to Lux for the code!]
+- The damage boost reward now does the following:
+	- Allows the recipient to bypass all types of damage immunity that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
+	- Gives the recipient damage resistance throughout its duration.
+	- Gives the recipient extended melee range. (Thanks to epzminion for the idea and Silvers for the code!)
+	- Gives the recipient hollowpoint ammo which atomizes Common infected and Witches. (Thanks to epzminion for the code!)
+	- Gives the recipient sledgehammer rounds which knock back special infected and has a `1%-10%` chance to knock back Tanks. (Thanks to epzminion for the code!)
+	- Allows the recipient to deal damage to attackers for each hit taken. (Thanks to epzminion for the help!)
+	- Allows the recipient to instantly kill Witches (limited uses). (Thanks to epzminion for the idea!)
+- The godmode reward now does the following:
+	- Automatically kills any special infected that attacks the recipient throughout its duration. (Thanks to 3aljiyavslgazana for suggesting!)
+	- Fully blocks all damage from registering. (Requested by 3aljiyavslgazana.)
+	- Blocks Boomer pukes on the recipient. (Thanks to 3aljiyavslgazana for the idea and epzminion for the help!) [Thanks to Silvers for the signatures!]
+	- Automatically removes the Boomer puke screen effect. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the signatures!]
+	- Reduces the pushback force from Tank punches. (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code and signatures!]
+	- Prevents the recipient from getting flung away by Chargers.
+	- Prevents the recipient from getting staggered.
+	- Blocks Smoker clouds, Boomer explosions, and Spitter acid puddles when they die (clean kills). (Thanks to epzminion for the help!)
+- The respawn reward no longer resets the recipient's stats. (Thanks to Dragokas for the code and gamedata info!)
+
+#### Game Data
+- Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.
+- Updated several signatures for detours. (Thanks to epzminion for the help!)
+
+#### Settings
+- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+	- `Reward Bots` (Thanks to Mi.Cura for the idea!)
+	- `Reward Effect` (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
+- Added the `Log Commands` setting under the `Plugin Settings/General` section. (Requested by 3aljiyavslgazana.)
+- Added the following settings under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
+	- `Arrival Sound` (Thanks to Tank Rush for the idea!)
+	- `Death Sound` (Thanks to Tank Rush for the idea!)
+	- `Vocalize Arrival`
+	- `Vocalize Death`
+- Added the `Enhancements` and `Immunities` sections under the `Plugin Settings` section for global use.
+- The following settings now accept a value of `0` (standard Tanks) [Thanks to Tonblader for the idea!]:
+	- `Type Range`
+	- `Regular Type`
+	- `Finale Types`
+- Added the `Spawn Limit` setting under the `Plugin Settings/General` section. (Requested by Tonblader.)
+- Added the `Survival Delay` setting under the `Plugin Settings/Competitive` section. (Requested by Tonblader.)
+- Added the following new options for the `Reward Enabled` setting:
+	- `Attack boost reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
+	- `Infinite ammo reward` (Thanks to epzminion for helping!)
+- The `Stasis Mode` setting now works in all game mode types. (Requested by yuzumi.)
+- Added the `Game Type` setting under the `Tank #/General` sections.
+- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+	- `Attack Boost Reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
+	- `Action Duration Reward` (Thanks to epzminion for the help!)
+	- `Ammo Boost Reward` (Thanks to epzminion for the help!)
+	- `Ammo Regen Reward`
+	- `Clean Kills Reward` (Thanks to epzminion for the help!)
+	- `Damage Resistance Reward`
+	- `Fall Voiceline Reward` (Thanks to epzminion for the help!)
+	- `Heal Percent Reward` (Thanks to epzminion for the help!)
+	- `Health Regen Reward` (Thanks to Silvers for the code!)
+	- `Hollowpoint Ammo Reward` (Thanks to epzminion for the code!)
+	- `Jump Height Reward` (Thanks to epzminion for the help!)
+	- `Lady Killer Reward` (Thanks to epzminion for the idea!)
+	- `Life Leech Reward` (Thanks to epzminion for the idea!)
+	- `Melee Range Reward` (Thanks to epzminion for the idea and Silvers for the code!)
+	- `Punch Resistance Reward` (Thanks to Silvers for the code!)
+	- `Revive Health Reward` (Thanks to epzminion for the help!)
+	- `Shove Damage Reward` (Thanks to epzminion for the idea!)
+	- `Shove Penalty Reward` (Thanks to 3aljiyavslgazana for the idea!)
+	- `Shove Rate Reward` (Thanks to epzminion for the help!)
+	- `Sledgehammer Rounds Reward` (Thanks to epzminion for the code!)
+	- `Special Ammo Reward` (Exclusive to Left 4 Dead 2.)
+	- `Thorns Reward` (Thanks to epzminion for the idea!)
+- Added the `Burn Duration` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections. (Requested by TheStarRocker.) [Thanks to Silvers for the code!]
+- Added the `ConVars` section under the `Plugin Settings` section which allows to change convar settings. (Requested by TheStarRocker.)
+- Added the following settings under the `Plugin Settings/General` section for global use (Requested by Maku.):
+	- `Tank Enabled`
+	- `Spawn Enabled`
+- Changed the minimum value of the `Tank Enabled` setting under the `Tank #/General` section from `0` to `-1`.
+- Changed the minimum value of the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, `STEAM_ID/Rewards` sections from `1.1` to `0.0`:
+	- `Damage Boost Reward`
+	- `Speed Boost Reward`
+- Added the following keywords for the `Tank Enabled` and `Spawn Enabled` settings:
+	- `ignore`/`exclude`/`filter`/`remove` - `-1`
+- Added the `Vomit Immunity` setting under the `Tank #/Immunities` and `STEAM_ID/Immunities` sections. (Thanks to epzminion for the help, Marttt for the idea, and Silvers for the signatures!)
+- Added the `Punch Force` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to 3aljiyavslgazana for the idea and Silvers for the code and signatures!)
+- Added the following keywords for the `Punch Force` setting:
+	- `nodmg`/`friendly`/`harmless` - `0.0` force
+	- `weakest` - `1.0` force
+	- `strongest` - `999999.0` force
+- Added the `Force Spawn` setting under the `Plugin Settings/Competitive` section. (Requested by yuzumi.)
+- The following settings under the `Plugin Settings` section can now be used on standard Tanks (Requested by Shadowart.):
+	- `Finales Only`
+	- `Idle Check`
+	- `Idle Check Mode`
+	- `Tank Model`
+	- `Burn Duration`
+	- `Burnt Skin`
+	- `Announce Arrival`
+	- `Announce Death`
+	- `Announce Kill`
+	- `Arrival Message`
+	- `Arrival Sound`
+	- `Death Message`
+	- `Death Sound`
+	- `Kill Message`
+	- `Vocalize Arrival`
+	- `Vocalize Death`
+	- `Reward Enabled`
+	- `Reward Bots`
+	- `Reward Effect`
+	- `Reward Chance`
+	- `Reward Duration`
+	- `Reward Percentage`
+	- `Action Duration Reward`
+	- `Ammo Boost Reward`
+	- `Ammo Regen Reward`
+	- `Attack Boost Reward`
+	- `Clean Kills Reward`
+	- `Damage Boost Reward`
+	- `Damage Resistance Reward`
+	- `Fall Voiceline Reward`
+	- `Heal Percent Reward`
+	- `Health Regen Reward`
+	- `Hollowpoint Ammo Reward`
+	- `Item Reward`
+	- `Jump Height Reward`
+	- `Lady Killer Reward`
+	- `Life Leech Reward`
+	- `Melee Range Reward`
+	- `Punch Resistance Reward`
+	- `Respawn Loadout Reward`
+	- `Revive Health Reward`
+	- `Shove Damage Reward`
+	- `Shove Penalty Reward`
+	- `Shove Rate Reward`
+	- `Sledgehammer Rounds Reward`
+	- `Special Ammo Reward`
+	- `Speed Boost Reward`
+	- `Thorns Reward`
+	- `Useful Rewards`
+	- `Aggressive Tanks`
+	- `Credit Igniters`
+	- `Stasis Mode`
+	- `Base Health`
+	- `Display Health`
+	- `Display Health Type`
+	- `Extra Health`
+	- `Health Characters`
+	- `Minimum Humans`
+	- `Multiply Health`
+	- `Attack Interval`
+	- `Claw Damage`
+	- `Hittable Damage`
+	- `Rock Damage`
+	- `Run Speed`
+	- `Throw Interval`
+	- `Bullet Immunity`
+	- `Explosive Immunity`
+	- `Fire Immunity`
+	- `Hittable Immunity`
+	- `Melee Immunity`
+	- `Vomit Immunity`
+
+#### Translations
+- Updated English translations.
+- Updated Simplified Chinese translations. (Thanks to yuzumi!)
+- Updated Hungarian translations. (Thanks to KasperH/Ladis!)
+- Updated Russian translations. (Thanks to Blueberry/Kleiner!)
+- Moved the `Tank # Name`, `Tank #`, `STEAM_ID Name`, and `STEAM_ID` phrases to the `mutant_tanks_names.phrases.txt` file. (Requested by yuzumi.)
+
+#### Natives & Forwards
+- Updated the `MT_OnRewardSurvivor` forward.
+- Added the `MT_OnFatalFalling` forward.
+- Added the `MT_OnPlayerEventKilled` forward.
+- Added the `MT_OnPlayerHitByVomitJar` forward.
+- Added the `MT_OnPlayerShovedBySurvivor` forward.
+- Added the `MT_RespawnSurvivor` native.
+- Added the `MT_ShoveBySurvivor` native.
+- Added the `MT_VomitPlayer` native.
+- Added the `MT_UnvomitPlayer` native.
+- Added the `MT_DoesSurvivorHaveRewardType` native.
+
+#### Abilities
+- Absorb
+	- The pushback effect no longer triggers for melee attacks unless the Tank takes at least one damage. (Requested by 3aljiyavslgazana.)
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+	- Added the `Absorb Hittable Divisor` setting.
+	- Any damage below `1` dealt to Tanks with this ability activated will automatically round up to `1`.
+
+- Acid
+	- The ability is now exclusive to Left 4 Dead 2.
+
+- Aimless
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Ammo
+	- Survivors with no ammunition are no longer affected.
+
+- Bury
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Buried survivors can no longer attack, shove, or use/grab items. (Requested by 3aljiyavslgazana.)
+
+- Choke
+	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- The ability automatically ends when the targeted survivor becomes incapacitated. (Requested by 3aljiyavslgazana.)
+	- Choked survivors can no longer attack, shove, or use/grab items. (Requested by 3aljiyavslgazana.)
+	- Blocked survivors from taking non-fatal fall damage after the ability ends.
+	- Removed the `Choke Height` setting.
+
+- Clone
+	- Clones no longer reward survivors after dying. (Thanks to 3aljiyavslgazana for the idea!)
+	- Clones no longer trigger announcements when spawning and dying. (Thanks to 3aljiyavslgazana for the idea!)
+	- Clones are removed when their Tank owner changes its Mutant Tank type if the `Clone Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
+
+- Fling
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- The ability is now exclusive to Left 4 Dead 2.
+
+- Fragile
+	- Added the `Fragile Hittable Multiplier` setting.
+	- Tank now have a `15%` chance of being knocked back when shoved by recipients of the attack boost reward. (Thanks to 3aljiyavslgazana for suggesting!)
+
+- God
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+	- Tanks with this ability activated are no longer affected by bile bombs unless the thrower has the damage boost reward. (Requested by 3aljiyavslgazana.)
+
+- Gravity
+	- Survivors with the speed boost reward are no longer affected by the hit and range attacks. (Requested by 3aljiyavslgazana.)
+
+- Hit
+	- Survivors with the damage boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Hypno
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+	- Added the `Hypno Hittable Divisor` setting.
+	- Any damage below `1` dealt to Tanks with this ability activated will automatically round up to `1`.
+
+- Idle
+	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Removed idle fix code. (Use [Lux's "Survivor_AFK_Fix" plugin](https://forums.alliedmods.net/showthread.php?t=326742) instead.)
+
+- Minion
+	- Minions are removed when their Tank owner changes its Mutant Tank type if the `Minion Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
+
+- Nullify
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+
+- Pimp
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Puke
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Added a Boomer puke fountain-like visual effect for the range and upon-death abilities. (Requested by 3aljiyavslgazana.) [Thanks to Marttt for the code!]
+
+- Respawn
+	- Replaced the detour for the `CTerrorPlayer::Event_Killed` function with the new `MT_OnPlayerEventKilled` forward.
+	- Tanks that respawn no longer give out rewards until their final deaths. (Thanks to 3aljiyavslgazana for suggesting!)
+
+- Restart
+	- Respawned survivors no longer have their stats reset. (Thanks to Dragokas for the code and gamedata info!)
+
+- Shield
+	- The damage boost reward now allows the recipient to bypass all types of shields that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
+	- Shields that can be damaged by melee weapons will no longer create pushback effects when hit by melee weapons. (Requested by 3aljiyavslgazana.)
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+	- Tanks are immune to bile bombs while the shield is active. (Requested by 3aljiyavslgazana.)
+
+- Shove
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Slow
+	- Survivors with the speed boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Throw
+	- Thrown special infected are removed when their Tank owner changes its Mutant Tank type if the `Throw Infected Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
+	- Thrown Witches are removed when their Tank owner changes its Mutant Tank type if the `Throw Witch Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
+
+- Ultimate
+	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+
+- Vision
+	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Warp
+	- Incapacitated or ledge-hanging survivors are no longer affected by the hit and range attacks. (Requested by 3aljiyavslgazana.)
+
+- Whirl
+	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+
+- Witch
+	- Witches are removed when their Tank owner changes its Mutant Tank type if the `Witch Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
+
+- Xiphos
+	- Any damage below `1` dealt to Tanks with this ability activated will automatically round up to `1`.
+
+- Yell
+	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+	- The ability no longer blocks player sounds when active.
+
+### Files
+
+#### Requirements
+- The `mutant_tanks_names.phrases` translation file is now used by all the plugins.
+- The `mutant_tanks_patches.cfg` config file is now used by the core plugin.
+
+#### Updates
+- Updated config files.
+- Updated gamedata file.
+- Updated include file.
+- Updated translation files.
+
 ## Version 8.82 (January 25, 2021)
 
 ### Bug Fixes
@@ -72,7 +561,7 @@
 - Updated config files.
 - Updated gamedata file.
 - Updated include file.
-- Updated translation file.
+- Updated translation files.
 
 ## Version 8.81 (January 20, 2021)
 
@@ -138,7 +627,7 @@
 - Fixed some potential errors caused by invalid weapon slots.
 - Fixed the SourceMod admin menu plugin not being optional.
 - Fixed rare cases where non-Mutant Tanks are counted as Mutant Tanks.
-- Fixed Tank rocks not breaking when hitting special and common infected.
+- Fixed Tank rocks not breaking when hitting special and Common infected.
 - Fixed the strong wind sound caused by Tank rock debris. (Thanks to Dragokas for the code!)
 
 #### Core Plugin
@@ -278,7 +767,7 @@
 	- Fixed panic events not being called on L4D1.
 
 - Respawn
-	- Fixed the Tank not respawning consistently. (Thanks to epz for the method!)
+	- Fixed the Tank not respawning consistently. (Thanks to epzminion for the method!)
 
 - Rock
 	- Fixed the rocks colliding with each other and producing lag.
@@ -362,58 +851,58 @@
 - Updated some of the default Mutant Tank types.
 - Added two more default Mutant Tank types: `Trap Tank` and `Drug Addict Tank`
 - Added the following keywords for toggle settings:
-	- `enabled`/`true`/`on`/`yes` - 1
-	- `disabled`/`false`/`off`/`no` - 0
+	- `enabled`/`true`/`on`/`yes` - `1`
+	- `disabled`/`false`/`off`/`no` - `0`
 - Added the following keywords for chance settings:
-	- `never` - 0% chance
-	- `sometimes`/`unlikely`/`seldom` - 33.3% chance
-	- `maybe` - 50% chance
-	- `often`/`likely`/`frequently` - 66.6% chance
-	- `always` - 100% chance
+	- `never` - `0%` chance
+	- `sometimes`/`unlikely`/`seldom` - `33.3%` chance
+	- `maybe` - `50%` chance
+	- `often`/`likely`/`frequently` - `66.6%` chance
+	- `always` - `100%` chance
 - Added the following keywords for damage settings:
-	- `nodmg`/`friendly`/`harmless` - 0.0 damage
-	- `weakest` - 1.0 damage
-	- `strongest` - 999999.0 damage
+	- `nodmg`/`friendly`/`harmless` - `0.0` damage
+	- `weakest` - `1.0` damage
+	- `strongest` - `999999.0` damage
 - Added the following keywords for cooldown, delay, duration, interval, and lifetime settings:
-	- `never`/`disabled`/`false`/`off`/`no` - 0 seconds
-	- `milli`/`millisecond` - 0.1 seconds
-	- `second` - 1 second
-	- `minute` - 1 minute
-	- `forever` - 999999 minutes
+	- `never`/`disabled`/`false`/`off`/`no` - `0` seconds
+	- `milli`/`millisecond` - `0.1` seconds
+	- `second` - `1` second
+	- `minute` - `1` minute
+	- `forever` - `999999` minutes
 - Added the following keywords for height settings:
-	- `shortest` - 0.1 height
-	- `tallest` - 999999.0 height
+	- `shortest` - `0.1` height
+	- `tallest` - `999999.0` height
 - Added the following keywords for `Open Areas Only` settings:
-	- `disabled`/`false`/`off`/`no` - 0.0 range
-	- `farthest` - 999999.0 range
+	- `disabled`/`false`/`off`/`no` - `0.0` range
+	- `farthest` - `999999.0` range
 - Added the following keywords for range settings:
-	- `closest` - 1.0 range
-	- `farthest` - 999999.0 range
+	- `closest` - `1.0` range
+	- `farthest` - `999999.0` range
 - Added the following keywords for hit mode settings:
-	- `both`/`all` - 0
-	- `tank`/`attack` - 1
-	- `survivor`/`hurt` - 2
+	- `both`/`all` - `0`
+	- `tank`/`attack` - `1`
+	- `survivor`/`hurt` - `2`
 - Added the following keywords for `Ability Effect` settings:
-	- `none`/`off` - 0
-	- `attack` - 1
-	- `hurt` - 2
-	- `attack,hurt` - 3
-	- `range` - 4
-	- `attack,range` - 5
-	- `hurt,range` - 6
-	- `attack,hurt,range`/`all` - 7
+	- `none`/`off` - `0`
+	- `attack` - `1`
+	- `hurt` - `2`
+	- `attack,hurt` - `3`
+	- `range` - `4`
+	- `attack,range` - `5`
+	- `hurt,range` - `6`
+	- `attack,hurt,range`/`all` - `7`
 - Added the following keywords for `Ability Message` settings:
-	- `none`/`off` - 0
-	- `hit` - 1
-	- `ability` - 2
-	- `both`/`all`/`hit,ability` - 3
-	- `rock` - 4
-	- `hit,rock` - 5
-	- `ability,rock` - 6
-	- `hit,ability,rock`/`all` - 7
+	- `none`/`off` - `0`
+	- `hit` - `1`
+	- `ability` - `2`
+	- `both`/`all`/`hit,ability` - `3`
+	- `rock` - `4`
+	- `hit,rock` - `5`
+	- `ability,rock` - `6`
+	- `hit,ability,rock`/`all` - `7`
 - Added the following keywords for `Human Ammo` settings:
-	- `none`/`off` - 0 ammo
-	- `infinite` - 999999 ammo
+	- `none`/`off` - `0` ammo
+	- `infinite` - `999999` ammo
 - Added the `default` keyword for each setting to force the default value set by Mutant Tanks.
 - Added the `min` keyword for each setting to force the minimum value set by Mutant Tanks.
 - Added the `max` keyword for each setting to force the maximum value set by Mutant Tanks.
@@ -423,7 +912,7 @@
 - Added a new option for the `Announce Death` setting.
 - Changed the default value of the `Regular Limit` setting from `2` to `999999`.
 - Changed the default value of the `Death Revert` setting under the `Plugin Settings/General` from `0` to `1`.
-- Added the `Attack Interval` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to epz for the code!)
+- Added the `Attack Interval` setting under the `Tank #/Enhancements` and `STEAM_ID/Enhancements` sections. (Thanks to epzminion for the code!)
 - Added the `Regular Delay` setting under the `Plugin Settings/Waves` section. (Requested by Tank Rush.)
 - Removed the `Rename Players` setting. (Too many bugs with special characters in people's names.)
 - Added the `Extras Delay` settings under `Plugin Settings/Waves` section.
@@ -503,10 +992,11 @@
 #### Translations
 - The `Tank Name` setting can now be translated in the translation file by creating a `Tank # Name` section for each type or `STEAM_ID Name` section for each player. (Requested by Mi.Cura.)
 - All logs generated by Mutant Tanks and its modules are now translated to use the server's language.
+- Updated English translations.
 - Updated Simplified Chinese translations.
 - Updated Hungarian translations. (Thanks to KasperH/Ladis!)
-- Added Russian translations. (Thanks to Blueberry!)
-- Divided the translations into separate files. (Requested by Blueberry.)
+- Added Russian translations. (Thanks to Blueberry/Kleiner!)
+- Divided the translations into separate files. (Requested by Blueberry/Kleiner.)
 
 #### Natives & Forwards
 - Added the `MT_IsTankClone` native to allow developers to check if a Tank is a clone.
@@ -720,7 +1210,7 @@
 - Updated config files.
 - Updated gamedata file.
 - Updated include files.
-- Updated translation file.
+- Updated translation files.
 
 ## Version 8.79 (October 10, 2020)
 
@@ -1034,7 +1524,7 @@ Changes:
 23. Added backwards compatibility for old natives.
 24. Updated/removed several phrases for each ability.
 25. Moved all redundant code to the core plugin's include file for universal usage.
-26. Changed how the administration system works. (Please read the `Administration System` section of the `README.md` file.)
+26. Changed how the administration system works. (Please read the `Administration System` section of the `README` file.)
 27. Optimized the code of all the plugins included.
 28. Added Hungarian translations. (Thanks to KasperH/Ladis!)
 
@@ -1115,7 +1605,7 @@ Changes:
 - `STEAM_ID/Props`: Overrides the setting under the `Props` for specific players.
 7. Added more particle and sound effects for the `Electric ability`.
 8. Common infected are now immune to Tank abilities. They should no longer die from running into fires or explosions caused by certain abilities.
-9. The rocks from the `Rock` and `Spam` abilities are now colored based on the Tank's `Rock Color` setting. (Thanks to epz for the detour idea and gamedata info!)
+9. The rocks from the `Rock` and `Spam` abilities are now colored based on the Tank's `Rock Color` setting. (Thanks to epzminion for the detour idea and gamedata info!)
 10. The leftover rocks created by the `Meteor` ability now explode after 10 seconds regardless if they hit the ground.
 11. The `Rock` and `Spam` abilities now create three times more rocks.
 12. Lowered the position of the `Spam` ability's rock launcher so that it's more likely to hit survivors.
@@ -1134,7 +1624,7 @@ Changes:
 25. Added the `Propane Tank Color` setting under the `Props` section.
 26. The `MT_GetPropColors` native's `mode` parameter now accepts values as high as 6 to add support for the new propane tank prop.
 27. The `Regular Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
-28. The core plugin now uses `Left 4 DHooks` to check when Tanks enter ghost state and materializes them 1 second later.
+28. The core plugin now uses `Left 4 DHooks` to check when Tanks enter ghost state and materializes them one second later.
 29. The `Restart` ability's plugin (`mt_restart.smx`) now uses `Left 4 DHooks` to check when a survivor is inside the starting safe area in order to get their "spawn coordinates" to be used when `Restart Mode` is set to `0`.
 30. Added the `mt_enabledgamemodes`, `mt_disabledgamemodes`, and `mt_gamemodetypes` cvars as cvar equivalents of the `Enabled Game Modes`, `Disabled Game Modes`, and `Game Mode Types` settings.
 31. The core plugin now requires `DHooks` and `Left 4 DHooks`.
@@ -1528,7 +2018,7 @@ Bug fixes:
 
 Changes:
 
-1. The `sm_tank` command can now spawn more than 1 Super Tank at a time. (New syntax: `sm_tank "type 1-500 OR name" "amount: 1-32" "0: spawn at crosshair|1: spawn automatically"`)
+1. The `sm_tank` command can now spawn more than one Super Tank at a time. (New syntax: `sm_tank "type 1-500 OR name" "amount: 1-32" "0: spawn at crosshair|1: spawn automatically"`)
 
 ## Version 8.48 (November 30, 2018)
 
@@ -1556,7 +2046,7 @@ Changes:
 
 1. Added new target filters: `@special`, `@infected`
 2. The `Ability Effect` settings are now disabled by default.
-3. All Chance settings now accept 0.0% as a valid value.
+3. All Chance settings now accept `0.0%` as a valid value.
 4. The `Skin-Glow Colors` and `Props Colors` settings have been divided into different settings.
 5. The `Tank Chance`, `Type Limit`, and `Finale Tank` settings no longer affect respawned Tanks and randomized Tanks.
 6. The `Announce Arrival` setting now accepts different values.
@@ -1877,7 +2367,7 @@ Files:
 
 Bug fixes:
 
-1. Fixed the `Witch` ability causing crashes when converting common infected into Witch minions.
+1. Fixed the `Witch` ability causing crashes when converting Common infected into Witch minions.
 
 Changes:
 
@@ -1891,7 +2381,7 @@ Changes:
 5. The `Splash` ability now damages nearby survivors every X seconds while the Super Tank is alive.
 6. Added the `Splash Interval` KeyValue setting to support the new Splash ability feature.
 7. The `Vampire` ability's `Vampire Health` KeyValue setting now only applies to the `range` ability. (When the Super Tank hits a survivor, he now gains the amount of damage as health.)
-8. The `Witch` ability's range used for detecting nearby common infected can now be configurable via the new `Witch Range` KeyValue setting.
+8. The `Witch` ability's range used for detecting nearby Common infected can now be configurable via the new `Witch Range` KeyValue setting.
 9. Changed a few lines of code.
 
 Files:
@@ -1995,7 +2485,7 @@ Files:
 Changes:
 
 1. Added extra checks to make sure the plugin spawns the proper amount of Tanks for each wave.
-2. Lessened the occurrence of Tanks flashing all over the map on finales. (Set `Glow Effect` to 1 to completely disable the glow outlines.)
+2. Lessened the occurrence of Tanks flashing all over the map on finales. (Set `Glow Effect` to `1` to completely disable the glow outlines.)
 
 Files:
 
@@ -2149,9 +2639,9 @@ Changes:
 8. Added the `Minion Amount` KeyValue which determines how many minions the Super Tank can spawn.
 9. Added the `Minion Chance` KeyValue which determines how often the Super Tank spawns special infected behind itself.
 10. Added the `Minion Types` KeyValue which decides what special infected the Super Tank can spawn behind itself.
-11. Added the `God Ability` KeyValue which lets the Super Tank have temporary god mode.
-12. Added the `God Chance` KeyValue which determines how often the Super Tank gets temporary god mode.
-13. Added the `God Duration` KeyValue which decides how long the Super Tank's temporary god mode lasts.
+11. Added the `God Ability` KeyValue which lets the Super Tank have temporary godmode.
+12. Added the `God Chance` KeyValue which determines how often the Super Tank gets temporary godmode.
+13. Added the `God Duration` KeyValue which decides how long the Super Tank's temporary godmode lasts.
 14. Added the `Clone Ability` KeyValue which lets the Super Tank spawn clones of itself.
 15. Added the `Clone Amount` KeyValue which determines how many clones the Super Tank can spawn.
 16. Added the `Clone Chance` KeyValue which determines how often the Super Tank can spawn clones of itself.
@@ -2203,7 +2693,7 @@ Changes:
 10. Added the `Nullify Duration` KeyValue which decides how long the Super Tank can nullify all of a survivor's damage.
 11. Buried survivors are now frozen in place.
 12. Buried survivors are now teleported to nearby teammates to avoid falling through the map after being unburied.
-13. The `Hypno` ability no longer sets survivors' HP to 1 when the inflicted damage is higher than their health, but rather incapacitates them.
+13. The `Hypno` ability no longer sets survivors' HP to `1` when the inflicted damage is higher than their health, but rather incapacitates them.
 14. Removed the `Tank Types` KeyValue.
 15. Replaced the `Tank Character` KeyValue with `Tank Enabled`. (Now users can simply enable/disable each Tank without using a letter, number, or symbol.)
 16. Added Tank death announcement messages.
@@ -2239,7 +2729,7 @@ Bug fixes:
 2. Fixed the `Enabled Game Modes` and `Disabled Game Modes` KeyValues not having enough space for more than 2-4 game modes.
 3. Fixed the issue with default `unnamed` Tanks appearing when certain Super Tanks are disabled.
 4. Fixed the `Warp` ability's interval glitching out.
-5. Fixed the `Gravity` ability creating more than 1 `point_push` entity per Tank.
+5. Fixed the `Gravity` ability creating more than one `point_push` entity per Tank.
 
 Changes:
 
@@ -2459,7 +2949,7 @@ Bug fixes:
 
 Bug fixes:
 
-1. Fixed the `Common Tank` not spawning any common infected.
+1. Fixed the `Common Tank` not spawning any Common infected.
 2. Fixed the `Gravity Tank`'s gravity force not stopping upon death.
 3. Fixed the `Hypno Tank`'s effect instantly killing survivors (Now it sets survivors to 1 HP).
 4. Fixed the `Meteor Tank`'s meteor shower not working.

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -127,6 +127,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_minion", cmdMinionInfo, "View information about the Minion ability.");
 }
@@ -143,7 +144,7 @@ public void OnClientPutInServer(int client)
 
 public void OnClientDisconnect(int client)
 {
-	if (bIsSpecialInfected(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_bMinion)
+	if (bIsSpecialInfected(client) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esPlayer[client].g_bMinion)
 	{
 		g_esPlayer[g_esPlayer[client].g_iOwner].g_iCount--;
 		g_esPlayer[client].g_iOwner = 0;
@@ -276,7 +277,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public void MT_OnPluginCheck(ArrayList &list)
 {
-	char sName[32];
+	char sName[128];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
 }
@@ -289,7 +290,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -440,7 +441,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flMinionChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMinionChance, g_esAbility[type].g_flMinionChance);
 	g_esCache[tank].g_flMinionLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMinionLifetime, g_esAbility[type].g_flMinionLifetime);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
@@ -506,19 +507,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
 		if (MT_IsTankSupported(iInfected, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			for (int iMinion = 1; iMinion <= MaxClients; iMinion++)
-			{
-				if (g_esPlayer[iMinion].g_iOwner == iInfected)
-				{
-					g_esPlayer[iMinion].g_iOwner = 0;
-
-					if (g_esPlayer[iMinion].g_bMinion && g_esCache[iInfected].g_iMinionRemove == 1 && bIsValidClient(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE))
-					{
-						ForcePlayerSuicide(iMinion);
-					}
-				}
-			}
-
+			vRemoveMinions(iInfected);
 			vRemoveMinion(iInfected);
 		}
 		else if (bIsSpecialInfected(iInfected) && g_esPlayer[iInfected].g_bMinion)
@@ -565,7 +554,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iMinionAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iMinionAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vMinionAbility(tank);
 	}
@@ -599,6 +588,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
+	vRemoveMinions(tank);
 	vRemoveMinion(tank);
 }
 
@@ -709,7 +699,7 @@ static void vMinion(int tank)
 
 						static int iTime;
 						iTime = GetTime();
-						if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
+						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 						{
 							g_esPlayer[tank].g_iAmmoCount++;
 
@@ -745,18 +735,18 @@ static void vMinionAbility(int tank)
 		return;
 	}
 
-	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iMinionAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
+	if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iMinionAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flMinionChance)
 		{
 			vMinion(tank);
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionHuman2");
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "MinionAmmo");
 	}
@@ -767,6 +757,25 @@ static void vRemoveMinion(int tank)
 	g_esPlayer[tank].g_iAmmoCount = 0;
 	g_esPlayer[tank].g_iCooldown = -1;
 	g_esPlayer[tank].g_iCount = 0;
+}
+
+static void vRemoveMinions(int tank)
+{
+	if (g_esCache[tank].g_iMinionRemove == 1)
+	{
+		for (int iMinion = 1; iMinion <= MaxClients; iMinion++)
+		{
+			if (g_esPlayer[iMinion].g_iOwner == tank)
+			{
+				g_esPlayer[iMinion].g_iOwner = 0;
+
+				if (g_esPlayer[iMinion].g_bMinion && bIsValidClient(iMinion, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+				{
+					ForcePlayerSuicide(iMinion);
+				}
+			}
+		}
+	}
 }
 
 static void vReset()

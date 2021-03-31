@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -147,6 +147,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_god", cmdUltimateInfo, "View information about the Ultimate ability.");
 
@@ -328,7 +329,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	iTime = GetTime();
 	if (g_esPlayer[client].g_iDuration < iTime)
 	{
-		if (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbility[g_esPlayer[client].g_iTankType].g_iAccessFlags, g_esPlayer[client].g_iAccessFlags)) && g_esCache[client].g_iHumanAbility == 1 && (g_esPlayer[client].g_iCooldown == -1 || g_esPlayer[client].g_iCooldown < iTime))
+		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbility[g_esPlayer[client].g_iTankType].g_iAccessFlags, g_esPlayer[client].g_iAccessFlags)) && g_esCache[client].g_iHumanAbility == 1 && (g_esPlayer[client].g_iCooldown == -1 || g_esPlayer[client].g_iCooldown < iTime))
 		{
 			g_esPlayer[client].g_iCooldown = (g_esPlayer[client].g_iCount < g_esCache[client].g_iHumanAmmo && g_esCache[client].g_iHumanAmmo > 0) ? (iTime + g_esCache[client].g_iHumanCooldown) : -1;
 			if (g_esPlayer[client].g_iCooldown != -1 && g_esPlayer[client].g_iCooldown > iTime)
@@ -357,7 +358,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
 		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && bIsSurvivor(victim))
 		{
@@ -372,7 +373,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				{
 					g_esPlayer[attacker].g_flDamage += damage;
 
-					if (MT_IsTankSupported(attacker, MT_CHECK_FAKECLIENT))
+					if (bIsTank(attacker, MT_CHECK_FAKECLIENT))
 					{
 						MT_PrintToChat(attacker, "%s %t", MT_TAG3, "Ultimate3", g_esPlayer[attacker].g_flDamage, g_esCache[attacker].g_flUltimateDamageRequired);
 					}
@@ -381,7 +382,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					{
 						g_esPlayer[attacker].g_bQualified = true;
 
-						if (MT_IsTankSupported(attacker, MT_CHECK_FAKECLIENT))
+						if (bIsTank(attacker, MT_CHECK_FAKECLIENT))
 						{
 							MT_PrintToChat(attacker, "%s %t", MT_TAG3, "Ultimate4");
 						}
@@ -405,7 +406,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			{
 				static float flTankPos[3];
 				GetClientAbsOrigin(victim, flTankPos);
-				vPushNearbyEntities(victim, flTankPos);
+
+				switch (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
+				{
+					case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
+					case false: vPushNearbyEntities(victim, flTankPos);
+				}
 			}
 
 			return Plugin_Handled;
@@ -417,7 +423,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public void MT_OnPluginCheck(ArrayList &list)
 {
-	char sName[32];
+	char sName[128];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
 }
@@ -430,7 +436,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -601,7 +607,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flUltimateChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flUltimateChance, g_esAbility[type].g_flUltimateChance);
 	g_esCache[tank].g_flUltimateDamageBoost = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flUltimateDamageBoost, g_esAbility[type].g_flUltimateDamageBoost);
 	g_esCache[tank].g_flUltimateDamageRequired = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flUltimateDamageRequired, g_esAbility[type].g_flUltimateDamageRequired);
@@ -684,7 +690,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iUltimateAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && g_esPlayer[tank].g_bQualified && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iUltimateAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && g_esPlayer[tank].g_bQualified && !g_esPlayer[tank].g_bActivated)
 	{
 		vUltimateAbility(tank);
 	}
@@ -776,7 +782,9 @@ static void vReset()
 
 static void vUltimate(int tank, int pos = -1)
 {
-	if (g_esPlayer[tank].g_bQualified && g_esPlayer[tank].g_iCount < g_esCache[tank].g_iUltimateAmount)
+	static int iTankHealth;
+	iTankHealth = GetEntProp(tank, Prop_Data, "m_iHealth");
+	if (iTankHealth <= g_esCache[tank].g_iUltimateHealthLimit && !bIsPlayerIncapacitated(tank) && g_esPlayer[tank].g_bQualified && g_esPlayer[tank].g_iCount < g_esCache[tank].g_iUltimateAmount)
 	{
 		static int iDuration;
 		iDuration = (pos != -1) ? RoundToNearest(MT_GetCombinationSetting(tank, 4, pos)) : g_esCache[tank].g_iUltimateDuration;
@@ -790,25 +798,32 @@ static void vUltimate(int tank, int pos = -1)
 		EmitSoundToAll(SOUND_ELECTRICITY, tank);
 		EmitSoundToAll(SOUND_EXPLOSION, tank);
 
-		if (g_bSecondGame)
+		switch (g_bSecondGame)
 		{
-			EmitSoundToAll(SOUND_GROWL2, tank);
-			EmitSoundToAll(SOUND_SMASH2, tank);
-		}
-		else
-		{
-			EmitSoundToAll(SOUND_GROWL1, tank);
-			EmitSoundToAll(SOUND_SMASH1, tank);
+			case true:
+			{
+				EmitSoundToAll(SOUND_GROWL2, tank);
+				EmitSoundToAll(SOUND_SMASH2, tank);
+			}
+			case false:
+			{
+				EmitSoundToAll(SOUND_GROWL1, tank);
+				EmitSoundToAll(SOUND_SMASH1, tank);
+			}
 		}
 
-		static int iMaxHealth, iNewHealth;
+		static int iValue, iMaxHealth, iNewHealth, iLeftover, iFinalHealth, iTotalHealth;
+		iValue = RoundToNearest(MT_TankMaxHealth(tank, 2) * g_esCache[tank].g_flUltimateHealthPortion);
 		iMaxHealth = MT_TankMaxHealth(tank, 1);
-		iNewHealth = RoundToNearest(GetEntProp(tank, Prop_Data, "m_iMaxHealth") * g_esCache[tank].g_flUltimateHealthPortion);
-		MT_TankMaxHealth(tank, 3, iMaxHealth + iNewHealth);
-		SetEntProp(tank, Prop_Data, "m_iHealth", iNewHealth);
+		iNewHealth = iTankHealth + iValue;
+		iLeftover = (iNewHealth > MT_MAXHEALTH) ? (iNewHealth - MT_MAXHEALTH) : iNewHealth;
+		iFinalHealth = (iNewHealth > MT_MAXHEALTH) ? MT_MAXHEALTH : iNewHealth;
+		iTotalHealth = (iNewHealth > MT_MAXHEALTH) ? iLeftover : iValue;
+		MT_TankMaxHealth(tank, 3, iMaxHealth + iTotalHealth);
+		SetEntProp(tank, Prop_Data, "m_iHealth", iFinalHealth);
 		SetEntProp(tank, Prop_Data, "m_takedamage", 0, 1);
 
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			g_esPlayer[tank].g_iAmmoCount++;
 
@@ -834,11 +849,11 @@ static void vUltimateAbility(int tank)
 
 	if (GetEntProp(tank, Prop_Data, "m_iHealth") <= g_esCache[tank].g_iUltimateHealthLimit && GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flUltimateChance)
 	{
-		if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iUltimateAmount && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
+		if (g_esPlayer[tank].g_iCount < g_esCache[tank].g_iUltimateAmount && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0)))
 		{
 			vUltimate(tank);
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "UltimateAmmo");
 		}

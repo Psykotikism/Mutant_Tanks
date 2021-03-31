@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -12,6 +12,10 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <mutant_tanks>
+
+#undef REQUIRE_PLUGIN
+#tryinclude <left4dhooks>
+#define REQUIRE_PLUGIN
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -25,20 +29,15 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad, g_bSecondGame;
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	switch (GetEngineVersion())
+	if (GetEngineVersion() != Engine_Left4Dead2)
 	{
-		case Engine_Left4Dead: g_bSecondGame = false;
-		case Engine_Left4Dead2: g_bSecondGame = true;
-		default:
-		{
-			strcopy(error, err_max, "\"[MT] Fling Ability\" only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[MT] Fling Ability\" only supports Left 4 Dead 2.");
 
-			return APLRes_SilentFailure;
-		}
+		return APLRes_SilentFailure;
 	}
 
 	g_bLateLoad = late;
@@ -58,8 +57,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esGeneral
 {
-	Handle g_hSDKFlingPlayer;
-	Handle g_hSDKPukePlayer;
+	bool g_bLeft4DHooksInstalled;
+
+	Handle g_hSDKFling;
 }
 
 esGeneral g_esGeneral;
@@ -149,10 +149,32 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_fling", cmdFlingInfo, "View information about the Fling ability.");
 
@@ -160,52 +182,25 @@ public void OnPluginStart()
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
 	}
 
-	switch (g_bSecondGame)
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::Fling"))
 	{
-		case true:
-		{
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::Fling"))
-			{
-				SetFailState("Failed to find signature: CTerrorPlayer::Fling");
+		delete gdMutantTanks;
 
-				delete gdMutantTanks;
-			}
+		SetFailState("Failed to find signature: CTerrorPlayer::Fling");
+	}
 
-			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 
-			g_esGeneral.g_hSDKFlingPlayer = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKFlingPlayer == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
-			}
-		}
-		case false:
-		{
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon"))
-			{
-				SetFailState("Failed to find signature: CTerrorPlayer::OnVomitedUpon");
-
-				delete gdMutantTanks;
-			}
-
-			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-
-			g_esGeneral.g_hSDKPukePlayer = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKPukePlayer == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
-			}
-		}
+	g_esGeneral.g_hSDKFling = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKFling == null)
+	{
+		LogError("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
@@ -362,7 +357,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -397,7 +392,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public void MT_OnPluginCheck(ArrayList &list)
 {
-	char sName[32];
+	char sName[128];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
 }
@@ -410,7 +405,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -629,7 +624,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flFlingChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFlingChance, g_esAbility[type].g_flFlingChance);
 	g_esCache[tank].g_flFlingDeathChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFlingDeathChance, g_esAbility[type].g_flFlingDeathChance);
 	g_esCache[tank].g_flFlingDeathRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFlingDeathRange, g_esAbility[type].g_flFlingDeathRange);
@@ -705,7 +700,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlingAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFlingAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vFlingAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
@@ -756,7 +751,6 @@ static void vCopyStats(int oldTank, int newTank)
 static void vFling(int survivor, int tank)
 {
 	static float flSurvivorPos[3], flTankPos[3], flDistance[3], flRatio[3], flVelocity[3];
-
 	GetClientAbsOrigin(survivor, flSurvivorPos);
 	GetClientAbsOrigin(tank, flTankPos);
 
@@ -771,7 +765,11 @@ static void vFling(int survivor, int tank)
 	flVelocity[1] = (flRatio[1] * -1) * g_esCache[tank].g_flFlingForce;
 	flVelocity[2] = g_esCache[tank].g_flFlingForce;
 
-	SDKCall(g_esGeneral.g_hSDKFlingPlayer, survivor, flVelocity, 76, tank, 3.0);
+	switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKFling == null)
+	{
+		case true: L4D2_CTerrorPlayer_Fling(survivor, tank, flVelocity);
+		case false: SDKCall(g_esGeneral.g_hSDKFling, survivor, flVelocity, 76, tank, 3.0);
+	}
 }
 
 static void vFlingAbility(int tank, float random, int pos = -1)
@@ -781,7 +779,7 @@ static void vFlingAbility(int tank, float random, int pos = -1)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bFailed = false;
 		g_esPlayer[tank].g_bNoAmmo = false;
@@ -808,13 +806,13 @@ static void vFlingAbility(int tank, float random, int pos = -1)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlingHuman4");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FlingAmmo");
 	}
@@ -827,15 +825,15 @@ static void vFlingHit(int survivor, int tank, float random, float chance, int en
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
-		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
 			static int iTime;
 			iTime = GetTime();
 			if (random <= chance)
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 				{
 					g_esPlayer[tank].g_iAmmoCount++;
 
@@ -848,38 +846,20 @@ static void vFlingHit(int survivor, int tank, float random, float chance, int en
 					}
 				}
 
+				vFling(survivor, tank);
 				vEffect(survivor, tank, g_esCache[tank].g_iFlingEffect, flags);
 
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
-
-				switch (g_bSecondGame)
+				if (g_esCache[tank].g_iFlingMessage & messages)
 				{
-					case true:
-					{
-						vFling(survivor, tank);
-
-						if (g_esCache[tank].g_iFlingMessage & messages)
-						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Fling", sTankName, survivor);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fling", LANG_SERVER, sTankName, survivor);
-						}
-					}
-					case false:
-					{
-						SDKCall(g_esGeneral.g_hSDKPukePlayer, survivor, tank, true);
-
-						if (g_esCache[tank].g_iFlingMessage & messages)
-						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
-						}
-					}
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Fling", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Fling", LANG_SERVER, sTankName, survivor);
 				}
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
 				{
 					g_esPlayer[tank].g_bFailed = true;
 
@@ -887,7 +867,7 @@ static void vFlingHit(int survivor, int tank, float random, float chance, int en
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
 		{
 			g_esPlayer[tank].g_bNoAmmo = true;
 
@@ -907,11 +887,6 @@ static void vFlingRange(int tank, int value, float random, int pos = -1)
 			return;
 		}
 
-		if (!g_bSecondGame)
-		{
-			vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
-		}
-
 		static float flTankPos[3];
 		GetClientAbsOrigin(tank, flTankPos);
 
@@ -919,18 +894,13 @@ static void vFlingRange(int tank, int value, float random, int pos = -1)
 		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esCache[tank].g_flFlingDeathRange;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-
 				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
 				if (flDistance <= flRange)
 				{
-					switch (g_bSecondGame)
-					{
-						case true: vFling(iSurvivor, tank);
-						case false: SDKCall(g_esGeneral.g_hSDKPukePlayer, iSurvivor, tank, true);
-					}
+					vFling(iSurvivor, tank);
 				}
 			}
 		}

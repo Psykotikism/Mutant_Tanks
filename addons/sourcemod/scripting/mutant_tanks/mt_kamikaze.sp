@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -132,6 +132,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_kamikaze", cmdKamikazeInfo, "View information about the Kamikaze ability.");
 
@@ -169,14 +170,14 @@ public void OnMapStart()
 
 public void OnClientPutInServer(int client)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	g_esPlayer[client].g_bFailed = false;
 
-	vRemoveKamikaze(client);
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
 public void OnClientDisconnect_Post(int client)
 {
-	vRemoveKamikaze(client);
+	g_esPlayer[client].g_bFailed = false;
 }
 
 public void OnMapEnd()
@@ -292,7 +293,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -327,7 +328,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public void MT_OnPluginCheck(ArrayList &list)
 {
-	char sName[32];
+	char sName[128];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
 }
@@ -340,7 +341,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -537,7 +538,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flKamikazeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flKamikazeChance, g_esAbility[type].g_flKamikazeChance);
 	g_esCache[tank].g_flKamikazeRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flKamikazeRange, g_esAbility[type].g_flKamikazeRange);
 	g_esCache[tank].g_flKamikazeRangeChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flKamikazeRangeChance, g_esAbility[type].g_flKamikazeRangeChance);
@@ -556,10 +557,9 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 
 public void MT_OnCopyStats(int oldTank, int newTank)
 {
-
 	if (oldTank != newTank)
 	{
-		vRemoveKamikaze(oldTank);
+		g_esPlayer[oldTank].g_bFailed = false;
 	}
 }
 
@@ -571,7 +571,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
 		if (bIsValidClient(iBot) && bIsTank(iTank))
 		{
-			vRemoveKamikaze(iBot);
+			g_esPlayer[iBot].g_bFailed = false;
 		}
 	}
 	else if (StrEqual(name, "player_bot_replace"))
@@ -580,7 +580,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
 		if (bIsValidClient(iTank) && bIsTank(iBot))
 		{
-			vRemoveKamikaze(iTank);
+			g_esPlayer[iTank].g_bFailed = false;
 		}
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
@@ -588,7 +588,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
 		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveKamikaze(iPlayer);
+			g_esPlayer[iPlayer].g_bFailed = false;
 		}
 		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_bSecondGame)
 		{
@@ -618,7 +618,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iKamikazeAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iKamikazeAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vKamikazeAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
@@ -645,7 +645,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
-	vRemoveKamikaze(tank);
+	g_esPlayer[tank].g_bFailed = false;
 }
 
 static void vKamikazeAbility(int tank, float random, int pos = -1)
@@ -679,7 +679,7 @@ static void vKamikazeAbility(int tank, float random, int pos = -1)
 
 	if (iSurvivorCount == 0)
 	{
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "KamikazeHuman3");
 		}
@@ -693,28 +693,27 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (random <= chance)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE))
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE))
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "KamikazeHuman");
 			}
 
-			EmitSoundToAll((g_bSecondGame) ? SOUND_SMASH2 : SOUND_SMASH1, survivor);
-			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1, 0.0);
+			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1);
+			vAttachParticle(tank, PARTICLE_BLOOD, 0.1);
 			ForcePlayerSuicide(survivor);
+			ForcePlayerSuicide(tank);
 			vEffect(survivor, tank, g_esCache[tank].g_iKamikazeEffect, flags);
+			EmitSoundToAll((g_bSecondGame) ? SOUND_SMASH2 : SOUND_SMASH1, survivor);
+			EmitSoundToAll((g_bSecondGame) ? SOUND_GROWL2 : SOUND_GROWL1, survivor);
 
 			if (g_esCache[tank].g_iKamikazeBody == 1)
 			{
-				RequestFrame(vRemoveBody, GetClientUserId(survivor));
+				RequestFrame(vRemoveKamikazeBody, GetClientUserId(survivor));
 			}
-
-			EmitSoundToAll((g_bSecondGame) ? SOUND_GROWL2 : SOUND_GROWL1, survivor);
-			vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
-			ForcePlayerSuicide(tank);
 
 			if (g_esCache[tank].g_iKamikazeMessage & messages)
 			{
@@ -726,7 +725,7 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 		}
 		else if ((flags & MT_ATTACK_RANGE))
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
 			{
 				g_esPlayer[tank].g_bFailed = true;
 
@@ -736,23 +735,18 @@ static void vKamikazeHit(int survivor, int tank, float random, float chance, int
 	}
 }
 
-static void vRemoveKamikaze(int tank)
-{
-	g_esPlayer[tank].g_bFailed = false;
-}
-
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
 		{
-			vRemoveKamikaze(iPlayer);
+			g_esPlayer[iPlayer].g_bFailed = false;
 		}
 	}
 }
 
-public void vRemoveBody(int userid)
+public void vRemoveKamikazeBody(int userid)
 {
 	int iSurvivor = GetClientOfUserId(userid);
 	if (!bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME))

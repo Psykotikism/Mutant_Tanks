@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -60,6 +60,7 @@ enum struct esPlayer
 	float g_flAbsorbChance;
 	float g_flAbsorbExplosiveDivisor;
 	float g_flAbsorbFireDivisor;
+	float g_flAbsorbHittableDivisor;
 	float g_flAbsorbMeleeDivisor;
 	float g_flOpenAreasOnly;
 
@@ -88,6 +89,7 @@ enum struct esAbility
 	float g_flAbsorbChance;
 	float g_flAbsorbExplosiveDivisor;
 	float g_flAbsorbFireDivisor;
+	float g_flAbsorbHittableDivisor;
 	float g_flAbsorbMeleeDivisor;
 	float g_flOpenAreasOnly;
 
@@ -112,6 +114,7 @@ enum struct esCache
 	float g_flAbsorbChance;
 	float g_flAbsorbExplosiveDivisor;
 	float g_flAbsorbFireDivisor;
+	float g_flAbsorbHittableDivisor;
 	float g_flAbsorbMeleeDivisor;
 	float g_flOpenAreasOnly;
 
@@ -132,6 +135,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_absorb", cmdAbsorbInfo, "View information about the Absorb ability.");
 
@@ -291,7 +295,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || !g_esPlayer[client].g_bActivated || (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || g_esPlayer[client].g_iDuration == -1)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || !g_esPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || g_esPlayer[client].g_iDuration == -1)
 	{
 		return Plugin_Continue;
 	}
@@ -300,7 +304,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	iTime = GetTime();
 	if (g_esPlayer[client].g_iDuration < iTime)
 	{
-		if (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbility[g_esPlayer[client].g_iTankType].g_iAccessFlags, g_esPlayer[client].g_iAccessFlags)) && g_esCache[client].g_iHumanAbility == 1 && (g_esPlayer[client].g_iCooldown == -1 || g_esPlayer[client].g_iCooldown < iTime))
+		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbility[g_esPlayer[client].g_iTankType].g_iAccessFlags, g_esPlayer[client].g_iAccessFlags)) && g_esCache[client].g_iHumanAbility == 1 && (g_esPlayer[client].g_iCooldown == -1 || g_esPlayer[client].g_iCooldown < iTime))
 		{
 			vReset3(client);
 		}
@@ -313,17 +317,18 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esPlayer[victim].g_bActivated && bIsSurvivor(attacker))
+		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esPlayer[victim].g_bActivated)
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
+			static bool bChanged, bSurvivor;
+			bChanged = false;
+			bSurvivor = bIsSurvivor(attacker);
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
 			}
 
-			static bool bChanged;
-			bChanged = false;
 			if (g_esCache[victim].g_flAbsorbBulletDivisor > 1.0 && (damagetype & DMG_BULLET))
 			{
 				bChanged = true;
@@ -334,24 +339,26 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbExplosiveDivisor;
 			}
-			else if (g_esCache[victim].g_flAbsorbFireDivisor > 1.0 && (damagetype & DMG_BURN))
+			else if (g_esCache[victim].g_flAbsorbFireDivisor > 1.0 && ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)))
 			{
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbFireDivisor;
+			}
+			else if (g_esCache[victim].g_flAbsorbHittableDivisor > 1.0 && (damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable"))
+			{
+				bChanged = true;
+				damage /= g_esCache[victim].g_flAbsorbHittableDivisor;
 			}
 			else if (g_esCache[victim].g_flAbsorbMeleeDivisor > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
 			{
 				bChanged = true;
 				damage /= g_esCache[victim].g_flAbsorbMeleeDivisor;
-
-				static float flTankPos[3];
-				GetClientAbsOrigin(victim, flTankPos);
-				vPushNearbyEntities(victim, flTankPos);
-				EmitSoundToAll(SOUND_METAL, victim);
 			}
 
 			if (bChanged)
 			{
+				if (damage < 1.0) damage = 1.0;
+
 				return Plugin_Changed;
 			}
 		}
@@ -362,7 +369,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public void MT_OnPluginCheck(ArrayList &list)
 {
-	char sName[32];
+	char sName[128];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
 }
@@ -375,7 +382,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -447,6 +454,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iAbsorbDuration = 5;
 				g_esAbility[iIndex].g_flAbsorbExplosiveDivisor = 20.0;
 				g_esAbility[iIndex].g_flAbsorbFireDivisor = 200.0;
+				g_esAbility[iIndex].g_flAbsorbHittableDivisor = 20.0;
 				g_esAbility[iIndex].g_flAbsorbMeleeDivisor = 200.0;
 			}
 		}
@@ -472,6 +480,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iAbsorbDuration = 0;
 					g_esPlayer[iPlayer].g_flAbsorbExplosiveDivisor = 0.0;
 					g_esPlayer[iPlayer].g_flAbsorbFireDivisor = 0.0;
+					g_esPlayer[iPlayer].g_flAbsorbHittableDivisor = 0.0;
 					g_esPlayer[iPlayer].g_flAbsorbMeleeDivisor = 0.0;
 				}
 			}
@@ -497,6 +506,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iAbsorbDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_esPlayer[admin].g_iAbsorbDuration, value, 1, 999999);
 		g_esPlayer[admin].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esPlayer[admin].g_flAbsorbExplosiveDivisor, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esPlayer[admin].g_flAbsorbFireDivisor, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flAbsorbHittableDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbHittableDivisor", "Absorb Hittable Divisor", "Absorb_Hittable_Divisor", "hittable", g_esPlayer[admin].g_flAbsorbHittableDivisor, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esPlayer[admin].g_flAbsorbMeleeDivisor, value, 1.0, 999999.0);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -528,6 +538,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iAbsorbDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbDuration", "Absorb Duration", "Absorb_Duration", "duration", g_esAbility[type].g_iAbsorbDuration, value, 1, 999999);
 		g_esAbility[type].g_flAbsorbExplosiveDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbExplosiveDivisor", "Absorb Explosive Divisor", "Absorb_Explosive_Divisor", "explosive", g_esAbility[type].g_flAbsorbExplosiveDivisor, value, 1.0, 999999.0);
 		g_esAbility[type].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esAbility[type].g_flAbsorbFireDivisor, value, 1.0, 999999.0);
+		g_esAbility[type].g_flAbsorbHittableDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbHittableDivisor", "Absorb Hittable Divisor", "Absorb_Hittable_Divisor", "hittable", g_esAbility[type].g_flAbsorbHittableDivisor, value, 1.0, 999999.0);
 		g_esAbility[type].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbility[type].g_flAbsorbMeleeDivisor, value, 1.0, 999999.0);
 
 		if (StrEqual(subsection, MT_CONFIG_SECTION, false) || StrEqual(subsection, MT_CONFIG_SECTION2, false) || StrEqual(subsection, MT_CONFIG_SECTION3, false) || StrEqual(subsection, MT_CONFIG_SECTION4, false))
@@ -546,11 +557,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flAbsorbBulletDivisor = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAbsorbBulletDivisor, g_esAbility[type].g_flAbsorbBulletDivisor);
 	g_esCache[tank].g_flAbsorbChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAbsorbChance, g_esAbility[type].g_flAbsorbChance);
 	g_esCache[tank].g_flAbsorbExplosiveDivisor = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAbsorbExplosiveDivisor, g_esAbility[type].g_flAbsorbExplosiveDivisor);
 	g_esCache[tank].g_flAbsorbFireDivisor = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAbsorbFireDivisor, g_esAbility[type].g_flAbsorbFireDivisor);
+	g_esCache[tank].g_flAbsorbHittableDivisor = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAbsorbHittableDivisor, g_esAbility[type].g_flAbsorbHittableDivisor);
 	g_esCache[tank].g_flAbsorbMeleeDivisor = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAbsorbMeleeDivisor, g_esAbility[type].g_flAbsorbMeleeDivisor);
 	g_esCache[tank].g_iAbsorbAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iAbsorbAbility, g_esAbility[type].g_iAbsorbAbility);
 	g_esCache[tank].g_iAbsorbDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iAbsorbDuration, g_esAbility[type].g_iAbsorbDuration);
@@ -618,7 +630,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iAbsorbAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iAbsorbAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
 	{
 		vAbsorbAbility(tank);
 	}
@@ -717,7 +729,7 @@ static void vAbsorb(int tank, int pos = -1)
 	g_esPlayer[tank].g_bActivated = true;
 	g_esPlayer[tank].g_iDuration = GetTime() + iDuration;
 
-	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		g_esPlayer[tank].g_iAmmoCount++;
 
@@ -740,18 +752,18 @@ static void vAbsorbAbility(int tank)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flAbsorbChance)
 		{
 			vAbsorb(tank);
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "AbsorbHuman2");
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "AbsorbAmmo");
 	}

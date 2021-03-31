@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -136,6 +136,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_enforce", cmdEnforceInfo, "View information about the Enforce ability.");
 
@@ -299,6 +300,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	if (bIsSurvivor(client) && g_esPlayer[client].g_bAffected)
 	{
+		if (MT_DoesSurvivorHaveRewardType(client, MT_REWARD_GODMODE) && g_esPlayer[client].g_iSlot != 0)
+		{
+			g_esPlayer[client].g_iSlot = 0;
+		}
+
 		int iWeapon = GetPlayerWeaponSlot(client, g_esPlayer[client].g_iSlot);
 		if (iWeapon > MaxClients)
 		{
@@ -311,7 +317,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -346,7 +352,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public void MT_OnPluginCheck(ArrayList &list)
 {
-	char sName[32];
+	char sName[128];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
 }
@@ -359,7 +365,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -569,7 +575,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flEnforceChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flEnforceChance, g_esAbility[type].g_flEnforceChance);
 	g_esCache[tank].g_flEnforceDuration = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flEnforceDuration, g_esAbility[type].g_flEnforceDuration);
 	g_esCache[tank].g_flEnforceRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flEnforceRange, g_esAbility[type].g_flEnforceRange);
@@ -642,7 +648,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iEnforceAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iEnforceAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vEnforceAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
@@ -692,7 +698,7 @@ static void vEnforceAbility(int tank, float random, int pos = -1)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bFailed = false;
 		g_esPlayer[tank].g_bNoAmmo = false;
@@ -719,13 +725,13 @@ static void vEnforceAbility(int tank, float random, int pos = -1)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceHuman4");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "EnforceAmmo");
 	}
@@ -740,7 +746,7 @@ static void vEnforceHit(int survivor, int tank, float random, float chance, int 
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
 			static int iTime;
 			iTime = GetTime();
@@ -749,7 +755,7 @@ static void vEnforceHit(int survivor, int tank, float random, float chance, int 
 				g_esPlayer[survivor].g_bAffected = true;
 				g_esPlayer[survivor].g_iOwner = tank;
 
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 				{
 					g_esPlayer[tank].g_iAmmoCount++;
 
@@ -762,28 +768,35 @@ static void vEnforceHit(int survivor, int tank, float random, float chance, int 
 					}
 				}
 
-				static int iSlotCount, iSlots[5], iFlag;
-				iSlotCount = 0;
-				for (int iBit = 0; iBit < sizeof(iSlots); iBit++)
+				if (MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 				{
-					iFlag = (1 << iBit);
-					if (!(g_esCache[tank].g_iEnforceWeaponSlots & iFlag))
+					g_esPlayer[survivor].g_iSlot = 0;
+				}
+				else
+				{
+					static int iSlotCount, iSlots[5], iFlag;
+					iSlotCount = 0;
+					for (int iBit = 0; iBit < sizeof(iSlots); iBit++)
 					{
-						continue;
+						iFlag = (1 << iBit);
+						if (!(g_esCache[tank].g_iEnforceWeaponSlots & iFlag))
+						{
+							continue;
+						}
+
+						iSlots[iSlotCount] = iFlag;
+						iSlotCount++;
 					}
 
-					iSlots[iSlotCount] = iFlag;
-					iSlotCount++;
-				}
-
-				switch (iSlots[GetRandomInt(0, iSlotCount - 1)])
-				{
-					case 1: g_esPlayer[survivor].g_iSlot = 0;
-					case 2: g_esPlayer[survivor].g_iSlot = 1;
-					case 4: g_esPlayer[survivor].g_iSlot = 2;
-					case 8: g_esPlayer[survivor].g_iSlot = 3;
-					case 16: g_esPlayer[survivor].g_iSlot = 4;
-					default: g_esPlayer[survivor].g_iSlot = GetRandomInt(0, 4);
+					switch (iSlots[GetRandomInt(0, iSlotCount - 1)])
+					{
+						case 1: g_esPlayer[survivor].g_iSlot = 0;
+						case 2: g_esPlayer[survivor].g_iSlot = 1;
+						case 4: g_esPlayer[survivor].g_iSlot = 2;
+						case 8: g_esPlayer[survivor].g_iSlot = 3;
+						case 16: g_esPlayer[survivor].g_iSlot = 4;
+						default: g_esPlayer[survivor].g_iSlot = GetRandomInt(0, 4);
+					}
 				}
 
 				static float flDuration;
@@ -806,7 +819,7 @@ static void vEnforceHit(int survivor, int tank, float random, float chance, int 
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
 				{
 					g_esPlayer[tank].g_bFailed = true;
 
@@ -814,7 +827,7 @@ static void vEnforceHit(int survivor, int tank, float random, float chance, int 
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
 		{
 			g_esPlayer[tank].g_bNoAmmo = true;
 

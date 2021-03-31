@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -162,6 +162,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_throw", cmdThrowInfo, "View information about the Throw ability.");
 
@@ -321,7 +322,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsSurvivor(victim) && !bIsPlayerDisabled(victim) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsSurvivor(victim) && !bIsPlayerDisabled(victim) && damage > 0.0)
 	{
 		if (bIsInfected(attacker) && g_esPlayer[attacker].g_bThrown)
 		{
@@ -366,7 +367,7 @@ public Action StartTouch(int thrown, int other)
 
 public void MT_OnPluginCheck(ArrayList &list)
 {
-	char sName[32];
+	char sName[128];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
 }
@@ -379,7 +380,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -564,7 +565,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flThrowCarLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowCarLifetime, g_esAbility[type].g_flThrowCarLifetime);
 	g_esCache[tank].g_flThrowChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowChance, g_esAbility[type].g_flThrowChance);
 	g_esCache[tank].g_flThrowInfectedLifetime = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flThrowInfectedLifetime, g_esAbility[type].g_flThrowInfectedLifetime);
@@ -645,33 +646,7 @@ public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
 		int iInfectedId = event.GetInt("userid"), iInfected = GetClientOfUserId(iInfectedId);
 		if (MT_IsTankSupported(iInfected, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
-			{
-				if (g_esPlayer[iSpecial].g_iOwner == iInfected)
-				{
-					g_esPlayer[iSpecial].g_iOwner = 0;
-
-					if (g_esPlayer[iSpecial].g_bThrown && g_esCache[iInfected].g_iThrowInfectedRemove == 1 && bIsValidClient(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE))
-					{
-						g_esPlayer[iSpecial].g_bThrown = false;
-
-						ForcePlayerSuicide(iSpecial);
-					}
-				}
-			}
-
-			if (g_esCache[iInfected].g_iThrowWitchRemove == 1)
-			{
-				int iWitch = -1;
-				while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
-				{
-					if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") == iInfected)
-					{
-						RemoveEntity(iWitch);
-					}
-				}
-			}
-
+			vRemoveThrows(iInfected);
 			vRemoveThrow(iInfected);
 		}
 		else if (bIsSpecialInfected(iInfected) && g_esPlayer[iInfected].g_bThrown)
@@ -732,6 +707,7 @@ public void MT_OnButtonPressed(int tank, int button)
 
 public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
+	vRemoveThrows(tank);
 	vRemoveThrow(tank);
 }
 
@@ -763,6 +739,39 @@ static void vRemoveThrow(int tank)
 	g_esPlayer[tank].g_iOwner = 0;
 }
 
+static void vRemoveThrows(int tank)
+{
+	if (g_esCache[tank].g_iThrowInfectedRemove == 1)
+	{
+		for (int iSpecial = 1; iSpecial <= MaxClients; iSpecial++)
+		{
+			if (g_esPlayer[iSpecial].g_iOwner == tank)
+			{
+				g_esPlayer[iSpecial].g_iOwner = 0;
+
+				if (g_esPlayer[iSpecial].g_bThrown && bIsValidClient(iSpecial, MT_CHECK_INGAME|MT_CHECK_ALIVE))
+				{
+					g_esPlayer[iSpecial].g_bThrown = false;
+
+					ForcePlayerSuicide(iSpecial);
+				}
+			}
+		}
+	}
+
+	if (g_esCache[tank].g_iThrowWitchRemove == 1)
+	{
+		int iWitch = -1;
+		while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
+		{
+			if (HasEntProp(iWitch, Prop_Send, "m_hOwnerEntity") && GetEntPropEnt(iWitch, Prop_Send, "m_hOwnerEntity") == tank)
+			{
+				RemoveEntity(iWitch);
+			}
+		}
+	}
+}
+
 static void vReset()
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -776,7 +785,7 @@ static void vReset()
 
 static void vThrow(int tank, int rock)
 {
-	if ((!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && !g_esPlayer[tank].g_bActivated)
+	if ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && !g_esPlayer[tank].g_bActivated)
 	{
 		g_esPlayer[tank].g_bActivated = true;
 	}
@@ -1119,7 +1128,7 @@ public Action tTimerThrow(Handle timer, DataPack pack)
 
 		static int iTime;
 		iTime = GetTime();
-		if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iTime))
+		if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iTime))
 		{
 			g_esPlayer[iTank].g_iCooldown = (g_esPlayer[iTank].g_iAmmoCount < g_esCache[iTank].g_iHumanAmmo && g_esCache[iTank].g_iHumanAmmo > 0) ? (iTime + g_esCache[iTank].g_iHumanCooldown) : -1;
 			if (g_esPlayer[iTank].g_iCooldown != -1 && g_esPlayer[iTank].g_iCooldown > iTime)

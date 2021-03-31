@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -14,7 +14,7 @@
 #endif
 #define _mutanttankscloneability_included
 
-public SharedPlugin __pl_mutanttankscloneability = 
+public SharedPlugin __pl_mutanttankscloneability =
 {
 	name = "mt_clone",
 	file = "mt_clone.smx",
@@ -37,7 +37,9 @@ public void __pl_mutanttankscloneability_SetNTVOptional()
  * Returns if the clone can use abilities.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			True if clone can use abilities, false otherwise.
+ * @error			Invalid client index.
  **/
 native bool MT_IsCloneSupported(int tank);
 
@@ -45,13 +47,23 @@ native bool MT_IsCloneSupported(int tank);
  * Returns if a Tank is a clone.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			True if the Tank is a clone, false otherwise.
  * @error			Invalid client index.
  **/
 native bool MT_IsTankClone(int tank);
 
+/**
+ * Returns whether the clone can use abilities.
+ *
+ * @param tank			Client index of the Tank.
+ * @param clone			Checks whether "st_clone.smx" is installed.
+ *
+ * @return			True if clone can use abilities, false otherwise.
+ * @error			Invalid client index.
+ **/
 #pragma deprecated Use MT_IsCloneSupported() instead.
-stock bool MT_CloneAllowed(int client, bool clone)
+stock bool ST_CloneAllowed(int tank, bool clone)
 {
 	return MT_IsCloneSupported(tank) && clone;
 }

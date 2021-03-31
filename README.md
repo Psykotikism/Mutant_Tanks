@@ -1,11 +1,13 @@
 # Mutant Tanks
+
 ## Languages
- - [Русский](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md)
+ - [English](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md)
+ - [Russian](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md)
 
 ## License
 > The following license is placed inside the source code of each plugin and include file.
 Mutant Tanks: a L4D/L4D2 SourceMod Plugin
-Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -39,8 +41,8 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 ## Requirements
 1. `SourceMod 1.11.0.6511` or higher
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
-3. [Left 4 DHooks Direct](https://forums.alliedmods.net/showthread.php?t=321696)
-4. Patience & competence
+3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
+4. Knowledge of installing SourceMod plugins.
 
 ## Notes
 1. I do not provide support for listen/local servers but the plugin and its modules should still work properly on them.
@@ -62,7 +64,11 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
  - `addons/sourcemod/scripting` folder (`mutant_tanks.sp` and all of its modules)
 2. Delete `mutant_tanks.txt` from `addons/sourcemod/gamedata` folder.
 3. Delete `mutant_tanks.inc` and `mt_clone.inc` from `addons/sourcemod/scripting/include` folder.
-4. Delete `mutant_tanks.phrases.txt` from `addons/sourcemod/translations` folder.
+4. Delete `mutant_tanks.phrases.txt` from:
+- `addons/sourcemod/translations` folder
+- `addons/sourcemod/translations/chi` folder
+- `addons/sourcemod/translations/hu` folder
+- `addons/sourcemod/translations/ru` folder
 5. Backup `mutant_tanks` folder in `addons/sourcemod/data` folder.
 6. Follow the Installation guide above. (Only for upgrading to newer versions.)
 
@@ -111,7 +117,7 @@ mt_pluginenabled "1"
 ```
 
 ## KeyValues Settings
-> View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,400 to customize!)
+> View the [INFORMATION.md](https://github.com/Psykotikism/Mutant_Tanks/blob/master/INFORMATION.md) file for information about each available setting. (Over 1,400 customization options!)
 
 ## Custom Configuration Files
 > Mutant Tanks has features that allow for creating and executing custom configuration files.
@@ -144,7 +150,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -165,7 +171,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -186,7 +192,7 @@ This is okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -207,7 +213,7 @@ This is not okay:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -230,7 +236,7 @@ Here's our final entry:
 ```
 "Mutant Tanks"
 {
-	"Tank #25"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -259,13 +265,13 @@ To make sure that this entry can be chosen, we must change the value in the `Typ
 	{
 		"General"
 		{
-			"Type Range"				"1-24" // Determines what entry to start and stop at when reading the entire config file.
+			"Type Range"				"1-14" // Determines what entry to start and stop at when reading the entire config file.
 		}
 	}
 }
 ```
 
-Now, assuming that `Tank #25` is our highest entry, we just raise the maximum value of `Type Range` by 1, so we get 25 entries to choose from. Once the plugin starts reading the config file, when it gets to `Tank #25` it will stop reading the rest.
+Now, assuming that `Tank #15` is our highest entry, we just raise the maximum value of `Type Range` by 1, so we get 15 entries to choose from. Once the plugin starts reading the config file, when it gets to `Tank #15` it will stop reading the rest.
 
 - Advanced Entry Examples
 
@@ -276,10 +282,10 @@ Now, assuming that `Tank #25` is our highest entry, we just raise the maximum va
 	{
 		"General"
 		{
-			"Type Range"				"1-5" // Check "Tank #1" to "Tank #5"
+			"Type Range"				"1-10" // Check "Tank #1" to "Tank #10"
 		}
 	}
-	"Tank #5" // Checked by the plugin.
+	"Tank #10" // Checked by the plugin.
 	{
 		"General"
 		{
@@ -473,14 +479,14 @@ Example:
 	{
 		"General"
 		{
-			"Type Range"				"1-69" // The plugin will check for 69 entries when loading the config file.
+			"Type Range"				"1-2" // The plugin will check for 2 entries when loading the config file.
 		}
 	}
-	"Tank #69"
+	"Tank #2"
 	{
 		"General"
 		{
-			"Tank Enabled"				"1" // Tank #69 is enabled and can be chosen.
+			"Tank Enabled"				"1" // Tank #2 is enabled and can be chosen.
 		}
 	}
 }
@@ -548,7 +554,7 @@ Example:
 			"Execute Config Types"			"1" // 1: Difficulty configs (easy, normal, hard, impossible)
 		}
 	}
-	"Tank #69"
+	"Tank #1"
 	{
 		"General"
 		{
@@ -574,7 +580,7 @@ Example:
 // Settings for addons/sourcemod/data/mutant_tanks/difficulty_configs/impossible.cfg
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #1"
 	{
 		"General"
 		{
@@ -726,7 +732,7 @@ forward void MT_OnChangeType(int tank, int oldType, int newType, bool revert);
  * @param weapon		Entity index of the weapon, if any.
  * @param classname		String containing the weapon classname, if any.
  **/
-forward void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname);
+forward void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname);
 
 /**
  * Called when the config file is about to load.
@@ -777,6 +783,16 @@ forward void MT_OnDisplayMenu(Menu menu);
 forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast);
 
 /**
+ * Called when a survivor is falling in a fatal zone.
+ * Use this forward to check if the current map has death fall cameras (fatal falls).
+ *
+ * @param survivor		Client index of the survivor.
+ *
+ * @return			Plugin_Handled to prevent the death fall camera from triggering, Plugin_Continue to allow.
+ **/
+forward Action MT_OnFatalFalling(int survivor);
+
+/**
  * Called when the core plugin is hooking/unhooking events.
  * Use this forward to hook/unhook events.
  *
@@ -816,6 +832,39 @@ forward void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer
 forward void MT_OnMenuItemSelected(int client, const char[] info);
 
 /**
+ * Called right before a player dies.
+ * Use this forward to do anything before the player dies.
+ *
+ * @param victim		Client index of the dying player.
+ * @param attacker		Client index of the killer.
+ **/
+forward void MT_OnPlayerEventKilled(int victim, int attacker);
+
+/**
+ * Called right before a player is hit by a bile bomb (vomit jar).
+ * Use this forward to do anything before the player is hit.
+ *
+ * @param player		Client index of the hit player.
+ * @param thrower		Client index of the survivor that threw the bile bomb (vomit jar).
+ *
+ * @return			Plugin_Handled to prevent the player from being hit, Plugin_Continue to allow.
+ **/
+forward Action MT_OnPlayerHitByVomitJar(int player, int thrower);
+
+/**
+ * Called right before a player is shoved by a survivor.
+ * Use this forward to do anything before the player is shoved.
+ * Note: Left 4 Dead 2 only calls this for special infected.
+ *
+ * @param player		Client index of the player.
+ * @param survivor		Client index of the survivor.
+ * @param direction		Direction of the shove.
+ *
+ * @return			Plugin_Handled to prevent the player from being shoved, Plugin_Continue to allow.
+ **/
+forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float direction[3]);
+
+/**
  * Called before the config file is read.
  * Use this forward to officially register an ability's plugin.
  *
@@ -840,7 +889,7 @@ forward void MT_OnPostTankSpawn(int tank);
 
 /**
  * Called when timers have been reset.
- * Use this forward for resetting repeating timers that use intervals set by config files. 
+ * Use this forward for resetting repeating timers that use intervals set by config files.
  *
  * @param mode			0 = No client index required, 1 = Client index required
  * @param tank			Client index of a Tank.
@@ -858,8 +907,10 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param priority		1 = Killer, 2 = Assistant who did most damage, 3 = Teammate who helped
  * @param duration		The duration of the reward.
  * @param apply			True if the reward is given, false otherwise.
+ *
+ * @return			Plugin_Handled to prevent giving or ending rewards, Plugin_Continue to allow.
  **/
-forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply);
+forward Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply);
 
 /**
  * Called when a Mutant Tank's rock breaks.
@@ -911,6 +962,7 @@ Natives:
  * Returns if a certain Mutant Tank type can spawn.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -920,14 +972,28 @@ native bool MT_CanTypeSpawn(int type);
  * Detonates a Tank rock on the next frame.
  *
  * @param rock			Entity index of the rock.
+ *
  * @error			Invalid entity index.
  **/
 native void MT_DetonateTankRock(int rock);
 
 /**
+ * Returns if a certain survivor has a reward type active.
+ *
+ * @param survivor		Client index of the survivor.
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
+ *					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
+ *
+ * @return			True if the survivor has the reward type active, false otherwise.
+ * @error			Invalid client index, client is not in-game, or type is 0 or less.
+ **/
+native bool MT_DoesSurvivorHaveRewardType(int survivor, int type);
+
+/**
  * Returns if a certain Mutant Tank type requires human-controlled survivors to be present to be effective.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type requires human-controlled survivors to be present, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -939,6 +1005,7 @@ native bool MT_DoesTypeRequireHumans(int type);
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
  * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
+ *
  * @return			The current access flags.
  * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
@@ -951,6 +1018,7 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
  * @param type			1 = Chance, 2 = Damage, 3 = Delay, 4 = Duration, 5 = Interval, 6 = Min radius, 7 = Max radius,
  *					8 = Range, 9 = Range Chance, 10 = Death range, 11 = Death range chance, 12 = Rock chance, 13 = Speed
  * @param pos			The position in the setting's array to retrieve the value from. (0-9)
+ *
  * @return			The value stored in the setting.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -968,6 +1036,7 @@ native int MT_GetCurrentFinaleWave();
  *
  * @param tank			Client index of the Tank.
  * @param mode			True if looking for max range, false otherwise.
+ *
  * @return			The glow outline range of the Tank.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -977,6 +1046,7 @@ native int MT_GetGlowRange(int tank, bool mode);
  * Returns a Mutant Tank's glow outline type.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			The glow outline type of the Tank.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -988,6 +1058,7 @@ native int MT_GetGlowType(int tank);
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
  * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
+ *
  * @return			The current immunity flags.
  * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
@@ -1017,6 +1088,7 @@ native int MT_GetMinType();
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
+ *
  * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 8.
  **/
 native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
@@ -1025,6 +1097,7 @@ native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue
  * Returns a Mutant Tank's run speed.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			The run speed of the Tank.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -1034,6 +1107,7 @@ native float MT_GetRunSpeed(int tank);
  * Returns the scaled damage based on difficulty.
  *
  * @param damage		Base damage to scale.
+ *
  * @return			The scaled damage based on difficulty.
  **/
 native float MT_GetScaledDamage(float damage);
@@ -1042,6 +1116,7 @@ native float MT_GetScaledDamage(float damage);
  * Returns a Mutant Tank's spawn type.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			The spawn type of the Tank.
  *					0 = Normal, 1 = Boss, 2 = Randomized, 3 = Transformation, 4 = Combined abilities
  * @error			Invalid client index, client is not in-game, or client is human.
@@ -1057,6 +1132,7 @@ native int MT_GetSpawnType(int tank);
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
+ *
  * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 2.
  **/
 native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
@@ -1066,6 +1142,7 @@ native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue
  *
  * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom name in.
+ *
  * @error			Invalid client index or client is not in-game.
  **/
 native void MT_GetTankName(int tank, char[] buffer);
@@ -1074,6 +1151,7 @@ native void MT_GetTankName(int tank, char[] buffer);
  * Returns the type of a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			The Tank's Mutant Tank type.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -1083,6 +1161,7 @@ native int MT_GetTankType(int tank);
  * Returns if a human player has access to a Mutant Tank type.
  *
  * @param admin			Client index of the admin.
+ *
  * @return			True if the human player has access, false otherwise.
  * @error			Invalid client index, client is not in-game, or client is a bot.
  **/
@@ -1092,6 +1171,7 @@ native bool MT_HasAdminAccess(int admin);
  * Returns if a certain Mutant Tank type has a chance of spawning.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type has a chance of spawning, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -1102,6 +1182,7 @@ native bool MT_HasChanceToSpawn(int type);
  *
  * @param entity		Entity index of the entity.
  * @param mode			True if hooking entity, false otherwise.
+ *
  * @error			Invalid entity index.
  **/
 native void MT_HideEntity(int entity, bool mode);
@@ -1111,6 +1192,7 @@ native void MT_HideEntity(int entity, bool mode);
  *
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
+ *
  * @return			True if the human survivor is immune, false otherwise.
  * @error			Invalid survivor index, survivor is not in-game, survivor is dead, survivor is a bot, survivor is idle,
  *					invalid Tank index, or Tank is not in-game.
@@ -1128,6 +1210,7 @@ native bool MT_IsCorePluginEnabled();
  * Returns if a custom Tank is allowed to be a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			True if the custom Tank is allowed to be a Mutant Tank, false otherwise.
  * @error			Invalid client index, client is not in-game, or client is dead.
  **/
@@ -1137,6 +1220,7 @@ native bool MT_IsCustomTankSupported(int tank);
  * Returns if a certain Mutant Tank type is only available on finale maps.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -1146,6 +1230,7 @@ native bool MT_IsFinaleType(int type);
  * Returns if a Mutant Tank type has a glow outline.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			True if the Tank has a glow outline, false otherwise.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -1155,6 +1240,7 @@ native bool MT_IsGlowEnabled(int tank);
  * Returns if a Mutant Tank type's glow outline is flashing.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			True if the Tank's glow outline is flashing, false otherwise.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -1164,6 +1250,7 @@ native bool MT_IsGlowFlashing(int tank);
  * Returns if a certain Mutant Tank type is only available on non-finale maps.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -1174,6 +1261,7 @@ native bool MT_IsNonFinaleType(int type);
  *
  * @param tank			Client index of the Tank.
  * @param type			Idle mode of the Tank. 0 = Both, 1 = Idle (waiting for survivors), 2 = Bugged (no behavior)
+ *
  * @return			True if the Tank is idle, false otherwise.
  * @error			Invalid client index, client is not in-game, client is dead, or type is less than 0 or greater than 2.
  **/
@@ -1187,6 +1275,7 @@ native bool MT_IsTankIdle(int tank, int type = 0);
  *					MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
  *					MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
  *					Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE
+ *
  * @return			True if the Tank is allowed to be a Mutant Tank, false otherwise.
  * @error			Invalid client index, client is not in-game, or client is dead.
  **/
@@ -1196,6 +1285,7 @@ native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_ING
  * Returns if a certain Mutant Tank type is enabled.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type is enabled, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -1211,26 +1301,48 @@ native bool MT_IsTypeEnabled(int type);
 native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ...);
 
 /**
+ * Respawns a survivor.
+ *
+ * @param survivor		Client index of the survivor.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_RespawnSurvivor(int survivor);
+
+/**
  * Sets a Tank's Mutant Tank type.
  *
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
  * @param mode			True if the Tank should transform physically into the new Mutant Tank type, false otherwise.
+ *
  * @error			Invalid client index, client is not in-game, client is dead, or type is 0 or less.
  **/
 native void MT_SetTankType(int tank, int type, bool mode);
+
+/**
+ * Shoves a player toward a certain direction.
+ *
+ * @param player		Client index of the player.
+ * @param survivor		Client index of the survivor.
+ * @param direction		Direction of the shove.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_ShoveBySurvivor(int player, int survivor, float direction[3]);
 
 /**
  * Spawns a Tank with the specified Mutant Tank type.
  *
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
+ *
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
  **/
 native void MT_SpawnTank(int tank, int type);
 
 /**
- * Get or set a Tank's max health.
+ * Gets or sets a Tank's max health.
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Get the Tank's max health, 2 = Get the Tank's stored max health,
@@ -1238,6 +1350,25 @@ native void MT_SpawnTank(int tank, int type);
  * @param newHealth		The Tank's new max health.
  **/
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
+
+/**
+ * Removes the vomit effect on a player.
+ *
+ * @param player		Client index of the player.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_UnvomitPlayer(int player);
+
+/**
+ * Sets the vomit effect on a player.
+ *
+ * @param player		Client index of the player.
+ * @param boomer		Client index of the Boomer.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_VomitPlayer(int player);
 ```
 
 - Clone ability
@@ -1247,7 +1378,9 @@ native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
  * Returns if the clone can use abilities.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			True if clone can use abilities, false otherwise.
+ * @error			Invalid client index.
  **/
 native bool MT_IsCloneSupported(int tank);
 
@@ -1255,6 +1388,7 @@ native bool MT_IsCloneSupported(int tank);
  * Returns if a Tank is a clone.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			True if the Tank is a clone, false otherwise.
  * @error			Invalid client index.
  **/
@@ -1278,16 +1412,10 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 
 	static char sBuffer[255], sMessage[255];
 	SetGlobalTransTarget(client);
-	FormatEx(sBuffer, sizeof(sBuffer), "\x01%s", message);
-	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);
-
-	ReplaceString(sMessage, sizeof(sMessage), "{default}", "\x01");
-	ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
-	ReplaceString(sMessage, sizeof(sMessage), "{yellow}", "\x04");
-	ReplaceString(sMessage, sizeof(sMessage), "{olive}", "\x05");
-	ReplaceString(sMessage, sizeof(sMessage), "{percent}", "%%");
-
-	PrintToChat(client, sMessage);
+	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
+	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), false);
+	PrintToChat(client, sBuffer);
 }
 
 stock void MT_PrintToChatAll(const char[] message, any ...)
@@ -1299,9 +1427,34 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 		{
 			SetGlobalTransTarget(iPlayer);
 			VFormat(sBuffer, sizeof(sBuffer), message, 2);
-
 			MT_PrintToChat(iPlayer, sBuffer);
 		}
+	}
+}
+
+stock void MT_PrintToServer(const char[] message, any ...)
+{
+	static char sBuffer[255];
+	SetGlobalTransTarget(LANG_SERVER);
+	VFormat(sBuffer, sizeof(sBuffer), message, 2);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+	PrintToServer(sBuffer);
+}
+
+stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
+{
+	ReplaceString(buffer, size, "{default}", (empty ? "" : "\x01"));
+	ReplaceString(buffer, size, "{mint}", (empty ? "" : "\x03"));
+	ReplaceString(buffer, size, "{yellow}", (empty ? "" : "\x04"));
+	ReplaceString(buffer, size, "{olive}", (empty ? "" : "\x05"));
+	ReplaceString(buffer, size, "{percent}", "%%");
+
+	if (empty)
+	{
+		ReplaceString(buffer, size, "\x01", "");
+		ReplaceString(buffer, size, "\x03", "");
+		ReplaceString(buffer, size, "\x04", "");
+		ReplaceString(buffer, size, "\x05", "");
 	}
 }
 
@@ -1313,15 +1466,11 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 
 	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
 	{
-		ReplaceString(sBuffer, sizeof(sBuffer), "{default}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{mint}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{yellow}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{percent}", "%%");
+		MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
 
 		switch (client == 0)
 		{
-			case true: PrintToServer(sBuffer);
+			case true: MT_PrintToServer(sBuffer);
 			case false: PrintToConsole(client, sBuffer);
 		}
 	}
@@ -1359,7 +1508,7 @@ sm_mt_tank - Spawn a Mutant Tank.
 
 Valid inputs:
 
-1. sm_tank <type 1*-500*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is 1 and the highest value you can set is "500" though.)
+1. sm_tank <type 1*-500*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The minimum and maximum values are determined by "Type Range". (The lowest value you can set is "1" and the highest value you can set is "500" though.)
 2. sm_tank <type name*> <amount: 1-32> <0: spawn on crosshair|1: spawn automatically> *The plugin will attempt to match the name with any of the Mutant Tank types' names. (Partial names are acceptable. If more than 1 match is found, a random match is chosen. If 0 matches are found, the command cancels the request.)
 
 The command has 4 functions.
@@ -1372,7 +1521,7 @@ If you are not a Tank:
 If you are a Tank:
 
 1. When holding down the +speed (default: LSHIFT) button, a Mutant Tank will spawn into the chosen type.
-2. When not holding down the +speed button, you will transform into the chosen type.
+2. When not holding down the +speed (default: LSHIFT) button, you will transform into the chosen type.
 ```
 
 ```
@@ -1386,6 +1535,7 @@ sm_mt_version - Find out the current version of Mutant Tanks.
 
 // Accessible by the developer only.
 sm_mt_config2 - View a section of a config file.
+sm_mt_dev - Used only by and for the developer.
 sm_mt_list2 - View a list of installed abilities.
 sm_tank2 - Spawn a Mutant Tank.
 sm_mt_tank2 - Spawn a Mutant Tank.
@@ -1760,7 +1910,7 @@ Whatever each button activates is entirely up to your configuration settings.
 
 4. How do I change the buttons or add extra buttons?
 
-Edit lines 90-93 of the `mutant_tanks.inc` file and recompile each ability plugin.
+Edit lines `96-99` of the `mutant_tanks.inc` file and recompile each ability plugin.
 
 5. What happens if a Mutant Tank has multiple abilities that are all activated by the same button?
 
@@ -1919,11 +2069,13 @@ Examples:
 
 **Luckylock** - For the [[L4D & L4D2] Tank Rock Lag Compensation](https://forums.alliedmods.net/showthread.php?t=315345) plugin.
 
+**raoulduke** - For the [[L4D] Survival Event Timer](https://forums.alliedmods.net/showthread.php?t=92175) plugin.
+
 **Silvers (Silvershot)** - For his plugins which make good references, help with gamedata signatures, and helping to optimize/fix various parts of the code.
 
 **epz (epzminion)** - For help with gamedata signatures, offsets, addresses, and invaluable input.
 
-**Lux** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) plugins.
+**Lux** - For helping to optimize/fix various parts of the code, the code for detecting thirdperson view, and for the [Left4Fix](https://github.com/LuxLuma/Left-4-fix) and [[L4D/L4D2]WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947) plugins.
 
 **Milo|** - For the [Extended Map Configs](https://forums.alliedmods.net/showthread.php?t=85551) and [Dailyconfig](https://forums.alliedmods.net/showthread.php?t=84720) plugins.
 
@@ -1937,15 +2089,15 @@ Examples:
 
 **Blueberry (Kleiner)** - For Russian translations and suggesting ideas.
 
-**yuzumi** - For Simplified Chinese translations and suggesting ideas.
+**yuzumi** - For Simplified Chinese translations, reporting issues, and suggesting ideas.
 
 **Mi.Cura, 3aljiyavslgazana** - For reporting issues, suggesting ideas, testing features, and overall support.
 
 **emsit** - For reporting issues, helping with parts of the code, and suggesting ideas.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush** - For reporting issues and suggesting ideas.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku** - For reporting issues and suggesting ideas.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, Maku** - For reporting issues.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer** - For reporting issues.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType** - For suggesting ideas.
 
@@ -1955,7 +2107,7 @@ Examples:
 
 **login101** - For providing some source code for the `Lightning` ability.
 
-**Peachie** - For the love and support behind the scenes.
+**peachie** - For the love and support behind the scenes.
 
 **Angelace113** - For the default colors (before `v8.12`), testing each Tank type, suggesting ideas, helping with converting plugins to use enum structs (`v8.66`), helping to set up the wiki pages, and overall support.
 
@@ -1965,8 +2117,8 @@ Examples:
 
 **SourceMod Team** - For continually updating/improving SourceMod.
 
-# 3rd-Party Revisions Notice
+## 3rd-Party Revisions Notice
 If you would like to share your own revisions of this plugin, please rename the files so that there is no confusion for users.
 
-# Final Words
+## Final Words
 Enjoy all my hard work and have fun with it!

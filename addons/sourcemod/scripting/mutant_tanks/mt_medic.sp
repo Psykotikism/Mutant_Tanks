@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -136,6 +136,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_medic", cmdMedicInfo, "View information about the Medic ability.");
 }
@@ -287,7 +288,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public void MT_OnPluginCheck(ArrayList &list)
 {
-	char sName[32];
+	char sName[128];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
 }
@@ -300,7 +301,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -468,7 +469,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			}
 			else
 			{
-				static char sSet[7][6], sValue[42];
+				static char sSet[7][11], sValue[77];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -525,7 +526,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 			}
 			else
 			{
-				static char sSet[7][6], sValue[42];
+				static char sSet[7][11], sValue[77];
 				strcopy(sValue, sizeof(sValue), value);
 				ReplaceString(sValue, sizeof(sValue), " ", "");
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
@@ -547,7 +548,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flMedicChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMedicChance, g_esAbility[type].g_flMedicChance);
 	g_esCache[tank].g_flMedicInterval = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMedicInterval, g_esAbility[type].g_flMedicInterval);
 	g_esCache[tank].g_flMedicRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flMedicRange, g_esAbility[type].g_flMedicRange);
@@ -568,7 +569,7 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	{
 		g_esCache[tank].g_iMedicHealth[iPos] = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMedicHealth[iPos], g_esAbility[type].g_iMedicHealth[iPos]);
 		g_esCache[tank].g_iMedicMaxHealth[iPos] = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMedicMaxHealth[iPos], g_esAbility[type].g_iMedicMaxHealth[iPos]);
-	
+
 		if (iPos < sizeof(esCache::g_iMedicFieldColor))
 		{
 			g_esCache[tank].g_iMedicFieldColor[iPos] = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iMedicFieldColor[iPos], g_esAbility[type].g_iMedicFieldColor[iPos]);
@@ -629,7 +630,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iMedicAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iMedicAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
 	{
 		vMedicAbility(tank);
 	}
@@ -735,7 +736,7 @@ static void vMedic(int tank, int pos = -1)
 
 	vMedic2(tank, pos);
 
-	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		g_esPlayer[tank].g_iAmmoCount++;
 
@@ -775,18 +776,18 @@ static void vMedicAbility(int tank)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flMedicChance)
 		{
 			vMedic(tank);
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "MedicHuman2");
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "MedicAmmo");
 	}
@@ -906,7 +907,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 	static int iTank, iType;
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iMedicAbility == 0 || !g_esPlayer[iTank].g_bActivated)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || bIsPlayerIncapacitated(iTank) || bIsAreaNarrow(iTank, g_esCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[iTank].g_iTankType) || (g_esCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAbility[g_esPlayer[iTank].g_iTankType].g_iAccessFlags, g_esPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esPlayer[iTank].g_iTankType || g_esCache[iTank].g_iMedicAbility == 0 || !g_esPlayer[iTank].g_bActivated)
 	{
 		vReset2(iTank);
 
@@ -917,7 +918,7 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 	iTime = pack.ReadCell();
 	iPos = pack.ReadCell();
 	iCurrentTime = GetTime();
-	if (MT_IsTankSupported(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && g_esCache[iTank].g_iHumanMode == 0 && (iTime + g_esCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iCurrentTime))
+	if (bIsTank(iTank, MT_CHECK_FAKECLIENT) && g_esCache[iTank].g_iHumanAbility == 1 && g_esCache[iTank].g_iHumanMode == 0 && (iTime + g_esCache[iTank].g_iHumanDuration) < iCurrentTime && (g_esPlayer[iTank].g_iCooldown == -1 || g_esPlayer[iTank].g_iCooldown < iCurrentTime))
 	{
 		vReset2(iTank);
 		vReset3(iTank);
@@ -936,21 +937,25 @@ public Action tTimerMedic(Handle timer, DataPack pack)
 		TE_SendToAll();
 	}
 
-	static int iHealth, iMaxHealth, iNewHealth, iExtraHealth, iExtraHealth2, iRealHealth;
+	static int iHealth, iValue, iLimit, iMaxHealth, iNewHealth, iLeftover, iExtraHealth, iExtraHealth2, iRealHealth, iTotalHealth;
 	for (int iInfected = 1; iInfected <= MaxClients; iInfected++)
 	{
-		if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE)) && iTank != iInfected)
+		if ((MT_IsTankSupported(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE) || bIsSpecialInfected(iInfected, MT_CHECK_INGAME|MT_CHECK_ALIVE)) && bIsPlayerIncapacitated(iInfected) && iTank != iInfected)
 		{
 			GetClientAbsOrigin(iInfected, flInfectedPos);
 			if (GetVectorDistance(flTankPos, flInfectedPos) <= flRange)
 			{
 				iHealth = GetEntProp(iInfected, Prop_Data, "m_iHealth");
+				iValue = iGetHealth(iTank, iInfected);
+				iLimit = iGetMaxHealth(iTank, iInfected);
 				iMaxHealth = MT_TankMaxHealth(iInfected, 1);
-				iNewHealth = iHealth + iGetHealth(iTank, iInfected);
-				iExtraHealth = (iNewHealth > iGetMaxHealth(iTank, iInfected)) ? iGetMaxHealth(iTank, iInfected) : iNewHealth;
+				iNewHealth = iHealth + iValue;
+				iLeftover = (iNewHealth > iLimit) ? (iNewHealth - iLimit) : iNewHealth;
+				iExtraHealth = (iNewHealth > iLimit) ? iLimit : iNewHealth;
 				iExtraHealth2 = (iNewHealth < iHealth) ? 1 : iNewHealth;
 				iRealHealth = (iNewHealth >= 0) ? iExtraHealth : iExtraHealth2;
-				MT_TankMaxHealth(iInfected, 3, iMaxHealth + iGetHealth(iTank, iInfected));
+				iTotalHealth = (iNewHealth > iLimit) ? iLeftover : iValue;
+				MT_TankMaxHealth(iInfected, 3, iMaxHealth + iTotalHealth);
 				SetEntProp(iInfected, Prop_Data, "m_iHealth", iRealHealth);
 
 				if (g_esCache[iTank].g_iMedicMessage == 1)

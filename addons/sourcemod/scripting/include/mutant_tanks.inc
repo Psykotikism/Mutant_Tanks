@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -16,7 +16,7 @@
 
 #include <sdktools>
 
-public SharedPlugin __pl_mutanttanks = 
+public SharedPlugin __pl_mutanttanks =
 {
 	name = "mutant_tanks",
 	file = "mutant_tanks.smx",
@@ -32,6 +32,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 {
 	MarkNativeAsOptional("MT_CanTypeSpawn");
 	MarkNativeAsOptional("MT_DetonateTankRock");
+	MarkNativeAsOptional("MT_DoesSurvivorHaveRewardType");
 	MarkNativeAsOptional("MT_DoesTypeRequireHumans");
 	MarkNativeAsOptional("MT_GetAccessFlags");
 	MarkNativeAsOptional("MT_GetCombinationSetting");
@@ -62,17 +63,21 @@ public void __pl_mutanttanks_SetNTVOptional()
 	MarkNativeAsOptional("MT_IsTankSupported");
 	MarkNativeAsOptional("MT_IsTypeEnabled");
 	MarkNativeAsOptional("MT_LogMessage");
+	MarkNativeAsOptional("MT_RespawnSurvivor");
 	MarkNativeAsOptional("MT_SetTankType");
+	MarkNativeAsOptional("MT_ShoveBySurvivor");
 	MarkNativeAsOptional("MT_SpawnTank");
 	MarkNativeAsOptional("MT_TankMaxHealth");
+	MarkNativeAsOptional("MT_UnvomitPlayer");
+	MarkNativeAsOptional("MT_VomitPlayer");
 }
 #endif
 
 // Core plugin information
-#define MT_NAME "Mutant Tanks"
+#define MT_NAME "[L4D & L4D2] Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.82"
+#define MT_VERSION "8.83"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 // Chat tags
@@ -106,6 +111,15 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_ATTACK_MELEE (1 << 1) // weapon_melee
 #define MT_ATTACK_RANGE (1 << 2) // range ability
 
+// Combination types
+#define MT_COMBO_MAINRANGE 0 // main/range ability
+#define MT_COMBO_MELEEHIT 1 // weapon_tank_claw/weapon_melee
+#define MT_COMBO_ROCKTHROW 2 // when rock is thrown
+#define MT_COMBO_ROCKBREAK 3 // tank_rock; when rock breaks
+#define MT_COMBO_POSTSPAWN 4 // after spawning
+#define MT_COMBO_UPONDEATH 5 // when dying
+#define MT_COMBO_UPONINCAP 6 // when incapacitated
+
 // Logging flags
 #define MT_LOG_LIFE (1 << 0) // spawned or died
 #define MT_LOG_CHANGE (1 << 1) // mutant type changed
@@ -123,20 +137,24 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_REWARD_HEALTH (1 << 0) // health reward
 #define MT_REWARD_SPEEDBOOST (1 << 1) // speed boost reward
 #define MT_REWARD_DAMAGEBOOST (1 << 2) // damage boost reward
-#define MT_REWARD_AMMO (1 << 3) // ammo reward
-#define MT_REWARD_ITEM (1 << 4) // item reward
-#define MT_REWARD_GODMODE (1 << 5) // god mode reward
-#define MT_REWARD_REFILL (1 << 6) // refill reward
-#define MT_REWARD_RESPAWN (1 << 7) // respawn reward
+#define MT_REWARD_ATTACKBOOST (1 << 3) // attack boost reward
+#define MT_REWARD_AMMO (1 << 4) // ammo reward
+#define MT_REWARD_ITEM (1 << 5) // item reward
+#define MT_REWARD_GODMODE (1 << 6) // god mode reward
+#define MT_REWARD_REFILL (1 << 7) // refill reward
+#define MT_REWARD_RESPAWN (1 << 8) // respawn reward
+#define MT_REWARD_INFAMMO (1 << 9) // infinite primary ammo reward
 
-// Combination types
-#define MT_COMBO_MAINRANGE 0 // main/range ability
-#define MT_COMBO_MELEEHIT 1 // weapon_tank_claw/weapon_melee
-#define MT_COMBO_ROCKTHROW 2 // when rock is thrown
-#define MT_COMBO_ROCKBREAK 3 // tank_rock; when rock breaks
-#define MT_COMBO_POSTSPAWN 4 // after spawning
-#define MT_COMBO_UPONDEATH 5 // when dying
-#define MT_COMBO_UPONINCAP 6 // when incapacitated
+// Special ammo types
+#define MT_UPGRADE_INCENDIARY (1 << 0) // incendiary ammo
+#define MT_UPGRADE_EXPLOSIVE (1 << 1) // explosive ammo
+#define MT_UPGRADE_LASERSIGHT (1 << 2) // laser sight
+
+// Entity mask information
+#define MAX_EDICT_BITS 11
+#define NUM_ENT_ENTRY_BITS (MAX_EDICT_BITS + 1)
+#define NUM_ENT_ENTRIES (1 << NUM_ENT_ENTRY_BITS)
+#define ENT_ENTRY_MASK (NUM_ENT_ENTRIES - 1)
 
 // Forwards
 /**
@@ -200,7 +218,7 @@ forward void MT_OnChangeType(int tank, int oldType, int newType, bool revert);
  * @param weapon		Entity index of the weapon, if any.
  * @param classname		String containing the weapon classname, if any.
  **/
-forward void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname);
+forward void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname);
 
 /**
  * Called when the config file is about to load.
@@ -251,6 +269,16 @@ forward void MT_OnDisplayMenu(Menu menu);
 forward void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast);
 
 /**
+ * Called when a survivor is falling in a fatal zone.
+ * Use this forward to check if the current map has death fall cameras (fatal falls).
+ *
+ * @param survivor		Client index of the survivor.
+ *
+ * @return			Plugin_Handled to prevent the death fall camera from triggering, Plugin_Continue to allow.
+ **/
+forward Action MT_OnFatalFalling(int survivor);
+
+/**
  * Called when the core plugin is hooking/unhooking events.
  * Use this forward to hook/unhook events.
  *
@@ -290,6 +318,39 @@ forward void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer
 forward void MT_OnMenuItemSelected(int client, const char[] info);
 
 /**
+ * Called right before a player dies.
+ * Use this forward to do anything before the player dies.
+ *
+ * @param victim		Client index of the dying player.
+ * @param attacker		Client index of the killer.
+ **/
+forward void MT_OnPlayerEventKilled(int victim, int attacker);
+
+/**
+ * Called right before a player is hit by a bile bomb (vomit jar).
+ * Use this forward to do anything before the player is hit.
+ *
+ * @param player		Client index of the hit player.
+ * @param thrower		Client index of the survivor that threw the bile bomb (vomit jar).
+ *
+ * @return			Plugin_Handled to prevent the player from being hit, Plugin_Continue to allow.
+ **/
+forward Action MT_OnPlayerHitByVomitJar(int player, int thrower);
+
+/**
+ * Called right before a player is shoved by a survivor.
+ * Use this forward to do anything before the player is shoved.
+ * Note: L4D2 only calls this for special infected.
+ *
+ * @param player		Client index of the player.
+ * @param survivor		Client index of the survivor.
+ * @param direction		Direction of the shove.
+ *
+ * @return			Plugin_Handled to prevent the player from being shoved, Plugin_Continue to allow.
+ **/
+forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float direction[3]);
+
+/**
  * Called before the config file is read.
  * Use this forward to officially register an ability's plugin.
  *
@@ -314,7 +375,7 @@ forward void MT_OnPostTankSpawn(int tank);
 
 /**
  * Called when timers have been reset.
- * Use this forward for resetting repeating timers that use intervals set by config files. 
+ * Use this forward for resetting repeating timers that use intervals set by config files.
  *
  * @param mode			0 = No client index required, 1 = Client index required
  * @param tank			Client index of a Tank.
@@ -332,8 +393,10 @@ forward void MT_OnResetTimers(int mode, int tank);
  * @param priority		1 = Killer, 2 = Assistant who did most damage, 3 = Teammate who helped
  * @param duration		The duration of the reward.
  * @param apply			True if the reward is given, false otherwise.
+ *
+ * @return			Plugin_Handled to prevent giving or ending rewards, Plugin_Continue to allow.
  **/
-forward void MT_OnRewardSurvivor(int survivor, int tank, int type, int priority, float duration, bool apply);
+forward Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply);
 
 /**
  * Called when a Mutant Tank's rock breaks.
@@ -372,7 +435,7 @@ forward void MT_OnSettingsCached(int tank, bool apply, int type);
  *
  * @return			Plugin_Handled to choose another type, Plugin_Stop to prevent the Tank from mutating,
  *					Plugin_Changed to change the chosen type, Plugin_Continue to allow.
- */
+ **/
 forward Action MT_OnTypeChosen(int &type, int tank);
 
 // Natives
@@ -380,6 +443,7 @@ forward Action MT_OnTypeChosen(int &type, int tank);
  * Returns if a certain Mutant Tank type can spawn.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -389,14 +453,28 @@ native bool MT_CanTypeSpawn(int type);
  * Detonates a Tank rock on the next frame.
  *
  * @param rock			Entity index of the rock.
+ *
  * @error			Invalid entity index.
  **/
 native void MT_DetonateTankRock(int rock);
 
 /**
+ * Returns if a certain survivor has a reward type active.
+ *
+ * @param survivor		Client index of the survivor.
+ * @param type			1 = Health, 2 = Damage boost, 4 = Speed boost, 8 = Ammo, 16 = Item, 32 = God mode, 64 = Health and ammo refill, 128 = Respawn,
+ *					255 = All eight rewards, 256-2147483647 = Reserved for third-party plugins
+ *
+ * @return			True if the survivor has the reward type active, false otherwise.
+ * @error			Invalid client index, client is not in-game, or type is 0 or less.
+ **/
+native bool MT_DoesSurvivorHaveRewardType(int survivor, int type);
+
+/**
  * Returns if a certain Mutant Tank type requires human-controlled survivors to be present to be effective.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type requires human-controlled survivors to be present, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -408,6 +486,7 @@ native bool MT_DoesTypeRequireHumans(int type);
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
  * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
+ *
  * @return			The current access flags.
  * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
@@ -420,6 +499,7 @@ native int MT_GetAccessFlags(int mode, int type = 0, int admin = -1);
  * @param type			1 = Chance, 2 = Damage, 3 = Delay, 4 = Duration, 5 = Interval, 6 = Min radius, 7 = Max radius,
  *					8 = Range, 9 = Range Chance, 10 = Death range, 11 = Death range chance, 12 = Rock chance, 13 = Speed
  * @param pos			The position in the setting's array to retrieve the value from. (0-9)
+ *
  * @return			The value stored in the setting.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -437,6 +517,7 @@ native int MT_GetCurrentFinaleWave();
  *
  * @param tank			Client index of the Tank.
  * @param mode			True if looking for max range, false otherwise.
+ *
  * @return			The glow outline range of the Tank.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -446,6 +527,7 @@ native int MT_GetGlowRange(int tank, bool mode);
  * Returns a Mutant Tank's glow outline type.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			The glow outline type of the Tank.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -457,6 +539,7 @@ native int MT_GetGlowType(int tank);
  * @param mode			1 = Global flags, 2 = Type-specific flags, 3 = Global admin flags, 4 = Type-specific admin flags
  * @param type			Mutant Tank type. (Optional)
  * @param admin			Client index of an admin. (Optional)
+ *
  * @return			The current immunity flags.
  * @error			Invalid client index, client is not in-game, client is a bot, or type is 0 or less.
  **/
@@ -486,6 +569,7 @@ native int MT_GetMinType();
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
+ *
  * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 8.
  **/
 native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
@@ -494,6 +578,7 @@ native void MT_GetPropColors(int tank, int type, int &red, int &green, int &blue
  * Returns a Mutant Tank's run speed.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			The run speed of the Tank.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -503,6 +588,7 @@ native float MT_GetRunSpeed(int tank);
  * Returns the scaled damage based on difficulty.
  *
  * @param damage		Base damage to scale.
+ *
  * @return			The scaled damage based on difficulty.
  **/
 native float MT_GetScaledDamage(float damage);
@@ -511,6 +597,7 @@ native float MT_GetScaledDamage(float damage);
  * Returns a Mutant Tank's spawn type.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			The spawn type of the Tank.
  *					0 = Normal, 1 = Boss, 2 = Randomized, 3 = Transformation, 4 = Combined abilities
  * @error			Invalid client index, client is not in-game, or client is human.
@@ -526,6 +613,7 @@ native int MT_GetSpawnType(int tank);
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
+ *
  * @error			Invalid client index, client is not in-game, or type is less than 1 or greater than 2.
  **/
 native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue, int &alpha);
@@ -535,6 +623,7 @@ native void MT_GetTankColors(int tank, int type, int &red, int &green, int &blue
  *
  * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom name in.
+ *
  * @error			Invalid client index or client is not in-game.
  **/
 native void MT_GetTankName(int tank, char[] buffer);
@@ -543,6 +632,7 @@ native void MT_GetTankName(int tank, char[] buffer);
  * Returns the type of a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			The Tank's Mutant Tank type.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -552,6 +642,7 @@ native int MT_GetTankType(int tank);
  * Returns if a human player has access to a Mutant Tank type.
  *
  * @param admin			Client index of the admin.
+ *
  * @return			True if the human player has access, false otherwise.
  * @error			Invalid client index, client is not in-game, or client is a bot.
  **/
@@ -561,6 +652,7 @@ native bool MT_HasAdminAccess(int admin);
  * Returns if a certain Mutant Tank type has a chance of spawning.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type has a chance of spawning, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -571,6 +663,7 @@ native bool MT_HasChanceToSpawn(int type);
  *
  * @param entity		Entity index of the entity.
  * @param mode			True if hooking entity, false otherwise.
+ *
  * @error			Invalid entity index.
  **/
 native void MT_HideEntity(int entity, bool mode);
@@ -580,6 +673,7 @@ native void MT_HideEntity(int entity, bool mode);
  *
  * @param survivor		Client index of the survivor.
  * @param tank			Client index of the Tank.
+ *
  * @return			True if the human survivor is immune, false otherwise.
  * @error			Invalid survivor index, survivor is not in-game, survivor is dead, survivor is a bot, survivor is idle,
  *					invalid Tank index, or Tank is not in-game.
@@ -597,6 +691,7 @@ native bool MT_IsCorePluginEnabled();
  * Returns if a custom Tank is allowed to be a Mutant Tank.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			True if the custom Tank is allowed to be a Mutant Tank, false otherwise.
  * @error			Invalid client index, client is not in-game, or client is dead.
  **/
@@ -606,6 +701,7 @@ native bool MT_IsCustomTankSupported(int tank);
  * Returns if a certain Mutant Tank type is only available on finale maps.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -615,6 +711,7 @@ native bool MT_IsFinaleType(int type);
  * Returns if a Mutant Tank type has a glow outline.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			True if the Tank has a glow outline, false otherwise.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -624,6 +721,7 @@ native bool MT_IsGlowEnabled(int tank);
  * Returns if a Mutant Tank type's glow outline is flashing.
  *
  * @param tank			Client index of the Tank.
+ *
  * @return			True if the Tank's glow outline is flashing, false otherwise.
  * @error			Invalid client index or client is not in-game.
  **/
@@ -633,6 +731,7 @@ native bool MT_IsGlowFlashing(int tank);
  * Returns if a certain Mutant Tank type is only available on non-finale maps.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -643,6 +742,7 @@ native bool MT_IsNonFinaleType(int type);
  *
  * @param tank			Client index of the Tank.
  * @param type			Idle mode of the Tank. 0 = Both, 1 = Idle (waiting for survivors), 2 = Bugged (no behavior)
+ *
  * @return			True if the Tank is idle, false otherwise.
  * @error			Invalid client index, client is not in-game, client is dead, or type is less than 0 or greater than 2.
  **/
@@ -656,6 +756,7 @@ native bool MT_IsTankIdle(int tank, int type = 0);
  *					MT_CHECK_INDEX = client index, MT_CHECK_CONNECTED = connection, MT_CHECK_INGAME = in-game status,
  *					MT_CHECK_ALIVE = life state, MT_CHECK_INKICKQUEUE = kick status, MT_CHECK_FAKECLIENT = bot check
  *					Default: MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE
+ *
  * @return			True if the Tank is allowed to be a Mutant Tank, false otherwise.
  * @error			Invalid client index, client is not in-game, or client is dead.
  **/
@@ -665,6 +766,7 @@ native bool MT_IsTankSupported(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_ING
  * Returns if a certain Mutant Tank type is enabled.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type is enabled, false otherwise.
  * @error			Type is 0 or less.
  **/
@@ -680,26 +782,48 @@ native bool MT_IsTypeEnabled(int type);
 native void MT_LogMessage(int type = MT_LOG_CUSTOM, const char[] message, any ...);
 
 /**
+ * Respawns a survivor.
+ *
+ * @param survivor		Client index of the survivor.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_RespawnSurvivor(int survivor);
+
+/**
  * Sets a Tank's Mutant Tank type.
  *
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
  * @param mode			True if the Tank should transform physically into the new Mutant Tank type, false otherwise.
+ *
  * @error			Invalid client index, client is not in-game, client is dead, or type is 0 or less.
  **/
 native void MT_SetTankType(int tank, int type, bool mode);
+
+/**
+ * Shoves a player toward a certain direction.
+ *
+ * @param player		Client index of the player.
+ * @param survivor		Client index of the survivor.
+ * @param direction		Direction of the shove.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_ShoveBySurvivor(int player, int survivor, float direction[3]);
 
 /**
  * Spawns a Tank with the specified Mutant Tank type.
  *
  * @param tank			Client index of the Tank.
  * @param type			Mutant Tank type.
+ *
  * @error			Invalid client index, client is not in-game, or type is 0 or less.
  **/
 native void MT_SpawnTank(int tank, int type);
 
 /**
- * Get or set a Tank's max health.
+ * Gets or sets a Tank's max health.
  *
  * @param tank			Client index of the Tank.
  * @param mode			1 = Get the Tank's max health, 2 = Get the Tank's stored max health,
@@ -708,29 +832,51 @@ native void MT_SpawnTank(int tank, int type);
  **/
 native int MT_TankMaxHealth(int tank, int mode, int newHealth = 0);
 
-/* Called every second to trigger the Super Tank's ability.
+/**
+ * Removes the vomit effect on a player.
+ *
+ * @param player		Client index of the player.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_UnvomitPlayer(int player);
+
+/**
+ * Sets the vomit effect on a player.
+ *
+ * @param player		Client index of the player.
+ * @param boomer		Client index of the Boomer.
+ *
+ * @error			Invalid client index, client is not in-game, or client is dead.
+ **/
+native void MT_VomitPlayer(int player, int boomer);
+
+/**
+ * Called every second to trigger the Super Tank's ability.
  * Use this forward for any passive abilities.
  *
  * @param client		Client index of the Tank.
- */
+ **/
 #pragma deprecated Use MT_OnAbilityActivated() instead.
 forward void ST_Ability(int client);
 
-/* Called when a Tank is about to throw a rock.
+/**
+ * Called when a Tank is about to throw a rock.
  * Use this forward to trigger anything when
  * the Tank is gonna throw a rock.
  *
  * @param client		Client index of the Tank.
- */
+ **/
 #pragma deprecated Use MT_OnRockThrow() instead.
 forward void ST_AbilityThrow(int client);
 
-/* Called when the Super Tank evolves.
+/**
+ * Called when the Super Tank evolves.
  * Use this forward to trigger any features/abilities/settings
  * when a Super Tank evolves.
  *
  * @param client		Client index of the Tank.
- */
+ **/
 #pragma deprecated Use MT_OnChangeType() instead.
 forward void ST_BossStage(int client);
 
@@ -743,43 +889,47 @@ forward void ST_BossStage(int client);
 #pragma deprecated Use MT_OnChangeType() instead.
 forward void ST_ChangeType(int tank);
 
-/* Called when the config file is loaded.
+/**
+ * Called when the config file is loaded.
  * Use this forward to load settings for the plugin.
  *
  * @param savepath		The savepath of the config.
  * @param limit			The limit for how many Super Tank types' settings to check for.
  * @param main			Checks whether the main config or a custom config is being used.
- */
+ **/
 #pragma deprecated Use MT_OnConfigsLoaded() instead.
 forward void ST_Configs(char[] savepath, int limit, bool main);
 
-/* Called when someone dies.
+/**
+ * Called when someone dies.
  * Use this forward to execute anything when
  * a survivor or Tank dies.
  * Use ST_Death2 if you also want to get the attacker's ID.
  *
  * @param client		Client index of the victim.
- */
+ **/
 #pragma deprecated Use the MT_OnEventFired() forward to catch the death event instead.
 forward void ST_Death(int client);
 
-/* Called when someone dies.
+/**
+ * Called when someone dies.
  * Use this forward to execute anything when
  * a survivor or Tank dies.
  * Use ST_Death if you just want to get the victim's ID.
  *
  * @param enemy			Client index of the attacker.
  * @param client		Client index of the victim.
- */
+ **/
 #pragma deprecated Use the MT_OnEventFired() forward to catch the death event instead.
 forward void ST_Death2(int enemy, int client);
 
-/* Called when an event hooked by the core plugin is fired.
+/**
+ * Called when an event hooked by the core plugin is fired.
  * Use this forward to trigger something on any of those events.
  *
  * @param event			Handle to the event.
  * @param name			String containing the name of the event.
- */
+ **/
 #pragma deprecated Use MT_OnEventFired() instead.
 forward void ST_Event(Event event, const char[] name);
 
@@ -794,12 +944,13 @@ forward void ST_Event(Event event, const char[] name);
 #pragma deprecated Use MT_OnEventFired() instead.
 forward void ST_EventHandler(Event event, const char[] name, bool dontBroadcast);
 
-/* Called when a Tank is incapacitated.
+/**
+ * Called when a Tank is incapacitated.
  * Use this forward to execute anything when
  * a Tank is about to die.
  *
  * @param client		Client index of the Tank.
- */
+ **/
 #pragma deprecated Use the MT_OnEventFired() forward to catch the incap event instead.
 forward void ST_Incap(int client);
 
@@ -823,37 +974,41 @@ forward void ST_OnPreset(int tank);
 #pragma deprecated Use the MT_OnPostTankSpawn() instead.
 forward void ST_Preset(int tank);
 
-/* Called when the Tank's rock breaks.
+/**
+ * Called when the Tank's rock breaks.
  * Use this forward for any after-effects.
  *
  * @param client		Client index of the Tank.
  * @param entity		Entity index of the rock.
- */
+ **/
 #pragma deprecated Use MT_OnRockBreak() instead.
 forward void ST_RockBreak(int client, int entity);
 
-/* Called when the Tank throws a rock.
+/**
+ * Called when the Tank throws a rock.
  * Use this forward for any throwing abilities.
  *
  * @param client		Client index of the Tank.
  * @param entity		Entity index of the rock.
- */
+ **/
 #pragma deprecated Use MT_OnRockThrow() instead.
 forward void ST_RockThrow(int client, int entity);
 
-/* Called when the round starts.
+/**
+ * Called when the round starts.
  * Use this forward for setting something when
  * the round starts.
- */
+ **/
 #pragma deprecated Use the MT_OnEventFired() forward to catch the round start event instead.
 forward void ST_RoundStart();
 
-/* Called when the Tank spawns.
+/**
+ * Called when the Tank spawns.
  * Use this forward for any one-time abilities
  * or on-spawn presets.
  *
  * @param client		Client index of the Tank.
- */
+ **/
 #pragma deprecated Use the MT_OnPostTankSpawn() instead.
 forward void ST_Spawn(int client);
 
@@ -861,6 +1016,7 @@ forward void ST_Spawn(int client);
  * Returns if a certain Mutant Tank type can spawn.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type can spawn, false otherwise.
  * @error			Type is 0.
  **/
@@ -874,6 +1030,7 @@ stock bool MT_CanTankSpawn(int type)
  * Returns if a certain Mutant Tank type is only available on finale maps.
  *
  * @param type			Mutant Tank type.
+ *
  * @return			True if the type is available, false otherwise.
  * @error			Type is 0.
  **/
@@ -883,40 +1040,44 @@ stock bool MT_IsFinaleTank(int type)
 	return MT_IsFinaleType(type);
 }
 
-/* Returns the value of the "Maximum Types" setting.
+/**
+ * Returns the value of the "Maximum Types" setting.
  *
  * @return			The value of the "Maximum Types" setting.
- */
+ **/
 #pragma deprecated Use MT_GetMaxType() instead.
 stock int ST_MaxTypes()
 {
 	return MT_GetMaxType();
 }
 
-/* Returns the maximum value of the "Type Range" setting.
+/**
+ * Returns the maximum value of the "Type Range" setting.
  *
  * @return			The maximum value of the "Type Range" setting.
- */
+ **/
 #pragma deprecated Use MT_GetMaxType() instead.
 stock int ST_MaxType()
 {
 	return MT_GetMaxType();
 }
 
-/* Returns the minimum value of the "Type Range" setting.
+/**
+ * Returns the minimum value of the "Type Range" setting.
  *
  * @return			The minimum value of the "Type Range" setting.
- */
+ **/
 #pragma deprecated Use MT_GetMinType() instead.
 stock int ST_MinType()
 {
 	return MT_GetMinType();
 }
 
-/* Returns the status of the core plugin.
+/**
+ * Returns the status of the core plugin.
  *
  * @return			True on success, false if core plugin is disabled.
- */
+ **/
 #pragma deprecated Use MT_IsCorePluginEnabled() instead.
 stock bool ST_PluginEnabled()
 {
@@ -933,6 +1094,7 @@ stock bool ST_PluginEnabled()
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
+ *
  * @error			Invalid client index.
  **/
 #pragma deprecated Use MT_GetPropColors() instead.
@@ -945,6 +1107,7 @@ stock void ST_PropsColors(int tank, int mode, int &red, int &green, int &blue, i
  * Returns if a certain Super Tank type can be spawned.
  *
  * @param type			Super Tank type.
+ *
  * @return			True if the type can be spawned, false otherwise.
  * @error			Type is 0.
  **/
@@ -954,12 +1117,13 @@ stock bool ST_SpawnEnabled(int type)
 	return MT_CanTypeSpawn(type);
 }
 
-/* Returns the status of the "Human Super Tanks" setting.
+/**
+ * Returns the status of the "Human Super Tanks" setting.
  *
  * @param client		Client index of the Tank.
  *
  * @return			True on success, false if the setting is disabled.
- */
+ **/
 #pragma deprecated Use MT_IsTankSupported() instead.
 stock bool ST_TankAllowed(int client)
 {
@@ -970,6 +1134,7 @@ stock bool ST_TankAllowed(int client)
  * Returns if a certain Super Tank type has a chance of spawning.
  *
  * @param type			Super Tank type.
+ *
  * @return			True if the type has a chance of spawning, false otherwise.
  * @error			Type is 0.
  **/
@@ -988,6 +1153,7 @@ stock bool ST_TankChance(int type)
  * @param green			Green color reference.
  * @param blue			Blue color reference.
  * @param alpha			Alpha color reference.
+ *
  * @error			Invalid client index.
  **/
 #pragma deprecated Use MT_GetTankColors() instead.
@@ -1001,6 +1167,7 @@ stock void ST_TankColors(int tank, int mode, int &red, int &green, int &blue, in
  *
  * @param tank			Client index of the Tank.
  * @param buffer		Buffer to store the custom name in.
+ *
  * @error			Invalid client index.
  **/
 #pragma deprecated Use MT_GetTankName() instead.
@@ -1009,22 +1176,25 @@ stock void ST_TankName(int tank, char[] buffer)
 	MT_GetTankName(tank, buffer);
 }
 
-/* Returns the Super Tank type of the Tank.
+/**
+ * Returns the Super Tank type of the Tank.
  *
  * @param client		Client index of the Tank.
  *
  * @return			The Tank's Super Tank type.
- */
+ * @error			Invalid client index.
+ **/
 #pragma deprecated Use MT_GetTankType() instead.
 stock int ST_TankType(int client)
 {
 	return MT_GetTankType(client);
 }
 
-/* Returns the current finale wave.
+/**
+ * Returns the current finale wave.
  *
  * @return			The current finale wave.
- */
+ **/
 #pragma deprecated Use MT_GetCurrentFinaleWave() instead.
 stock int ST_TankWave()
 {
@@ -1035,6 +1205,7 @@ stock int ST_TankWave()
  * Returns if a certain Super Tank type is enabled.
  *
  * @param type			Super Tank type.
+ *
  * @return			True if the type is enabled, false otherwise.
  * @error			Type is 0.
  **/
@@ -1053,13 +1224,13 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 		iParticle = CreateEntityByName("info_particle_system");
 		if (bIsValidEntity(iParticle))
 		{
+			DispatchKeyValue(iParticle, "effect_name", particlename);
+
 			static float flPos[3];
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
-
 			flPos[2] += origin;
-			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 
-			DispatchKeyValue(iParticle, "effect_name", particlename);
+			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 			vSetEntityParent(iParticle, entity);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
@@ -1077,7 +1248,7 @@ stock void vAttachParticle2(float pos[3], float angle[3], const char[] particlen
 	iParticle = CreateEntityByName("info_particle_system");
 	if (bIsValidEntity(iParticle))
 	{
-		DispatchKeyValue(iParticle, "effect_name", particlename); 
+		DispatchKeyValue(iParticle, "effect_name", particlename);
 		TeleportEntity(iParticle, pos, angle, NULL_VECTOR);
 		DispatchSpawn(iParticle);
 		ActivateEntity(iParticle);
@@ -1090,14 +1261,17 @@ stock void vAttachParticle2(float pos[3], float angle[3], const char[] particlen
 
 stock void vCheatCommand(int player, const char[] command, const char[] arguments = "")
 {
-	static int iCmdFlags, iFlagBits;
-	iFlagBits = GetUserFlagBits(player);
-	iCmdFlags = GetCommandFlags(command);
-	SetUserFlagBits(player, ADMFLAG_ROOT);
-	SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
-	FakeClientCommand(player, "%s %s", command, arguments);
-	SetUserFlagBits(player, iFlagBits);
-	SetCommandFlags(command, iCmdFlags|FCVAR_CHEAT);
+	if (bIsValidClient(player, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		static int iCmdFlags, iFlagBits;
+		iFlagBits = GetUserFlagBits(player);
+		iCmdFlags = GetCommandFlags(command);
+		SetUserFlagBits(player, ADMFLAG_ROOT);
+		SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
+		FakeClientCommand(player, "%s %s", command, arguments);
+		SetUserFlagBits(player, iFlagBits);
+		SetCommandFlags(command, iCmdFlags|FCVAR_CHEAT);
+	}
 }
 
 stock void vCopyVector(float source[3], float target[3])
@@ -1120,11 +1294,60 @@ stock void vCreateConfigFile(const char[] folder, const char[] filename, any ...
 	File fFilename = OpenFile(sConfigFilename, "w+");
 	if (fFilename != null)
 	{
-		fFilename.WriteLine("// This config file was auto-generated by %s v%s (%s)", MT_NAME, MT_VERSION, MT_URL);
+		fFilename.WriteLine("// This config file was auto-generated for and by \"%s\" (v%s)", MT_NAME, MT_VERSION);
 		fFilename.WriteLine("\n");
+		fFilename.WriteLine("\"Mutant Tanks\"");
+		fFilename.WriteLine("{");
+		fFilename.WriteLine("\t// Override settings in here.");
+		fFilename.WriteLine("}");
 
 		delete fFilename;
 	}
+}
+
+stock int iCreateParticle(int player, const char[] particlename, float pos[3], float angle[3], float pause, float duration, const char[] attachment = "")
+{
+	static int iEffect;
+	iEffect = CreateEntityByName("info_particle_system");
+	if (bIsValidEntity(iEffect))
+	{
+		DispatchKeyValue(iEffect, "effect_name", particlename);
+		vSetEntityParent(iEffect, player);
+		TeleportEntity(iEffect, pos, angle, NULL_VECTOR);
+		DispatchSpawn(iEffect);
+		ActivateEntity(iEffect);
+		AcceptEntityInput(iEffect, "Start");
+
+		if (attachment[0] != '\0')
+		{
+			SetVariantString(attachment);
+			AcceptEntityInput(iEffect, "SetParentAttachment");
+		}
+
+		static char sVariant[64];
+		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:Stop::%f:-1", pause);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
+
+		FormatEx(sVariant, sizeof(sVariant), "OnUser1 !self:FireUser2::%f:-1", pause + 0.5);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
+		AcceptEntityInput(iEffect, "FireUser1");
+
+		SetVariantString("OnUser2 !self:Start::0:-1");
+		AcceptEntityInput(iEffect, "AddOutput");
+		SetVariantString("OnUser2 !self:FireUser1::0:-1");
+		AcceptEntityInput(iEffect, "AddOutput");
+
+		FormatEx(sVariant, sizeof(sVariant), "OnUser3 !self:Kill::%f:-1", duration);
+		SetVariantString(sVariant);
+		AcceptEntityInput(iEffect, "AddOutput");
+		AcceptEntityInput(iEffect, "FireUser3");
+
+		return iEffect;
+	}
+
+	return -1;
 }
 
 stock void vDamagePlayer(int victim, int attacker, float damage, const char[] damagetype = "0")
@@ -1198,7 +1421,7 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 
 stock void vExternalView(int player, float time)
 {
-	if (GetEngineVersion() == Engine_Left4Dead2 && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") != 99999.3)
+	if (bIsSecondGame() && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") != 99999.3)
 	{
 		SetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView", GetGameTime() + time);
 	}
@@ -1208,7 +1431,7 @@ stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size = 0,
 {
 	switch (apply)
 	{
-		case true: Format(buffer, size, "%s", ((human && playerVal[0] != '\0') ? playerVal : typeVal));
+		case true: FormatEx(buffer, size, "%s", ((human && playerVal[0] != '\0') ? playerVal : typeVal));
 		case false: buffer[0] = '\0';
 	}
 }
@@ -1284,6 +1507,24 @@ stock void vRemoveWeapons(int survivor)
 	}
 }
 
+stock void vSetAdrenalineTime(int survivor, float duration)
+{
+	if (!bIsSecondGame())
+	{
+		return;
+	}
+
+	static int iTimerAddress = -1;
+	if (iTimerAddress == -1)
+	{
+		iTimerAddress = FindSendPropInfo("CTerrorPlayer", "m_bAdrenalineActive") - 12;
+	}
+
+	SetEntDataFloat(survivor, (iTimerAddress + 4), duration);
+	SetEntDataFloat(survivor, (iTimerAddress + 8), (GetGameTime() + duration));
+	SetEntProp(survivor, Prop_Send, "m_bAdrenalineActive", (duration <= 0.0 ? 0 : 1), 1);
+}
+
 stock void vSetEntityParent(int entity, int parent, bool owner = false)
 {
 	SetVariantString("!activator");
@@ -1295,11 +1536,35 @@ stock void vSetEntityParent(int entity, int parent, bool owner = false)
 	}
 }
 
+stock void vSetTempHealth(int survivor, float health)
+{
+	SetEntPropFloat(survivor, Prop_Send, "m_healthBuffer", (health < 0.0) ? 0.0 : health);
+	SetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime", GetGameTime());
+}
+
 stock void vSetVector(float target[3], float x, float y, float z)
 {
 	target[0] = x;
 	target[1] = y;
 	target[2] = z;
+}
+
+stock void vSetWounds(int common, int type = -1)
+{
+	if (!bIsCommonInfected(common))
+	{
+		return;
+	}
+
+	if (bIsSecondGame() && HasEntProp(common, Prop_Send, "m_iRequestedWound1"))
+	{
+		SetEntProp(common, Prop_Send, "m_iRequestedWound1", type);
+		SetEntProp(common, Prop_Send, "m_iRequestedWound2", type);
+	}
+	else if (HasEntProp(common, Prop_Send, "m_nBody"))
+	{
+		SetEntProp(common, Prop_Send, "m_nBody", ((type < 0) ? 0 : type));
+	}
 }
 
 stock void vSpawnBreakProp(int tank, float pos[3], float offset, const char[] model)
@@ -1370,16 +1635,10 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 
 	static char sBuffer[255], sMessage[255];
 	SetGlobalTransTarget(client);
-	FormatEx(sBuffer, sizeof(sBuffer), "\x01%s", message);
-	VFormat(sMessage, sizeof(sMessage), sBuffer, 3);
-
-	ReplaceString(sMessage, sizeof(sMessage), "{default}", "\x01");
-	ReplaceString(sMessage, sizeof(sMessage), "{mint}", "\x03");
-	ReplaceString(sMessage, sizeof(sMessage), "{yellow}", "\x04");
-	ReplaceString(sMessage, sizeof(sMessage), "{olive}", "\x05");
-	ReplaceString(sMessage, sizeof(sMessage), "{percent}", "%%");
-
-	PrintToChat(client, sMessage);
+	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
+	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), false);
+	PrintToChat(client, sBuffer);
 }
 
 stock void MT_PrintToChatAll(const char[] message, any ...)
@@ -1396,6 +1655,32 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 	}
 }
 
+stock void MT_PrintToServer(const char[] message, any ...)
+{
+	static char sBuffer[255];
+	SetGlobalTransTarget(LANG_SERVER);
+	VFormat(sBuffer, sizeof(sBuffer), message, 2);
+	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
+	PrintToServer(sBuffer);
+}
+
+stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
+{
+	ReplaceString(buffer, size, "{default}", (empty ? "" : "\x01"));
+	ReplaceString(buffer, size, "{mint}", (empty ? "" : "\x03"));
+	ReplaceString(buffer, size, "{yellow}", (empty ? "" : "\x04"));
+	ReplaceString(buffer, size, "{olive}", (empty ? "" : "\x05"));
+	ReplaceString(buffer, size, "{percent}", "%%");
+
+	if (empty)
+	{
+		ReplaceString(buffer, size, "\x01", "");
+		ReplaceString(buffer, size, "\x03", "");
+		ReplaceString(buffer, size, "\x04", "");
+		ReplaceString(buffer, size, "\x05", "");
+	}
+}
+
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
 	static char sBuffer[255];
@@ -1404,11 +1689,7 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 
 	if (GetCmdReplySource() == SM_REPLY_TO_CONSOLE)
 	{
-		ReplaceString(sBuffer, sizeof(sBuffer), "{default}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{mint}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{yellow}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{olive}", "");
-		ReplaceString(sBuffer, sizeof(sBuffer), "{percent}", "%%");
+		MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
 
 		switch (client == 0)
 		{
@@ -1497,11 +1778,11 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 		{
 			if (TR_DidHit(hTrace))
 			{
-				TR_GetEndPosition(flPos, hTrace); 
-
+				TR_GetEndPosition(flPos, hTrace);
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
+
 					return true;
 				}
 			}
@@ -1513,7 +1794,7 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 	return false;
 }
 
-stock bool bIsBoomer(int boomer, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsBoomer(int boomer, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(boomer, flags) && GetEntProp(boomer, Prop_Send, "m_zombieClass") == 2;
 }
@@ -1533,9 +1814,9 @@ stock bool bIsBotSurvivor(int bot, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT
 	return bIsSurvivor(bot, flags) && !bIsValidClient(bot, MT_CHECK_FAKECLIENT);
 }
 
-stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsCharger(int charger, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	return bIsInfected(charger, flags) && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
+	return bIsInfected(charger, flags) && bIsSecondGame() && GetEntProp(charger, Prop_Send, "m_zombieClass") == 6;
 }
 
 stock bool bIsCommonInfected(int common)
@@ -1557,9 +1838,29 @@ stock bool bIsEntityGrounded(int entity)
 
 stock bool bIsGunWeapon(int survivor)
 {
-	static char sWeapon[32];
-	GetClientWeapon(survivor, sWeapon, sizeof(sWeapon));
-	return GetPlayerWeaponSlot(survivor, 0) > MaxClients || (GetPlayerWeaponSlot(survivor, 1) > MaxClients && StrContains(sWeapon, "pistol", false) != -1);
+	static int iWeapon;
+	iWeapon = GetEntPropEnt(survivor, Prop_Send, "m_hActiveWeapon");
+	if (iWeapon > MaxClients)
+	{
+		static int iSlot, iSlot2;
+		iSlot = GetPlayerWeaponSlot(survivor, 0);
+		iSlot2 = GetPlayerWeaponSlot(survivor, 1);
+		if (iSlot > MaxClients && iSlot == iWeapon)
+		{
+			return true;
+		}
+		else if (iSlot2 > MaxClients && iSlot2 == iWeapon)
+		{
+			static char sWeapon[32];
+			GetEntityClassname(iWeapon, sWeapon, sizeof(sWeapon));
+			if (StrContains(sWeapon, "pistol", false) != -1 || StrContains(sWeapon, "weapon_chainsaw") != -1)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 stock bool bIsHumanSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
@@ -1568,7 +1869,7 @@ stock bool bIsHumanSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_IN
 	return bIsSurvivor(survivor, flags) && !bHasIdlePlayer(survivor) && !bIsPlayerIdle(survivor);
 }
 
-stock bool bIsHunter(int hunter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsHunter(int hunter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(hunter, flags) && GetEntProp(hunter, Prop_Send, "m_zombieClass") == 3;
 }
@@ -1578,7 +1879,7 @@ stock bool bIsIdlePlayer(int bot, int survivor, int flags = MT_CHECK_INDEX|MT_CH
 	return bIsValidClient(survivor, flags) && GetClientTeam(bot) == 2;
 }
 
-stock bool bIsInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsValidClient(infected, flags) && GetClientTeam(infected) == 3;
 }
@@ -1588,9 +1889,9 @@ stock bool bIsInfectedGhost(int infected)
 	return GetEntProp(infected, Prop_Send, "m_isGhost") == 1;
 }
 
-stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsJockey(int jockey, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	return bIsInfected(jockey, flags) && GetEngineVersion() == Engine_Left4Dead2 && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
+	return bIsInfected(jockey, flags) && bIsSecondGame() && GetEntProp(jockey, Prop_Send, "m_zombieClass") == 5;
 }
 
 stock bool bIsPlayerBurning(int player)
@@ -1640,19 +1941,30 @@ stock bool bIsPlayerIncapacitated(int survivor)
 	return GetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1) == 1;
 }
 
-stock bool bIsSmoker(int smoker, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsSecondGame()
+{
+	static EngineVersion evEngine = Engine_Unknown;
+	if (evEngine == Engine_Unknown)
+	{
+		evEngine = GetEngineVersion();
+	}
+
+	return evEngine == Engine_Left4Dead2;
+}
+
+stock bool bIsSmoker(int smoker, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsInfected(smoker, flags) && GetEntProp(smoker, Prop_Send, "m_zombieClass") == 1;
 }
 
-stock bool bIsSpecialInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsSpecialInfected(int infected, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	return bIsSmoker(infected, flags) || bIsBoomer(infected, flags) || bIsHunter(infected, flags) || bIsSpitter(infected, flags) || bIsJockey(infected, flags) || bIsCharger(infected, flags);
 }
 
-stock bool bIsSpitter(int spitter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
+stock bool bIsSpitter(int spitter, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	return bIsInfected(spitter, flags) && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
+	return bIsInfected(spitter, flags) && bIsSecondGame() && GetEntProp(spitter, Prop_Send, "m_zombieClass") == 4;
 }
 
 stock bool bIsSurvivor(int survivor, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
@@ -1665,7 +1977,7 @@ stock bool bIsSurvivorCaught(int survivor)
 	static int iSpecial;
 	iSpecial = GetEntPropEnt(survivor, Prop_Send, "m_pounceAttacker");
 	iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_tongueOwner") : iSpecial;
-	if (GetEngineVersion() == Engine_Left4Dead2)
+	if (bIsSecondGame())
 	{
 		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_pummelAttacker") : iSpecial;
 		iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_carryAttacker") : iSpecial;
@@ -1677,13 +1989,13 @@ stock bool bIsSurvivorCaught(int survivor)
 
 stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
-	int iClass = (GetEngineVersion() == Engine_Left4Dead2) ? 8 : 5;
+	int iClass = bIsSecondGame() ? 8 : 5;
 	return bIsInfected(tank, flags) && GetEntProp(tank, Prop_Send, "m_zombieClass") == iClass;
 }
 
-stock bool bIsTankStasis(int tank)
+stock bool bIsTankInStasis(int tank)
 {
-	return GetEntProp(tank, Prop_Data, "m_bIsInStasis") == 1;
+	return bIsSecondGame() && GetEntProp(tank, Prop_Data, "m_bIsInStasis") == 1;
 }
 
 stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT)
@@ -1696,7 +2008,7 @@ stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGA
 		}
 	}
 
-	return bIsPlayerIncapacitated(tank) || (GetEngineVersion() == Engine_Left4Dead2 && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0;
+	return bIsPlayerIncapacitated(tank) || (bIsSecondGame() && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0;
 }
 
 stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)
@@ -1891,6 +2203,7 @@ public bool bTraceRayDontHitSelfAndSurvivor(int entity, int mask, any data)
 stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 {
 	static Handle hTrace;
+
 	switch (type)
 	{
 		case 1: hTrace = TR_TraceRayFilterEx(pos2, pos1, MASK_SOLID, RayType_EndPoint, bTraceRayDontHitSelfAndSurvivor, entity);
@@ -1902,6 +2215,7 @@ stock bool bVisiblePosition(float pos1[3], float pos2[3], int entity, int type)
 		if (TR_DidHit(hTrace))
 		{
 			delete hTrace;
+
 			return false;
 		}
 
@@ -1923,6 +2237,30 @@ stock float flClamp(float value, float min, float max)
 	}
 
 	return value;
+}
+
+stock float flGetAdrenalineTime(int survivor)
+{
+	if (!bIsSecondGame())
+	{
+		return -1.0;
+	}
+
+	static int iTimerAddress = -1;
+	if (iTimerAddress == -1)
+	{
+		iTimerAddress = FindSendPropInfo("CTerrorPlayer", "m_bAdrenalineActive") - 12;
+	}
+
+	static float flTime, flDuration;
+	flTime = GetGameTime();
+	flDuration = GetEntDataFloat(survivor, iTimerAddress + 8);
+	if (flDuration <= flTime)
+	{
+		return -1.0;
+	}
+
+	return flDuration - flTime;
 }
 
 stock float flGetAngle(float angle1[3], float angle2[3])
@@ -1960,6 +2298,7 @@ stock float flGetGroundUnits(int entity)
 				flUnits = flOrigin[2] - flPosition[2];
 
 				delete hTrace;
+
 				return flUnits;
 			}
 
@@ -2033,15 +2372,19 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 	}
 	else if ((min == -1.0 || min == 1.0) && max == 999999.0)
 	{
-		if (min == -1.0 && StrContains(key, "damage", false) != -1 && (StrEqual(value, "nodmg", false) || StrEqual(value, "friendly", false) || StrEqual(value, "harmless", false)))
+		static bool bDamageSetting, bForceSetting, bRangeSetting;
+		bDamageSetting = StrContains(key, "damage", false) != -1;
+		bForceSetting = StrContains(key, "force", false) != -1;
+		bRangeSetting = StrContains(key, "range", false) != -1;
+		if (min == -1.0 && (bDamageSetting || bForceSetting) && (StrEqual(value, "nodmg", false) || StrEqual(value, "friendly", false) || StrEqual(value, "harmless", false)))
 		{
 			return 0.0;
 		}
-		else if ((StrContains(key, "damage", false) != -1 && StrEqual(value, "weakest", false)) || (StrContains(key, "range", false) != -1 && StrEqual(value, "closest", false)))
+		else if (((bDamageSetting || bForceSetting) && StrEqual(value, "weakest", false)) || (bRangeSetting && StrEqual(value, "closest", false)))
 		{
 			return min;
 		}
-		else if ((StrContains(key, "damage", false) != -1 && StrEqual(value, "strongest", false)) || (StrContains(key, "range", false) != -1 && StrEqual(value, "farthest", false)))
+		else if (((bDamageSetting || bForceSetting) && StrEqual(value, "strongest", false)) || (bRangeSetting && StrEqual(value, "farthest", false)))
 		{
 			return max;
 		}
@@ -2117,12 +2460,12 @@ stock float flGetSettingValue(bool apply, bool human, float playerVal, float typ
 	return (overrideLevel == 1) ? -1.0 : 0.0;
 }
 
-stock float flGetTemporaryHealth(int player, float decay)
+stock float flGetTempHealth(int survivor, float decayRate)
 {
-	static float flHealth;
-	flHealth = GetEntPropFloat(player, Prop_Send, "m_healthBuffer");
-	flHealth -= (GetGameTime() - GetEntPropFloat(player, Prop_Send, "m_healthBufferTime")) * decay;
-	return (flHealth < 0.0) ? 0.0 : flHealth;
+	static float flTempHealth;
+	flTempHealth = GetEntPropFloat(survivor, Prop_Send, "m_healthBuffer");
+	flTempHealth -= (GetGameTime() - GetEntPropFloat(survivor, Prop_Send, "m_healthBufferTime")) * decayRate;
+	return (flTempHealth < 0.0) ? 0.0 : flTempHealth;
 }
 
 stock int iClamp(int value, int min, int max)
@@ -2150,6 +2493,18 @@ stock int iGetBotSurvivor()
 	}
 
 	return -1;
+}
+
+stock int iGetEntityIndex(any refHandle)
+{
+	Address adHandle = view_as<Address>(refHandle);
+	return iGetEntryIndex(adHandle);
+}
+
+stock int iGetEntryIndex(Address entityHandle)
+{
+	int iMaskIndex = LoadFromAddress(entityHandle, NumberType_Int32);
+	return iMaskIndex & ENT_ENTRY_MASK;
 }
 
 stock int iGetHumanCount(bool infected = false)
@@ -2241,11 +2596,15 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 	{
 		return max;
 	}
-	else if (min == 0 && max == 1)
+	else if (min <= 0 && max == 1)
 	{
-		if (StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
+		if (min == -1 && (StrEqual(value, "ignore", false) || StrEqual(value, "exclude", false) || StrEqual(value, "filter", false) || StrEqual(value, "remove", false)))
 		{
 			return min;
+		}
+		else if (StrEqual(value, "disabled", false) || StrEqual(value, "false", false) || StrEqual(value, "off", false) || StrEqual(value, "no", false))
+		{
+			return (min == 0) ? min : 0;
 		}
 		else if (StrEqual(value, "enabled", false) || StrEqual(value, "true", false) || StrEqual(value, "on", false) || StrEqual(value, "yes", false))
 		{
@@ -2483,42 +2842,43 @@ stock int iGetSettingValue(bool apply, bool human, int playerVal, int typeVal, i
 	return (overrideLevel == 1) ? -1 : 0;
 }
 
-stock int iGetWeaponOffset(const char[] weapon)
+stock int iGetWeaponOffset(int weapon)
 {
-	bool bSecondGame = GetEngineVersion() == Engine_Left4Dead2;
-	if (StrEqual(weapon, "weapon_rifle") || StrEqual(weapon, "weapon_rifle_ak47") || StrEqual(weapon, "weapon_rifle_desert") || StrEqual(weapon, "weapon_rifle_sg552"))
+	static char sWeapon[32];
+	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if (StrEqual(sWeapon, "weapon_rifle") || StrEqual(sWeapon, "weapon_rifle_ak47") || StrEqual(sWeapon, "weapon_rifle_desert") || StrEqual(sWeapon, "weapon_rifle_sg552"))
 	{
 		return 3;
 	}
-	else if (StrEqual(weapon, "weapon_smg") || StrEqual(weapon, "weapon_smg_silenced") || StrEqual(weapon, "weapon_smg_mp5"))
+	else if (StrEqual(sWeapon, "weapon_smg") || StrEqual(sWeapon, "weapon_smg_silenced") || StrEqual(sWeapon, "weapon_smg_mp5"))
 	{
 		return 5;
 	}
-	else if (StrEqual(weapon, "weapon_shotgun_chrome"))
+	else if (StrEqual(sWeapon, "weapon_shotgun_chrome"))
 	{
 		return 7;
 	}
-	else if (StrEqual(weapon, "weapon_pumpshotgun"))
+	else if (StrEqual(sWeapon, "weapon_pumpshotgun"))
 	{
-		return bSecondGame ? 7 : 6;
+		return bIsSecondGame() ? 7 : 6;
 	}
-	else if (StrEqual(weapon, "weapon_shotgun_spas"))
+	else if (StrEqual(sWeapon, "weapon_shotgun_spas"))
 	{
 		return 8;
 	}
-	else if (StrEqual(weapon, "weapon_autoshotgun"))
+	else if (StrEqual(sWeapon, "weapon_autoshotgun"))
 	{
-		return bSecondGame ? 8 : 6;
+		return bIsSecondGame() ? 8 : 6;
 	}
-	else if (StrEqual(weapon, "weapon_hunting_rifle"))
+	else if (StrEqual(sWeapon, "weapon_hunting_rifle"))
 	{
-		return bSecondGame ? 9 : 2;
+		return bIsSecondGame() ? 9 : 2;
 	}
-	else if (StrEqual(weapon, "weapon_sniper_military") || StrEqual(weapon, "weapon_sniper_scout") || StrEqual(weapon, "weapon_sniper_awp"))
+	else if (StrEqual(sWeapon, "weapon_sniper_military") || StrEqual(sWeapon, "weapon_sniper_scout") || StrEqual(sWeapon, "weapon_sniper_awp"))
 	{
 		return 10;
 	}
-	else if (StrEqual(weapon, "weapon_grenade_launcher"))
+	else if (StrEqual(sWeapon, "weapon_grenade_launcher"))
 	{
 		return 17;
 	}

@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -59,6 +59,7 @@ enum struct esPlayer
 	float g_flFragileDamageBoost;
 	float g_flFragileExplosiveMultiplier;
 	float g_flFragileFireMultiplier;
+	float g_flFragileHittableMultiplier;
 	float g_flFragileMeleeMultiplier;
 	float g_flFragileSpeedBoost;
 	float g_flOpenAreasOnly;
@@ -90,6 +91,7 @@ enum struct esAbility
 	float g_flFragileDamageBoost;
 	float g_flFragileExplosiveMultiplier;
 	float g_flFragileFireMultiplier;
+	float g_flFragileHittableMultiplier;
 	float g_flFragileMeleeMultiplier;
 	float g_flFragileSpeedBoost;
 	float g_flOpenAreasOnly;
@@ -117,6 +119,7 @@ enum struct esCache
 	float g_flFragileDamageBoost;
 	float g_flFragileExplosiveMultiplier;
 	float g_flFragileFireMultiplier;
+	float g_flFragileHittableMultiplier;
 	float g_flFragileMeleeMultiplier;
 	float g_flFragileSpeedBoost;
 	float g_flOpenAreasOnly;
@@ -139,6 +142,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_fragile", cmdFragileInfo, "View information about the Fragile ability.");
 
@@ -298,7 +302,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || !g_esPlayer[client].g_bActivated || (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || g_esPlayer[client].g_iDuration == -1)
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(client) || !g_esPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esCache[client].g_iHumanMode == 1) || g_esPlayer[client].g_iDuration == -1)
 	{
 		return Plugin_Continue;
 	}
@@ -307,7 +311,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	iTime = GetTime();
 	if (g_esPlayer[client].g_iDuration < iTime)
 	{
-		if (MT_IsTankSupported(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbility[g_esPlayer[client].g_iTankType].g_iAccessFlags, g_esPlayer[client].g_iAccessFlags)) && g_esCache[client].g_iHumanAbility == 1 && (g_esPlayer[client].g_iCooldown == -1 || g_esPlayer[client].g_iCooldown < iTime))
+		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esAbility[g_esPlayer[client].g_iTankType].g_iAccessFlags, g_esPlayer[client].g_iAccessFlags)) && g_esCache[client].g_iHumanAbility == 1 && (g_esPlayer[client].g_iCooldown == -1 || g_esPlayer[client].g_iCooldown < iTime))
 		{
 			vReset3(client);
 		}
@@ -320,11 +324,13 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
 	{
-		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esPlayer[victim].g_bActivated && bIsSurvivor(attacker))
+		if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esPlayer[victim].g_bActivated)
 		{
-			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))
+			static bool bSurvivor;
+			bSurvivor = bIsSurvivor(attacker);
+			if ((!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esAbility[g_esPlayer[victim].g_iTankType].g_iAccessFlags, g_esPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esPlayer[victim].g_iTankType, g_esAbility[g_esPlayer[victim].g_iTankType].g_iImmunityFlags, g_esPlayer[attacker].g_iImmunityFlags))))
 			{
 				return Plugin_Continue;
 			}
@@ -341,15 +347,31 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileExplosiveMultiplier;
 			}
-			else if (g_esCache[victim].g_flFragileFireMultiplier > 1.0 && (damagetype & DMG_BURN))
+			else if (g_esCache[victim].g_flFragileFireMultiplier > 1.0 && ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)))
 			{
 				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileFireMultiplier;
+			}
+			else if (g_esCache[victim].g_flFragileHittableMultiplier > 1.0 && (damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable"))
+			{
+				bChanged = true;
+				damage *= g_esCache[victim].g_flFragileHittableMultiplier;
 			}
 			else if (g_esCache[victim].g_flFragileMeleeMultiplier > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
 			{
 				bChanged = true;
 				damage *= g_esCache[victim].g_flFragileMeleeMultiplier;
+
+				if (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_ATTACKBOOST) && GetRandomFloat(0.0, 100.0) <= 15.0)
+				{
+					static float flTankOrigin[3], flSurvivorOrigin[3], flDirection[3];
+					GetClientAbsOrigin(attacker, flSurvivorOrigin);
+					GetClientAbsOrigin(victim, flTankOrigin);
+					MakeVectorFromPoints(flSurvivorOrigin, flTankOrigin, flDirection);
+					NormalizeVector(flDirection, flDirection);
+					MT_ShoveBySurvivor(victim, attacker, flDirection);
+					SetEntPropFloat(victim, Prop_Send, "m_flVelocityModifier", 0.4);
+				}
 			}
 
 			if (bChanged)
@@ -389,7 +411,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public void MT_OnPluginCheck(ArrayList &list)
 {
-	char sName[32];
+	char sName[128];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
 }
@@ -402,7 +424,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -475,6 +497,7 @@ public void MT_OnConfigsLoad(int mode)
 				g_esAbility[iIndex].g_iFragileDuration = 5;
 				g_esAbility[iIndex].g_flFragileExplosiveMultiplier = 5.0;
 				g_esAbility[iIndex].g_flFragileFireMultiplier = 3.0;
+				g_esAbility[iIndex].g_flFragileHittableMultiplier = 1.5;
 				g_esAbility[iIndex].g_flFragileMeleeMultiplier = 1.5;
 				g_esAbility[iIndex].g_iFragileMode = 0;
 				g_esAbility[iIndex].g_flFragileSpeedBoost = 1.0;
@@ -503,6 +526,7 @@ public void MT_OnConfigsLoad(int mode)
 					g_esPlayer[iPlayer].g_iFragileDuration = 0;
 					g_esPlayer[iPlayer].g_flFragileExplosiveMultiplier = 0.0;
 					g_esPlayer[iPlayer].g_flFragileFireMultiplier = 0.0;
+					g_esPlayer[iPlayer].g_flFragileHittableMultiplier = 0.0;
 					g_esPlayer[iPlayer].g_flFragileMeleeMultiplier = 0.0;
 					g_esPlayer[iPlayer].g_iFragileMode = 0;
 					g_esPlayer[iPlayer].g_flFragileSpeedBoost = 0.0;
@@ -531,6 +555,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPlayer[admin].g_iFragileDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esPlayer[admin].g_iFragileDuration, value, 1, 999999);
 		g_esPlayer[admin].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esPlayer[admin].g_flFragileExplosiveMultiplier, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esPlayer[admin].g_flFragileFireMultiplier, value, 1.0, 999999.0);
+		g_esPlayer[admin].g_flFragileHittableMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileHittableMultiplier", "Fragile Hittable Multiplier", "Fragile_Hittable_Multiplier", "hittable", g_esPlayer[admin].g_flFragileHittableMultiplier, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esPlayer[admin].g_flFragileMeleeMultiplier, value, 1.0, 999999.0);
 		g_esPlayer[admin].g_iFragileMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esPlayer[admin].g_iFragileMode, value, 0, 1);
 		g_esPlayer[admin].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esPlayer[admin].g_flFragileSpeedBoost, value, 0.1, 3.0);
@@ -565,6 +590,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbility[type].g_iFragileDuration = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileDuration", "Fragile Duration", "Fragile_Duration", "duration", g_esAbility[type].g_iFragileDuration, value, 1, 999999);
 		g_esAbility[type].g_flFragileExplosiveMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileExplosiveMultiplier", "Fragile Explosive Multiplier", "Fragile_Explosive_Multiplier", "explosive", g_esAbility[type].g_flFragileExplosiveMultiplier, value, 1.0, 999999.0);
 		g_esAbility[type].g_flFragileFireMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileFireMultiplier", "Fragile Fire Multiplier", "Fragile_Fire_Multiplier", "fire", g_esAbility[type].g_flFragileFireMultiplier, value, 1.0, 999999.0);
+		g_esAbility[type].g_flFragileHittableMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileHittableMultiplier", "Fragile Hittable Multiplier", "Fragile_Hittable_Multiplier", "hittable", g_esAbility[type].g_flFragileHittableMultiplier, value, 1.0, 999999.0);
 		g_esAbility[type].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esAbility[type].g_flFragileMeleeMultiplier, value, 1.0, 999999.0);
 		g_esAbility[type].g_iFragileMode = iGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esAbility[type].g_iFragileMode, value, 0, 1);
 		g_esAbility[type].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_CONFIG_SECTIONS, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esAbility[type].g_flFragileSpeedBoost, value, 0.1, 3.0);
@@ -585,13 +611,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iComboAbility, g_esAbility[type].g_iComboAbility);
 	g_esCache[tank].g_flFragileBulletMultiplier = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileBulletMultiplier, g_esAbility[type].g_flFragileBulletMultiplier);
 	g_esCache[tank].g_flFragileChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileChance, g_esAbility[type].g_flFragileChance);
 	g_esCache[tank].g_flFragileDamageBoost = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileDamageBoost, g_esAbility[type].g_flFragileDamageBoost);
 	g_esCache[tank].g_flFragileExplosiveMultiplier = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileExplosiveMultiplier, g_esAbility[type].g_flFragileExplosiveMultiplier);
 	g_esCache[tank].g_flFragileFireMultiplier = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileFireMultiplier, g_esAbility[type].g_flFragileFireMultiplier);
+	g_esCache[tank].g_flFragileHittableMultiplier = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileHittableMultiplier, g_esAbility[type].g_flFragileHittableMultiplier);
 	g_esCache[tank].g_flFragileMeleeMultiplier = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flFragileMeleeMultiplier, g_esAbility[type].g_flFragileMeleeMultiplier);
 	g_esCache[tank].g_iFragileAbility = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFragileAbility, g_esAbility[type].g_iFragileAbility);
 	g_esCache[tank].g_iFragileDuration = iGetSettingValue(apply, bHuman, g_esPlayer[tank].g_iFragileDuration, g_esAbility[type].g_iFragileDuration);
@@ -669,7 +696,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFragileAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iFragileAbility == 1 && g_esCache[tank].g_iComboAbility == 0 && !g_esPlayer[tank].g_bActivated)
 	{
 		vFragileAbility(tank);
 	}
@@ -774,7 +801,7 @@ static void vFragile(int tank, int pos = -1)
 	g_esPlayer[tank].g_bActivated = true;
 	g_esPlayer[tank].g_iDuration = GetTime() + iDuration;
 
-	if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		g_esPlayer[tank].g_iAmmoCount++;
 
@@ -797,18 +824,18 @@ static void vFragileAbility(int tank)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		if (GetRandomFloat(0.1, 100.0) <= g_esCache[tank].g_flFragileChance)
 		{
 			vFragile(tank);
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 		{
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "FragileHuman2");
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "FragileAmmo");
 	}

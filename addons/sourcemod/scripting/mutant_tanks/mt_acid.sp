@@ -1,6 +1,6 @@
 /**
  * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
- * Copyright (C) 2020  Alfred "Crasher_3637/Psyk0tik" Llagas
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
@@ -12,6 +12,10 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <mutant_tanks>
+
+#undef REQUIRE_PLUGIN
+#tryinclude <left4dhooks>
+#define REQUIRE_PLUGIN
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -25,20 +29,15 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad, g_bSecondGame;
+bool g_bLateLoad;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	switch (GetEngineVersion())
+	if (GetEngineVersion() != Engine_Left4Dead2)
 	{
-		case Engine_Left4Dead: g_bSecondGame = false;
-		case Engine_Left4Dead2: g_bSecondGame = true;
-		default:
-		{
-			strcopy(error, err_max, "\"[MT] Acid Ability\" only supports Left 4 Dead 1 & 2.");
+		strcopy(error, err_max, "\"[MT] Acid Ability\" only supports Left 4 Dead 2.");
 
-			return APLRes_SilentFailure;
-		}
+		return APLRes_SilentFailure;
 	}
 
 	g_bLateLoad = late;
@@ -58,8 +57,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 enum struct esGeneral
 {
-	Handle g_hSDKAcidPlayer;
-	Handle g_hSDKPukePlayer;
+	bool g_bLeft4DHooksInstalled;
+
+	Handle g_hSDKSpitterProjectileCreate;
 }
 
 esGeneral g_esGeneral;
@@ -154,10 +154,32 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_esGeneral.g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_esGeneral.g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
+
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
 	RegConsoleCmd("sm_mt_acid", cmdAcidInfo, "View information about the Acid ability.");
 
@@ -165,55 +187,27 @@ public void OnPluginStart()
 	if (gdMutantTanks == null)
 	{
 		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-
-		delete gdMutantTanks;
 	}
 
-	switch (g_bSecondGame)
+	StartPrepSDKCall(SDKCall_Static);
+	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CSpitterProjectile::Create"))
 	{
-		case true:
-		{
-			StartPrepSDKCall(SDKCall_Static);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CSpitterProjectile::Create"))
-			{
-				SetFailState("Failed to find signature: CSpitterProjectile::Create");
+		delete gdMutantTanks;
 
-				delete gdMutantTanks;
-			}
+		SetFailState("Failed to find signature: CSpitterProjectile::Create");
+	}
 
-			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
+	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+	PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 
-			g_esGeneral.g_hSDKAcidPlayer = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKAcidPlayer == null)
-			{
-				LogError("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
-			}
-		}
-		case false:
-		{
-			StartPrepSDKCall(SDKCall_Player);
-			if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon"))
-			{
-				SetFailState("Failed to find signature: CTerrorPlayer::OnVomitedUpon");
-
-				delete gdMutantTanks;
-			}
-
-			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-
-			g_esGeneral.g_hSDKPukePlayer = EndPrepSDKCall();
-			if (g_esGeneral.g_hSDKPukePlayer == null)
-			{
-				LogError("%s Your \"CTerrorPlayer::OnVomitedUpon\" signature is outdated.", MT_TAG);
-			}
-		}
+	g_esGeneral.g_hSDKSpitterProjectileCreate = EndPrepSDKCall();
+	if (g_esGeneral.g_hSDKSpitterProjectileCreate == null)
+	{
+		LogError("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
 	}
 
 	delete gdMutantTanks;
@@ -370,7 +364,7 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage >= 0.5)
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -405,7 +399,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public void MT_OnPluginCheck(ArrayList &list)
 {
-	char sName[32];
+	char sName[128];
 	GetPluginFilename(null, sName, sizeof(sName));
 	list.PushString(sName);
 }
@@ -418,7 +412,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -648,7 +642,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 
 public void MT_OnSettingsCached(int tank, bool apply, int type)
 {
-	bool bHuman = MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT);
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCache[tank].g_flAcidChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAcidChance, g_esAbility[type].g_flAcidChance);
 	g_esCache[tank].g_flAcidDeathChance = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAcidDeathChance, g_esAbility[type].g_flAcidDeathChance);
 	g_esCache[tank].g_flAcidDeathRange = flGetSettingValue(apply, bHuman, g_esPlayer[tank].g_flAcidDeathRange, g_esAbility[type].g_flAcidDeathRange);
@@ -725,7 +719,7 @@ public void MT_OnAbilityActivated(int tank)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iAcidAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iAcidAbility == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vAcidAbility(tank, GetRandomFloat(0.1, 100.0));
 	}
@@ -761,9 +755,9 @@ public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
 {
 	vRemoveAcid(tank);
 
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_bSecondGame && g_esCache[tank].g_iAcidAbility == 1)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iAcidAbility == 1)
 	{
-		if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
+		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0))
 		{
 			return;
 		}
@@ -784,7 +778,7 @@ public void MT_OnRockBreak(int tank, int rock)
 		return;
 	}
 
-	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iAcidRockBreak == 1 && g_esCache[tank].g_iComboAbility == 0 && g_bSecondGame)
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iAcidRockBreak == 1 && g_esCache[tank].g_iComboAbility == 0)
 	{
 		vAcidRockBreak(tank, rock, GetRandomFloat(0.1, 100.0));
 	}
@@ -801,7 +795,11 @@ static void vAcid(int survivor, int tank)
 	GetClientAbsOrigin(survivor, flOrigin);
 	GetClientAbsAngles(survivor, flAngles);
 
-	SDKCall(g_esGeneral.g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, tank, 2.0);
+	switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKSpitterProjectileCreate == null)
+	{
+		case true: L4D2_SpitterPrj(tank, flOrigin, flAngles);
+		case false: SDKCall(g_esGeneral.g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
+	}
 }
 
 static void vAcidAbility(int tank, float random, int pos = -1)
@@ -811,7 +809,7 @@ static void vAcidAbility(int tank, float random, int pos = -1)
 		return;
 	}
 
-	if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 	{
 		g_esPlayer[tank].g_bFailed = false;
 		g_esPlayer[tank].g_bNoAmmo = false;
@@ -838,13 +836,13 @@ static void vAcidAbility(int tank, float random, int pos = -1)
 
 		if (iSurvivorCount == 0)
 		{
-			if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 			{
 				MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidHuman4");
 			}
 		}
 	}
-	else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1)
 	{
 		MT_PrintToChat(tank, "%s %t", MT_TAG3, "AcidAmmo");
 	}
@@ -859,13 +857,13 @@ static void vAcidHit(int survivor, int tank, float random, float chance, int ena
 
 	if (enabled == 1 && bIsSurvivor(survivor))
 	{
-		if (!MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esPlayer[tank].g_iAmmoCount < g_esCache[tank].g_iHumanAmmo && g_esCache[tank].g_iHumanAmmo > 0))
 		{
 			static int iTime;
 			iTime = GetTime();
 			if (random <= chance)
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 				{
 					g_esPlayer[tank].g_iAmmoCount++;
 
@@ -878,38 +876,20 @@ static void vAcidHit(int survivor, int tank, float random, float chance, int ena
 					}
 				}
 
+				vAcid(survivor, tank);
+				vEffect(survivor, tank, g_esCache[tank].g_iAcidEffect, flags);
+
 				static char sTankName[33];
 				MT_GetTankName(tank, sTankName);
-
-				switch (g_bSecondGame)
+				if (g_esCache[tank].g_iAcidMessage & messages)
 				{
-					case true:
-					{
-						vAcid(survivor, tank);
-
-						if (g_esCache[tank].g_iAcidMessage & messages)
-						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Acid", sTankName, survivor);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Acid", LANG_SERVER, sTankName, survivor);
-						}
-					}
-					case false:
-					{
-						SDKCall(g_esGeneral.g_hSDKPukePlayer, survivor, tank, true);
-
-						if (g_esCache[tank].g_iAcidMessage & messages)
-						{
-							MT_PrintToChatAll("%s %t", MT_TAG2, "Puke", sTankName, survivor);
-							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Puke", LANG_SERVER, sTankName, survivor);
-						}
-					}
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Acid", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Acid", LANG_SERVER, sTankName, survivor);
 				}
-
-				vEffect(survivor, tank, g_esCache[tank].g_iAcidEffect, flags);
 			}
 			else if ((flags & MT_ATTACK_RANGE) && (g_esPlayer[tank].g_iCooldown == -1 || g_esPlayer[tank].g_iCooldown < iTime))
 			{
-				if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bFailed)
 				{
 					g_esPlayer[tank].g_bFailed = true;
 
@@ -917,7 +897,7 @@ static void vAcidHit(int survivor, int tank, float random, float chance, int ena
 				}
 			}
 		}
-		else if (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility == 1 && !g_esPlayer[tank].g_bNoAmmo)
 		{
 			g_esPlayer[tank].g_bNoAmmo = true;
 
@@ -932,34 +912,12 @@ static void vAcidRange(int tank, int value, float random, int pos = -1)
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esCache[tank].g_flAcidDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esCache[tank].g_iAcidDeath == 1 && random <= flChance)
 	{
-		if (g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
+		if (g_esCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esPlayer[tank].g_iTankType) || (g_esCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbility[g_esPlayer[tank].g_iTankType].g_iAccessFlags, g_esPlayer[tank].g_iAccessFlags)) || g_esCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
 
-		switch (g_bSecondGame)
-		{
-			case true: vAcid(tank, tank);
-			case false:
-			{
-				vAttachParticle(tank, PARTICLE_BLOOD, 0.1, 0.0);
-
-				static float flTankPos[3], flSurvivorPos[3], flRange;
-				GetClientAbsOrigin(tank, flTankPos);
-				flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esCache[tank].g_flAcidDeathRange;
-				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
-				{
-					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esPlayer[tank].g_iTankType, g_esAbility[g_esPlayer[tank].g_iTankType].g_iImmunityFlags, g_esPlayer[iSurvivor].g_iImmunityFlags))
-					{
-						GetClientAbsOrigin(iSurvivor, flSurvivorPos);
-						if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
-						{
-							SDKCall(g_esGeneral.g_hSDKPukePlayer, iSurvivor, tank, true);
-						}
-					}
-				}
-			}
-		}
+		vAcid(tank, tank);
 	}
 }
 
@@ -973,7 +931,11 @@ static void vAcidRockBreak(int tank, int rock, float random, int pos = -1)
 		GetEntPropVector(rock, Prop_Send, "m_vecOrigin", flOrigin);
 		flOrigin[2] += 40.0;
 
-		SDKCall(g_esGeneral.g_hSDKAcidPlayer, flOrigin, flAngles, flAngles, flAngles, tank, 2.0);
+		switch (g_esGeneral.g_bLeft4DHooksInstalled || g_esGeneral.g_hSDKSpitterProjectileCreate == null)
+		{
+			case true: L4D2_SpitterPrj(tank, flOrigin, flAngles);
+			case false: SDKCall(g_esGeneral.g_hSDKSpitterProjectileCreate, flOrigin, flAngles, flAngles, flAngles, tank);
+		}
 
 		if (g_esCache[tank].g_iAcidMessage & MT_MESSAGE_SPECIAL)
 		{

@@ -4,6 +4,64 @@
 	{
 		"Functions"
 		{
+			/* CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*) */
+			"CAmmoDef::MaxCarry"
+			{
+				"signature"	"CAmmoDef::MaxCarry"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"address"
+				"arguments"
+				{
+					"ammoType"
+					{
+						"type"		"int"
+					}
+					"player"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+			/* CBaseCombatWeapon::GetMaxClip1() const */
+			"CBaseCombatWeapon::GetMaxClip1"
+			{
+				"signature"	"CBaseCombatWeapon::GetMaxClip1"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"entity"
+			}
+			/* CDeathFallCamera::Enable(CBasePlayer*) */
+			"CDeathFallCamera::Enable"
+			{
+				"signature"	"CDeathFallCamera::Enable"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"player"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+			/* CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
+			"CDirector::OnFirstSurvivorLeftSafeArea"
+			{
+				"signature"	"CDirector::OnFirstSurvivorLeftSafeArea"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"ignore"
+				"arguments"
+				{
+					"survivor"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+			/* CEnvRockLauncher::LaunchCurrentDir() */
 			"CEnvRockLauncher::LaunchCurrentDir"
 			{
 				"signature"	"CEnvRockLauncher::LaunchCurrentDir"
@@ -11,6 +69,26 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
+			"CTankClaw::OnPlayerHit"
+			{
+				"signature"	"CTankClaw::OnPlayerHit"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"player"
+					{
+						"type"		"cbaseentity"
+					}
+					"incap"
+					{
+						"type"		"bool"
+					}
+				}
+			}
+			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
 			"CTankRock::Create"
 			{
 				"signature"	"CTankRock::Create"
@@ -36,6 +114,22 @@
 					}
 				}
 			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump"
+			{
+				"signature"	"CTerrorGameMovement::DoJump"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"address"
+				"arguments"
+				{
+					"velocity"
+					{
+						"type"		"vectorptr"
+					}
+				}
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed"
 			{
 				"signature"	"CTerrorPlayer::Event_Killed"
@@ -50,27 +144,111 @@
 					}
 				}
 			}
-			"CTerrorPlayer::GoAwayFromKeyboard"
+			/* CTerrorPlayer::OnEnterGhostState() */
+			"CTerrorPlayer::OnEnterGhostState"
 			{
-				"signature"	"CTerrorPlayer::GoAwayFromKeyboard"
+				"signature"	"CTerrorPlayer::OnEnterGhostState"
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
 			}
-			"SurvivorBot::SetHumanSpectator"
+			/* CTerrorPlayer::OnFalling() */
+			"CTerrorPlayer::OnFalling"
 			{
-				"signature"	"SurvivorBot::SetHumanSpectator"
+				"signature"	"CTerrorPlayer::OnFalling"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+			/* CTerrorPlayer::OnRevived() */
+			"CTerrorPlayer::OnRevived"
+			{
+				"signature"	"CTerrorPlayer::OnRevived"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+			/* CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool) */
+			"CTerrorPlayer::OnShovedByPounceLanding"
+			{
+				"signature"	"CTerrorPlayer::OnShovedByPounceLanding"
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
 				"arguments"
 				{
-					"AFKPlayer"
+					"attacker"
+					{
+						"type"		"cbaseentity"
+					}
+					"unknown"
+					{
+						"type"		"bool"
+					}
+				}
+			}
+			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
+			"CTerrorPlayer::OnShovedBySurvivor"
+			{
+				"signature"	"CTerrorPlayer::OnShovedBySurvivor"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"player"
+					{
+						"type"		"cbaseentity"
+					}
+					"direction"
+					{
+						"type"		"vectorptr"
+					}
+				}
+			}
+			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
+			"CTerrorPlayer::OnStaggered"
+			{
+				"signature"	"CTerrorPlayer::OnStaggered"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"charger"
+					{
+						"type"		"cbaseentity"
+					}
+					"origin"
+					{
+						"type"		"vectorptr"
+					}
+				}
+			}
+			/* CTerrorPlayer::StartReviving(CTerrorPlayer*) */
+			"CTerrorPlayer::StartReviving"
+			{
+				"signature"	"CTerrorPlayer::StartReviving"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"revivee" // Changed from "target" to be compatible with Left 4 Fix
 					{
 						"type"		"cbaseentity"
 					}
 				}
 			}
+			/* CTerrorWeapon::SecondaryAttack() */
+			"CTerrorWeapon::SecondaryAttack"
+			{
+				"signature"	"CTerrorWeapon::SecondaryAttack"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+			/* Tank::EnterStasis() */
 			"Tank::EnterStasis"
 			{
 				"signature"	"Tank::EnterStasis"
@@ -78,6 +256,7 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* Tank::LeaveStasis() */
 			"Tank::LeaveStasis"
 			{
 				"signature"	"Tank::LeaveStasis"
@@ -85,53 +264,353 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*) */
+			"ZombieManager::ReplaceTank"
+			{
+				"signature"	"ZombieManager::ReplaceTank"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"ignore"
+				"arguments"
+				{
+					"oldTank"
+					{
+						"type"		"cbaseentity"
+					}
+					"newTank"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+			/* ZombieManager::SpawnTank(Vector const&, QAngle const&) */
+			"ZombieManager::SpawnTank"
+			{
+				"signature"	"ZombieManager::SpawnTank"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"ignore"
+				"arguments"
+				{
+					"origin"
+					{
+						"type"		"vectorptr"
+					}
+					"angles"
+					{
+						"type"		"vectorptr"
+					}
+				}
+			}
+		}
+		"Addresses"
+		{
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"DoJumpStart"
+			{
+				"signature"	"CTerrorGameMovement::DoJump"
+			}
+			/**
+			 * Failsafe method for finding default jump height (57.0) using byte signatures
+			 * Used in case "DoJumpValueRead" fails
+			 **/
+			"DoJumpValueBytes"
+			{
+				"signature"	"CTerrorGameMovement::DoJump::Value"
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"Event_KilledStart"
+			{
+				"signature"	"CTerrorPlayer::Event_Killed"
+			}
+			/* CSmokeCloudSystem::FireGameEvent(IGameEvent *) */
+			"FireSmokerCloud"
+			{
+				"signature"	"CSmokeCloudSystem::FireGameEvent"
+			}
+			/**
+			 * Failsafe method for finding default sound string ("Player.Fall") using byte signatures
+			 * Used in case "OnFallingSoundRead" fails
+			 **/
+			"OnFallingSoundBytes"
+			{
+				"signature"	"CTerrorPlayer::OnFalling::Sound"
+			}
+			"RoundRespawnStart"
+			{
+				"signature"	"CTerrorPlayer::RoundRespawn"
+			}
+		}
+		"Offsets"
+		{
+			"OS"
+			{
+				"windows"	"0"
+				"linux"		"1"
+			}
+			/* Action<Tank>::FirstContainedResponder() const */
+			"Action<Tank>::FirstContainedResponder"
+			{
+				"windows"	"16"
+				"linux"		"16"
+			}
+			/* Behavior<Tank>::FirstContainedResponder() const */
+			"Behavior<Tank>::FirstContainedResponder"
+			{
+				"windows"	"8"
+				"linux"		"8"
+			}
+			/* CBaseEntity::GetRefEHandle() const */
+			"CBaseEntity::GetRefEHandle"
+			{
+				"windows"	"2"
+				"linux"		"3"
+			}
+			/* TankIntention::FirstContainedResponder() const */
+			"TankIntention::FirstContainedResponder"
+			{
+				"windows"	"28"
+				"linux"		"28"
+			}
+		}
+		"Signatures"
+		{
+			"TheDirector"
+			{
+				"library"	"server"
+				"linux"		"@TheDirector"
+			}
 		}
 	}
 	"left4dead"
 	{
+		"Functions"
+		{
+			/* CFirstAidKit::FinishHealing() */
+			"CFirstAidKit::FinishHealing"
+			{
+				"signature"	"CFirstAidKit::FinishHealing"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+			/* CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType) */
+			"CFirstAidKit::StartHealing"
+			{
+				"signature"	"CFirstAidKit::StartHealing"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"targetType"
+					{
+						"type"		"int"
+					}
+				}
+			}
+			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool) */
+			"CTerrorPlayer::OnVomitedUpon"
+			{
+				"signature"	"CTerrorPlayer::OnVomitedUpon"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"boomer"
+					{
+						"type"		"cbaseentity"
+					}
+					"unknown1"
+					{
+						"type"		"bool"
+					}
+					"unknown2"
+					{
+						"type"		"bool"
+					}
+				}
+			}
+			/* CTerrorPlayer::SetMainActivity(Activity, bool) */
+			"CTerrorPlayer::SetMainActivity"
+			{
+				"signature"	"CTerrorPlayer::SetMainActivity"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"activity"
+					{
+						"type"		"int"
+					}
+					"unknown"
+					{
+						"type"		"bool"
+					}
+				}
+			}
+		}
+		"Addresses"
+		{
+			"CDirector"
+			{
+				"windows"
+				{
+					"signature"	"SurvivorLegsMeetRescueVehicleArrival::Update"
+					"read"		"9"
+				}
+				"linux"
+				{
+					"signature"	"TheDirector"
+				}
+				"read"		"0"
+			}
+			/**
+			 * Initial method for finding default jump height (57.0) by jumping to location
+			 * Relies on "DoJumpValueBytes" in case of failure
+			 **/
+			"DoJumpValueRead"
+			{
+				"signature"	"CTerrorGameMovement::DoJump"
+				"windows"
+				{
+					"read"		"174"
+				}
+				"linux"
+				{
+					"read"		"184"
+				}
+			}
+			/**
+			 * Initial method for finding default sound string ("Player.Fall") by jumping to location
+			 * Relies on "OnFallingSoundBytes" in case of failure
+			 **/
+			"OnFallingSoundRead"
+			{
+				"signature"	"CTerrorPlayer::OnFalling"
+				"windows"
+				{
+					"read"		"361"
+				}
+				"linux"
+				{
+					"read"		"386"
+				}
+			}
+			/* InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&) */
+			"OnInjuredStart"
+			{
+				"signature"	"InfectedExecAction::OnInjured"
+			}
+		}
 		"Offsets"
 		{
-			"Action<Tank>::FirstContainedResponder"
+			/* CBaseCombatWeapon::GetMaxClip1() const */
+			"CBaseCombatWeapon::GetMaxClip1"
 			{
-				"windows"	"1"
-				"linux"		"2"
+				"windows"	"300"
+				"linux"		"301"
 			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Start"
+			{
+				"windows"	"71" // change DD to D9
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Start2"
+			{
+				// Windows references the default jump height (57.0) twice
+				"windows"	"172" // change DC to D8
+			}
+			/* CTerrorPlayer::Deafen(float, float, float) */
 			"CTerrorPlayer::Deafen"
 			{
 				"windows"	"491"
 				"linux"		"494"
 			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Attacker"
+			{
+				"windows"	"40"
+				"linux"		"40"
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
+			{
+				"windows"	"4954" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"7186" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
+			{
+				"windows"	"4977" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"7220" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
+			{
+				"windows"	"5095" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"5752" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
+			{
+				// Crashes on Windows when patching 5 bytes with NOPs (0x90), so do a jump (JMP) instruction instead
+				"windows"	"5342" // start at D9 and patch 2 bytes with EB ??
+				"linux"		"7366" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
+			{
+				"windows"	"5418" // start at 8B and patch 2 bytes with EB ??
+				"linux"		"7529" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
+			{
+				"windows"	"5606" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"7712" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::GetLastKnownArea() const */
 			"CTerrorPlayer::GetLastKnownArea"
 			{
 				"windows"	"309"
 				"linux"		"310"
 			}
-			"CTerrorPlayer::SetObserverTarget"
+			/* CTerrorPlayer::RoundRespawn() */
+			"CTerrorPlayer::RoundRespawn::StatsCondition"
 			{
-				"windows"	"375"
-				"linux"		"376"
+				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
+				"linux"		"35" // start at 75 and patch 1 byte with JNS (0x79)
 			}
-			"Infected::GetIntentionInterface"
+			/* InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&) */
+			"InfectedExecAction::OnInjured::Requirement"
 			{
-				"windows"	"3456"
-				"linux"		"3476"
+				"windows"	"143" // start at 6A and patch 11 bytes with a different instruction
+				"linux"		"795" // start at F6 and patch 7 bytes with a different instruction
 			}
+			/* Tank::GetIntentionInterface() const */
 			"Tank::GetIntentionInterface"
 			{
 				"windows"	"11924"
 				"linux"		"11940"
 			}
+			/* TankIdle::GetName() const */
 			"TankIdle::GetName"
 			{
 				"windows"	"35"
 				"linux"		"36"
 			}
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
 				"windows"	"300"
 				"linux"		"304"
 			}
-			"m_flow"
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
+			"WitchLocomotion::IsAreaTraversable::m_flow"
 			{
 				"windows"	"340"
 				"linux"		"348"
@@ -139,135 +618,606 @@
 		}
 		"Signatures"
 		{
+			/* CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*) */
+			"CAmmoDef::MaxCarry"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8CAmmoDef8MaxCarryEiPK20CBaseCombatCharacter"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x7C\x2A\x3B\x41\x04\x7D\x2A\x6B\xC0\x34\x03\xC8\x8B\x41\x2C\x83\xF8\xFF\x75\x2A\x8B\x49\x38\x85\xC9\x74\x2A\x8B\x41\x1C\x8B\x40\x30\xC2\x08\x00"
+			}
+			/* CBaseCombatWeapon::GetMaxClip1() const */
+			"CBaseCombatWeapon::GetMaxClip1"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK17CBaseCombatWeapon11GetMaxClip1Ev"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x8B\x80\x60\x01\x00\x00\x83\x2A\x2A\xC3"
+			}
+			/* CDeathFallCamera::Enable(CBasePlayer*) */
+			"CDeathFallCamera::Enable"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CDeathFallCamera6EnableEP11CBasePlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xCF\xE8\x2A\x2A\x2A\x2A\x85\xC0\x74\x2A\x6A\x2A\x8B\xCF\xE8\x2A\x2A\x2A\x2A\x8B\xC8"
+			}
+			/* Director::HasAnySurvivorLeftSafeArea() */
+			"CDirector::HasAnySurvivorLeftSafeArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8Director26HasAnySurvivorLeftSafeAreaEv"
+				"windows"	"\x8A\x2A\x68\x01\x00\x00\xC3"
+			}
+			/* Director::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
+			"CDirector::OnFirstSurvivorLeftSafeArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8Director27OnFirstSurvivorLeftSafeAreaEP13CTerrorPlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x80\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\x80\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x84\xA7\x00\x00\x00"
+			}
+			/* CEnvRockLauncher::LaunchCurrentDir() */
 			"CEnvRockLauncher::LaunchCurrentDir"
 			{
 				"library"	"server"
 				"linux"		"@_ZN16CEnvRockLauncher16LaunchCurrentDirEv"
-				"windows"	"\x83\xEC\x40\x56\x8B\xF1\x8B\x86\x1C\x01\x00\x00"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x86\x1C\x01\x00\x00\xC1\xE8\x0B\xA8\x01\x57\x74\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x96\x2A\x2A\x2A\x2A\x8B\x86\x2A\x2A\x2A\x2A\x89\x4C\x24\x18\x8B\x8E\x2A\x2A\x2A\x2A\xC1\xE9\x0B"
 			}
+			/* CFirstAidKit::FinishHealing() */
+			"CFirstAidKit::FinishHealing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CFirstAidKit13FinishHealingEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x55\x89\x5C\x24\x10\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\xED\x0F\x84"
+			}
+			/* CFirstAidKit::StartHealing(CFirstAidKit::HealTargetType) */
+			"CFirstAidKit::StartHealing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CFirstAidKit12StartHealingENS_14HealTargetTypeE.part.43"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x8D\xB1\x58\x08\x00\x00\x57\x89\x4C\x24\x10\x0F\x85\xFF\x01\x00\x00"
+			}
+			/* CSmokeCloudSystem::FireGameEvent(IGameEvent *) */
+			"CSmokeCloudSystem::FireGameEvent"
+			{
+				"library"	"server"
+				"linux"		"@_ZN17CSmokeCloudSystem13FireGameEventEP10IGameEvent" // change 57 to C3
+				"windows"	"\x83\xEC\x14\x56\x8B\x74\x24\x1C\x8B\x06" // change 83 ?? ?? to C2 04 00
+			}
+			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
+			"CTankClaw::OnPlayerHit"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw11OnPlayerHitEP13CTerrorPlayerb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xCE\x8B\xF8\xE8\x2A\x2A\x2A\x2A\x83"
+			}
+			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
 			"CTankRock::Create"
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter.constprop.123"
 				"windows"	"\x8B\x44\x24\x08\x53\x8B\x5C\x24\x08"
 			}
+			/* CTankRock::Detonate() */
 			"CTankRock::Detonate"
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock8DetonateEv"
 				"windows"	"\x83\xEC\x30\x53\x55\x56\x8B\xF1\x80\xBE\xD4\x08\x00\x00\x00"
 			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CTerrorGameMovement6DoJumpEP6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\x6A\x2A\xFF\xD2\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x01\x8B\x90\x2A\x2A\x2A\x2A\x6A\x2A\x6A\x2A\xFF\xD2"
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Value"
+			{
+				"library"	"server"
+				"linux"		"\x00\x00\x64\x42\x00"
+				"windows"	"\x00\x00\x00\x00\x00\x80\x4C\x40"
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12Event_KilledERK15CTakeDamageInfo"
-				"windows"	"\x81\xEC\xE8\x01\x00\x00"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x8B\xF1\x8B\x06\x8B\x90\xF8\x04\x00\x00\x57\xFF\xD2"
 			}
+			/* CTerrorPlayer::GoAwayFromKeyboard() */
 			"CTerrorPlayer::GoAwayFromKeyboard"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer18GoAwayFromKeyboardEv"
-				"windows"	"\x83\xEC\x2A\x53\x56\x57\x8B\xF1\x8B\x06\x8B\x90\xB8\x2A\x2A\x2A\x8B\x9E\x34\x2A\x2A\x2A\x6A\x2A\x6A\x2A\x6A\x2A"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xF1\x8B\x06\x8B\x90\xB8\x07\x00\x00"
 			}
+			/* CTerrorPlayer::MaterializeFromGhost() */
+			"CTerrorPlayer::MaterializeFromGhost"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer20MaterializeFromGhostEv"
+				"windows"	"\x56\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xFF\x2A\x50\xE8"
+			}
+			/* CTerrorPlayer::OnFalling() */
+			"CTerrorPlayer::OnFalling"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer9OnFallingEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x83\xF8\x02\x0F\x85\x2A\x2A\x2A\x2A\x8D\xBE\x2A\x2A\x2A\x2A\x8B\xCF"
+			}
+			/* CTerrorPlayer::OnFalling() */
+			"CTerrorPlayer::OnFalling::Sound"
+			{
+				"library"	"server"
+				"linux"		"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
+				"windows"	"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
+			}
+			/* CTerrorPlayer::OnITExpired() */
+			"CTerrorPlayer::OnITExpired"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11OnITExpiredEv"
+				"windows"	"\xD9\x05\x2A\x2A\x2A\x2A\x56\x57\x8B\xF9\xD8\x9F\x2A\x2A\x00\x00\x8D\xB7\x2A\x2A\x00\x00\xDF\xE0\xF6\xC4\x2A\x7B\x13\x8B\x46\xF8\x8B\x10\x8D\x4E\xF8\x56\xFF\xD2\xD9\x2A\x2A\x2A\x2A\x2A\xD9\x1E\x8B\x37\x6A"
+			}
+			/* CTerrorPlayer::OnEnterGhostState() */
+			"CTerrorPlayer::OnEnterGhostState"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer17OnEnterGhostStateEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x57\xFF\xD2\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2"
+			}
+			/* CTerrorPlayer::OnRevived() */
+			"CTerrorPlayer::OnRevived"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8A\x9F\xFD\x26\x00\x00"
+			}
+			/* CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool) */
+			"CTerrorPlayer::OnShovedByPounceLanding"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer23OnShovedByPounceLandingEPS_b"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x57\x8B\x7C"
+			}
+			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
+			"CTerrorPlayer::OnShovedBySurvivor"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer18OnShovedBySurvivorEPS_RK6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x8C\x24\x2A\x2A\x2A\x2A\x85\xC9"
+			}
+			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
+			"CTerrorPlayer::OnStaggered"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F\x85\x2A\x2A\x2A\x2A\x53\x55\x57\x6A\x2A\x8B\xCE\xE8"
+			}
+			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool) */
+			"CTerrorPlayer::OnVomitedUpon"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_bb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\xA1\x2A\x2A\x2A\x2A\x80\xB8\x6A\x2A\x2A\x2A\x2A\x75\x2A\x8B"
+			}
+			/* CTerrorPlayer::RoundRespawn() */
 			"CTerrorPlayer::RoundRespawn"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
 				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
 			}
-			"CTerrorPlayer::OnRevived"
+			/* CTerrorPlayer::SetMainActivity(Activity, bool) */
+			"CTerrorPlayer::SetMainActivity"
 			{
 				"library"	"server"
-				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
-				"windows"	"\x83\x2A\x2A\x53\x55\x56\x57\x8B\x2A\x8B\x2A\x8B"
+				"linux"		"@_ZN13CTerrorPlayer15SetMainActivityE8Activityb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x3D\x2A\x2A\x2A\x2A\x8B\x07\x8B\x50\x64\x8B\xF1\x8B\xCF\x89\x7C\x24\x10\xFF\xD2"
 			}
-			"CTerrorPlayer::OnStaggered"
+			/* CTerrorPlayer::StartReviving(CTerrorPlayer*) */
+			"CTerrorPlayer::StartReviving"
 			{
 				"library"	"server"
-				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
-				"windows"	"\x83\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x9C\x24\x24\x01\x00\x00"
 			}
-			"CTerrorPlayer::OnVomitedUpon"
+			/* CTerrorWeapon::SecondaryAttack() */
+			"CTerrorWeapon::SecondaryAttack"
 			{
 				"library"	"server"
-				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_bb"
-				"windows"	"\x83\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84" 
+				"linux"		"@_ZN13CTerrorWeapon15SecondaryAttackEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xF0\x85\xF6\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x40\x01\x00\x00\x8B\xCE\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x7C\x07\x00\x00\x8B\xCE\xFF\xD2\x84\xC0\x0F\x85\xCC\x00\x00\x00\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2"
 			}
-			"SurvivorBot::SetHumanSpectator"
+			/* InfectedExecAction::OnInjured(Infected *, CTakeDamageInfo const&) */
+			"InfectedExecAction::OnInjured"
 			{
 				"library"	"server"
-				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
-				"windows"	"\x53\x8B\xD9\x83\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8D\x2A\x2A\x2A\x2A\x2A\x7E\x07\x5E\x32\xC0\x5B\xC2\x04\x00"
+				"linux"		"@_ZN18InfectedExecAction9OnInjuredEP8InfectedRK15CTakeDamageInfo"
+				"windows"	"\x83\xEC\x0C\x53\x55\x8B\x6C\x24\x1C\x56\x57\x8B"
 			}
+			/**
+			 * SurvivorLegsMeetRescueVehicleArrival::Update(SurvivorBot*, float)
+			 * Used for the "CDirector" address on Windows.
+			 **/
+			"SurvivorLegsMeetRescueVehicleArrival::Update"
+			{
+				"library"	"server"
+				"windows"	"\x83\x2A\x2A\x53\x55\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x33\x2A\x38\x2A\x2A\x2A\x2A\x2A\x74"
+			}
+			/* Tank::EnterStasis() */
 			"Tank::EnterStasis"
 			{
 				"library"	"server"
 				"linux"		"@_ZN4Tank11EnterStasisEv"
-				"windows"	"\x56\x8B\xF1\x80\xBE\x2A\x2A\x2A\x2A\x00\x0F\x85\x2A\x2A\x2A\x2A\x83\x7E"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x83\x7E\x18\x00\x0F\x84\x2A\x2A\x2A\x2A\x0F\xB6\x86"
 			}
+			/* Tank::LeaveStasis() */
 			"Tank::LeaveStasis"
 			{
 				"library"	"server"
 				"linux"		"@_ZN4Tank11LeaveStasisEv"
-				"windows"	"\x56\x8B\xF1\x80\xBE\x2A\x2A\x2A\x2A\x00\x0F\x84\x2A\x2A\x2A\x2A\x83\x7E"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x83\x7E\x18\x00\x74\x2A\x0F\xB7\x86\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x57\x83\xE0\xFB\x50\xE8"
+			}
+			/* ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*) */
+			"ZombieManager::ReplaceTank"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager11ReplaceTankEP13CTerrorPlayerS1_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x57\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x03"
+			}
+			/* ZombieManager::SpawnTank(Vector const&, QAngle const&) */
+			"ZombieManager::SpawnTank"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager9SpawnTankERK6VectorRK6QAngle"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x85\x2A\x75\x2A\x5E\xC2\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x6A\x2A\x6A\x2A\x6A\x2A\x8B\x2A\xFF\x2A\x6A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x05"
 			}
 		}
 	}
 	"left4dead2"
 	{
+		"Functions"
+		{
+			/* CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger) */
+			"CBaseBackpackItem::StartAction"
+			{
+				"signature"	"CBaseBackpackItem::StartAction"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"entity"
+				"arguments"
+				{
+					"actionType"
+					{
+						"type"		"int"
+					}
+					"actionTrigger"
+					{
+						"type"		"int"
+					}
+				}
+			}
+			/* CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*) */
+			"CFirstAidKit::OnActionComplete"
+			{
+				"signature"	"CFirstAidKit::OnActionComplete"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"healer"
+					{
+						"type"		"cbaseentity"
+					}
+					"subject"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+			/* CTerrorGun::FireBullet() */
+			"CTerrorGun::FireBullet"
+			{
+				"signature"	"CTerrorGun::FireBullet"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+			/* CTerrorMeleeWeapon::SecondaryAttack() */
+			"CTerrorMeleeWeapon::SecondaryAttack"
+			{
+				"signature"	"CTerrorMeleeWeapon::SecondaryAttack"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
+			/* CTerrorMeleeWeapon::TestMeleeSwingCollision(Vector const&) */
+			"CTerrorMeleeWeapon::TestMeleeSwingCollision"
+			{
+				"signature"	"CTerrorMeleeWeapon::TestMeleeSwingCollision"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"swingAngle"
+					{
+						"type"		"vectorptr"
+					}
+				}
+			}
+			/* CTerrorPlayer::DoAnimationEvent(PlayerAnimEvent_t, int) */
+			"CTerrorPlayer::DoAnimationEvent"
+			{
+				"signature"	"CTerrorPlayer::DoAnimationEvent"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"animation"
+					{
+						"type"		"int"
+					}
+					"unknown"
+					{
+						"type"		"int"
+					}
+				}
+			}
+			/* CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float) */
+			"CTerrorPlayer::Fling"
+			{
+				"signature"	"CTerrorPlayer::Fling"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"velocity"
+					{
+						"type"		"vectorptr"
+					}
+					"animation"
+					{
+						"type"		"int"
+					}
+					"charger"
+					{
+						"type"		"cbaseentity"
+					}
+					"viewDuration"
+					{
+						"type"		"float"
+					}
+				}
+			}
+			/* CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*) */
+			"CTerrorPlayer::OnHitByVomitJar"
+			{
+				"signature"	"CTerrorPlayer::OnHitByVomitJar"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"thrower"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool) */
+			"CTerrorPlayer::OnVomitedUpon"
+			{
+				"signature"	"CTerrorPlayer::OnVomitedUpon"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"boomer"
+					{
+						"type"		"cbaseentity"
+					}
+					"unknown"
+					{
+						"type"		"bool"
+					}
+				}
+			}
+		}
+		"Addresses"
+		{
+			"CDirector"
+			{
+				"windows"
+				{
+					"signature"	"CDirectorMusicBanks::OnRoundStart"
+					"read"		"12"
+				}
+				"linux"
+				{
+					"signature"	"TheDirector"
+				}
+				"read"		"0"
+			}
+			/**
+			 * Initial method for finding default jump height (57.0) by jumping to location
+			 * Relies on "DoJumpValueBytes" in case of failure
+			 **/
+			"DoJumpValueRead"
+			{
+				"signature"	"CTerrorGameMovement::DoJump"
+				"windows"
+				{
+					"read"		"86"
+				}
+				"linux"
+				{
+					"read"		"695"
+				}
+			}
+			/**
+			 * Initial method for finding default sound string ("Player.Fall") by jumping to location
+			 * Relies on "OnFallingSoundBytes" in case of failure
+			 **/
+			"OnFallingSoundRead"
+			{
+				"signature"	"CTerrorPlayer::OnFalling"
+				"windows"
+				{
+					"read"		"297"
+				}
+				"linux"
+				{
+					"read"		"426"
+				}
+			}
+		}
 		"Offsets"
 		{
-			"Action<Tank>::FirstContainedResponder"
+			/* CBaseBackpackItem::GetUseAction() const */
+			"CBaseBackpackItem::GetUseAction"
 			{
-				"windows"	"1"
-				"linux"		"2"
+				"windows"	"451"
+				"linux"		"453"
 			}
+			/* CBaseCombatWeapon::GetMaxClip1() const */
+			"CBaseCombatWeapon::GetMaxClip1"
+			{
+				"windows"	"323"
+				"linux"		"324"
+			}
+			/* CBaseEntity::IsInStasis() const */
 			"CBaseEntity::IsInStasis"
 			{
 				"windows"	"39"
 				"linux"		"40"
 			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Start"
+			{
+				"windows"	"84" // change DD to D9
+				"linux"		"691" // change F2 to F3
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Start2"
+			{
+				// Windows references the default jump height (57.0) twice
+				"windows"	"186" // change DC to D8
+			}
+			/* CTerrorPlayer::Deafen(float, float, float) */
 			"CTerrorPlayer::Deafen"
 			{
 				"windows"	"517"
 				"linux"		"518"
 			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Attacker"
+			{
+				"windows"	"52"
+				"linux"		"52"
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Boomer1" // "boomer_explode"
+			{
+				"windows"	"7368" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"8863" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Boomer2" // "BoomerZombie.Detonate"
+			{
+				"windows"	"7391" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"8895" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Boomer3" // CreateExplosion
+			{
+				"windows"	"7705" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"9060" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Boomer4" // "boomer_explode"
+			{
+				"windows"	"7559" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"10335" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Boomer5" // "BoomerZombie.Detonate"
+			{
+				"windows"	"7582" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"10367" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Boomer6" // CreateExplosion
+			{
+				"windows"	"7855" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"6490" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Smoker1" // "SmokerZombie.Explode"
+			{
+				"windows"	"8124" // start at D9 and patch 2 bytes with EB ??
+				"linux"		"10511" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Smoker2" // "smoker_smokecloud"
+			{
+				"windows"	"8218" // start at 8B and patch 2 bytes with EB ??
+				"linux"		"10679" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::Smoker3" // "smoker_smokecloud_camera"
+			{
+				"windows"	"8432" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"10839" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
+			"CTerrorPlayer::Event_Killed::SpitterPuddle" // JMP instruction
+			{
+				"windows"	"9284" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+				"linux"		"7635" // start at 8B and patch 5 bytes with an unconditional jump (0xE9) to skip instruction
+			}
+			/* CTerrorPlayer::GetLastKnownArea() const */
 			"CTerrorPlayer::GetLastKnownArea"
 			{
 				"windows"	"330"
 				"linux"		"331"
 			}
-			"CTerrorPlayer::SetObserverTarget"
+			/* CTerrorPlayer::RoundRespawn() */
+			"CTerrorPlayer::RoundRespawn::StatsCondition"
 			{
-				"windows"	"402"
-				"linux"		"403"
+				"windows"	"15" // start at 75 and patch 1 byte with JNS (0x79)
+				"linux"		"25" // start at 75 and patch 1 byte with JNS (0x79)
 			}
-			"Infected::GetIntentionInterface"
-			{
-				"windows"	"7368"
-				"linux"		"7364"
-			}
+			/* Tank::GetIntentionInterface() const */
 			"Tank::GetIntentionInterface"
 			{
 				"windows"	"17236"
 				"linux"		"17208"
 			}
+			/* TankIdle::GetName() const */
 			"TankIdle::GetName"
 			{
 				"windows"	"40"
 				"linux"		"41"
 			}
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
 			"WitchLocomotion::IsAreaTraversable::m_attributeFlags"
 			{
 				"windows"	"296"
 				"linux"		"300"
 			}
-			"m_flow"
+			/* WitchLocomotion::IsAreaTraversable(CNavArea const*) const */
+			"WitchLocomotion::IsAreaTraversable::m_flow"
 			{
 				"windows"	"332"
 				"linux"		"340"
 			}
-			"HiddenMelee"
+			/* CTerrorPlayer::OnIncapacitatedAsSurvivor(CTakeDamageInfo const&) */
+			"CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon"
 			{
 				"windows"	"16340"
 				"linux"		"16320"
@@ -275,89 +1225,294 @@
 		}
 		"Signatures"
 		{
+			/* CAmmoDef::MaxCarry(int, CBaseCombatCharacter const*) */
+			"CAmmoDef::MaxCarry"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8CAmmoDef8MaxCarryEiPK20CBaseCombatCharacter"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xF8\x01\x7C\x2A\x3B\x41\x04\x7D\x2A\x6B\xC0\x34\x03\xC8\x8B\x41\x2C\x83\xF8\xFF\x75\x2A\x8B\x49\x38\x85\xC9\x74\x2A\x8B\x41\x1C\x8B\x40\x30\x5D"
+			}
+			/* CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger) */
+			"CBaseBackpackItem::StartAction"
+			{
+				"library"	"server"
+				"linux"		"@_ZN17CBaseBackpackItem11StartActionENS_22BackpackItemActionTypeENS_25BackpackItemActionTriggerE"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\xF8\x85\xFF\x75\x2A\x5F\x32\xC0"
+			}
+			/* CBaseCombatWeapon::GetMaxClip1() const */
+			"CBaseCombatWeapon::GetMaxClip1"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK17CBaseCombatWeapon11GetMaxClip1Ev"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x8B\x80\x60\x01\x00\x00\x83\x2A\x2A\xC3"
+			}
+			/* CDeathFallCamera::Enable(CBasePlayer*) */
+			"CDeathFallCamera::Enable"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CDeathFallCamera6EnableEP11CBasePlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\xF9\x8B\xCB\x89\x7D\xFC\xE8\x2A\x2A\x2A\x2A\x85\xC0\x74\x2A\x6A"
+			}
+			/* CDirector::HasAnySurvivorLeftSafeArea() */
+			"CDirector::HasAnySurvivorLeftSafeArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector26HasAnySurvivorLeftSafeAreaEv"
+				"windows"	"\x8A\x2A\xA0\x00\x00\x00\xC3"
+			}
+			/* CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer*) */
+			"CDirector::OnFirstSurvivorLeftSafeArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector27OnFirstSurvivorLeftSafeAreaEP13CTerrorPlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x8B\x2A\x2A\x57\x8B\x2A\x8B\x8F\x84\x05\x00\x00\x53\xE8"
+			}
+			/**
+			 * CDirectorMusicBanks::OnRoundStart()
+			 * Used for the "CDirector" address on Windows.
+			 ***/
+			"CDirectorMusicBanks::OnRoundStart"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x0F"
+			}
+			/* CEnvRockLauncher::LaunchCurrentDir() */
 			"CEnvRockLauncher::LaunchCurrentDir"
 			{
 				"library"	"server"
 				"linux"		"@_ZN16CEnvRockLauncher16LaunchCurrentDirEv"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x3C\x56\x8B\xF1\x8B\x86\x38\x01\x00\x00"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\xF1\x8B\x86\x38\x01\x00\x00\xC1\xE8\x0B\x57\xA8\x01\x74\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x96\x2A\x2A\x2A\x2A\x8B\x86\x2A\x2A\x2A\x2A\x89\x4D\xE8\x8B\x8E\x2A\x2A\x2A\x2A\xC1\xE9\x0B"
 			}
+			/* CFirstAidKit::OnActionComplete(CTerrorPlayer*, CBaseEntity*) */
+			"CFirstAidKit::OnActionComplete"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CFirstAidKit16OnActionCompleteEP13CTerrorPlayerP11CBaseEntity"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x7D\x0C\x85\xFF\x74\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B\x2A\xFF\xD2"
+			}
+			/* CSmokeCloudSystem::FireGameEvent(IGameEvent *) */
+			"CSmokeCloudSystem::FireGameEvent"
+			{
+				"library"	"server" // change 55 to C3
+				"linux"		"@_ZN17CSmokeCloudSystem13FireGameEventEP10IGameEvent"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x14\x56\x8B\x75\x08\x8B\x06\x8B\x50\x04"
+			}
+			/* CSpitterProjectile::Create(Vector const&, QAngle const&, Vector const&, Vector const&, CBaseCombatCharacter*) */
 			"CSpitterProjectile::Create"
 			{
 				"library"	"server"
 				"linux"		"@_ZN18CSpitterProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57"
 			}
+			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
+			"CTankClaw::OnPlayerHit"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw11OnPlayerHitEP13CTerrorPlayerb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x56\x8B\x2A\x2A\x57\x8B\x2A\x89\x2A\x2A\xE8"
+			}
+			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
 			"CTankRock::Create"
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock6CreateERK6VectorRK6QAngleS2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\xEC\x8B\x45\x0C\x8B\x4D\x08\x53"
 			}
+			/* CTankRock::Detonate() */
 			"CTankRock::Detonate"
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CTankRock8DetonateEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x34\x53\x56\x8B\xF1\x80\xBE\x9C\x1A\x00\x00\x00"
 			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CTerrorGameMovement6DoJumpEP6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\x6A\x2A\xFF\xD2\x8B\x8E\x2A\x2A\x2A\x2A\x8B\x01\x8B\x90\x2A\x2A\x2A\x2A\x6A\x2A\x6A\x2A\xFF\xD2"
+			}
+			/* CTerrorGameMovement::DoJump(Vector*) */
+			"CTerrorGameMovement::DoJump::Value"
+			{
+				"library"	"server"
+				"linux"		"\x00\x00\x00\x00\x00\x80\x4C\x40"
+				"windows"	"\x00\x00\x00\x00\x00\x80\x4C\x40"
+			}
+			/* CTerrorGun::FireBullet() */
+			"CTerrorGun::FireBullet"
+			{
+				"library"	"server"
+				"linux"		"@_ZN10CTerrorGun10FireBulletEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x53\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x8B\xD8\x85\xDB\x0F\x84\x2A\x2A\x2A\x2A\x80"
+			}
+			/* CTerrorMeleeWeapon::SecondaryAttack() */
+			"CTerrorMeleeWeapon::SecondaryAttack"
+			{
+				"library"	"server"
+				"linux"		"@_ZN18CTerrorMeleeWeapon15SecondaryAttackEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xD8\x85\xDB\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x7C\x06\x00\x00\x8B\xCE\xFF\xD2"
+			}
+			/* CTerrorMeleeWeapon::TestMeleeSwingCollision(Vector const&) */
+			"CTerrorMeleeWeapon::TestMeleeSwingCollision"
+			{
+				"library"	"server"
+				"linux"		"@_ZN18CTerrorMeleeWeapon23TestMeleeSwingCollisionERK6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x2A\x57\x89\x2A\x2A\xE8"
+			}
+			/* CTerrorPlayer::DoAnimationEvent(PlayerAnimEvent_t, int) */
+			"CTerrorPlayer::DoAnimationEvent"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer16DoAnimationEventE17PlayerAnimEvent_ti"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xF9\x83\xFE\x63"
+			}
+			/* CTerrorPlayer::Event_Killed(CTakeDamageInfo const&) */
 			"CTerrorPlayer::Event_Killed"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12Event_KilledERK15CTakeDamageInfo"
-				"windows"	"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\x48\x02\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x43\x08"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\x48\x02\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x43\x08"
 			}
+			/* CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float) */
 			"CTerrorPlayer::Fling"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer5FlingERK6Vector17PlayerAnimEvent_tP20CBaseCombatCharacterf"
-				"windows"	"\x53\x8B\xDC\x83\xEC\x2A\x83\xE4\x2A\x83\xC4\x2A\x55\x8B\x6B\x2A\x89\x6C\x2A\x2A\x8B\xEC\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x8B\x43\x2A\x56\x8B\x73\x2A\x57\x6A\x2A\x8B\xF9\x89\x45"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xE4\x2A\x83\xC4\x2A\x55\x8B\x6B\x2A\x89\x6C\x2A\x2A\x8B\xEC\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x8B\x43\x2A\x56\x8B\x73\x2A\x57\x6A\x2A\x8B\xF9\x89\x45\x9C"
 			}
+			/* CTerrorPlayer::GoAwayFromKeyboard() */
 			"CTerrorPlayer::GoAwayFromKeyboard"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer18GoAwayFromKeyboardEv"
-				"windows"	"\x55\x8B\xEC\x83\xEC*\x53\x56\x57\x8B\xF1\x8B\x06\x8B\x90***\x00\x8B\x9e***\x00\x6A\x00\x6A\x08\x6A\x01"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\xF1\x8B\x06\x8B\x90\xC8\x08\x00\x00"
 			}
+			/* CTerrorPlayer::MaterializeFromGhost() */
+			"CTerrorPlayer::MaterializeFromGhost"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer20MaterializeFromGhostEv"
+				"windows"	"\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x50\xE8\x2A\x2A\x2A\x2A\x83\xC4"
+			}
+			/* CTerrorPlayer::OnEnterGhostState() */
+			"CTerrorPlayer::OnEnterGhostState"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer17OnEnterGhostStateEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8B\x86\x2A\x2A\x2A\x2A\x8B\x50\x0C\x8D\x8E\x2A\x2A\x2A\x2A\x57\xFF\xD2\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2"
+			}
+			/* CTerrorPlayer::OnFalling() */
+			"CTerrorPlayer::OnFalling"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer9OnFallingEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x83\xF8\x02"
+			}
+			/* CTerrorPlayer::OnFalling() */
+			"CTerrorPlayer::OnFalling::Sound"
+			{
+				"library"	"server"
+				"linux"		"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
+				"windows"	"\x50\x6C\x61\x79\x65\x72\x2E\x46\x61\x6C\x6C\x00"
+			}
+			/* CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter*) */
+			"CTerrorPlayer::OnHitByVomitJar"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer15OnHitByVomitJarEP20CBaseCombatCharacter"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F"
+			}
+			/* CTerrorPlayer::OnITExpired() */
+			"CTerrorPlayer::OnITExpired"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11OnITExpiredEv"
+				"windows"	"\x56\x57\x8B\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7B\x2A\x8B\x2A\x2A\x8B\x2A\x8D\x2A\x2A\x56\xFF\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x8B\x2A\x6A"
+			}
+			/* CTerrorPlayer::OnRevived() */
 			"CTerrorPlayer::OnRevived"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\xCE"
 			}
+			/* CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool) */
+			"CTerrorPlayer::OnShovedByPounceLanding"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer23OnShovedByPounceLandingEPS_b"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x57\x8B"
+			}
+			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
+			"CTerrorPlayer::OnShovedBySurvivor"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer18OnShovedBySurvivorEPS_RK6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x2A\x56\x57\x8B\x7D\x2A\x8B\xF1\x89\x5D\x80"
+			}
+			/* CTerrorPlayer::OnStaggered(CBaseEntity*, Vector const*) */
 			"CTerrorPlayer::OnStaggered"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
-				"windows"	"\x53\x8B\x2A\x83\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
 			}
+			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool) */
 			"CTerrorPlayer::OnVomitedUpon"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_b"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x53\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90"
 			}
+			/* CTerrorPlayer::RoundRespawn() */
 			"CTerrorPlayer::RoundRespawn"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
 				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
 			}
-			"SurvivorBot::SetHumanSpectator"
+			/* CTerrorPlayer::StartReviving(CTerrorPlayer*) */
+			"CTerrorPlayer::StartReviving"
 			{
 				"library"	"server"
-				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
-				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x83\xBE\x2A\x2A\x2A\x2A\x00\x7E\x07\x32\xC0\x5E\x5D\xC2\x04\x00\x8B\x0D"
+				"linux"		"@_ZN13CTerrorPlayer13StartRevivingEPS_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x08\x8B\x83\x58\x2E\x00\x00"
 			}
+			/* CTerrorWeapon::SecondaryAttack() */
+			"CTerrorWeapon::SecondaryAttack"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorWeapon15SecondaryAttackEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xF0\x85\xF6\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F\x85\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2"
+			}
+			/* Tank::EnterStasis() */
 			"Tank::EnterStasis"
 			{
 				"library"	"server"
 				"linux"		"@_ZN4Tank11EnterStasisEv"
-				"windows"	"\x56\x57\x8B\xF9\x80\xBF\x2A\x2A\x2A\x2A\x00\x8D\xB7\x2A\x2A\x2A\x2A\x74\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x56\xFF\xD2\xC6\x06\x00\x8B"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8D\xB7\x2A\x2A\x2A\x2A\x74\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x56\xFF\xD2\xC6\x06\x00\x8B"
 			}
+			/* Tank::LeaveStasis() */
 			"Tank::LeaveStasis"
 			{
 				"library"	"server"
 				"linux"		"@_ZN4Tank11LeaveStasisEv"
-				"windows"	"\x56\x57\x8B\xF9\x80\xBF\xF1\x00\x00\x00\x02\x8D\xB7\xF1\x00\x00\x00"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8D\xB7\x2A\x2A\x2A\x2A\x74\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x56\xFF\xD2\xC6\x06\x02\x8B\x07\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCF\xFF\xD2"
+			}
+			/* ZombieManager::ReplaceTank(CTerrorPlayer*, CTerrorPlayer*) */
+			"ZombieManager::ReplaceTank"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager11ReplaceTankEP13CTerrorPlayerS1_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\x75\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\x8B\xF9\x8B\xCE\xFF\xD2\x84\xC0\x0F\x84\x86\x01\x00\x00"
+			}
+			/* ZombieManager::SpawnTank(Vector const&, QAngle const&) */
+			"ZombieManager::SpawnTank"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager9SpawnTankERK6VectorRK6QAngle"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\xC0\x78\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x39\x81\x00\x01\x00\x00"
 			}
 		}
 	}
