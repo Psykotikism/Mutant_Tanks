@@ -367,6 +367,7 @@ enum struct esGeneral
 	DynamicDetour g_ddSecondaryAttackDetour;
 	DynamicDetour g_ddSecondaryAttackDetour2;
 	DynamicDetour g_ddSetMainActivityDetour;
+	DynamicDetour g_ddShovedByPounceLandingDetour;
 	DynamicDetour g_ddShovedBySurvivorDetour;
 	DynamicDetour g_ddSpawnTankDetour;
 	DynamicDetour g_ddStaggerDetour;
@@ -2125,6 +2126,12 @@ public void OnPluginStart()
 			if (g_esGeneral.g_ddSecondaryAttackDetour == null)
 			{
 				LogError("%s Failed to find signature: CTerrorWeapon::SecondaryAttack", MT_TAG);
+			}
+
+			g_esGeneral.g_ddShovedByPounceLandingDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnShovedByPounceLanding");
+			if (g_esGeneral.g_ddShovedByPounceLandingDetour == null)
+			{
+				LogError("%s Failed to find signature: CTerrorPlayer::OnShovedByPounceLanding", MT_TAG);
 			}
 
 			g_esGeneral.g_ddShovedBySurvivorDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnShovedBySurvivor");
@@ -7699,7 +7706,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				iSurvivorId = event.GetInt("victim"), iSurvivor = GetClientOfUserId(iSurvivorId);
 			if (bIsSpecialInfected(iSpecial) && bIsSurvivor(iSurvivor) && (bIsDeveloper(iSurvivor, 11) || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE)))
 			{
-				vSaveCaughtSurvivor(iSurvivor);
+				vSaveCaughtSurvivor(iSurvivor, iSpecial);
 			}
 		}
 		else if (StrEqual(name, "create_panic_event"))
@@ -8787,6 +8794,11 @@ static void vPluginStatus()
 				LogError("%s Failed to enable detour post: ZombieManager::ReplaceTank", MT_TAG);
 			}
 
+			if (!g_esGeneral.g_ddShovedByPounceLandingDetour.Enable(Hook_Pre, mreShovedByPounceLandingPre))
+			{
+				LogError("%s Failed to enable detour pre: CTerrorPlayer::OnShovedByPounceLanding", MT_TAG);
+			}
+
 			if (!g_esGeneral.g_ddShovedBySurvivorDetour.Enable(Hook_Pre, mreShovedBySurvivorPre))
 			{
 				LogError("%s Failed to enable detour pre: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
@@ -9024,6 +9036,11 @@ static void vPluginStatus()
 			if (!g_esGeneral.g_ddReplaceTankDetour.Disable(Hook_Post, mreReplaceTankPost))
 			{
 				LogError("%s Failed to disable detour post: ZombieManager::ReplaceTank", MT_TAG);
+			}
+
+			if (!g_esGeneral.g_ddShovedByPounceLandingDetour.Disable(Hook_Pre, mreShovedByPounceLandingPre))
+			{
+				LogError("%s Failed to disable detour pre: CTerrorPlayer::OnShovedByPounceLanding", MT_TAG);
 			}
 
 			if (!g_esGeneral.g_ddShovedBySurvivorDetour.Disable(Hook_Pre, mreShovedBySurvivorPre))
@@ -10712,9 +10729,10 @@ static void vSaveWeapons(int survivor)
 	}
 }
 
-static void vSaveCaughtSurvivor(int survivor)
+static void vSaveCaughtSurvivor(int survivor, int special = 0)
 {
-	int iSpecial = GetEntPropEnt(survivor, Prop_Send, "m_pounceAttacker");
+	int iSpecial = special;
+	iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_pounceAttacker") : iSpecial;
 	iSpecial = (iSpecial <= 0) ? GetEntPropEnt(survivor, Prop_Send, "m_tongueOwner") : iSpecial;
 	if (g_bSecondGame)
 	{
@@ -12569,7 +12587,7 @@ static bool bIsCustomTankSupported(int tank)
  * 32 - 5 - speed boost, jump height, auto-revive, life leech
  * 64 - 6 - no shove penalty, fast shove/attack rate/action durations, fast recover, full health when healing/reviving, ammo regen
  * 128 - 7 - infinite ammo, health regen, special ammo (off by default)
- * 256 - 8 - block puke/fling/stagger/punch/acid puddle (off by default)
+ * 256 - 8 - block puke/fling/shove/stagger/punch/acid puddle (off by default)
  * 512 - 9 - sledgehammer rounds, hollowpoint ammo, tank melee knockback, shove damage against tank/charger/witch
  * 1024 - 10 - respawn upon death, clean kills, puke/acid puddle
  * 2048 - 11 - auto-insta-kill SI attackers, god mode, no damage, lady killer, special ammo (off by default)
@@ -13882,6 +13900,16 @@ public MRESReturn mreSecondaryAttackPost(int pThis)
 	return MRES_Ignored;
 }
 
+public MRESReturn mreShovedByPounceLandingPre(int pThis, DHookParam hParams)
+{
+	if (bIsSurvivor(pThis) && (bIsDeveloper(pThis, 8) || (g_esPlayer[pThis].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
+}
+
 public MRESReturn mreShovedBySurvivorPre(int pThis, DHookParam hParams)
 {
 	Action aResult = Plugin_Continue;
@@ -14211,6 +14239,16 @@ public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 	}
 
 	return bBlock ? Plugin_Handled : Plugin_Continue;
+}
+
+public Action L4D2_OnPounceOrLeapStumble(int victim, int attacker)
+{
+	if (bIsSurvivor(victim) && (bIsDeveloper(victim, 8) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_GODMODE)))
+	{
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
 }
 
 public Action L4D2_OnStagger(int target, int source)
