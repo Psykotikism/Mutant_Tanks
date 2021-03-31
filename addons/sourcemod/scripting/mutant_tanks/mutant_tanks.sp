@@ -5894,8 +5894,8 @@ static void vCacheSettings(int tank)
 			g_esCache[tank].g_iRespawnLoadoutReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRespawnLoadoutReward[iPos], g_esCache[tank].g_iRespawnLoadoutReward[iPos]);
 			g_esCache[tank].g_iReviveHealthReward[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iReviveHealthReward[iPos], g_esGeneral.g_iReviveHealthReward[iPos]);
 			g_esCache[tank].g_iReviveHealthReward[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iReviveHealthReward[iPos], g_esCache[tank].g_iReviveHealthReward[iPos]);
-			g_esCache[tank].g_iRewardBots[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRewardBots[iPos], g_esGeneral.g_iRewardBots[iPos]);
-			g_esCache[tank].g_iRewardBots[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRewardBots[iPos], g_esCache[tank].g_iRewardBots[iPos]);
+			g_esCache[tank].g_iRewardBots[iPos] = iGetSettingValue(bAccess, true, g_esTank[iType].g_iRewardBots[iPos], g_esGeneral.g_iRewardBots[iPos], 1);
+			g_esCache[tank].g_iRewardBots[iPos] = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRewardBots[iPos], g_esCache[tank].g_iRewardBots[iPos], 1);
 			g_esCache[tank].g_flRewardChance[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flRewardChance[iPos], g_esGeneral.g_flRewardChance[iPos]);
 			g_esCache[tank].g_flRewardChance[iPos] = flGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_flRewardChance[iPos], g_esCache[tank].g_flRewardChance[iPos]);
 			g_esCache[tank].g_flRewardDuration[iPos] = flGetSettingValue(bAccess, true, g_esTank[iType].g_flRewardDuration[iPos], g_esGeneral.g_flRewardDuration[iPos]);
@@ -6290,7 +6290,7 @@ public void SMCParseStart(SMCParser smc)
 			if (iPos < sizeof(esGeneral::g_iRewardEnabled))
 			{
 				g_esGeneral.g_iRewardEnabled[iPos] = -1;
-				g_esGeneral.g_iRewardBots[iPos] = 0;
+				g_esGeneral.g_iRewardBots[iPos] = -1;
 				g_esGeneral.g_flRewardChance[iPos] = 33.3;
 				g_esGeneral.g_flRewardDuration[iPos] = 10.0;
 				g_esGeneral.g_iRewardEffect[iPos] = 15;
@@ -6412,7 +6412,7 @@ public void SMCParseStart(SMCParser smc)
 				if (iPos < sizeof(esTank::g_iRewardEnabled))
 				{
 					g_esTank[iIndex].g_iRewardEnabled[iPos] = -1;
-					g_esTank[iIndex].g_iRewardBots[iPos] = 0;
+					g_esTank[iIndex].g_iRewardBots[iPos] = -1;
 					g_esTank[iIndex].g_flRewardChance[iPos] = 0.0;
 					g_esTank[iIndex].g_flRewardDuration[iPos] = 0.0;
 					g_esTank[iIndex].g_iRewardEffect[iPos] = 0;
@@ -6571,7 +6571,7 @@ public void SMCParseStart(SMCParser smc)
 					if (iPos < sizeof(esPlayer::g_iRewardEnabled))
 					{
 						g_esPlayer[iPlayer].g_iRewardEnabled[iPos] = -1;
-						g_esPlayer[iPlayer].g_iRewardBots[iPos] = 0;
+						g_esPlayer[iPlayer].g_iRewardBots[iPos] = -1;
 						g_esPlayer[iPlayer].g_flRewardChance[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_flRewardDuration[iPos] = 0.0;
 						g_esPlayer[iPlayer].g_iRewardEffect[iPos] = 0;
@@ -6819,7 +6819,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						}
 						else if (StrEqual(key, "RewardBots", false) || StrEqual(key, "Reward Bots", false) || StrEqual(key, "Reward_Bots", false) || StrEqual(key, "bots", false))
 						{
-							g_esGeneral.g_iRewardBots[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 1) : g_esGeneral.g_iRewardBots[iPos];
+							g_esGeneral.g_iRewardBots[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 2147483647) : g_esGeneral.g_iRewardBots[iPos];
 						}
 						else if (StrEqual(key, "RewardChance", false) || StrEqual(key, "Reward Chance", false) || StrEqual(key, "Reward_Chance", false) || StrEqual(key, "chance", false))
 						{
@@ -7212,7 +7212,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								}
 								else if (StrEqual(key, "RewardBots", false) || StrEqual(key, "Reward Bots", false) || StrEqual(key, "Reward_Bots", false) || StrEqual(key, "bots", false))
 								{
-									g_esPlayer[iPlayer].g_iRewardBots[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 1) : g_esPlayer[iPlayer].g_iRewardBots[iPos];
+									g_esPlayer[iPlayer].g_iRewardBots[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 2147483647) : g_esPlayer[iPlayer].g_iRewardBots[iPos];
 								}
 								else if (StrEqual(key, "RewardChance", false) || StrEqual(key, "Reward Chance", false) || StrEqual(key, "Reward_Chance", false) || StrEqual(key, "chance", false))
 								{
@@ -8148,7 +8148,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 				}
 				else if (StrEqual(key, "RewardBots", false) || StrEqual(key, "Reward Bots", false) || StrEqual(key, "Reward_Bots", false) || StrEqual(key, "bots", false))
 				{
-					g_esTank[type].g_iRewardBots[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), 0, 1) : g_esTank[type].g_iRewardBots[iPos];
+					g_esTank[type].g_iRewardBots[iPos] = (sSet[iPos][0] != '\0') ? iClamp(StringToInt(sSet[iPos]), -1, 2147483647) : g_esTank[type].g_iRewardBots[iPos];
 				}
 				else if (StrEqual(key, "RewardChance", false) || StrEqual(key, "Reward Chance", false) || StrEqual(key, "Reward_Chance", false) || StrEqual(key, "chance", false))
 				{
@@ -9812,10 +9812,10 @@ static void vCalculateDeath(int tank, int survivor)
 {
 	if (g_esPlayer[tank].g_iTankType <= 0 || !bIsCustomTank(tank))
 	{
-		int iAssistant = (bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && bCanReceiveReward(survivor, tank)) ? survivor : 0;
+		int iAssistant = bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME) ? survivor : 0;
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
-			if (bIsValidClient(iPlayer, MT_CHECK_INGAME) && bCanReceiveReward(iPlayer, tank, 1) && GetClientTeam(iPlayer) != 3 && g_esPlayer[iPlayer].g_iTankDamage[tank] > g_esPlayer[iAssistant].g_iTankDamage[tank])
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME) && GetClientTeam(iPlayer) != 3 && g_esPlayer[iPlayer].g_iTankDamage[tank] > g_esPlayer[iAssistant].g_iTankDamage[tank])
 			{
 				iAssistant = iPlayer;
 			}
@@ -9824,39 +9824,38 @@ static void vCalculateDeath(int tank, int survivor)
 		bool bRepeat = true;
 		char sTankName[33];
 		vGetTranslatedName(sTankName, sizeof(sTankName), tank);
+
 		float flPercentage = (float(g_esPlayer[iAssistant].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100, flRandom = GetRandomFloat(0.1, 100.0);
 		vAnnounceDeath(tank, survivor, iAssistant, flPercentage);
-		if (bIsSurvivor(iAssistant, MT_CHECK_INDEX|MT_CHECK_INGAME) && bCanReceiveReward(iAssistant, tank, 1) && g_esCache[tank].g_iRewardEnabled[1] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[1])
+
+		int iSetting = bIsValidClient(iAssistant, MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[1] : g_esCache[tank].g_iRewardBots[1];
+		if (bIsSurvivor(iAssistant, MT_CHECK_INDEX|MT_CHECK_INGAME) && iSetting != -1 && flRandom <= g_esCache[tank].g_flRewardChance[1])
 		{
 			if (flPercentage >= g_esCache[tank].g_flRewardPercentage[1])
 			{
 				vChooseReward(iAssistant, tank, 1, bRepeat);
 			}
-			else if (bRepeat)
-			{
-				MT_PrintToChat(iAssistant, "%s %t", MT_TAG3, "RewardNone", sTankName);
-			}
+			else if (bRepeat) MT_PrintToChat(iAssistant, "%s %t", MT_TAG3, "RewardNone", sTankName);
 		}
 
 		bRepeat = (iAssistant != survivor) ? true : false;
 		flPercentage = (float(g_esPlayer[survivor].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
-		if (bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && bCanReceiveReward(survivor, tank) && g_esCache[tank].g_iRewardEnabled[0] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[0])
+		iSetting = bIsValidClient(survivor, MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[0] : g_esCache[tank].g_iRewardBots[0];
+		if (bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && iSetting != -1 && flRandom <= g_esCache[tank].g_flRewardChance[0])
 		{
 			if (flPercentage >= g_esCache[tank].g_flRewardPercentage[0])
 			{
 				vChooseReward(survivor, tank, 0, bRepeat);
 			}
-			else if (bRepeat)
-			{
-				MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardNone", sTankName);
-			}
+			else if (bRepeat) MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardNone", sTankName);
 		}
 
-		if (g_esCache[tank].g_iRewardEnabled[2] != -1 && flRandom <= g_esCache[tank].g_flRewardChance[2])
+		if (flRandom <= g_esCache[tank].g_flRewardChance[2])
 		{
 			for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 			{
-				if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME) && bCanReceiveReward(iTeammate, tank, 2) && iTeammate != survivor && iTeammate != iAssistant)
+				iSetting = bIsValidClient(iTeammate, MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[2] : g_esCache[tank].g_iRewardBots[2];
+				if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME) && iSetting != -1 && iTeammate != survivor && iTeammate != iAssistant)
 				{
 					bRepeat = (iTeammate != survivor && iTeammate != iAssistant) ? true : false;
 					flPercentage = (float(g_esPlayer[iTeammate].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
@@ -9882,7 +9881,7 @@ static void vCalculateDeath(int tank, int survivor)
 
 static void vChooseReward(int survivor, int tank, int priority, bool repeat)
 {
-	int iType = (g_esCache[tank].g_iRewardEnabled[priority] > 0) ? g_esCache[tank].g_iRewardEnabled[priority] : (1 << GetRandomInt(0, 7));
+	int iSetting = bIsValidClient(survivor, MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[priority] : g_esCache[tank].g_iRewardBots[priority], iType = (iSetting > 0) ? iSetting : (1 << GetRandomInt(0, 7));
 	if (bIsDeveloper(survivor, 3))
 	{
 		iType |= g_esDeveloper[survivor].g_iDevRewardTypes;
@@ -10004,10 +10003,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 							case 2: strcopy(g_esPlayer[survivor].g_sFallVoiceline, sizeof(esPlayer::g_sFallVoiceline), g_esCache[tank].g_sFallVoicelineReward3);
 						}
 					}
-					else if (repeat)
-					{
-						vRewardMessage(survivor, priority, "RewardSpeedBoost", "RewardSpeedBoost2", "RewardSpeedBoost3", sTankName);
-					}
+					else if (repeat) vRewardMessage(survivor, priority, "RewardSpeedBoost", "RewardSpeedBoost2", "RewardSpeedBoost3", sTankName);
 
 					g_esPlayer[survivor].g_flRewardTime[2] = flDuration;
 				}
@@ -10050,10 +10046,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						g_esPlayer[survivor].g_flShoveRate = g_esCache[tank].g_flShoveRateReward[priority];
 						g_esPlayer[survivor].g_iShovePenalty = g_esCache[tank].g_iShovePenaltyReward[priority];
 					}
-					else if (repeat)
-					{
-						vRewardMessage(survivor, priority, "RewardAttackBoost", "RewardAttackBoost2", "RewardAttackBoost3", sTankName);
-					}
+					else if (repeat) vRewardMessage(survivor, priority, "RewardAttackBoost", "RewardAttackBoost2", "RewardAttackBoost3", sTankName);
 
 					g_esPlayer[survivor].g_flRewardTime[4] = flDuration;
 				}
@@ -10156,10 +10149,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 							}
 						}
 					}
-					else if (repeat)
-					{
-						vRewardMessage(survivor, priority, "RewardGod", "RewardGod2", "RewardGod3", sTankName);
-					}
+					else if (repeat) vRewardMessage(survivor, priority, "RewardGod", "RewardGod2", "RewardGod3", sTankName);
 
 					g_esPlayer[survivor].g_flRewardTime[5] = flDuration;
 				}
@@ -12450,16 +12440,6 @@ static bool bAreHumansRequired(int type)
 	static int iCount;
 	iCount = iGetHumanCount();
 	return (g_esTank[type].g_iRequiresHumans > 0 && iCount < g_esTank[type].g_iRequiresHumans) || (g_esGeneral.g_iRequiresHumans > 0 && iCount < g_esGeneral.g_iRequiresHumans);
-}
-
-static bool bCanReceiveReward(int survivor, int tank, int priority = 0)
-{
-	if (bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
-	{
-		return true;
-	}
-
-	return !!g_esCache[tank].g_iRewardBots[priority];
 }
 
 static bool bCanTypeSpawn(int type = 0)
