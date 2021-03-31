@@ -757,6 +757,7 @@ enum struct esPlayer
 	int g_iEffect[2];
 	int g_iExplosiveImmunity;
 	int g_iExtraHealth;
+	int g_iFallPasses;
 	int g_iFavoriteType;
 	int g_iFireImmunity;
 	int g_iFlame[2];
@@ -5291,8 +5292,10 @@ public Action OnTakePlayerDamage(int victim, int &attacker, int &inflictor, floa
 
 				return Plugin_Handled;
 			}
-			else if ((bIsDeveloper(victim, 5) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (damagetype & DMG_FALL) && (bIsSafeFalling(victim) || RoundToNearest(damage) < GetEntProp(victim, Prop_Data, "m_iHealth") || !g_esPlayer[victim].g_bFatalFalling))
+			else if ((g_esPlayer[victim].g_iFallPasses > 0 || bIsDeveloper(victim, 5) || (g_esPlayer[victim].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (damagetype & DMG_FALL) && (bIsSafeFalling(victim) || RoundToNearest(damage) < GetEntProp(victim, Prop_Data, "m_iHealth") || !g_esPlayer[victim].g_bFatalFalling))
 			{
+				if (g_esPlayer[victim].g_iFallPasses > 0) g_esPlayer[victim].g_iFallPasses--;
+
 				return Plugin_Handled;
 			}
 			else if ((bIsDeveloper(victim, 8) || bIsDeveloper(victim, 10)) && StrEqual(sClassname, "insect_swarm"))
@@ -9709,6 +9712,7 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_iAmmoBoost = 0;
 	g_esPlayer[survivor].g_iAmmoRegen = 0;
 	g_esPlayer[survivor].g_iCleanKills = 0;
+	g_esPlayer[survivor].g_iFallPasses = 0;
 	g_esPlayer[survivor].g_iHealthRegen = 0;
 	g_esPlayer[survivor].g_iHollowpointAmmo = 0;
 	g_esPlayer[survivor].g_iLifeLeech = 0;
@@ -9991,6 +9995,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_SPEEDBOOST;
 						g_esPlayer[survivor].g_flJumpHeight = g_esCache[tank].g_flJumpHeightReward[priority];
 						g_esPlayer[survivor].g_flSpeedBoost = g_esCache[tank].g_flSpeedBoostReward[priority];
+						g_esPlayer[survivor].g_iFallPasses = 0;
 
 						switch (priority)
 						{
@@ -10230,6 +10235,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 				g_esPlayer[survivor].g_flRewardTime[2] = -1.0;
 				g_esPlayer[survivor].g_flJumpHeight = 0.0;
 				g_esPlayer[survivor].g_flSpeedBoost = 0.0;
+				g_esPlayer[survivor].g_iFallPasses = 3;
 
 				if (bIsSurvivor(survivor, MT_CHECK_ALIVE) && !bIsDeveloper(survivor, 5) && flGetAdrenalineTime(survivor) > 0.0)
 				{
