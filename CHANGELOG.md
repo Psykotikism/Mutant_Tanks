@@ -240,7 +240,7 @@
 	- `Melee Range Reward` (Thanks to epzminion for the idea and Silvers for the code!)
 	- `Punch Resistance Reward` (Thanks to Silvers for the code!)
 	- `Revive Health Reward` (Thanks to epzminion for the help!)
-	- `Shove Damage Reward`
+	- `Shove Damage Reward` (Thanks to epzminion for the idea!)
 	- `Shove Penalty Reward` (Thanks to 3aljiyavslgazana for the idea!)
 	- `Shove Rate Reward` (Thanks to epzminion for the help!)
 	- `Sledgehammer Rounds Reward` (Thanks to epzminion for the code!)

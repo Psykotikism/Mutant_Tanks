@@ -506,7 +506,7 @@
 			// - Faster deploy time (ammo upgrade packs)
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
-			// - Faster recovery
+			// - Faster recovery time
 			// 16: Ammo reward (temporary)
 			// - Refill clip to max size
 			// - Refill magazine to max size
@@ -591,7 +591,7 @@
 			// - Faster deploy time (ammo upgrade packs)
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
-			// - Faster recovery
+			// - Faster recovery time
 			// 16: Ammo reward (temporary)
 			// - Refill clip to max size
 			// - Refill magazine to max size
@@ -2164,7 +2164,7 @@
 			// - Faster deploy time (ammo upgrade packs)
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
-			// - Faster recovery
+			// - Faster recovery time
 			// 16: Ammo reward (temporary)
 			// - Refill clip to max size
 			// - Refill magazine to max size
@@ -2249,7 +2249,7 @@
 			// - Faster deploy time (ammo upgrade packs)
 			// - Faster pour time (gas cans)
 			// - Faster delivery time (cola bottles)
-			// - Faster recovery
+			// - Faster recovery time
 			// 16: Ammo reward (temporary)
 			// - Refill clip to max size
 			// - Refill magazine to max size
