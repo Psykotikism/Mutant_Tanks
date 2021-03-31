@@ -168,6 +168,25 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool) */
+			"CTerrorPlayer::OnShovedByPounceLanding"
+			{
+				"signature"	"CTerrorPlayer::OnShovedByPounceLanding"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"attacker"
+					{
+						"type"		"cbaseentity"
+					}
+					"unknown"
+					{
+						"type"		"bool"
+					}
+				}
+			}
 			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
 			"CTerrorPlayer::OnShovedBySurvivor"
 			{
@@ -403,11 +422,11 @@
 					{
 						"type"		"cbaseentity"
 					}
-					"bool1"
+					"unknown1"
 					{
 						"type"		"bool"
 					}
-					"bool2"
+					"unknown2"
 					{
 						"type"		"bool"
 					}
@@ -753,6 +772,13 @@
 				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8A\x9F\xFD\x26\x00\x00"
 			}
+			/* CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool) */
+			"CTerrorPlayer::OnShovedByPounceLanding"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer23OnShovedByPounceLandingEPS_b"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x57\x8B\x7C"
+			}
 			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
 			"CTerrorPlayer::OnShovedBySurvivor"
 			{
@@ -995,7 +1021,7 @@
 					{
 						"type"		"cbaseentity"
 					}
-					"bool1"
+					"unknown"
 					{
 						"type"		"bool"
 					}
@@ -1410,6 +1436,13 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\xCE"
+			}
+			/* CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*, bool) */
+			"CTerrorPlayer::OnShovedByPounceLanding"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer23OnShovedByPounceLandingEPS_b"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x57\x8B"
 			}
 			/* CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) */
 			"CTerrorPlayer::OnShovedBySurvivor"
