@@ -540,22 +540,90 @@
 			// 3rd number = Enable rewards for teammates.
 			"Reward Enabled"			"-1,-1,-1"
 
-			// Reward bots for fighting Mutant Tanks.
+			// Reward survivor bots for fighting Mutant Tanks.
+			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
+			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
+			// Link: https://forums.alliedmods.net/showthread.php?t=319947
+			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
 			// --
-			// Separate chances with commas (",").
+			// Separate values with commas (",").
 			// --
-			// Values limit: 3
-			// Character limit for each value: 1
+			// Add up numbers together for different results.
 			// --
-			// Minimum value for each: 0 (OFF)
-			// Maximum value for each: 1 (ON)
+			// Minimum value for each: -1
+			// Maximum value for each: 2147483647
 			// --
-			// 1st number = Reward killers.
-			// 2nd number = Reward assistants.
-			// 3rd number = Reward teammates.
-			"Reward Bots"				"0,0,0"
+			// -1: OFF
+			// 0: Random
+			// 1: Health reward (temporary)
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
+			// - Heal back to 100% health with first aid kits.
+			// - Receive 100% temporary health after being revived.
+			// - Slowly regenerate back to full health.
+			// - Leech health off of any infected per melee hit.
+			// 2: Speed boost reward (temporary)
+			// - Run faster
+			// - Jump higher
+			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
+			// 4: Damage boost reward (temporary)
+			// - Extra damage
+			// - Bypass Tank immunities
+			// - Damage resistance
+			// - Automatically kill Witches.
+			// - Hollowpoint ammo
+			// - Extended melee range
+			// - Sledgehammer rounds
+			// - Protected by thorns (deal damage towards attacker per hit taken)
+			// 8: Attack boost reward (temporary)
+			// - Bypass shove penalty
+			// - Shoving Tanks does damage.
+			// - Faster shove interval
+			// - Faster shoot rate (guns)
+			// - Faster reload rate (guns)
+			// - Faster swing rate (melee)
+			// - Faster throw time (throwables)
+			// - Faster revive time
+			// - Faster healing time (first aid kit)
+			// - Faster defib time (defibrillator)
+			// - Faster deploy time (ammo upgrade packs)
+			// - Faster pour time (gas cans)
+			// - Faster delivery time (cola bottles)
+			// - Faster recovery
+			// 16: Ammo reward (temporary)
+			// - Refill clip to max size
+			// - Refill magazine to max size
+			// - Extra clip and magazine size
+			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
+			// - Slowly regenerate back to full capacity.
+			// 32: Item reward
+			// 64: God mode reward (temporary)
+			// - Automatically kill all special infected attackers.
+			// - Immune to all types of damage.
+			// - Cannot be flung away by Chargers.
+			// - Cannot be pushed around.
+			// - Cannot be vomited on by Boomers.
+			// - Reduced pushback from Tank punches
+			// - Reduced pushback from hitting Tanks with melee immunity.
+			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
+			// 128: Health and ammo refill reward
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
+			// - Refill clip to max size
+			// - Refill magazine to max size
+			// 256: Respawn reward
+			// - Respawn and teleport to a teammate.
+			// - Restore previous loadout
+			// 512: Infinite ammo reward (temporary)
+			// 1023: All above rewards
+			// 1024-2147483647: Reserved for third-party plugins
+			// --
+			// 1st number = Enable rewards for killers.
+			// 2nd number = Enable rewards for assistants.
+			// 3rd number = Enable rewards for teammates.
+			"Reward Bots"				"-1,-1,-1"
 
 			// The chance to reward survivors for killing Mutant Tanks.
 			// Note: This setting can be used for standard Tanks.
@@ -2130,22 +2198,90 @@
 			// 3rd number = Enable rewards for teammates.
 			"Reward Enabled"			"-1,-1,-1"
 
-			// Reward bots for fighting Mutant Tanks.
+			// Reward survivor bots for fighting the Mutant Tank.
+			// Note: The same rewards cannot be stacked and will not overlap each other to avoid spam.
+			// Note: Some rewards may require Lux's "WeaponHandling_API" plugin.
+			// Link: https://forums.alliedmods.net/showthread.php?t=319947
+			// Note: Some rewards may require patches from the "mutant_tanks_patches.cfg" config file to work.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// Separate chances with commas (",").
+			// Separate values with commas (",").
 			// --
-			// Values limit: 3
-			// Character limit for each value: 1
+			// Add up numbers together for different results.
 			// --
-			// Minimum value for each: 0 (OFF)
-			// Maximum value for each: 1 (ON)
+			// Minimum value for each: -1
+			// Maximum value for each: 2147483647
 			// --
-			// 1st number = Reward killers.
-			// 2nd number = Reward assistants.
-			// 3rd number = Reward teammates.
-			"Reward Bots"				"0,0,0"
+			// -1: OFF
+			// 0: Random
+			// 1: Health reward (temporary)
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
+			// - Heal back to 100% health with first aid kits.
+			// - Receive 100% temporary health after being revived.
+			// - Slowly regenerate back to full health.
+			// - Leech health off of any infected per melee hit.
+			// 2: Speed boost reward (temporary)
+			// - Run faster
+			// - Jump higher
+			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
+			// 4: Damage boost reward (temporary)
+			// - Extra damage
+			// - Bypass Tank immunities
+			// - Damage resistance
+			// - Automatically kill Witches.
+			// - Hollowpoint ammo
+			// - Extended melee range
+			// - Sledgehammer rounds
+			// - Protected by thorns (deal damage towards attacker per hit taken)
+			// 8: Attack boost reward (temporary)
+			// - Bypass shove penalty
+			// - Shoving Tanks does damage.
+			// - Faster shove interval
+			// - Faster shoot rate (guns)
+			// - Faster reload rate (guns)
+			// - Faster swing rate (melee)
+			// - Faster throw time (throwables)
+			// - Faster revive time
+			// - Faster healing time (first aid kit)
+			// - Faster defib time (defibrillator)
+			// - Faster deploy time (ammo upgrade packs)
+			// - Faster pour time (gas cans)
+			// - Faster delivery time (cola bottles)
+			// - Faster recovery
+			// 16: Ammo reward (temporary)
+			// - Refill clip to max size
+			// - Refill magazine to max size
+			// - Extra clip and magazine size
+			// - Receive one of the special ammo (incendiary or explosive). (Only available in Left 4 Dead 2.)
+			// - Slowly regenerate back to full capacity.
+			// 32: Item reward
+			// 64: God mode reward (temporary)
+			// - Automatically kill all special infected attackers.
+			// - Immune to all types of damage.
+			// - Cannot be flung away by Chargers.
+			// - Cannot be pushed around.
+			// - Cannot be vomited on by Boomers.
+			// - Reduced pushback from Tank punches
+			// - Reduced pushback from hitting Tanks with melee immunity.
+			// - Get clean kills (blocks Smoker clouds, Boomer explosions, and Spitter acid puddles)
+			// 128: Health and ammo refill reward
+			// - Refill to 100% health.
+			// - Automatically kill any current special infected attacker.
+			// - Refill clip to max size
+			// - Refill magazine to max size
+			// 256: Respawn reward
+			// - Respawn and teleport to a teammate.
+			// - Restore previous loadout
+			// 512: Infinite ammo reward (temporary)
+			// 1023: All above rewards
+			// 1024-2147483647: Reserved for third-party plugins
+			// --
+			// 1st number = Enable rewards for killers.
+			// 2nd number = Enable rewards for assistants.
+			// 3rd number = Enable rewards for teammates.
+			"Reward Bots"				"-1,-1,-1"
 
 			// The chance to reward survivors for killing the Mutant Tank.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.

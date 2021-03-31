@@ -241,7 +241,7 @@
 	- `Punch Resistance Reward` (Thanks to Silvers for the code!)
 	- `Revive Health Reward` (Thanks to epzminion for the help!)
 	- `Shove Damage Reward`
-	- `Shove Penalty Reward`
+	- `Shove Penalty Reward` (Thanks to 3aljiyavslgazana for the idea!)
 	- `Shove Rate Reward` (Thanks to epzminion for the help!)
 	- `Sledgehammer Rounds Reward` (Thanks to epzminion for the code!)
 	- `Special Ammo Reward` (Exclusive to Left 4 Dead 2.)
