@@ -3636,7 +3636,7 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 		{
 			if (!(g_esPlayer[developer].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 			{
-				vSetAdrenalineTime(developer, -1.0);
+				vSetAdrenalineTime(developer, 0.0);
 				SetEntPropFloat(developer, Prop_Send, "m_flLaggedMovementValue", 1.0);
 			}
 
