@@ -732,7 +732,7 @@ forward void MT_OnChangeType(int tank, int oldType, int newType, bool revert);
  * @param weapon		Индекс энтити оружия, если таковой имеется.
  * @param classname		Строка, содержащая имя класса оружия, если есть.
  **/
-forward void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname);
+forward void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname);
 
 /**
  * Вызывается, когда файл конфигурации загружается.
@@ -862,7 +862,7 @@ forward Action MT_OnPlayerHitByVomitJar(int player, int thrower);
  *
  * @return			Plugin_Handled, чтобы игрока не толкало, Plugin_Continue, чтобы разрешить.
  **/
-forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, float direction[3]);
+forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float direction[3]);
 
 /**
  * Вызывается перед чтением файла конфигурации.

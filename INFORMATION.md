@@ -481,7 +481,7 @@
 			// - Leech health off of any infected per melee hit.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
-			// - Jump higher
+			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
 			// - Extra damage
@@ -566,7 +566,7 @@
 			// - Leech health off of any infected per melee hit.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
-			// - Jump higher
+			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
 			// - Extra damage
@@ -2139,7 +2139,7 @@
 			// - Leech health off of any infected per melee hit.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
-			// - Jump higher
+			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
 			// - Extra damage
@@ -2224,7 +2224,7 @@
 			// - Leech health off of any infected per melee hit.
 			// 2: Speed boost reward (temporary)
 			// - Run faster
-			// - Jump higher
+			// - Jump higher (Disables the death fall camera for recipients.)
 			// - Receive the adrenaline effect for the duration of the reward. (Only available in Left 4 Dead 2.)
 			// 4: Damage boost reward (temporary)
 			// - Extra damage
