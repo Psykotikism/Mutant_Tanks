@@ -229,6 +229,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_EFFECT_SOUND (1 << 2) // sound effect
 #define MT_EFFECT_THIRDPERSON (1 << 3) // thirdperson view
 
+#define MT_JUMP_DEFAULTHEIGHT 57.0 // default jump height
+#define MT_JUMP_FALLPASSES 3 // safe fall passes
+#define MT_JUMP_FORWARDBOOST 50.0 // forward boost for each jump
+
 #define MT_PARTICLE_BLOOD (1 << 0) // blood particle
 #define MT_PARTICLE_ELECTRICITY (1 << 1) // electric particle
 #define MT_PARTICLE_FIRE (1 << 2) // fire particle
@@ -237,8 +241,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define MT_PARTICLE_SMOKE (1 << 5) // smoke particle
 #define MT_PARTICLE_SPIT (1 << 6) // spit particle
 
-#define MT_MAXPATCHES 50
-#define MT_MAX_PATCH_LEN 48
+#define MT_PATCH_LIMIT 50 // number of patches allowed
+#define MT_PATCH_MAXLEN 48 // number of bytes allowed
 
 #define MT_PROP_BLUR (1 << 0) // blur prop
 #define MT_PROP_LIGHT (1 << 1) // light prop
@@ -1108,13 +1112,13 @@ enum struct esCache
 
 esCache g_esCache[MAXPLAYERS + 1];
 
-Address g_adPatchAddress[MT_MAXPATCHES];
+Address g_adPatchAddress[MT_PATCH_LIMIT];
 
-bool g_bPatchInstalled[MT_MAXPATCHES], g_bPermanentPatch[MT_MAXPATCHES];
+bool g_bPatchInstalled[MT_PATCH_LIMIT], g_bPermanentPatch[MT_PATCH_LIMIT];
 
-char g_sPatchName[MT_MAXPATCHES][64];
+char g_sPatchName[MT_PATCH_LIMIT][64];
 
-int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1, g_iOriginalBytes[MT_MAXPATCHES][MT_MAX_PATCH_LEN], g_iPatchBytes[MT_MAXPATCHES][MT_MAX_PATCH_LEN], g_iPatchCount = 0, g_iPatchLength[MT_MAXPATCHES], g_iPatchOffset[MT_MAXPATCHES];
+int g_iBossBeamSprite = -1, g_iBossHaloSprite = -1, g_iOriginalBytes[MT_PATCH_LIMIT][MT_PATCH_MAXLEN], g_iPatchBytes[MT_PATCH_LIMIT][MT_PATCH_MAXLEN], g_iPatchCount = 0, g_iPatchLength[MT_PATCH_LIMIT], g_iPatchOffset[MT_PATCH_LIMIT];
 
 public any aNative_CanTypeSpawn(Handle plugin, int numParams)
 {
@@ -1703,7 +1707,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -5012,6 +5015,23 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	if (bIsSurvivor(client))
 	{
+		if ((bIsDeveloper(client, 5) || (g_esPlayer[client].g_iRewardTypes & MT_REWARD_SPEEDBOOST)) && (buttons & IN_JUMP) && (GetEntityFlags(client) & FL_ONGROUND))
+		{
+			static float flAngles[3], flForward[3], flVelocity[3];
+			GetClientEyeAngles(client, flAngles);
+			flAngles[0] = 0.0;
+
+			GetAngleVectors(flAngles, flForward, NULL_VECTOR, NULL_VECTOR);
+			NormalizeVector(flForward, flForward);
+			ScaleVector(flForward, MT_JUMP_FORWARDBOOST);
+
+			GetEntPropVector(client, Prop_Data, "m_vecAbsVelocity", flVelocity);
+			flVelocity[0] += flForward[0];
+			flVelocity[1] += flForward[1];
+			flVelocity[2] += flForward[2];
+			TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVelocity);
+		}
+
 		if ((bIsDeveloper(client, 6) || ((g_esPlayer[client].g_iRewardTypes & MT_REWARD_ATTACKBOOST) && g_esPlayer[client].g_iShovePenalty == 1)) && (buttons & IN_ATTACK2))
 		{
 			SetEntProp(client, Prop_Send, "m_iShovePenalty", 0, 1);
@@ -9828,7 +9848,7 @@ static void vCalculateDeath(int tank, int survivor)
 		float flPercentage = (float(g_esPlayer[iAssistant].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100, flRandom = GetRandomFloat(0.1, 100.0);
 		vAnnounceDeath(tank, survivor, iAssistant, flPercentage);
 
-		int iSetting = bIsValidClient(iAssistant, MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[1] : g_esCache[tank].g_iRewardBots[1];
+		int iSetting = bIsValidClient(iAssistant, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[1] : g_esCache[tank].g_iRewardBots[1];
 		if (bIsSurvivor(iAssistant, MT_CHECK_INDEX|MT_CHECK_INGAME) && iSetting != -1 && flRandom <= g_esCache[tank].g_flRewardChance[1])
 		{
 			if (flPercentage >= g_esCache[tank].g_flRewardPercentage[1])
@@ -9840,7 +9860,7 @@ static void vCalculateDeath(int tank, int survivor)
 
 		bRepeat = (iAssistant != survivor) ? true : false;
 		flPercentage = (float(g_esPlayer[survivor].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
-		iSetting = bIsValidClient(survivor, MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[0] : g_esCache[tank].g_iRewardBots[0];
+		iSetting = bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[0] : g_esCache[tank].g_iRewardBots[0];
 		if (bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME) && iSetting != -1 && flRandom <= g_esCache[tank].g_flRewardChance[0])
 		{
 			if (flPercentage >= g_esCache[tank].g_flRewardPercentage[0])
@@ -9854,7 +9874,7 @@ static void vCalculateDeath(int tank, int survivor)
 		{
 			for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 			{
-				iSetting = bIsValidClient(iTeammate, MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[2] : g_esCache[tank].g_iRewardBots[2];
+				iSetting = bIsValidClient(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[2] : g_esCache[tank].g_iRewardBots[2];
 				if (bIsSurvivor(iTeammate, MT_CHECK_INDEX|MT_CHECK_INGAME) && iSetting != -1 && iTeammate != survivor && iTeammate != iAssistant)
 				{
 					bRepeat = (iTeammate != survivor && iTeammate != iAssistant) ? true : false;
@@ -9881,7 +9901,7 @@ static void vCalculateDeath(int tank, int survivor)
 
 static void vChooseReward(int survivor, int tank, int priority, bool repeat)
 {
-	int iSetting = bIsValidClient(survivor, MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[priority] : g_esCache[tank].g_iRewardBots[priority], iType = (iSetting > 0) ? iSetting : (1 << GetRandomInt(0, 7));
+	int iSetting = bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) ? g_esCache[tank].g_iRewardEnabled[priority] : g_esCache[tank].g_iRewardBots[priority], iType = (iSetting > 0) ? iSetting : (1 << GetRandomInt(0, 7));
 	if (bIsDeveloper(survivor, 3))
 	{
 		iType |= g_esDeveloper[survivor].g_iDevRewardTypes;
@@ -10225,7 +10245,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 				g_esPlayer[survivor].g_flRewardTime[2] = -1.0;
 				g_esPlayer[survivor].g_flJumpHeight = 0.0;
 				g_esPlayer[survivor].g_flSpeedBoost = 0.0;
-				g_esPlayer[survivor].g_iFallPasses = 3;
+				g_esPlayer[survivor].g_iFallPasses = MT_JUMP_FALLPASSES;
 
 				if (bIsSurvivor(survivor, MT_CHECK_ALIVE) && !bIsDeveloper(survivor, 5) && flGetAdrenalineTime(survivor) > 0.0)
 				{
@@ -12365,7 +12385,7 @@ static void vRegisterPatches(GameData dataHandle)
 
 	bool bLog, bPermanent;
 	char sName[128], sSignature[128], sOffset[128], sVerify[5], sBytes[192], sLog[4], sType[10];
-	int iCheckByte, iBytes[MT_MAX_PATCH_LEN], iLength;
+	int iCheckByte, iBytes[MT_PATCH_MAXLEN], iLength;
 
 	do
 	{
@@ -12419,7 +12439,7 @@ static void vRegisterPatches(GameData dataHandle)
 		if (bLog) vLogMessage(-1, _, "%s Storing bytes: %s - %s", MT_TAG, sVerify, sBytes);
 		iCheckByte = (iGetDecimalFromHex(sVerify[0]) << 4) + iGetDecimalFromHex(sVerify[1]);
 
-		for (int iPos = 0; iPos < MT_MAX_PATCH_LEN; iPos++)
+		for (int iPos = 0; iPos < MT_PATCH_MAXLEN; iPos++)
 		{
 			switch (iPos < iLength)
 			{
@@ -13396,7 +13416,7 @@ public MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 		bool bDeveloper = bIsDeveloper(iSurvivor, 5);
 		if (bDeveloper || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 		{
-			bool bApply[2];
+			bool bApply[2] = {false, false};
 			static int iIndex[2] = {-1, -1};
 			if (g_bSecondGame || (!g_bSecondGame && !g_esGeneral.g_bLinux))
 			{
@@ -13432,7 +13452,7 @@ public MRESReturn mreDoJumpPre(int pThis, DHookParam hParams)
 
 public MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
 {
-	bool bApply[2];
+	bool bApply[2] = {true, true};
 	static int iIndex[2] = {-1, -1};
 	if (g_bSecondGame || (!g_bSecondGame && !g_esGeneral.g_bLinux))
 	{
@@ -13454,7 +13474,7 @@ public MRESReturn mreDoJumpPost(int pThis, DHookParam hParams)
 	{
 		g_esGeneral.g_bPatchDoJumpValue = false;
 
-		StoreToAddress(g_esGeneral.g_adDoJumpValue, view_as<int>(57.0), NumberType_Int32);
+		StoreToAddress(g_esGeneral.g_adDoJumpValue, view_as<int>(MT_JUMP_DEFAULTHEIGHT), NumberType_Int32);
 	}
 
 	return MRES_Ignored;
