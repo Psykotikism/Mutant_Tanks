@@ -218,7 +218,7 @@ forward void MT_OnChangeType(int tank, int oldType, int newType, bool revert);
  * @param weapon		Entity index of the weapon, if any.
  * @param classname		String containing the weapon classname, if any.
  **/
-forward void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname);
+forward void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname);
 
 /**
  * Called when the config file is about to load.
@@ -348,7 +348,7 @@ forward Action MT_OnPlayerHitByVomitJar(int player, int thrower);
  *
  * @return			Plugin_Handled to prevent the player from being shoved, Plugin_Continue to allow.
  **/
-forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, float direction[3]);
+forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float direction[3]);
 
 /**
  * Called before the config file is read.

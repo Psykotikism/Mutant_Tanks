@@ -535,7 +535,7 @@ public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list
 	list4.PushString(MT_CONFIG_SECTION4);
 }
 
-public void MT_OnCombineAbilities(int tank, int type, float random, const char[] combo, int survivor, int weapon, const char[] classname)
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCache[tank].g_iHumanAbility != 2)
 	{
@@ -860,7 +860,7 @@ public Action MT_OnPlayerHitByVomitJar(int player, int thrower)
 	return Plugin_Continue;
 }
 
-public Action MT_OnPlayerShovedBySurvivor(int player, int survivor, float direction[3])
+public Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float direction[3])
 {
 	if (MT_IsTankSupported(player) && g_esPlayer[player].g_bActivated && !(g_esCache[player].g_iShieldType & MT_SHIELD_MELEE) && bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
