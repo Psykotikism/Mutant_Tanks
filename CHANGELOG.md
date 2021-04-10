@@ -1,5 +1,62 @@
 # Changelog
 
+## Version 8.84 (August 25, 2021)
+
+### Bug Fixes
+
+#### Core Plugin
+- Fixed some developer tools not disabling themselves properly.
+- Fixed the `Reward` system creating multiple effects per player.
+- Fixed the positioning of the Tank's light props.
+
+#### Natives & Forwards
+- Fixed the `MT_LogMessage` native logging messages even when the feature is disabled.
+
+#### Abilities
+- Respawn
+	- Fixed the ability requiring `DHooks`.
+
+### Changes
+
+#### General
+- Each ability's plugin is now a component that must be compiled through a main plugin.
+
+#### Commands
+- Replaced all the `sm_mt_<ability name>` commands with `sm_mt_ability <name>`/`sm_mt_ability2 <name>`.
+
+#### Settings
+- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+	- `Reward Notify`
+	- `Reward Visual` (Requested by 3aljiyavslgazana.)
+	- `Body Color Visual` (Requested by 3aljiyavslgazana.)
+	- `Glow Color Visual` (Requested by 3aljiyavslgazana.)
+	- `Looping Voiceline Visual` (Requested by 3aljiyavslgazana.)
+	- `Particle Effect Visual` (Requested by 3aljiyavslgazana.)
+	- `Screen Color Visual` (Requested by 3aljiyavslgazana.)
+
+#### Translations
+- Updated English translations with new phrases.
+- Updated Simplified Chinese translations with new phrases. (Thanks to yuzumi!)
+- Updated Hungarian translations with new phrases. (Thanks to KasperH/Ladis!)
+- Updated Russian translations with new phrases. (Thanks to Blueberry/Kleiner!)
+
+### Files
+
+#### Additions
+- Added the `mt_abilities` plugin file which combines the first `38` abilities (A-L).
+- Added the `mt_abilities2` plugin file which combines the second `38` abilities (M-Z).
+
+#### Locations
+- Each ability's plugin must now be placed in the `scripting/abilities` (A-L) and `scripting/abilities2` (M-Z) folders.
+
+#### Requirements
+- The `mt_clone` include file is now only used by the core plugin and registered by the new `mt_abilities` file.
+
+#### Updates
+- Updated config files.
+- Updated include files.
+- Updated translation files.
+
 ## Version 8.83 (March 31, 2021)
 
 ### Bug Fixes
@@ -202,9 +259,6 @@
 - Updated several signatures for detours. (Thanks to epzminion for the help!)
 
 #### Settings
-- Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
-	- `Reward Bots` (Thanks to Mi.Cura for the idea!)
-	- `Reward Effect` (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
 - Added the `Log Commands` setting under the `Plugin Settings/General` section. (Requested by 3aljiyavslgazana.)
 - Added the following settings under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections:
 	- `Arrival Sound` (Thanks to Tank Rush for the idea!)
@@ -224,6 +278,8 @@
 - The `Stasis Mode` setting now works in all game mode types. (Requested by yuzumi.)
 - Added the `Game Type` setting under the `Tank #/General` sections.
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
+	- `Reward Bots` (Thanks to Mi.Cura for the idea!)
+	- `Reward Effect` (Requested by 3aljiyavslgazana.) [Thanks to Silvers for the code!]
 	- `Attack Boost Reward` (Requested by 3aljiyavslgazana.) [Requires WeaponHandling API.]
 	- `Action Duration Reward` (Thanks to epzminion for the help!)
 	- `Ammo Boost Reward` (Thanks to epzminion for the help!)

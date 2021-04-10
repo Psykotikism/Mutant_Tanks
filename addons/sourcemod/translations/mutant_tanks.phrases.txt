@@ -341,6 +341,12 @@
 		"en"			"Usage: {1} <type {2}-{3}> <amount: 1-32> <0: spawn at crosshair|1: spawn automatically>"
 	}
 
+	"CommandUsage2"
+	{
+		"#format"		"{1:s}"
+		"en"			"Usage: {1} \"ability name\""
+	}
+
 	"CompletedParsing"
 	{
 		"en"			"Parsing complete!"
@@ -864,6 +870,12 @@
 	{
 		"#format"		"{1:t}"
 		"en"			"You{default} received a(n){yellow} respawn{default} for assisting against{olive} {1}{default}!"
+	}
+
+	"RewardSolo"
+	{
+		"#format"		"{1:t}"
+		"en"			"You{default} soloed{olive} {1}{default}!"
 	}
 
 	"RewardSpeedBoost"

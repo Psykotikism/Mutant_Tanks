@@ -77,7 +77,7 @@ public void __pl_mutanttanks_SetNTVOptional()
 #define MT_NAME "[L4D & L4D2] Mutant Tanks"
 #define MT_AUTHOR "Psyk0tik (Crasher_3637)"
 #define MT_DESCRIPTION "Mutant Tanks enhances the fun and excitement players get from Tank fights by creating a unique experience with every Tank."
-#define MT_VERSION "8.83"
+#define MT_VERSION "8.84"
 #define MT_URL "https://forums.alliedmods.net/showthread.php?t=302140"
 
 // Chat tags
@@ -1392,12 +1392,16 @@ stock void vDeleteEntity(int ref, float duration = 0.1)
 	}
 }
 
-stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE|MT_ATTACK_CLAW)
+stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE|MT_ATTACK_CLAW, int red = -1, int green = -1, int blue = -1, int alpha = -1)
 {
 	if (mode & flags)
 	{
 		static int iColor[4];
 		MT_GetTankColors(tank, GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
+		if (0 <= red <= 255) iColor[0] = red;
+		if (0 <= green <= 255) iColor[1] = green;
+		if (0 <= blue <= 255) iColor[2] = blue;
+		iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
 
 		static Handle hFadeTarget;
 		hFadeTarget = StartMessageOne("Fade", survivor);
@@ -1408,12 +1412,10 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 		bfWrite.WriteShort(300);
 		bfWrite.WriteShort((0x0010|0x0001));
 
-		for (int iPos = 0; iPos < sizeof(iColor) - 1; iPos++)
+		for (int iPos = 0; iPos < sizeof(iColor); iPos++)
 		{
 			bfWrite.WriteByte(iColor[iPos]);
 		}
-
-		bfWrite.WriteByte(150);
 
 		EndMessage();
 	}

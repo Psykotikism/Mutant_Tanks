@@ -1,0 +1,1212 @@
+/**
+ * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+#if !defined MT_ABILITIES_MAIN2
+#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+#endif
+
+#define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
+#define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
+#define MODEL_SHIELD "models/props_unique/airport/atlas_break_ball.mdl"
+
+#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
+
+#define MT_SHIELD_SECTION "shieldability"
+#define MT_SHIELD_SECTION2 "shield ability"
+#define MT_SHIELD_SECTION3 "shield_ability"
+#define MT_SHIELD_SECTION4 "shield"
+#define MT_SHIELD_SECTIONS MT_SHIELD_SECTION, MT_SHIELD_SECTION2, MT_SHIELD_SECTION3, MT_SHIELD_SECTION4
+
+#define MT_SHIELD_BULLET (1 << 0) // requires bullet damage
+#define MT_SHIELD_EXPLOSIVE (1 << 1) // requires explosive damage
+#define MT_SHIELD_FIRE (1 << 2) // requires fire damage
+#define MT_SHIELD_MELEE (1 << 3) // requires melee damage
+
+#define MT_MENU_SHIELD "Shield Ability"
+
+enum struct esShieldPlayer
+{
+	bool g_bActivated;
+
+	char g_sShieldHealthChars[4];
+
+	float g_flHealth;
+	float g_flOpenAreasOnly;
+	float g_flShieldChance;
+	float g_flShieldHealth;
+	float g_flShieldThrowChance;
+
+	int g_iAccessFlags;
+	int g_iAmmoCount;
+	int g_iComboAbility;
+	int g_iCooldown;
+	int g_iCooldown2;
+	int g_iDuration;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iImmunityFlags;
+	int g_iRequiresHumans;
+	int g_iShield;
+	int g_iShieldAbility;
+	int g_iShieldColor[4];
+	int g_iShieldDelay;
+	int g_iShieldDisplayHP;
+	int g_iShieldDisplayHPType;
+	int g_iShieldGlow;
+	int g_iShieldMessage;
+	int g_iShieldType;
+	int g_iTankType;
+}
+
+esShieldPlayer g_esShieldPlayer[MAXPLAYERS + 1];
+
+enum struct esShieldAbility
+{
+	char g_sShieldHealthChars[4];
+
+	float g_flOpenAreasOnly;
+	float g_flShieldChance;
+	float g_flShieldHealth;
+	float g_flShieldThrowChance;
+
+	int g_iAccessFlags;
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iImmunityFlags;
+	int g_iRequiresHumans;
+	int g_iShieldAbility;
+	int g_iShieldColor[4];
+	int g_iShieldDelay;
+	int g_iShieldDisplayHP;
+	int g_iShieldDisplayHPType;
+	int g_iShieldGlow;
+	int g_iShieldMessage;
+	int g_iShieldType;
+}
+
+esShieldAbility g_esShieldAbility[MT_MAXTYPES + 1];
+
+enum struct esShieldCache
+{
+	char g_sShieldHealthChars[4];
+
+	float g_flOpenAreasOnly;
+	float g_flShieldChance;
+	float g_flShieldHealth;
+	float g_flShieldThrowChance;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHumanDuration;
+	int g_iHumanMode;
+	int g_iRequiresHumans;
+	int g_iShieldAbility;
+	int g_iShieldColor[4];
+	int g_iShieldDelay;
+	int g_iShieldDisplayHP;
+	int g_iShieldDisplayHPType;
+	int g_iShieldGlow;
+	int g_iShieldMessage;
+	int g_iShieldType;
+}
+
+esShieldCache g_esShieldCache[MAXPLAYERS + 1];
+
+ConVar g_cvMTShieldTankThrowForce;
+
+void vShieldPluginStart()
+{
+	g_cvMTShieldTankThrowForce = FindConVar("z_tank_throw_force");
+}
+
+void vShieldLateLoad()
+{
+	int iInfected = -1;
+	while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
+	{
+		SDKHook(iInfected, SDKHook_OnTakeDamage, OnShieldTakeDamage);
+	}
+
+	iInfected = -1;
+	while ((iInfected = FindEntityByClassname(iInfected, "witch")) != INVALID_ENT_REFERENCE)
+	{
+		SDKHook(iInfected, SDKHook_OnTakeDamage, OnShieldTakeDamage);
+	}
+}
+
+void vShieldMapStart()
+{
+	PrecacheModel(MODEL_SHIELD, true);
+
+	vShieldReset();
+}
+
+void vShieldClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnShieldTakeDamage);
+	vShieldReset2(client);
+}
+
+void vShieldClientDisconnect_Post(int client)
+{
+	vShieldReset2(client);
+}
+
+void vShieldMapEnd()
+{
+	vShieldReset();
+}
+
+void vShieldMenu(int client, const char[] name, int item)
+{
+	if (StrContains(MT_SHIELD_SECTION4, name, false) == -1)
+	{
+		return;
+	}
+
+	Menu mAbilityMenu = new Menu(iShieldMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mAbilityMenu.SetTitle("Shield Ability Information");
+	mAbilityMenu.AddItem("Status", "Status");
+	mAbilityMenu.AddItem("Ammunition", "Ammunition");
+	mAbilityMenu.AddItem("Buttons", "Buttons");
+	mAbilityMenu.AddItem("Button Mode", "Button Mode");
+	mAbilityMenu.AddItem("Cooldown", "Cooldown");
+	mAbilityMenu.AddItem("Details", "Details");
+	mAbilityMenu.AddItem("Duration", "Duration");
+	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
+}
+
+public int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			switch (param2)
+			{
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esShieldCache[param1].g_iShieldAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esShieldCache[param1].g_iHumanAmmo - g_esShieldPlayer[param1].g_iAmmoCount, g_esShieldCache[param1].g_iHumanAmmo);
+				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esShieldCache[param1].g_iHumanMode == 0 ? "AbilityButtonMode1" : "AbilityButtonMode2");
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esShieldCache[param1].g_iHumanCooldown);
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "ShieldDetails");
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration2", g_esShieldCache[param1].g_iHumanDuration);
+				case 7: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esShieldCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+			}
+
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
+			{
+				vShieldMenu(param1, MT_SHIELD_SECTION4, menu.Selection);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[PLATFORM_MAX_PATH];
+			Panel pShield = view_as<Panel>(param2);
+			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "ShieldMenu", param1);
+			pShield.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			if (param2 >= 0)
+			{
+				char sMenuOption[PLATFORM_MAX_PATH];
+
+				switch (param2)
+				{
+					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "ButtonMode", param1);
+					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+					case 7: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+				}
+
+				return RedrawMenuItem(sMenuOption);
+			}
+		}
+	}
+
+	return 0;
+}
+
+void vShieldDisplayMenu(Menu menu)
+{
+	menu.AddItem(MT_MENU_SHIELD, MT_MENU_SHIELD);
+}
+
+void vShieldMenuItemSelected(int client, const char[] info)
+{
+	if (StrEqual(info, MT_MENU_SHIELD, false))
+	{
+		vShieldMenu(client, MT_SHIELD_SECTION4, 0);
+	}
+}
+
+void vShieldMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+{
+	if (StrEqual(info, MT_MENU_SHIELD, false))
+	{
+		FormatEx(buffer, size, "%T", "ShieldMenu2", client);
+	}
+}
+
+void vShieldEntityCreated(int entity, const char[] classname)
+{
+	if (bIsValidEntity(entity) && (StrEqual(classname, "infected") || StrEqual(classname, "witch")))
+	{
+		SDKHook(entity, SDKHook_SpawnPost, OnInfectedSpawnPost);
+	}
+}
+
+public void OnGameFrame()
+{
+	if (MT_IsCorePluginEnabled())
+	{
+		static char sClassname[32], sHealthBar[51], sSet[2][2], sTankName[33];
+		static float flPercentage;
+		static int iTarget;
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT))
+			{
+				iTarget = GetClientAimTarget(iPlayer);
+				if (bIsTank(iTarget))
+				{
+					GetEntityClassname(iTarget, sClassname, sizeof(sClassname));
+					if (StrEqual(sClassname, "player") && g_esShieldPlayer[iTarget].g_bActivated && g_esShieldPlayer[iTarget].g_flHealth > 0.0 && g_esShieldCache[iTarget].g_flShieldHealth > 0.0)
+					{
+						MT_GetTankName(iTarget, sTankName);
+
+						sHealthBar[0] = '\0';
+						flPercentage = (g_esShieldPlayer[iTarget].g_flHealth / g_esShieldCache[iTarget].g_flShieldHealth) * 100;
+
+						ReplaceString(g_esShieldCache[iTarget].g_sShieldHealthChars, sizeof(esShieldCache::g_sShieldHealthChars), " ", "");
+						ExplodeString(g_esShieldCache[iTarget].g_sShieldHealthChars, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+
+						for (int iCount = 0; iCount < (g_esShieldPlayer[iTarget].g_flHealth / g_esShieldCache[iTarget].g_flShieldHealth) * sizeof(sHealthBar) - 1 && iCount < sizeof(sHealthBar) - 1; iCount++)
+						{
+							StrCat(sHealthBar, sizeof(sHealthBar), sSet[0]);
+						}
+
+						for (int iCount = 0; iCount < sizeof(sHealthBar) - 1; iCount++)
+						{
+							StrCat(sHealthBar, sizeof(sHealthBar), sSet[1]);
+						}
+
+						switch (g_esShieldCache[iTarget].g_iShieldDisplayHPType)
+						{
+							case 1:
+							{
+								switch (g_esShieldCache[iTarget].g_iShieldDisplayHP)
+								{
+									case 1: PrintHintText(iPlayer, "%t", "ShieldOwner", sTankName);
+									case 2: PrintHintText(iPlayer, "Shield: %.0f HP", g_esShieldPlayer[iTarget].g_flHealth);
+									case 3: PrintHintText(iPlayer, "Shield: %.0f/%.0f HP (%.0f%s)", g_esShieldPlayer[iTarget].g_flHealth, g_esShieldCache[iTarget].g_flShieldHealth, flPercentage, "%%");
+									case 4: PrintHintText(iPlayer, "Shield\nHP: |-<%s>-|", sHealthBar);
+									case 5: PrintHintText(iPlayer, "%t (%.0f HP)", "ShieldOwner", sTankName, g_esShieldPlayer[iTarget].g_flHealth);
+									case 6: PrintHintText(iPlayer, "%t [%.0f/%.0f HP (%.0f%s)]", "ShieldOwner", sTankName, g_esShieldPlayer[iTarget].g_flHealth, g_esShieldCache[iTarget].g_flShieldHealth, flPercentage, "%%");
+									case 7: PrintHintText(iPlayer, "%t\nHP: |-<%s>-|", "ShieldOwner", sTankName, sHealthBar);
+									case 8: PrintHintText(iPlayer, "Shield: %.0f HP\nHP: |-<%s>-|", g_esShieldPlayer[iTarget].g_flHealth, sHealthBar);
+									case 9: PrintHintText(iPlayer, "Shield: %.0f/%.0f HP (%.0f%s)\nHP: |-<%s>-|", g_esShieldPlayer[iTarget].g_flHealth, g_esShieldCache[iTarget].g_flShieldHealth, flPercentage, "%%", sHealthBar);
+									case 10: PrintHintText(iPlayer, "%t (%.0f HP)\nHP: |-<%s>-|", "ShieldOwner", sTankName, g_esShieldPlayer[iTarget].g_flHealth, sHealthBar);
+									case 11: PrintHintText(iPlayer, "%t [%.0f/%.0f HP (%.0f%s)]\nHP: |-<%s>-|", "ShieldOwner", sTankName, g_esShieldPlayer[iTarget].g_flHealth, g_esShieldCache[iTarget].g_flShieldHealth, flPercentage, "%%", sHealthBar);
+								}
+							}
+							case 2:
+							{
+								switch (g_esShieldCache[iTarget].g_iShieldDisplayHP)
+								{
+									case 1: PrintCenterText(iPlayer, "%t", "ShieldOwner", sTankName);
+									case 2: PrintCenterText(iPlayer, "Shield: %.0f HP", g_esShieldPlayer[iTarget].g_flHealth);
+									case 3: PrintCenterText(iPlayer, "Shield: %.0f/%.0f HP (%.0f%s)", g_esShieldPlayer[iTarget].g_flHealth, g_esShieldCache[iTarget].g_flShieldHealth, flPercentage, "%%");
+									case 4: PrintCenterText(iPlayer, "Shield\nHP: |-<%s>-|", sHealthBar);
+									case 5: PrintCenterText(iPlayer, "%t (%.0f HP)", "ShieldOwner", sTankName, g_esShieldPlayer[iTarget].g_flHealth);
+									case 6: PrintCenterText(iPlayer, "%t [%.0f/%.0f HP (%.0f%s)]", "ShieldOwner", sTankName, g_esShieldPlayer[iTarget].g_flHealth, g_esShieldCache[iTarget].g_flShieldHealth, flPercentage, "%%");
+									case 7: PrintCenterText(iPlayer, "%t\nHP: |-<%s>-|", "ShieldOwner", sTankName, sHealthBar);
+									case 8: PrintCenterText(iPlayer, "Shield: %.0f HP\nHP: |-<%s>-|", g_esShieldPlayer[iTarget].g_flHealth, sHealthBar);
+									case 9: PrintCenterText(iPlayer, "Shield: %.0f/%.0f HP (%.0f%s)\nHP: |-<%s>-|", g_esShieldPlayer[iTarget].g_flHealth, g_esShieldCache[iTarget].g_flShieldHealth, flPercentage, "%%", sHealthBar);
+									case 10: PrintCenterText(iPlayer, "%t (%.0f HP)\nHP: |-<%s>-|", "ShieldOwner", sTankName, g_esShieldPlayer[iTarget].g_flHealth, sHealthBar);
+									case 11: PrintCenterText(iPlayer, "%t [%.0f/%.0f HP (%.0f%s)]\nHP: |-<%s>-|", "ShieldOwner", sTankName, g_esShieldPlayer[iTarget].g_flHealth, g_esShieldCache[iTarget].g_flShieldHealth, flPercentage, "%%", sHealthBar);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void vShieldPlayerRunCmd(int client)
+{
+	if (!MT_IsTankSupported(client) || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esShieldCache[client].g_iHumanMode == 1) || (g_esShieldPlayer[client].g_iDuration == -1 && g_esShieldPlayer[client].g_iCooldown2 == -1))
+	{
+		return;
+	}
+
+	static int iTime;
+	iTime = GetTime();
+	if (g_esShieldPlayer[client].g_bActivated && g_esShieldPlayer[client].g_iDuration != -1 && g_esShieldPlayer[client].g_iDuration < iTime)
+	{
+		if (bIsTank(client, MT_CHECK_FAKECLIENT) && (MT_HasAdminAccess(client) || bHasAdminAccess(client, g_esShieldAbility[g_esShieldPlayer[client].g_iTankType].g_iAccessFlags, g_esShieldPlayer[client].g_iAccessFlags)) && g_esShieldCache[client].g_iHumanAbility == 1 && g_esShieldCache[client].g_iHumanMode == 0 && (g_esShieldPlayer[client].g_iCooldown == -1 || g_esShieldPlayer[client].g_iCooldown < iTime))
+		{
+			vShieldReset3(client);
+		}
+
+		vShieldAbility(client, false);
+	}
+	else if (g_esShieldPlayer[client].g_iCooldown2 != -1 && g_esShieldPlayer[client].g_iCooldown2 < iTime)
+	{
+		vShieldAbility(client, true);
+	}
+}
+
+public void OnInfectedSpawnPost(int entity)
+{
+	SDKHook(entity, SDKHook_OnTakeDamage, OnShieldTakeDamage);
+}
+
+public Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (MT_IsCorePluginEnabled() && MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && g_esShieldPlayer[victim].g_bActivated && damage > 0.0)
+	{
+		static bool bCommon, bSpecial, bSurvivor, bRewarded;
+		bCommon = bIsCommonInfected(attacker);
+		bSpecial = bIsSpecialInfected(attacker);
+		bSurvivor = bIsSurvivor(attacker);
+		bRewarded = bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_DAMAGEBOOST);
+		if ((damagetype & DMG_FALL) || ((damagetype & DMG_DROWN) && GetEntProp(victim, Prop_Send, "m_nWaterLevel") > 0) || (!MT_HasAdminAccess(victim) && !bHasAdminAccess(victim, g_esShieldAbility[g_esShieldPlayer[victim].g_iTankType].g_iAccessFlags, g_esShieldPlayer[victim].g_iAccessFlags)) || (bSurvivor && (MT_IsAdminImmune(attacker, victim) || bIsAdminImmune(attacker, g_esShieldPlayer[victim].g_iTankType, g_esShieldAbility[g_esShieldPlayer[victim].g_iTankType].g_iImmunityFlags, g_esShieldPlayer[attacker].g_iImmunityFlags))))
+		{
+			vShieldAbility(victim, false);
+
+			return Plugin_Continue;
+		}
+
+		if (bSurvivor || bSpecial || bCommon)
+		{
+			static bool bBulletDamage, bExplosiveDamage, bFireDamage, bMeleeDamage;
+			bBulletDamage = (damagetype & DMG_BULLET) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_BULLET);
+			bExplosiveDamage = ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_EXPLOSIVE);
+			bFireDamage = ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_FIRE);
+			bMeleeDamage = ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && (g_esShieldCache[victim].g_iShieldType & MT_SHIELD_MELEE);
+			if (bRewarded || bSpecial || bCommon || bBulletDamage || bExplosiveDamage || bFireDamage || bMeleeDamage)
+			{
+				g_esShieldPlayer[victim].g_flHealth -= damage;
+				if (g_esShieldCache[victim].g_flShieldHealth == 0.0 || g_esShieldPlayer[victim].g_flHealth < 1.0)
+				{
+					vShieldAbility(victim, false);
+				}
+			}
+		}
+
+		EmitSoundToAll(SOUND_METAL, victim);
+
+		if ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT))
+		{
+			ExtinguishEntity(victim);
+		}
+
+		if (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && !(g_esShieldCache[victim].g_iShieldType & MT_SHIELD_MELEE))
+		{
+			if (bRewarded) return Plugin_Handled;
+
+			static float flTankPos[3];
+			GetClientAbsOrigin(victim, flTankPos);
+
+			switch (bSurvivor && MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
+			{
+				case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
+				case false: vPushNearbyEntities(victim, flTankPos);
+			}
+		}
+
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+
+void vShieldPluginCheck(ArrayList &list)
+{
+	list.PushString(MT_MENU_SHIELD);
+}
+
+void vShieldAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString(MT_SHIELD_SECTION);
+	list2.PushString(MT_SHIELD_SECTION2);
+	list3.PushString(MT_SHIELD_SECTION3);
+	list4.PushString(MT_SHIELD_SECTION4);
+}
+
+void vShieldCombineAbilities(int tank, int type, const float random, const char[] combo)
+{
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility != 2)
+	{
+		return;
+	}
+
+	static char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
+	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_SHIELD_SECTION);
+	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_SHIELD_SECTION2);
+	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_SHIELD_SECTION3);
+	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_SHIELD_SECTION4);
+	if (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1)
+	{
+		if (type == MT_COMBO_MAINRANGE && g_esShieldCache[tank].g_iShieldAbility == 1 && g_esShieldCache[tank].g_iComboAbility == 1 && !g_esShieldPlayer[tank].g_bActivated)
+		{
+			static char sSubset[10][32];
+			ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
+			for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+			{
+				if (StrEqual(sSubset[iPos], MT_SHIELD_SECTION, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION2, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION3, false) || StrEqual(sSubset[iPos], MT_SHIELD_SECTION4, false))
+				{
+					if (random <= MT_GetCombinationSetting(tank, 1, iPos))
+					{
+						static float flDelay;
+						flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+
+						switch (flDelay)
+						{
+							case 0.0: vShieldAbility(tank, true);
+							default: CreateTimer(flDelay, tTimerShieldCombo, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE);
+						}
+
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+void vShieldConfigsLoad(int mode)
+{
+	switch (mode)
+	{
+		case 1:
+		{
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			{
+				g_esShieldAbility[iIndex].g_iAccessFlags = 0;
+				g_esShieldAbility[iIndex].g_iImmunityFlags = 0;
+				g_esShieldAbility[iIndex].g_iComboAbility = 0;
+				g_esShieldAbility[iIndex].g_iHumanAbility = 0;
+				g_esShieldAbility[iIndex].g_iHumanAmmo = 5;
+				g_esShieldAbility[iIndex].g_iHumanCooldown = 30;
+				g_esShieldAbility[iIndex].g_iHumanDuration = 5;
+				g_esShieldAbility[iIndex].g_iHumanMode = 1;
+				g_esShieldAbility[iIndex].g_flOpenAreasOnly = 0.0;
+				g_esShieldAbility[iIndex].g_iRequiresHumans = 1;
+				g_esShieldAbility[iIndex].g_iShieldAbility = 0;
+				g_esShieldAbility[iIndex].g_iShieldMessage = 0;
+				g_esShieldAbility[iIndex].g_flShieldChance = 33.3;
+				g_esShieldAbility[iIndex].g_iShieldDelay = 5;
+				g_esShieldAbility[iIndex].g_iShieldDisplayHP = 11;
+				g_esShieldAbility[iIndex].g_iShieldDisplayHPType = 2;
+				g_esShieldAbility[iIndex].g_iShieldGlow = 1;
+				g_esShieldAbility[iIndex].g_flShieldHealth = 0.0;
+				g_esShieldAbility[iIndex].g_sShieldHealthChars = "],=";
+				g_esShieldAbility[iIndex].g_flShieldThrowChance = 100.0;
+				g_esShieldAbility[iIndex].g_iShieldType = 2;
+
+				for (int iPos = 0; iPos < sizeof(esShieldAbility::g_iShieldColor); iPos++)
+				{
+					g_esShieldAbility[iIndex].g_iShieldColor[iPos] = 255;
+				}
+			}
+		}
+		case 3:
+		{
+			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+			{
+				if (bIsValidClient(iPlayer))
+				{
+					g_esShieldPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esShieldPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esShieldPlayer[iPlayer].g_iComboAbility = 0;
+					g_esShieldPlayer[iPlayer].g_iHumanAbility = 0;
+					g_esShieldPlayer[iPlayer].g_iHumanAmmo = 0;
+					g_esShieldPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esShieldPlayer[iPlayer].g_iHumanDuration = 0;
+					g_esShieldPlayer[iPlayer].g_iHumanMode = 0;
+					g_esShieldPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
+					g_esShieldPlayer[iPlayer].g_iRequiresHumans = 0;
+					g_esShieldPlayer[iPlayer].g_iShieldAbility = 0;
+					g_esShieldPlayer[iPlayer].g_iShieldMessage = 0;
+					g_esShieldPlayer[iPlayer].g_flShieldChance = 0.0;
+					g_esShieldPlayer[iPlayer].g_iShieldDelay = 0;
+					g_esShieldPlayer[iPlayer].g_iShieldDisplayHP = 0;
+					g_esShieldPlayer[iPlayer].g_iShieldDisplayHPType = 0;
+					g_esShieldPlayer[iPlayer].g_iShieldGlow = 0;
+					g_esShieldPlayer[iPlayer].g_flShieldHealth = 0.0;
+					g_esShieldPlayer[iPlayer].g_sShieldHealthChars[0] = '\0';
+					g_esShieldPlayer[iPlayer].g_flShieldThrowChance = 0.0;
+					g_esShieldPlayer[iPlayer].g_iShieldType = 0;
+
+					for (int iPos = 0; iPos < sizeof(esShieldPlayer::g_iShieldColor); iPos++)
+					{
+						g_esShieldPlayer[iPlayer].g_iShieldColor[iPos] = -1;
+					}
+				}
+			}
+		}
+	}
+}
+
+void vShieldConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+{
+	if (mode == 3 && bIsValidClient(admin))
+	{
+		g_esShieldPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esShieldPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esShieldPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esShieldPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esShieldPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShieldPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esShieldPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShieldPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esShieldPlayer[admin].g_iHumanDuration = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esShieldPlayer[admin].g_iHumanDuration, value, 1, 999999);
+		g_esShieldPlayer[admin].g_iHumanMode = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esShieldPlayer[admin].g_iHumanMode, value, 0, 1);
+		g_esShieldPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShieldPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esShieldPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShieldPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esShieldPlayer[admin].g_iShieldAbility = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShieldPlayer[admin].g_iShieldAbility, value, 0, 1);
+		g_esShieldPlayer[admin].g_iShieldMessage = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShieldPlayer[admin].g_iShieldMessage, value, 0, 1);
+		g_esShieldPlayer[admin].g_flShieldChance = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldChance", "Shield Chance", "Shield_Chance", "chance", g_esShieldPlayer[admin].g_flShieldChance, value, 0.0, 100.0);
+		g_esShieldPlayer[admin].g_iShieldDelay = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldDelay", "Shield Delay", "Shield_Delay", "delay", g_esShieldPlayer[admin].g_iShieldDelay, value, 1, 999999);
+		g_esShieldPlayer[admin].g_iShieldDisplayHP = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldDisplayHealth", "Shield Display Health", "Shield_Display_Health", "displayhp", g_esShieldPlayer[admin].g_iShieldDisplayHP, value, 0, 11);
+		g_esShieldPlayer[admin].g_iShieldDisplayHPType = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldDisplayHealthType", "Shield Display Health Type", "Shield_Display_Health_Type", "displaytype", g_esShieldPlayer[admin].g_iShieldDisplayHPType, value, 0, 2);
+		g_esShieldPlayer[admin].g_iShieldGlow = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldGlow", "Shield Glow", "Shield_Glow", "glow", g_esShieldPlayer[admin].g_iShieldGlow, value, 0, 1);
+		g_esShieldPlayer[admin].g_flShieldHealth = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldHealth", "Shield Health", "Shield_Health", "health", g_esShieldPlayer[admin].g_flShieldHealth, value, 0.0, 999999.0);
+		g_esShieldPlayer[admin].g_flShieldThrowChance = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldThrowChance", "Shield Throw Chance", "Shield_Throw_Chance", "throwchance", g_esShieldPlayer[admin].g_flShieldThrowChance, value, 0.0, 100.0);
+		g_esShieldPlayer[admin].g_iShieldType = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldType", "Shield Type", "Shield_Type", "type", g_esShieldPlayer[admin].g_iShieldType, value, 0, 15);
+
+		if (StrEqual(subsection, MT_SHIELD_SECTION, false) || StrEqual(subsection, MT_SHIELD_SECTION2, false) || StrEqual(subsection, MT_SHIELD_SECTION3, false) || StrEqual(subsection, MT_SHIELD_SECTION4, false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_esShieldPlayer[admin].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_esShieldPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
+			{
+				static char sSet[4][4], sValue[16];
+				strcopy(sValue, sizeof(sValue), value);
+				ReplaceString(sValue, sizeof(sValue), " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+				{
+					if (sSet[iPos][0] == '\0')
+					{
+						continue;
+					}
+
+					g_esShieldPlayer[admin].g_iShieldColor[iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
+				}
+			}
+			else if (StrEqual(key, "ShieldHealthCharacters", false) || StrEqual(key, "Shield Health Characters", false) || StrEqual(key, "Shield_Characters", false) || StrEqual(key, "hpchars", false))
+			{
+				strcopy(g_esShieldPlayer[admin].g_sShieldHealthChars, sizeof(esShieldPlayer::g_sShieldHealthChars), value);
+			}
+		}
+	}
+
+	if (mode < 3 && type > 0)
+	{
+		g_esShieldAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esShieldAbility[type].g_iComboAbility, value, 0, 1);
+		g_esShieldAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esShieldAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esShieldAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esShieldAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esShieldAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esShieldAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esShieldAbility[type].g_iHumanDuration = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "HumanDuration", "Human Duration", "Human_Duration", "hduration", g_esShieldAbility[type].g_iHumanDuration, value, 1, 999999);
+		g_esShieldAbility[type].g_iHumanMode = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "HumanMode", "Human Mode", "Human_Mode", "hmode", g_esShieldAbility[type].g_iHumanMode, value, 0, 1);
+		g_esShieldAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esShieldAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esShieldAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esShieldAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esShieldAbility[type].g_iShieldAbility = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esShieldAbility[type].g_iShieldAbility, value, 0, 1);
+		g_esShieldAbility[type].g_iShieldMessage = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esShieldAbility[type].g_iShieldMessage, value, 0, 1);
+		g_esShieldAbility[type].g_flShieldChance = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldChance", "Shield Chance", "Shield_Chance", "chance", g_esShieldAbility[type].g_flShieldChance, value, 0.0, 100.0);
+		g_esShieldAbility[type].g_iShieldDelay = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldDelay", "Shield Delay", "Shield_Delay", "delay", g_esShieldAbility[type].g_iShieldDelay, value, 1, 999999);
+		g_esShieldAbility[type].g_iShieldDisplayHP = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldDisplayHealth", "Shield Display Health", "Shield_Display_Health", "displayhp", g_esShieldAbility[type].g_iShieldDisplayHP, value, 0, 11);
+		g_esShieldAbility[type].g_iShieldDisplayHPType = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldDisplayHealthType", "Shield Display Health Type", "Shield_Display_Health_Type", "displaytype", g_esShieldAbility[type].g_iShieldDisplayHPType, value, 0, 2);
+		g_esShieldAbility[type].g_iShieldGlow = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldGlow", "Shield Glow", "Shield_Glow", "glow", g_esShieldAbility[type].g_iShieldGlow, value, 0, 1);
+		g_esShieldAbility[type].g_flShieldHealth = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldHealth", "Shield Health", "Shield_Health", "health", g_esShieldAbility[type].g_flShieldHealth, value, 0.0, 999999.0);
+		g_esShieldAbility[type].g_flShieldThrowChance = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldThrowChance", "Shield Throw Chance", "Shield_Throw_Chance", "throwchance", g_esShieldAbility[type].g_flShieldThrowChance, value, 0.0, 100.0);
+		g_esShieldAbility[type].g_iShieldType = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldType", "Shield Type", "Shield_Type", "type", g_esShieldAbility[type].g_iShieldType, value, 0, 15);
+
+		if (StrEqual(subsection, MT_SHIELD_SECTION, false) || StrEqual(subsection, MT_SHIELD_SECTION2, false) || StrEqual(subsection, MT_SHIELD_SECTION3, false) || StrEqual(subsection, MT_SHIELD_SECTION4, false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_esShieldAbility[type].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_esShieldAbility[type].g_iImmunityFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
+			{
+				static char sSet[4][4], sValue[16];
+				strcopy(sValue, sizeof(sValue), value);
+				ReplaceString(sValue, sizeof(sValue), " ", "");
+				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
+				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
+				{
+					if (sSet[iPos][0] == '\0')
+					{
+						continue;
+					}
+
+					g_esShieldAbility[type].g_iShieldColor[iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
+				}
+			}
+			else if (StrEqual(key, "ShieldHealthCharacters", false) || StrEqual(key, "Shield Health Characters", false) || StrEqual(key, "Shield_Characters", false) || StrEqual(key, "hpchars", false))
+			{
+				strcopy(g_esShieldAbility[type].g_sShieldHealthChars, sizeof(esShieldAbility::g_sShieldHealthChars), value);
+			}
+		}
+	}
+}
+
+void vShieldSettingsCached(int tank, bool apply, int type)
+{
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldHealthChars, sizeof(esShieldCache::g_sShieldHealthChars), g_esShieldPlayer[tank].g_sShieldHealthChars, g_esShieldAbility[type].g_sShieldHealthChars);
+	g_esShieldCache[tank].g_flShieldChance = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldChance, g_esShieldAbility[type].g_flShieldChance);
+	g_esShieldCache[tank].g_flShieldHealth = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldHealth, g_esShieldAbility[type].g_flShieldHealth);
+	g_esShieldCache[tank].g_flShieldThrowChance = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldThrowChance, g_esShieldAbility[type].g_flShieldThrowChance);
+	g_esShieldCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iComboAbility, g_esShieldAbility[type].g_iComboAbility);
+	g_esShieldCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanAbility, g_esShieldAbility[type].g_iHumanAbility);
+	g_esShieldCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanAmmo, g_esShieldAbility[type].g_iHumanAmmo);
+	g_esShieldCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanCooldown, g_esShieldAbility[type].g_iHumanCooldown);
+	g_esShieldCache[tank].g_iHumanDuration = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanDuration, g_esShieldAbility[type].g_iHumanDuration);
+	g_esShieldCache[tank].g_iHumanMode = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iHumanMode, g_esShieldAbility[type].g_iHumanMode);
+	g_esShieldCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flOpenAreasOnly, g_esShieldAbility[type].g_flOpenAreasOnly);
+	g_esShieldCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iRequiresHumans, g_esShieldAbility[type].g_iRequiresHumans);
+	g_esShieldCache[tank].g_iShieldAbility = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldAbility, g_esShieldAbility[type].g_iShieldAbility);
+	g_esShieldCache[tank].g_iShieldDelay = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDelay, g_esShieldAbility[type].g_iShieldDelay);
+	g_esShieldCache[tank].g_iShieldDisplayHP = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDisplayHP, g_esShieldAbility[type].g_iShieldDisplayHP);
+	g_esShieldCache[tank].g_iShieldDisplayHPType = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldDisplayHPType, g_esShieldAbility[type].g_iShieldDisplayHPType);
+	g_esShieldCache[tank].g_iShieldGlow = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldGlow, g_esShieldAbility[type].g_iShieldGlow);
+	g_esShieldCache[tank].g_iShieldMessage = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldMessage, g_esShieldAbility[type].g_iShieldMessage);
+	g_esShieldCache[tank].g_iShieldType = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldType, g_esShieldAbility[type].g_iShieldType);
+	g_esShieldPlayer[tank].g_iTankType = apply ? type : 0;
+
+	for (int iPos = 0; iPos < sizeof(esShieldCache::g_iShieldColor); iPos++)
+	{
+		g_esShieldCache[tank].g_iShieldColor[iPos] = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldColor[iPos], g_esShieldAbility[type].g_iShieldColor[iPos], 1);
+	}
+}
+
+void vShieldCopyStats(int oldTank, int newTank)
+{
+	vShieldCopyStats2(oldTank, newTank);
+
+	if (oldTank != newTank)
+	{
+		vRemoveShield(oldTank);
+	}
+}
+
+void vShieldPluginEnd()
+{
+	for (int iTank = 1; iTank <= MaxClients; iTank++)
+	{
+		if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE) && g_esShieldPlayer[iTank].g_bActivated)
+		{
+			vRemoveShield(iTank);
+		}
+	}
+}
+
+void vShieldEventFired(Event event, const char[] name)
+{
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vShieldCopyStats2(iBot, iTank);
+			vRemoveShield(iBot);
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vShieldCopyStats2(iTank, iBot);
+			vRemoveShield(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_incapacitated") || StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	{
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vRemoveShield(iTank);
+			vShieldReset2(iTank);
+		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vShieldReset();
+	}
+}
+
+Action aShieldPlayerHitByVomitJar(int player, int thrower)
+{
+	if (MT_IsTankSupported(player) && g_esShieldPlayer[player].g_bActivated && bIsSurvivor(thrower, MT_CHECK_INDEX|MT_CHECK_INGAME) && !MT_DoesSurvivorHaveRewardType(thrower, MT_REWARD_DAMAGEBOOST))
+	{
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+
+Action aShieldPlayerShovedBySurvivor(int player, int survivor)
+{
+	if (MT_IsTankSupported(player) && g_esShieldPlayer[player].g_bActivated && !(g_esShieldCache[player].g_iShieldType & MT_SHIELD_MELEE) && bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+
+void vShieldAbilityActivated(int tank)
+{
+	if ((MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[tank].g_iAccessFlags)) || g_esShieldCache[tank].g_iHumanAbility == 0)) || bIsPlayerIncapacitated(tank))
+	{
+		return;
+	}
+
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esShieldCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esShieldCache[tank].g_iShieldAbility == 1 && g_esShieldCache[tank].g_iComboAbility == 0 && !g_esShieldPlayer[tank].g_bActivated)
+	{
+		vShieldAbility(tank, true);
+	}
+}
+
+void vShieldButtonPressed(int tank, int button)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
+	{
+		if (bIsAreaNarrow(tank, g_esShieldCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esShieldPlayer[tank].g_iTankType) || (g_esShieldCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShieldCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[tank].g_iAccessFlags)))
+		{
+			return;
+		}
+
+		if (button & MT_MAIN_KEY)
+		{
+			if (g_esShieldCache[tank].g_iShieldAbility == 1 && g_esShieldCache[tank].g_iHumanAbility == 1)
+			{
+				static int iTime;
+				iTime = GetTime();
+				static bool bRecharging;
+				bRecharging = g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime;
+
+				switch (g_esShieldCache[tank].g_iHumanMode)
+				{
+					case 0:
+					{
+						if (!g_esShieldPlayer[tank].g_bActivated && !bRecharging)
+						{
+							vShieldAbility(tank, true);
+						}
+						else if (g_esShieldPlayer[tank].g_bActivated)
+						{
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman3");
+						}
+						else if (bRecharging)
+						{
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman4", g_esShieldPlayer[tank].g_iCooldown - iTime);
+						}
+					}
+					case 1:
+					{
+						if (g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0)
+						{
+							if (!g_esShieldPlayer[tank].g_bActivated && !bRecharging)
+							{
+								g_esShieldPlayer[tank].g_bActivated = true;
+								g_esShieldPlayer[tank].g_iAmmoCount++;
+
+								g_esShieldPlayer[tank].g_iShield = CreateEntityByName("prop_dynamic");
+								if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
+								{
+									vShield(tank);
+								}
+
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_esShieldPlayer[tank].g_iAmmoCount, g_esShieldCache[tank].g_iHumanAmmo);
+							}
+							else if (g_esShieldPlayer[tank].g_bActivated)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman3");
+							}
+							else if (bRecharging)
+							{
+								MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman4", g_esShieldPlayer[tank].g_iCooldown - iTime);
+							}
+						}
+						else
+						{
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldAmmo");
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void vShieldButtonReleased(int tank, int button)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
+	{
+		if (button & MT_MAIN_KEY)
+		{
+			if (g_esShieldCache[tank].g_iHumanMode == 1 && g_esShieldPlayer[tank].g_bActivated && (g_esShieldPlayer[tank].g_iCooldown == -1 || g_esShieldPlayer[tank].g_iCooldown < GetTime()))
+			{
+				g_esShieldPlayer[tank].g_bActivated = false;
+
+				vRemoveShield(tank);
+				vShieldReset3(tank);
+			}
+		}
+	}
+}
+
+void vShieldChangeType(int tank)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+	{
+		vRemoveShield(tank);
+	}
+
+	vShieldReset2(tank);
+}
+
+void vShieldRockThrow(int tank, int rock)
+{
+	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esShieldCache[tank].g_iShieldAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esShieldCache[tank].g_flShieldThrowChance && ((g_esShieldCache[tank].g_iShieldType & MT_SHIELD_EXPLOSIVE) || (g_esShieldCache[tank].g_iShieldType & MT_SHIELD_FIRE)))
+	{
+		if (bIsAreaNarrow(tank, g_esShieldCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esShieldPlayer[tank].g_iTankType) || (g_esShieldCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShieldCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[tank].g_iAccessFlags)))
+		{
+			return;
+		}
+
+		DataPack dpShieldThrow;
+		CreateDataTimer(0.1, tTimerShieldThrow, dpShieldThrow, TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+		dpShieldThrow.WriteCell(EntIndexToEntRef(rock));
+		dpShieldThrow.WriteCell(GetClientUserId(tank));
+		dpShieldThrow.WriteCell(g_esShieldPlayer[tank].g_iTankType);
+	}
+}
+
+void vShieldCopyStats2(int oldTank, int newTank)
+{
+	g_esShieldPlayer[newTank].g_iAmmoCount = g_esShieldPlayer[oldTank].g_iAmmoCount;
+	g_esShieldPlayer[newTank].g_iCooldown = g_esShieldPlayer[oldTank].g_iCooldown;
+}
+
+void vRemoveShield(int tank)
+{
+	if (bIsValidEntRef(g_esShieldPlayer[tank].g_iShield))
+	{
+		g_esShieldPlayer[tank].g_iShield = EntRefToEntIndex(g_esShieldPlayer[tank].g_iShield);
+		if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
+		{
+			vSetShieldGlow(g_esShieldPlayer[tank].g_iShield, 0, 0, 0, 0, 0);
+
+			if (bIsValidClient(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && MT_IsGlowEnabled(tank))
+			{
+				int iGlowColor[4];
+				MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
+				vSetShieldGlow(tank, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(tank) ? 1 : 0), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), (MT_GetGlowType(tank) == 1 ? 3 : 2));
+			}
+
+			MT_HideEntity(g_esShieldPlayer[tank].g_iShield, false);
+			RemoveEntity(g_esShieldPlayer[tank].g_iShield);
+		}
+	}
+
+	g_esShieldPlayer[tank].g_bActivated = false;
+	g_esShieldPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
+}
+
+void vShieldReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vShieldAbility(iPlayer, false);
+			vShieldReset2(iPlayer);
+		}
+	}
+}
+
+void vShieldReset2(int tank)
+{
+	g_esShieldPlayer[tank].g_flHealth = 0.0;
+	g_esShieldPlayer[tank].g_iAmmoCount = 0;
+	g_esShieldPlayer[tank].g_iCooldown = -1;
+	g_esShieldPlayer[tank].g_iCooldown2 = -1;
+	g_esShieldPlayer[tank].g_iDuration = -1;
+	g_esShieldPlayer[tank].g_iShield = INVALID_ENT_REFERENCE;
+}
+
+void vShieldReset3(int tank)
+{
+	int iTime = GetTime();
+	g_esShieldPlayer[tank].g_iCooldown = (g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esShieldCache[tank].g_iHumanCooldown) : -1;
+	if (g_esShieldPlayer[tank].g_iCooldown != -1 && g_esShieldPlayer[tank].g_iCooldown > iTime)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman5", g_esShieldPlayer[tank].g_iCooldown - iTime);
+	}
+}
+
+void vSetShieldGlow(int entity, int color, int flashing, int min, int max, int type)
+{
+	if (!g_bSecondGame)
+	{
+		return;
+	}
+
+	SetEntProp(entity, Prop_Send, "m_glowColorOverride", color);
+	SetEntProp(entity, Prop_Send, "m_bFlashing", flashing);
+	SetEntProp(entity, Prop_Send, "m_nGlowRangeMin", min);
+	SetEntProp(entity, Prop_Send, "m_nGlowRange", max);
+	SetEntProp(entity, Prop_Send, "m_iGlowType", type);
+}
+
+void vShield(int tank)
+{
+	if (bIsAreaNarrow(tank, g_esShieldCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esShieldPlayer[tank].g_iTankType) || (g_esShieldCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShieldCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[tank].g_iAccessFlags)))
+	{
+		return;
+	}
+
+	static float flOrigin[3];
+	GetClientAbsOrigin(tank, flOrigin);
+	flOrigin[2] -= 120.0;
+
+	SetEntityModel(g_esShieldPlayer[tank].g_iShield, MODEL_SHIELD);
+
+	DispatchKeyValueVector(g_esShieldPlayer[tank].g_iShield, "origin", flOrigin);
+	DispatchSpawn(g_esShieldPlayer[tank].g_iShield);
+	vSetEntityParent(g_esShieldPlayer[tank].g_iShield, tank, true);
+
+	SetEntityRenderMode(g_esShieldPlayer[tank].g_iShield, RENDER_TRANSTEXTURE);
+	SetEntityRenderColor(g_esShieldPlayer[tank].g_iShield, iGetRandomColor(g_esShieldCache[tank].g_iShieldColor[0]), iGetRandomColor(g_esShieldCache[tank].g_iShieldColor[1]), iGetRandomColor(g_esShieldCache[tank].g_iShieldColor[2]), iGetRandomColor(g_esShieldCache[tank].g_iShieldColor[3]));
+
+	if (g_esShieldCache[tank].g_iShieldGlow == 1)
+	{
+		vSetShieldGlow(tank, 0, 0, 0, 0, 0);
+		int iGlowColor[4];
+		MT_GetTankColors(tank, 2, iGlowColor[0], iGlowColor[1], iGlowColor[2], iGlowColor[3]);
+		vSetShieldGlow(g_esShieldPlayer[tank].g_iShield, iGetRGBColor(iGlowColor[0], iGlowColor[1], iGlowColor[2]), (MT_IsGlowFlashing(tank) ? 1 : 0), MT_GetGlowRange(tank, false), MT_GetGlowRange(tank, true), (MT_GetGlowType(tank) == 1 ? 3 : 2));
+	}
+
+	SetEntProp(g_esShieldPlayer[tank].g_iShield, Prop_Send, "m_CollisionGroup", 1);
+	MT_HideEntity(g_esShieldPlayer[tank].g_iShield, true);
+	g_esShieldPlayer[tank].g_iShield = EntIndexToEntRef(g_esShieldPlayer[tank].g_iShield);
+}
+
+void vShieldAbility(int tank, bool shield)
+{
+	static int iTime;
+	iTime = GetTime();
+
+	switch (shield)
+	{
+		case true:
+		{
+			if (bIsAreaNarrow(tank, g_esShieldCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esShieldPlayer[tank].g_iTankType) || (g_esShieldCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShieldCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[tank].g_iAccessFlags)) || ((!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esShieldCache[tank].g_iHumanAbility != 1) && g_esShieldPlayer[tank].g_iCooldown2 != -1 && g_esShieldPlayer[tank].g_iCooldown2 > iTime))
+			{
+				return;
+			}
+
+			if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esShieldPlayer[tank].g_iAmmoCount < g_esShieldCache[tank].g_iHumanAmmo && g_esShieldCache[tank].g_iHumanAmmo > 0))
+			{
+				if (GetRandomFloat(0.1, 100.0) <= g_esShieldCache[tank].g_flShieldChance)
+				{
+					g_esShieldPlayer[tank].g_iShield = CreateEntityByName("prop_dynamic");
+					if (bIsValidEntity(g_esShieldPlayer[tank].g_iShield))
+					{
+						g_esShieldPlayer[tank].g_bActivated = true;
+						g_esShieldPlayer[tank].g_iCooldown2 = -1;
+						g_esShieldPlayer[tank].g_flHealth = g_esShieldCache[tank].g_flShieldHealth;
+
+						vShield(tank);
+						ExtinguishEntity(tank);
+
+						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
+						{
+							g_esShieldPlayer[tank].g_iAmmoCount++;
+							g_esShieldPlayer[tank].g_iDuration = iTime + g_esShieldPlayer[tank].g_iHumanDuration;
+
+							vExternalView(tank, 1.5);
+							MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman", g_esShieldPlayer[tank].g_iAmmoCount, g_esShieldCache[tank].g_iHumanAmmo);
+						}
+
+						if (g_esShieldCache[tank].g_iShieldMessage == 1)
+						{
+							static char sTankName[33];
+							MT_GetTankName(tank, sTankName);
+							MT_PrintToChatAll("%s %t", MT_TAG2, "Shield", sTankName);
+							MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shield", LANG_SERVER, sTankName);
+						}
+					}
+				}
+				else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
+				{
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldHuman2");
+				}
+			}
+			else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
+			{
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "ShieldAmmo");
+			}
+		}
+		case false:
+		{
+			g_esShieldPlayer[tank].g_bActivated = false;
+			g_esShieldPlayer[tank].g_iDuration = -1;
+			g_esShieldPlayer[tank].g_flHealth = 0.0;
+
+			vRemoveShield(tank);
+
+			switch (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
+			{
+				case true:
+				{
+					vExternalView(tank, 1.5);
+					vShieldReset3(tank);
+				}
+				case false: g_esShieldPlayer[tank].g_iCooldown2 = iTime + g_esShieldCache[tank].g_iShieldDelay;
+			}
+
+			if (g_esShieldCache[tank].g_iShieldMessage == 1)
+			{
+				static char sTankName[33];
+				MT_GetTankName(tank, sTankName);
+				MT_PrintToChatAll("%s %t", MT_TAG2, "Shield2", sTankName);
+				MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Shield2", LANG_SERVER, sTankName);
+			}
+		}
+	}
+}
+
+public Action tTimerShieldCombo(Handle timer, int userid)
+{
+	int iTank = GetClientOfUserId(userid);
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShieldAbility[g_esShieldPlayer[iTank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShieldPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esShieldCache[iTank].g_iShieldAbility == 0 || g_esShieldPlayer[iTank].g_bActivated)
+	{
+		return Plugin_Stop;
+	}
+
+	vShieldAbility(iTank, true);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerShieldThrow(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	static int iRock;
+	iRock = EntRefToEntIndex(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || iRock == INVALID_ENT_REFERENCE || !bIsValidEntity(iRock))
+	{
+		return Plugin_Stop;
+	}
+
+	static int iTank, iType;
+	iTank = GetClientOfUserId(pack.ReadCell());
+	iType = pack.ReadCell();
+	if (!MT_IsTankSupported(iTank) || bIsAreaNarrow(iTank, g_esShieldCache[iTank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esShieldPlayer[iTank].g_iTankType) || (g_esShieldCache[iTank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esShieldCache[iTank].g_iRequiresHumans) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esShieldAbility[g_esShieldPlayer[iTank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esShieldPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esShieldPlayer[iTank].g_iTankType || g_esShieldCache[iTank].g_iShieldAbility == 0 || !g_esShieldPlayer[iTank].g_bActivated)
+	{
+		return Plugin_Stop;
+	}
+
+	if (!(g_esShieldCache[iTank].g_iShieldType & MT_SHIELD_EXPLOSIVE) && !(g_esShieldCache[iTank].g_iShieldType & MT_SHIELD_FIRE))
+	{
+		return Plugin_Stop;
+	}
+
+	static float flVelocity[3];
+	GetEntPropVector(iRock, Prop_Data, "m_vecVelocity", flVelocity);
+
+	static float flVector;
+	flVector = GetVectorLength(flVelocity);
+	if (flVector > 500.0)
+	{
+		static int iTypeCount, iTypes[4], iFlag;
+		iTypeCount = 0;
+		for (int iBit = 0; iBit < sizeof(iTypes); iBit++)
+		{
+			iFlag = (1 << iBit);
+			if (!(g_esShieldCache[iTank].g_iShieldType & iFlag))
+			{
+				continue;
+			}
+
+			iTypes[iTypeCount] = iFlag;
+			iTypeCount++;
+		}
+
+		static int iChosen;
+		iChosen = iTypes[GetRandomInt(0, iTypeCount - 1)];
+		if (iChosen == 2 || iChosen == 4)
+		{
+			static int iThrowable;
+			iThrowable = CreateEntityByName("prop_physics");
+			if (bIsValidEntity(iThrowable))
+			{
+				switch (iChosen)
+				{
+					case 2: SetEntityModel(iThrowable, MODEL_PROPANETANK);
+					case 4: SetEntityModel(iThrowable, MODEL_GASCAN);
+				}
+
+				static float flPos[3];
+				GetEntPropVector(iRock, Prop_Send, "m_vecOrigin", flPos);
+				RemoveEntity(iRock);
+
+				NormalizeVector(flVelocity, flVelocity);
+				ScaleVector(flVelocity, g_cvMTShieldTankThrowForce.FloatValue * 1.4);
+
+				TeleportEntity(iThrowable, flPos, NULL_VECTOR, NULL_VECTOR);
+				DispatchSpawn(iThrowable);
+				TeleportEntity(iThrowable, NULL_VECTOR, NULL_VECTOR, flVelocity);
+			}
+		}
+
+		return Plugin_Stop;
+	}
+
+	return Plugin_Continue;
+}

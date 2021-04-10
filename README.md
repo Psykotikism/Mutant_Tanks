@@ -1543,83 +1543,9 @@ sm_mt_version2 - Find out the current version of Mutant Tanks.
 
 // Accessible by all players.
 sm_mutanttank - Choose a Mutant Tank. (This command only works if the "Spawn Mode" setting under the "Plugin Settings/Human Support" section is set to 0.)
+sm_mt_ability - View information about each ability (A-L).
+sm_mt_ability2 - View information about each ability (M-Z).
 sm_mt_info - View information about Mutant Tanks.
-sm_mt_absorb - View information about the Absorb ability.
-sm_mt_acid - View information about the Acid ability.
-sm_mt_aimless - View information about the Aimless ability.
-sm_mt_ammo - View information about the Ammo ability.
-sm_mt_blind - View information about the Blind ability.
-sm_mt_bomb - View information about the Bomb ability.
-sm_mt_bury - View information about the Bury ability.
-sm_mt_car - View information about the Car ability.
-sm_mt_choke - View information about the Choke ability.
-sm_mt_clone - View information about the Clone ability.
-sm_mt_cloud - View information about the Cloud ability.
-sm_mt_drop - View information about the Drop ability.
-sm_mt_drug - View information about the Drug ability.
-sm_mt_drunk - View information about the Drunk ability.
-sm_mt_electric - View information about the Electric ability.
-sm_mt_enforce - View information about the Enforce ability.
-sm_mt_fast - View information about the Fast ability.
-sm_mt_fire - View information about the Fire ability.
-sm_mt_fling - View information about the Fling ability.
-sm_mt_fly - View information about the Fly ability.
-sm_mt_fragile - View information about the Fragile ability.
-sm_mt_ghost - View information about the Ghost ability.
-sm_mt_god - View information about the God ability.
-sm_mt_gravity - View information about the Gravity ability.
-sm_mt_heal - View information about the Heal ability.
-sm_mt_hit - View information about the Hit ability.
-sm_mt_hurt - View information about the Hurt ability.
-sm_mt_hypno - View information about the Hypno ability.
-sm_mt_ice - View information about the Ice ability.
-sm_mt_idle - View information about the Idle ability.
-sm_mt_invert - View information about the Invert ability.
-sm_mt_item - View information about the Item ability.
-sm_mt_jump - View information about the Jump ability.
-sm_mt_kamikaze - View information about the Kamikaze ability.
-sm_mt_lag - View information about the Lag ability.
-sm_mt_laser - View information about the Laser ability.
-sm_mt_leech - View information about the Leech ability.
-sm_mt_lightning - View information about the Lightning ability.
-sm_mt_medic - View information about the Medic ability.
-sm_mt_meteor - View information about the Meteor ability.
-sm_mt_minion - View information about the Minion ability.
-sm_mt_necro - View information about the Necro ability.
-sm_mt_nullify - View information about the Nullify ability.
-sm_mt_omni - View information about the Omni ability.
-sm_mt_panic - View information about the Panic ability.
-sm_mt_pimp - View information about the Pimp ability.
-sm_mt_puke - View information about the Puke ability.
-sm_mt_pyro - View information about the Pyro ability.
-sm_mt_quiet - View information about the Quiet ability.
-sm_mt_recoil - View information about the Recoil ability.
-sm_mt_regen - View information about the Regen ability.
-sm_mt_respawn - View information about the Respawn ability.
-sm_mt_restart - View information about the Restart ability.
-sm_mt_rock - View information about the Rock ability.
-sm_mt_rocket - View information about the Rocket ability.
-sm_mt_shake - View information about the Shake ability.
-sm_mt_shield - View information about the Shield ability.
-sm_mt_shove - View information about the Shove ability.
-sm_mt_slow - View information about the Slow ability.
-sm_mt_smash - View information about the Smash ability.
-sm_mt_smite - View information about the Smite ability.
-sm_mt_spam - View information about the Spam ability.
-sm_mt_splash - View information about the Splash ability.
-sm_mt_splatter - View information about the Splatter ability.
-sm_mt_throw - View information about the Throw ability.
-sm_mt_track - View information about the Track ability.
-sm_mt_ultimate - View information about the Ultimate ability.
-sm_mt_undead - View information about the Undead ability.
-sm_mt_vampire - View information about the Vampire ability.
-sm_mt_vision - View information about the Vision ability.
-sm_mt_warp - View information about the Warp ability.
-sm_mt_whirl - View information about the Whirl ability.
-sm_mt_witch - View information about the Witch ability.
-sm_mt_xiphos - View information about the Xiphos ability.
-sm_mt_yell - View information about the Yell ability.
-sm_mt_zombie - View information about the Zombie ability.
 ```
 
 ### Configuration Formatting
@@ -1966,7 +1892,7 @@ That setting is a special mode setting for players, which can determine how some
 
 10. Is there any way players can view information about this feature in-game?
 
-Yes, each ability has a `sm_mt_<ability name here>` command that players can use anytime to view information about abilities.
+Yes, use the `sm_mt_ability`/`sm_mt_ability2` commands.
 
 The commands will each provide a menu that players can use to display certain information in chat.
 

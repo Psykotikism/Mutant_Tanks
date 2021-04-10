@@ -681,6 +681,29 @@
 			// 3rd number = Effect for teammates.
 			"Reward Effect"				"15,15,15"
 
+			// Notify survivors when they receive a reward from Mutant Tanks.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 3
+			// --
+			// 0: OFF
+			// 1: When survivors solo a Mutant Tank or do not do enough damage to a Mutant Tank.
+			// 2: When survivors receive a reward.
+			// --
+			// 1st number = Notify killers.
+			// 2nd number = Notify assistants.
+			// 3rd number = Notify teammates.
+			"Reward Notify"				"3,3,3"
+
 			// The minimum amount of damage in percentage required to receive a reward.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -697,6 +720,29 @@
 			// 2nd number = Percentage of damage required for assistant rewards.
 			// 3rd number = Percentage of damage required for teammate rewards.
 			"Reward Percentage"			"10.0,10.0,10.0"
+
+			// The visual effects displayed for rewards.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 31
+			// --
+			// 0: OFF
+			// 1: Screen color
+			// 2: Glow outline (Only available in Left 4 Dead 2.)
+			// 3: Body color
+			// 8: Particle effect
+			// 16: Looping voiceline
+			// --
+			// 1st number = Visual effect for killers.
+			// 2nd number = Visual effect for assistants.
+			// 3rd number = Visual effect for teammates.
+			"Reward Visual"				"31,31,31"
 
 			// The action duration to reward to survivors.
 			// Note: This setting can be used for standard Tanks.
@@ -1168,6 +1214,108 @@
 			// 2nd number = Enable useful rewards for assistants.
 			// 3rd number = Enable useful rewards for teammates.
 			"Useful Rewards"			"15,15,15"
+
+			// These are the RGBA values of the recipients' body color visual.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: Any value less than "0" will output a random color.
+			// --
+			// Separate RGBA sets with commas (",").
+			// Separate RGBA values with semi-colons (";").
+			// --
+			// RGBA sets limit: 3
+			// Character limit for each set: 16
+			// --
+			// Minimum value for each: -1 (Random)
+			// Maximum value for each: 255 (Brightest)
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			// --
+			// 1st set = RGBA set for killers.
+			// 2nd set = RGBA set for assistants.
+			// 3rd set = RGBA set for teammates.
+			"Body Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
+
+			// These are the RGB values of the recipients' glow outline color visual.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: Only available in Left 4 Dead 2.
+			// Note: Any value less than "0" will output a random color.
+			// --
+			// Separate RGB sets with commas (",").
+			// Separate RGB values with semi-colons (";").
+			// --
+			// RGBA sets limit: 3
+			// Character limit for each set: 12
+			// --
+			// Minimum value for each: -1 (Random)
+			// Maximum value for each: 255 (Brightest)
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// --
+			// 1st set = RGB set for killers.
+			// 2nd set = RGB set for assistants.
+			// 3rd set = RGB set for teammates.
+			"Glow Color Visual"			"-1;-1;-1,-1;-1;-1,-1;-1;-1"
+
+			// The voiceline that plays on loop throughout a survivor's reward duration.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate voicelines sets with commas (",").
+			// --
+			// Item sets limit: 3
+			// Character limit for each set: 64
+			// --
+			// 1st set = Looping voiceline for killers.
+			// 2nd set = Looping voiceline for assistants.
+			// 3rd set = Looping voiceline for teammates.
+			"Looping Voiceline Visual"		"PlayerDeath,PlayerDeath,PlayerDeath"
+
+			// The particles for the recipients' particle effect visual.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 15
+			// --
+			// 0: OFF
+			// 1: Blood Explosion
+			// 2: Electric Jolt
+			// 4: Fire Trail
+			// 8: Acid Trail (Only available in Left 4 Dead 2.)
+			"Particle Effect Visual"		"15,15,15"
+
+			// These are the RGBA values of the recipients' screen color visual.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// Note: Any value less than "0" will output a random color.
+			// --
+			// Separate RGBA sets with commas (",").
+			// Separate RGBA values with semi-colons (";").
+			// --
+			// RGBA sets limit: 3
+			// Character limit for each set: 16
+			// --
+			// Minimum value for each: -1 (Random)
+			// Maximum value for each: 255 (Brightest)
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			// --
+			// 1st set = RGBA set for killers.
+			// 2nd set = RGBA set for assistants.
+			// 3rd set = RGBA set for teammates.
+			"Screen Color Visual"			"-1;-1;-1;-1,-1;-1;-1;-1,-1;-1;-1;-1"
 		}
 		"Competitive"
 		{
@@ -2339,6 +2487,29 @@
 			// 3rd number = Effect for teammates.
 			"Reward Effect"				"0,0,0"
 
+			// Notify survivors when they receive a reward from the Mutant Tank.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 3
+			// --
+			// 0: OFF
+			// 1: When survivors solo the Mutant Tank or do not do enough damage to the Mutant Tank.
+			// 2: When survivors receive a reward.
+			// --
+			// 1st number = Notify killers.
+			// 2nd number = Notify assistants.
+			// 3rd number = Notify teammates.
+			"Reward Notify"				"0,0,0"
+
 			// The minimum amount of damage in percentage required to receive a reward.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -2355,6 +2526,29 @@
 			// 2nd number = Percentage of damage required for assistant rewards.
 			// 3rd number = Percentage of damage required for teammate rewards.
 			"Reward Percentage"			"0.0,0.0,0.0"
+
+			// The visual effects displayed for rewards.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 31
+			// --
+			// 0: OFF
+			// 1: Screen color
+			// 2: Glow outline (Only available in Left 4 Dead 2.)
+			// 3: Body color
+			// 8: Particle effect
+			// 16: Looping voiceline
+			// --
+			// 1st number = Visual effect for killers.
+			// 2nd number = Visual effect for assistants.
+			// 3rd number = Visual effect for teammates.
+			"Reward Visual"				"0,0,0"
 
 			// The action duration to reward to survivors.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
@@ -2826,6 +3020,108 @@
 			// 2nd number = Enable useful rewards for assistants.
 			// 3rd number = Enable useful rewards for teammates.
 			"Useful Rewards"			"0,0,0"
+
+			// These are the RGBA values of the recipients' body color visual.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: Any value less than "0" will output a random color.
+			// --
+			// Separate RGBA sets with commas (",").
+			// Separate RGBA values with semi-colons (";").
+			// --
+			// RGBA sets limit: 3
+			// Character limit for each set: 16
+			// --
+			// Minimum value for each: -1 (Random)
+			// Maximum value for each: 255 (Brightest)
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			// --
+			// 1st set = RGBA set for killers.
+			// 2nd set = RGBA set for assistants.
+			// 3rd set = RGBA set for teammates.
+			"Body Color Visual"			""
+
+			// These are the RGB values of the recipients' glow outline color visual.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
+			// Note: Any value less than "0" will output a random color.
+			// --
+			// Separate RGB sets with commas (",").
+			// Separate RGB values with semi-colons (";").
+			// --
+			// RGBA sets limit: 3
+			// Character limit for each set: 12
+			// --
+			// Minimum value for each: -1 (Random)
+			// Maximum value for each: 255 (Brightest)
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// --
+			// 1st set = RGB set for killers.
+			// 2nd set = RGB set for assistants.
+			// 3rd set = RGB set for teammates.
+			"Glow Color Visual"			""
+
+			// The voiceline that plays on loop throughout a survivor's reward duration.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate voicelines sets with commas (",").
+			// --
+			// Item sets limit: 3
+			// Character limit for each set: 64
+			// --
+			// 1st set = Looping voiceline for killers.
+			// 2nd set = Looping voiceline for assistants.
+			// 3rd set = Looping voiceline for teammates.
+			"Looping Voiceline Visual"		""
+
+			// The particles for the recipients' particle effect visual.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Add up numbers together for different results.
+			// --
+			// Minimum: 0
+			// Maximum: 15
+			// --
+			// 0: OFF
+			// 1: Blood Explosion
+			// 2: Electric Jolt
+			// 4: Fire Trail
+			// 8: Acid Trail (Only available in Left 4 Dead 2.)
+			"Particle Effect Visual"		"0,0,0"
+
+			// These are the RGBA values of the recipients' screen color visual.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// Note: Any value less than "0" will output a random color.
+			// --
+			// Separate RGBA sets with commas (",").
+			// Separate RGBA values with semi-colons (";").
+			// --
+			// RGBA sets limit: 3
+			// Character limit for each set: 16
+			// --
+			// Minimum value for each: -1 (Random)
+			// Maximum value for each: 255 (Brightest)
+			// --
+			// 1st number = Red
+			// 2nd number = Green
+			// 3rd number = Blue
+			// 4th number = Alpha
+			// --
+			// 1st set = RGBA set for killers.
+			// 2nd set = RGBA set for assistants.
+			// 3rd set = RGBA set for teammates.
+			"Screen Color Visual"			""
 		}
 		"Glow"
 		{
@@ -3848,7 +4144,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank absorbs most of the damage it receives.
-		// Requires "mt_absorb.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_absorb.sp" to work.
 		"Absorb Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4051,7 +4347,8 @@
 		// - "Acid Hit Mode"
 		// "Acid Rock Break" - When the Mutant Tank's rock breaks, it creates an acid puddle.
 		// - "Acid Rock Chance"
-		// Requires "mt_acid.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_acid.sp" to work.
+		// Note: Only available in Left 4 Dead 2.
 		"Acid Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4328,7 +4625,7 @@
 		// "Aimless Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor cannot aim.
 		// - "Aimless Chance"
 		// - "Aimless Hit Mode"
-		// Requires "mt_aimless.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_aimless.sp" to work.
 		"Aimless Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4554,7 +4851,7 @@
 		// "Ammo Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, their ammunition is taken away.
 		// - "Ammo Chance"
 		// - "Ammo Hit Mode"
-		// Requires "mt_ammo.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_ammo.sp" to work.
 		"Ammo Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -4774,7 +5071,7 @@
 		// "Blind Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is blinded.
 		// - "Blind Chance"
 		// - "Blind Hit Mode"
-		// Requires "mt_blind.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_blind.sp" to work.
 		"Blind Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5010,7 +5307,7 @@
 		// - "Bomb Hit Mode"
 		// "Bomb Rock Break" - When the Mutant Tank's rock breaks, it creates an explosion.
 		// - "Bomb Rock Chance"
-		// Requires "mt_bomb.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_bomb.sp" to work.
 		"Bomb Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5251,7 +5548,7 @@
 		// "Bury Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is buried.
 		// - "Bury Chance"
 		// - "Bury Hit Mode"
-		// Requires "mt_bury.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_bury.sp" to work.
 		"Bury Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5490,7 +5787,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank creates car showers.
-		// Requires "mt_car.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_car.sp" to work.
 		"Car Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5687,7 +5984,7 @@
 		// "Choke Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is choked in the air.
 		// - "Choke Chance"
 		// - "Choke Hit Mode"
-		// Requires "mt_choke.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_choke.sp" to work.
 		"Choke Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -5931,7 +6228,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank creates clones of itself.
-		// Requires "mt_clone.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_clone.sp" to work.
 		"Clone Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6120,7 +6417,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank constantly emits clouds of smoke that damage survivors caught in them.
-		// Requires "mt_cloud.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_cloud.sp" to work.
 		"Cloud Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6273,7 +6570,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank drops weapons upon death.
-		// Requires "mt_drop.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_drop.sp" to work.
 		"Drop Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6419,7 +6716,7 @@
 		// "Drug Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is drugged.
 		// - "Drug Chance"
 		// - "Drug Hit Mode"
-		// Requires "mt_drug.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_drug.sp" to work.
 		"Drug Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6659,7 +6956,7 @@
 		// "Drunk Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor gets drunk.
 		// - "Drunk Chance"
 		// - "Drunk Hit Mode"
-		// Requires "mt_drunk.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_drunk.sp" to work.
 		"Drunk Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -6910,7 +7207,7 @@
 		// "Electric Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is electrocuted.
 		// - "Electric Chance"
 		// - "Electric Hit Mode"
-		// Requires "mt_electric.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_electric.sp" to work.
 		"Electric Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7162,7 +7459,7 @@
 		// "Enforce Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is forced to only use a certain weapon slot.
 		// - "Enforce Chance"
 		// - "Enforce Hit Mode"
-		// Requires "mt_enforce.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_enforce.sp" to work.
 		"Enforce Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7399,7 +7696,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank runs really fast like the Flash.
-		// Requires "mt_fast.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_fast.sp" to work.
 		"Fast Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7549,7 +7846,7 @@
 		// - "Fire Hit Mode"
 		// "Fire Rock Break" - When the Mutant Tank's rock breaks, it creates a fire.
 		// - "Fire Rock Chance"
-		// Requires "mt_fire.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_fire.sp" to work.
 		"Fire Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -7793,7 +8090,8 @@
 		// "Fling Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is flung into the air.
 		// - "Fling Chance"
 		// - "Fling Hit Mode"
-		// Requires "mt_fling.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_fling.sp" to work.
+		// Note: Only available in Left 4 Dead 2.
 		"Fling Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8044,7 +8342,7 @@
 	{
 		// The Mutant Tank can fly.
 		// "Fly Type" - AI (bot) Tanks - When an AI (bot) Tank throws a rock, attacks, gets hurt, or jumps, it has a chance to fly.
-		// Requires "mt_fly.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_fly.sp" to work.
 		"Fly Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8210,7 +8508,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank takes more damage but becomes stronger.
-		// Requires "mt_fragile.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_fragile.sp" to work.
 		"Fragile Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8441,7 +8739,7 @@
 		// "Ghost Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is disarmed.
 		// - "Ghost Chance"
 		// - "Ghost Hit Mode"
-		// Requires "mt_ghost.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_ghost.sp" to work.
 		"Ghost Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8760,7 +9058,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank gains temporary immunity to all types of damage.
-		// Requires "mt_god.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_god.sp" to work.
 		"God Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -8910,7 +9208,7 @@
 		// "Gravity Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's gravity changes.
 		// - "Gravity Chance"
 		// - "Gravity Hit Mode"
-		// Requires "mt_gravity.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_gravity.sp" to work.
 		"Gravity Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -9172,7 +9470,7 @@
 		// "Heal Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is set to temporary health and will die when they reach 0 HP.
 		// - "Heal Chance"
 		// - "Heal Hit Mode"
-		// Requires "mt_heal.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_heal.sp" to work.
 		"Heal Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -9469,7 +9767,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank only takes damage in certain parts of its body.
-		// Requires "mt_hit.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_hit.sp" to work.
 		"Hit Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -9567,7 +9865,7 @@
 		// "Hurt Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor gets hurt repeatedly.
 		// - "Hurt Chance"
 		// - "Hurt Hit Mode"
-		// Requires "mt_hurt.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_hurt.sp" to work.
 		"Hurt Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -9819,7 +10117,7 @@
 		// "Hypno Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is hypnotized.
 		// - "Hypno Chance"
 		// - "Hypno Hit Mode"
-		// Requires "mt_hypno.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_hypno.sp" to work.
 		"Hypno Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -10103,7 +10401,7 @@
 		// "Ice Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is frozen in place.
 		// - "Ice Chance"
 		// - "Ice Hit Mode"
-		// Requires "mt_ice.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_ice.sp" to work.
 		"Ice Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -10330,7 +10628,7 @@
 		// "Idle Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor goes idle.
 		// - "Idle Chance"
 		// - "Idle Hit Mode"
-		// Requires "mt_idle.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_idle.sp" to work.
 		"Idle Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -10543,7 +10841,7 @@
 		// "Invert Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's movement keys are inverted.
 		// - "Invert Chance"
 		// - "Invert Hit Mode"
-		// Requires "mt_invert.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_invert.sp" to work.
 		"Invert Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -10763,7 +11061,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank gives survivors items upon death.
-		// Requires "mt_item.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_item.sp" to work.
 		"Item Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -10889,7 +11187,7 @@
 		// "Jump Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor jumps uncontrollably.
 		// - "Jump Chance"
 		// - "Jump Hit Mode"
-		// Requires "mt_jump.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_jump.sp" to work.
 		"Jump Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -11190,7 +11488,7 @@
 		// "Kamikaze Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor dies along with the Mutant Tank.
 		// - "Kamikaze Chance"
 		// - "Kamikaze Hit Mode"
-		// Requires "mt_kamikaze.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_kamikaze.sp" to work.
 		"Kamikaze Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -11386,7 +11684,7 @@
 		// "Lag Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor lags.
 		// - "Lag Chance"
 		// - "Lag Hit Mode"
-		// Requires "mt_lag.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_lag.sp" to work.
 		"Lag Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -11605,7 +11903,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank shoots lasers.
-		// Requires "mt_laser.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_laser.sp" to work.
 		"Laser Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -11790,7 +12088,7 @@
 		// "Leech Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the Mutant Tank leeches health off of the survivor.
 		// - "Leech Chance"
 		// - "Leech Hit Mode"
-		// Requires "mt_leech.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_leech.sp" to work.
 		"Leech Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -12024,7 +12322,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank creates lightning storms.
-		// Requires "mt_lightning.smx" to be installed.
+		// Requires "mt_abilities.smx" to be compiled with "mt_lightning.sp" to work.
 		// Note: Only available in Left 4 Dead 2.
 		"Lightning Ability"
 		{
@@ -12192,7 +12490,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank heals nearby special infected.
-		// Requires "mt_medic.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_medic.sp" to work.
 		"Medic Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -12401,7 +12699,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank creates meteor showers.
-		// Requires "mt_meteor.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_meteor.sp" to work.
 		"Meteor Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -12598,7 +12896,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank spawns minions.
-		// Requires "mt_minion.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_minion.sp" to work.
 		"Minion Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -12763,7 +13061,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank resurrects nearby special infected that die.
-		// Requires "mt_necro.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_necro.sp" to work.
 		"Necro Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -12914,7 +13212,7 @@
 		// "Nullify Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor does not do any damage to the Mutant Tank.
 		// - "Nullify Chance"
 		// - "Nullify Hit Mode"
-		// Requires "mt_nullify.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_nullify.sp" to work.
 		"Nullify Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -13134,7 +13432,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank has omni-level access to other nearby Mutant Tanks' abilities.
-		// Requires "mt_omni.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_omni.sp" to work.
 		"Omni Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -13286,7 +13584,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank starts panic events.
-		// Requires "mt_panic.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_panic.sp" to work.
 		"Panic Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -13439,7 +13737,7 @@
 		// "Pimp Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is repeatedly pimp slapped.
 		// - "Pimp Chance"
 		// - "Pimp Hit Mode"
-		// Requires "mt_pimp.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_pimp.sp" to work.
 		"Pimp Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -13694,7 +13992,7 @@
 		// "Puke Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the Mutant Tank pukes on the survivor.
 		// - "Puke Chance"
 		// - "Puke Hit Mode"
-		// Requires "mt_puke.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_puke.sp" to work.
 		"Puke Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -13936,7 +14234,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank ignites itself and gains a speed boost when on fire.
-		// Requires "mt_pyro.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_pyro.sp" to work.
 		"Pyro Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -14109,7 +14407,7 @@
 		// "Quiet Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor cannot hear the Mutant Tank's sounds.
 		// - "Quiet Chance"
 		// - "Quiet Hit Mode"
-		// Requires "mt_quiet.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_quiet.sp" to work.
 		"Quiet Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -14336,7 +14634,7 @@
 		// "Recoil Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor experiences strong recoil.
 		// - "Recoil Chance"
 		// - "Recoil Hit Mode"
-		// Requires "mt_recoil.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_recoil.sp" to work.
 		"Recoil Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -14556,7 +14854,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank regenerates health.
-		// Requires "mt_regen.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_regen.sp" to work.
 		"Regen Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -14720,7 +15018,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank respawns upon death.
-		// Requires "mt_respawn.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_respawn.sp" to work.
 		"Respawn Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -14859,7 +15157,7 @@
 		// "Restart Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor respawns at the start of the map or near a teammate.
 		// - "Restart Chance"
 		// - "Restart Hit Mode"
-		// Requires "mt_restart.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_restart.sp" to work.
 		"Restart Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -15083,7 +15381,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank creates rock showers.
-		// Requires "mt_rock.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_rock.sp" to work.
 		"Rock Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -15264,7 +15562,7 @@
 		// "Rocket Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is sent into space.
 		// - "Rocket Chance"
 		// - "Rocket Hit Mode"
-		// Requires "mt_rocket.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_rocket.sp" to work.
 		"Rocket Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -15499,7 +15797,7 @@
 		// "Shake Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's screen is shaken.
 		// - "Shake Chance"
 		// - "Shake Hit Mode"
-		// Requires "mt_shake.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_shake.sp" to work.
 		"Shake Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -15768,7 +16066,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank protects itself with a shield and throws propane tanks or gas cans.
-		// Requires "mt_shield.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_shield.sp" to work.
 		"Shield Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -16026,7 +16324,7 @@
 		// "Shove Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is shoved repeatedly.
 		// - "Shove Chance"
 		// - "Shove Hit Mode"
-		// Requires "mt_shove.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_shove.sp" to work.
 		"Shove Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -16301,7 +16599,7 @@
 		// "Slow Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is slowed down.
 		// - "Slow Chance"
 		// - "Slow Hit Mode"
-		// Requires "mt_slow.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_slow.sp" to work.
 		"Slow Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -16536,7 +16834,7 @@
 		// "Smash Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is smashed to death.
 		// - "Smash Chance"
 		// - "Smash Hit Mode"
-		// Requires "mt_smash.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_smash.sp" to work.
 		"Smash Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -16756,7 +17054,7 @@
 		// "Smite Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is smitten.
 		// - "Smite Chance"
 		// - "Smite Hit Mode"
-		// Requires "mt_smite.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_smite.sp" to work.
 		"Smite Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -16970,7 +17268,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank spams rocks at survivors.
-		// Requires "mt_spam.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_spam.sp" to work.
 		"Spam Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -17132,7 +17430,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank constantly deals splash damage to nearby survivors.
-		// Requires "mt_splash.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_splash.sp" to work.
 		"Splash Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -17311,7 +17609,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank covers everyone's screens with splatters.
-		// Requires "mt_splatter.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_splatter.sp" to work.
 		// Note: Only available in Left 4 Dead 2.
 		"Splatter Ability"
 		{
@@ -17484,7 +17782,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank throws cars, special infected, Witches, or itself.
-		// Requires "mt_throw.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_throw.sp" to work.
 		"Throw Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -17744,7 +18042,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank throws heat-seeking rocks that will track down the nearest survivors.
-		// Requires "mt_track.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_track.sp" to work.
 		"Track Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -17890,7 +18188,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank activates ultimate mode when low on health to gain temporary godmode and damage boost.
-		// Requires "mt_ultimate.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_ultimate.sp" to work.
 		"Ultimate Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -18058,7 +18356,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank cannot die.
-		// Requires "mt_undead.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_undead.sp" to work.
 		"Undead Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -18178,7 +18476,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank gains health from hurting survivors.
-		// Requires "mt_vampire.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_vampire.sp" to work.
 		"Vampire Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -18278,7 +18576,7 @@
 		// "Vision Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's vision changes.
 		// - "Vision Chance"
 		// - "Vision Hit Mode"
-		// Requires "mt_vision.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_vision.sp" to work.
 		"Vision Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -18514,7 +18812,7 @@
 		// "Warp Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor is warped to a random teammate.
 		// - "Warp Chance"
 		// - "Warp Hit Mode"
-		// Requires "mt_warp.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_warp.sp" to work.
 		"Warp Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -18778,7 +19076,7 @@
 		// "Whirl Hit" - When a survivor is hit by the Mutant Tank's claw or rock, or a survivor hits the Mutant Tank with a melee weapon, the survivor's screen whirls.
 		// - "Whirl Chance"
 		// - "Whirl Hit Mode"
-		// Requires "mt_whirl.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_whirl.sp" to work.
 		"Whirl Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -19020,7 +19318,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank converts nearby common infected into Witch minions.
-		// Requires "mt_witch.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_witch.sp" to work.
 		"Witch Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -19195,7 +19493,7 @@
 	{
 		// The Mutant Tank can steal health from survivors and vice-versa.
 		// Note: Survivors only get a portion of the damage as health while Tanks get the full damage as health.
-		// Requires "mt_xiphos.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_xiphos.sp" to work.
 		"Xiphos Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -19299,7 +19597,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank yells to deafen survivors.
-		// Requires "mt_yell.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_yell.sp" to work.
 		"Yell Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.
@@ -19452,7 +19750,7 @@
 	"Tank #1"
 	{
 		// The Mutant Tank spawns zombies.
-		// Requires "mt_zombie.smx" to be installed.
+		// Requires "mt_abilities2.smx" to be compiled with "mt_zombie.sp" to work.
 		"Zombie Ability"
 		{
 			// Admins with one or more of these access flags have access to this ability.

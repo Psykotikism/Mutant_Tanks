@@ -312,6 +312,11 @@
 		"chi"			"用法: {1} <类型 {2}-{3}> <数量: 1-32> <0: 在十字准星处生成|1: 自动生成>"
 	}
 
+	"CommandUsage2"
+	{
+		"chi"			"用法: {1} \"能力名称\""
+	}
+
 	"CompletedParsing"
 	{
 		"chi"			"解析完成!"
@@ -765,6 +770,11 @@
 	"RewardRespawn3"
 	{
 		"chi"			"你协助队友击杀了{olive} {1}{default}, 获得了{yellow} 复活{default}!"
+	}
+
+	"RewardSolo"
+	{
+		"chi"			"你{default} 独自击杀了{olive} {1}{default}!"
 	}
 
 	"RewardSpeedBoost"

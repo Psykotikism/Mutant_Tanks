@@ -312,6 +312,11 @@
 		"hu"			"Használat: {1} <írd {2}-{3}> <mennyíség: 1-32> <0: születés célkeresztnél|1: születés automatikusan>"
 	}
 
+	"CommandUsage2"
+	{
+		"hu"			"Használat: {1} \"képesség név\""
+	}
+
 	"CompletedParsing"
 	{
 		"hu"			"Elemzés befejezve!"
@@ -765,6 +770,11 @@
 	"RewardRespawn3"
 	{
 		"hu"			"Most{default} kaptál egy{yellow} újjászületést{default} mert segítettél{olive} {1}{default}ellen!"
+	}
+
+	"RewardSolo"
+	{
+		"hu"			"Leszólóztad{default} az{olive} {1}{default}-ot!"
 	}
 
 	"RewardSpeedBoost"

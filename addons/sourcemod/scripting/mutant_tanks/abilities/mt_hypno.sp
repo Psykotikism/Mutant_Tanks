@@ -1,0 +1,930 @@
+/**
+ * Mutant Tanks: a L4D/L4D2 SourceMod Plugin
+ * Copyright (C) 2021  Alfred "Crasher_3637/Psyk0tik" Llagas
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+#if !defined MT_ABILITIES_MAIN
+#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+#endif
+
+#define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
+
+#define MT_HYPNO_SECTION "hypnoability"
+#define MT_HYPNO_SECTION2 "hypno ability"
+#define MT_HYPNO_SECTION3 "hypno_ability"
+#define MT_HYPNO_SECTION4 "hypno"
+#define MT_HYPNO_SECTIONS MT_HYPNO_SECTION, MT_HYPNO_SECTION2, MT_HYPNO_SECTION3, MT_HYPNO_SECTION4
+
+#define MT_MENU_HYPNO "Hypno Ability"
+
+enum struct esHypnoPlayer
+{
+	bool g_bAffected;
+	bool g_bFailed;
+	bool g_bNoAmmo;
+
+	float g_flHypnoBulletDivisor;
+	float g_flHypnoChance;
+	float g_flHypnoDuration;
+	float g_flHypnoExplosiveDivisor;
+	float g_flHypnoFireDivisor;
+	float g_flHypnoHittableDivisor;
+	float g_flHypnoMeleeDivisor;
+	float g_flHypnoRange;
+	float g_flHypnoRangeChance;
+	float g_flOpenAreasOnly;
+
+	int g_iAccessFlags;
+	int g_iAmmoCount;
+	int g_iComboAbility;
+	int g_iCooldown;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHypnoAbility;
+	int g_iHypnoEffect;
+	int g_iHypnoHit;
+	int g_iHypnoHitMode;
+	int g_iHypnoMessage;
+	int g_iHypnoMode;
+	int g_iImmunityFlags;
+	int g_iOwner;
+	int g_iRequiresHumans;
+	int g_iTankType;
+}
+
+esHypnoPlayer g_esHypnoPlayer[MAXPLAYERS + 1];
+
+enum struct esHypnoAbility
+{
+	float g_flHypnoBulletDivisor;
+	float g_flHypnoChance;
+	float g_flHypnoDuration;
+	float g_flHypnoExplosiveDivisor;
+	float g_flHypnoFireDivisor;
+	float g_flHypnoHittableDivisor;
+	float g_flHypnoMeleeDivisor;
+	float g_flHypnoRange;
+	float g_flHypnoRangeChance;
+	float g_flOpenAreasOnly;
+
+	int g_iAccessFlags;
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHypnoAbility;
+	int g_iHypnoEffect;
+	int g_iHypnoHit;
+	int g_iHypnoHitMode;
+	int g_iHypnoMessage;
+	int g_iHypnoMode;
+	int g_iImmunityFlags;
+	int g_iRequiresHumans;
+}
+
+esHypnoAbility g_esHypnoAbility[MT_MAXTYPES + 1];
+
+enum struct esHypnoCache
+{
+	float g_flHypnoBulletDivisor;
+	float g_flHypnoChance;
+	float g_flHypnoDuration;
+	float g_flHypnoExplosiveDivisor;
+	float g_flHypnoFireDivisor;
+	float g_flHypnoHittableDivisor;
+	float g_flHypnoMeleeDivisor;
+	float g_flHypnoRange;
+	float g_flHypnoRangeChance;
+	float g_flOpenAreasOnly;
+
+	int g_iComboAbility;
+	int g_iHumanAbility;
+	int g_iHumanAmmo;
+	int g_iHumanCooldown;
+	int g_iHypnoAbility;
+	int g_iHypnoEffect;
+	int g_iHypnoHit;
+	int g_iHypnoHitMode;
+	int g_iHypnoMessage;
+	int g_iHypnoMode;
+	int g_iRequiresHumans;
+}
+
+esHypnoCache g_esHypnoCache[MAXPLAYERS + 1];
+
+void vHypnoMapStart()
+{
+	vHypnoReset();
+}
+
+void vHypnoClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnHypnoTakeDamage);
+	vHypnoReset2(client);
+}
+
+void vHypnoClientDisconnect_Post(int client)
+{
+	vHypnoReset2(client);
+}
+
+void vHypnoMapEnd()
+{
+	vHypnoReset();
+}
+
+void vHypnoMenu(int client, const char[] name, int item)
+{
+	if (StrContains(MT_HYPNO_SECTION4, name, false) == -1)
+	{
+		return;
+	}
+
+	Menu mAbilityMenu = new Menu(iHypnoMenuHandler, MENU_ACTIONS_DEFAULT|MenuAction_Display|MenuAction_DisplayItem);
+	mAbilityMenu.SetTitle("Hypno Ability Information");
+	mAbilityMenu.AddItem("Status", "Status");
+	mAbilityMenu.AddItem("Ammunition", "Ammunition");
+	mAbilityMenu.AddItem("Buttons", "Buttons");
+	mAbilityMenu.AddItem("Cooldown", "Cooldown");
+	mAbilityMenu.AddItem("Details", "Details");
+	mAbilityMenu.AddItem("Duration", "Duration");
+	mAbilityMenu.AddItem("Human Support", "Human Support");
+	mAbilityMenu.DisplayAt(client, item, MENU_TIME_FOREVER);
+}
+
+public int iHypnoMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	switch (action)
+	{
+		case MenuAction_End: delete menu;
+		case MenuAction_Select:
+		{
+			switch (param2)
+			{
+				case 0: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esHypnoCache[param1].g_iHypnoAbility == 0 ? "AbilityStatus1" : "AbilityStatus2");
+				case 1: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityAmmo", g_esHypnoCache[param1].g_iHumanAmmo - g_esHypnoPlayer[param1].g_iAmmoCount, g_esHypnoCache[param1].g_iHumanAmmo);
+				case 2: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityButtons2");
+				case 3: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityCooldown", g_esHypnoCache[param1].g_iHumanCooldown);
+				case 4: MT_PrintToChat(param1, "%s %t", MT_TAG3, "HypnoDetails");
+				case 5: MT_PrintToChat(param1, "%s %t", MT_TAG3, "AbilityDuration", g_esHypnoCache[param1].g_flHypnoDuration);
+				case 6: MT_PrintToChat(param1, "%s %t", MT_TAG3, g_esHypnoCache[param1].g_iHumanAbility == 0 ? "AbilityHumanSupport1" : "AbilityHumanSupport2");
+			}
+
+			if (bIsValidClient(param1, MT_CHECK_INGAME))
+			{
+				vHypnoMenu(param1, MT_HYPNO_SECTION4, menu.Selection);
+			}
+		}
+		case MenuAction_Display:
+		{
+			char sMenuTitle[PLATFORM_MAX_PATH];
+			Panel pHypno = view_as<Panel>(param2);
+			FormatEx(sMenuTitle, sizeof(sMenuTitle), "%T", "HypnoMenu", param1);
+			pHypno.SetTitle(sMenuTitle);
+		}
+		case MenuAction_DisplayItem:
+		{
+			if (param2 >= 0)
+			{
+				char sMenuOption[PLATFORM_MAX_PATH];
+
+				switch (param2)
+				{
+					case 0: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Status", param1);
+					case 1: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Ammunition", param1);
+					case 2: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Buttons", param1);
+					case 3: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Cooldown", param1);
+					case 4: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Details", param1);
+					case 5: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "Duration", param1);
+					case 6: FormatEx(sMenuOption, sizeof(sMenuOption), "%T", "HumanSupport", param1);
+				}
+
+				return RedrawMenuItem(sMenuOption);
+			}
+		}
+	}
+
+	return 0;
+}
+
+void vHypnoDisplayMenu(Menu menu)
+{
+	menu.AddItem(MT_MENU_HYPNO, MT_MENU_HYPNO);
+}
+
+void vHypnoMenuItemSelected(int client, const char[] info)
+{
+	if (StrEqual(info, MT_MENU_HYPNO, false))
+	{
+		vHypnoMenu(client, MT_HYPNO_SECTION4, 0);
+	}
+}
+
+void vHypnoMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+{
+	if (StrEqual(info, MT_MENU_HYPNO, false))
+	{
+		FormatEx(buffer, size, "%T", "HypnoMenu2", client);
+	}
+}
+
+public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+{
+	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && damage > 0.0)
+	{
+		static char sClassname[32];
+
+		switch (bIsValidEntity(inflictor))
+		{
+			case true: GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
+			case false: sClassname[0] = '\0';
+		}
+
+		if (MT_IsTankSupported(attacker) && MT_IsCustomTankSupported(attacker) && (g_esHypnoCache[attacker].g_iHypnoHitMode == 0 || g_esHypnoCache[attacker].g_iHypnoHitMode == 1) && bIsSurvivor(victim) && g_esHypnoCache[attacker].g_iComboAbility == 0)
+		{
+			if ((!MT_HasAdminAccess(attacker) && !bHasAdminAccess(attacker, g_esHypnoAbility[g_esHypnoPlayer[attacker].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[attacker].g_iAccessFlags)) || MT_IsAdminImmune(victim, attacker) || bIsAdminImmune(victim, g_esHypnoPlayer[attacker].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[attacker].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[victim].g_iImmunityFlags))
+			{
+				return Plugin_Continue;
+			}
+
+			if (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock"))
+			{
+				vHypnoHit(victim, attacker, GetRandomFloat(0.1, 100.0), g_esHypnoCache[attacker].g_flHypnoChance, g_esHypnoCache[attacker].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW);
+			}
+		}
+		else if (MT_IsTankSupported(victim) && MT_IsCustomTankSupported(victim) && bIsSurvivor(attacker))
+		{
+			if ((g_esHypnoCache[victim].g_iHypnoHitMode == 0 || g_esHypnoCache[victim].g_iHypnoHitMode == 2) && StrEqual(sClassname, "weapon_melee") && g_esHypnoCache[victim].g_iComboAbility == 0)
+			{
+				if ((MT_HasAdminAccess(victim) || bHasAdminAccess(victim, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[victim].g_iAccessFlags)) && !MT_IsAdminImmune(attacker, victim) && !bIsAdminImmune(attacker, g_esHypnoPlayer[victim].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[victim].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[attacker].g_iImmunityFlags))
+				{
+					vHypnoHit(attacker, victim, GetRandomFloat(0.1, 100.0), g_esHypnoCache[victim].g_flHypnoChance, g_esHypnoCache[victim].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE);
+				}
+			}
+
+			if (!bIsPlayerIncapacitated(victim) && g_esHypnoPlayer[attacker].g_bAffected)
+			{
+				static bool bChanged;
+				bChanged = false;
+				if (g_esHypnoCache[victim].g_flHypnoBulletDivisor > 1.0 && (damagetype & DMG_BULLET))
+				{
+					bChanged = true;
+					damage /= g_esHypnoCache[victim].g_flHypnoBulletDivisor;
+				}
+				else if (g_esHypnoCache[victim].g_flHypnoExplosiveDivisor > 1.0 && ((damagetype & DMG_BLAST) || (damagetype & DMG_BLAST_SURFACE) || (damagetype & DMG_AIRBOAT) || (damagetype & DMG_PLASMA)))
+				{
+					bChanged = true;
+					damage /= g_esHypnoCache[victim].g_flHypnoExplosiveDivisor;
+				}
+				else if (g_esHypnoCache[victim].g_flHypnoFireDivisor > 1.0 && ((damagetype & DMG_BURN) || (damagetype & DMG_DIRECT)))
+				{
+					bChanged = true;
+					damage /= g_esHypnoCache[victim].g_flHypnoFireDivisor;
+				}
+				else if (g_esHypnoCache[victim].g_flHypnoHittableDivisor > 1.0 && (damagetype & DMG_CRUSH) && bIsValidEntity(inflictor) && HasEntProp(inflictor, Prop_Send, "m_isCarryable"))
+				{
+					bChanged = true;
+					damage /= g_esHypnoCache[victim].g_flHypnoHittableDivisor;
+				}
+				else if (g_esHypnoCache[victim].g_flHypnoMeleeDivisor > 1.0 && ((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)))
+				{
+					bChanged = true;
+					damage /= g_esHypnoCache[victim].g_flHypnoMeleeDivisor;
+
+					static float flTankPos[3];
+					GetClientAbsOrigin(victim, flTankPos);
+
+					switch (MT_DoesSurvivorHaveRewardType(attacker, MT_REWARD_GODMODE))
+					{
+						case true: vPushNearbyEntities(victim, flTankPos, 300.0, 100.0);
+						case false: vPushNearbyEntities(victim, flTankPos);
+					}
+				}
+
+				if (bChanged)
+				{
+					if (damage < 1.0) damage = 1.0;
+
+					static int iTarget;
+					iTarget = (g_esHypnoCache[victim].g_iHypnoMode == 1) ? iGetRandomSurvivor(victim) : attacker;
+					if (iTarget > 0)
+					{
+						static char sDamageType[32];
+						IntToString(damagetype, sDamageType, sizeof(sDamageType));
+						vDamagePlayer(iTarget, victim, damage, sDamageType);
+						EmitSoundToAll(SOUND_METAL, victim);
+					}
+				}
+
+				return Plugin_Handled;
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
+void vHypnoPluginCheck(ArrayList &list)
+{
+	list.PushString(MT_MENU_HYPNO);
+}
+
+void vHypnoAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+{
+	list.PushString(MT_HYPNO_SECTION);
+	list2.PushString(MT_HYPNO_SECTION2);
+	list3.PushString(MT_HYPNO_SECTION3);
+	list4.PushString(MT_HYPNO_SECTION4);
+}
+
+void vHypnoCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+{
+	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility != 2)
+	{
+		return;
+	}
+
+	static char sAbilities[320], sSet[4][32];
+	FormatEx(sAbilities, sizeof(sAbilities), ",%s,", combo);
+	FormatEx(sSet[0], sizeof(sSet[]), ",%s,", MT_HYPNO_SECTION);
+	FormatEx(sSet[1], sizeof(sSet[]), ",%s,", MT_HYPNO_SECTION2);
+	FormatEx(sSet[2], sizeof(sSet[]), ",%s,", MT_HYPNO_SECTION3);
+	FormatEx(sSet[3], sizeof(sSet[]), ",%s,", MT_HYPNO_SECTION4);
+	if (g_esHypnoCache[tank].g_iComboAbility == 1 && (StrContains(sAbilities, sSet[0], false) != -1 || StrContains(sAbilities, sSet[1], false) != -1 || StrContains(sAbilities, sSet[2], false) != -1 || StrContains(sAbilities, sSet[3], false) != -1))
+	{
+		static char sSubset[10][32];
+		ExplodeString(combo, ",", sSubset, sizeof(sSubset), sizeof(sSubset[]));
+		for (int iPos = 0; iPos < sizeof(sSubset); iPos++)
+		{
+			if (StrEqual(sSubset[iPos], MT_HYPNO_SECTION, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION2, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION3, false) || StrEqual(sSubset[iPos], MT_HYPNO_SECTION4, false))
+			{
+				static float flDelay;
+				flDelay = MT_GetCombinationSetting(tank, 3, iPos);
+
+				switch (type)
+				{
+					case MT_COMBO_MAINRANGE:
+					{
+						if (g_esHypnoCache[tank].g_iHypnoAbility == 1)
+						{
+							switch (flDelay)
+							{
+								case 0.0: vHypnoAbility(tank, random, iPos);
+								default:
+								{
+									DataPack dpCombo;
+									CreateDataTimer(flDelay, tTimerHypnoCombo, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+									dpCombo.WriteCell(GetClientUserId(tank));
+									dpCombo.WriteFloat(random);
+									dpCombo.WriteCell(iPos);
+								}
+							}
+						}
+					}
+					case MT_COMBO_MELEEHIT:
+					{
+						static float flChance;
+						flChance = MT_GetCombinationSetting(tank, 1, iPos);
+
+						switch (flDelay)
+						{
+							case 0.0:
+							{
+								if ((g_esHypnoCache[tank].g_iHypnoHitMode == 0 || g_esHypnoCache[tank].g_iHypnoHitMode == 1) && (StrEqual(classname, "weapon_tank_claw") || StrEqual(classname, "tank_rock")))
+								{
+									vHypnoHit(survivor, tank, random, flChance, g_esHypnoCache[tank].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
+								}
+								else if ((g_esHypnoCache[tank].g_iHypnoHitMode == 0 || g_esHypnoCache[tank].g_iHypnoHitMode == 2) && StrEqual(classname, "weapon_melee"))
+								{
+									vHypnoHit(survivor, tank, random, flChance, g_esHypnoCache[tank].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
+								}
+							}
+							default:
+							{
+								DataPack dpCombo;
+								CreateDataTimer(flDelay, tTimerHypnoCombo2, dpCombo, TIMER_FLAG_NO_MAPCHANGE);
+								dpCombo.WriteCell(GetClientUserId(survivor));
+								dpCombo.WriteCell(GetClientUserId(tank));
+								dpCombo.WriteFloat(random);
+								dpCombo.WriteFloat(flChance);
+								dpCombo.WriteCell(iPos);
+								dpCombo.WriteString(classname);
+							}
+						}
+					}
+				}
+
+				break;
+			}
+		}
+	}
+}
+
+void vHypnoConfigsLoad(int mode)
+{
+	switch (mode)
+	{
+		case 1:
+		{
+			for (int iIndex = MT_GetMinType(); iIndex <= MT_GetMaxType(); iIndex++)
+			{
+				g_esHypnoAbility[iIndex].g_iAccessFlags = 0;
+				g_esHypnoAbility[iIndex].g_iImmunityFlags = 0;
+				g_esHypnoAbility[iIndex].g_iComboAbility = 0;
+				g_esHypnoAbility[iIndex].g_iHumanAbility = 0;
+				g_esHypnoAbility[iIndex].g_iHumanAmmo = 5;
+				g_esHypnoAbility[iIndex].g_iHumanCooldown = 30;
+				g_esHypnoAbility[iIndex].g_flOpenAreasOnly = 0.0;
+				g_esHypnoAbility[iIndex].g_iRequiresHumans = 0;
+				g_esHypnoAbility[iIndex].g_iHypnoAbility = 0;
+				g_esHypnoAbility[iIndex].g_iHypnoEffect = 0;
+				g_esHypnoAbility[iIndex].g_iHypnoMessage = 0;
+				g_esHypnoAbility[iIndex].g_flHypnoBulletDivisor = 20.0;
+				g_esHypnoAbility[iIndex].g_flHypnoChance = 33.3;
+				g_esHypnoAbility[iIndex].g_flHypnoDuration = 5.0;
+				g_esHypnoAbility[iIndex].g_flHypnoExplosiveDivisor = 20.0;
+				g_esHypnoAbility[iIndex].g_flHypnoFireDivisor = 200.0;
+				g_esHypnoAbility[iIndex].g_iHypnoHit = 0;
+				g_esHypnoAbility[iIndex].g_iHypnoHitMode = 0;
+				g_esHypnoAbility[iIndex].g_flHypnoHittableDivisor = 20.0;
+				g_esHypnoAbility[iIndex].g_flHypnoMeleeDivisor = 200.0;
+				g_esHypnoAbility[iIndex].g_iHypnoMode = 0;
+				g_esHypnoAbility[iIndex].g_flHypnoRange = 150.0;
+				g_esHypnoAbility[iIndex].g_flHypnoRangeChance = 15.0;
+			}
+		}
+		case 3:
+		{
+			for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+			{
+				if (bIsValidClient(iPlayer))
+				{
+					g_esHypnoPlayer[iPlayer].g_iAccessFlags = 0;
+					g_esHypnoPlayer[iPlayer].g_iImmunityFlags = 0;
+					g_esHypnoPlayer[iPlayer].g_iComboAbility = 0;
+					g_esHypnoPlayer[iPlayer].g_iHumanAbility = 0;
+					g_esHypnoPlayer[iPlayer].g_iHumanAmmo = 0;
+					g_esHypnoPlayer[iPlayer].g_iHumanCooldown = 0;
+					g_esHypnoPlayer[iPlayer].g_flOpenAreasOnly = 0.0;
+					g_esHypnoPlayer[iPlayer].g_iRequiresHumans = 0;
+					g_esHypnoPlayer[iPlayer].g_iHypnoAbility = 0;
+					g_esHypnoPlayer[iPlayer].g_iHypnoEffect = 0;
+					g_esHypnoPlayer[iPlayer].g_iHypnoMessage = 0;
+					g_esHypnoPlayer[iPlayer].g_flHypnoBulletDivisor = 0.0;
+					g_esHypnoPlayer[iPlayer].g_flHypnoChance = 0.0;
+					g_esHypnoPlayer[iPlayer].g_flHypnoDuration = 0.0;
+					g_esHypnoPlayer[iPlayer].g_flHypnoExplosiveDivisor = 0.0;
+					g_esHypnoPlayer[iPlayer].g_flHypnoFireDivisor = 0.0;
+					g_esHypnoPlayer[iPlayer].g_iHypnoHit = 0;
+					g_esHypnoPlayer[iPlayer].g_iHypnoHitMode = 0;
+					g_esHypnoPlayer[iPlayer].g_flHypnoHittableDivisor = 0.0;
+					g_esHypnoPlayer[iPlayer].g_flHypnoMeleeDivisor = 0.0;
+					g_esHypnoPlayer[iPlayer].g_iHypnoMode = 0;
+					g_esHypnoPlayer[iPlayer].g_flHypnoRange = 0.0;
+					g_esHypnoPlayer[iPlayer].g_flHypnoRangeChance = 0.0;
+				}
+			}
+		}
+	}
+}
+
+void vHypnoConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+{
+	if (mode == 3 && bIsValidClient(admin))
+	{
+		g_esHypnoPlayer[admin].g_iComboAbility = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHypnoPlayer[admin].g_iComboAbility, value, 0, 1);
+		g_esHypnoPlayer[admin].g_iHumanAbility = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHypnoPlayer[admin].g_iHumanAbility, value, 0, 2);
+		g_esHypnoPlayer[admin].g_iHumanAmmo = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHypnoPlayer[admin].g_iHumanAmmo, value, 0, 999999);
+		g_esHypnoPlayer[admin].g_iHumanCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHypnoPlayer[admin].g_iHumanCooldown, value, 0, 999999);
+		g_esHypnoPlayer[admin].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHypnoPlayer[admin].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esHypnoPlayer[admin].g_iRequiresHumans = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHypnoPlayer[admin].g_iRequiresHumans, value, 0, 32);
+		g_esHypnoPlayer[admin].g_iHypnoAbility = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHypnoPlayer[admin].g_iHypnoAbility, value, 0, 1);
+		g_esHypnoPlayer[admin].g_iHypnoEffect = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHypnoPlayer[admin].g_iHypnoEffect, value, 0, 7);
+		g_esHypnoPlayer[admin].g_iHypnoMessage = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHypnoPlayer[admin].g_iHypnoMessage, value, 0, 3);
+		g_esHypnoPlayer[admin].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esHypnoPlayer[admin].g_flHypnoBulletDivisor, value, 1.0, 999999.0);
+		g_esHypnoPlayer[admin].g_flHypnoChance = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esHypnoPlayer[admin].g_flHypnoChance, value, 0.0, 100.0);
+		g_esHypnoPlayer[admin].g_flHypnoDuration = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoDuration", "Hypno Duration", "Hypno_Duration", "duration", g_esHypnoPlayer[admin].g_flHypnoDuration, value, 0.1, 999999.0);
+		g_esHypnoPlayer[admin].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esHypnoPlayer[admin].g_flHypnoExplosiveDivisor, value, 1.0, 999999.0);
+		g_esHypnoPlayer[admin].g_flHypnoFireDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esHypnoPlayer[admin].g_flHypnoFireDivisor, value, 1.0, 999999.0);
+		g_esHypnoPlayer[admin].g_iHypnoHit = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoHit", "Hypno Hit", "Hypno_Hit", "hit", g_esHypnoPlayer[admin].g_iHypnoHit, value, 0, 1);
+		g_esHypnoPlayer[admin].g_iHypnoHitMode = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoHitMode", "Hypno Hit Mode", "Hypno_Hit_Mode", "hitmode", g_esHypnoPlayer[admin].g_iHypnoHitMode, value, 0, 2);
+		g_esHypnoPlayer[admin].g_flHypnoHittableDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoHittableDivisor", "Hypno Hittable Divisor", "Hypno_Hittable_Divisor", "hittable", g_esHypnoPlayer[admin].g_flHypnoHittableDivisor, value, 1.0, 999999.0);
+		g_esHypnoPlayer[admin].g_flHypnoMeleeDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoMeleeDivisor", "Hypno Melee Divisor", "Hypno_Melee_Divisor", "melee", g_esHypnoPlayer[admin].g_flHypnoMeleeDivisor, value, 1.0, 999999.0);
+		g_esHypnoPlayer[admin].g_iHypnoMode = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esHypnoPlayer[admin].g_iHypnoMode, value, 0, 1);
+		g_esHypnoPlayer[admin].g_flHypnoRange = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esHypnoPlayer[admin].g_flHypnoRange, value, 1.0, 999999.0);
+		g_esHypnoPlayer[admin].g_flHypnoRangeChance = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esHypnoPlayer[admin].g_flHypnoRangeChance, value, 0.0, 100.0);
+
+		if (StrEqual(subsection, MT_HYPNO_SECTION, false) || StrEqual(subsection, MT_HYPNO_SECTION2, false) || StrEqual(subsection, MT_HYPNO_SECTION3, false) || StrEqual(subsection, MT_HYPNO_SECTION4, false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_esHypnoPlayer[admin].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_esHypnoPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
+			}
+		}
+	}
+
+	if (mode < 3 && type > 0)
+	{
+		g_esHypnoAbility[type].g_iComboAbility = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "ComboAbility", "Combo Ability", "Combo_Ability", "combo", g_esHypnoAbility[type].g_iComboAbility, value, 0, 1);
+		g_esHypnoAbility[type].g_iHumanAbility = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HumanAbility", "Human Ability", "Human_Ability", "human", g_esHypnoAbility[type].g_iHumanAbility, value, 0, 2);
+		g_esHypnoAbility[type].g_iHumanAmmo = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HumanAmmo", "Human Ammo", "Human_Ammo", "hammo", g_esHypnoAbility[type].g_iHumanAmmo, value, 0, 999999);
+		g_esHypnoAbility[type].g_iHumanCooldown = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HumanCooldown", "Human Cooldown", "Human_Cooldown", "hcooldown", g_esHypnoAbility[type].g_iHumanCooldown, value, 0, 999999);
+		g_esHypnoAbility[type].g_flOpenAreasOnly = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "OpenAreasOnly", "Open Areas Only", "Open_Areas_Only", "openareas", g_esHypnoAbility[type].g_flOpenAreasOnly, value, 0.0, 999999.0);
+		g_esHypnoAbility[type].g_iRequiresHumans = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esHypnoAbility[type].g_iRequiresHumans, value, 0, 32);
+		g_esHypnoAbility[type].g_iHypnoAbility = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "AbilityEnabled", "Ability Enabled", "Ability_Enabled", "aenabled", g_esHypnoAbility[type].g_iHypnoAbility, value, 0, 1);
+		g_esHypnoAbility[type].g_iHypnoEffect = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esHypnoAbility[type].g_iHypnoEffect, value, 0, 7);
+		g_esHypnoAbility[type].g_iHypnoMessage = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esHypnoAbility[type].g_iHypnoMessage, value, 0, 3);
+		g_esHypnoAbility[type].g_flHypnoBulletDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoBulletDivisor", "Hypno Bullet Divisor", "Hypno_Bullet_Divisor", "bullet", g_esHypnoAbility[type].g_flHypnoBulletDivisor, value, 1.0, 999999.0);
+		g_esHypnoAbility[type].g_flHypnoChance = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoChance", "Hypno Chance", "Hypno_Chance", "chance", g_esHypnoAbility[type].g_flHypnoChance, value, 0.0, 100.0);
+		g_esHypnoAbility[type].g_flHypnoDuration = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoDuration", "Hypno Duration", "Hypno_Duration", "duration", g_esHypnoAbility[type].g_flHypnoDuration, value, 0.1, 999999.0);
+		g_esHypnoAbility[type].g_flHypnoExplosiveDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoExplosiveDivisor", "Hypno Explosive Divisor", "Hypno_Explosive_Divisor", "explosive", g_esHypnoAbility[type].g_flHypnoExplosiveDivisor, value, 1.0, 999999.0);
+		g_esHypnoAbility[type].g_flHypnoFireDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoFireDivisor", "Hypno Fire Divisor", "Hypno_Fire_Divisor", "fire", g_esHypnoAbility[type].g_flHypnoFireDivisor, value, 1.0, 999999.0);
+		g_esHypnoAbility[type].g_iHypnoHit = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoHit", "Hypno Hit", "Hypno_Hit", "hit", g_esHypnoAbility[type].g_iHypnoHit, value, 0, 1);
+		g_esHypnoAbility[type].g_iHypnoHitMode = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoHitMode", "Hypno Hit Mode", "Hypno_Hit_Mode", "hitmode", g_esHypnoAbility[type].g_iHypnoHitMode, value, 0, 2);
+		g_esHypnoAbility[type].g_flHypnoHittableDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoHittableDivisor", "Hypno Hittable Divisor", "Hypno_Hittable_Divisor", "hittable", g_esHypnoAbility[type].g_flHypnoHittableDivisor, value, 1.0, 999999.0);
+		g_esHypnoAbility[type].g_flHypnoMeleeDivisor = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoMeleeDivisor", "Hypno Melee Divisor", "Hypno_Melee_Divisor", "melee", g_esHypnoAbility[type].g_flHypnoMeleeDivisor, value, 1.0, 999999.0);
+		g_esHypnoAbility[type].g_iHypnoMode = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esHypnoAbility[type].g_iHypnoMode, value, 0, 1);
+		g_esHypnoAbility[type].g_flHypnoRange = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esHypnoAbility[type].g_flHypnoRange, value, 1.0, 999999.0);
+		g_esHypnoAbility[type].g_flHypnoRangeChance = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esHypnoAbility[type].g_flHypnoRangeChance, value, 0.0, 100.0);
+
+		if (StrEqual(subsection, MT_HYPNO_SECTION, false) || StrEqual(subsection, MT_HYPNO_SECTION2, false) || StrEqual(subsection, MT_HYPNO_SECTION3, false) || StrEqual(subsection, MT_HYPNO_SECTION4, false))
+		{
+			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
+			{
+				g_esHypnoAbility[type].g_iAccessFlags = ReadFlagString(value);
+			}
+			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
+			{
+				g_esHypnoAbility[type].g_iImmunityFlags = ReadFlagString(value);
+			}
+		}
+	}
+}
+
+void vHypnoSettingsCached(int tank, bool apply, int type)
+{
+	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
+	g_esHypnoCache[tank].g_flHypnoBulletDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoBulletDivisor, g_esHypnoAbility[type].g_flHypnoBulletDivisor);
+	g_esHypnoCache[tank].g_flHypnoChance = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoChance, g_esHypnoAbility[type].g_flHypnoChance);
+	g_esHypnoCache[tank].g_flHypnoDuration = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoDuration, g_esHypnoAbility[type].g_flHypnoDuration);
+	g_esHypnoCache[tank].g_flHypnoExplosiveDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoExplosiveDivisor, g_esHypnoAbility[type].g_flHypnoExplosiveDivisor);
+	g_esHypnoCache[tank].g_flHypnoFireDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoFireDivisor, g_esHypnoAbility[type].g_flHypnoFireDivisor);
+	g_esHypnoCache[tank].g_flHypnoHittableDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoHittableDivisor, g_esHypnoAbility[type].g_flHypnoHittableDivisor);
+	g_esHypnoCache[tank].g_flHypnoMeleeDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoMeleeDivisor, g_esHypnoAbility[type].g_flHypnoMeleeDivisor);
+	g_esHypnoCache[tank].g_flHypnoRange = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoRange, g_esHypnoAbility[type].g_flHypnoRange);
+	g_esHypnoCache[tank].g_flHypnoRangeChance = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoRangeChance, g_esHypnoAbility[type].g_flHypnoRangeChance);
+	g_esHypnoCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iComboAbility, g_esHypnoAbility[type].g_iComboAbility);
+	g_esHypnoCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanAbility, g_esHypnoAbility[type].g_iHumanAbility);
+	g_esHypnoCache[tank].g_iHumanAmmo = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanAmmo, g_esHypnoAbility[type].g_iHumanAmmo);
+	g_esHypnoCache[tank].g_iHumanCooldown = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHumanCooldown, g_esHypnoAbility[type].g_iHumanCooldown);
+	g_esHypnoCache[tank].g_iHypnoAbility = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoAbility, g_esHypnoAbility[type].g_iHypnoAbility);
+	g_esHypnoCache[tank].g_iHypnoEffect = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoEffect, g_esHypnoAbility[type].g_iHypnoEffect);
+	g_esHypnoCache[tank].g_iHypnoHit = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoHit, g_esHypnoAbility[type].g_iHypnoHit);
+	g_esHypnoCache[tank].g_iHypnoHitMode = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoHitMode, g_esHypnoAbility[type].g_iHypnoHitMode);
+	g_esHypnoCache[tank].g_iHypnoMessage = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoMessage, g_esHypnoAbility[type].g_iHypnoMessage);
+	g_esHypnoCache[tank].g_iHypnoMode = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iHypnoMode, g_esHypnoAbility[type].g_iHypnoMode);
+	g_esHypnoCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flOpenAreasOnly, g_esHypnoAbility[type].g_flOpenAreasOnly);
+	g_esHypnoCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_iRequiresHumans, g_esHypnoAbility[type].g_iRequiresHumans);
+	g_esHypnoPlayer[tank].g_iTankType = apply ? type : 0;
+}
+
+void vHypnoCopyStats(int oldTank, int newTank)
+{
+	vHypnoCopyStats2(oldTank, newTank);
+
+	if (oldTank != newTank)
+	{
+		vRemoveHypno(oldTank);
+	}
+}
+
+void vHypnoEventFired(Event event, const char[] name)
+{
+	if (StrEqual(name, "bot_player_replace"))
+	{
+		int iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId),
+			iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId);
+		if (bIsValidClient(iBot) && bIsTank(iTank))
+		{
+			vHypnoCopyStats2(iBot, iTank);
+			vRemoveHypno(iBot);
+		}
+	}
+	else if (StrEqual(name, "player_bot_replace"))
+	{
+		int iTankId = event.GetInt("player"), iTank = GetClientOfUserId(iTankId),
+			iBotId = event.GetInt("bot"), iBot = GetClientOfUserId(iBotId);
+		if (bIsValidClient(iTank) && bIsTank(iBot))
+		{
+			vHypnoCopyStats2(iTank, iBot);
+			vRemoveHypno(iTank);
+		}
+	}
+	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
+	{
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		{
+			vRemoveHypno(iTank);
+		}
+	}
+	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
+	{
+		vHypnoReset();
+	}
+}
+
+void vHypnoAbilityActivated(int tank)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)) || g_esHypnoCache[tank].g_iHumanAbility == 0))
+	{
+		return;
+	}
+
+	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esHypnoCache[tank].g_iHumanAbility != 1) && MT_IsCustomTankSupported(tank) && g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iComboAbility == 0)
+	{
+		vHypnoAbility(tank, GetRandomFloat(0.1, 100.0));
+	}
+}
+
+void vHypnoButtonPressed(int tank, int button)
+{
+	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
+	{
+		if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)))
+		{
+			return;
+		}
+
+		if (button & MT_SUB_KEY)
+		{
+			if (g_esHypnoCache[tank].g_iHypnoAbility == 1 && g_esHypnoCache[tank].g_iHumanAbility == 1)
+			{
+				static int iTime;
+				iTime = GetTime();
+
+				switch (g_esHypnoPlayer[tank].g_iCooldown == -1 || g_esHypnoPlayer[tank].g_iCooldown < iTime)
+				{
+					case true: vHypnoAbility(tank, GetRandomFloat(0.1, 100.0));
+					case false: MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman3", g_esHypnoPlayer[tank].g_iCooldown - iTime);
+				}
+			}
+		}
+	}
+}
+
+void vHypnoChangeType(int tank)
+{
+	vRemoveHypno(tank);
+}
+
+void vHypnoCopyStats2(int oldTank, int newTank)
+{
+	g_esHypnoPlayer[newTank].g_iAmmoCount = g_esHypnoPlayer[oldTank].g_iAmmoCount;
+	g_esHypnoPlayer[newTank].g_iCooldown = g_esHypnoPlayer[oldTank].g_iCooldown;
+}
+
+void vHypnoAbility(int tank, float random, int pos = -1)
+{
+	if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)))
+	{
+		return;
+	}
+
+	if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esHypnoPlayer[tank].g_iAmmoCount < g_esHypnoCache[tank].g_iHumanAmmo && g_esHypnoCache[tank].g_iHumanAmmo > 0))
+	{
+		g_esHypnoPlayer[tank].g_bFailed = false;
+		g_esHypnoPlayer[tank].g_bNoAmmo = false;
+
+		static float flTankPos[3], flSurvivorPos[3], flRange, flChance;
+		GetClientAbsOrigin(tank, flTankPos);
+		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 8, pos) : g_esHypnoCache[tank].g_flHypnoRange;
+		flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 9, pos) : g_esHypnoCache[tank].g_flHypnoRangeChance;
+		static int iSurvivorCount;
+		iSurvivorCount = 0;
+		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+		{
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esHypnoPlayer[tank].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[iSurvivor].g_iImmunityFlags))
+			{
+				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
+				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
+				{
+					vHypnoHit(iSurvivor, tank, random, flChance, g_esHypnoCache[tank].g_iHypnoAbility, MT_MESSAGE_RANGE, MT_ATTACK_RANGE, pos);
+
+					iSurvivorCount++;
+				}
+			}
+		}
+
+		if (iSurvivorCount == 0)
+		{
+			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility == 1)
+			{
+				MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman4");
+			}
+		}
+	}
+	else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility == 1)
+	{
+		MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoAmmo");
+	}
+}
+
+void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags, int pos = -1)
+{
+	if (bIsAreaNarrow(tank, g_esHypnoCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esHypnoPlayer[tank].g_iTankType) || (g_esHypnoCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esHypnoCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esHypnoPlayer[tank].g_iTankType, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iImmunityFlags, g_esHypnoPlayer[survivor].g_iImmunityFlags))
+	{
+		return;
+	}
+
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor))
+	{
+		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esHypnoPlayer[tank].g_iAmmoCount < g_esHypnoCache[tank].g_iHumanAmmo && g_esHypnoCache[tank].g_iHumanAmmo > 0))
+		{
+			static int iTime;
+			iTime = GetTime();
+			if (random <= chance && !g_esHypnoPlayer[survivor].g_bAffected)
+			{
+				g_esHypnoPlayer[survivor].g_bAffected = true;
+				g_esHypnoPlayer[survivor].g_iOwner = tank;
+
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esHypnoPlayer[tank].g_iCooldown == -1 || g_esHypnoPlayer[tank].g_iCooldown < iTime))
+				{
+					g_esHypnoPlayer[tank].g_iAmmoCount++;
+
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman", g_esHypnoPlayer[tank].g_iAmmoCount, g_esHypnoCache[tank].g_iHumanAmmo);
+
+					g_esHypnoPlayer[tank].g_iCooldown = (g_esHypnoPlayer[tank].g_iAmmoCount < g_esHypnoCache[tank].g_iHumanAmmo && g_esHypnoCache[tank].g_iHumanAmmo > 0) ? (iTime + g_esHypnoCache[tank].g_iHumanCooldown) : -1;
+					if (g_esHypnoPlayer[tank].g_iCooldown != -1 && g_esHypnoPlayer[tank].g_iCooldown > iTime)
+					{
+						MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman5", g_esHypnoPlayer[tank].g_iCooldown - iTime);
+					}
+				}
+
+				static float flDuration;
+				flDuration = (pos != -1) ? MT_GetCombinationSetting(tank, 4, pos) : g_esHypnoCache[tank].g_flHypnoDuration;
+				DataPack dpStopHypno;
+				CreateDataTimer(flDuration, tTimerStopHypno, dpStopHypno, TIMER_FLAG_NO_MAPCHANGE);
+				dpStopHypno.WriteCell(GetClientUserId(survivor));
+				dpStopHypno.WriteCell(GetClientUserId(tank));
+				dpStopHypno.WriteCell(messages);
+
+				vEffect(survivor, tank, g_esHypnoCache[tank].g_iHypnoEffect, flags);
+
+				if (g_esHypnoCache[tank].g_iHypnoMessage & messages)
+				{
+					static char sTankName[33];
+					MT_GetTankName(tank, sTankName);
+					MT_PrintToChatAll("%s %t", MT_TAG2, "Hypno", sTankName, survivor);
+					MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hypno", LANG_SERVER, sTankName, survivor);
+				}
+			}
+			else if ((flags & MT_ATTACK_RANGE) && (g_esHypnoPlayer[tank].g_iCooldown == -1 || g_esHypnoPlayer[tank].g_iCooldown < iTime))
+			{
+				if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility == 1 && !g_esHypnoPlayer[tank].g_bFailed)
+				{
+					g_esHypnoPlayer[tank].g_bFailed = true;
+
+					MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoHuman2");
+				}
+			}
+		}
+		else if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility == 1 && !g_esHypnoPlayer[tank].g_bNoAmmo)
+		{
+			g_esHypnoPlayer[tank].g_bNoAmmo = true;
+
+			MT_PrintToChat(tank, "%s %t", MT_TAG3, "HypnoAmmo");
+		}
+	}
+}
+
+void vRemoveHypno(int tank)
+{
+	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+	{
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME) && g_esHypnoPlayer[iSurvivor].g_bAffected && g_esHypnoPlayer[iSurvivor].g_iOwner == tank)
+		{
+			g_esHypnoPlayer[iSurvivor].g_bAffected = false;
+			g_esHypnoPlayer[iSurvivor].g_iOwner = 0;
+		}
+	}
+
+	vHypnoReset2(tank);
+}
+
+void vHypnoReset()
+{
+	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+	{
+		if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+		{
+			vHypnoReset2(iPlayer);
+
+			g_esHypnoPlayer[iPlayer].g_iOwner = 0;
+		}
+	}
+}
+
+void vHypnoReset2(int tank)
+{
+	g_esHypnoPlayer[tank].g_bAffected = false;
+	g_esHypnoPlayer[tank].g_bFailed = false;
+	g_esHypnoPlayer[tank].g_bNoAmmo = false;
+	g_esHypnoPlayer[tank].g_iAmmoCount = 0;
+	g_esHypnoPlayer[tank].g_iCooldown = -1;
+}
+
+public Action tTimerHypnoCombo(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHypnoAbility[g_esHypnoPlayer[iTank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHypnoPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esHypnoCache[iTank].g_iHypnoAbility == 0)
+	{
+		return Plugin_Stop;
+	}
+
+	float flRandom = pack.ReadFloat();
+	int iPos = pack.ReadCell();
+	vHypnoAbility(iTank, flRandom, iPos);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerHypnoCombo2(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!bIsSurvivor(iSurvivor) || g_esHypnoPlayer[iSurvivor].g_bAffected)
+	{
+		return Plugin_Stop;
+	}
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esHypnoAbility[g_esHypnoPlayer[iTank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esHypnoPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esHypnoCache[iTank].g_iHypnoHit == 0)
+	{
+		return Plugin_Stop;
+	}
+
+	float flRandom = pack.ReadFloat(), flChance = pack.ReadFloat();
+	int iPos = pack.ReadCell();
+	char sClassname[32];
+	pack.ReadString(sClassname, sizeof(sClassname));
+	if ((g_esHypnoCache[iTank].g_iHypnoHitMode == 0 || g_esHypnoCache[iTank].g_iHypnoHitMode == 1) && (StrEqual(sClassname, "weapon_tank_claw") || StrEqual(sClassname, "tank_rock")))
+	{
+		vHypnoHit(iSurvivor, iTank, flRandom, flChance, g_esHypnoCache[iTank].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_CLAW, iPos);
+	}
+	else if ((g_esHypnoCache[iTank].g_iHypnoHitMode == 0 || g_esHypnoCache[iTank].g_iHypnoHitMode == 2) && StrEqual(sClassname, "weapon_melee"))
+	{
+		vHypnoHit(iSurvivor, iTank, flRandom, flChance, g_esHypnoCache[iTank].g_iHypnoHit, MT_MESSAGE_MELEE, MT_ATTACK_MELEE, iPos);
+	}
+
+	return Plugin_Continue;
+}
+
+public Action tTimerStopHypno(Handle timer, DataPack pack)
+{
+	pack.Reset();
+
+	int iSurvivor = GetClientOfUserId(pack.ReadCell());
+	if (!bIsSurvivor(iSurvivor) || !g_esHypnoPlayer[iSurvivor].g_bAffected)
+	{
+		g_esHypnoPlayer[iSurvivor].g_bAffected = false;
+		g_esHypnoPlayer[iSurvivor].g_iOwner = 0;
+
+		return Plugin_Stop;
+	}
+
+	int iTank = GetClientOfUserId(pack.ReadCell());
+	if (!MT_IsTankSupported(iTank) || !MT_IsCustomTankSupported(iTank))
+	{
+		g_esHypnoPlayer[iSurvivor].g_bAffected = false;
+		g_esHypnoPlayer[iSurvivor].g_iOwner = 0;
+
+		return Plugin_Stop;
+	}
+
+	g_esHypnoPlayer[iSurvivor].g_bAffected = false;
+	g_esHypnoPlayer[iSurvivor].g_iOwner = 0;
+
+	int iMessage = pack.ReadCell();
+	if (g_esHypnoCache[iTank].g_iHypnoMessage & iMessage)
+	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "Hypno2", iSurvivor);
+		MT_LogMessage(MT_LOG_ABILITY, "%s %T", MT_TAG, "Hypno2", LANG_SERVER, iSurvivor);
+	}
+
+	return Plugin_Continue;
+}
