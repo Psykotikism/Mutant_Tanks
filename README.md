@@ -1,11 +1,11 @@
 # Mutant Tanks
 
 ## Languages
- - Click on one of the flags to view in another language.
-<a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
+Click on one of the flags to view in another language.
+- <a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
 <img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt="English" width="32">
 </a> (English)
-<a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
+- <a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
 <img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt="Russian" width="32">
 </a> (Russian)
 

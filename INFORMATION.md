@@ -42,7 +42,7 @@
 	- Enhancements
 	- Immunities
 
-- Abilities Set #1
+- Abilities Set #1 (A-L)
 	- Absorb
 	- Acid
 	- Aimless
@@ -82,7 +82,7 @@
 	- Leech
 	- Lightning
 
-- Abilities Set #2
+- Abilities Set #2 (M-Z)
 	- Medic
 	- Meteor
 	- Minion
