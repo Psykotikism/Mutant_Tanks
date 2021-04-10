@@ -1,8 +1,13 @@
 # Танки-мутанты
 
 ## Языки
- - [Русский](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md)
- - [Английский](https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md)
+ - Нажмите на один из флажков, чтобы просмотреть на другой языковой.
+<a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
+<img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt="Английский" width="32">
+</a> (Английский)
+<a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
+<img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt="Русский" width="32">
+</a> (Русский)
 
 ## Лицензия
 > Следующая лицензия помещается в исходный код каждого плагина и включаемого файла.
