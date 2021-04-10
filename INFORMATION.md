@@ -8,7 +8,7 @@
 - Most of the settings below can be overridden for each player.
 
 ## Sections
-- Plugin Settings:
+- Plugin Settings
 	- General
 	- Announcements
 	- Rewards
@@ -24,7 +24,7 @@
 	- Game Modes
 	- Custom
 
-- Tank Settings:
+- Tank Settings
 	- General
 	- Announcements
 	- Rewards
@@ -42,7 +42,7 @@
 	- Enhancements
 	- Immunities
 
-- Abilities Set #1 (A-L):
+- Abilities Set #1 (A-L)
 	- Absorb
 	- Acid
 	- Aimless
@@ -82,7 +82,7 @@
 	- Leech
 	- Lightning
 
-- Abilities Set #2 (M-Z):
+- Abilities Set #2 (M-Z)
 	- Medic
 	- Meteor
 	- Minion
@@ -122,7 +122,7 @@
 	- Yell
 	- Zombie
 
-- Administration System:
+- Administration System
 	- Administration
 	- Tank Settings
 	- Abilities
