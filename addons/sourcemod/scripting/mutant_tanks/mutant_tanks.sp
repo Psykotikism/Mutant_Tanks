@@ -1784,6 +1784,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -10580,29 +10581,32 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 					}
 				}
 
-				int iEffect = g_esCache[tank].g_iRewardEffect[priority];
-				if (!g_esPlayer[survivor].g_bEffectApplied && iEffect > 0)
+				if (!g_esPlayer[survivor].g_bEffectApplied)
 				{
 					g_esPlayer[survivor].g_bEffectApplied = true;
 
-					if ((bDeveloper || (iEffect & MT_EFFECT_TROPHY)) && g_esPlayer[survivor].g_iEffect[0] == INVALID_ENT_REFERENCE)
+					int iEffect = g_esCache[tank].g_iRewardEffect[priority];
+					if (iEffect > 0)
 					{
-						g_esPlayer[survivor].g_iEffect[0] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_ACHIEVED, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 1.5, 1.5));
-					}
+						if ((bDeveloper || (iEffect & MT_EFFECT_TROPHY)) && g_esPlayer[survivor].g_iEffect[0] == INVALID_ENT_REFERENCE)
+						{
+							g_esPlayer[survivor].g_iEffect[0] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_ACHIEVED, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 1.5, 1.5));
+						}
 
-					if ((bDeveloper || (iEffect & MT_EFFECT_FIREWORKS)) && g_esPlayer[survivor].g_iEffect[1] == INVALID_ENT_REFERENCE)
-					{
-						g_esPlayer[survivor].g_iEffect[1] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_FIREWORK, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 2.0, 1.5));
-					}
+						if ((bDeveloper || (iEffect & MT_EFFECT_FIREWORKS)) && g_esPlayer[survivor].g_iEffect[1] == INVALID_ENT_REFERENCE)
+						{
+							g_esPlayer[survivor].g_iEffect[1] = EntIndexToEntRef(iCreateParticle(survivor, PARTICLE_FIREWORK, view_as<float>({0.0, 0.0, 50.0}), NULL_VECTOR, 2.0, 1.5));
+						}
 
-					if (bDeveloper || (iEffect & MT_EFFECT_SOUND))
-					{
-						EmitSoundToAll(SOUND_ACHIEVEMENT, survivor, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, SNDVOL_NORMAL, SNDPITCH_NORMAL, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
-					}
+						if (bDeveloper || (iEffect & MT_EFFECT_SOUND))
+						{
+							EmitSoundToAll(SOUND_ACHIEVEMENT, survivor, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, SNDVOL_NORMAL, SNDPITCH_NORMAL, -1, NULL_VECTOR, NULL_VECTOR, true, 0.0);
+						}
 
-					if ((bDeveloper || (iEffect & MT_EFFECT_THIRDPERSON)) && bIsSurvivor(survivor, MT_CHECK_FAKECLIENT))
-					{
-						vExternalView(survivor, 1.5);
+						if ((bDeveloper || (iEffect & MT_EFFECT_THIRDPERSON)) && bIsSurvivor(survivor, MT_CHECK_FAKECLIENT))
+						{
+							vExternalView(survivor, 1.5);
+						}
 					}
 				}
 
@@ -10722,10 +10726,10 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[3] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[3] - flCurrentTime)))
 						{
-							int iParticle = g_esCache[tank].g_iParticleEffectVisual[priority];
-							if (iParticle > 0 && g_esPlayer[survivor].g_iParticleEffect != iParticle)
+							int iEffect = g_esCache[tank].g_iParticleEffectVisual[priority];
+							if (iEffect > 0 && g_esPlayer[survivor].g_iParticleEffect != iEffect)
 							{
-								g_esPlayer[survivor].g_iParticleEffect = iParticle;
+								g_esPlayer[survivor].g_iParticleEffect = iEffect;
 							}
 
 							if (g_esPlayer[survivor].g_flVisualTime[3] == -1.0)
