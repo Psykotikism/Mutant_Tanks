@@ -835,7 +835,7 @@ enum struct esPlayer
 	int g_iOldTankType;
 	int g_iOzTank[2];
 	int g_iOzTankColor[4];
-	int g_iParticleEffects;
+	int g_iParticleEffect;
 	int g_iParticleEffectVisual[3];
 	int g_iPropsAttached;
 	int g_iPropaneTank;
@@ -10044,7 +10044,7 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_iLifeLeech = 0;
 	g_esPlayer[survivor].g_iMeleeRange = 0;
 	g_esPlayer[survivor].g_iNotify = 0;
-	g_esPlayer[survivor].g_iParticleEffects = 0;
+	g_esPlayer[survivor].g_iParticleEffect = 0;
 	g_esPlayer[survivor].g_iReviveHealth = 0;
 	g_esPlayer[survivor].g_iRewardTypes = 0;
 	g_esPlayer[survivor].g_iShovePenalty = 0;
@@ -10315,7 +10315,10 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						vRewardMessage(survivor, priority, "RewardHealth", "RewardHealth2", "RewardHealth3", sTankName);
 					}
 
-					g_esPlayer[survivor].g_flRewardTime[0] = flDuration;
+					if (g_esPlayer[survivor].g_flRewardTime[0] == -1.0 || (flTime > (g_esPlayer[survivor].g_flRewardTime[0] - flCurrentTime)))
+					{
+						g_esPlayer[survivor].g_flRewardTime[0] = flDuration;
+					}
 				}
 
 				if (iType & MT_REWARD_SPEEDBOOST)
@@ -10344,7 +10347,10 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 					}
 					else if (repeat) vRewardMessage(survivor, priority, "RewardSpeedBoost", "RewardSpeedBoost2", "RewardSpeedBoost3", sTankName);
 
-					g_esPlayer[survivor].g_flRewardTime[2] = flDuration;
+					if (g_esPlayer[survivor].g_flRewardTime[2] == -1.0 || (flTime > (g_esPlayer[survivor].g_flRewardTime[2] - flCurrentTime)))
+					{
+						g_esPlayer[survivor].g_flRewardTime[2] = flDuration;
+					}
 				}
 
 				if (iType & MT_REWARD_DAMAGEBOOST)
@@ -10368,7 +10374,10 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						vRewardLadyKillerMessage(survivor, tank, priority);
 					}
 
-					g_esPlayer[survivor].g_flRewardTime[3] = flDuration;
+					if (g_esPlayer[survivor].g_flRewardTime[3] == -1.0 || (flTime > (g_esPlayer[survivor].g_flRewardTime[3] - flCurrentTime)))
+					{
+						g_esPlayer[survivor].g_flRewardTime[3] = flDuration;
+					}
 				}
 
 				if (iType & MT_REWARD_ATTACKBOOST)
@@ -10387,7 +10396,10 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 					}
 					else if (repeat) vRewardMessage(survivor, priority, "RewardAttackBoost", "RewardAttackBoost2", "RewardAttackBoost3", sTankName);
 
-					g_esPlayer[survivor].g_flRewardTime[4] = flDuration;
+					if (g_esPlayer[survivor].g_flRewardTime[4] == -1.0 || (flTime > (g_esPlayer[survivor].g_flRewardTime[4] - flCurrentTime)))
+					{
+						g_esPlayer[survivor].g_flRewardTime[4] = flDuration;
+					}
 				}
 
 				if ((iType & MT_REWARD_ITEM) && !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_ITEM))
@@ -10465,7 +10477,10 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						vRewardMessage(survivor, priority, "RewardAmmo", "RewardAmmo2", "RewardAmmo3", sTankName);
 					}
 
-					g_esPlayer[survivor].g_flRewardTime[1] = flDuration;
+					if (g_esPlayer[survivor].g_flRewardTime[1] == -1.0 || (flTime > (g_esPlayer[survivor].g_flRewardTime[1] - flCurrentTime)))
+					{
+						g_esPlayer[survivor].g_flRewardTime[1] = flDuration;
+					}
 				}
 
 				if (iType & MT_REWARD_GODMODE)
@@ -10490,7 +10505,10 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 					}
 					else if (repeat) vRewardMessage(survivor, priority, "RewardGod", "RewardGod2", "RewardGod3", sTankName);
 
-					g_esPlayer[survivor].g_flRewardTime[5] = flDuration;
+					if (g_esPlayer[survivor].g_flRewardTime[5] == -1.0 || (flTime > (g_esPlayer[survivor].g_flRewardTime[5] - flCurrentTime)))
+					{
+						g_esPlayer[survivor].g_flRewardTime[5] = flDuration;
+					}
 				}
 
 				if ((iType & MT_REWARD_REFILL) && !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_REFILL))
@@ -10511,7 +10529,10 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 						g_esPlayer[survivor].g_iRewardTypes |= MT_REWARD_INFAMMO;
 					}
 
-					g_esPlayer[survivor].g_flRewardTime[6] = flDuration;
+					if (g_esPlayer[survivor].g_flRewardTime[6] == -1.0 || (flTime > (g_esPlayer[survivor].g_flRewardTime[6] - flCurrentTime)))
+					{
+						g_esPlayer[survivor].g_flRewardTime[6] = flDuration;
+					}
 				}
 
 				if (repeat)
@@ -10546,7 +10567,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 				{
 					if (bDeveloper || (iVisual & MT_VISUAL_SCREEN))
 					{
-						if (g_esPlayer[survivor].g_flVisualTime[0] == -1.0 || (flDuration > (g_esPlayer[survivor].g_flVisualTime[0] - flCurrentTime)))
+						if (g_esPlayer[survivor].g_flVisualTime[0] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[0] - flCurrentTime)))
 						{
 							char sColor[48], sSet[3][16], sValue[4][4];
 
@@ -10574,14 +10595,17 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 							{
 								CreateTimer(2.0, tTimerScreenEffect, GetClientUserId(survivor), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 							}
-						}
 
-						g_esPlayer[survivor].g_flVisualTime[0] = flDuration;
+							if (flTime > (g_esPlayer[survivor].g_flVisualTime[0] - flCurrentTime))
+							{
+								g_esPlayer[survivor].g_flVisualTime[0] = flDuration;
+							}
+						}
 					}
 
 					if (bDeveloper || (iVisual & MT_VISUAL_GLOW))
 					{
-						if (g_esPlayer[survivor].g_flVisualTime[1] == -1.0 || (flDuration > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime)))
+						if (g_esPlayer[survivor].g_flVisualTime[1] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime)))
 						{
 							char sColor[36], sSet[3][12], sValue[3][4];
 
@@ -10606,14 +10630,17 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 							}
 
 							vSetSurvivorGlow(survivor);
-						}
 
-						g_esPlayer[survivor].g_flVisualTime[1] = flDuration;
+							if (flTime > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime))
+							{
+								g_esPlayer[survivor].g_flVisualTime[1] = flDuration;
+							}
+						}
 					}
 
 					if (bDeveloper || (iVisual & MT_VISUAL_BODY))
 					{
-						if (g_esPlayer[survivor].g_flVisualTime[2] == -1.0 || (flDuration > (g_esPlayer[survivor].g_flVisualTime[2] - flCurrentTime)))
+						if (g_esPlayer[survivor].g_flVisualTime[2] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[2] - flCurrentTime)))
 						{
 							char sColor[48], sSet[3][16], sValue[4][4];
 							int iColor[4];
@@ -10639,33 +10666,39 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 							}
 
 							SetEntityRenderColor(survivor, iColor[0], iColor[1], iColor[2], iColor[3]);
-						}
 
-						g_esPlayer[survivor].g_flVisualTime[2] = flDuration;
+							if (flTime > (g_esPlayer[survivor].g_flVisualTime[2] - flCurrentTime))
+							{
+								g_esPlayer[survivor].g_flVisualTime[2] = flDuration;
+							}
+						}
 					}
 
 					if (bDeveloper || (iVisual & MT_VISUAL_PARTICLE))
 					{
-						if (g_esPlayer[survivor].g_flVisualTime[3] == -1.0 || (flDuration > (g_esPlayer[survivor].g_flVisualTime[3] - flCurrentTime)))
+						if (g_esPlayer[survivor].g_flVisualTime[3] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[3] - flCurrentTime)))
 						{
 							int iEffect = g_esCache[tank].g_iParticleEffectVisual[priority];
-							if (iEffect > 0 && !(g_esPlayer[survivor].g_iParticleEffects & iEffect))
+							if (iEffect > 0 && g_esPlayer[survivor].g_iParticleEffect != iEffect)
 							{
-								g_esPlayer[survivor].g_iParticleEffects |= iEffect;
+								g_esPlayer[survivor].g_iParticleEffect = iEffect;
 							}
 
 							if (g_esPlayer[survivor].g_flVisualTime[3] == -1.0)
 							{
 								CreateTimer(0.75, tTimerParticleVisual, GetClientUserId(survivor), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 							}
-						}
 
-						g_esPlayer[survivor].g_flVisualTime[3] = flDuration;
+							if (flTime > (g_esPlayer[survivor].g_flVisualTime[3] - flCurrentTime))
+							{
+								g_esPlayer[survivor].g_flVisualTime[3] = flDuration;
+							}
+						}
 					}
 
 					if (bDeveloper || (iVisual & MT_VISUAL_VOICELINE))
 					{
-						if (g_esPlayer[survivor].g_flVisualTime[4] == -1.0 || (flDuration > (g_esPlayer[survivor].g_flVisualTime[4] - flCurrentTime)))
+						if (g_esPlayer[survivor].g_flVisualTime[4] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[4] - flCurrentTime)))
 						{
 							switch (priority)
 							{
@@ -10678,9 +10711,12 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool repeat = 
 							{
 								CreateTimer(3.0, tTimerLoopVoiceline, GetClientUserId(survivor), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 							}
-						}
 
-						g_esPlayer[survivor].g_flVisualTime[4] = flDuration;
+							if (flTime > (g_esPlayer[survivor].g_flVisualTime[4] - flCurrentTime))
+							{
+								g_esPlayer[survivor].g_flVisualTime[4] = flDuration;
+							}
+						}
 					}
 				}
 			}
@@ -15188,13 +15224,13 @@ public Action tTimerParticleVisual(Handle timer, int userid)
 	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_flVisualTime[3] == -1.0 || g_esPlayer[iSurvivor].g_flVisualTime[3] < GetGameTime())
 	{
 		g_esPlayer[iSurvivor].g_flVisualTime[3] = -1.0;
-		g_esPlayer[iSurvivor].g_iParticleEffects = 0;
+		g_esPlayer[iSurvivor].g_iParticleEffect = 0;
 
 		return Plugin_Stop;
 	}
 
 	static int iEffect;
-	iEffect = g_esPlayer[iSurvivor].g_iParticleEffects;
+	iEffect = g_esPlayer[iSurvivor].g_iParticleEffect;
 	if (iEffect == 0)
 	{
 		g_esPlayer[iSurvivor].g_flVisualTime[3] = -1.0;
@@ -15321,7 +15357,7 @@ public Action tTimerRefreshRewards(Handle timer)
 					if (g_esPlayer[iSurvivor].g_flVisualTime[3] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[3] < flTime)
 					{
 						g_esPlayer[iSurvivor].g_flVisualTime[3] = -1.0;
-						g_esPlayer[iSurvivor].g_iParticleEffects = 0;
+						g_esPlayer[iSurvivor].g_iParticleEffect = 0;
 					}
 
 					if (g_esPlayer[iSurvivor].g_flVisualTime[4] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[4] < flTime)
