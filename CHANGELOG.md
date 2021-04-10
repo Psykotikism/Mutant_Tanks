@@ -7,6 +7,7 @@
 #### Core Plugin
 - Fixed some developer tools not disabling themselves properly.
 - Fixed the `Reward` system creating multiple effects per player.
+- Fixed the `Reward` system using wrong durations.
 - Fixed the positioning of the Tank's light props.
 
 #### Natives & Forwards
@@ -27,6 +28,7 @@
 #### Settings
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Reward Notify`
+	- `Reward Priority`
 	- `Reward Visual` (Requested by 3aljiyavslgazana.)
 	- `Body Color Visual` (Requested by 3aljiyavslgazana.)
 	- `Glow Color Visual` (Requested by 3aljiyavslgazana.)

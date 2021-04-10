@@ -721,6 +721,28 @@
 			// 3rd number = Percentage of damage required for teammate rewards.
 			"Reward Percentage"			"10.0,10.0,10.0"
 
+			// Prioritize rewards in this order.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 3
+			// --
+			// 0: OFF (Do not reward anyone.)
+			// 1: Reward killers.
+			// 2: Reward assistants.
+			// 3: Reward teammates.
+			// --
+			// 1st number = 1st priority
+			// 2nd number = 2nd priority
+			// 3rd number = 3rd priority
+			"Reward Priority"			"1,2,3"
+
 			// The visual effects displayed for rewards.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Rewards" section of their settings.
@@ -884,7 +906,7 @@
 			// Separate percentages with commas (",").
 			// --
 			// Percentages limit: 3
-			// Character limit for each percentage: 1
+			// Character limit for each percentage: 6
 			// --
 			// Minimum percentage for each: 0.0 (OFF)
 			// Maximum percentage for each: 100.0 (Highest)
@@ -1019,7 +1041,7 @@
 			// Separate resistances with commas (",").
 			// --
 			// Resistances limit: 3
-			// Character limit for each resistance: 3
+			// Character limit for each resistance: 6
 			// --
 			// Minimum value for each resistance: 0.0 (OFF)
 			// Maximum value for each resistance: 1.0 (None)
@@ -1225,6 +1247,7 @@
 			// --
 			// RGBA sets limit: 3
 			// Character limit for each set: 16
+			// Character limit for each value: 4
 			// --
 			// Minimum value for each: -1 (Random)
 			// Maximum value for each: 255 (Brightest)
@@ -1250,6 +1273,7 @@
 			// --
 			// RGBA sets limit: 3
 			// Character limit for each set: 12
+			// Character limit for each value: 4
 			// --
 			// Minimum value for each: -1 (Random)
 			// Maximum value for each: 255 (Brightest)
@@ -1303,6 +1327,7 @@
 			// --
 			// RGBA sets limit: 3
 			// Character limit for each set: 16
+			// Character limit for each value: 4
 			// --
 			// Minimum value for each: -1 (Random)
 			// Maximum value for each: 255 (Brightest)
@@ -2527,6 +2552,28 @@
 			// 3rd number = Percentage of damage required for teammate rewards.
 			"Reward Percentage"			"0.0,0.0,0.0"
 
+			// Prioritize rewards in this order.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// Separate values with commas (",").
+			// --
+			// Values limit: 3
+			// Character limit for each value: 1
+			// --
+			// Minimum value for each: 0
+			// Maximum value for each: 3
+			// --
+			// 0: OFF (Do not reward anyone.)
+			// 1: Reward killers.
+			// 2: Reward assistants.
+			// 3: Reward teammates.
+			// --
+			// 1st number = 1st priority
+			// 2nd number = 2nd priority
+			// 3rd number = 3rd priority
+			"Reward Priority"			"0,0,0"
+
 			// The visual effects displayed for rewards.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Rewards" section.
 			// Note: This setting can be overridden for specific players.
@@ -2690,7 +2737,7 @@
 			// Separate percentages with commas (",").
 			// --
 			// Percentages limit: 3
-			// Character limit for each percentage: 1
+			// Character limit for each percentage: 6
 			// --
 			// Minimum percentage for each: 0.0 (OFF)
 			// Maximum percentage for each: 100.0 (Highest)
@@ -2825,7 +2872,7 @@
 			// Separate resistances with commas (",").
 			// --
 			// Resistances limit: 3
-			// Character limit for each resistance: 3
+			// Character limit for each resistance: 6
 			// --
 			// Minimum value for each resistance: 0.0 (OFF)
 			// Maximum value for each resistance: 1.0 (None)
@@ -3031,6 +3078,7 @@
 			// --
 			// RGBA sets limit: 3
 			// Character limit for each set: 16
+			// Character limit for each value: 4
 			// --
 			// Minimum value for each: -1 (Random)
 			// Maximum value for each: 255 (Brightest)
@@ -3056,6 +3104,7 @@
 			// --
 			// RGBA sets limit: 3
 			// Character limit for each set: 12
+			// Character limit for each value: 4
 			// --
 			// Minimum value for each: -1 (Random)
 			// Maximum value for each: 255 (Brightest)
@@ -3109,6 +3158,7 @@
 			// --
 			// RGBA sets limit: 3
 			// Character limit for each set: 16
+			// Character limit for each value: 4
 			// --
 			// Minimum value for each: -1 (Random)
 			// Maximum value for each: 255 (Brightest)
