@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.84 (July 1, 2021)
+## Version 8.84 (August 1, 2021)
 
 ### Bug Fixes
 
