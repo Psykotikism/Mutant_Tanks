@@ -673,6 +673,7 @@ enum struct esPlayer
 	bool g_bSpit;
 	bool g_bStasis;
 	bool g_bThirdPerson;
+	bool g_bThirdPerson2;
 	bool g_bTransformed;
 	bool g_bTriggered;
 	bool g_bVomited;
@@ -1784,6 +1785,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -4661,10 +4663,7 @@ static void vTank(int admin, char[] type, bool spawn = false, bool log = true, i
 				int iTypeCount = 0, iTankTypes[MT_MAXTYPES + 1];
 				for (int iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 				{
-					if (iIndex <= 0)
-					{
-						continue;
-					}
+					if (iIndex <= 0) continue;
 
 					vGetTranslatedName(sPhrase, sizeof(sPhrase), _, iIndex);
 					SetGlobalTransTarget(admin);
@@ -5012,10 +5011,7 @@ public void OnGameFrame()
 				iTarget = GetClientAimTarget(iPlayer);
 				if (bIsTank(iTarget))
 				{
-					if (bIsTankIdle(iTarget, 1) && bIsSurvivor(iPlayer))
-					{
-						continue;
-					}
+					if (bIsTankIdle(iTarget, 1) && bIsSurvivor(iPlayer)) continue;
 
 					sHealthBar[0] = '\0';
 					iHealth = bIsPlayerIncapacitated(iTarget) ? 0 : GetEntProp(iTarget, Prop_Data, "m_iHealth");
@@ -7240,10 +7236,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						ExplodeString(sValue, ",", sRange, sizeof(sRange), sizeof(sRange[]));
 						for (int iPos = 0; iPos < sizeof(sRange); iPos++)
 						{
-							if (sRange[iPos][0] == '\0')
-							{
-								continue;
-							}
+							if (sRange[iPos][0] == '\0') continue;
 
 							ExplodeString(sRange[iPos], "-", sSet, sizeof(sSet), sizeof(sSet[]));
 							g_esGeneral.g_iFinaleMinTypes[iPos] = (sSet[0][0] != '\0') ? iClamp(StringToInt(sSet[0]), 0, MT_MAXTYPES) : g_esGeneral.g_iFinaleMinTypes[iPos];
@@ -7337,10 +7330,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					{
 						for (iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 						{
-							if (iIndex <= 0)
-							{
-								continue;
-							}
+							if (iIndex <= 0) continue;
 
 							iRealType = iFindSectionType(g_esGeneral.g_sCurrentSection, iIndex);
 							if (iIndex == iRealType || StrContains(g_esGeneral.g_sCurrentSection, "all", false) != -1)
@@ -7864,10 +7854,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 								{
 									for (iIndex = g_esGeneral.g_iMinType; iIndex <= g_esGeneral.g_iMaxType; iIndex++)
 									{
-										if (iIndex <= 0)
-										{
-											continue;
-										}
+										if (iIndex <= 0) continue;
 
 										iRealType = iFindSectionType(g_esGeneral.g_sCurrentSubSection, iIndex);
 										if (iIndex == iRealType || StrContains(g_esGeneral.g_sCurrentSubSection, "all", false) != -1)
@@ -9977,6 +9964,7 @@ static void vResetCore(int client)
 	g_esPlayer[client].g_bLastLife = false;
 	g_esPlayer[client].g_bStasis = false;
 	g_esPlayer[client].g_bThirdPerson = false;
+	g_esPlayer[client].g_bThirdPerson2 = false;
 	g_esPlayer[client].g_iLastButtons = 0;
 	g_esPlayer[client].g_iMaxClip[0] = 0;
 	g_esPlayer[client].g_iMaxClip[1] = 0;
@@ -10868,7 +10856,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 
 static void vRewardEndMessage(int survivor, const char[] phrase)
 {
-	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || g_esPlayer[survivor].g_iNotify == 0 || g_esPlayer[survivor].g_iNotify == 2)
+	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || g_esPlayer[survivor].g_iNotify == 0 || g_esPlayer[survivor].g_iNotify == 1)
 	{
 		return;
 	}
@@ -10878,7 +10866,7 @@ static void vRewardEndMessage(int survivor, const char[] phrase)
 
 static void vRewardItemMessage(int survivor, int priority, const char[] loadout, const char[] namePhrase)
 {
-	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || g_esPlayer[survivor].g_iNotify == 0 || g_esPlayer[survivor].g_iNotify == 2)
+	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || g_esPlayer[survivor].g_iNotify == 0 || g_esPlayer[survivor].g_iNotify == 1)
 	{
 		return;
 	}
@@ -10893,7 +10881,7 @@ static void vRewardItemMessage(int survivor, int priority, const char[] loadout,
 
 static void vRewardLadyKillerMessage(int survivor, int tank, int priority)
 {
-	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || g_esPlayer[survivor].g_iNotify == 0 || g_esPlayer[survivor].g_iNotify == 2)
+	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		return;
 	}
@@ -10902,7 +10890,7 @@ static void vRewardLadyKillerMessage(int survivor, int tank, int priority)
 	iNewUses = g_esCache[tank].g_iLadyKillerReward[priority] + iUses,
 	iFinalUses = iClamp(iNewUses, 0, iLimit),
 	iReceivedUses = (iNewUses > iLimit) ? (iLimit - iUses) : g_esCache[tank].g_iLadyKillerReward[priority];
-	if (iReceivedUses > 0)
+	if (g_esPlayer[survivor].g_iNotify == 2 && g_esPlayer[survivor].g_iNotify == 3 && iReceivedUses > 0)
 	{
 		MT_PrintToChat(survivor, "%s %t", MT_TAG3, "RewardLadyKiller", iReceivedUses);
 	}
@@ -10913,7 +10901,7 @@ static void vRewardLadyKillerMessage(int survivor, int tank, int priority)
 
 static void vRewardMessage(int survivor, int priority, const char[] phrase1, const char[] phrase2, const char[] phrase3, const char[] namePhrase)
 {
-	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || g_esPlayer[survivor].g_iNotify == 0 || g_esPlayer[survivor].g_iNotify == 2)
+	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || g_esPlayer[survivor].g_iNotify == 0 || g_esPlayer[survivor].g_iNotify == 1)
 	{
 		return;
 	}
@@ -10928,7 +10916,7 @@ static void vRewardMessage(int survivor, int priority, const char[] phrase1, con
 
 static void vRewardNotify(int survivor, int tank, int priority, const char[] phrase, const char[] namePhrase)
 {
-	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iRewardNotify[priority] < 2)
+	if (!bIsValidClient(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || g_esCache[tank].g_iRewardNotify[priority] == 0 || g_esCache[tank].g_iRewardNotify[priority] == 2)
 	{
 		return;
 	}
@@ -12130,10 +12118,7 @@ static void vSetTankModel(int tank)
 		for (int iBit = 0; iBit < sizeof(iModels); iBit++)
 		{
 			iFlag = (1 << iBit);
-			if (!(g_esCache[tank].g_iTankModel & iFlag))
-			{
-				continue;
-			}
+			if (!(g_esCache[tank].g_iTankModel & iFlag)) continue;
 
 			iModels[iModelCount] = iFlag;
 			iModelCount++;
@@ -12582,7 +12567,7 @@ static void vMutateTank(int tank, int type)
 		if (g_esPlayer[tank].g_iTankType > 0)
 		{
 			vTankSpawn(tank);
-			CreateTimer(0.1, tTimerCheckView, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			CreateTimer(0.1, tTimerCheckTankView, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 			CreateTimer(1.0, tTimerTankUpdate, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 
 			if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iFavoriteType > 0 && iType != g_esPlayer[tank].g_iFavoriteType)
@@ -12705,6 +12690,7 @@ public void vPlayerSpawnFrame(DataPack pack)
 		}
 
 		vSetupDeveloper(iPlayer, _, true);
+		CreateTimer(0.1, tTimerCheckSurvivorView, GetClientUserId(iPlayer), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 	else if (bIsTank(iPlayer) && !g_esPlayer[iPlayer].g_bFirstSpawn)
 	{
@@ -13386,7 +13372,7 @@ static bool bIsTankIdle(int tank, int type = 0)
 
 static bool bIsTankInThirdPerson(int tank)
 {
-	return g_esPlayer[tank].g_bThirdPerson || bIsTankThirdPerson(tank);
+	return g_esPlayer[tank].g_bThirdPerson2 || bIsTankThirdPerson(tank);
 }
 
 static bool bIsTypeAvailable(int type, int tank = 0)
@@ -13400,10 +13386,7 @@ static bool bIsTypeAvailable(int type, int tank = 0)
 	iPluginCount = 0;
 	for (int iPos = 0; iPos < MT_MAXABILITIES; iPos++)
 	{
-		if (!g_esGeneral.g_bAbilityPlugin[iPos])
-		{
-			continue;
-		}
+		if (!g_esGeneral.g_bAbilityPlugin[iPos]) continue;
 
 		iPluginCount++;
 	}
@@ -13629,10 +13612,7 @@ static int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 	iTypeCount = 0;
 	for (int iIndex = iMin; iIndex <= iMax; iIndex++)
 	{
-		if (iIndex <= 0)
-		{
-			continue;
-		}
+		if (iIndex <= 0) continue;
 
 		switch (exclude)
 		{
@@ -13640,10 +13620,7 @@ static int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 			case 2: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || !bIsSpawnEnabled(iIndex) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly);
 		}
 
-		if (bCondition)
-		{
-			continue;
-		}
+		if (bCondition) continue;
 
 		iTankTypes[iTypeCount + 1] = iIndex;
 		iTypeCount++;
@@ -13809,10 +13786,7 @@ static int iGetMessageType(int setting)
 	for (int iBit = 0; iBit < sizeof(iMessages); iBit++)
 	{
 		iFlag = (1 << iBit);
-		if (!(setting & iFlag))
-		{
-			continue;
-		}
+		if (!(setting & iFlag)) continue;
 
 		iMessages[iMessageCount] = iFlag;
 		iMessageCount++;
@@ -13881,10 +13855,7 @@ static int iGetTankCount(bool manual, bool include = false)
 			{
 				if (bIsTank(iTank, MT_CHECK_INGAME|MT_CHECK_ALIVE))
 				{
-					if (!include && bIsCustomTank(iTank))
-					{
-						continue;
-					}
+					if (!include && bIsCustomTank(iTank)) continue;
 
 					iTankCount++;
 				}
@@ -14920,12 +14891,21 @@ public void vMTGameDifficultyCvar(ConVar convar, const char[] oldValue, const ch
 	}
 }
 
-public void vViewQuery(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue)
+public void vThirdpersonQuery(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue)
 {
 	switch (bIsValidClient(client) && result == ConVarQuery_Okay)
 	{
-		case true: g_esPlayer[client].g_bThirdPerson = (StrEqual(cvarName, "z_view_distance") && StringToInt(cvarValue) <= -1) ? true : false;
+		case true: g_esPlayer[client].g_bThirdPerson = !!StringToInt(cvarValue);
 		case false: g_esPlayer[client].g_bThirdPerson = false;
+	}
+}
+
+public void vViewDistanceQuery(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue)
+{
+	switch (bIsValidClient(client) && result == ConVarQuery_Okay)
+	{
+		case true: g_esPlayer[client].g_bThirdPerson2 = (StringToInt(cvarValue) <= -1) ? true : false;
+		case false: g_esPlayer[client].g_bThirdPerson2 = false;
 	}
 }
 
@@ -15064,7 +15044,21 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 	return Plugin_Continue;
 }
 
-public Action tTimerCheckView(Handle timer, int userid)
+public Action tTimerCheckSurvivorView(Handle timer, int userid)
+{
+	static int iSurvivor;
+	iSurvivor = GetClientOfUserId(userid);
+	if (!g_esGeneral.g_bPluginEnabled || !bIsHumanSurvivor(iSurvivor))
+	{
+		return Plugin_Stop;
+	}
+
+	QueryClientConVar(iSurvivor, "c_thirdpersonshoulder", vThirdpersonQuery);
+
+	return Plugin_Continue;
+}
+
+public Action tTimerCheckTankView(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
@@ -15073,7 +15067,7 @@ public Action tTimerCheckView(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	QueryClientConVar(iTank, "z_view_distance", vViewQuery);
+	QueryClientConVar(iTank, "z_view_distance", vViewDistanceQuery);
 
 	return Plugin_Continue;
 }
@@ -15457,10 +15451,7 @@ public Action tTimerRegenerateAmmo(Handle timer)
 	static int iAmmo, iAmmoOffset, iMaxAmmo, iClip, iMaxClip, iRegen, iSlot, iSpecialAmmo, iUpgrades;
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (!bIsSurvivor(iSurvivor))
-		{
-			continue;
-		}
+		if (!bIsSurvivor(iSurvivor)) continue;
 
 		bDeveloper = bIsDeveloper(iSurvivor, 4) || bIsDeveloper(iSurvivor, 6);
 		iRegen = (bDeveloper && g_esDeveloper[iSurvivor].g_iDevAmmoRegen > g_esPlayer[iSurvivor].g_iAmmoRegen) ? g_esDeveloper[iSurvivor].g_iDevAmmoRegen : g_esPlayer[iSurvivor].g_iAmmoRegen;
@@ -15704,6 +15695,11 @@ public Action tTimerScreenEffect(Handle timer, int userid)
 		g_esPlayer[iSurvivor].g_iScreenColorVisual[3] = -1;
 
 		return Plugin_Stop;
+	}
+
+	if (bIsPlayerHanging(iSurvivor) || g_esPlayer[iSurvivor].g_bThirdPerson)
+	{
+		return Plugin_Continue;
 	}
 
 	vEffect(iSurvivor, 0, MT_ATTACK_RANGE, MT_ATTACK_RANGE, g_esPlayer[iSurvivor].g_iScreenColorVisual[0], g_esPlayer[iSurvivor].g_iScreenColorVisual[1], g_esPlayer[iSurvivor].g_iScreenColorVisual[2], g_esPlayer[iSurvivor].g_iScreenColorVisual[3]);
