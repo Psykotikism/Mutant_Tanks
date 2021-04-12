@@ -2444,10 +2444,10 @@ public void OnConfigsExecuted()
 			{
 				switch (iDifficulty)
 				{
-					case 0: sDifficulty = "easy";
-					case 1: sDifficulty = "normal";
-					case 2: sDifficulty = "hard";
-					case 3: sDifficulty = "impossible";
+					case 0: sDifficulty = "Easy";
+					case 1: sDifficulty = "Normal";
+					case 2: sDifficulty = "Hard";
+					case 3: sDifficulty = "Impossible";
 				}
 
 				vCreateConfigFile("difficulty_configs/", sDifficulty);
@@ -13565,10 +13565,10 @@ static float flGetScaledDamage(float damage)
 
 		switch (sDifficulty[0])
 		{
-			case 'e', 'E': return (g_esGeneral.g_flDifficultyDamage[0] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[0]) : damage;
-			case 'n', 'N': return (g_esGeneral.g_flDifficultyDamage[1] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[1]) : damage;
-			case 'h', 'H': return (g_esGeneral.g_flDifficultyDamage[2] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[2]) : damage;
-			case 'i', 'I': return (g_esGeneral.g_flDifficultyDamage[3] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[3]) : damage;
+			case 'E': return (g_esGeneral.g_flDifficultyDamage[0] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[0]) : damage;
+			case 'N': return (g_esGeneral.g_flDifficultyDamage[1] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[1]) : damage;
+			case 'H': return (g_esGeneral.g_flDifficultyDamage[2] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[2]) : damage;
+			case 'I': return (g_esGeneral.g_flDifficultyDamage[3] > 0.0) ? (damage * g_esGeneral.g_flDifficultyDamage[3]) : damage;
 		}
 	}
 

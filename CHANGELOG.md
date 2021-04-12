@@ -6,16 +6,15 @@
 
 #### Core Plugin
 - Fixed some developer tools not disabling themselves properly.
-- Fixed the `Reward` system creating multiple effects per player.
-- Fixed the `Reward` system using wrong durations.
+- Fixed the `Reward` system creating multiple effects per player and using wrong durations.
 - Fixed the positioning of the Tank's light props.
+- Fixed the difficulty config files using the wrong letter case. (Thanks to Shadowart for testing and reporting!)
 
 #### Natives & Forwards
 - Fixed the `MT_LogMessage` native logging messages even when the feature is disabled.
 
 #### Abilities
-- Respawn
-	- Fixed the ability requiring `DHooks`.
+- Respawn: Fixed the ability requiring `DHooks`.
 
 ### Changes
 
@@ -98,8 +97,7 @@
 - Fixed the `Item Reward` setting not being read properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 #### Abilities
-- Absorb
-	- Fixed all types of fire damage not being detected.
+- Absorb: Fixed all types of fire damage not being detected.
 
 - Bury
 	- Fixed survivors not being revived when receiving the godmode reward.
@@ -109,17 +107,13 @@
 	- Fixed choked survivors not always being lifted off the ground while being choked. (Thanks to 3aljiyavslgazana and Mi.Cura for testing and reporting!)
 	- Fixed choked survivors being stuck under the floor when the ability ends.
 
-- Clone
-	- Fixed clone deaths raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Clone: Fixed clone deaths raising the wave count. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
-- Drop
-	- Fixed weapons not being attached properly.
+- Drop: Fixed weapons not being attached properly.
 
-- Fragile
-	- Fixed all types of fire damage not being detected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fragile: Fixed all types of fire damage not being detected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
-- God
-	- Fixed Tanks not being extinguished from fires while the ability is activated. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- God: Fixed Tanks not being extinguished from fires while the ability is activated. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Heal
 	- Fixed players with the godmode reward being affected.
@@ -127,17 +121,13 @@
 	- Fixed Tanks gaining health while in the dying animation.
 	- Fixed all types of fire damage not being detected.
 
-- Hit
-	- Fixed the ability not working when the `Human Ability` setting is disabled.
+- Hit: Fixed the ability not working when the `Human Ability` setting is disabled.
 
-- Hypno
-	- Fixed all types of fire damage not being detected.
+- Hypno: Fixed all types of fire damage not being detected.
 
-- Kamikaze
-	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Kamikaze: Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
-- Laser
-	- Fixed the ability always targeting the first player that joined the server.
+- Laser: Fixed the ability always targeting the first player that joined the server.
 
 - Leech
 	- Fixed total health being miscalculated.
@@ -148,33 +138,25 @@
 	- Fixed Tanks gaining health while in the dying animation.
 	- Fixed the `Medic Health` and `Medic Max Health` settings not being read entirely. (Thanks to TheStarRocker for testing and reporting!)
 
-- Pyro
-	- Fixed all types of fire damage not being detected.
+- Pyro: Fixed all types of fire damage not being detected.
 
-- Recoil
-	- Fixed the ability affecting all weapons instead of just guns.
+- Recoil: Fixed the ability affecting all weapons instead of just guns.
 
 - Regen
 	- Fixed total health being miscalculated.
 	- Fixed Tanks gaining health while in the dying animation.
 
-- Respawn
-	- Fixed Tanks not respawning when dying as a different type. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Respawn: Fixed Tanks not respawning when dying as a different type. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
-- Restart
-	- Fixed players with the godmode reward being affected.
+- Restart: Fixed players with the godmode reward being affected.
 
-- Rocket
-	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Rocket: Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
-- Shield
-	- Fixed all types of fire damage not being detected.
+- Shield: Fixed all types of fire damage not being detected.
 
-- Smash
-	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Smash: Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
-- Smite
-	- Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Smite: Fixed players with the godmode reward being affected. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Ultimate
 	- Fixed total health being miscalculated.
@@ -193,11 +175,9 @@
 	- Fixed Tanks gaining health while in the dying animation.
 	- Fixed all types of fire damage not being detected.
 
-- Yell
-	- Fixed the errors regarding the sound hook. (Thanks to ur5efj for reporting!)
+- Yell: Fixed the errors regarding the sound hook. (Thanks to ur5efj for reporting!)
 
-- Zombie
-	- Fixed the ability trying to spawn Uncommon infected on L4D1.
+- Zombie: Fixed the ability trying to spawn Uncommon infected on L4D1.
 
 ### Changes
 
@@ -421,14 +401,11 @@
 	- Added the `Absorb Hittable Divisor` setting.
 	- Any damage below `1` dealt to Tanks with this ability activated will automatically round up to `1`.
 
-- Acid
-	- The ability is now exclusive to Left 4 Dead 2.
+- Acid: The ability is now exclusive to Left 4 Dead 2.
 
-- Aimless
-	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+- Aimless: Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
-- Ammo
-	- Survivors with no ammunition are no longer affected.
+- Ammo: Survivors with no ammunition are no longer affected.
 
 - Bury
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -459,11 +436,9 @@
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 	- Tanks with this ability activated are no longer affected by bile bombs unless the thrower has the damage boost reward. (Requested by 3aljiyavslgazana.)
 
-- Gravity
-	- Survivors with the speed boost reward are no longer affected by the hit and range attacks. (Requested by 3aljiyavslgazana.)
+- Gravity: Survivors with the speed boost reward are no longer affected by the hit and range attacks. (Requested by 3aljiyavslgazana.)
 
-- Hit
-	- Survivors with the damage boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
+- Hit: Survivors with the damage boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Hypno
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
@@ -475,14 +450,11 @@
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 	- Removed idle fix code. (Use [Lux's "Survivor_AFK_Fix" plugin](https://forums.alliedmods.net/showthread.php?t=326742) instead.)
 
-- Minion
-	- Minions are removed when their Tank owner changes its Mutant Tank type if the `Minion Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
+- Minion: Minions are removed when their Tank owner changes its Mutant Tank type if the `Minion Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
 
-- Nullify
-	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+- Nullify: The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 
-- Pimp
-	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+- Pimp: Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Puke
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -492,8 +464,7 @@
 	- Replaced the detour for the `CTerrorPlayer::Event_Killed` function with the new `MT_OnPlayerEventKilled` forward.
 	- Tanks that respawn no longer give out rewards until their final deaths. (Thanks to 3aljiyavslgazana for suggesting!)
 
-- Restart
-	- Respawned survivors no longer have their stats reset. (Thanks to Dragokas for the code and gamedata info!)
+- Restart: Respawned survivors no longer have their stats reset. (Thanks to Dragokas for the code and gamedata info!)
 
 - Shield
 	- The damage boost reward now allows the recipient to bypass all types of shields that Tanks may have throughout its duration. (Requested by 3aljiyavslgazana.)
@@ -501,35 +472,29 @@
 	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 	- Tanks are immune to bile bombs while the shield is active. (Requested by 3aljiyavslgazana.)
 
-- Shove
-	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
+- Shove: Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
-- Slow
-	- Survivors with the speed boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
+- Slow: Survivors with the speed boost reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Throw
 	- Thrown special infected are removed when their Tank owner changes its Mutant Tank type if the `Throw Infected Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
 	- Thrown Witches are removed when their Tank owner changes its Mutant Tank type if the `Throw Witch Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
 
-- Ultimate
-	- The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
+- Ultimate: The pushback effect has less magnitude and radius when triggered by recipients of the godmode reward. (Requested by 3aljiyavslgazana.)
 
 - Vision
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
-- Warp
-	- Incapacitated or ledge-hanging survivors are no longer affected by the hit and range attacks. (Requested by 3aljiyavslgazana.)
+- Warp: Incapacitated or ledge-hanging survivors are no longer affected by the hit and range attacks. (Requested by 3aljiyavslgazana.)
 
 - Whirl
 	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
 
-- Witch
-	- Witches are removed when their Tank owner changes its Mutant Tank type if the `Witch Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
+- Witch: Witches are removed when their Tank owner changes its Mutant Tank type if the `Witch Remove` setting is enabled. (Thanks to 3aljiyavslgazana for suggesting!)
 
-- Xiphos
-	- Any damage below `1` dealt to Tanks with this ability activated will automatically round up to `1`.
+- Xiphos: Any damage below `1` dealt to Tanks with this ability activated will automatically round up to `1`.
 
 - Yell
 	- Survivors with the godmode reward are no longer affected. (Requested by 3aljiyavslgazana.)
@@ -569,11 +534,9 @@
 - Fixed the `Tank Model` setting's third option using the L4D2 model instead of the L4D1 model.
 
 #### Abilities
-- Shield
-	- Fixed Tanks taking fire damage in certain cases while shield is up. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Shield: Fixed Tanks taking fire damage in certain cases while shield is up. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
-- Throw
-	- Fixed the `Ability Enabled` setting not being checked properly for human-controlled Tanks.
+- Throw: Fixed the `Ability Enabled` setting not being checked properly for human-controlled Tanks.
 
 ### Changes
 
@@ -604,14 +567,11 @@
 - Changed the minimum value of the `Throw Interval` setting from `-1.0` to `0.0`.
 
 #### Abilities
-- Car
-	- Added the `Car Owner` setting. (Requested by 3aljiyavslgazana.)
+- Car: Added the `Car Owner` setting. (Requested by 3aljiyavslgazana.)
 
-- Throw
-	- Added the `Throw Car Owner` setting. (Requested by 3aljiyavslgazana.)
+- Throw: Added the `Throw Car Owner` setting. (Requested by 3aljiyavslgazana.)
 
-- Warp
-	- Tanks can no longer teleport to survivors who are inside saferooms or spawn areas. (Requested by 3aljiyavslgazana.)
+- Warp: Tanks can no longer teleport to survivors who are inside saferooms or spawn areas. (Requested by 3aljiyavslgazana.)
 
 ### Files
 
@@ -626,11 +586,9 @@
 ### Bug Fixes
 
 #### Abilities
-- Meteor
-	- Fixed the random crashes caused when rocks explode. (Thanks to 3aljiyavslgazana, Mi.Cura, and Maku for reporting!)
+- Meteor: Fixed the random crashes caused when rocks explode. (Thanks to 3aljiyavslgazana, Mi.Cura, and Maku for reporting!)
 
-- Shield
-	- Fixed the Tank throwing gas cans or propane tanks even when the `Shield Type` setting is not blast-based nor fire-based. (Thanks to Mi.Cura for letting me test on his servers!)
+- Shield: Fixed the Tank throwing gas cans or propane tanks even when the `Shield Type` setting is not blast-based nor fire-based. (Thanks to Mi.Cura for letting me test on his servers!)
 
 ### Changes
 
@@ -647,29 +605,21 @@
 - Added the `Hittable Immunity` setting under the `Tank #/Immunities` and `STEAM_ID/Immunities` sections. (Thanks to Marttt for the code!)
 
 #### Abilities
-- Absorb
-	- Added a pushback effect when players use their melee weapons against Tanks with melee absorption.
+- Absorb: Added a pushback effect when players use their melee weapons against Tanks with melee absorption.
 
-- Car
-	- All cars are now owned by Tanks. (Requested by Marttt.)
+- Car: All cars are now owned by Tanks. (Requested by Marttt.)
 
-- God
-	- Added a pushback effect when players use their melee weapons against Tanks with godmode.
+- God: Added a pushback effect when players use their melee weapons against Tanks with godmode.
 
-- Hypno
-	- Added a pushback effect when players use their melee weapons against Tanks while hypnotized.
+- Hypno: Added a pushback effect when players use their melee weapons against Tanks while hypnotized.
 
-- Nullify
-	- Added a pushback effect when players use their melee weapons against Tanks while nullified.
+- Nullify: Added a pushback effect when players use their melee weapons against Tanks while nullified.
 
-- Shield
-	- Added a pushback effect when players use their melee weapons against Tanks with shields.
+- Shield: Added a pushback effect when players use their melee weapons against Tanks with shields.
 
-- Throw
-	- All cars are now owned by Tanks. (Requested by Marttt.)
+- Throw: All cars are now owned by Tanks. (Requested by Marttt.)
 
-- Ultimate
-	- Added a pushback effect when players use their melee weapons against Tanks with godmode.
+- Ultimate: Added a pushback effect when players use their melee weapons against Tanks with godmode.
 
 ### Files
 
@@ -739,25 +689,21 @@
 - Fixed some settings of multiple abilities having the wrong limits.
 - Fixed abilities activating when the Tank is dying, which caused the Tank being stuck in a looped dying animation.
 
-- Absorb
-	- Fixed the ability bypassing damage immunity settings. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Absorb: Fixed the ability bypassing damage immunity settings. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Blind
 	- Fixed the ability being enabled by default. (Thanks to Mi.Cura and Tank Rush for reporting!)
 	- Fixed the sound effect not playing in L4D1 due to the file not existing.
 
-- Bomb
-	- Fixed the sound effect not playing in L4D1 due to the file not existing.
+- Bomb: Fixed the sound effect not playing in L4D1 due to the file not existing.
 
 - Bury
 	- Fixed players being left under the map. (Thanks to Mi.Cura for testing and reporting!)
 	- Fixed players keeping their original velocity after being teleported.
 
-- Car
-	- Fixed cars giving players accelerated velocity when standing on them.
+- Car: Fixed cars giving players accelerated velocity when standing on them.
 
-- Choke
-	- Fixed survivors being launched too high up into the air regardless of the `Choke Height` setting's value.
+- Choke: Fixed survivors being launched too high up into the air regardless of the `Choke Height` setting's value.
 
 - Clone
 	- Fixed clones spawning uncontrollably. (Thanks to 3aljiyavslgazana for testing and reporting!)
@@ -767,11 +713,9 @@
 	- Fixed clone count not supporting kicked clones.
 	- Fixed the ability not being optional.
 
-- Drug
-	- Fixed the ability not requiring human survivors to be present by default.
+- Drug: Fixed the ability not requiring human survivors to be present by default.
 
-- Drunk
-	- Fixed the ability requiring human survivors to be present by default.
+- Drunk: Fixed the ability requiring human survivors to be present by default.
 
 - Drop
 	- Fixed the `Drop Weapon Name` setting not reading weapon names properly. (Thanks to Tank Rush and moekai for testing and reporting!)
@@ -780,59 +724,47 @@
 - Electric
 	- Fixed the ability not working sometimes. (Thanks to Tank Rush and Mi.Cura for testing and reporting!)
 
-- Enforce
-	- Fixed errors related to enforced weapon slots having invalid weapons.
+- Enforce: Fixed errors related to enforced weapon slots having invalid weapons.
 
-- Fire
-	- Fixed the sound effect not playing in L4D1 due to the file not existing.
+- Fire: Fixed the sound effect not playing in L4D1 due to the file not existing.
 
-- Fragile
-	- Fixed the ability bypassing damage immunity settings. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Fragile: Fixed the ability bypassing damage immunity settings. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Ghost
 	- Fixed the range ability checking for the wrong ammo count.
 	- Fixed special infected remaining transparent after the Tank dies.
 	- Fixed client index errors. (Thanks to Mi.Cura for reporting!)
 
-- Gravity
-	- Fixed the range ability checking for the wrong ammo count.
+- Gravity: Fixed the range ability checking for the wrong ammo count.
 
 - Heal
 	- Fixed the glow outline not going away when Tanks die.
 	- Fixed glow outlines not applying/resetting properly.
 	- Fixed the range ability checking for the wrong ammo count.
 
-- Hit
-	- Fixed some of the settings not working in some config formats.
+- Hit: Fixed some of the settings not working in some config formats.
 
-- Hypno
-	- Fixed survivors taking too much damage when the Tank is incapacitated while survivors are still hypnotized.
+- Hypno: Fixed survivors taking too much damage when the Tank is incapacitated while survivors are still hypnotized.
 
-- Jump
-	- Fixed the range ability checking for the wrong ammo count.
+- Jump: Fixed the range ability checking for the wrong ammo count.
 
-- Meteor
-	- Fixed the `Meteor Damage` setting not working properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Meteor: Fixed the `Meteor Damage` setting not working properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Minion
 	- Fixed minions being replaced even when the `Minion Replace` setting is set to `0`.
 	- Fixed minion count not supporting kicked minions.
 
-- Omni
-	- Fixed type changes not being tracked properly. (Thanks to Mi.Cura for testing and reporting!)
+- Omni: Fixed type changes not being tracked properly. (Thanks to Mi.Cura for testing and reporting!)
 
-- Panic
-	- Fixed panic events not being called on L4D1.
+- Panic: Fixed panic events not being called on L4D1.
 
-- Respawn
-	- Fixed the Tank not respawning consistently. (Thanks to epzminion for the method!)
+- Respawn: Fixed the Tank not respawning consistently. (Thanks to epzminion for the method!)
 
 - Rock
 	- Fixed the rocks colliding with each other and producing lag.
 	- Fixed the `Rock Damage` setting not working properly. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
-- Shake
-	- Fixed one of the messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
+- Shake: Fixed one of the messages using the wrong format specifier. (Thanks to Mi.Cura for reporting!)
 
 - Shield
 	- Fixed shields not disappearing on mission loss or round restart.
@@ -842,8 +774,7 @@
 	- Fixed the rocks colliding with each other and producing lag.
 	- Fixed the `Spam Damage` setting not working properly.
 
-- Splatter
-	- Fixed the `Splatter Type` setting using the wrong value limit. (Thanks to 3aljiyavslgazana for testing and reporting!)
+- Splatter: Fixed the `Splatter Type` setting using the wrong value limit. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
 - Throw
 	- Fixed cars giving players accelerated velocity when standing on them.
@@ -861,15 +792,13 @@
 	- Fixed messages being spammed.
 	- Fixed witches not dealing any damage to survivors. (Thanks to 3aljiyavslgazana for testing and reporting!)
 
-- Vampire
-	- Fixed admin immunity not being checked properly.
+- Vampire: Fixed admin immunity not being checked properly.
 
 - Xiphos
 	- Fixed survivors receiving full health per hit.
 	- Fixed survivors receiving health while Tank is in dying animation.
 
-- Yell
-	- Fixed messages providing the wrong information. (Thanks to Mi.Cura for reporting!)
+- Yell: Fixed messages providing the wrong information. (Thanks to Mi.Cura for reporting!)
 
 ### Changes
 
@@ -1083,11 +1012,9 @@
 	- Changed the minimum value of the divisor settings from `0.1` to `1.0`.
 	- Divisor settings will not take effect unless their values are greater than `1.0`.
 
-- Blind
-	- Added a sound effect for L4D1.
+- Blind: Added a sound effect for L4D1.
 
-- Bomb
-	- Added a sound effect for L4D1.
+- Bomb: Added a sound effect for L4D1.
 
 - Bury
 	- Added the `Bury Buffer` setting. (Requested by Mi.Cura.)
@@ -1098,8 +1025,7 @@
 	- Added the `Car Interval` setting.
 	- Added the `Car Lifetime` setting.
 
-- Choke
-	- Changed the default value of the `Choke Height` setting from `300.0` to `200.0`.
+- Choke: Changed the default value of the `Choke Height` setting from `300.0` to `200.0`.
 
 - Clone
 	- The `Clone Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
@@ -1112,14 +1038,11 @@
 	- Dropped weapons now have normal size. (Requested by 3aljiyavslgazana.)
 	- Weapons attached to Tanks are now affected by the `Ghost` ability's fade feature. (Requested by 3aljiyavslgazana.)
 
-- Fire
-	- Added a sound effect for L4D1.
+- Fire: Added a sound effect for L4D1.
 
-- Fling
-	- Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+- Fling: Incapacitated or ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 
-- Fly
-	- Added the `Immunity Flags` setting.
+- Fly: Added the `Immunity Flags` setting.
 
 - Fragile
 	- Added the `Immunity Flags` setting.
@@ -1130,8 +1053,7 @@
 	- Incapacitated or ledge-hanging survivors are no longer affected.
 	- Special infected affected by the fade feature are now reverted back to normal upon death. (Requested by 3aljiyavslgazana.)
 
-- God
-	- Added the `Immunity Flags` setting.
+- God: Added the `Immunity Flags` setting.
 
 - Heal
 	- Changed the default value of the `Heal Buffer` setting from `25.0` to `100.0`.
@@ -1143,18 +1065,15 @@
 	- Changed the minimum value of the divisor settings from `0.1` to `1.0`.
 	- Divisor settings will not take effect unless their values are greater than `1.0`.
 
-- Ice
-	- Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
+- Ice: Ledge-hanging survivors are no longer affected. (Requested by 3aljiyavslgazana.)
 
 - Idle
 	- Applied a new idle fix method. (Thanks to Lux for the code!)
 	- The ability now requires `DHooks`.
 
-- Kamikaze
-	- Added the `Kamikaze Body` setting.
+- Kamikaze: Added the `Kamikaze Body` setting.
 
-- Leech
-	- The ability now contributes to the Tank's overall health.
+- Leech: The ability now contributes to the Tank's overall health.
 
 - Medic
 	- Added the `Medic Field` and `Medic Field Color` settings. (Thanks to Marttt and Silvers for the code!)
@@ -1172,28 +1091,23 @@
 	- Added the `Minion Lifetime` setting.
 	- AI minions are now killed instead of kicked when the plugin is unloaded.
 
-- Nullify
-	- Added a sound effect.
+- Nullify: Added a sound effect.
 
-- Pyro
-	- Added the `Pyro Reignite` setting.
+- Pyro: Added the `Pyro Reignite` setting.
 
-- Regen
-	- The ability now contributes to the Tank's overall health.
+- Regen: The ability now contributes to the Tank's overall health.
 
 - Respawn
 	- The `Respawn Type` setting now takes in a type range. Example: `1-10` (Requested by Neptunia.)
 	- The ability now requires `DHooks`.
 
-- Restart
-	- The ability no longer requires `Left 4 DHooks`.
+- Restart: The ability no longer requires `Left 4 DHooks`.
 
 - Rock
 	- Added the `Immunity Flags` setting.
 	- Added the `Rock Interval` setting.
 
-- Rocket
-	- Added the `Rocket Body` setting.
+- Rocket: Added the `Rocket Body` setting.
 
 - Shield
 	- Added the `Shield Glow` setting.
@@ -1202,14 +1116,11 @@
 	- Human-controlled Tanks are now put into thirdperson for `1.5` seconds after toggling the shield.
 	- Added a sound effect.
 
-- Shove
-	- Incapacitated or ledge-hanging survivors are no longer affected.
+- Shove: Incapacitated or ledge-hanging survivors are no longer affected.
 
-- Smash
-	- Added the `Smash Body` setting.
+- Smash: Added the `Smash Body` setting.
 
-- Smite
-	- Added the `Smite Body` setting.
+- Smite: Added the `Smite Body` setting.
 
 - Spam
 	- Added the `Immunity Flags` setting.
@@ -1227,19 +1138,16 @@
 	- Added the `Throw Witch Remove` setting.
 	- Thrown Witches now use default speed when set on fire. (Requested by 3aljiyavslgazana.)
 
-- Track
-	- Added the `Track Glow` setting.
+- Track: Added the `Track Glow` setting.
 
 - Ultimate
 	- The ability now contributes to the Tank's overall health.
 	- Added a sound effect.
 	- Added the `Ultimate Chance` setting.
 
-- Undead
-	- The ability now contributes to the Tank's overall health.
+- Undead: The ability now contributes to the Tank's overall health.
 
-- Vampire
-	- The ability now contributes to the Tank's overall health.
+- Vampire: The ability now contributes to the Tank's overall health.
 
 - Witch
 	- Added the `Witch Remove` setting.
