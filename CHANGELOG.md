@@ -6,7 +6,8 @@
 
 #### Core Plugin
 - Fixed some developer tools not disabling themselves properly.
-- Fixed the `Reward` system creating multiple effects per player and using wrong durations.
+- Fixed the `Reward` system creating multiple effects per player.
+- Fixed the `Reward` system using wrong durations.
 - Fixed the positioning of the Tank's light props.
 - Fixed the difficulty config files using the wrong letter case. (Thanks to Shadowart for testing and reporting!)
 
@@ -19,6 +20,7 @@
 ### Changes
 
 #### General
+- Mutant Tanks and its sub-plugins can be used in `SM 1.10`. `SourceMod 1.11.0.6511` or higher is only required when compiling the plugins. (Thanks to Shadowart for pointing this out.)
 - Each ability's plugin is now a component that must be compiled through a main plugin.
 
 #### Commands
@@ -2153,7 +2155,7 @@ Files:
 
 1. Updated config file with all the new settings, presets, and organization/structure.
 2. Updated gamedata file to remove unused signatures.
-3. Updated include file to use new natives introduced in SM 1.9 and SM 1.10, and to add new forwards and natives.
+3. Updated include file to use new natives introduced in `SM 1.9` and `SM 1.10`, and to add new forwards and natives.
 4. Updated translation file with new phrases and reformatted the phrase name of the Tank Note phrases.
 
 ## Version 8.41 (September 18, 2018)

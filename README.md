@@ -5,6 +5,7 @@
 <a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
 <img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt="English" width="32">
 </a>
+
 <a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
 <img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt="Russian" width="32">
 </a>
@@ -44,7 +45,9 @@ Originally an extended version of Super Tanks, Mutant Tanks combines Last Boss, 
 18. Fully customizable reward system.
 
 ## Requirements
-1. `SourceMod 1.11.0.6511` or higher
+1. `SourceMod 1.10` or `SourceMod 1.11`:
+- `SourceMod 1.10` (Only if using the `.smx` files included in the package.)
+- `SourceMod 1.11.0.6511` or higher (Only if compiling the `.sp` files yourself.)
 2. [`DHooks 2.2.0-detours15` or higher](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Recommended: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Knowledge of installing SourceMod plugins.

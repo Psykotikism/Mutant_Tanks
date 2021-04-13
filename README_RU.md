@@ -5,6 +5,7 @@
 <a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
 <img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt="Английский" width="32">
 </a>
+
 <a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
 <img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt="Русский" width="32">
 </a>
@@ -44,7 +45,9 @@
 18. Полностью настраиваемая система наград.
 
 ## Требования
-1. `SourceMod 1.11.0.6511` или выше
+1. `SourceMod 1.10` или `SourceMod 1.11`:
+- `SourceMod 1.10` (Только при использовании файлов `.smx`, включенных в пакет.)
+- `SourceMod 1.11.0.6511` или выше (только при самостоятельной компиляции файлов `.sp`.)
 2. [`DHooks 2.2.0-detours15` или выше](https://forums.alliedmods.net/showpost.php?p=2588686&postcount=589)
 3. Рекомендуется: [WeaponHandling_API](https://forums.alliedmods.net/showthread.php?t=319947)
 4. Знания по установке SourceMod плагинов.
