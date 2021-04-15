@@ -9394,54 +9394,54 @@ static void vPluginStatus()
 
 static void vHookEvents(bool hook)
 {
-	static bool bHooked;
+	static bool bHooked, bCheck[40];
 	if (hook && !bHooked)
 	{
 		bHooked = true;
 
-		HookEvent("ability_use", vEventHandler);
-		HookEvent("bot_player_replace", vEventHandler);
-		HookEvent("choke_start", vEventHandler);
-		HookEvent("create_panic_event", vEventHandler);
-		HookEvent("entity_shoved", vEventHandler);
-		HookEvent("finale_escape_start", vEventHandler);
-		HookEvent("finale_start", vEventHandler, EventHookMode_Pre);
-		HookEvent("finale_vehicle_leaving", vEventHandler);
-		HookEvent("finale_vehicle_ready", vEventHandler);
-		HookEvent("finale_rush", vEventHandler);
-		HookEvent("finale_radio_start", vEventHandler);
-		HookEvent("finale_radio_damaged", vEventHandler);
-		HookEvent("finale_win", vEventHandler);
-		HookEvent("heal_success", vEventHandler);
-		HookEvent("infected_hurt", vEventHandler);
-		HookEvent("lunge_pounce", vEventHandler);
-		HookEvent("mission_lost", vEventHandler);
-		HookEvent("player_bot_replace", vEventHandler);
-		HookEvent("player_connect", vEventHandler, EventHookMode_Pre);
-		HookEvent("player_death", vEventHandler, EventHookMode_Pre);
-		HookEvent("player_disconnect", vEventHandler, EventHookMode_Pre);
-		HookEvent("player_hurt", vEventHandler);
-		HookEvent("player_incapacitated", vEventHandler);
-		HookEvent("player_jump", vEventHandler);
-		HookEvent("player_ledge_grab", vEventHandler);
-		HookEvent("player_now_it", vEventHandler);
-		HookEvent("player_no_longer_it", vEventHandler);
-		HookEvent("player_shoved", vEventHandler);
-		HookEvent("player_spawn", vEventHandler);
-		HookEvent("player_team", vEventHandler);
-		HookEvent("revive_success", vEventHandler);
-		HookEvent("tongue_grab", vEventHandler);
-		HookEvent("weapon_fire", vEventHandler);
-		HookEvent("witch_killed", vEventHandler);
+		bCheck[0] = HookEventEx("ability_use", vEventHandler);
+		bCheck[1] = HookEventEx("bot_player_replace", vEventHandler);
+		bCheck[2] = HookEventEx("choke_start", vEventHandler);
+		bCheck[3] = HookEventEx("create_panic_event", vEventHandler);
+		bCheck[4] = HookEventEx("entity_shoved", vEventHandler);
+		bCheck[5] = HookEventEx("finale_escape_start", vEventHandler);
+		bCheck[6] = HookEventEx("finale_start", vEventHandler, EventHookMode_Pre);
+		bCheck[7] = HookEventEx("finale_vehicle_leaving", vEventHandler);
+		bCheck[8] = HookEventEx("finale_vehicle_ready", vEventHandler);
+		bCheck[9] = HookEventEx("finale_rush", vEventHandler);
+		bCheck[10] = HookEventEx("finale_radio_start", vEventHandler);
+		bCheck[11] = HookEventEx("finale_radio_damaged", vEventHandler);
+		bCheck[12] = HookEventEx("finale_win", vEventHandler);
+		bCheck[13] = HookEventEx("heal_success", vEventHandler);
+		bCheck[14] = HookEventEx("infected_hurt", vEventHandler);
+		bCheck[15] = HookEventEx("lunge_pounce", vEventHandler);
+		bCheck[16] = HookEventEx("mission_lost", vEventHandler);
+		bCheck[17] = HookEventEx("player_bot_replace", vEventHandler);
+		bCheck[18] = HookEventEx("player_connect", vEventHandler, EventHookMode_Pre);
+		bCheck[19] = HookEventEx("player_death", vEventHandler, EventHookMode_Pre);
+		bCheck[20] = HookEventEx("player_disconnect", vEventHandler, EventHookMode_Pre);
+		bCheck[21] = HookEventEx("player_hurt", vEventHandler);
+		bCheck[22] = HookEventEx("player_incapacitated", vEventHandler);
+		bCheck[23] = HookEventEx("player_jump", vEventHandler);
+		bCheck[24] = HookEventEx("player_ledge_grab", vEventHandler);
+		bCheck[25] = HookEventEx("player_now_it", vEventHandler);
+		bCheck[26] = HookEventEx("player_no_longer_it", vEventHandler);
+		bCheck[27] = HookEventEx("player_shoved", vEventHandler);
+		bCheck[28] = HookEventEx("player_spawn", vEventHandler);
+		bCheck[29] = HookEventEx("player_team", vEventHandler);
+		bCheck[30] = HookEventEx("revive_success", vEventHandler);
+		bCheck[31] = HookEventEx("tongue_grab", vEventHandler);
+		bCheck[32] = HookEventEx("weapon_fire", vEventHandler);
+		bCheck[33] = HookEventEx("witch_killed", vEventHandler);
 
 		if (g_bSecondGame)
 		{
-			HookEvent("charger_carry_start", vEventHandler);
-			HookEvent("charger_pummel_start", vEventHandler);
-			HookEvent("finale_vehicle_incoming", vEventHandler);
-			HookEvent("finale_bridge_lowering", vEventHandler);
-			HookEvent("gauntlet_finale_start", vEventHandler);
-			HookEvent("jockey_ride", vEventHandler);
+			bCheck[34] = HookEventEx("charger_carry_start", vEventHandler);
+			bCheck[35] = HookEventEx("charger_pummel_start", vEventHandler);
+			bCheck[36] = HookEventEx("finale_vehicle_incoming", vEventHandler);
+			bCheck[37] = HookEventEx("finale_bridge_lowering", vEventHandler);
+			bCheck[38] = HookEventEx("gauntlet_finale_start", vEventHandler);
+			bCheck[39] = HookEventEx("jockey_ride", vEventHandler);
 		}
 
 		vHookEventForward(true);
@@ -9450,49 +9450,49 @@ static void vHookEvents(bool hook)
 	{
 		bHooked = false;
 
-		UnhookEvent("ability_use", vEventHandler);
-		UnhookEvent("bot_player_replace", vEventHandler);
-		UnhookEvent("choke_start", vEventHandler);
-		UnhookEvent("create_panic_event", vEventHandler);
-		UnhookEvent("entity_shoved", vEventHandler);
-		UnhookEvent("finale_escape_start", vEventHandler);
-		UnhookEvent("finale_start", vEventHandler, EventHookMode_Pre);
-		UnhookEvent("finale_vehicle_leaving", vEventHandler);
-		UnhookEvent("finale_vehicle_ready", vEventHandler);
-		UnhookEvent("finale_rush", vEventHandler);
-		UnhookEvent("finale_radio_start", vEventHandler);
-		UnhookEvent("finale_radio_damaged", vEventHandler);
-		UnhookEvent("finale_win", vEventHandler);
-		UnhookEvent("heal_success", vEventHandler);
-		UnhookEvent("infected_hurt", vEventHandler);
-		UnhookEvent("lunge_pounce", vEventHandler);
-		UnhookEvent("mission_lost", vEventHandler);
-		UnhookEvent("player_bot_replace", vEventHandler);
-		UnhookEvent("player_connect", vEventHandler, EventHookMode_Pre);
-		UnhookEvent("player_death", vEventHandler, EventHookMode_Pre);
-		UnhookEvent("player_disconnect", vEventHandler, EventHookMode_Pre);
-		UnhookEvent("player_hurt", vEventHandler);
-		UnhookEvent("player_incapacitated", vEventHandler);
-		UnhookEvent("player_jump", vEventHandler);
-		UnhookEvent("player_ledge_grab", vEventHandler);
-		UnhookEvent("player_now_it", vEventHandler);
-		UnhookEvent("player_no_longer_it", vEventHandler);
-		UnhookEvent("player_shoved", vEventHandler);
-		UnhookEvent("player_spawn", vEventHandler);
-		UnhookEvent("player_team", vEventHandler);
-		UnhookEvent("revive_success", vEventHandler);
-		UnhookEvent("tongue_grab", vEventHandler);
-		UnhookEvent("weapon_fire", vEventHandler);
-		UnhookEvent("witch_killed", vEventHandler);
+		if (bCheck[0]) UnhookEvent("ability_use", vEventHandler);
+		if (bCheck[1]) UnhookEvent("bot_player_replace", vEventHandler);
+		if (bCheck[2]) UnhookEvent("choke_start", vEventHandler);
+		if (bCheck[3]) UnhookEvent("create_panic_event", vEventHandler);
+		if (bCheck[4]) UnhookEvent("entity_shoved", vEventHandler);
+		if (bCheck[5]) UnhookEvent("finale_escape_start", vEventHandler);
+		if (bCheck[6]) UnhookEvent("finale_start", vEventHandler, EventHookMode_Pre);
+		if (bCheck[7]) UnhookEvent("finale_vehicle_leaving", vEventHandler);
+		if (bCheck[8]) UnhookEvent("finale_vehicle_ready", vEventHandler);
+		if (bCheck[9]) UnhookEvent("finale_rush", vEventHandler);
+		if (bCheck[10]) UnhookEvent("finale_radio_start", vEventHandler);
+		if (bCheck[11]) UnhookEvent("finale_radio_damaged", vEventHandler);
+		if (bCheck[12]) UnhookEvent("finale_win", vEventHandler);
+		if (bCheck[13]) UnhookEvent("heal_success", vEventHandler);
+		if (bCheck[14]) UnhookEvent("infected_hurt", vEventHandler);
+		if (bCheck[15]) UnhookEvent("lunge_pounce", vEventHandler);
+		if (bCheck[16]) UnhookEvent("mission_lost", vEventHandler);
+		if (bCheck[17]) UnhookEvent("player_bot_replace", vEventHandler);
+		if (bCheck[18]) UnhookEvent("player_connect", vEventHandler, EventHookMode_Pre);
+		if (bCheck[19]) UnhookEvent("player_death", vEventHandler, EventHookMode_Pre);
+		if (bCheck[20]) UnhookEvent("player_disconnect", vEventHandler, EventHookMode_Pre);
+		if (bCheck[21]) UnhookEvent("player_hurt", vEventHandler);
+		if (bCheck[22]) UnhookEvent("player_incapacitated", vEventHandler);
+		if (bCheck[23]) UnhookEvent("player_jump", vEventHandler);
+		if (bCheck[24]) UnhookEvent("player_ledge_grab", vEventHandler);
+		if (bCheck[25]) UnhookEvent("player_now_it", vEventHandler);
+		if (bCheck[26]) UnhookEvent("player_no_longer_it", vEventHandler);
+		if (bCheck[27]) UnhookEvent("player_shoved", vEventHandler);
+		if (bCheck[28]) UnhookEvent("player_spawn", vEventHandler);
+		if (bCheck[29]) UnhookEvent("player_team", vEventHandler);
+		if (bCheck[30]) UnhookEvent("revive_success", vEventHandler);
+		if (bCheck[31]) UnhookEvent("tongue_grab", vEventHandler);
+		if (bCheck[32]) UnhookEvent("weapon_fire", vEventHandler);
+		if (bCheck[33]) UnhookEvent("witch_killed", vEventHandler);
 
 		if (g_bSecondGame)
 		{
-			UnhookEvent("charger_carry_start", vEventHandler);
-			UnhookEvent("charger_pummel_start", vEventHandler);
-			UnhookEvent("finale_vehicle_incoming", vEventHandler);
-			UnhookEvent("finale_bridge_lowering", vEventHandler);
-			UnhookEvent("gauntlet_finale_start", vEventHandler);
-			UnhookEvent("jockey_ride", vEventHandler);
+			if (bCheck[34]) UnhookEvent("charger_carry_start", vEventHandler);
+			if (bCheck[35]) UnhookEvent("charger_pummel_start", vEventHandler);
+			if (bCheck[36]) UnhookEvent("finale_vehicle_incoming", vEventHandler);
+			if (bCheck[37]) UnhookEvent("finale_bridge_lowering", vEventHandler);
+			if (bCheck[38]) UnhookEvent("gauntlet_finale_start", vEventHandler);
+			if (bCheck[39]) UnhookEvent("jockey_ride", vEventHandler);
 		}
 
 		vHookEventForward(false);

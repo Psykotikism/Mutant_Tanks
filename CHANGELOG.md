@@ -6,8 +6,7 @@
 
 #### Core Plugin
 - Fixed some developer tools not disabling themselves properly.
-- Fixed the `Reward` system creating multiple effects per player.
-- Fixed the `Reward` system using wrong durations.
+- Fixed the `Reward` system creating multiple effects per player and using wrong durations.
 - Fixed the positioning of the Tank's light props.
 - Fixed the difficulty config files using the wrong letter case. (Thanks to Shadowart for testing and reporting!)
 
@@ -20,8 +19,11 @@
 ### Changes
 
 #### General
-- Mutant Tanks and its sub-plugins can be used in `SM 1.10`. `SourceMod 1.11.0.6511` or higher is only required when compiling the plugins. (Thanks to Shadowart for pointing this out.)
+- Mutant Tanks and its sub-plugins can be used in `SM 1.10`. `SourceMod 1.11.0.6511` or higher is only required when compiling the plugins. (Thanks to Shadowart for pointing this out!)
 - Each ability's plugin is now a component that must be compiled through a main plugin.
+
+#### Core Plugin
+- Added strict checking for hooking/unhooking events. (Thanks to Shadowart for the idea!)
 
 #### Commands
 - Replaced all the `sm_mt_<ability name>` commands with `sm_mt_ability <name>`/`sm_mt_ability2 <name>`.

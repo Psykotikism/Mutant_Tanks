@@ -2029,9 +2029,9 @@ Overrides
 
 **emsit** - За сообщения о проблемах, помощи с частями кода и предложения идей.
 
-**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart** - За сообщения о проблемах и предложения идей.
+**ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku** - За сообщения о проблемах и предложения идей.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer** - За сообщения о проблемах.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, Shadowart** - За сообщения о проблемах.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType** - За предложения идей.
 
