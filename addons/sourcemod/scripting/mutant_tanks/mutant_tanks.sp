@@ -1786,6 +1786,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -10960,6 +10961,8 @@ static void vDeveloperSettings(int developer)
 
 static void vFixAmmo(int survivor)
 {
+	if (bIsDeveloper(survivor, 6)) return;
+
 	int iSlot = 0;
 	if (!g_esPlayer[survivor].g_bFixedAmmo[0])
 	{
@@ -12725,6 +12728,7 @@ public void vPlayerSpawnFrame(DataPack pack)
 			g_esDeveloper[iPlayer].g_iDevAccess = 1660;
 		}
 
+		vRefillAmmo(iPlayer, _, true);
 		vSetupDeveloper(iPlayer, _, true);
 		CreateTimer(0.1, tTimerCheckSurvivorView, GetClientUserId(iPlayer), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
@@ -15246,7 +15250,7 @@ public Action tTimerLoopVoiceline(Handle timer, int userid)
 {
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_flVisualTime[4] == -1.0 || g_esPlayer[iSurvivor].g_flVisualTime[4] < GetGameTime())
+	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_flVisualTime[4] == -1.0 || g_esPlayer[iSurvivor].g_flVisualTime[4] < GetGameTime() || g_esGeneral.g_bFinaleEnded)
 	{
 		g_esPlayer[iSurvivor].g_flVisualTime[4] = -1.0;
 		g_esPlayer[iSurvivor].g_sLoopingVoiceline[0] = '\0';
@@ -15286,7 +15290,7 @@ public Action tTimerParticleVisual(Handle timer, int userid)
 {
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_flVisualTime[3] == -1.0 || g_esPlayer[iSurvivor].g_flVisualTime[3] < GetGameTime())
+	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_flVisualTime[3] == -1.0 || g_esPlayer[iSurvivor].g_flVisualTime[3] < GetGameTime() || g_esGeneral.g_bFinaleEnded)
 	{
 		g_esPlayer[iSurvivor].g_flVisualTime[3] = -1.0;
 		g_esPlayer[iSurvivor].g_iParticleEffect = 0;
@@ -15393,7 +15397,7 @@ public Action tTimerRefreshRewards(Handle timer)
 			{
 				if (iPos < sizeof(esPlayer::g_flVisualTime))
 				{
-					if (g_esPlayer[iSurvivor].g_flVisualTime[0] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[0] < flTime)
+					if ((g_esPlayer[iSurvivor].g_flVisualTime[0] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[0] < flTime) || g_esGeneral.g_bFinaleEnded)
 					{
 						g_esPlayer[iSurvivor].g_flVisualTime[0] = -1.0;
 						g_esPlayer[iSurvivor].g_iScreenColorVisual[0] = -1;
@@ -15402,7 +15406,7 @@ public Action tTimerRefreshRewards(Handle timer)
 						g_esPlayer[iSurvivor].g_iScreenColorVisual[3] = -1;
 					}
 
-					if (g_esPlayer[iSurvivor].g_flVisualTime[1] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[1] < flTime)
+					if ((g_esPlayer[iSurvivor].g_flVisualTime[1] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[1] < flTime) || g_esGeneral.g_bFinaleEnded)
 					{
 						g_esPlayer[iSurvivor].g_flVisualTime[1] = -1.0;
 						g_esPlayer[iSurvivor].g_iGlowColorVisual[0] = -1;
@@ -15412,20 +15416,20 @@ public Action tTimerRefreshRewards(Handle timer)
 						vRemoveGlow(iSurvivor);
 					}
 
-					if (g_esPlayer[iSurvivor].g_flVisualTime[2] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[2] < flTime)
+					if ((g_esPlayer[iSurvivor].g_flVisualTime[2] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[2] < flTime) || g_esGeneral.g_bFinaleEnded)
 					{
 						g_esPlayer[iSurvivor].g_flVisualTime[2] = -1.0;
 
 						SetEntityRenderColor(iSurvivor, 255, 255, 255, 255);
 					}
 
-					if (g_esPlayer[iSurvivor].g_flVisualTime[3] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[3] < flTime)
+					if ((g_esPlayer[iSurvivor].g_flVisualTime[3] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[3] < flTime) || g_esGeneral.g_bFinaleEnded)
 					{
 						g_esPlayer[iSurvivor].g_flVisualTime[3] = -1.0;
 						g_esPlayer[iSurvivor].g_iParticleEffect = 0;
 					}
 
-					if (g_esPlayer[iSurvivor].g_flVisualTime[4] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[4] < flTime)
+					if ((g_esPlayer[iSurvivor].g_flVisualTime[4] != -1.0 && g_esPlayer[iSurvivor].g_flVisualTime[4] < flTime) || g_esGeneral.g_bFinaleEnded)
 					{
 						g_esPlayer[iSurvivor].g_flVisualTime[4] = -1.0;
 						g_esPlayer[iSurvivor].g_sLoopingVoiceline[0] = '\0';
@@ -15444,7 +15448,7 @@ public Action tTimerRefreshRewards(Handle timer)
 				}
 
 				flDuration = g_esPlayer[iSurvivor].g_flRewardTime[iPos];
-				if (bCheck && flDuration != -1.0 && flDuration < flTime)
+				if (bCheck && ((flDuration != -1.0 && flDuration < flTime) || g_esGeneral.g_bFinaleEnded))
 				{
 					switch (iPos)
 					{
@@ -15712,7 +15716,7 @@ public Action tTimerScreenEffect(Handle timer, int userid)
 {
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_flVisualTime[0] == -1.0 || g_esPlayer[iSurvivor].g_flVisualTime[0] < GetGameTime())
+	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_flVisualTime[0] == -1.0 || g_esPlayer[iSurvivor].g_flVisualTime[0] < GetGameTime() || g_esGeneral.g_bFinaleEnded)
 	{
 		g_esPlayer[iSurvivor].g_flVisualTime[0] = -1.0;
 		g_esPlayer[iSurvivor].g_iScreenColorVisual[0] = -1;
