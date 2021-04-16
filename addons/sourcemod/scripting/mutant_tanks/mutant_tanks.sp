@@ -1786,7 +1786,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -8304,6 +8303,17 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 				}
 			}
 		}
+		else if (StrEqual(name, "witch_harasser_set"))
+		{
+			int iHarasserId = event.GetInt("userid"), iHarasser = GetClientOfUserId(iHarasserId);
+			for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
+			{
+				if (bIsSurvivor(iSurvivor) && iSurvivor != iHarasser)
+				{
+					MT_PrintToChat(iSurvivor, "%s %t", MT_TAG2, "RewardLadyKiller2", g_esPlayer[iSurvivor].g_iLadyKiller);
+				}
+			}
+		}
 		else if (StrEqual(name, "witch_killed"))
 		{
 			int iWitch = event.GetInt("witchid");
@@ -9399,7 +9409,7 @@ static void vPluginStatus()
 
 static void vHookEvents(bool hook)
 {
-	static bool bHooked, bCheck[40];
+	static bool bHooked, bCheck[41];
 	if (hook && !bHooked)
 	{
 		bHooked = true;
@@ -9437,16 +9447,17 @@ static void vHookEvents(bool hook)
 		bCheck[30] = HookEventEx("revive_success", vEventHandler);
 		bCheck[31] = HookEventEx("tongue_grab", vEventHandler);
 		bCheck[32] = HookEventEx("weapon_fire", vEventHandler);
-		bCheck[33] = HookEventEx("witch_killed", vEventHandler);
+		bCheck[33] = HookEventEx("witch_harasser_set", vEventHandler);
+		bCheck[34] = HookEventEx("witch_killed", vEventHandler);
 
 		if (g_bSecondGame)
 		{
-			bCheck[34] = HookEventEx("charger_carry_start", vEventHandler);
-			bCheck[35] = HookEventEx("charger_pummel_start", vEventHandler);
-			bCheck[36] = HookEventEx("finale_vehicle_incoming", vEventHandler);
-			bCheck[37] = HookEventEx("finale_bridge_lowering", vEventHandler);
-			bCheck[38] = HookEventEx("gauntlet_finale_start", vEventHandler);
-			bCheck[39] = HookEventEx("jockey_ride", vEventHandler);
+			bCheck[35] = HookEventEx("charger_carry_start", vEventHandler);
+			bCheck[36] = HookEventEx("charger_pummel_start", vEventHandler);
+			bCheck[37] = HookEventEx("finale_vehicle_incoming", vEventHandler);
+			bCheck[38] = HookEventEx("finale_bridge_lowering", vEventHandler);
+			bCheck[39] = HookEventEx("gauntlet_finale_start", vEventHandler);
+			bCheck[40] = HookEventEx("jockey_ride", vEventHandler);
 		}
 
 		vHookEventForward(true);
@@ -9488,16 +9499,17 @@ static void vHookEvents(bool hook)
 		if (bCheck[30]) UnhookEvent("revive_success", vEventHandler);
 		if (bCheck[31]) UnhookEvent("tongue_grab", vEventHandler);
 		if (bCheck[32]) UnhookEvent("weapon_fire", vEventHandler);
-		if (bCheck[33]) UnhookEvent("witch_killed", vEventHandler);
+		if (bCheck[33]) UnhookEvent("witch_harasser_set", vEventHandler);
+		if (bCheck[34]) UnhookEvent("witch_killed", vEventHandler);
 
 		if (g_bSecondGame)
 		{
-			if (bCheck[34]) UnhookEvent("charger_carry_start", vEventHandler);
-			if (bCheck[35]) UnhookEvent("charger_pummel_start", vEventHandler);
-			if (bCheck[36]) UnhookEvent("finale_vehicle_incoming", vEventHandler);
-			if (bCheck[37]) UnhookEvent("finale_bridge_lowering", vEventHandler);
-			if (bCheck[38]) UnhookEvent("gauntlet_finale_start", vEventHandler);
-			if (bCheck[39]) UnhookEvent("jockey_ride", vEventHandler);
+			if (bCheck[35]) UnhookEvent("charger_carry_start", vEventHandler);
+			if (bCheck[36]) UnhookEvent("charger_pummel_start", vEventHandler);
+			if (bCheck[37]) UnhookEvent("finale_vehicle_incoming", vEventHandler);
+			if (bCheck[38]) UnhookEvent("finale_bridge_lowering", vEventHandler);
+			if (bCheck[39]) UnhookEvent("gauntlet_finale_start", vEventHandler);
+			if (bCheck[40]) UnhookEvent("jockey_ride", vEventHandler);
 		}
 
 		vHookEventForward(false);
@@ -10246,9 +10258,9 @@ static void vRewardPriority(int survivor, int assistant, int tank, int priority)
 			{
 				if (flPercentage >= g_esCache[tank].g_flRewardPercentage[0])
 				{
-					vChooseReward(survivor, tank, 0);
-
 					if (flPercentage >= 90.0 && !g_esPlayer[survivor].g_bEffectApplied) vRewardNotify(survivor, tank, 0, "RewardSolo", sTankName);
+
+					vChooseReward(survivor, tank, 0);
 				}
 				else if (!g_esPlayer[survivor].g_bEffectApplied) vRewardNotify(survivor, tank, 0, "RewardNone", sTankName);
 			}
@@ -10261,9 +10273,9 @@ static void vRewardPriority(int survivor, int assistant, int tank, int priority)
 			{
 				if (flPercentage >= g_esCache[tank].g_flRewardPercentage[1])
 				{
-					vChooseReward(assistant, tank, 1);
-
 					if (flPercentage >= 90.0 && !g_esPlayer[assistant].g_bEffectApplied) vRewardNotify(assistant, tank, 1, "RewardSolo", sTankName);
+
+					vChooseReward(assistant, tank, 1);
 				}
 				else if (!g_esPlayer[assistant].g_bEffectApplied) vRewardNotify(assistant, tank, 1, "RewardNone", sTankName);
 			}
@@ -10280,10 +10292,10 @@ static void vRewardPriority(int survivor, int assistant, int tank, int priority)
 						flPercentage = (float(g_esPlayer[iTeammate].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
 						if (flPercentage >= g_esCache[tank].g_flRewardPercentage[2])
 						{
+							if (flPercentage >= 90.0) vRewardNotify(iTeammate, tank, 2, "RewardSolo", sTankName);
+
 							vChooseReward(iTeammate, tank, 2);
 							vResetSurvivorStats2(iTeammate);
-
-							if (flPercentage >= 90.0) vRewardNotify(iTeammate, tank, 2, "RewardSolo", sTankName);
 						}
 						else vRewardNotify(iTeammate, tank, 2, "RewardNone", sTankName);
 					}
@@ -10552,7 +10564,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 				{
 					vSaveCaughtSurvivor(survivor);
 					vFixAmmo(survivor);
-					vRefillAmmo(survivor);
+					vRefillAmmo(survivor, _, !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO));
 					vRefillHealth(survivor);
 					vRewardMessage(survivor, priority, "RewardRefill", "RewardRefill2", "RewardRefill3", sTankName);
 
