@@ -661,6 +661,7 @@ enum struct esPlayer
 	bool g_bFatalFalling;
 	bool g_bFire;
 	bool g_bFirstSpawn;
+	bool g_bFixedAmmo[2];
 	bool g_bIce;
 	bool g_bKeepCurrentType;
 	bool g_bLastLife;
@@ -1785,7 +1786,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -5703,14 +5703,18 @@ public void OnWeaponEquipPost(int client, int weapon)
 {
 	if (bIsSurvivor(client) && weapon > MaxClients)
 	{
+		static bool bDeveloper;
+		bDeveloper = bIsDeveloper(client, 6) || (g_esPlayer[client].g_iRewardTypes & MT_REWARD_AMMO);
 		static char sWeapon[32];
 		GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 		if (g_esGeneral.g_hSDKGetMaxClip1 != null && GetPlayerWeaponSlot(client, 0) == weapon)
 		{
+			if (!bDeveloper) g_esPlayer[client].g_bFixedAmmo[0] = false;
 			g_esPlayer[client].g_iMaxClip[0] = SDKCall(g_esGeneral.g_hSDKGetMaxClip1, weapon);
 		}
-		else if (g_esGeneral.g_hSDKGetMaxClip1 != null && (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw")) && GetPlayerWeaponSlot(client, 1) == weapon)
+		else if (g_esGeneral.g_hSDKGetMaxClip1 != null && GetPlayerWeaponSlot(client, 1) == weapon && (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw")))
 		{
+			if (!bDeveloper) g_esPlayer[client].g_bFixedAmmo[1] = false;
 			g_esPlayer[client].g_iMaxClip[1] = SDKCall(g_esGeneral.g_hSDKGetMaxClip1, weapon);
 		}
 		else if (GetPlayerWeaponSlot(client, 2) == weapon)
@@ -10035,6 +10039,8 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_bFalling = false;
 	g_esPlayer[survivor].g_bFallTracked = false;
 	g_esPlayer[survivor].g_bFatalFalling = false;
+	g_esPlayer[survivor].g_bFixedAmmo[0] = false;
+	g_esPlayer[survivor].g_bFixedAmmo[1] = false;
 	g_esPlayer[survivor].g_bSetup = false;
 	g_esPlayer[survivor].g_bVomited = false;
 	g_esPlayer[survivor].g_flActionDuration = 0.0;
@@ -10489,6 +10495,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 				{
 					if (!(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_AMMO))
 					{
+						vFixAmmo(survivor);
 						vRefillAmmo(survivor);
 						vRewardMessage(survivor, priority, "RewardAmmo", "RewardAmmo2", "RewardAmmo3", sTankName);
 
@@ -10543,6 +10550,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 				if ((iType & MT_REWARD_REFILL) && !(g_esPlayer[survivor].g_iRewardTypes & MT_REWARD_REFILL))
 				{
 					vSaveCaughtSurvivor(survivor);
+					vFixAmmo(survivor);
 					vRefillAmmo(survivor);
 					vRefillHealth(survivor);
 					vRewardMessage(survivor, priority, "RewardRefill", "RewardRefill2", "RewardRefill3", sTankName);
@@ -10950,6 +10958,35 @@ static void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_iDevSpecialAmmo = 0;
 }
 
+static void vFixAmmo(int survivor)
+{
+	int iSlot = 0;
+	if (!g_esPlayer[survivor].g_bFixedAmmo[0])
+	{
+		iSlot = GetPlayerWeaponSlot(survivor, 0);
+		if (iSlot > MaxClients)
+		{
+			g_esPlayer[survivor].g_iMaxClip[0] *= 2;
+			g_esPlayer[survivor].g_bFixedAmmo[0] = true;
+		}
+	}
+
+	if (!g_esPlayer[survivor].g_bFixedAmmo[1])
+	{
+		iSlot = GetPlayerWeaponSlot(survivor, 1);
+		if (iSlot > MaxClients)
+		{
+			char sWeapon[32];
+			GetEntityClassname(iSlot, sWeapon, sizeof(sWeapon));
+			if (StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw"))
+			{
+				g_esPlayer[survivor].g_iMaxClip[1] *= 2;
+				g_esPlayer[survivor].g_bFixedAmmo[1] = true;
+			}
+		}
+	}
+}
+
 static void vGiveRandomMeleeWeapon(int survivor, bool specific, const char[] name = "")
 {
 	if (specific)
@@ -11135,7 +11172,6 @@ static void vRefillAmmo(int survivor, bool all = false, bool reset = false)
 		static int iMaxClip;
 		g_esPlayer[survivor].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(iSlot, Prop_Send, "m_isDualWielding") > 0;
 		iMaxClip = g_esPlayer[survivor].g_bDualWielding ? (g_esPlayer[survivor].g_iMaxClip[1] * 2) : g_esPlayer[survivor].g_iMaxClip[1];
-		if (!reset) iMaxClip *= 2;
 		if ((StrContains(sWeapon, "pistol") != -1 || StrEqual(sWeapon, "weapon_chainsaw")) && (!reset || (reset && GetEntProp(iSlot, Prop_Send, "m_iClip1") >= iMaxClip)))
 		{
 			SetEntProp(iSlot, Prop_Send, "m_iClip1", iMaxClip);
@@ -14198,16 +14234,10 @@ public MRESReturn mreFallingPost(int pThis)
 
 public MRESReturn mreFirstSurvivorLeftSafeAreaPost(DHookParam hParams)
 {
-	if (hParams.IsNull(1))
-	{
-		return MRES_Ignored;
-	}
+	if (hParams.IsNull(1)) return MRES_Ignored;
 
 	int iSurvivor = hParams.Get(1);
-	if (bIsSurvivor(iSurvivor))
-	{
-		vResetTimers(true);
-	}
+	if (bIsSurvivor(iSurvivor)) vResetTimers(true);
 
 	return MRES_Ignored;
 }
@@ -14228,10 +14258,7 @@ public MRESReturn mreFinishHealingPre(int pThis)
 
 public MRESReturn mreFinishHealingPost(int pThis)
 {
-	if (g_esGeneral.g_flDefaultFirstAidHealPercent != -1.0)
-	{
-		vSetHealPercentCvar(true);
-	}
+	if (g_esGeneral.g_flDefaultFirstAidHealPercent != -1.0) vSetHealPercentCvar(true);
 
 	return MRES_Ignored;
 }
@@ -15524,7 +15551,6 @@ public Action tTimerRegenerateAmmo(Handle timer)
 			g_esPlayer[iSurvivor].g_bDualWielding = StrContains(sWeapon, "pistol") != -1 && GetEntProp(iSlot, Prop_Send, "m_isDualWielding") > 0;
 			iClip = GetEntProp(iSlot, Prop_Send, "m_iClip1");
 			iMaxClip = g_esPlayer[iSurvivor].g_bDualWielding ? (g_esPlayer[iSurvivor].g_iMaxClip[1] * 2) : g_esPlayer[iSurvivor].g_iMaxClip[1];
-			iMaxClip *= 2;
 			if (iClip < iMaxClip)
 			{
 				SetEntProp(iSlot, Prop_Send, "m_iClip1", (iClip + iRegen));
