@@ -1786,6 +1786,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -2735,10 +2736,7 @@ public void OnPluginEnd()
 
 public Action umNameChange(UserMsg msg_id, BfRead msg, const int[] players, int playersNum, bool reliable, bool init)
 {
-	if (!g_esGeneral.g_bHideNameChange)
-	{
-		return Plugin_Continue;
-	}
+	if (!g_esGeneral.g_bHideNameChange) return Plugin_Continue;
 
 	msg.ReadByte();
 	msg.ReadByte();
@@ -5083,10 +5081,7 @@ public void OnGameFrame()
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!g_esGeneral.g_bPluginEnabled || !bIsValidClient(client))
-	{
-		return Plugin_Continue;
-	}
+	if (!g_esGeneral.g_bPluginEnabled || !bIsValidClient(client)) return Plugin_Continue;
 
 	if (bIsSurvivor(client))
 	{
@@ -8310,7 +8305,7 @@ public void vEventHandler(Event event, const char[] name, bool dontBroadcast)
 			{
 				if (bIsSurvivor(iSurvivor) && iSurvivor != iHarasser)
 				{
-					MT_PrintToChat(iSurvivor, "%s %t", MT_TAG2, "RewardLadyKiller2", g_esPlayer[iSurvivor].g_iLadyKiller);
+					MT_PrintToChat(iSurvivor, "%s %t", MT_TAG2, "RewardLadyKiller2", g_esPlayer[iSurvivor].g_iLadyKiller - g_esPlayer[iSurvivor].g_iLadyKillerCount);
 				}
 			}
 		}
@@ -13281,38 +13276,26 @@ static bool bIsPluginEnabled()
 		return false;
 	}
 
-	char sFixed[32], sGameMode[32], sGameModes[513], sList[513];
+	char sFixed[32], sGameMode[32], sGameModes[513], sGameModesCvar[513], sList[513], sListCvar[513];
 	g_esGeneral.g_cvMTGameMode.GetString(sGameMode, sizeof(sGameMode));
 	FormatEx(sFixed, sizeof(sFixed), ",%s,", sGameMode);
 
-	switch (g_esGeneral.g_sEnabledGameModes[0] != '\0')
+	strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sEnabledGameModes);
+	g_esGeneral.g_cvMTEnabledGameModes.GetString(sGameModesCvar, sizeof(sGameModesCvar));
+	if (sGameModes[0] != '\0' || sGameModesCvar[0] != '\0')
 	{
-		case true: strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sEnabledGameModes);
-		case false: g_esGeneral.g_cvMTEnabledGameModes.GetString(sGameModes, sizeof(sGameModes));
+		if (sGameModes[0] != '\0') FormatEx(sList, sizeof(sList), ",%s,", sGameModes);
+		if (sGameModesCvar[0] != '\0') FormatEx(sListCvar, sizeof(sListCvar), ",%s,", sGameModesCvar);
+		if ((sList[0] != '\0' && StrContains(sList, sFixed, false) == -1) && (sListCvar[0] != '\0' && StrContains(sListCvar, sFixed, false) == -1)) return false;
 	}
 
-	if (sGameModes[0] != '\0')
+	strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sDisabledGameModes);
+	g_esGeneral.g_cvMTDisabledGameModes.GetString(sGameModesCvar, sizeof(sGameModesCvar));
+	if (sGameModes[0] != '\0' || sGameModesCvar[0] != '\0')
 	{
-		FormatEx(sList, sizeof(sList), ",%s,", sGameModes);
-		if (StrContains(sList, sFixed, false) == -1)
-		{
-			return false;
-		}
-	}
-
-	switch (g_esGeneral.g_sDisabledGameModes[0] != '\0')
-	{
-		case true: strcopy(sGameModes, sizeof(sGameModes), g_esGeneral.g_sDisabledGameModes);
-		case false: g_esGeneral.g_cvMTDisabledGameModes.GetString(sGameModes, sizeof(sGameModes));
-	}
-
-	if (sGameModes[0] != '\0')
-	{
-		FormatEx(sList, sizeof(sList), ",%s,", sGameModes);
-		if (StrContains(sList, sFixed, false) != -1)
-		{
-			return false;
-		}
+		if (sGameModes[0] != '\0') FormatEx(sList, sizeof(sList), ",%s,", sGameModes);
+		if (sGameModesCvar[0] != '\0') FormatEx(sListCvar, sizeof(sListCvar), ",%s,", sGameModesCvar);
+		if ((sList[0] != '\0' && StrContains(sList, sFixed, false) != -1) || (sListCvar[0] != '\0' && StrContains(sListCvar, sFixed, false) != -1)) return false;
 	}
 
 	return true;
@@ -14809,10 +14792,7 @@ public Action L4D_OnShovedBySurvivor(int client, int victim, const float vecDir[
 
 public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 {
-	if (g_esGeneral.g_iLimitExtras == 0 || g_esGeneral.g_bForceSpawned)
-	{
-		return Plugin_Continue;
-	}
+	if (g_esGeneral.g_iLimitExtras == 0 || g_esGeneral.g_bForceSpawned) return Plugin_Continue;
 
 	bool bBlock = false;
 	int iCount = iGetTankCount(true), iCount2 = iGetTankCount(false);
@@ -14958,10 +14938,7 @@ public Action tTimerAnnounce(Handle timer, DataPack pack)
 
 	static int iTank;
 	iTank = GetClientOfUserId(pack.ReadCell());
-	if (!bIsTank(iTank))
-	{
-		return Plugin_Stop;
-	}
+	if (!bIsTank(iTank)) return Plugin_Stop;
 
 	if (bIsTankSupported(iTank) && !bIsTankIdle(iTank))
 	{
@@ -14983,10 +14960,7 @@ public Action tTimerAnnounce2(Handle timer, int userid)
 {
 	static int iTank;
 	iTank = GetClientOfUserId(userid);
-	if (!bIsTank(iTank))
-	{
-		return Plugin_Stop;
-	}
+	if (!bIsTank(iTank)) return Plugin_Stop;
 
 	if (!bIsTankIdle(iTank))
 	{
@@ -15064,10 +15038,7 @@ public Action tTimerBoss(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (bIsTankIdle(iTank))
-	{
-		return Plugin_Continue;
-	}
+	if (bIsTankIdle(iTank)) return Plugin_Continue;
 
 	static int iBossStages, iBossHealth, iType, iBossHealth2, iType2, iBossHealth3, iType3, iBossHealth4, iType4;
 	iBossStages = pack.ReadCell();
@@ -15368,10 +15339,7 @@ public Action tTimerRandomize(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (bIsTankIdle(iTank))
-	{
-		return Plugin_Continue;
-	}
+	if (bIsTankIdle(iTank)) return Plugin_Continue;
 
 	static int iType;
 	iType = iChooseTank(iTank, 2, _, _, false);
@@ -15389,10 +15357,7 @@ public Action tTimerRandomize(Handle timer, DataPack pack)
 
 public Action tTimerRefreshRewards(Handle timer)
 {
-	if (!g_esGeneral.g_bPluginEnabled)
-	{
-		return Plugin_Continue;
-	}
+	if (!g_esGeneral.g_bPluginEnabled) return Plugin_Continue;
 
 	static bool bCheck;
 	bCheck = false;
@@ -15484,10 +15449,7 @@ public Action tTimerRefreshRewards(Handle timer)
 
 public Action tTimerRegenerateAmmo(Handle timer)
 {
-	if (!g_esGeneral.g_bPluginEnabled)
-	{
-		return Plugin_Continue;
-	}
+	if (!g_esGeneral.g_bPluginEnabled) return Plugin_Continue;
 
 	static bool bDeveloper;
 	static char sWeapon[32];
@@ -15584,10 +15546,7 @@ public Action tTimerRegenerateAmmo(Handle timer)
 
 public Action tTimerRegenerateHealth(Handle timer)
 {
-	if (!g_esGeneral.g_bPluginEnabled)
-	{
-		return Plugin_Continue;
-	}
+	if (!g_esGeneral.g_bPluginEnabled) return Plugin_Continue;
 
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -15641,10 +15600,7 @@ public Action tTimerReloadConfigs(Handle timer)
 public Action tTimerRemoveTimescale(Handle timer, int ref)
 {
 	int iTimescale = EntRefToEntIndex(ref);
-	if (iTimescale == INVALID_ENT_REFERENCE || !bIsValidEntity(iTimescale))
-	{
-		return Plugin_Stop;
-	}
+	if (iTimescale == INVALID_ENT_REFERENCE || !bIsValidEntity(iTimescale)) return Plugin_Stop;
 
 	AcceptEntityInput(iTimescale, "Stop");
 	RemoveEntity(iTimescale);
@@ -15655,10 +15611,7 @@ public Action tTimerRemoveTimescale(Handle timer, int ref)
 public Action tTimerResetAttackDelay(Handle timer, int userid)
 {
 	int iTank = GetClientOfUserId(userid);
-	if (!bIsTankSupported(iTank))
-	{
-		return Plugin_Stop;
-	}
+	if (!bIsTankSupported(iTank)) return Plugin_Stop;
 
 	g_esPlayer[iTank].g_bAttackedAgain = false;
 
@@ -15695,10 +15648,7 @@ public Action tTimerRockEffects(Handle timer, DataPack pack)
 
 	static char sClassname[32];
 	GetEntityClassname(iRock, sClassname, sizeof(sClassname));
-	if (!StrEqual(sClassname, "tank_rock"))
-	{
-		return Plugin_Stop;
-	}
+	if (!StrEqual(sClassname, "tank_rock")) return Plugin_Stop;
 
 	if (g_esCache[iTank].g_iRockEffects & MT_ROCK_BLOOD)
 	{
@@ -15739,10 +15689,7 @@ public Action tTimerScreenEffect(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if (bIsPlayerHanging(iSurvivor) || g_esPlayer[iSurvivor].g_bThirdPerson)
-	{
-		return Plugin_Continue;
-	}
+	if (bIsPlayerHanging(iSurvivor) || g_esPlayer[iSurvivor].g_bThirdPerson) return Plugin_Continue;
 
 	vEffect(iSurvivor, 0, MT_ATTACK_RANGE, MT_ATTACK_RANGE, g_esPlayer[iSurvivor].g_iScreenColorVisual[0], g_esPlayer[iSurvivor].g_iScreenColorVisual[1], g_esPlayer[iSurvivor].g_iScreenColorVisual[2], g_esPlayer[iSurvivor].g_iScreenColorVisual[3]);
 
@@ -15809,10 +15756,7 @@ public Action tTimerTankUpdate(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if (bIsTankIdle(iTank))
-	{
-		return Plugin_Continue;
-	}
+	if (bIsTankIdle(iTank)) return Plugin_Continue;
 
 	switch (g_esCache[iTank].g_iSpawnType)
 	{
@@ -15896,10 +15840,7 @@ public Action tTimerTransform(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if (bIsTankIdle(iTank))
-	{
-		return Plugin_Continue;
-	}
+	if (bIsTankIdle(iTank)) return Plugin_Continue;
 
 	int iPos = GetRandomInt(0, sizeof(esCache::g_iTransformType) - 1);
 	vSetColor(iTank, g_esCache[iTank].g_iTransformType[iPos]);
@@ -15920,10 +15861,7 @@ public Action tTimerUntransform(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	if (bIsTankIdle(iTank))
-	{
-		return Plugin_Continue;
-	}
+	if (bIsTankIdle(iTank)) return Plugin_Continue;
 
 	int iTankType = pack.ReadCell();
 	vSetColor(iTank, iTankType);

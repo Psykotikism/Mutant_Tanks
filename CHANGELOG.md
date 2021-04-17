@@ -9,6 +9,7 @@
 - Fixed the `Reward` system creating multiple effects per player and using wrong durations.
 - Fixed the positioning of the Tank's light props.
 - Fixed the difficulty config files using the wrong letter case. (Thanks to Shadowart for testing and reporting!)
+- Fixed survivors with the ammo reward getting the incorrect ammo count in some cases.
 
 #### Natives & Forwards
 - Fixed the `MT_LogMessage` native logging messages even when the feature is disabled.
@@ -23,7 +24,8 @@
 - Each ability's plugin is now a component that must be compiled through a main plugin.
 
 #### Core Plugin
-- Added strict checking for hooking/unhooking events. (Thanks to Shadowart for the idea!)
+- Added strict checking for hooking/unhooking events. (Thanks to Shadowart for reporting!)
+- Updated the logic for checking which game modes to enable/disable the plugin on. (Thanks to Shadowart for reporting!)
 
 #### Commands
 - Replaced all the `sm_mt_<ability name>` commands with `sm_mt_ability <name>`/`sm_mt_ability2 <name>`.
