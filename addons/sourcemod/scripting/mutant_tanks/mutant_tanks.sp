@@ -2339,6 +2339,9 @@ public void OnMapStart()
 	PrecacheModel(MODEL_TIRES, true);
 	PrecacheModel(MODEL_TREE_TRUNK, true);
 	PrecacheModel(MODEL_WITCH, true);
+	PrecacheModel(SPRITE_EXPLODE, true);
+	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
+	g_iBossHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
 
 	iPrecacheParticle(PARTICLE_ACHIEVED);
 	iPrecacheParticle(PARTICLE_BLOOD);
@@ -2375,10 +2378,6 @@ public void OnMapStart()
 	PrecacheSound(SOUND_METAL, true);
 	PrecacheSound(SOUND_NULL, true);
 	PrecacheSound(SOUND_SPAWN, true);
-
-	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
-	g_iBossHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
-	PrecacheModel(SPRITE_EXPLODE, true);
 
 	vReset();
 	vToggleLogging(1);
@@ -9573,7 +9572,8 @@ static void vPluginStatus()
 
 static void vHookEvents(bool hook)
 {
-	static bool bHooked, bCheck[41];
+	static bool bHooked, bCheck[41], bPreHook[41];
+	static char sEvent[32];
 	if (hook && !bHooked)
 	{
 		bHooked = true;
@@ -9630,211 +9630,63 @@ static void vHookEvents(bool hook)
 	{
 		bHooked = false;
 
-		if (bCheck[0])
+		for (int iPos = 0; iPos < sizeof(bCheck); iPos++)
 		{
-			UnhookEvent("ability_use", vEventHandler);
-		}
-
-		if (bCheck[1])
-		{
-			UnhookEvent("bot_player_replace", vEventHandler);
-		}
-
-		if (bCheck[2])
-		{
-			UnhookEvent("choke_start", vEventHandler);
-		}
-
-		if (bCheck[3])
-		{
-			UnhookEvent("create_panic_event", vEventHandler);
-		}
-
-		if (bCheck[4])
-		{
-			UnhookEvent("entity_shoved", vEventHandler);
-		}
-
-		if (bCheck[5])
-		{
-			UnhookEvent("finale_escape_start", vEventHandler);
-		}
-
-		if (bCheck[6])
-		{
-			UnhookEvent("finale_start", vEventHandler, EventHookMode_Pre);
-		}
-
-		if (bCheck[7])
-		{
-			UnhookEvent("finale_vehicle_leaving", vEventHandler);
-		}
-
-		if (bCheck[8])
-		{
-			UnhookEvent("finale_vehicle_ready", vEventHandler);
-		}
-
-		if (bCheck[9])
-		{
-			UnhookEvent("finale_rush", vEventHandler);
-		}
-
-		if (bCheck[10])
-		{
-			UnhookEvent("finale_radio_start", vEventHandler);
-		}
-
-		if (bCheck[11])
-		{
-			UnhookEvent("finale_radio_damaged", vEventHandler);
-		}
-
-		if (bCheck[12])
-		{
-			UnhookEvent("finale_win", vEventHandler);
-		}
-
-		if (bCheck[13])
-		{
-			UnhookEvent("heal_success", vEventHandler);
-		}
-
-		if (bCheck[14])
-		{
-			UnhookEvent("infected_hurt", vEventHandler);
-		}
-
-		if (bCheck[15])
-		{
-			UnhookEvent("lunge_pounce", vEventHandler);
-		}
-
-		if (bCheck[16])
-		{
-			UnhookEvent("mission_lost", vEventHandler);
-		}
-
-		if (bCheck[17])
-		{
-			UnhookEvent("player_bot_replace", vEventHandler);
-		}
-
-		if (bCheck[18])
-		{
-			UnhookEvent("player_connect", vEventHandler, EventHookMode_Pre);
-		}
-
-		if (bCheck[19])
-		{
-			UnhookEvent("player_death", vEventHandler, EventHookMode_Pre);
-		}
-
-		if (bCheck[20])
-		{
-			UnhookEvent("player_disconnect", vEventHandler, EventHookMode_Pre);
-		}
-
-		if (bCheck[21])
-		{
-			UnhookEvent("player_hurt", vEventHandler);
-		}
-
-		if (bCheck[22])
-		{
-			UnhookEvent("player_incapacitated", vEventHandler);
-		}
-
-		if (bCheck[23])
-		{
-			UnhookEvent("player_jump", vEventHandler);
-		}
-
-		if (bCheck[24])
-		{
-			UnhookEvent("player_ledge_grab", vEventHandler);
-		}
-
-		if (bCheck[25])
-		{
-			UnhookEvent("player_now_it", vEventHandler);
-		}
-
-		if (bCheck[26])
-		{
-			UnhookEvent("player_no_longer_it", vEventHandler);
-		}
-
-		if (bCheck[27])
-		{
-			UnhookEvent("player_shoved", vEventHandler);
-		}
-
-		if (bCheck[28])
-		{
-			UnhookEvent("player_spawn", vEventHandler);
-		}
-
-		if (bCheck[29])
-		{
-			UnhookEvent("player_team", vEventHandler);
-		}
-
-		if (bCheck[30])
-		{
-			UnhookEvent("revive_success", vEventHandler);
-		}
-
-		if (bCheck[31])
-		{
-			UnhookEvent("tongue_grab", vEventHandler);
-		}
-
-		if (bCheck[32])
-		{
-			UnhookEvent("weapon_fire", vEventHandler);
-		}
-
-		if (bCheck[33])
-		{
-			UnhookEvent("witch_harasser_set", vEventHandler);
-		}
-
-		if (bCheck[34])
-		{
-			UnhookEvent("witch_killed", vEventHandler);
-		}
-
-		if (g_bSecondGame)
-		{
-			if (bCheck[35])
+			switch (iPos)
 			{
-				UnhookEvent("charger_carry_start", vEventHandler);
+				case 0: sEvent = "ability_use";
+				case 1: sEvent = "bot_player_replace";
+				case 2: sEvent = "choke_start";
+				case 3: sEvent = "create_panic_event";
+				case 4: sEvent = "entity_shoved";
+				case 5: sEvent = "finale_escape_start";
+				case 6: sEvent = "finale_start";
+				case 7: sEvent = "finale_vehicle_leaving";
+				case 8: sEvent = "finale_vehicle_ready";
+				case 9: sEvent = "finale_rush";
+				case 10: sEvent = "finale_radio_start";
+				case 11: sEvent = "finale_radio_damaged";
+				case 12: sEvent = "finale_win";
+				case 13: sEvent = "heal_success";
+				case 14: sEvent = "infected_hurt";
+				case 15: sEvent = "lunge_pounce";
+				case 16: sEvent = "mission_lost";
+				case 17: sEvent = "player_bot_replace";
+				case 18: sEvent = "player_connect";
+				case 19: sEvent = "player_death";
+				case 20: sEvent = "player_disconnect";
+				case 21: sEvent = "player_hurt";
+				case 22: sEvent = "player_incapacitated";
+				case 23: sEvent = "player_jump";
+				case 24: sEvent = "player_ledge_grab";
+				case 25: sEvent = "player_now_it";
+				case 26: sEvent = "player_no_longer_it";
+				case 27: sEvent = "player_shoved";
+				case 28: sEvent = "player_spawn";
+				case 29: sEvent = "player_team";
+				case 30: sEvent = "revive_success";
+				case 31: sEvent = "tongue_grab";
+				case 32: sEvent = "weapon_fire";
+				case 33: sEvent = "witch_harasser_set";
+				case 34: sEvent = "witch_killed";
+				case 35: sEvent = "charger_carry_start";
+				case 36: sEvent = "charger_pummel_start";
+				case 37: sEvent = "finale_vehicle_incoming";
+				case 38: sEvent = "finale_bridge_lowering";
+				case 39: sEvent = "gauntlet_finale_start";
+				case 40: sEvent = "jockey_ride";
 			}
 
-			if (bCheck[36])
+			if (bCheck[iPos])
 			{
-				UnhookEvent("charger_pummel_start", vEventHandler);
-			}
+				bPreHook[iPos] = iPos == 6 || (iPos >= 18 && iPos <= 20);
 
-			if (bCheck[37])
-			{
-				UnhookEvent("finale_vehicle_incoming", vEventHandler);
-			}
+				if (!g_bSecondGame && iPos >= 35 && iPos <= 40)
+				{
+					continue;
+				}
 
-			if (bCheck[38])
-			{
-				UnhookEvent("finale_bridge_lowering", vEventHandler);
-			}
-
-			if (bCheck[39])
-			{
-				UnhookEvent("gauntlet_finale_start", vEventHandler);
-			}
-
-			if (bCheck[40])
-			{
-				UnhookEvent("jockey_ride", vEventHandler);
+				UnhookEvent(sEvent, vEventHandler, (bPreHook[iPos] ? EventHookMode_Pre : EventHookMode_Post));
 			}
 		}
 
