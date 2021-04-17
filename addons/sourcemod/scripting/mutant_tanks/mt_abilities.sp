@@ -575,7 +575,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		return Plugin_Continue;
 	}
-
 #if defined MT_MENU_ABSORB
 	vAbsorbPlayerRunCmd(client);
 #endif
@@ -2170,7 +2169,10 @@ static void vAbilityPlayer(int type, int client)
 	}
 #endif
 #if defined MT_MENU_HIT
-	if (type == 0) vHitClientPutInServer(client);
+	if (type == 0)
+	{
+		vHitClientPutInServer(client);
+	}
 #endif
 #if defined MT_MENU_HURT
 	switch (type)

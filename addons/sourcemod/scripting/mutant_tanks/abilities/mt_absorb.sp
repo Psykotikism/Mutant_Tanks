@@ -283,7 +283,10 @@ public Action OnAbsorbTakeDamage(int victim, int &attacker, int &inflictor, floa
 
 			if (bChanged)
 			{
-				if (damage < 1.0) damage = 1.0;
+				if (damage < 1.0)
+				{
+					damage = 1.0;
+				}
 
 				return Plugin_Changed;
 			}

@@ -310,7 +310,10 @@ public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float
 
 				if (bChanged)
 				{
-					if (damage < 1.0) damage = 1.0;
+					if (damage < 1.0)
+					{
+						damage = 1.0;
+					}
 
 					static int iTarget;
 					iTarget = (g_esHypnoCache[victim].g_iHypnoMode == 1) ? iGetRandomSurvivor(victim) : attacker;

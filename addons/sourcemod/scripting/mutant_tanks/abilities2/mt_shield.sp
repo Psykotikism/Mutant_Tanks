@@ -430,7 +430,10 @@ public Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, floa
 
 		if (((damagetype & DMG_SLASH) || (damagetype & DMG_CLUB)) && !(g_esShieldCache[victim].g_iShieldType & MT_SHIELD_MELEE))
 		{
-			if (bRewarded) return Plugin_Handled;
+			if (bRewarded)
+			{
+				return Plugin_Handled;
+			}
 
 			static float flTankPos[3];
 			GetClientAbsOrigin(victim, flTankPos);

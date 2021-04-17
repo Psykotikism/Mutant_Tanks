@@ -584,7 +584,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		return Plugin_Continue;
 	}
-
 #if defined MT_MENU_NECRO
 	vNecroPlayerRunCmd(client);
 #endif
@@ -2248,7 +2247,10 @@ static void vAbilityPlayer(int type, int client)
 	}
 #endif
 #if defined MT_MENU_VAMPIRE
-	if (type == 0) vVampireClientPutInServer(client);
+	if (type == 0)
+	{
+		vVampireClientPutInServer(client);
+	}
 #endif
 #if defined MT_MENU_VISION
 	switch (type)
@@ -2285,7 +2287,10 @@ static void vAbilityPlayer(int type, int client)
 	}
 #endif
 #if defined MT_MENU_XIPHOS
-	if (type == 0) vXiphosClientPutInServer(client);
+	if (type == 0)
+	{
+		vXiphosClientPutInServer(client);
+	}
 #endif
 #if defined MT_MENU_YELL
 	switch (type)
