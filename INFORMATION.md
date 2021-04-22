@@ -1605,6 +1605,15 @@
 			// Maximum: 3.0
 			"Run Speed"				"0.0"
 
+			// Every Mutant Tank's punches hit all survivors within range.
+			// Note: By default, the game automatically does this in Versus and Survival modes.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Sweep Fist"				"0"
+
 			// Every Mutant Tank throws a rock every time this many seconds passes.
 			// Note: Default throw interval is 5.0 seconds.
 			// Note: This setting can be used for standard Tanks.
@@ -4140,6 +4149,15 @@
 			// Minimum: 0.1
 			// Maximum: 3.0
 			"Run Speed"				"0.0"
+
+			// The Mutant Tank's punches hit all survivors within range.
+			// Note: By default, the game automatically does this in Versus and Survival modes.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: OFF
+			// 1: ON
+			"Sweep Fist"				"0"
 
 			// The Mutant Tank throws a rock every time this many seconds passes.
 			// Note: Default throw interval is 5.0 seconds.

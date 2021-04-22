@@ -117,34 +117,37 @@ Handle g_hSDKSpitterProjectileCreate;
 
 void vAcidPluginStart()
 {
-	GameData gdMutantTanks = new GameData("mutant_tanks");
-	if (gdMutantTanks == null)
+	if (g_bSecondGame)
 	{
-		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-	}
+		GameData gdMutantTanks = new GameData("mutant_tanks");
+		if (gdMutantTanks == null)
+		{
+			SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+		}
 
-	StartPrepSDKCall(SDKCall_Static);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CSpitterProjectile::Create"))
-	{
+		StartPrepSDKCall(SDKCall_Static);
+		if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CSpitterProjectile::Create"))
+		{
+			delete gdMutantTanks;
+
+			SetFailState("Failed to find signature: CSpitterProjectile::Create");
+		}
+
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
+
+		g_hSDKSpitterProjectileCreate = EndPrepSDKCall();
+		if (g_hSDKSpitterProjectileCreate == null)
+		{
+			LogError("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
+		}
+
 		delete gdMutantTanks;
-
-		SetFailState("Failed to find signature: CSpitterProjectile::Create");
 	}
-
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-	PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
-
-	g_hSDKSpitterProjectileCreate = EndPrepSDKCall();
-	if (g_hSDKSpitterProjectileCreate == null)
-	{
-		LogError("%s Your \"CSpitterProjectile::Create\" signature is outdated.", MT_TAG);
-	}
-
-	delete gdMutantTanks;
 }
 
 void vAcidMapStart()
@@ -263,7 +266,7 @@ void vAcidMenuItemDisplayed(int client, const char[] info, char[] buffer, int si
 
 public Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
+	if (g_bSecondGame && MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -311,7 +314,7 @@ void vAcidAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arra
 
 void vAcidCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esAcidCache[tank].g_iHumanAbility != 2)
+	if (!g_bSecondGame || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esAcidCache[tank].g_iHumanAbility != 2))
 	{
 		return;
 	}
@@ -597,7 +600,7 @@ void vAcidEventFired(Event event, const char[] name)
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		if (g_bSecondGame && MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			vAcidRange(iTank, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveAcid(iTank);
@@ -611,7 +614,7 @@ void vAcidEventFired(Event event, const char[] name)
 
 void vAcidAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || g_esAcidCache[tank].g_iHumanAbility == 0))
+	if (!g_bSecondGame || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || g_esAcidCache[tank].g_iHumanAbility == 0)))
 	{
 		return;
 	}
@@ -626,7 +629,7 @@ void vAcidButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)))
+		if (!g_bSecondGame || bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -654,7 +657,7 @@ void vAcidChangeType(int tank)
 
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esAcidCache[tank].g_iAcidAbility == 1)
 	{
-		if (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || g_esAcidCache[tank].g_iHumanAbility == 0))
+		if (!g_bSecondGame || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || g_esAcidCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -670,7 +673,7 @@ void vAcidPostTankSpawn(int tank)
 
 void vAcidRockBreak(int tank, int rock)
 {
-	if (bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || g_esAcidCache[tank].g_iHumanAbility == 0)))
+	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || g_esAcidCache[tank].g_iHumanAbility == 0)))
 	{
 		return;
 	}
@@ -683,7 +686,7 @@ void vAcidRockBreak(int tank, int rock)
 
 void vAcid(int survivor, int tank)
 {
-	if (bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)))
+	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -701,7 +704,7 @@ void vAcid(int survivor, int tank)
 
 void vAcidAbility(int tank, float random, int pos = -1)
 {
-	if (bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)))
+	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -747,7 +750,7 @@ void vAcidAbility(int tank, float random, int pos = -1)
 
 void vAcidHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags)
 {
-	if (bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esAcidPlayer[tank].g_iTankType, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iImmunityFlags, g_esAcidPlayer[survivor].g_iImmunityFlags))
+	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esAcidPlayer[tank].g_iTankType, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iImmunityFlags, g_esAcidPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -809,7 +812,7 @@ void vAcidRange(int tank, int value, float random, int pos = -1)
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esAcidCache[tank].g_flAcidDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esAcidCache[tank].g_iAcidDeath == 1 && random <= flChance)
 	{
-		if (g_esAcidCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || g_esAcidCache[tank].g_iHumanAbility == 0)))
+		if (!g_bSecondGame || g_esAcidCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esAcidCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esAcidPlayer[tank].g_iTankType) || (g_esAcidCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esAcidCache[tank].g_iRequiresHumans) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAcidAbility[g_esAcidPlayer[tank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[tank].g_iAccessFlags)) || g_esAcidCache[tank].g_iHumanAbility == 0)))
 		{
 			return;
 		}
@@ -874,7 +877,7 @@ public Action tTimerAcidCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAcidAbility[g_esAcidPlayer[iTank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esAcidPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esAcidCache[iTank].g_iAcidAbility == 0)
+	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esAcidAbility[g_esAcidPlayer[iTank].g_iTankType].g_iAccessFlags, g_esAcidPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esAcidPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esAcidCache[iTank].g_iAcidAbility == 0)
 	{
 		return Plugin_Stop;
 	}
@@ -891,7 +894,7 @@ public Action tTimerAcidCombo2(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!g_bSecondGame || !bIsSurvivor(iSurvivor))
 	{
 		return Plugin_Stop;
 	}

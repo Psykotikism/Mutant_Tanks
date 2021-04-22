@@ -69,6 +69,25 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+			"CTankClaw::SweepFist"
+			{
+				"signature"	"CTankClaw::SweepFist"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"		"vectorptr"
+					}
+					"a2"
+					{
+						"type"		"vectorptr"
+					}
+				}
+			}
 			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
 			"CTankClaw::OnPlayerHit"
 			{
@@ -181,7 +200,7 @@
 					{
 						"type"		"cbaseentity"
 					}
-					"unknown"
+					"a2"
 					{
 						"type"		"bool"
 					}
@@ -340,6 +359,10 @@
 			{
 				"signature"	"CTerrorPlayer::RoundRespawn"
 			}
+			"SweepFistStart"
+			{
+				"signature"	"CTankClaw::SweepFist"
+			}
 		}
 		"Offsets"
 		{
@@ -422,11 +445,11 @@
 					{
 						"type"		"cbaseentity"
 					}
-					"unknown1"
+					"a2"
 					{
 						"type"		"bool"
 					}
-					"unknown2"
+					"a3"
 					{
 						"type"		"bool"
 					}
@@ -445,7 +468,7 @@
 					{
 						"type"		"int"
 					}
-					"unknown"
+					"a2"
 					{
 						"type"		"bool"
 					}
@@ -512,6 +535,18 @@
 			{
 				"windows"	"300"
 				"linux"		"301"
+			}
+			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+			"CTankClaw::SweepFist::Check1"
+			{
+				"windows"	"1067" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"1565" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+			"CTankClaw::SweepFist::Check2"
+			{
+				"windows"	"1076" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"3078" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorGameMovement::DoJump(Vector*) */
 			"CTerrorGameMovement::DoJump::Start"
@@ -687,6 +722,13 @@
 				"library"	"server"
 				"linux"		"@_ZN9CTankClaw11OnPlayerHitEP13CTerrorPlayerb"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xCE\x8B\xF8\xE8\x2A\x2A\x2A\x2A\x83"
+			}
+			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+			"CTankClaw::SweepFist"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw9SweepFistERK6VectorS2_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x55\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\xF6\x0F\x84\x2A\x2A\x2A\x2A\x8B\x0D"
 			}
 			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
 			"CTankRock::Create"
@@ -960,7 +1002,7 @@
 					{
 						"type"		"int"
 					}
-					"unknown"
+					"a2"
 					{
 						"type"		"int"
 					}
@@ -1021,7 +1063,7 @@
 					{
 						"type"		"cbaseentity"
 					}
-					"unknown"
+					"a2"
 					{
 						"type"		"bool"
 					}
@@ -1095,6 +1137,18 @@
 			{
 				"windows"	"39"
 				"linux"		"40"
+			}
+			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+			"CTankClaw::SweepFist::Check1"
+			{
+				"windows"	"1382" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"2519" // start at E8 and patch 5 bytes with NOPs (0x90)
+			}
+			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+			"CTankClaw::SweepFist::Check2"
+			{
+				"windows"	"1391" // start at E8 and patch 5 bytes with NOPs (0x90)
+				"linux"		"3473" // start at E8 and patch 5 bytes with NOPs (0x90)
 			}
 			/* CTerrorGameMovement::DoJump(Vector*) */
 			"CTerrorGameMovement::DoJump::Start"
@@ -1310,6 +1364,13 @@
 				"library"	"server"
 				"linux"		"@_ZN9CTankClaw11OnPlayerHitEP13CTerrorPlayerb"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x56\x8B\x2A\x2A\x57\x8B\x2A\x89\x2A\x2A\xE8"
+			}
+			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
+			"CTankClaw::SweepFist"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw9SweepFistERK6VectorS2_"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\xA8\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x43\x0C"
 			}
 			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
 			"CTankRock::Create"

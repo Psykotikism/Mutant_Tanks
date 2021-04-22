@@ -112,32 +112,35 @@ Handle g_hSDKFling;
 
 void vFlingPluginStart()
 {
-	GameData gdMutantTanks = new GameData("mutant_tanks");
-	if (gdMutantTanks == null)
+	if (g_bSecondGame)
 	{
-		SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
-	}
+		GameData gdMutantTanks = new GameData("mutant_tanks");
+		if (gdMutantTanks == null)
+		{
+			SetFailState("Unable to load the \"mutant_tanks\" gamedata file.");
+		}
 
-	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::Fling"))
-	{
+		StartPrepSDKCall(SDKCall_Player);
+		if (!PrepSDKCall_SetFromConf(gdMutantTanks, SDKConf_Signature, "CTerrorPlayer::Fling"))
+		{
+			delete gdMutantTanks;
+
+			SetFailState("Failed to find signature: CTerrorPlayer::Fling");
+		}
+
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+
+		g_hSDKFling = EndPrepSDKCall();
+		if (g_hSDKFling == null)
+		{
+			LogError("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
+		}
+
 		delete gdMutantTanks;
-
-		SetFailState("Failed to find signature: CTerrorPlayer::Fling");
 	}
-
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-
-	g_hSDKFling = EndPrepSDKCall();
-	if (g_hSDKFling == null)
-	{
-		LogError("%s Your \"CTerrorPlayer::Fling\" signature is outdated.", MT_TAG);
-	}
-
-	delete gdMutantTanks;
 }
 
 void vFlingMapStart()
@@ -257,7 +260,7 @@ void vFlingMenuItemDisplayed(int client, const char[] info, char[] buffer, int s
 
 public Action OnFlingTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
+	if (g_bSecondGame && MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
 	{
 		static char sClassname[32];
 		GetEntityClassname(inflictor, sClassname, sizeof(sClassname));
@@ -305,7 +308,7 @@ void vFlingAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arr
 
 void vFlingCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
 {
-	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlingCache[tank].g_iHumanAbility != 2)
+	if (!g_bSecondGame || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlingCache[tank].g_iHumanAbility != 2))
 	{
 		return;
 	}
@@ -579,7 +582,7 @@ void vFlingEventFired(Event event, const char[] name)
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
 		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
-		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		if (g_bSecondGame && MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
 			vFlingRange(iTank, 1, GetRandomFloat(0.1, 100.0));
 			vRemoveFling(iTank);
@@ -593,7 +596,7 @@ void vFlingEventFired(Event event, const char[] name)
 
 void vFlingAbilityActivated(int tank)
 {
-	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags)) || g_esFlingCache[tank].g_iHumanAbility == 0))
+	if (!g_bSecondGame || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags)) || g_esFlingCache[tank].g_iHumanAbility == 0)))
 	{
 		return;
 	}
@@ -608,7 +611,7 @@ void vFlingButtonPressed(int tank, int button)
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
-		if (bIsAreaNarrow(tank, g_esFlingCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esFlingPlayer[tank].g_iTankType) || (g_esFlingCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlingCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags)))
+		if (!g_bSecondGame || bIsAreaNarrow(tank, g_esFlingCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esFlingPlayer[tank].g_iTankType) || (g_esFlingCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlingCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -672,7 +675,7 @@ void vFling(int survivor, int tank)
 
 void vFlingAbility(int tank, float random, int pos = -1)
 {
-	if (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags))
+	if (!g_bSecondGame || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags)))
 	{
 		return;
 	}
@@ -718,7 +721,7 @@ void vFlingAbility(int tank, float random, int pos = -1)
 
 void vFlingHit(int survivor, int tank, float random, float chance, int enabled, int messages, int flags)
 {
-	if (bIsAreaNarrow(tank, g_esFlingCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esFlingPlayer[tank].g_iTankType) || (g_esFlingCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlingCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esFlingPlayer[tank].g_iTankType, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iImmunityFlags, g_esFlingPlayer[survivor].g_iImmunityFlags))
+	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esFlingCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esFlingPlayer[tank].g_iTankType) || (g_esFlingCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlingCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags)) || MT_IsAdminImmune(survivor, tank) || bIsAdminImmune(survivor, g_esFlingPlayer[tank].g_iTankType, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iImmunityFlags, g_esFlingPlayer[survivor].g_iImmunityFlags))
 	{
 		return;
 	}
@@ -780,7 +783,7 @@ void vFlingRange(int tank, int value, float random, int pos = -1)
 	flChance = (pos != -1) ? MT_GetCombinationSetting(tank, 11, pos) : g_esFlingCache[tank].g_flFlingDeathChance;
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME) && MT_IsCustomTankSupported(tank) && g_esFlingCache[tank].g_iFlingDeath == 1 && random <= flChance)
 	{
-		if (g_esFlingCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esFlingCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esFlingPlayer[tank].g_iTankType) || (g_esFlingCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlingCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags)))
+		if (!g_bSecondGame || g_esFlingCache[tank].g_iComboAbility == value || bIsAreaNarrow(tank, g_esFlingCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esFlingPlayer[tank].g_iTankType) || (g_esFlingCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esFlingCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags)))
 		{
 			return;
 		}
@@ -829,7 +832,7 @@ public Action tTimerFlingCombo(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iTank = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFlingAbility[g_esFlingPlayer[iTank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFlingPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esFlingCache[iTank].g_iFlingAbility == 0)
+	if (!g_bSecondGame || !MT_IsCorePluginEnabled() || !MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esFlingAbility[g_esFlingPlayer[iTank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esFlingPlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || g_esFlingCache[iTank].g_iFlingAbility == 0)
 	{
 		return Plugin_Stop;
 	}
@@ -846,7 +849,7 @@ public Action tTimerFlingCombo2(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!bIsSurvivor(iSurvivor))
+	if (!g_bSecondGame || !bIsSurvivor(iSurvivor))
 	{
 		return Plugin_Stop;
 	}

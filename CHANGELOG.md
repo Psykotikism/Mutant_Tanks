@@ -44,6 +44,7 @@
 	- `Particle Effect Visual` (Requested by 3aljiyavslgazana.)
 	- `Screen Color Visual` (Requested by 3aljiyavslgazana.)
 - Added the `Death Details` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections. (Requested by Shadowart.)
+- Added the `Sweep Fist` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to HarryPotter for the idea!)
 
 #### Translations
 - Updated English translations with new phrases.
@@ -65,6 +66,7 @@
 
 #### Updates
 - Updated config files.
+- Updated gamedata file.
 - Updated include files.
 - Updated translation files.
 

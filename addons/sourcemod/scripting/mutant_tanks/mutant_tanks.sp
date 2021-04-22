@@ -383,7 +383,6 @@ enum struct esGeneral
 	DynamicDetour g_ddLauncherDirectionDetour;
 	DynamicDetour g_ddLeaveStasisDetour;
 	DynamicDetour g_ddMaxCarryDetour;
-	DynamicDetour g_ddPlayerHitDetour;
 	DynamicDetour g_ddReplaceTankDetour;
 	DynamicDetour g_ddRevivedDetour;
 	DynamicDetour g_ddSecondaryAttackDetour;
@@ -396,6 +395,8 @@ enum struct esGeneral
 	DynamicDetour g_ddStartHealingDetour;
 	DynamicDetour g_ddStartRevivingDetour;
 	DynamicDetour g_ddStartActionDetour;
+	DynamicDetour g_ddTankClawPlayerHitDetour;
+	DynamicDetour g_ddTankClawSweepFistDetour;
 	DynamicDetour g_ddTankRockCreateDetour;
 	DynamicDetour g_ddTestMeleeSwingCollisionDetour;
 	DynamicDetour g_ddVomitedUponDetour;
@@ -587,6 +588,7 @@ enum struct esGeneral
 	int g_iSpecialAmmoReward[3];
 	int g_iStasisMode;
 	int g_iSurvivalBlock;
+	int g_iSweepFist;
 	int g_iTankCount;
 	int g_iTankEnabled;
 	int g_iTankModel;
@@ -871,6 +873,7 @@ enum struct esPlayer
 	int g_iSpawnType;
 	int g_iSpecialAmmo;
 	int g_iSpecialAmmoReward[3];
+	int g_iSweepFist;
 	int g_iTankDamage[MAXPLAYERS + 1];
 	int g_iTankHealth;
 	int g_iTankModel;
@@ -1034,6 +1037,7 @@ enum struct esTank
 	int g_iSpawnEnabled;
 	int g_iSpawnType;
 	int g_iSpecialAmmoReward[3];
+	int g_iSweepFist;
 	int g_iTankEnabled;
 	int g_iTankModel;
 	int g_iTankNote;
@@ -1181,6 +1185,7 @@ enum struct esCache
 	int g_iSpawnEnabled;
 	int g_iSpawnType;
 	int g_iSpecialAmmoReward[3];
+	int g_iSweepFist;
 	int g_iTankEnabled;
 	int g_iTankModel;
 	int g_iTankNote;
@@ -1820,6 +1825,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -2221,12 +2227,6 @@ public void OnPluginStart()
 				LogError("%s Failed to find signature: CAmmoDef::MaxCarry", MT_TAG);
 			}
 
-			g_esGeneral.g_ddPlayerHitDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankClaw::OnPlayerHit");
-			if (g_esGeneral.g_ddPlayerHitDetour == null)
-			{
-				LogError("%s Failed to find signature: CTankClaw::OnPlayerHit", MT_TAG);
-			}
-
 			g_esGeneral.g_ddReplaceTankDetour = DynamicDetour.FromConf(gdMutantTanks, "ZombieManager::ReplaceTank");
 			if (g_esGeneral.g_ddReplaceTankDetour == null)
 			{
@@ -2273,6 +2273,18 @@ public void OnPluginStart()
 			if (g_esGeneral.g_ddStartRevivingDetour == null)
 			{
 				LogError("%s Failed to find signature: CTerrorPlayer::StartReviving", MT_TAG);
+			}
+
+			g_esGeneral.g_ddTankClawPlayerHitDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankClaw::OnPlayerHit");
+			if (g_esGeneral.g_ddTankClawPlayerHitDetour == null)
+			{
+				LogError("%s Failed to find signature: CTankClaw::OnPlayerHit", MT_TAG);
+			}
+
+			g_esGeneral.g_ddTankClawSweepFistDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankClaw::SweepFist");
+			if (g_esGeneral.g_ddTankClawSweepFistDetour == null)
+			{
+				LogError("%s Failed to find signature: CTankClaw::SweepFist", MT_TAG);
 			}
 
 			g_esGeneral.g_ddTankRockCreateDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankRock::Create");
@@ -6106,6 +6118,8 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iRockEffects = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRockEffects, g_esTank[iType].g_iRockEffects);
 	g_esCache[tank].g_iRockModel = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iRockModel, g_esTank[iType].g_iRockModel);
 	g_esCache[tank].g_iSpawnType = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSpawnType, g_esTank[iType].g_iSpawnType);
+	g_esCache[tank].g_iSweepFist = iGetSettingValue(bAccess, true, g_esTank[iType].g_iSweepFist, g_esGeneral.g_iSweepFist);
+	g_esCache[tank].g_iSweepFist = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iSweepFist, g_esCache[tank].g_iSweepFist);
 	g_esCache[tank].g_iTankEnabled = iGetSettingValue(bAccess, true, g_esTank[iType].g_iTankEnabled, g_esGeneral.g_iTankEnabled, 1);
 	g_esCache[tank].g_iTankModel = iGetSettingValue(bAccess, true, g_esTank[iType].g_iTankModel, g_esGeneral.g_iTankModel);
 	g_esCache[tank].g_iTankModel = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iTankModel, g_esCache[tank].g_iTankModel);
@@ -6546,6 +6560,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_flPunchForce = -1.0;
 		g_esGeneral.g_flRockDamage = -1.0;
 		g_esGeneral.g_flRunSpeed = 0.0;
+		g_esGeneral.g_iSweepFist = 0;
 		g_esGeneral.g_flThrowInterval = 0.0;
 		g_esGeneral.g_iBulletImmunity = 0;
 		g_esGeneral.g_iExplosiveImmunity = 0;
@@ -6710,6 +6725,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_flPunchForce = -1.0;
 			g_esTank[iIndex].g_flRockDamage = -1.0;
 			g_esTank[iIndex].g_flRunSpeed = 0.0;
+			g_esTank[iIndex].g_iSweepFist = 0;
 			g_esTank[iIndex].g_flThrowInterval = 0.0;
 			g_esTank[iIndex].g_iBulletImmunity = 0;
 			g_esTank[iIndex].g_iExplosiveImmunity = 0;
@@ -6886,6 +6902,7 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_flPunchForce = -1.0;
 				g_esPlayer[iPlayer].g_flRockDamage = -1.0;
 				g_esPlayer[iPlayer].g_flRunSpeed = 0.0;
+				g_esPlayer[iPlayer].g_iSweepFist = 0;
 				g_esPlayer[iPlayer].g_flThrowInterval = 0.0;
 				g_esPlayer[iPlayer].g_iBulletImmunity = 0;
 				g_esPlayer[iPlayer].g_iExplosiveImmunity = 0;
@@ -7112,6 +7129,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punch", g_esGeneral.g_flPunchForce, value, -1.0, 999999.0);
 				g_esGeneral.g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esGeneral.g_flRockDamage, value, -1.0, 999999.0);
 				g_esGeneral.g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esGeneral.g_flRunSpeed, value, 0.0, 3.0);
+				g_esGeneral.g_iSweepFist = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esGeneral.g_iSweepFist, value, 0, 1);
 				g_esGeneral.g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esGeneral.g_flThrowInterval, value, 0.0, 999999.0);
 				g_esGeneral.g_iBulletImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_IMMUNE, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esGeneral.g_iBulletImmunity, value, 0, 1);
 				g_esGeneral.g_iExplosiveImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_IMMUNE, key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esGeneral.g_iExplosiveImmunity, value, 0, 1);
@@ -7571,6 +7589,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esPlayer[iPlayer].g_flPunchForce = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punch", g_esPlayer[iPlayer].g_flPunchForce, value, -1.0, 999999.0);
 						g_esPlayer[iPlayer].g_flRockDamage = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esPlayer[iPlayer].g_flRockDamage, value, -1.0, 999999.0);
 						g_esPlayer[iPlayer].g_flRunSpeed = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esPlayer[iPlayer].g_flRunSpeed, value, 0.0, 3.0);
+						g_esPlayer[iPlayer].g_iSweepFist = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esPlayer[iPlayer].g_iSweepFist, value, 0, 1);
 						g_esPlayer[iPlayer].g_flThrowInterval = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ENHANCE, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esPlayer[iPlayer].g_flThrowInterval, value, 0.0, 999999.0);
 						g_esPlayer[iPlayer].g_iBulletImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_IMMUNE, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esPlayer[iPlayer].g_iBulletImmunity, value, 0, 1);
 						g_esPlayer[iPlayer].g_iExplosiveImmunity = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_IMMUNE, key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esPlayer[iPlayer].g_iExplosiveImmunity, value, 0, 1);
@@ -8578,6 +8597,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_flPunchForce = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "PunchForce", "Punch Force", "Punch_Force", "punch", g_esTank[type].g_flPunchForce, value, -1.0, 999999.0);
 		g_esTank[type].g_flRockDamage = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "RockDamage", "Rock Damage", "Rock_Damage", "rock", g_esTank[type].g_flRockDamage, value, -1.0, 999999.0);
 		g_esTank[type].g_flRunSpeed = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "RunSpeed", "Run Speed", "Run_Speed", "speed", g_esTank[type].g_flRunSpeed, value, 0.0, 3.0);
+		g_esTank[type].g_iSweepFist = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "SweepFist", "Sweep Fist", "Sweep_Fist", "sweep", g_esTank[type].g_iSweepFist, value, 0, 1);
 		g_esTank[type].g_flThrowInterval = flGetKeyValue(sub, MT_CONFIG_SECTIONS_ENHANCE, key, "ThrowInterval", "Throw Interval", "Throw_Interval", "throw", g_esTank[type].g_flThrowInterval, value, 0.0, 999999.0);
 		g_esTank[type].g_iBulletImmunity = iGetKeyValue(sub, MT_CONFIG_SECTIONS_IMMUNE, key, "BulletImmunity", "Bullet Immunity", "Bullet_Immunity", "bullet", g_esTank[type].g_iBulletImmunity, value, 0, 1);
 		g_esTank[type].g_iExplosiveImmunity = iGetKeyValue(sub, MT_CONFIG_SECTIONS_IMMUNE, key, "ExplosiveImmunity", "Explosive Immunity", "Explosive_Immunity", "explosive", g_esTank[type].g_iExplosiveImmunity, value, 0, 1);
@@ -9158,16 +9178,6 @@ static void vPluginStatus()
 			LogError("%s Failed to enable detour pre: CAmmoDef::MaxCarry", MT_TAG);
 		}
 
-		if (!g_esGeneral.g_ddPlayerHitDetour.Enable(Hook_Pre, mrePlayerHitPre))
-		{
-			LogError("%s Failed to enable detour pre: CTankClaw::OnPlayerHit", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddPlayerHitDetour.Enable(Hook_Post, mrePlayerHitPost))
-		{
-			LogError("%s Failed to enable detour post: CTankClaw::OnPlayerHit", MT_TAG);
-		}
-
 		if (!g_esGeneral.g_ddRevivedDetour.Enable(Hook_Pre, mreRevivedPre))
 		{
 			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnRevived", MT_TAG);
@@ -9196,6 +9206,26 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddStartRevivingDetour.Enable(Hook_Post, mreStartRevivingPost))
 		{
 			LogError("%s Failed to enable detour post: CTerrorPlayer::StartReviving", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Enable(Hook_Pre, mreTankClawPlayerHitPre))
+		{
+			LogError("%s Failed to enable detour pre: CTankClaw::OnPlayerHit", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Enable(Hook_Post, mreTankClawPlayerHitPost))
+		{
+			LogError("%s Failed to enable detour post: CTankClaw::OnPlayerHit", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_ddTankClawSweepFistDetour.Enable(Hook_Pre, mreTankClawSweepFistPre))
+		{
+			LogError("%s Failed to enable detour pre: CTankClaw::SweepFist", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_ddTankClawSweepFistDetour.Enable(Hook_Post, mreTankClawSweepFistPost))
+		{
+			LogError("%s Failed to enable detour post: CTankClaw::SweepFist", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddTankRockCreateDetour.Enable(Hook_Post, mreTankRockCreatePost))
@@ -9402,16 +9432,6 @@ static void vPluginStatus()
 			LogError("%s Failed to disable detour pre: CAmmoDef::MaxCarry", MT_TAG);
 		}
 
-		if (!g_esGeneral.g_ddPlayerHitDetour.Disable(Hook_Pre, mrePlayerHitPre))
-		{
-			LogError("%s Failed to disable detour pre: CTankClaw::OnPlayerHit", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddPlayerHitDetour.Disable(Hook_Post, mrePlayerHitPost))
-		{
-			LogError("%s Failed to disable detour post: CTankClaw::OnPlayerHit", MT_TAG);
-		}
-
 		if (!g_esGeneral.g_ddRevivedDetour.Disable(Hook_Pre, mreRevivedPre))
 		{
 			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnRevived", MT_TAG);
@@ -9440,6 +9460,26 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddStartRevivingDetour.Disable(Hook_Post, mreStartRevivingPost))
 		{
 			LogError("%s Failed to disable detour post: CTerrorPlayer::StartReviving", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Disable(Hook_Pre, mreTankClawPlayerHitPre))
+		{
+			LogError("%s Failed to disable detour pre: CTankClaw::OnPlayerHit", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Disable(Hook_Post, mreTankClawPlayerHitPost))
+		{
+			LogError("%s Failed to disable detour post: CTankClaw::OnPlayerHit", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_ddTankClawSweepFistDetour.Disable(Hook_Pre, mreTankClawSweepFistPre))
+		{
+			LogError("%s Failed to disable detour pre: CTankClaw::SweepFist", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_ddTankClawSweepFistDetour.Disable(Hook_Post, mreTankClawSweepFistPost))
+		{
+			LogError("%s Failed to disable detour post: CTankClaw::SweepFist", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddTankRockCreateDetour.Disable(Hook_Post, mreTankRockCreatePost))
@@ -14915,38 +14955,6 @@ public MRESReturn mreMaxCarryPre(int pThis, DHookReturn hReturn, DHookParam hPar
 	return MRES_Ignored;
 }
 
-public MRESReturn mrePlayerHitPre(int pThis, DHookParam hParams)
-{
-	g_esGeneral.g_iTankTarget = hParams.Get(1);
-	if (bIsSurvivor(g_esGeneral.g_iTankTarget) && bIsDeveloper(g_esGeneral.g_iTankTarget, 8))
-	{
-		return MRES_Supercede;
-	}
-
-	return MRES_Ignored;
-}
-
-public MRESReturn mrePlayerHitPost(int pThis, DHookParam hParams)
-{
-	int iTank = GetEntPropEnt(pThis, Prop_Send, "m_hOwner"), iSurvivor = g_esGeneral.g_iTankTarget;
-	if (bIsTank(iTank) && bIsSurvivor(iSurvivor))
-	{
-		bool bDeveloper = bIsDeveloper(iSurvivor, 4);
-		if (g_esCache[iTank].g_flPunchForce >= 0.0 || bDeveloper || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE))
-		{
-			float flVelocity[3], flForce = flGetPunchForce(iSurvivor, g_esCache[iTank].g_flPunchForce);
-			if (flForce >= 0.0)
-			{
-				GetEntPropVector(iSurvivor, Prop_Data, "m_vecVelocity", flVelocity);
-				ScaleVector(flVelocity, flForce);
-				TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
-			}
-		}
-	}
-
-	g_esGeneral.g_iTankTarget = 0;
-}
-
 public MRESReturn mreReplaceTankPost(DHookParam hParams)
 {
 	int iOldTank = hParams.Get(1), iNewTank = hParams.Get(2);
@@ -15204,6 +15212,86 @@ public MRESReturn mreStartRevivingPost(int pThis, DHookParam hParams)
 	{
 		g_esGeneral.g_cvMTSurvivorReviveDuration.FloatValue = g_esGeneral.g_flDefaultSurvivorReviveDuration;
 		g_esGeneral.g_flDefaultSurvivorReviveDuration = -1.0;
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreTankClawPlayerHitPre(int pThis, DHookParam hParams)
+{
+	g_esGeneral.g_iTankTarget = hParams.Get(1);
+	if (bIsSurvivor(g_esGeneral.g_iTankTarget) && bIsDeveloper(g_esGeneral.g_iTankTarget, 8))
+	{
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreTankClawPlayerHitPost(int pThis, DHookParam hParams)
+{
+	int iTank = GetEntPropEnt(pThis, Prop_Send, "m_hOwner"), iSurvivor = g_esGeneral.g_iTankTarget;
+	if (bIsTank(iTank) && bIsSurvivor(iSurvivor))
+	{
+		bool bDeveloper = bIsDeveloper(iSurvivor, 4);
+		if (g_esCache[iTank].g_flPunchForce >= 0.0 || bDeveloper || (g_esPlayer[iSurvivor].g_iRewardTypes & MT_REWARD_GODMODE))
+		{
+			float flVelocity[3], flForce = flGetPunchForce(iSurvivor, g_esCache[iTank].g_flPunchForce);
+			if (flForce >= 0.0)
+			{
+				GetEntPropVector(iSurvivor, Prop_Data, "m_vecVelocity", flVelocity);
+				ScaleVector(flVelocity, flForce);
+				TeleportEntity(iSurvivor, NULL_VECTOR, NULL_VECTOR, flVelocity);
+			}
+		}
+	}
+
+	g_esGeneral.g_iTankTarget = 0;
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreTankClawSweepFistPre(int pThis, DHookParam hParams)
+{
+	int iTank = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	if (bIsTank(iTank) && g_esCache[iTank].g_iSweepFist == 1)
+	{
+		char sName[32];
+		static int iIndex[2] = {-1, -1};
+		for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
+		{
+			if (iIndex[iPos] == -1)
+			{
+				FormatEx(sName, sizeof(sName), "TankSweepFist%i", iPos + 1);
+				iIndex[iPos] = iGetPatchIndex(sName);
+			}
+
+			if (iIndex[iPos] != -1)
+			{
+				bInstallPatch(iIndex[iPos]);
+			}
+		}
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreTankClawSweepFistPost(int pThis, DHookParam hParams)
+{
+	char sName[32];
+	static int iIndex[2] = {-1, -1};
+	for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
+	{
+		if (iIndex[iPos] == -1)
+		{
+			FormatEx(sName, sizeof(sName), "TankSweepFist%i", iPos + 1);
+			iIndex[iPos] = iGetPatchIndex(sName);
+		}
+
+		if (iIndex[iPos] != -1)
+		{
+			bRemovePatch(iIndex[iPos]);
+		}
 	}
 
 	return MRES_Ignored;
