@@ -1,7 +1,7 @@
 # Танки-мутанты
 
 ## Языки
-- Нажмите на один из флажков, чтобы просмотреть на другой языковой.
+- Нажмите на один из флажков, чтобы просмотреть на другой языковой версии.
 <a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
 <img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt="Английский" width="32">
 </a>
