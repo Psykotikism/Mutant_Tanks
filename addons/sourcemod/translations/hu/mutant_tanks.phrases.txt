@@ -249,52 +249,52 @@
 
 	"Assist1"
 	{
-		"hu"			"{olive}{1}{default} legyőzve!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} legyőzve!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist2"
 	{
-		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"A túlélők legyőzték a(z){olive} {1}{default}!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist3"
 	{
-		"hu"			"{olive}{1}{default} elindult a pokolba!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} elindult a pokolba!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist4"
 	{
-		"hu"			"A(z){olive} {1}{default} tényleg halott...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"A(z){olive} {1}{default} tényleg halott...?{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist5"
 	{
-		"hu"			"{olive}{1}{default} elvesztette a kihívást a túlélőkkel szemben!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} elvesztette a kihívást a túlélőkkel szemben!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist6"
 	{
-		"hu"			"A(z){olive} {1}{default} elbukta a túlélők megölését!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"A(z){olive} {1}{default} elbukta a túlélők megölését!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist7"
 	{
-		"hu"			"{olive}{1}{default} találkozott a halállal!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} találkozott a halállal!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist8"
 	{
-		"hu"			"Éljen!{olive} {1}{default} halott!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"Éljen!{olive} {1}{default} halott!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist9"
 	{
-		"hu"			"{olive}{1}{default} elhagyta a játékot{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"{olive}{1}{default} elhagyta a játékot{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist10"
 	{
-		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"hu"			"Úgy látszik a(z){olive} {1}{default} végül is nem tuddta legyőzni a túlélőket.{yellow} MVP:{mint} {2}"
 	}
 
 	"ChangeType"
@@ -459,52 +459,52 @@
 
 	"Killer1"
 	{
-		"hu"			"{mint}{1}{default} kivégezte{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{mint}{1}{default} kivégezte{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer2"
 	{
-		"hu"			"{mint}{1}{default} legyőzte{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{mint}{1}{default} legyőzte{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer3"
 	{
-		"hu"			"{mint}{1}{default} elküldte{olive} {2}{default} a pokolba!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{mint}{1}{default} elküldte{olive} {2}{default} a pokolba!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer4"
 	{
-		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"Biztos hogy{mint} {1}{default} tényleg megölte{olive} {2}{default}...?{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer5"
 	{
-		"hu"			"{olive}{2}{default} elvesztette a kihívást{mint} {1}{default} ellen!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{olive}{2}{default} elvesztette a kihívást{mint} {1}{default} ellen!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer6"
 	{
-		"hu"			"A(z){olive} {2}{default}-nak nem sikerült megölnie{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"A(z){olive} {2}{default}-nak nem sikerült megölnie{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer7"
 	{
-		"hu"			"{olive}{2}{default} elérte a pusztulás {mint} {1}{default} keze által!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{olive}{2}{default} elérte a pusztulás {mint} {1}{default} keze által!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer8"
 	{
-		"hu"			"Éljen!{olive} {2}{default} halott, hála{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"Éljen!{olive} {2}{default} halott, hála{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer9"
 	{
-		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"{mint}{1}{default} rávette{olive} {2}{default} hogy mérgében kilépjen!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer10"
 	{
-		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"hu"			"Úgy látszik{olive} {2}{default} nem tudta legyőzni{mint} {1}{default} végül is!{yellow} MVP:{mint} {3}"
 	}
 
 	"LogEnded"
@@ -810,6 +810,11 @@
 	"StillParsing"
 	{
 		"hu"			"A plugin még elemzi a konfig fájlt."
+	}
+
+	"TeammatesList"
+	{
+		"hu"			"Az összes okozott sebzés a(z) to{olive} {1}{default}-nak:{mint} {2}"
 	}
 
 	"Transformed"

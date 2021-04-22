@@ -511,6 +511,7 @@ enum struct esGeneral
 	int g_iConfigMode;
 	int g_iCreditIgniters;
 	int g_iCurrentMode;
+	int g_iDeathDetails;
 	int g_iDeathMessage;
 	int g_iDeathRevert;
 	int g_iDeathSound;
@@ -791,6 +792,7 @@ enum struct esPlayer
 	int g_iCleanKillsReward[3];
 	int g_iCooldown;
 	int g_iCrownColor[4];
+	int g_iDeathDetails;
 	int g_iDeathMessage;
 	int g_iDeathRevert;
 	int g_iDeathSound;
@@ -975,6 +977,7 @@ enum struct esTank
 	int g_iBulletImmunity;
 	int g_iCleanKillsReward[3];
 	int g_iCrownColor[4];
+	int g_iDeathDetails;
 	int g_iDeathMessage;
 	int g_iDeathRevert;
 	int g_iDeathSound;
@@ -1127,6 +1130,7 @@ enum struct esCache
 	int g_iBulletImmunity;
 	int g_iCleanKillsReward[3];
 	int g_iCrownColor[4];
+	int g_iDeathDetails;
 	int g_iDeathMessage;
 	int g_iDeathRevert;
 	int g_iDeathSound;
@@ -1540,7 +1544,7 @@ public any aNative_LogMessage(Handle plugin, int numParams)
 	int iType = GetNativeCell(1);
 	if (g_esGeneral.g_iLogMessages > 0 && iType > 0 && (g_esGeneral.g_iLogMessages & iType))
 	{
-		char sBuffer[255];
+		char sBuffer[1024];
 		int iSize = 0, iResult = FormatNativeString(0, 2, 3, sizeof(sBuffer), iSize, sBuffer);
 		if (iResult == SP_ERROR_NONE)
 		{
@@ -1659,11 +1663,11 @@ public void OnLibraryAdded(const char[] name)
 	{
 		g_esGeneral.g_bLeft4DHooksInstalled = true;
 	}
-	else if (StrEqual(name, "mt_clone", false))
+	else if (StrEqual(name, "mt_clone"))
 	{
 		g_esGeneral.g_bCloneInstalled = true;
 	}
-	else if (StrEqual(name, "WeaponHandling", false))
+	else if (StrEqual(name, "WeaponHandling"))
 	{
 		g_esGeneral.g_bWeaponHandlingInstalled = true;
 	}
@@ -1675,11 +1679,11 @@ public void OnLibraryRemoved(const char[] name)
 	{
 		g_esGeneral.g_bLeft4DHooksInstalled = false;
 	}
-	else if (StrEqual(name, "mt_clone", false))
+	else if (StrEqual(name, "mt_clone"))
 	{
 		g_esGeneral.g_bCloneInstalled = false;
 	}
-	else if (StrEqual(name, "WeaponHandling", false))
+	else if (StrEqual(name, "WeaponHandling"))
 	{
 		g_esGeneral.g_bWeaponHandlingInstalled = false;
 	}
@@ -1778,12 +1782,6 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTSurvivorReviveHealth = FindConVar("survivor_revive_health");
 	g_esGeneral.g_cvMTGunSwingInterval = FindConVar("z_gun_swing_interval");
 
-	g_esGeneral.g_cvMTDisabledGameModes.AddChangeHook(vMTPluginStatusCvar);
-	g_esGeneral.g_cvMTEnabledGameModes.AddChangeHook(vMTPluginStatusCvar);
-	g_esGeneral.g_cvMTGameModeTypes.AddChangeHook(vMTPluginStatusCvar);
-	g_esGeneral.g_cvMTPluginEnabled.AddChangeHook(vMTPluginStatusCvar);
-	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
-
 	if (g_bSecondGame)
 	{
 		g_esGeneral.g_cvMTAmmoPackUseDuration = FindConVar("ammo_pack_use_duration");
@@ -1794,6 +1792,12 @@ public void OnPluginStart()
 		g_esGeneral.g_cvMTPhysicsPushScale = FindConVar("phys_pushscale");
 		g_esGeneral.g_cvMTUpgradePackUseDuration = FindConVar("upgrade_pack_use_duration");
 	}
+
+	g_esGeneral.g_cvMTDisabledGameModes.AddChangeHook(vMTPluginStatusCvar);
+	g_esGeneral.g_cvMTEnabledGameModes.AddChangeHook(vMTPluginStatusCvar);
+	g_esGeneral.g_cvMTGameModeTypes.AddChangeHook(vMTPluginStatusCvar);
+	g_esGeneral.g_cvMTPluginEnabled.AddChangeHook(vMTPluginStatusCvar);
+	g_esGeneral.g_cvMTDifficulty.AddChangeHook(vMTGameDifficultyCvar);
 
 	char sDate[32];
 	FormatTime(sDate, sizeof(sDate), "%Y-%m-%d", GetTime());
@@ -6062,6 +6066,8 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iBossStages = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iBossStages, g_esTank[iType].g_iBossStages);
 	g_esCache[tank].g_iBulletImmunity = iGetSettingValue(bAccess, true, g_esTank[iType].g_iBulletImmunity, g_esGeneral.g_iBulletImmunity);
 	g_esCache[tank].g_iBulletImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iBulletImmunity, g_esCache[tank].g_iBulletImmunity);
+	g_esCache[tank].g_iDeathDetails = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDeathDetails, g_esGeneral.g_iDeathDetails);
+	g_esCache[tank].g_iDeathDetails = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDeathDetails, g_esCache[tank].g_iDeathDetails);
 	g_esCache[tank].g_iDeathMessage = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDeathMessage, g_esGeneral.g_iDeathMessage);
 	g_esCache[tank].g_iDeathMessage = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDeathMessage, g_esCache[tank].g_iDeathMessage);
 	g_esCache[tank].g_iDeathRevert = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDeathRevert, g_esGeneral.g_iDeathRevert);
@@ -6497,6 +6503,7 @@ public void SMCParseStart(SMCParser smc)
 		g_esGeneral.g_iAnnounceKill = 1;
 		g_esGeneral.g_iArrivalMessage = 0;
 		g_esGeneral.g_iArrivalSound = 1;
+		g_esGeneral.g_iDeathDetails = 5;
 		g_esGeneral.g_iDeathMessage = 0;
 		g_esGeneral.g_iDeathSound = 1;
 		g_esGeneral.g_iKillMessage = 0;
@@ -6642,6 +6649,7 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_iAnnounceKill = 0;
 			g_esTank[iIndex].g_iArrivalMessage = 0;
 			g_esTank[iIndex].g_iArrivalSound = 0;
+			g_esTank[iIndex].g_iDeathDetails = 0;
 			g_esTank[iIndex].g_iDeathMessage = 0;
 			g_esTank[iIndex].g_iDeathSound = 0;
 			g_esTank[iIndex].g_iKillMessage = 0;
@@ -6821,6 +6829,7 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_iAnnounceKill = 0;
 				g_esPlayer[iPlayer].g_iArrivalMessage = 0;
 				g_esPlayer[iPlayer].g_iArrivalSound = 0;
+				g_esPlayer[iPlayer].g_iDeathDetails = 0;
 				g_esPlayer[iPlayer].g_iDeathMessage = 0;
 				g_esPlayer[iPlayer].g_iDeathSound = 0;
 				g_esPlayer[iPlayer].g_iKillMessage = 0;
@@ -7079,6 +7088,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 				g_esGeneral.g_iAnnounceKill = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceKill", "Announce Kill", "Announce_Kill", "kill", g_esGeneral.g_iAnnounceKill, value, 0, 1);
 				g_esGeneral.g_iArrivalMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalMessage", "Arrival Message", "Arrival_Message", "arrivalmsg", g_esGeneral.g_iArrivalMessage, value, 0, 1023);
 				g_esGeneral.g_iArrivalSound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalSound", "Arrival Sound", "Arrival_Sound", "arrivalsnd", g_esGeneral.g_iArrivalSound, value, 0, 1);
+				g_esGeneral.g_iDeathDetails = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathDetails", "Death Details", "Death_Details", "deathdets", g_esGeneral.g_iDeathDetails, value, 0, 5);
 				g_esGeneral.g_iDeathMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathMessage", "Death Message", "Death_Message", "deathmsg", g_esGeneral.g_iDeathMessage, value, 0, 1023);
 				g_esGeneral.g_iDeathSound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathSound", "Death Sound", "Death_Sound", "deathsnd", g_esGeneral.g_iDeathSound, value, 0, 1);
 				g_esGeneral.g_iKillMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "KillMessage", "Kill Message", "Kill_Message", "killmsg", g_esGeneral.g_iKillMessage, value, 0, 1023);
@@ -7529,6 +7539,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esPlayer[iPlayer].g_iAnnounceKill = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceKill", "Announce Kill", "Announce_Kill", "kill", g_esPlayer[iPlayer].g_iAnnounceKill, value, 0, 1);
 						g_esPlayer[iPlayer].g_iArrivalMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalMessage", "Arrival Message", "Arrival_Message", "arrivalmsg", g_esPlayer[iPlayer].g_iArrivalMessage, value, 0, 1023);
 						g_esPlayer[iPlayer].g_iArrivalSound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalSound", "Arrival Sound", "Arrival_Sound", "arrivalsnd", g_esPlayer[iPlayer].g_iArrivalSound, value, 0, 1);
+						g_esPlayer[iPlayer].g_iDeathDetails = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathDetails", "Death Details", "Death_Details", "deathdets", g_esPlayer[iPlayer].g_iDeathDetails, value, 0, 5);
 						g_esPlayer[iPlayer].g_iDeathMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathMessage", "Death Message", "Death_Message", "deathmsg", g_esPlayer[iPlayer].g_iDeathMessage, value, 0, 1023);
 						g_esPlayer[iPlayer].g_iDeathSound = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathSound", "Death Sound", "Death_Sound", "deathsnd", g_esPlayer[iPlayer].g_iDeathSound, value, 0, 1);
 						g_esPlayer[iPlayer].g_iKillMessage = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "KillMessage", "Kill Message", "Kill_Message", "killmsg", g_esPlayer[iPlayer].g_iKillMessage, value, 0, 1023);
@@ -8531,6 +8542,7 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_iAnnounceKill = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceKill", "Announce Kill", "Announce_Kill", "kill", g_esTank[type].g_iAnnounceKill, value, 0, 1);
 		g_esTank[type].g_iArrivalMessage = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalMessage", "Arrival Message", "Arrival_Message", "arrivalmsg", g_esTank[type].g_iArrivalMessage, value, 0, 1023);
 		g_esTank[type].g_iArrivalSound = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "ArrivalSound", "Arrival Sound", "Arrival_Sound", "arrivalsnd", g_esTank[type].g_iArrivalSound, value, 0, 1);
+		g_esTank[type].g_iDeathDetails = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathDetails", "Death Details", "Death_Details", "deathdets", g_esTank[type].g_iDeathDetails, value, 0, 5);
 		g_esTank[type].g_iDeathMessage = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathMessage", "Death Message", "Death_Message", "deathmsg", g_esTank[type].g_iDeathMessage, value, 0, 1023);
 		g_esTank[type].g_iDeathSound = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "DeathSound", "Death Sound", "Death_Sound", "deathsnd", g_esTank[type].g_iDeathSound, value, 0, 1);
 		g_esTank[type].g_iKillMessage = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "KillMessage", "Kill Message", "Kill_Message", "killmsg", g_esTank[type].g_iKillMessage, value, 0, 1023);
@@ -9572,8 +9584,7 @@ static void vPluginStatus()
 
 static void vHookEvents(bool hook)
 {
-	static bool bHooked, bCheck[41], bPreHook[41];
-	static char sEvent[32];
+	static bool bHooked, bCheck[41];
 	if (hook && !bHooked)
 	{
 		bHooked = true;
@@ -9628,6 +9639,8 @@ static void vHookEvents(bool hook)
 	}
 	else if (!hook && bHooked)
 	{
+		static bool bPreHook[41];
+		static char sEvent[32];
 		bHooked = false;
 
 		for (int iPos = 0; iPos < sizeof(bCheck); iPos++)
@@ -9705,7 +9718,7 @@ static void vLogCommand(int admin, int type, const char[] activity, any ...)
 {
 	if (g_esGeneral.g_iLogCommands & type)
 	{
-		static char sMessage[255];
+		static char sMessage[1024];
 		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 		{
 			if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && CheckCommandAccess(iPlayer, "sm_admin", ADMFLAG_ROOT, true) && iPlayer != admin)
@@ -9735,7 +9748,7 @@ static void vLogMessage(int type, bool timestamp = true, const char[] message, a
 			case Plugin_Handled: return;
 			case Plugin_Continue:
 			{
-				static char sBuffer[255], sMessage[255];
+				static char sBuffer[1024], sMessage[1024];
 				SetGlobalTransTarget(LANG_SERVER);
 				VFormat(sBuffer, sizeof(sBuffer), message, 4);
 				MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
@@ -9760,7 +9773,7 @@ static void vLogMessage(int type, bool timestamp = true, const char[] message, a
 
 static void vToggleLogging(int type = -1)
 {
-	static char sMessage[255], sMap[128], sTime[32], sDate[32];
+	static char sMessage[1024], sMap[128], sTime[32], sDate[32];
 	GetCurrentMap(sMap, sizeof(sMap));
 	if (IsMapValid(sMap))
 	{
@@ -12585,20 +12598,24 @@ static void vAnnounceDeath(int tank, int killer, int assistant, float percentage
 			int iOption = iGetMessageType(g_esCache[tank].g_iDeathMessage);
 			if (iOption > 0)
 			{
-				char sPhrase[32], sTankName[33];
+				char sDetails[128], sPhrase[32], sTankName[33], sTeammates[1024];
 				vGetTranslatedName(sTankName, sizeof(sTankName), tank);
 				if (bIsSurvivor(killer, MT_CHECK_INDEX|MT_CHECK_INGAME))
 				{
 					FormatEx(sPhrase, sizeof(sPhrase), "Killer%i", iOption);
-					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, killer, sTankName, assistant, percentage);
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, killer, sTankName, assistant, percentage);
+					vRecordDamage(tank, assistant, percentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates));
+					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, killer, sTankName, sDetails);
+					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, killer, sTankName, sDetails);
+					vShowDamageList(tank, sTankName, sTeammates);
 					vVocalizeDeath(killer, assistant, tank);
 				}
 				else if (percentage >= 1.0)
 				{
 					FormatEx(sPhrase, sizeof(sPhrase), "Assist%i", iOption);
-					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, assistant, percentage);
-					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, assistant, percentage);
+					vRecordDamage(tank, assistant, percentage, sDetails, sizeof(sDetails), sTeammates, sizeof(sTeammates));
+					MT_PrintToChatAll("%s %t", MT_TAG2, sPhrase, sTankName, sDetails);
+					vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, sPhrase, LANG_SERVER, sTankName, sDetails);
+					vShowDamageList(tank, sTankName, sTeammates);
 					vVocalizeDeath(killer, assistant, tank);
 				}
 				else
@@ -12644,6 +12661,93 @@ static void vAnnounceDeath(int tank, int killer, int assistant, float percentage
 				}
 			}
 		}
+	}
+}
+
+static void vListTeammates(int tank, int assistant, int setting, char[] list, int listSize)
+{
+	if (setting < 3)
+	{
+		return;
+	}
+
+	bool bListed = false;
+	char sList[1024];
+	float flPercentage = 0.0;
+	for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
+	{
+		if (bIsValidClient(iTeammate) && g_esPlayer[iTeammate].g_iTankDamage[tank] > 0 && iTeammate != assistant)
+		{
+			flPercentage = (float(g_esPlayer[iTeammate].g_iTankDamage[tank]) / float(g_esPlayer[tank].g_iTankHealth)) * 100;
+
+			switch (bListed)
+			{
+				case true:
+				{
+					switch (setting)
+					{
+						case 3: Format(sList, sizeof(sList), "%s{default}, {mint}%N{default} ({olive}%i HP{default})", sList, iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank]);
+						case 4: Format(sList, sizeof(sList), "%s{default}, {mint}%N{default} ({olive}%.0f{percent}{default})", sList, iTeammate, flPercentage);
+						case 5: Format(sList, sizeof(sList), "%s{default}, {mint}%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", sList, iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank], flPercentage);
+					}
+				}
+				case false:
+				{
+					bListed = true;
+
+					switch (setting)
+					{
+						case 3: FormatEx(sList, sizeof(sList), "%N{default} ({olive}%i HP{default})", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank]);
+						case 4: FormatEx(sList, sizeof(sList), "%N{default} ({olive}%.0f{percent}{default})", iTeammate, flPercentage);
+						case 5: FormatEx(sList, sizeof(sList), "%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", iTeammate, g_esPlayer[iTeammate].g_iTankDamage[tank], flPercentage);
+					}
+				}
+			}
+		}
+	}
+
+	if (sList[0] != '\0')
+	{
+		strcopy(list, listSize, sList);
+	}
+}
+
+static void vRecordDamage(int tank, int assistant, float percentage, char[] solo, int soloSize, char[] list, int listSize)
+{
+	char sList[1024];
+	int iSetting = g_esCache[tank].g_iDeathDetails;
+
+	switch (iSetting)
+	{
+		case 0, 3:
+		{
+			FormatEx(solo, soloSize, "%N{default} ({olive}%i HP{default})", assistant, g_esPlayer[assistant].g_iTankDamage[tank]);
+			vListTeammates(tank, assistant, iSetting, sList, sizeof(sList));
+		}
+		case 1, 4:
+		{
+			FormatEx(solo, soloSize, "%N{default} ({olive}%.0f{percent}{default})", assistant, percentage);
+			vListTeammates(tank, assistant, iSetting, sList, sizeof(sList));
+		}
+		case 2, 5:
+		{
+			FormatEx(solo, soloSize, "%N{default} ({yellow}%i HP{default}) [{olive}%.0f{percent}{default}]", assistant, g_esPlayer[assistant].g_iTankDamage[tank], percentage);
+			vListTeammates(tank, assistant, iSetting, sList, sizeof(sList));
+		}
+	}
+
+	if (sList[0] != '\0')
+	{
+		strcopy(list, listSize, sList);
+	}
+}
+
+static void vShowDamageList(int tank, const char[] namePhrase, const char[] list)
+{
+	if (g_esCache[tank].g_iDeathDetails > 2 && list[0] != '\0')
+	{
+		MT_PrintToChatAll("%s %t", MT_TAG2, "TeammatesList", namePhrase, list);
+		vLogMessage(MT_LOG_LIFE, _, "%s %T", MT_TAG, "TeammatesList", LANG_SERVER, namePhrase, list);
 	}
 }
 

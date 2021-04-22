@@ -387,6 +387,18 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Arrival Sound"				"1"
 
+			// The details shown when announcing Mutant Tanks' deaths.
+			// Note: This setting can be used for standard Tanks.
+			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
+			// --
+			// 0: Damage done to Mutant Tanks' health.
+			// 1: Percentage of damage done to Mutant Tanks' health.
+			// 2: Damage and percentage of damage done to Mutant Tanks' health.
+			// 3: Damage done to Mutant Tanks' health as a team.
+			// 4: Percentage of damage done to Mutant Tanks' health as a team.
+			// 5: Damage and percentage of damage done to Mutant Tanks' health as a team.
+			"Death Details"				"5"
+
 			// The message shown to players when a Mutant Tank dies.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Announcements" section of their settings.
@@ -2217,6 +2229,18 @@
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Arrival Sound"				"1"
+
+			// The details shown when announcing the Mutant Tank's death.
+			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0: Damage done to the Mutant Tank's health.
+			// 1: Percentage of damage done to the Mutant Tank's health.
+			// 2: Damage and percentage of damage done to the Mutant Tank's health.
+			// 3: Damage done to the Mutant Tank's health as a team.
+			// 4: Percentage of damage done to the Mutant Tank's health as a team.
+			// 5: Damage and percentage of damage done to the Mutant Tank's health as a team.
+			"Death Details"				"5"
 
 			// The message shown to players when the Mutant Tank dies.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Announcements" section.

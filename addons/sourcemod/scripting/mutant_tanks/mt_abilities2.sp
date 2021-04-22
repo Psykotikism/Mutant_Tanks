@@ -137,7 +137,6 @@ public void OnPluginStart()
 #if defined MT_MENU_SHIELD
 		vShieldLateLoad();
 #endif
-
 		g_bLateLoad = false;
 	}
 }
@@ -1997,7 +1996,7 @@ static void vAbilityMenu(int client, const char[] name)
 #if defined MT_MENU_ZOMBIE
 	vZombieMenu(client, name, 0);
 #endif
-	MT_LogMessage(-1, "%s vAbilityMenu(%i, %s) - This should never fire.", MT_TAG, client, name);
+	MT_LogMessage(-1, "%s Ability Menu (%i, %s) - This should never fire.", MT_TAG, client, name);
 }
 
 static void vAbilityPlayer(int type, int client)
@@ -2309,7 +2308,7 @@ static void vAbilityPlayer(int type, int client)
 		case 4: vZombiePostTankSpawn(client);
 	}
 #endif
-	MT_LogMessage(-1, "%s vAbilityPlayer(%i, %i) - This should never fire.", MT_TAG, type, client);
+	MT_LogMessage(-1, "%s Ability Player (%i, %i) - This should never fire.", MT_TAG, type, client);
 }
 
 static void vAbilitySetup(int type)
@@ -2581,5 +2580,5 @@ static void vAbilitySetup(int type)
 		case 2: vZombieMapEnd();
 	}
 #endif
-	MT_LogMessage(-1, "%s vAbilitySetup(%i) - This should never fire.", MT_TAG, type);
+	MT_LogMessage(-1, "%s Ability Setup (%i) - This should never fire.", MT_TAG, type);
 }

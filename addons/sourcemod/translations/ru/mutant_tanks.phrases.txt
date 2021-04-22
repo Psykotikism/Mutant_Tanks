@@ -249,52 +249,52 @@
 
 	"Assist1"
 	{
-		"ru"			"{olive}{1}{default} терпит поражение!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} терпит поражение!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist2"
 	{
-		"ru"			"Выжившие победили{olive} {1}{default}!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"Выжившие победили{olive} {1}{default}!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist3"
 	{
-		"ru"			"{olive}{1}{default} был отправлен обратно в ад!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} был отправлен обратно в ад!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist4"
 	{
-		"ru"			"{olive} {1}{default} действительно мёртв...?{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive} {1}{default} действительно мёртв...?{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist5"
 	{
-		"ru"			"{olive}{1}{default} проиграл вызов выжившим!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} проиграл вызов выжившим!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist6"
 	{
-		"ru"			"{olive} {1}{default} не смог убить выживших!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive} {1}{default} не смог убить выживших!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist7"
 	{
-		"ru"			"{olive}{1}{default} встретил свою кончину!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} встретил свою кончину!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist8"
 	{
-		"ru"			"Ура!{olive} {1}{default} мёртв!{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"Ура!{olive} {1}{default} мёртв!{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist9"
 	{
-		"ru"			"{olive}{1}{default} покидает игру{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"{olive}{1}{default} покидает игру{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"Assist10"
 	{
-		"ru"			"Похоже,{olive} {1}{default} не смог победить выживших.{yellow} Наибольший урон:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"ru"			"Похоже,{olive} {1}{default} не смог победить выживших.{yellow} Наибольший урон:{mint} {2}"
 	}
 
 	"ChangeType"
@@ -459,52 +459,52 @@
 
 	"Killer1"
 	{
-		"ru"			"{mint}{1}{default} прикончил{olive} {2}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{mint}{1}{default} прикончил{olive} {2}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer2"
 	{
-		"ru"			"{mint}{1}{default} победил{olive} {2}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{mint}{1}{default} победил{olive} {2}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer3"
 	{
-		"ru"			"{mint}{1}{default} отправил{olive} {2}{default} обратно в ад!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{mint}{1}{default} отправил{olive} {2}{default} обратно в ад!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer4"
 	{
-		"ru"			"Действительно ли{mint} {1}{default} убил{olive} {2}{default}...?{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"Действительно ли{mint} {1}{default} убил{olive} {2}{default}...?{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer5"
 	{
-		"ru"			"{olive}{2}{default} проиграл вызов против{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{olive}{2}{default} проиграл вызов против{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer6"
 	{
-		"ru"			"{olive} {2}{default} не удалось убить{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{olive} {2}{default} не удалось убить{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer7"
 	{
-		"ru"			"{olive}{2}{default} встретил свою кончину от рук{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{olive}{2}{default} встретил свою кончину от рук{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer8"
 	{
-		"ru"			"Ура!{olive} {2}{default} мёртв благодаря{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"Ура!{olive} {2}{default} мёртв благодаря{mint} {1}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer9"
 	{
-		"ru"			"{olive}{2}{default} вышел из игры в ярости из-за {olive}{1}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{olive}{2}{default} вышел из игры в ярости из-за {olive}{1}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"Killer10"
 	{
-		"ru"			"{default}Кажется,{mint} {2}{default} все-таки не смог победить{olive} {1}{default}!{yellow} Наибольший урон:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"ru"			"{default}Кажется,{mint} {2}{default} все-таки не смог победить{olive} {1}{default}!{yellow} Наибольший урон:{mint} {3}"
 	}
 
 	"LogEnded"
@@ -810,6 +810,11 @@
 	"StillParsing"
 	{
 		"ru"			"Плагин всё ещё анализирует файл конфигурации."
+	}
+
+	"TeammatesList"
+	{
+		"ru"			"Общий нанесённый урон по{olive} {1}{default}:{mint} {2}"
 	}
 
 	"Transformed"

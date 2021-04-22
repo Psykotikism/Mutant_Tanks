@@ -267,62 +267,62 @@
 
 	"Assist1"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"{olive}{1}{default} is defeated!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"{olive}{1}{default} is defeated!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist2"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"The survivors defeated{olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"The survivors defeated{olive} {1}{default}!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist3"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"{olive}{1}{default} goes to hell!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"{olive}{1}{default} goes to hell!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist4"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"Is{olive} {1}{default} really dead...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"Is{olive} {1}{default} really dead...?{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist5"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"{olive}{1}{default} lost the challenge against the survivors!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"{olive}{1}{default} lost the challenge against the survivors!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist6"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"The{olive} {1}{default} failed to kill the survivors!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"The{olive} {1}{default} failed to kill the survivors!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist7"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"{olive}{1}{default} has met their demise!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"{olive}{1}{default} has met their demise!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist8"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"Yay!{olive} {1}{default} is dead!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"Yay!{olive} {1}{default} is dead!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist9"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"{olive}{1}{default} left the game{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"{olive}{1}{default} left the game{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist10"
 	{
-		"#format"		"{1:t},{2:N},{3:.0f}"
-		"en"			"It seems{olive} {1}{default} could not beat the survivors after all.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"#format"		"{1:t},{2:s}"
+		"en"			"It seems{olive} {1}{default} could not beat the survivors after all.{yellow} MVP:{mint} {2}"
 	}
 
 	"ChangeType"
@@ -513,62 +513,62 @@
 
 	"Killer1"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{mint}{1}{default} finished off{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:N},{2:t},{3:s}"
+		"en"			"{mint}{1}{default} finished off{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer2"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{mint}{1}{default} defeated{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:N},{2:t},{3:s}"
+		"en"			"{mint}{1}{default} defeated{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer3"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{mint}{1}{default} sent{olive} {2}{default} to hell!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:N},{2:t},{3:s}"
+		"en"			"{mint}{1}{default} sent{olive} {2}{default} to hell!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer4"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:N},{2:t},{3:s}"
+		"en"			"Did{mint} {1}{default} actually kill{olive} {2}{default}...?{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer5"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:N},{2:t},{3:s}"
+		"en"			"{olive}{2}{default} lost the challenge against{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer6"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:N},{2:t},{3:s}"
+		"en"			"The{olive} {2}{default} failed to kill{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer7"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:N},{2:t},{3:s}"
+		"en"			"{olive}{2}{default} has met their demise at the hands of{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer8"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:N},{2:t},{3:s}"
+		"en"			"Yay!{olive} {2}{default} is dead thanks to{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer9"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:N},{2:t},{3:s}"
+		"en"			"{mint}{1}{default} made{olive} {2}{default} ragequit!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer10"
 	{
-		"#format"		"{1:N},{2:t},{3:N},{4:.0f}"
-		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"#format"		"{1:N},{2:t},{3:s}"
+		"en"			"It seems{olive} {2}{default} could not beat{mint} {1}{default} after all!{yellow} MVP:{mint} {3}"
 	}
 
 	"LogEnded"
@@ -914,6 +914,12 @@
 	"StillParsing"
 	{
 		"en"			"The plugin is still parsing the config file."
+	}
+
+	"TeammatesList"
+	{
+		"#format"		"{1:t},{2:s}"
+		"en"			"Total damage done to{olive} {1}{default}:{mint} {2}"
 	}
 
 	"Transformed"

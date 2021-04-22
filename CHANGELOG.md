@@ -4,6 +4,9 @@
 
 ### Bug Fixes
 
+#### General
+- Fixed chat, log, and server messages from Mutant Tanks not supporting enough characters.
+
 #### Core Plugin
 - Fixed some developer tools not disabling themselves properly.
 - Fixed the `Reward` system creating multiple effects per player and using wrong durations.
@@ -40,6 +43,7 @@
 	- `Looping Voiceline Visual` (Requested by 3aljiyavslgazana.)
 	- `Particle Effect Visual` (Requested by 3aljiyavslgazana.)
 	- `Screen Color Visual` (Requested by 3aljiyavslgazana.)
+- Added the `Death Details` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections. (Requested by Shadowart.)
 
 #### Translations
 - Updated English translations with new phrases.

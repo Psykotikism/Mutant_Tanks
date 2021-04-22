@@ -249,52 +249,52 @@
 
 	"Assist1"
 	{
-		"chi"			"{olive}{1}{default} 被击败了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 被击败了!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist2"
 	{
-		"chi"			"幸存者消灭了{olive} {1}{default}!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"幸存者消灭了{olive} {1}{default}!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist3"
 	{
-		"chi"			"{olive}{1}{default} 被打入地狱了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 被打入地狱了!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist4"
 	{
-		"chi"			"{olive}{1}{default} 真的死了...?{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 真的死了...?{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist5"
 	{
-		"chi"			"{olive}{1}{default} 挑战幸存者失败!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 挑战幸存者失败!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist6"
 	{
-		"chi"			"{olive}{1}{default} 未能团灭幸存者!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 未能团灭幸存者!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist7"
 	{
-		"chi"			"{olive}{1}{default} 已经消逝了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 已经消逝了!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist8"
 	{
-		"chi"			"哎呀! {olive}{1}{default} 死了!{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"哎呀! {olive}{1}{default} 死了!{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist9"
 	{
-		"chi"			"{olive}{1}{default} 被打出游戏{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"{olive}{1}{default} 被打出游戏{yellow} MVP:{mint} {2}"
 	}
 
 	"Assist10"
 	{
-		"chi"			"看来{olive} {1}{default} 根本无法团灭幸存者嘛.{yellow} MVP:{mint} {2}{default} ({olive}{3}{percent}{default})"
+		"chi"			"看来{olive} {1}{default} 根本无法团灭幸存者嘛.{yellow} MVP:{mint} {2}"
 	}
 
 	"ChangeType"
@@ -459,52 +459,52 @@
 
 	"Killer1"
 	{
-		"chi"			"{mint}{1}{default} 终结了{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 终结了{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer2"
 	{
-		"chi"			"{mint}{1}{default} 击败了{olive} {2}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 击败了{olive} {2}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer3"
 	{
-		"chi"			"{mint}{1}{default} 把{olive} {2}{default} 打入地狱了!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 把{olive} {2}{default} 打入地狱了!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer4"
 	{
-		"chi"			"{mint}{1}{default} 真的杀死{olive} {2}{default}...了吗?{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 真的杀死{olive} {2}{default}...了吗?{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer5"
 	{
-		"chi"			"{olive}{2}{default} 挑战{mint} {1}{default} 失败了!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{olive}{2}{default} 挑战{mint} {1}{default} 失败了!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer6"
 	{
-		"chi"			"{olive}{2}{default} 无法杀死{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{olive}{2}{default} 无法杀死{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer7"
 	{
-		"chi"			"{olive}{2}{default} 在{mint} {1}{default} 手中灭亡!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{olive}{2}{default} 在{mint} {1}{default} 手中灭亡!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer8"
 	{
-		"chi"			"哎呀!{olive} {2}{default} 死了, 这要感谢{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"哎呀!{olive} {2}{default} 死了, 这要感谢{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer9"
 	{
-		"chi"			"{mint}{1}{default} 把{olive} {2}{default} 气得愤怒退场!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"{mint}{1}{default} 把{olive} {2}{default} 气得愤怒退场!{yellow} MVP:{mint} {3}"
 	}
 
 	"Killer10"
 	{
-		"chi"			"看来{olive} {2}{default} 无法击败{mint} {1}{default}!{yellow} MVP:{mint} {3}{default} ({olive}{4}{percent}{default})"
+		"chi"			"看来{olive} {2}{default} 无法击败{mint} {1}{default}!{yellow} MVP:{mint} {3}"
 	}
 
 	"LogEnded"
@@ -810,6 +810,11 @@
 	"StillParsing"
 	{
 		"chi"			"插件还在解析配置文件."
+	}
+
+	"TeammatesList"
+	{
+		"chi"			"玩家对{olive} {1}{default} 造成的总伤害比:{mint} {2}"
 	}
 
 	"Transformed"
