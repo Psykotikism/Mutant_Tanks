@@ -16353,7 +16353,7 @@ public Action tTimerScreenEffect(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if (bIsPlayerHanging(iSurvivor) || g_esPlayer[iSurvivor].g_bThirdPerson)
+	if (bIsPlayerHanging(iSurvivor) || g_esPlayer[iSurvivor].g_bThirdPerson || bIsTankThirdPerson(iSurvivor))
 	{
 		return Plugin_Continue;
 	}

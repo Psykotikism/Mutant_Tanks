@@ -1362,8 +1362,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be used for standard Tanks.
 			// --
-			// 0: OFF, let the game determine Mutant Tanks' initial behavior.
-			// 1: ON, force Mutant Tanks to attack immediately.
+			// 0/"disabled"/"false"/"off"/"no": OFF, let the game determine Mutant Tanks' initial behavior.
+			// 1/"enabled"/"true"/"on"/"yes": ON, force Mutant Tanks to attack immediately.
 			"Aggressive Tanks"			"0"
 
 			// Survivors will be credited when damaging Mutant Tanks with fire.
@@ -1386,8 +1386,8 @@
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be used for standard Tanks.
 			// --
-			// 0: OFF, let the game determine Mutant Tanks' stasis mode.
-			// 1: ON, skip stasis mode and spawn Mutant Tanks right away.
+			// 0/"disabled"/"false"/"off"/"no": OFF, let the game determine Mutant Tanks' stasis mode.
+			// 1/"enabled"/"true"/"on"/"yes": ON, skip stasis mode and spawn Mutant Tanks right away.
 			"Stasis Mode"				"0"
 
 			// (Survival modes only) The delay in seconds before allowing Mutant Tanks to spawn.
@@ -1610,8 +1610,8 @@
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Sweep Fist"				"0"
 
 			// Every Mutant Tank throws a rock every time this many seconds passes.
@@ -1737,8 +1737,8 @@
 			// Note: Set this setting to "0" for maps like Tank Challenge or Tanks Playground.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// --
-			// 0: OFF, let the game, map, or other plugins determine the limit.
-			// 1: ON, let Mutant Tanks limit Tank spawns.
+			// 0/"disabled"/"false"/"off"/"no": OFF, let the game, map, or other plugins determine the limit.
+			// 1/"enabled"/"true"/"on"/"yes": ON, let Mutant Tanks limit Tank spawns.
 			"Limit Extras"				"1"
 
 			// The delay in seconds before spawning an extra Tank.
@@ -4155,8 +4155,8 @@
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Sweep Fist"				"0"
 
 			// The Mutant Tank throws a rock every time this many seconds passes.
@@ -6456,8 +6456,8 @@
 			// Note: Clones cannot clone themselves regardless of the value for this setting for obvious safety reasons.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF, the clone cannot use abilities like real Mutant Tanks.
-			// 1: ON, the clone can use abilities like real Mutant Tanks.
+			// 0/"disabled"/"false"/"off"/"no": OFF, the clone cannot use abilities like real Mutant Tanks.
+			// 1/"enabled"/"true"/"on"/"yes": ON, the clone can use abilities like real Mutant Tanks.
 			"Clone Mode"				"0"
 
 			// Remove all clones created by the Mutant Tank when it dies or changes its Mutant Tank type.
@@ -9882,8 +9882,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON, players can use buttons to activate abilities.
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
 
 			// The ability can only activate in open areas.
@@ -18591,8 +18591,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON, players can use buttons to activate abilities.
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
 
 			// The ability can only activate in open areas.
@@ -19608,8 +19608,8 @@
 			// Allow human-controlled Mutant Tanks to use this ability.
 			// Note: This setting can be overridden for specific players.
 			// --
-			// 0: OFF
-			// 1: ON, players can use buttons to activate abilities.
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON, players can use buttons to activate abilities.
 			"Human Ability"				"0"
 
 			// The ability can only activate in open areas.
