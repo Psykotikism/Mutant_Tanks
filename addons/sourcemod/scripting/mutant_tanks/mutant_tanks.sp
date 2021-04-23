@@ -9968,10 +9968,10 @@ static void vSurvivorReactions(int tank)
 		iTimescale = CreateEntityByName("func_timescale");
 		if (bIsValidEntity(iTimescale))
 		{
-			DispatchKeyValue(iTimescale, "desiredTimescale", "0.2");
-			DispatchKeyValue(iTimescale, "acceleration", "2.0");
-			DispatchKeyValue(iTimescale, "minBlendRate", "1.0");
-			DispatchKeyValue(iTimescale, "blendDeltaMultiplier", "2.0");
+			DispatchKeyValueFloat(iTimescale, "desiredTimescale", 0.2);
+			DispatchKeyValueFloat(iTimescale, "acceleration", 2.0);
+			DispatchKeyValueFloat(iTimescale, "minBlendRate", 1.0);
+			DispatchKeyValueFloat(iTimescale, "blendDeltaMultiplier", 2.0);
 			DispatchSpawn(iTimescale);
 			AcceptEntityInput(iTimescale, "Start");
 			CreateTimer(0.75, tTimerRemoveTimescale, EntIndexToEntRef(iTimescale), TIMER_FLAG_NO_MAPCHANGE);
