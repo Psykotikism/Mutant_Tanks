@@ -1606,7 +1606,7 @@
 			"Run Speed"				"0.0"
 
 			// Every Mutant Tank's punches hit all survivors within range.
-			// Note: By default, the game automatically does this in Versus and Survival modes.
+			// Note: Both games already do this by default in Versus and Survival modes.
 			// Note: This setting can be used for standard Tanks.
 			// Note: This setting can be overridden for each Mutant Tank under the "Enhancements" section of their settings.
 			// --
@@ -4151,7 +4151,7 @@
 			"Run Speed"				"0.0"
 
 			// The Mutant Tank's punches hit all survivors within range.
-			// Note: By default, the game automatically does this in Versus and Survival modes.
+			// Note: Both games already do this by default in Versus and Survival modes.
 			// Note: This setting overrides the same setting under the "Plugin Settings/Enhancements" section.
 			// Note: This setting can be overridden for specific players.
 			// --

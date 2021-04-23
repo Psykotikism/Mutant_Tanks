@@ -2033,7 +2033,7 @@ Examples:
 
 **Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer** - For reporting issues.
 
-**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter** - For suggesting ideas.
+**Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva** - For suggesting ideas.
 
 **Marttt** - For helping with many things and the pull requests.
 

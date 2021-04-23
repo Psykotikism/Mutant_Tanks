@@ -13,6 +13,8 @@
 - Fixed the positioning of the Tank's light props.
 - Fixed the difficulty config files using the wrong letter case. (Thanks to Shadowart for testing and reporting!)
 - Fixed survivors with the ammo reward getting the incorrect ammo count in some cases.
+- Fixed the health reward's life leech option not setting the correct amount of temporary health.
+- Fixed the Tank spawner calling unnecessary functions when spawning non-Mutant Tanks.
 
 #### Natives & Forwards
 - Fixed the `MT_LogMessage` native logging messages even when the feature is disabled.
@@ -29,6 +31,7 @@
 #### Core Plugin
 - Added strict checking for hooking/unhooking events. (Thanks to Shadowart for reporting!)
 - Updated the logic for checking which game modes to enable/disable the plugin on. (Thanks to Shadowart for reporting!)
+- Added a `Tank #-1` option to the `sm_tank`/`sm_mt_tank` menu. (Thanks to jeremyvillanueva for the idea!)
 
 #### Commands
 - Replaced all the `sm_mt_<ability name>` commands with `sm_mt_ability <name>`/`sm_mt_ability2 <name>`.
@@ -247,6 +250,7 @@
 	- Prevents the recipient from getting staggered.
 	- Blocks Smoker clouds, Boomer explosions, and Spitter acid puddles when they die (clean kills). (Thanks to epzminion for the help!)
 - The respawn reward no longer resets the recipient's stats. (Thanks to Dragokas for the code and gamedata info!)
+- Added a `Tank #0` option to the `sm_tank`/`sm_mt_tank` menu.
 
 #### Game Data
 - Renamed all detour arguments to be consistent and compatible with `Left 4 Fix`'s and `Left 4 DHooks`' detours.

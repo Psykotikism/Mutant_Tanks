@@ -1825,7 +1825,6 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
-
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -4585,13 +4584,15 @@ public Action cmdTank(int client, int args)
 	char sCmd[15], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
-	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
+	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	if ((IsCharNumeric(sType[0]) && (iType < -1 || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, -1, g_esGeneral.g_iMaxType);
 
 		return Plugin_Handled;
 	}
+
+	vFixRandomPick(sType, sizeof(sType));
 
 	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bIsRightGame(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
@@ -4637,13 +4638,15 @@ public Action cmdTank2(int client, int args)
 	char sCmd[15], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
-	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
+	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	if ((IsCharNumeric(sType[0]) && (iType < -1 || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, -1, g_esGeneral.g_iMaxType);
 
 		return Plugin_Handled;
 	}
+
+	vFixRandomPick(sType, sizeof(sType));
 
 	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bIsRightGame(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
@@ -4696,13 +4699,15 @@ public Action cmdMutantTank(int client, int args)
 	char sCmd[15], sType[33];
 	GetCmdArg(0, sCmd, sizeof(sCmd));
 	GetCmdArg(1, sType, sizeof(sType));
-	int iType = iClamp(StringToInt(sType), g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
-	if ((IsCharNumeric(sType[0]) && (iType < g_esGeneral.g_iMinType || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
+	int iType = iClamp(StringToInt(sType), -1, g_esGeneral.g_iMaxType), iLimit = StrEqual(sType, "psy_dev_access", false) ? 4095 : 32, iAmount = iClamp(GetCmdArgInt(2), 1, iLimit), iMode = iClamp(GetCmdArgInt(3), 0, 1);
+	if ((IsCharNumeric(sType[0]) && (iType < -1 || iType > g_esGeneral.g_iMaxType)) || iAmount > iLimit || iMode < 0 || iMode > 1 || args > 3)
 	{
-		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, g_esGeneral.g_iMinType, g_esGeneral.g_iMaxType);
+		MT_ReplyToCommand(client, "%s %t", MT_TAG2, "CommandUsage", sCmd, -1, g_esGeneral.g_iMaxType);
 
 		return Plugin_Handled;
 	}
+
+	vFixRandomPick(sType, sizeof(sType));
 
 	if (IsCharNumeric(sType[0]) && (!bIsTankEnabled(iType) || g_esTank[iType].g_iMenuEnabled == 0 || !bIsTypeAvailable(iType, client) || bAreHumansRequired(iType) || !bCanTypeSpawn(iType) || !bIsRightGame(iType) || !bHasCoreAdminAccess(client, iType)))
 	{
@@ -4718,13 +4723,21 @@ public Action cmdMutantTank(int client, int args)
 	return Plugin_Handled;
 }
 
+static void vFixRandomPick(char[] buffer, int size)
+{
+	if (StrEqual(buffer, "0"))
+	{
+		strcopy(buffer, size, "random");
+	}
+}
+
 static void vTank(int admin, char[] type, bool spawn = false, bool log = true, int amount = 1, int mode = 0)
 {
 	int iType = StringToInt(type);
 
 	switch (iType)
 	{
-		case -1: g_esGeneral.g_iChosenType = 0;
+		case -1: g_esGeneral.g_iChosenType = iType;
 		case 0:
 		{
 			if (bIsValidClient(admin) && bIsDeveloper(admin, _, true) && StrEqual(type, "psy_dev_access", false))
@@ -4750,7 +4763,7 @@ static void vTank(int admin, char[] type, bool spawn = false, bool log = true, i
 					vGetTranslatedName(sPhrase, sizeof(sPhrase), _, iIndex);
 					SetGlobalTransTarget(admin);
 					FormatEx(sTankName, sizeof(sTankName), "%T", sPhrase, admin);
-					if (!bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || !bIsRightGame(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly) || StrContains(sTankName, type, false) == -1)
+					if (!bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(admin, iIndex) || g_esTank[iIndex].g_iMenuEnabled == 0 || !bIsTypeAvailable(iIndex, admin) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || !bIsRightGame(iIndex) || bIsAreaNarrow(admin, g_esTank[iIndex].g_flOpenAreasOnly) || (!StrEqual(type, "random", false) && StrContains(sTankName, type, false) == -1))
 					{
 						continue;
 					}
@@ -4917,8 +4930,16 @@ static void vSpawnTank(int admin, bool log = true, int amount, int mode)
 
 	if (log)
 	{
-		vLogCommand(admin, MT_CMD_SPAWN, "%s %N:{default} Spawned{mint} %i{olive} %s%s{default}.", MT_TAG4, admin, amount, g_esTank[iType].g_sTankName, ((amount > 1) ? "s" : ""));
-		vLogMessage(MT_LOG_SERVER, _, "%s %N: Spawned %i %s%s.", MT_TAG, admin, amount, g_esTank[iType].g_sTankName, ((amount > 1) ? "s" : ""));
+		char sTankName[33];
+
+		switch (iType)
+		{
+			case -1: FormatEx(sTankName, sizeof(sTankName), "Tank");
+			default: strcopy(sTankName, sizeof(sTankName), g_esTank[iType].g_sTankName);
+		}
+
+		vLogCommand(admin, MT_CMD_SPAWN, "%s %N:{default} Spawned{mint} %i{olive} %s%s{default}.", MT_TAG4, admin, amount, sTankName, ((amount > 1) ? "s" : ""));
+		vLogMessage(MT_LOG_SERVER, _, "%s %N: Spawned %i %s%s.", MT_TAG, admin, amount, sTankName, ((amount > 1) ? "s" : ""));
 	}
 }
 
@@ -4939,10 +4960,13 @@ static void vTankMenu(int admin, bool adminmenu = false, int item = 0)
 		}
 		case false:
 		{
-			SetGlobalTransTarget(admin);
-			FormatEx(sMenuItem, sizeof(sMenuItem), "%T", "MTTankItem", admin, "NoName", 0);
-			IntToString(0, sIndex, sizeof(sIndex));
-			mTankMenu.AddItem(sIndex, sMenuItem);
+			for (int iIndex = -1; iIndex <= 0; iIndex++)
+			{
+				SetGlobalTransTarget(admin);
+				FormatEx(sMenuItem, sizeof(sMenuItem), "%T", "MTTankItem", admin, "NoName", iIndex);
+				IntToString(iIndex, sIndex, sizeof(sIndex));
+				mTankMenu.AddItem(sIndex, sMenuItem);
+			}
 		}
 	}
 
@@ -4986,17 +5010,21 @@ public int iTankMenuHandler(Menu menu, MenuAction action, int param1, int param2
 		{
 			char sInfo[33];
 			menu.GetItem(param2, sInfo, sizeof(sInfo));
-			if (StrEqual(sInfo, "Default", false))
+			int iIndex = StringToInt(sInfo);
+			if (StrEqual(sInfo, "Default", false) && bIsTank(param1))
 			{
 				vQueueTank(param1, g_esPlayer[param1].g_iTankType, false);
 			}
-			else if (StringToInt(sInfo) == 0)
+			else if (iIndex <= 0)
 			{
-				vQueueTank(param1, -1, false);
+				switch (iIndex)
+				{
+					case -1: vQueueTank(param1, iIndex, false);
+					case 0: vTank(param1, "random", false);
+				}
 			}
 			else
 			{
-				int iIndex = StringToInt(sInfo);
 				if (bIsTankEnabled(iIndex) && bHasCoreAdminAccess(param1, iIndex) && g_esTank[iIndex].g_iMenuEnabled == 1 && bIsTypeAvailable(iIndex, param1) && !bAreHumansRequired(iIndex) && bCanTypeSpawn(iIndex) && bIsRightGame(iIndex) && !bIsAreaNarrow(param1, g_esTank[iIndex].g_flOpenAreasOnly))
 				{
 					vQueueTank(param1, iIndex, false);
@@ -5956,7 +5984,7 @@ static void vLifeLeech(int survivor, int damagetype = 0, int tank = 0, int type 
 		switch (flTempHealth + iLeech > iMaxHealth)
 		{
 			case true: vSetTempHealth(survivor, float(iMaxHealth));
-			case false: vSetTempHealth(survivor, (flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue) + iHealth));
+			case false: vSetTempHealth(survivor, (flTempHealth + iLeech));
 		}
 	}
 	else
@@ -5968,7 +5996,7 @@ static void vLifeLeech(int survivor, int damagetype = 0, int tank = 0, int type 
 		}
 
 		static float flHealth;
-		flHealth = flGetTempHealth(survivor, g_esGeneral.g_cvMTPainPillsDecayRate.FloatValue) - iLeech;
+		flHealth = flTempHealth - iLeech;
 		vSetTempHealth(survivor, ((flHealth < 0.0) ? 0.0 : flHealth));
 	}
 
@@ -11703,32 +11731,40 @@ static void vSpawnModes(int tank, bool status)
 
 static void vSetColor(int tank, int type = 0, bool change = true, bool revert = false)
 {
-	if (change)
+	if (type == -1)
 	{
-		vResetTank(tank);
-	}
-
-	if (type == 0)
-	{
-		vRemoveProps(tank);
-		vChangeTypeForward(tank, g_esPlayer[tank].g_iTankType, type, revert);
-
-		g_esPlayer[tank].g_iTankType = type;
-
 		return;
 	}
-	else if (g_esPlayer[tank].g_iTankType > 0 && g_esPlayer[tank].g_iTankType == type && !g_esPlayer[tank].g_bReplaceSelf && !g_esPlayer[tank].g_bKeepCurrentType)
-	{
-		g_esPlayer[tank].g_iTankType = 0;
 
-		vRemoveProps(tank);
-		vChangeTypeForward(tank, type, g_esPlayer[tank].g_iTankType, revert);
-
-		return;
-	}
-	else if (type > 0 && g_esPlayer[tank].g_iTankType > 0)
+	if (g_esPlayer[tank].g_iTankType > 0)
 	{
-		g_esPlayer[tank].g_iOldTankType = g_esPlayer[tank].g_iTankType;
+		if (change)
+		{
+			vResetTank(tank);
+		}
+
+		if (type == 0)
+		{
+			vRemoveProps(tank);
+			vChangeTypeForward(tank, g_esPlayer[tank].g_iTankType, type, revert);
+
+			g_esPlayer[tank].g_iTankType = type;
+
+			return;
+		}
+		else if (g_esPlayer[tank].g_iTankType == type && !g_esPlayer[tank].g_bReplaceSelf && !g_esPlayer[tank].g_bKeepCurrentType)
+		{
+			g_esPlayer[tank].g_iTankType = 0;
+
+			vRemoveProps(tank);
+			vChangeTypeForward(tank, type, g_esPlayer[tank].g_iTankType, revert);
+
+			return;
+		}
+		else if (type > 0)
+		{
+			g_esPlayer[tank].g_iOldTankType = g_esPlayer[tank].g_iTankType;
+		}
 	}
 
 	g_esPlayer[tank].g_iTankType = type;
@@ -12988,7 +13024,7 @@ static void vMutateTank(int tank, int type)
 	if (bCanTypeSpawn())
 	{
 		int iType = 0;
-		if (type <= 0 && g_esPlayer[tank].g_iTankType <= 0)
+		if (type == 0 && g_esPlayer[tank].g_iTankType <= 0)
 		{
 			switch (bIsFinaleMap() && g_esGeneral.g_iTankWave > 0)
 			{
@@ -13023,7 +13059,7 @@ static void vMutateTank(int tank, int type)
 				}
 			}
 		}
-		else
+		else if (type != -1)
 		{
 			iType = (type > 0) ? type : g_esPlayer[tank].g_iTankType;
 			vSetColor(tank, iType, false);
