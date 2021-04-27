@@ -727,7 +727,7 @@
 			"CTankClaw::SweepFist"
 			{
 				"library"	"server"
-				"linux"		"@_ZN9CTankClaw9SweepFistERK6VectorS2_"
+				"linux"		"@_ZN9CTankClaw9SweepFistERK6VectorS2_.constprop.248"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x55\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\xF6\x0F\x84\x2A\x2A\x2A\x2A\x8B\x0D"
 			}
 			/* CTankRock::Create(Vector const&, QAngle const&, Vector const&, CBaseCombatCharacter*) */
