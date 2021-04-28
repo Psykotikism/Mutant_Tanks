@@ -646,26 +646,6 @@ void vSplatter2(int tank, int pos = -1)
 	dpSplatter.WriteCell(GetTime());
 }
 
-void vSplatter3(int tank)
-{
-	int iSplatter = CreateEntityByName("info_particle_system");
-	if (bIsValidEntity(iSplatter))
-	{
-		DispatchKeyValue(iSplatter, "effect_name", (g_esSplatterCache[tank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[tank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, sizeof(g_sParticles) - 1)]);
-		DispatchSpawn(iSplatter);
-
-		SetVariantString("!activator");
-		AcceptEntityInput(iSplatter, "SetParent", tank);
-
-		ActivateEntity(iSplatter);
-		AcceptEntityInput(iSplatter, "start");
-
-		SetVariantString("OnUser1 !self:Kill::10.0:1");
-		AcceptEntityInput(iSplatter, "AddOutput");
-		AcceptEntityInput(iSplatter, "FireUser1");
-	}
-}
-
 void vSplatterAbility(int tank)
 {
 	if (!g_bSecondGame || bIsAreaNarrow(tank, g_esSplatterCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esSplatterPlayer[tank].g_iTankType) || (g_esSplatterCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esSplatterCache[tank].g_iRequiresHumans) || (!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)))
@@ -699,7 +679,7 @@ void vSplatterRange(int tank, bool idle)
 			return;
 		}
 
-		vSplatter3(tank);
+		vAttachParticle(tank, (g_esSplatterCache[tank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[tank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, sizeof(g_sParticles) - 1)], 10.0, _, false);
 	}
 }
 
@@ -743,7 +723,7 @@ public Action tTimerSplatter(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
-	vSplatter3(iTank);
+	vAttachParticle(iTank, (g_esSplatterCache[iTank].g_iSplatterType > 0) ? g_sParticles[g_esSplatterCache[iTank].g_iSplatterType - 1] : g_sParticles[GetRandomInt(0, sizeof(g_sParticles) - 1)], 10.0, _, false);
 
 	if (g_esSplatterCache[iTank].g_iSplatterMessage == 1)
 	{

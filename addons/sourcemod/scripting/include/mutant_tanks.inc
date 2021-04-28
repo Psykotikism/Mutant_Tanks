@@ -1216,7 +1216,7 @@ stock bool ST_TypeEnabled(int type)
 }
 
 // Functions
-stock void vAttachParticle(int entity, const char[] particlename, float duration = 0.0, float origin = 0.0)
+stock void vAttachParticle(int entity, const char[] particlename, float duration = 0.0, float origin = 0.0, bool teleport = true)
 {
 	if (bIsValidClient(entity) || bIsValidEntity(entity))
 	{
@@ -1226,11 +1226,14 @@ stock void vAttachParticle(int entity, const char[] particlename, float duration
 		{
 			DispatchKeyValue(iParticle, "effect_name", particlename);
 
-			static float flPos[3];
-			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
-			flPos[2] += origin;
+			if (teleport)
+			{
+				static float flPos[3];
+				GetEntPropVector(entity, Prop_Send, "m_vecOrigin", flPos);
+				flPos[2] += origin;
+				TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
+			}
 
-			TeleportEntity(iParticle, flPos, NULL_VECTOR, NULL_VECTOR);
 			vSetEntityParent(iParticle, entity);
 			DispatchSpawn(iParticle);
 			ActivateEntity(iParticle);
