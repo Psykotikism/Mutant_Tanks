@@ -652,7 +652,7 @@ void vIceHit(int survivor, int tank, float random, float chance, int enabled, in
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerHanging(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorHanging(survivor))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esIcePlayer[tank].g_iAmmoCount < g_esIceCache[tank].g_iHumanAmmo && g_esIceCache[tank].g_iHumanAmmo > 0))
 		{

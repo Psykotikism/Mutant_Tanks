@@ -692,7 +692,7 @@ void vChokeHit(int survivor, int tank, float random, float chance, int enabled, 
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esChokePlayer[tank].g_iAmmoCount < g_esChokeCache[tank].g_iHumanAmmo && g_esChokeCache[tank].g_iHumanAmmo > 0))
 		{
@@ -821,7 +821,7 @@ public Action tTimerChokeLaunch(Handle timer, DataPack pack)
 	pack.Reset();
 
 	int iSurvivor = GetClientOfUserId(pack.ReadCell());
-	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || bIsPlayerDisabled(iSurvivor) || !g_esChokePlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
+	if (!MT_IsCorePluginEnabled() || !bIsSurvivor(iSurvivor) || bIsSurvivorDisabled(iSurvivor) || !g_esChokePlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		g_esChokePlayer[iSurvivor].g_bAffected = false;
 		g_esChokePlayer[iSurvivor].g_iOwner = 0;
@@ -876,7 +876,7 @@ public Action tTimerChokeDamage(Handle timer, DataPack pack)
 	iTank = GetClientOfUserId(pack.ReadCell());
 	iType = pack.ReadCell();
 	iMessage = pack.ReadCell();
-	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iAccessFlags, g_esChokePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esChokePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esChokePlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esChokePlayer[iTank].g_iTankType, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iImmunityFlags, g_esChokePlayer[iSurvivor].g_iImmunityFlags) || bIsPlayerDisabled(iSurvivor) || !g_esChokePlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
+	if (!MT_IsTankSupported(iTank) || (!MT_HasAdminAccess(iTank) && !bHasAdminAccess(iTank, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iAccessFlags, g_esChokePlayer[iTank].g_iAccessFlags)) || !MT_IsTypeEnabled(g_esChokePlayer[iTank].g_iTankType) || !MT_IsCustomTankSupported(iTank) || iType != g_esChokePlayer[iTank].g_iTankType || MT_IsAdminImmune(iSurvivor, iTank) || bIsAdminImmune(iSurvivor, g_esChokePlayer[iTank].g_iTankType, g_esChokeAbility[g_esChokePlayer[iTank].g_iTankType].g_iImmunityFlags, g_esChokePlayer[iSurvivor].g_iImmunityFlags) || bIsSurvivorDisabled(iSurvivor) || !g_esChokePlayer[iSurvivor].g_bAffected || MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE))
 	{
 		vChokeReset2(iSurvivor, iTank, iMessage);
 

@@ -931,7 +931,7 @@ void vGhostHit(int survivor, int tank, float random, float chance, int enabled, 
 		return;
 	}
 
-	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor))
+	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esGhostPlayer[tank].g_iAmmoCount2 < g_esGhostCache[tank].g_iHumanAmmo && g_esGhostCache[tank].g_iHumanAmmo > 0))
 		{

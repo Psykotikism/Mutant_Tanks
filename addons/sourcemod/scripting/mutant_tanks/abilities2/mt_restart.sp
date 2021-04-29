@@ -835,7 +835,7 @@ void vRestartHit(int survivor, int tank, float random, float chance, int enabled
 					static float flOrigin[3], flAngles[3];
 					for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 					{
-						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && iSurvivor != survivor)
+						if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && iSurvivor != survivor)
 						{
 							bTeleport = false;
 

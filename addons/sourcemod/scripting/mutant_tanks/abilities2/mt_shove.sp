@@ -754,7 +754,7 @@ void vShoveHit(int survivor, int tank, float random, float chance, int enabled, 
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esShovePlayer[tank].g_iAmmoCount < g_esShoveCache[tank].g_iHumanAmmo && g_esShoveCache[tank].g_iHumanAmmo > 0))
 		{
@@ -835,7 +835,7 @@ void vShoveRange(int tank, int value, float random, int pos = -1)
 		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esShoveCache[tank].g_flShoveDeathRange;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esShovePlayer[tank].g_iTankType, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iImmunityFlags, g_esShovePlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esShovePlayer[tank].g_iTankType, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iImmunityFlags, g_esShovePlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)

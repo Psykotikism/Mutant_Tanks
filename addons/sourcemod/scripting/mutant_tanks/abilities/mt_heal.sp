@@ -896,7 +896,7 @@ void vHealHit(int survivor, int tank, float random, float chance, int enabled, i
 		return;
 	}
 
-	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
+	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esHealPlayer[tank].g_iAmmoCount2 < g_esHealCache[tank].g_iHumanAmmo && g_esHealCache[tank].g_iHumanAmmo > 0))
 		{

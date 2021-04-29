@@ -651,7 +651,7 @@ void vIdleHit(int survivor, int tank, float random, float chance, int enabled, i
 		return;
 	}
 
-	if (enabled == 1 && bIsHumanSurvivor(survivor) && !bIsPlayerHanging(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
+	if (enabled == 1 && bIsHumanSurvivor(survivor) && !bIsSurvivorHanging(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esIdlePlayer[tank].g_iAmmoCount < g_esIdleCache[tank].g_iHumanAmmo && g_esIdleCache[tank].g_iHumanAmmo > 0))
 		{

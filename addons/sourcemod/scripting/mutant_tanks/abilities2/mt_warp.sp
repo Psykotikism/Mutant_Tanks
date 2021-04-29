@@ -940,7 +940,7 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 		return;
 	}
 
-	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor))
+	if ((enabled == 1 || enabled == 3) && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esWarpPlayer[tank].g_iAmmoCount2 < g_esWarpCache[tank].g_iHumanAmmo && g_esWarpCache[tank].g_iHumanAmmo > 0))
 		{
@@ -952,7 +952,7 @@ void vWarpHit(int survivor, int tank, float random, float chance, int enabled, i
 				static float flCurrentOrigin[3], flCurrentAngles[3];
 				for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 				{
-					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && iSurvivor != survivor)
+					if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && iSurvivor != survivor)
 					{
 						if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esWarpCache[tank].g_iHumanAbility == 1 && (flags & MT_ATTACK_RANGE) && (g_esWarpPlayer[tank].g_iCooldown2 == -1 || g_esWarpPlayer[tank].g_iCooldown2 < iTime))
 						{
@@ -1134,7 +1134,7 @@ public Action tTimerWarp(Handle timer, DataPack pack)
 		{
 			static int iSurvivor;
 			iSurvivor = iGetRandomSurvivor(iTank);
-			if (bIsSurvivor(iSurvivor) && !bIsPlayerDisabled(iSurvivor) && !bIsInsideSaferoom(iSurvivor))
+			if (bIsSurvivor(iSurvivor) && !bIsSurvivorDisabled(iSurvivor) && !bIsInsideSaferoom(iSurvivor))
 			{
 				vWarp2(iTank, iSurvivor);
 			}

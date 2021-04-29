@@ -5362,62 +5362,14 @@ public void OnPlayerPostThinkPost(int survivor)
 
 					switch (sModel[29])
 					{
-						case 'b':
-						{
-							if (iSequence == 620 || 627 <= iSequence <= 630 || iSequence == 667 || iSequence == 671 || iSequence == 672 || iSequence == 680)
-							{
-								bFast = true;
-							}
-						}
-						case 'd':
-						{
-							if (iSequence == 629 || 635 <= iSequence <= 638 || iSequence == 664 || iSequence == 678 || iSequence == 679 || iSequence == 687)
-							{
-								bFast = true;
-							}
-						}
-						case 'c':
-						{
-							if (iSequence == 621 || 627 <= iSequence <= 630 || iSequence == 656 || iSequence == 660 || iSequence == 661 || iSequence == 669)
-							{
-								bFast = true;
-							}
-						}
-						case 'h':
-						{
-							if (iSequence == 625 || 632 <= iSequence <= 635 || iSequence == 671 || iSequence == 675 || iSequence == 676 || iSequence == 684)
-							{
-								bFast = true;
-							}
-						}
-						case 'v':
-						{
-							if (iSequence == 528 || 535 <= iSequence <= 538 || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772)
-							{
-								bFast = true;
-							}
-						}
-						case 'n':
-						{
-							if (iSequence == 537 || 544 <= iSequence <= 547 || iSequence == 809 || iSequence == 819 || iSequence == 823 || iSequence == 824)
-							{
-								bFast = true;
-							}
-						}
-						case 'e':
-						{
-							if (iSequence == 531 || 539 <= iSequence <= 541 || iSequence == 762 || iSequence == 766 || iSequence == 767 || iSequence == 775)
-							{
-								bFast = true;
-							}
-						}
-						case 'a':
-						{
-							if (iSequence == 528 || 535 <= iSequence <= 538 || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772)
-							{
-								bFast = true;
-							}
-						}
+						case 'b': bFast = iSequence == 620 || 627 <= iSequence <= 630 || iSequence == 667 || iSequence == 671 || iSequence == 672 || iSequence == 680;
+						case 'd': bFast = iSequence == 629 || 635 <= iSequence <= 638 || iSequence == 664 || iSequence == 678 || iSequence == 679 || iSequence == 687;
+						case 'c': bFast = iSequence == 621 || 627 <= iSequence <= 630 || iSequence == 656 || iSequence == 660 || iSequence == 661 || iSequence == 669;
+						case 'h': bFast = iSequence == 625 || 632 <= iSequence <= 635 || iSequence == 671 || iSequence == 675 || iSequence == 676 || iSequence == 684;
+						case 'v': bFast = iSequence == 528 || 535 <= iSequence <= 538 || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772;
+						case 'n': bFast = iSequence == 537 || 544 <= iSequence <= 547 || iSequence == 809 || iSequence == 819 || iSequence == 823 || iSequence == 824;
+						case 'e': bFast = iSequence == 531 || 539 <= iSequence <= 541 || iSequence == 762 || iSequence == 766 || iSequence == 767 || iSequence == 775;
+						case 'a': bFast = iSequence == 528 || 535 <= iSequence <= 538 || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772;
 					}
 				}
 
@@ -5953,7 +5905,7 @@ static void vKnockbackTank(int tank, int survivor, int damagetype)
 
 static void vLifeLeech(int survivor, int damagetype = 0, int tank = 0, int type = 5)
 {
-	if (!bIsSurvivor(survivor) || bIsPlayerDisabled(survivor) || (bIsTank(tank) && (bIsPlayerIncapacitated(tank) || bIsCustomTank(tank))) || (damagetype != 0 && !(damagetype & DMG_CLUB) && !(damagetype & DMG_SLASH)))
+	if (!bIsSurvivor(survivor) || bIsSurvivorDisabled(survivor) || (bIsTank(tank) && (bIsPlayerIncapacitated(tank) || bIsCustomTank(tank))) || (damagetype != 0 && !(damagetype & DMG_CLUB) && !(damagetype & DMG_SLASH)))
 	{
 		return;
 	}
@@ -10488,11 +10440,11 @@ static void vChooseReward(int survivor, int tank, int priority)
 				iAmmo = GetEntProp(survivor, Prop_Send, "m_iAmmo", _, iGetWeaponOffset(iWeapon));
 			}
 
-			if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_REFILL) && !(iType & MT_REWARD_REFILL) && ((g_esPlayer[survivor].g_bLastLife && g_esPlayer[survivor].g_iReviveCount > 0) || bIsPlayerDisabled(survivor)) && -1 < iAmmo <= 10)
+			if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_REFILL) && !(iType & MT_REWARD_REFILL) && ((g_esPlayer[survivor].g_bLastLife && g_esPlayer[survivor].g_iReviveCount > 0) || bIsSurvivorDisabled(survivor)) && -1 < iAmmo <= 10)
 			{
 				iType |= MT_REWARD_REFILL;
 			}
-			else if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_HEALTH) && !(iType & MT_REWARD_REFILL) && !(iType & MT_REWARD_HEALTH) && ((g_esPlayer[survivor].g_bLastLife && g_esPlayer[survivor].g_iReviveCount > 0) || bIsPlayerDisabled(survivor)))
+			else if ((g_esCache[tank].g_iUsefulRewards[priority] & MT_USEFUL_HEALTH) && !(iType & MT_REWARD_REFILL) && !(iType & MT_REWARD_HEALTH) && ((g_esPlayer[survivor].g_bLastLife && g_esPlayer[survivor].g_iReviveCount > 0) || bIsSurvivorDisabled(survivor)))
 			{
 				iType |= MT_REWARD_HEALTH;
 			}
@@ -11532,7 +11484,7 @@ static void vRefillAmmo(int survivor, bool all = false, bool reset = false)
 
 static void vRefillHealth(int survivor)
 {
-	if (bIsPlayerDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth"))
+	if (bIsSurvivorDisabled(survivor) || GetEntProp(survivor, Prop_Data, "m_iHealth") < GetEntProp(survivor, Prop_Data, "m_iMaxHealth"))
 	{
 		int iMode = GetEntProp(survivor, Prop_Data, "m_takedamage", 1);
 		if (iMode != 2)
@@ -11625,7 +11577,7 @@ static void vSaveWeapons(int survivor)
 	iSlot = 0;
 	if (g_bSecondGame)
 	{
-		if (bIsPlayerDisabled(survivor) && g_esGeneral.g_iMeleeOffset != -1)
+		if (bIsSurvivorDisabled(survivor) && g_esGeneral.g_iMeleeOffset != -1)
 		{
 			int iMelee = GetEntDataEnt2(survivor, g_esGeneral.g_iMeleeOffset);
 
@@ -13899,7 +13851,7 @@ static bool bIsTankIdle(int tank, int type = 0)
 
 static bool bIsTankInThirdPerson(int tank)
 {
-	return g_esPlayer[tank].g_bThirdPerson2 || bIsTankThirdPerson(tank);
+	return g_esPlayer[tank].g_bThirdPerson2 || bIsPlayerInThirdPerson(tank);
 }
 
 static bool bIsTypeAvailable(int type, int tank = 0)
@@ -14026,7 +13978,7 @@ static bool bRespawnSurvivor(int survivor, bool restore)
 		float flOrigin[3], flAngles[3];
 		for (int iTeammate = 1; iTeammate <= MaxClients; iTeammate++)
 		{
-			if (bIsSurvivor(iTeammate) && !bIsPlayerHanging(iTeammate) && iTeammate != survivor)
+			if (bIsSurvivor(iTeammate) && !bIsSurvivorHanging(iTeammate) && iTeammate != survivor)
 			{
 				bTeleport = true;
 
@@ -16389,7 +16341,7 @@ public Action tTimerScreenEffect(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	if (bIsPlayerHanging(iSurvivor) || g_esPlayer[iSurvivor].g_bThirdPerson || bIsTankThirdPerson(iSurvivor))
+	if (bIsSurvivorHanging(iSurvivor) || g_esPlayer[iSurvivor].g_bThirdPerson || bIsPlayerInThirdPerson(iSurvivor))
 	{
 		return Plugin_Continue;
 	}

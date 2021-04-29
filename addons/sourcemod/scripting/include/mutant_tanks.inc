@@ -1904,16 +1904,6 @@ stock bool bIsPlayerBurning(int player)
 	return GetEntPropFloat(player, Prop_Send, "m_burnPercent") > 0.0 || GetEntProp(player, Prop_Data, "m_fFlags") & FL_ONFIRE;
 }
 
-stock bool bIsPlayerDisabled(int survivor)
-{
-	return bIsPlayerHanging(survivor) || bIsPlayerIncapacitated(survivor);
-}
-
-stock bool bIsPlayerHanging(int survivor)
-{
-	return GetEntProp(survivor, Prop_Send, "m_isHangingFromLedge") == 1 || GetEntProp(survivor, Prop_Send, "m_isFallingFromLedge") == 1;
-}
-
 stock bool bIsPlayerIdle(int survivor)
 {
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
@@ -1941,9 +1931,81 @@ stock bool bIsPlayerIdle(int survivor)
 	return false;
 }
 
-stock bool bIsPlayerIncapacitated(int survivor)
+stock bool bIsPlayerIncapacitated(int player)
 {
-	return GetEntProp(survivor, Prop_Send, "m_isIncapacitated", 1) == 1;
+	return GetEntProp(player, Prop_Send, "m_isIncapacitated", 1) == 1;
+}
+
+stock bool bIsPlayerInThirdPerson(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT)
+{
+	if (bIsTank(player, flags))
+	{
+		switch (GetEntProp(player, Prop_Send, "m_nSequence"))
+		{
+			case 28, 29, 30, 31, 47, 48, 49, 50, 51, 73, 74, 75, 76, 77: return true;
+		}
+	}
+	else if (bIsSurvivor(player, flags) && bIsSecondGame()) // No L4D1 support yet
+	{
+		static char sModel[32];
+		GetEntPropString(player, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+		static int iSequence;
+		iSequence = GetEntProp(player, Prop_Send, "m_nSequence");
+
+		switch (sModel[29])
+		{
+			case 'b': // Nick
+			{
+				return iSequence == 626 || iSequence == 625 || iSequence == 624 || iSequence == 623 || iSequence == 622 || iSequence == 621 || iSequence == 661
+					|| iSequence == 662 || iSequence == 664 || iSequence == 665 || iSequence == 666 || iSequence == 667 || iSequence == 668 || iSequence == 670
+					|| iSequence == 671 || iSequence == 672 || iSequence == 673 || iSequence == 674 || iSequence == 620 || iSequence == 680 || iSequence == 616;
+			}
+			case 'd': // Rochelle
+			{
+				return iSequence == 674 || iSequence == 678 || iSequence == 679 || iSequence == 630 || iSequence == 631 || iSequence == 632 || iSequence == 633 || iSequence == 634
+					|| iSequence == 668 || iSequence == 677 || iSequence == 681 || iSequence == 680 || iSequence == 676 || iSequence == 675 || iSequence == 673
+					|| iSequence == 672 || iSequence == 671 || iSequence == 670 || iSequence == 687 || iSequence == 629 || iSequence == 625 || iSequence == 616;
+			}
+			case 'c': // Coach
+			{
+				return iSequence == 656 || iSequence == 622 || iSequence == 623 || iSequence == 624 || iSequence == 625 || iSequence == 626 || iSequence == 663
+					|| iSequence == 662 || iSequence == 661 || iSequence == 660 || iSequence == 659 || iSequence == 658 || iSequence == 657 || iSequence == 654
+					|| iSequence == 653 || iSequence == 652 || iSequence == 651 || iSequence == 621 || iSequence == 620 || iSequence == 669 || iSequence == 615;
+			}
+			case 'h': // Ellis
+			{
+				return iSequence == 625 || iSequence == 675 || iSequence == 626 || iSequence == 627 || iSequence == 628 || iSequence == 629 || iSequence == 630 || iSequence == 631
+					|| iSequence == 678 || iSequence == 677 || iSequence == 676 || iSequence == 575 || iSequence == 674 || iSequence == 673 || iSequence == 672 || iSequence == 671
+					|| iSequence == 670 || iSequence == 669 || iSequence == 668 || iSequence == 667 || iSequence == 666 || iSequence == 665 || iSequence == 684 || iSequence == 621;
+			}
+			case 'v': // Bill
+			{
+				return iSequence == 528 || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 529 || iSequence == 530 || iSequence == 531 || iSequence == 532
+					|| iSequence == 533 || iSequence == 534 || iSequence == 753 || iSequence == 676 || iSequence == 675 || iSequence == 761 || iSequence == 758 || iSequence == 757
+					|| iSequence == 756 || iSequence == 755 || iSequence == 754 || iSequence == 527 || iSequence == 772 || iSequence == 762 || iSequence == 522;
+			}
+			case 'n': // Zoey
+			{
+				return iSequence == 537 || iSequence == 819 || iSequence == 823 || iSequence == 824 || iSequence == 538 || iSequence == 539 || iSequence == 540 || iSequence == 541
+					|| iSequence == 542 || iSequence == 543 || iSequence == 813 || iSequence == 828 || iSequence == 825 || iSequence == 822 || iSequence == 821 || iSequence == 820
+					|| iSequence == 818 || iSequence == 817 || iSequence == 816 || iSequence == 815 || iSequence == 814 || iSequence == 536 || iSequence == 809 || iSequence == 572;
+			}
+			case 'e': // Francis
+			{
+				return iSequence == 532 || iSequence == 533 || iSequence == 534 || iSequence == 535 || iSequence == 536 || iSequence == 537 || iSequence == 769 || iSequence == 768
+					|| iSequence == 767 || iSequence == 766 || iSequence == 765 || iSequence == 764 || iSequence == 763 || iSequence == 762 || iSequence == 761 || iSequence == 760
+					|| iSequence == 759 || iSequence == 758 || iSequence == 757 || iSequence == 756 || iSequence == 531 || iSequence == 530 || iSequence == 775 || iSequence == 525;
+			}
+			case 'a': // Louis
+			{
+				return iSequence == 529 || iSequence == 530 || iSequence == 531 || iSequence == 532 || iSequence == 533 || iSequence == 534 || iSequence == 766 || iSequence == 765
+					|| iSequence == 764 || iSequence == 763 || iSequence == 762 || iSequence == 761 || iSequence == 760 || iSequence == 759 || iSequence == 758 || iSequence == 757
+					|| iSequence == 756 || iSequence == 755 || iSequence == 754 || iSequence == 753 || iSequence == 527 || iSequence == 772 || iSequence == 528 || iSequence == 522;
+			}
+		}
+	}
+
+	return bIsPlayerIncapacitated(player) || (bIsSecondGame() && GetEntPropFloat(player, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(player, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(player, Prop_Send, "m_hViewEntity") > 0;
 }
 
 stock bool bIsSecondGame()
@@ -1992,6 +2054,16 @@ stock bool bIsSurvivorCaught(int survivor)
 	return iSpecial > 0;
 }
 
+stock bool bIsSurvivorDisabled(int survivor)
+{
+	return bIsSurvivorHanging(survivor) || bIsPlayerIncapacitated(survivor);
+}
+
+stock bool bIsSurvivorHanging(int survivor)
+{
+	return GetEntProp(survivor, Prop_Send, "m_isHangingFromLedge") == 1 || GetEntProp(survivor, Prop_Send, "m_isFallingFromLedge") == 1;
+}
+
 stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE)
 {
 	int iClass = bIsSecondGame() ? 8 : 5;
@@ -2001,19 +2073,6 @@ stock bool bIsTank(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK
 stock bool bIsTankInStasis(int tank)
 {
 	return bIsSecondGame() && GetEntProp(tank, Prop_Data, "m_bIsInStasis") == 1;
-}
-
-stock bool bIsTankThirdPerson(int tank, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT)
-{
-	if (bIsTank(tank, flags))
-	{
-		switch (GetEntProp(tank, Prop_Send, "m_nSequence"))
-		{
-			case 28, 29, 30, 31, 47, 48, 49, 50, 51, 73, 74, 75, 76, 77: return true;
-		}
-	}
-
-	return bIsPlayerIncapacitated(tank) || (bIsSecondGame() && GetEntPropFloat(tank, Prop_Send, "m_TimeForceExternalView") > GetGameTime()) || GetEntPropFloat(tank, Prop_Send, "m_staggerTimer", 1) > -1.0 || GetEntPropEnt(tank, Prop_Send, "m_hViewEntity") > 0;
 }
 
 stock bool bIsValidClient(int player, int flags = MT_CHECK_INDEX|MT_CHECK_INGAME)

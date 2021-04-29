@@ -207,7 +207,7 @@ void vWitchMenuItemDisplayed(int client, const char[] info, char[] buffer, int s
 
 public Action OnWitchTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsWitch(attacker) && bIsSurvivor(victim) && !bIsPlayerDisabled(victim) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsWitch(attacker) && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim) && damage > 0.0)
 	{
 		static int iTank;
 		iTank = HasEntProp(attacker, Prop_Send, "m_hOwnerEntity") ? GetEntPropEnt(attacker, Prop_Send, "m_hOwnerEntity") : 0;

@@ -712,7 +712,7 @@ void vBuryHit(int survivor, int tank, float random, float chance, int enabled, i
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && bIsEntityGrounded(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_INFAMMO))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor) && bIsEntityGrounded(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_INFAMMO))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esBuryPlayer[tank].g_iAmmoCount < g_esBuryCache[tank].g_iHumanAmmo && g_esBuryCache[tank].g_iHumanAmmo > 0))
 		{
@@ -863,7 +863,7 @@ void vStopBury(int survivor, int tank)
 	float flAngles[3];
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
-		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && !g_esBuryPlayer[iSurvivor].g_bAffected && iSurvivor != survivor)
+		if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !g_esBuryPlayer[iSurvivor].g_bAffected && iSurvivor != survivor)
 		{
 			bTeleport = false;
 

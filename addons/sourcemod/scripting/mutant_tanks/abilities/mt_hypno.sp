@@ -751,7 +751,7 @@ void vHypnoHit(int survivor, int tank, float random, float chance, int enabled, 
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esHypnoPlayer[tank].g_iAmmoCount < g_esHypnoCache[tank].g_iHumanAmmo && g_esHypnoCache[tank].g_iHumanAmmo > 0))
 		{

@@ -249,7 +249,7 @@ void vThrowMenuItemDisplayed(int client, const char[] info, char[] buffer, int s
 
 public Action OnThrowTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (MT_IsCorePluginEnabled() && bIsSurvivor(victim) && !bIsPlayerDisabled(victim) && damage > 0.0)
+	if (MT_IsCorePluginEnabled() && bIsSurvivor(victim) && !bIsSurvivorDisabled(victim) && damage > 0.0)
 	{
 		if (bIsInfected(attacker) && g_esThrowPlayer[attacker].g_bThrown)
 		{

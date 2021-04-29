@@ -722,7 +722,7 @@ void vWhirlHit(int survivor, int tank, float random, float chance, int enabled, 
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerHanging(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorHanging(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esWhirlPlayer[tank].g_iAmmoCount < g_esWhirlCache[tank].g_iHumanAmmo && g_esWhirlCache[tank].g_iHumanAmmo > 0))
 		{

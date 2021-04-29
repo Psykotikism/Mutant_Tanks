@@ -693,7 +693,7 @@ void vFlingAbility(int tank, float random, int pos = -1)
 		iSurvivorCount = 0;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esFlingPlayer[tank].g_iTankType, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iImmunityFlags, g_esFlingPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esFlingPlayer[tank].g_iTankType, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iImmunityFlags, g_esFlingPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				if (GetVectorDistance(flTankPos, flSurvivorPos) <= flRange)
@@ -726,7 +726,7 @@ void vFlingHit(int survivor, int tank, float random, float chance, int enabled, 
 		return;
 	}
 
-	if (enabled == 1 && bIsSurvivor(survivor) && !bIsPlayerDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
+	if (enabled == 1 && bIsSurvivor(survivor) && !bIsSurvivorDisabled(survivor) && !MT_DoesSurvivorHaveRewardType(survivor, MT_REWARD_GODMODE))
 	{
 		if (!bIsTank(tank, MT_CHECK_FAKECLIENT) || (g_esFlingPlayer[tank].g_iAmmoCount < g_esFlingCache[tank].g_iHumanAmmo && g_esFlingCache[tank].g_iHumanAmmo > 0))
 		{
@@ -795,7 +795,7 @@ void vFlingRange(int tank, int value, float random, int pos = -1)
 		flRange = (pos != -1) ? MT_GetCombinationSetting(tank, 10, pos) : g_esFlingCache[tank].g_flFlingDeathRange;
 		for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 		{
-			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsPlayerDisabled(iSurvivor) && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esFlingPlayer[tank].g_iTankType, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iImmunityFlags, g_esFlingPlayer[iSurvivor].g_iImmunityFlags))
+			if (bIsSurvivor(iSurvivor, MT_CHECK_INGAME|MT_CHECK_ALIVE) && !bIsSurvivorDisabled(iSurvivor) && !MT_DoesSurvivorHaveRewardType(iSurvivor, MT_REWARD_GODMODE) && !MT_IsAdminImmune(iSurvivor, tank) && !bIsAdminImmune(iSurvivor, g_esFlingPlayer[tank].g_iTankType, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iImmunityFlags, g_esFlingPlayer[iSurvivor].g_iImmunityFlags))
 			{
 				GetClientAbsOrigin(iSurvivor, flSurvivorPos);
 				flDistance = GetVectorDistance(flTankPos, flSurvivorPos);
