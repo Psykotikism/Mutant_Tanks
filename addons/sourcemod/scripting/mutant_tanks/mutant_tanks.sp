@@ -4097,6 +4097,8 @@ static void vDeveloperPanel(int developer, int level = 0)
 	pDevPanel.DrawItem("Next Page", ITEMDRAW_CONTROL);
 	pDevPanel.DrawItem("Exit", ITEMDRAW_CONTROL);
 	pDevPanel.Send(developer, iDeveloperMenuHandler, MENU_TIME_FOREVER);
+
+	delete pDevPanel;
 }
 
 public int iDeveloperMenuHandler(Menu menu, MenuAction action, int param1, int param2)
@@ -5362,14 +5364,14 @@ public void OnPlayerPostThinkPost(int survivor)
 
 					switch (sModel[29])
 					{
-						case 'b': bFast = iSequence == 620 || 627 <= iSequence <= 630 || iSequence == 667 || iSequence == 671 || iSequence == 672 || iSequence == 680;
-						case 'd': bFast = iSequence == 629 || 635 <= iSequence <= 638 || iSequence == 664 || iSequence == 678 || iSequence == 679 || iSequence == 687;
-						case 'c': bFast = iSequence == 621 || 627 <= iSequence <= 630 || iSequence == 656 || iSequence == 660 || iSequence == 661 || iSequence == 669;
-						case 'h': bFast = iSequence == 625 || 632 <= iSequence <= 635 || iSequence == 671 || iSequence == 675 || iSequence == 676 || iSequence == 684;
-						case 'v': bFast = iSequence == 528 || 535 <= iSequence <= 538 || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772;
-						case 'n': bFast = iSequence == 537 || 544 <= iSequence <= 547 || iSequence == 809 || iSequence == 819 || iSequence == 823 || iSequence == 824;
-						case 'e': bFast = iSequence == 531 || 539 <= iSequence <= 541 || iSequence == 762 || iSequence == 766 || iSequence == 767 || iSequence == 775;
-						case 'a': bFast = iSequence == 528 || 535 <= iSequence <= 538 || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772;
+						case 'b': bFast = (iSequence == 620 || 627 <= iSequence <= 630 || iSequence == 667 || iSequence == 671 || iSequence == 672 || iSequence == 680);
+						case 'd': bFast = (iSequence == 629 || 635 <= iSequence <= 638 || iSequence == 664 || iSequence == 678 || iSequence == 679 || iSequence == 687);
+						case 'c': bFast = (iSequence == 621 || 627 <= iSequence <= 630 || iSequence == 656 || iSequence == 660 || iSequence == 661 || iSequence == 669);
+						case 'h': bFast = (iSequence == 625 || 632 <= iSequence <= 635 || iSequence == 671 || iSequence == 675 || iSequence == 676 || iSequence == 684);
+						case 'v': bFast = (iSequence == 528 || 535 <= iSequence <= 538 || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772);
+						case 'n': bFast = (iSequence == 537 || 544 <= iSequence <= 547 || iSequence == 809 || iSequence == 819 || iSequence == 823 || iSequence == 824);
+						case 'e': bFast = (iSequence == 531 || 539 <= iSequence <= 541 || iSequence == 762 || iSequence == 766 || iSequence == 767 || iSequence == 775);
+						case 'a': bFast = (iSequence == 528 || 535 <= iSequence <= 538 || iSequence == 759 || iSequence == 763 || iSequence == 764 || iSequence == 772);
 					}
 				}
 
@@ -9712,7 +9714,7 @@ static void vHookEvents(bool hook)
 
 			if (bCheck[iPos])
 			{
-				bPreHook[iPos] = iPos == 6 || (iPos >= 18 && iPos <= 20);
+				bPreHook[iPos] = (iPos == 6) || (iPos >= 18 && iPos <= 20);
 
 				if (!g_bSecondGame && iPos >= 35 && iPos <= 40)
 				{
@@ -13413,17 +13415,14 @@ static void vRegisterPatches(GameData dataHandle)
 		kvPatches.GetString("type", sType, sizeof(sType));
 		kvPatches.GetString("signature", sSignature, sizeof(sSignature));
 		kvPatches.GetString("offset", sOffset, sizeof(sOffset));
-		/*kvPatches.GetString("verify", sVerify, sizeof(sVerify));
-		kvPatches.GetString("bytes", sBytes, sizeof(sBytes));
-		iLength = kvPatches.GetNum("length");*/
 
 		if (g_esGeneral.g_bLinux)
 		{
 			if (kvPatches.JumpToKey("linux"))
 			{
-				kvPatches.GetString("verify", sVerify, sizeof(sVerify)/*, sVerify*/);
-				kvPatches.GetString("bytes", sBytes, sizeof(sBytes)/*, sBytes*/);
-				iLength = kvPatches.GetNum("length"/*, iLength*/);
+				kvPatches.GetString("verify", sVerify, sizeof(sVerify));
+				kvPatches.GetString("bytes", sBytes, sizeof(sBytes));
+				iLength = kvPatches.GetNum("length");
 
 				kvPatches.GoBack();
 			}
@@ -13436,9 +13435,9 @@ static void vRegisterPatches(GameData dataHandle)
 		{
 			if (kvPatches.JumpToKey("windows"))
 			{
-				kvPatches.GetString("verify", sVerify, sizeof(sVerify)/*, sVerify*/);
-				kvPatches.GetString("bytes", sBytes, sizeof(sBytes)/*, sBytes*/);
-				iLength = kvPatches.GetNum("length"/*, iLength*/);
+				kvPatches.GetString("verify", sVerify, sizeof(sVerify));
+				kvPatches.GetString("bytes", sBytes, sizeof(sBytes));
+				iLength = kvPatches.GetNum("length");
 
 				kvPatches.GoBack();
 			}
@@ -13619,6 +13618,7 @@ static bool bIsCustomTankSupported(int tank)
 }
 
 /**
+ * Developer tools for testing
  * 1 - 0 - no versus cooldown (off by default)
  * 2 - 1 - immune to abilities, access to all tanks (off by default)
  * 4 - 2 - loadout on initial spawn
@@ -14104,8 +14104,8 @@ static int iChooseType(int exclude, int tank = 0, int min = -1, int max = -1)
 
 		switch (exclude)
 		{
-			case 1: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank, iIndex) || !bIsSpawnEnabled(iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || GetRandomFloat(0.1, 100.0) > g_esTank[iIndex].g_flTankChance || (g_esGeneral.g_iSpawnLimit > 0 && iGetTypeCount() >= g_esGeneral.g_iSpawnLimit) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || g_esPlayer[tank].g_iTankType == iIndex;
-			case 2: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank) || g_esTank[iIndex].g_iRandomTank == 0 || !bIsSpawnEnabled(iIndex) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || g_esPlayer[tank].g_iTankType == iIndex || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly);
+			case 1: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank, iIndex) || !bIsSpawnEnabled(iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly) || GetRandomFloat(0.1, 100.0) > g_esTank[iIndex].g_flTankChance || (g_esGeneral.g_iSpawnLimit > 0 && iGetTypeCount() >= g_esGeneral.g_iSpawnLimit) || (g_esTank[iIndex].g_iTypeLimit > 0 && iGetTypeCount(iIndex) >= g_esTank[iIndex].g_iTypeLimit) || (g_esPlayer[tank].g_iTankType == iIndex);
+			case 2: bCondition = !bIsRightGame(iIndex) || !bIsTankEnabled(iIndex) || !bHasCoreAdminAccess(tank) || (g_esTank[iIndex].g_iRandomTank == 0) || !bIsSpawnEnabled(iIndex) || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPlayer[tank].g_iRandomTank == 0) || (g_esPlayer[tank].g_iTankType == iIndex) || !bIsTypeAvailable(iIndex, tank) || bAreHumansRequired(iIndex) || !bCanTypeSpawn(iIndex) || bIsAreaNarrow(tank, g_esTank[iIndex].g_flOpenAreasOnly);
 		}
 
 		if (bCondition)
