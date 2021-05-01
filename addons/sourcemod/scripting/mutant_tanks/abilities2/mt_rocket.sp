@@ -577,10 +577,10 @@ void vRocketEventFired(Event event, const char[] name)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
-		if (MT_IsTankSupported(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iTankId = event.GetInt("userid"), iTank = GetClientOfUserId(iTankId);
+		if (MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveRocket(iSurvivor);
+			vRemoveRocket(iTank);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
