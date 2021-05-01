@@ -20,7 +20,15 @@
 - Fixed the `MT_LogMessage` native logging messages even when the feature is disabled.
 
 #### Abilities
+- Kamikaze: Fixed survivor death models being removed on player spawn. (Thanks to AlexAlcala for reporting!) [Thanks to Lux for the help!]
+
 - Respawn: Fixed the ability requiring `DHooks`.
+
+- Rocket: Fixed survivor death models being removed on player spawn. (Thanks to AlexAlcala for reporting!) [Thanks to Lux for the help!]
+
+- Smash: Fixed survivor death models being removed on player spawn. (Thanks to AlexAlcala for reporting!) [Thanks to Lux for the help!]
+
+- Smite: Fixed survivor death models being removed on player spawn. (Thanks to AlexAlcala for reporting!) [Thanks to Lux for the help!]
 
 ### Changes
 

@@ -395,8 +395,8 @@ enum struct esGeneral
 	DynamicDetour g_ddStartHealingDetour;
 	DynamicDetour g_ddStartRevivingDetour;
 	DynamicDetour g_ddStartActionDetour;
+	DynamicDetour g_ddTankClawDoSwingDetour;
 	DynamicDetour g_ddTankClawPlayerHitDetour;
-	DynamicDetour g_ddTankClawSweepFistDetour;
 	DynamicDetour g_ddTankRockCreateDetour;
 	DynamicDetour g_ddTestMeleeSwingCollisionDetour;
 	DynamicDetour g_ddVomitedUponDetour;
@@ -2274,16 +2274,16 @@ public void OnPluginStart()
 				LogError("%s Failed to find signature: CTerrorPlayer::StartReviving", MT_TAG);
 			}
 
+			g_esGeneral.g_ddTankClawDoSwingDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankClaw::DoSwing");
+			if (g_esGeneral.g_ddTankClawDoSwingDetour == null)
+			{
+				LogError("%s Failed to find signature: CTankClaw::DoSwing", MT_TAG);
+			}
+
 			g_esGeneral.g_ddTankClawPlayerHitDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankClaw::OnPlayerHit");
 			if (g_esGeneral.g_ddTankClawPlayerHitDetour == null)
 			{
 				LogError("%s Failed to find signature: CTankClaw::OnPlayerHit", MT_TAG);
-			}
-
-			g_esGeneral.g_ddTankClawSweepFistDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankClaw::SweepFist");
-			if (g_esGeneral.g_ddTankClawSweepFistDetour == null)
-			{
-				LogError("%s Failed to find signature: CTankClaw::SweepFist", MT_TAG);
 			}
 
 			g_esGeneral.g_ddTankRockCreateDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankRock::Create");
@@ -2344,6 +2344,8 @@ public void OnPluginStart()
 public void OnMapStart()
 {
 	g_esGeneral.g_bMapStarted = true;
+	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
+	g_iBossHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
 
 	PrecacheModel(MODEL_CONCRETE_CHUNK, true);
 	PrecacheModel(MODEL_GASCAN, true);
@@ -2355,8 +2357,6 @@ public void OnMapStart()
 	PrecacheModel(MODEL_TREE_TRUNK, true);
 	PrecacheModel(MODEL_WITCH, true);
 	PrecacheModel(SPRITE_EXPLODE, true);
-	g_iBossBeamSprite = PrecacheModel("sprites/laserbeam.vmt", true);
-	g_iBossHaloSprite = PrecacheModel("sprites/glow01.vmt", true);
 
 	iPrecacheParticle(PARTICLE_ACHIEVED);
 	iPrecacheParticle(PARTICLE_BLOOD);
@@ -9190,6 +9190,16 @@ static void vPluginStatus()
 			LogError("%s Failed to enable detour post: CTerrorPlayer::StartReviving", MT_TAG);
 		}
 
+		if (!g_esGeneral.g_ddTankClawDoSwingDetour.Enable(Hook_Pre, mreTankClawDoSwingPre))
+		{
+			LogError("%s Failed to enable detour pre: CTankClaw::DoSwing", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_ddTankClawDoSwingDetour.Enable(Hook_Post, mreTankClawDoSwingPost))
+		{
+			LogError("%s Failed to enable detour post: CTankClaw::DoSwing", MT_TAG);
+		}
+
 		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Enable(Hook_Pre, mreTankClawPlayerHitPre))
 		{
 			LogError("%s Failed to enable detour pre: CTankClaw::OnPlayerHit", MT_TAG);
@@ -9198,16 +9208,6 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Enable(Hook_Post, mreTankClawPlayerHitPost))
 		{
 			LogError("%s Failed to enable detour post: CTankClaw::OnPlayerHit", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawSweepFistDetour.Enable(Hook_Pre, mreTankClawSweepFistPre))
-		{
-			LogError("%s Failed to enable detour pre: CTankClaw::SweepFist", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawSweepFistDetour.Enable(Hook_Post, mreTankClawSweepFistPost))
-		{
-			LogError("%s Failed to enable detour post: CTankClaw::SweepFist", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddTankRockCreateDetour.Enable(Hook_Post, mreTankRockCreatePost))
@@ -9444,6 +9444,16 @@ static void vPluginStatus()
 			LogError("%s Failed to disable detour post: CTerrorPlayer::StartReviving", MT_TAG);
 		}
 
+		if (!g_esGeneral.g_ddTankClawDoSwingDetour.Disable(Hook_Pre, mreTankClawDoSwingPre))
+		{
+			LogError("%s Failed to disable detour pre: CTankClaw::DoSwing", MT_TAG);
+		}
+
+		if (!g_esGeneral.g_ddTankClawDoSwingDetour.Disable(Hook_Post, mreTankClawDoSwingPost))
+		{
+			LogError("%s Failed to disable detour post: CTankClaw::DoSwing", MT_TAG);
+		}
+
 		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Disable(Hook_Pre, mreTankClawPlayerHitPre))
 		{
 			LogError("%s Failed to disable detour pre: CTankClaw::OnPlayerHit", MT_TAG);
@@ -9452,16 +9462,6 @@ static void vPluginStatus()
 		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Disable(Hook_Post, mreTankClawPlayerHitPost))
 		{
 			LogError("%s Failed to disable detour post: CTankClaw::OnPlayerHit", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawSweepFistDetour.Disable(Hook_Pre, mreTankClawSweepFistPre))
-		{
-			LogError("%s Failed to disable detour pre: CTankClaw::SweepFist", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawSweepFistDetour.Disable(Hook_Post, mreTankClawSweepFistPost))
-		{
-			LogError("%s Failed to disable detour post: CTankClaw::SweepFist", MT_TAG);
 		}
 
 		if (!g_esGeneral.g_ddTankRockCreateDetour.Disable(Hook_Post, mreTankRockCreatePost))
@@ -15205,6 +15205,52 @@ public MRESReturn mreStartRevivingPost(int pThis, DHookParam hParams)
 	return MRES_Ignored;
 }
 
+public MRESReturn mreTankClawDoSwingPre(int pThis)
+{
+	int iTank = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	if (bIsTank(iTank) && g_esCache[iTank].g_iSweepFist == 1)
+	{
+		char sName[32];
+		static int iIndex[2] = {-1, -1};
+		for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
+		{
+			if (iIndex[iPos] == -1)
+			{
+				FormatEx(sName, sizeof(sName), "TankSweepFist%i", iPos + 1);
+				iIndex[iPos] = iGetPatchIndex(sName);
+			}
+
+			if (iIndex[iPos] != -1)
+			{
+				bInstallPatch(iIndex[iPos]);
+			}
+		}
+	}
+
+	return MRES_Ignored;
+}
+
+public MRESReturn mreTankClawDoSwingPost(int pThis)
+{
+	char sName[32];
+	static int iIndex[2] = {-1, -1};
+	for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
+	{
+		if (iIndex[iPos] == -1)
+		{
+			FormatEx(sName, sizeof(sName), "TankSweepFist%i", iPos + 1);
+			iIndex[iPos] = iGetPatchIndex(sName);
+		}
+
+		if (iIndex[iPos] != -1)
+		{
+			bRemovePatch(iIndex[iPos]);
+		}
+	}
+
+	return MRES_Ignored;
+}
+
 public MRESReturn mreTankClawPlayerHitPre(int pThis, DHookParam hParams)
 {
 	g_esGeneral.g_iTankTarget = hParams.Get(1);
@@ -15235,52 +15281,6 @@ public MRESReturn mreTankClawPlayerHitPost(int pThis, DHookParam hParams)
 	}
 
 	g_esGeneral.g_iTankTarget = 0;
-
-	return MRES_Ignored;
-}
-
-public MRESReturn mreTankClawSweepFistPre(int pThis, DHookParam hParams)
-{
-	int iTank = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
-	if (bIsTank(iTank) && g_esCache[iTank].g_iSweepFist == 1)
-	{
-		char sName[32];
-		static int iIndex[2] = {-1, -1};
-		for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
-		{
-			if (iIndex[iPos] == -1)
-			{
-				FormatEx(sName, sizeof(sName), "TankSweepFist%i", iPos + 1);
-				iIndex[iPos] = iGetPatchIndex(sName);
-			}
-
-			if (iIndex[iPos] != -1)
-			{
-				bInstallPatch(iIndex[iPos]);
-			}
-		}
-	}
-
-	return MRES_Ignored;
-}
-
-public MRESReturn mreTankClawSweepFistPost(int pThis, DHookParam hParams)
-{
-	char sName[32];
-	static int iIndex[2] = {-1, -1};
-	for (int iPos = 0; iPos < sizeof(iIndex); iPos++)
-	{
-		if (iIndex[iPos] == -1)
-		{
-			FormatEx(sName, sizeof(sName), "TankSweepFist%i", iPos + 1);
-			iIndex[iPos] = iGetPatchIndex(sName);
-		}
-
-		if (iIndex[iPos] != -1)
-		{
-			bRemovePatch(iIndex[iPos]);
-		}
-	}
 
 	return MRES_Ignored;
 }

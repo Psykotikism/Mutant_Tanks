@@ -227,6 +227,34 @@ void vRocketMenuItemDisplayed(int client, const char[] info, char[] buffer, int 
 	}
 }
 
+void vRocketEntityCreated(int entity, const char[] classname)
+{
+	if (bIsValidEntity(entity) && StrEqual(classname, "survivor_death_model"))
+	{
+		int iOwner = GetClientOfUserId(g_iDeathModelOwner);
+		if (bIsValidClient(iOwner))
+		{
+			SDKHook(entity, SDKHook_SpawnPost, OnRocketModelSpawnPost);
+		}
+
+		g_iDeathModelOwner = 0;
+	}
+}
+
+public void OnRocketModelSpawnPost(int model)
+{
+	g_iDeathModelOwner = 0;
+
+	SDKUnhook(model, SDKHook_SpawnPost, OnRocketModelSpawnPost);
+
+	if (!bIsValidEntity(model))
+	{
+		return;
+	}
+
+	RemoveEntity(model);
+}
+
 public Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
@@ -549,24 +577,10 @@ void vRocketEventFired(Event event, const char[] name)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
-		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
+		if (MT_IsTankSupported(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveRocket(iPlayer);
-		}
-		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_bSecondGame)
-		{
-			int iBody = -1;
-			while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
-			{
-				float flSurvivorPos[3], flBodyPos[3];
-				GetClientAbsOrigin(iPlayer, flSurvivorPos);
-				GetEntPropVector(iBody, Prop_Send, "m_vecOrigin", flBodyPos);
-				if (GetEntProp(iBody, Prop_Send, "m_nCharacterType") == GetEntProp(iPlayer, Prop_Send, "m_survivorCharacter") && GetVectorDistance(flSurvivorPos, flBodyPos) == 0.0)
-				{
-					SetEntPropEnt(iBody, Prop_Send, "m_hOwnerEntity", iPlayer);
-				}
-			}
+			vRemoveRocket(iSurvivor);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -816,25 +830,6 @@ void vRocketHit(int survivor, int tank, float random, float chance, int enabled,
 	}
 }
 
-public void vRemoveRocketBody(int userid)
-{
-	int iSurvivor = GetClientOfUserId(userid);
-	if (!bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
-	{
-		return;
-	}
-
-	int iBody = -1;
-	while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
-	{
-		int iOwner = GetEntPropEnt(iBody, Prop_Send, "m_hOwnerEntity");
-		if (iSurvivor == iOwner)
-		{
-			RemoveEntity(iBody);
-		}
-	}
-}
-
 public Action tTimerRocketCombo(Handle timer, DataPack pack)
 {
 	pack.Reset();
@@ -948,6 +943,11 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 		return Plugin_Stop;
 	}
 
+	if (g_esRocketCache[iTank].g_iRocketBody == 1)
+	{
+		g_iDeathModelOwner = GetClientUserId(iSurvivor);
+	}
+
 	static float flPosition[3];
 	GetClientAbsOrigin(iSurvivor, flPosition);
 
@@ -956,11 +956,6 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 
 	SetEntityGravity(iSurvivor, 1.0);
 	ForcePlayerSuicide(iSurvivor);
-
-	if (g_esRocketCache[iTank].g_iRocketBody == 1)
-	{
-		RequestFrame(vRemoveRocketBody, GetClientUserId(iSurvivor));
-	}
 
 	g_esRocketPlayer[iSurvivor].g_bAffected = false;
 	g_esRocketPlayer[iSurvivor].g_iOwner = 0;

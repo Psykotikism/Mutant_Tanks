@@ -69,6 +69,14 @@
 				"return"	"void"
 				"this"		"entity"
 			}
+			/* CTankClaw::DoSwing() */
+			"CTankClaw::DoSwing"
+			{
+				"signature"	"CTankClaw::DoSwing"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+			}
 			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
 			"CTankClaw::OnPlayerHit"
 			{
@@ -85,25 +93,6 @@
 					"incap"
 					{
 						"type"		"bool"
-					}
-				}
-			}
-			/* CTankClaw::SweepFist(Vector const&, Vector const&) */
-			"CTankClaw::SweepFist"
-			{
-				"signature"	"CTankClaw::SweepFist"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"entity"
-				"arguments"
-				{
-					"a1"
-					{
-						"type"		"vectorptr"
-					}
-					"a2"
-					{
-						"type"		"vectorptr"
 					}
 				}
 			}
@@ -241,6 +230,25 @@
 					"origin"
 					{
 						"type"		"vectorptr"
+					}
+				}
+			}
+			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool) */
+			"CTerrorPlayer::OnVomitedUpon"
+			{
+				"signature"	"CTerrorPlayer::OnVomitedUpon"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"boomer"
+					{
+						"type"		"cbaseentity"
+					}
+					"a2"
+					{
+						"type"		"bool"
 					}
 				}
 			}
@@ -435,20 +443,8 @@
 			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool, bool) */
 			"CTerrorPlayer::OnVomitedUpon"
 			{
-				"signature"	"CTerrorPlayer::OnVomitedUpon"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"entity"
-				"arguments"
+				"arguments" // L4D1 has an extra argument on "CTerrorPlayer::OnVomitedUpon"
 				{
-					"boomer"
-					{
-						"type"		"cbaseentity"
-					}
-					"a2"
-					{
-						"type"		"bool"
-					}
 					"a3"
 					{
 						"type"		"bool"
@@ -724,6 +720,14 @@
 				"linux"		"@_ZN17CSmokeCloudSystem13FireGameEventEP10IGameEvent" // change 57 to C3
 				"windows"	"\x83\xEC\x14\x56\x8B\x74\x24\x1C\x8B\x06" // change 83 ?? ?? to C2 04 00
 						/* 83 EC 14 56 8B 74 24 1C 8B 06 */
+			}
+			/* CTankClaw::DoSwing() */
+			"CTankClaw::DoSwing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw7DoSwingEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\xF0\x85\xF6\x74\x2A\x8D\x44\x24\x14"
+						/* ? ? ? ? ? ? ? E8 ? ? ? ? 8B F0 85 F6 74 ? 8D 44 24 14 */
 			}
 			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
 			"CTankClaw::OnPlayerHit"
@@ -1085,25 +1089,6 @@
 					}
 				}
 			}
-			/* CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool) */
-			"CTerrorPlayer::OnVomitedUpon"
-			{
-				"signature"	"CTerrorPlayer::OnVomitedUpon"
-				"callconv"	"thiscall"
-				"return"	"void"
-				"this"		"entity"
-				"arguments"
-				{
-					"boomer"
-					{
-						"type"		"cbaseentity"
-					}
-					"a2"
-					{
-						"type"		"bool"
-					}
-				}
-			}
 		}
 		"Addresses"
 		{
@@ -1403,6 +1388,14 @@
 				"linux"		"@_ZN18CSpitterProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57"
 						/* 55 8B ? 8B ? ? 8B ? ? 53 8B ? ? 56 57 50 51 53 68 ? ? ? ? E8 ? ? ? ? 8B ? ? ? ? ? 83 ? ? ? ? ? ? 8B ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? D9 ? ? ? ? ? 83 ? ? 8B ? D9 ? ? E8 ? ? ? ? 57 8B ? E8 ? ? ? ? 57 8B ? E8 ? ? ? ? ? ? ? 57 */
+			}
+			/* CTankClaw::DoSwing() */
+			"CTankClaw::DoSwing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw7DoSwingEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x89\x4D\xF8\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\xF6\x0F\x84"
+						/* ? ? ? ? ? ? 56 89 4D F8 E8 ? ? ? ? 8B ? 85 F6 0F 84 */
 			}
 			/* CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) */
 			"CTankClaw::OnPlayerHit"

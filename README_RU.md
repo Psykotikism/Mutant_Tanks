@@ -2,12 +2,12 @@
 
 ## Языки
 - Нажмите на один из флажков, чтобы просмотреть на другой языковой версии.
-<a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
-<img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt="Английский" width="32">
+<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "Английский" width = "32">
 </a>
 
-<a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
-<img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt="Русский" width="32">
+<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Русский" width = "32">
 </a>
 
 ## Лицензия
@@ -2031,7 +2031,7 @@ Overrides
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart** - За сообщения о проблемах и предложения идей.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer** - За сообщения о проблемах.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala** - За сообщения о проблемах.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva** - За предложения идей.
 

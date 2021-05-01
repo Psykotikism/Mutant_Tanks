@@ -3211,17 +3211,17 @@
 		"Glow"
 		{
 			// The Mutant Tank will have a glow outline.
-			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Glow Enabled"				"0"
 
 			// These are the RGB values of the Mutant Tank's glow outline color.
+			// Note: This setting can be overridden for specific players.
 			// Note: Only available in Left 4 Dead 2.
 			// Note: Any value less than "0" will output a random color.
-			// Note: This setting can be overridden for specific players.
 			// --
 			// 1st number = Red
 			// 2nd number = Green
@@ -3229,16 +3229,16 @@
 			"Glow Color"				"255,255,255"
 
 			// The Mutant Tank's glow outline will flash.
-			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Glow Flashing"				"0"
 
 			// The minimum range that a client can be away from the Mutant Tank until the glow outline starts to appear.
-			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// Separate values with "-".
 			// --
@@ -3253,8 +3253,8 @@
 			"Glow Range"				"0-999999"
 
 			// The Mutant Tank's glow outline visibility type.
-			// Note: Only available in Left 4 Dead 2.
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0: Glow outline visible only on sight.
 			// 1: Glow outline visible through the walls.
@@ -4679,9 +4679,9 @@
 			"Acid Range Chance"			"15.0"
 
 			// The Mutant Tank's rock creates an acid puddle when it breaks.
-			// Note: Only available in Left 4 Dead 2.
 			// Note: This does not need "Ability Enabled" or "Acid Hit" set to "1".
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -11693,6 +11693,7 @@
 
 			// Removes the death model of the survivor when killed.
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -15791,6 +15792,7 @@
 
 			// Removes the death model of the survivor when killed.
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -17063,6 +17065,7 @@
 
 			// Removes the death model of the survivor when killed.
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
@@ -17283,6 +17286,7 @@
 
 			// Removes the death model of the survivor when killed.
 			// Note: This setting can be overridden for specific players.
+			// Note: Only available in Left 4 Dead 2.
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON

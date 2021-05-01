@@ -34,6 +34,8 @@ public Plugin myinfo =
 
 bool g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
 
+int g_iDeathModelOwner = 0;
+
 #undef REQUIRE_PLUGIN
 #tryinclude "mutant_tanks/abilities/mt_absorb.sp"
 #tryinclude "mutant_tanks/abilities/mt_acid.sp"
@@ -170,6 +172,13 @@ public void OnMapEnd()
 public void MT_OnPluginEnd()
 {
 	vAbilitySetup(3);
+}
+
+public void OnEntityCreated(int entity, const char[] classname)
+{
+#if defined MT_MENU_KAMIKAZE
+	vKamikazeEntityCreated(entity, classname);
+#endif
 }
 
 public Action cmdAbilityInfo(int client, int args)

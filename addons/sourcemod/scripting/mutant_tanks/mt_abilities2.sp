@@ -33,6 +33,8 @@ public Plugin myinfo =
 
 bool g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
 
+int g_iDeathModelOwner = 0;
+
 #undef REQUIRE_PLUGIN
 #tryinclude "mutant_tanks/abilities2/mt_medic.sp"
 #tryinclude "mutant_tanks/abilities2/mt_meteor.sp"
@@ -176,8 +178,17 @@ public void OnEntityCreated(int entity, const char[] classname)
 #if defined MT_MENU_METEOR
 	vMeteorEntityCreated(entity, classname);
 #endif
+#if defined MT_MENU_ROCKET
+	vRocketEntityCreated(entity, classname);
+#endif
 #if defined MT_MENU_SHIELD
 	vShieldEntityCreated(entity, classname);
+#endif
+#if defined MT_MENU_SMASH
+	vSmashEntityCreated(entity, classname);
+#endif
+#if defined MT_MENU_SMITE
+	vSmiteEntityCreated(entity, classname);
 #endif
 }
 

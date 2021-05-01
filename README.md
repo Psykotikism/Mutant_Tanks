@@ -2,12 +2,12 @@
 
 ## Languages
 - Click on one of the flags to view in another language.
-<a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
-<img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt="English" width="32">
+<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "English" width = "32">
 </a>
 
-<a href="https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
-<img src="https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt="Russian" width="32">
+<a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
+<img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32">
 </a>
 
 ## License
@@ -2031,7 +2031,7 @@ Examples:
 
 **ReCreator, SilentBr, Neptunia, Zytheus, huwong, Tank Rush, Tonblader, TheStarRocker, Maku, Shadowart** - For reporting issues and suggesting ideas.
 
-**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer** - For reporting issues.
+**Princess LadyRain, Nekrob, fig101, BloodyBlade, user2000, MedicDTI, ben12398, AK978, ricksfishin, Voevoda, ur5efj, What, moekai, weffer, AlexAlcala** - For reporting issues.
 
 **Electr000999, foquaxticity, foxhound27, sxslmk, FatalOE71, zaviier, RDiver, BHaType, HarryPotter, jeremyvillanueva** - For suggesting ideas.
 

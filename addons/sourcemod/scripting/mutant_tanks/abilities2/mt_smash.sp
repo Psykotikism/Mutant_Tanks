@@ -230,6 +230,34 @@ void vSmashMenuItemDisplayed(int client, const char[] info, char[] buffer, int s
 	}
 }
 
+void vSmashEntityCreated(int entity, const char[] classname)
+{
+	if (bIsValidEntity(entity) && StrEqual(classname, "survivor_death_model"))
+	{
+		int iOwner = GetClientOfUserId(g_iDeathModelOwner);
+		if (bIsValidClient(iOwner))
+		{
+			SDKHook(entity, SDKHook_SpawnPost, OnSmashModelSpawnPost);
+		}
+
+		g_iDeathModelOwner = 0;
+	}
+}
+
+public void OnSmashModelSpawnPost(int model)
+{
+	g_iDeathModelOwner = 0;
+
+	SDKUnhook(model, SDKHook_SpawnPost, OnSmashModelSpawnPost);
+
+	if (!bIsValidEntity(model))
+	{
+		return;
+	}
+
+	RemoveEntity(model);
+}
+
 public Action OnSmashTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (MT_IsCorePluginEnabled() && bIsValidClient(victim, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE) && bIsValidEntity(inflictor) && damage > 0.0)
@@ -536,24 +564,10 @@ void vSmashEventFired(Event event, const char[] name)
 	}
 	else if (StrEqual(name, "player_death") || StrEqual(name, "player_spawn"))
 	{
-		int iPlayerId = event.GetInt("userid"), iPlayer = GetClientOfUserId(iPlayerId);
-		if (MT_IsTankSupported(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME))
+		int iSurvivorId = event.GetInt("userid"), iSurvivor = GetClientOfUserId(iSurvivorId);
+		if (MT_IsTankSupported(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
 		{
-			vRemoveSmash(iPlayer);
-		}
-		else if (bIsSurvivor(iPlayer, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_bSecondGame)
-		{
-			int iBody = -1;
-			while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
-			{
-				float flSurvivorPos[3], flBodyPos[3];
-				GetClientAbsOrigin(iPlayer, flSurvivorPos);
-				GetEntPropVector(iBody, Prop_Send, "m_vecOrigin", flBodyPos);
-				if (GetEntProp(iBody, Prop_Send, "m_nCharacterType") == GetEntProp(iPlayer, Prop_Send, "m_survivorCharacter") && GetVectorDistance(flSurvivorPos, flBodyPos) == 0.0)
-				{
-					SetEntPropEnt(iBody, Prop_Send, "m_hOwnerEntity", iPlayer);
-				}
-			}
+			vRemoveSmash(iSurvivor);
 		}
 	}
 	else if (StrEqual(name, "mission_lost") || StrEqual(name, "round_start") || StrEqual(name, "round_end"))
@@ -729,14 +743,14 @@ void vSmashHit(int survivor, int tank, float random, float chance, int enabled, 
 					}
 				}
 
+				if (g_esSmashCache[tank].g_iSmashBody == 1)
+				{
+					g_iDeathModelOwner = GetClientUserId(survivor);
+				}
+
 				vSmash(survivor, tank);
 				ForcePlayerSuicide(survivor);
 				vEffect(survivor, tank, g_esSmashCache[tank].g_iSmashEffect, flags);
-
-				if (g_esSmashCache[tank].g_iSmashBody == 1)
-				{
-					RequestFrame(vRemoveSmashBody, GetClientUserId(survivor));
-				}
 
 				if (g_esSmashCache[tank].g_iSmashMessage & messages)
 				{
@@ -761,25 +775,6 @@ void vSmashHit(int survivor, int tank, float random, float chance, int enabled, 
 			g_esSmashPlayer[tank].g_bNoAmmo = true;
 
 			MT_PrintToChat(tank, "%s %t", MT_TAG3, "SmashAmmo");
-		}
-	}
-}
-
-public void vRemoveSmashBody(int userid)
-{
-	int iSurvivor = GetClientOfUserId(userid);
-	if (!bIsSurvivor(iSurvivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
-	{
-		return;
-	}
-
-	int iBody = -1;
-	while ((iBody = FindEntityByClassname(iBody, "survivor_death_model")) != INVALID_ENT_REFERENCE)
-	{
-		int iOwner = GetEntPropEnt(iBody, Prop_Send, "m_hOwnerEntity");
-		if (iSurvivor == iOwner)
-		{
-			RemoveEntity(iBody);
 		}
 	}
 }
