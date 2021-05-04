@@ -335,11 +335,16 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 }
 
 #if defined MT_ABILITIES_MAIN
-void vEnforcePlayerRunCmd(int client, int &weapon)
+Action aEnforcePlayerRunCmd(int client, int &weapon)
 #else
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 #endif
 {
+	if (!MT_IsCorePluginEnabled())
+	{
+		return Plugin_Continue;
+	}
+
 	if (bIsSurvivor(client) && g_esEnforcePlayer[client].g_bAffected)
 	{
 		if (MT_DoesSurvivorHaveRewardType(client, MT_REWARD_GODMODE) && g_esEnforcePlayer[client].g_iSlot != 0)
@@ -351,8 +356,12 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		if (iWeapon > MaxClients)
 		{
 			weapon = iWeapon;
+
+			return Plugin_Changed;
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public Action OnEnforceTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)

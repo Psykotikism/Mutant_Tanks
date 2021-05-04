@@ -582,6 +582,8 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		return Plugin_Continue;
 	}
+
+	Action aReturn = Plugin_Continue, aResult = Plugin_Continue;
 #if defined MT_MENU_ABSORB
 	vAbsorbPlayerRunCmd(client);
 #endif
@@ -589,22 +591,34 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	vAimlessPlayerRunCmd(client);
 #endif
 #if defined MT_MENU_BURY
-	vBuryPlayerRunCmd(client, buttons);
+	aResult = aBuryPlayerRunCmd(client, buttons);
+	if (aResult != Plugin_Continue)
+	{
+		aReturn = aResult;
+	}
 #endif
 #if defined MT_MENU_CHOKE
-	vChokePlayerRunCmd(client, buttons);
+	aResult = aChokePlayerRunCmd(client, buttons);
+	if (aResult != Plugin_Continue)
+	{
+		aReturn = aResult;
+	}
 #endif
 #if defined MT_MENU_ENFORCE
-	vEnforcePlayerRunCmd(client, weapon);
+	aResult = aEnforcePlayerRunCmd(client, weapon);
+	if (aResult != Plugin_Continue)
+	{
+		aReturn = aResult;
+	}
 #endif
 #if defined MT_MENU_FAST
 	vFastPlayerRunCmd(client);
 #endif
-#if defined MT_MENU_FRAGILE
-	vFragilePlayerRunCmd(client);
-#endif
 #if defined MT_MENU_FLY
 	vFlyPlayerRunCmd(client);
+#endif
+#if defined MT_MENU_FRAGILE
+	vFragilePlayerRunCmd(client);
 #endif
 #if defined MT_MENU_GHOST
 	vGhostPlayerRunCmd(client);
@@ -616,9 +630,13 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	vGravityPlayerRunCmd(client);
 #endif
 #if defined MT_MENU_INVERT
-	vInvertPlayerRunCmd(client, buttons, vel);
+	aResult = aInvertPlayerRunCmd(client, buttons, vel);
+	if (aResult != Plugin_Continue)
+	{
+		aReturn = aResult;
+	}
 #endif
-	return Plugin_Continue;
+	return aReturn;
 }
 
 public void MT_OnPluginCheck(ArrayList &list)

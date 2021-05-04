@@ -331,11 +331,16 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 }
 
 #if defined MT_ABILITIES_MAIN
-void vInvertPlayerRunCmd(int client, int &buttons, float vel[3])
+Action aInvertPlayerRunCmd(int client, int &buttons, float vel[3])
 #else
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 #endif
 {
+	if (!MT_IsCorePluginEnabled())
+	{
+		return Plugin_Continue;
+	}
+
 	if (bIsSurvivor(client) && g_esInvertPlayer[client].g_bAffected)
 	{
 		vel[0] = -vel[0];
@@ -361,7 +366,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			buttons &= ~IN_MOVERIGHT;
 			buttons |= IN_MOVELEFT;
 		}
+
+		return Plugin_Changed;
 	}
+
+	return Plugin_Continue;
 }
 
 public Action OnInvertTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)

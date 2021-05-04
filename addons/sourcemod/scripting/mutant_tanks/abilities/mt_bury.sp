@@ -389,18 +389,14 @@ public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer,
 }
 
 #if defined MT_ABILITIES_MAIN
-void vBuryPlayerRunCmd(int client, int &buttons)
+Action aBuryPlayerRunCmd(int client, int &buttons)
 #else
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 #endif
 {
 	if (!MT_IsCorePluginEnabled())
 	{
-#if defined MT_ABILITIES_MAIN
-		return;
-#else
 		return Plugin_Continue;
-#endif
 	}
 
 	if (g_esBuryPlayer[client].g_bAffected && ((buttons & IN_ATTACK) || (buttons & IN_ATTACK2) || (buttons & IN_USE)))
@@ -408,10 +404,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		buttons &= IN_ATTACK;
 		buttons &= IN_ATTACK2;
 		buttons &= IN_USE;
+
+		return Plugin_Changed;
 	}
-#if !defined MT_ABILITIES_MAIN
+
 	return Plugin_Continue;
-#endif
 }
 
 public Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
