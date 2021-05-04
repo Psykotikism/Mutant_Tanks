@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_INVERT_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_INVERT_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Invert Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank inverts the survivors' movement keys.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Invert Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_INVERT_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_INVERT_SECTION "invertability"
@@ -99,26 +135,93 @@ enum struct esInvertCache
 
 esInvertCache g_esInvertCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_invert", cmdInvertInfo, "View information about the Invert ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vInvertMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vInvertReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnInvertTakeDamage);
 	vInvertReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vInvertReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vInvertReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdInvertInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vInvertMenu(client, MT_INVERT_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vInvertMenu(int client, const char[] name, int item)
 {
@@ -194,12 +297,20 @@ public int iInvertMenuHandler(Menu menu, MenuAction action, int param1, int para
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_INVERT, MT_MENU_INVERT);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_INVERT, false))
 	{
@@ -207,7 +318,11 @@ void vInvertMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_INVERT, false))
 	{
@@ -215,7 +330,11 @@ void vInvertMenuItemDisplayed(int client, const char[] info, char[] buffer, int 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertPlayerRunCmd(int client, int &buttons, float vel[3])
+#else
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+#endif
 {
 	if (bIsSurvivor(client) && g_esInvertPlayer[client].g_bAffected)
 	{
@@ -280,12 +399,20 @@ public Action OnInvertTakeDamage(int victim, int &attacker, int &inflictor, floa
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_INVERT);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_INVERT_SECTION);
 	list2.PushString(MT_INVERT_SECTION2);
@@ -293,7 +420,11 @@ void vInvertAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Ar
 	list4.PushString(MT_INVERT_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esInvertCache[tank].g_iHumanAbility != 2)
 	{
@@ -376,7 +507,11 @@ void vInvertCombineAbilities(int tank, int type, const float random, const char[
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -432,7 +567,11 @@ void vInvertConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -497,7 +636,11 @@ void vInvertConfigsLoaded(const char[] subsection, const char[] key, const char[
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esInvertCache[tank].g_flInvertChance = flGetSettingValue(apply, bHuman, g_esInvertPlayer[tank].g_flInvertChance, g_esInvertAbility[type].g_flInvertChance);
@@ -518,7 +661,11 @@ void vInvertSettingsCached(int tank, bool apply, int type)
 	g_esInvertPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vInvertCopyStats2(oldTank, newTank);
 
@@ -528,7 +675,11 @@ void vInvertCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -564,7 +715,11 @@ void vInvertEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esInvertAbility[g_esInvertPlayer[tank].g_iTankType].g_iAccessFlags, g_esInvertPlayer[tank].g_iAccessFlags)) || g_esInvertCache[tank].g_iHumanAbility == 0))
 	{
@@ -577,7 +732,11 @@ void vInvertAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -603,7 +762,11 @@ void vInvertButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vInvertChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveInvert(tank);
 }

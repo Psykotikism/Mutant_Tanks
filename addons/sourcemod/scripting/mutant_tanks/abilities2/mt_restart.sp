@@ -9,8 +9,72 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_RESTART_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_RESTART_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#undef REQUIRE_PLUGIN
+	#tryinclude <left4dhooks>
+	#define REQUIRE_PLUGIN
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Restart Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank forces survivors to restart at the beginning of the map or near a teammate with a new loadout.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Restart Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
+#else
+	#if MT_RESTART_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_RESTART_SECTION "restartability"
@@ -115,7 +179,11 @@ enum struct esRestartCache
 
 esRestartCache g_esRestartCache[MAXPLAYERS + 1];
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartPluginStart()
+#else
+public void OnPluginStart()
+#endif
 {
 	GameData gdMutantTanks = new GameData("mutant_tanks");
 	if (gdMutantTanks == null)
@@ -145,27 +213,88 @@ void vRestartPluginStart()
 	}
 
 	delete gdMutantTanks;
+#if !defined MT_ABILITIES_MAIN2
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_restart", cmdRestartInfo, "View information about the Restart ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+#endif
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vRestartReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnRestartTakeDamage);
 	vRemoveRestart(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveRestart(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vRestartReset();
+}
+
+public Action cmdRestartInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vRestartMenu(client, MT_RESTART_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
 }
 
 void vRestartMenu(int client, const char[] name, int item)
@@ -239,12 +368,20 @@ public int iRestartMenuHandler(Menu menu, MenuAction action, int param1, int par
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_RESTART, MT_MENU_RESTART);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_RESTART, false))
 	{
@@ -252,7 +389,11 @@ void vRestartMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_RESTART, false))
 	{
@@ -295,12 +436,20 @@ public Action OnRestartTakeDamage(int victim, int &attacker, int &inflictor, flo
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_RESTART);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_RESTART_SECTION);
 	list2.PushString(MT_RESTART_SECTION2);
@@ -308,7 +457,11 @@ void vRestartAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, A
 	list4.PushString(MT_RESTART_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRestartCache[tank].g_iHumanAbility != 2)
 	{
@@ -390,7 +543,11 @@ void vRestartCombineAbilities(int tank, int type, const float random, const char
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -448,7 +605,11 @@ void vRestartConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -521,7 +682,11 @@ void vRestartConfigsLoaded(const char[] subsection, const char[] key, const char
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	vGetSettingValue(apply, bHuman, g_esRestartCache[tank].g_sRestartLoadout, sizeof(esRestartCache::g_sRestartLoadout), g_esRestartPlayer[tank].g_sRestartLoadout, g_esRestartAbility[type].g_sRestartLoadout);
@@ -543,7 +708,11 @@ void vRestartSettingsCached(int tank, bool apply, int type)
 	g_esRestartPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vRestartCopyStats2(oldTank, newTank);
 
@@ -553,34 +722,57 @@ void vRestartCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartHookEvent(bool hooked)
+#else
+public void MT_OnHookEvent(bool hooked)
+#endif
 {
+	static bool bCheck[3];
+
 	switch (hooked)
 	{
 		case true:
 		{
-			HookEvent("player_entered_checkpoint", MT_OnEventFired);
-			HookEvent("player_left_checkpoint", MT_OnEventFired);
+			bCheck[0] = HookEventEx("player_entered_checkpoint", MT_OnEventFired);
+			bCheck[1] = HookEventEx("player_left_checkpoint", MT_OnEventFired);
 
 			if (!g_bSecondGame)
 			{
-				HookEvent("player_entered_start_area", MT_OnEventFired);
+				bCheck[2] = HookEventEx("player_entered_start_area", MT_OnEventFired);
 			}
 		}
 		case false:
 		{
-			UnhookEvent("player_entered_checkpoint", MT_OnEventFired);
-			UnhookEvent("player_left_checkpoint", MT_OnEventFired);
-
-			if (!g_bSecondGame)
+			static char sEvent[32];
+			for (int iPos = 0; iPos < sizeof(bCheck); iPos++)
 			{
-				UnhookEvent("player_entered_start_area", MT_OnEventFired);
+				switch (iPos)
+				{
+					case 0: sEvent = "player_entered_checkpoint";
+					case 1: sEvent = "player_left_checkpoint";
+					case 2: sEvent = "player_entered_start_area";
+				}
+
+				if (bCheck[iPos])
+				{
+					if (g_bSecondGame && iPos == 2)
+					{
+						continue;
+					}
+
+					UnhookEvent(sEvent, MT_OnEventFired);
+				}
 			}
 		}
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -651,7 +843,11 @@ void vRestartEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRestartAbility[g_esRestartPlayer[tank].g_iTankType].g_iAccessFlags, g_esRestartPlayer[tank].g_iAccessFlags)) || g_esRestartCache[tank].g_iHumanAbility == 0))
 	{
@@ -664,7 +860,11 @@ void vRestartAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -690,7 +890,11 @@ void vRestartButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRestartChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveRestart(tank);
 }

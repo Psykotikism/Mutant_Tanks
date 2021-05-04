@@ -9,8 +9,46 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_MINION_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_MINION_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Minion Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank spawns minions.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bSecondGame;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Minion Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	return APLRes_Success;
+}
+#else
+	#if MT_MINION_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_MINION_SECTION "minionability"
@@ -93,17 +131,40 @@ enum struct esMinionCache
 
 esMinionCache g_esMinionCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_minion", cmdMinionInfo, "View information about the Minion ability.");
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vMinionMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vMinionReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	vRemoveMinion(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionClientDisconnect(int client)
+#else
+public void OnClientDisconnect(int client)
+#endif
 {
 	if (bIsSpecialInfected(client) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esMinionPlayer[client].g_bMinion)
 	{
@@ -114,15 +175,50 @@ void vMinionClientDisconnect(int client)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveMinion(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vMinionReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdMinionInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vMinionMenu(client, MT_MINION_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vMinionMenu(int client, const char[] name, int item)
 {
@@ -195,12 +291,20 @@ public int iMinionMenuHandler(Menu menu, MenuAction action, int param1, int para
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_MINION, MT_MENU_MINION);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_MINION, false))
 	{
@@ -208,7 +312,11 @@ void vMinionMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_MINION, false))
 	{
@@ -216,12 +324,20 @@ void vMinionMenuItemDisplayed(int client, const char[] info, char[] buffer, int 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_MINION);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_MINION_SECTION);
 	list2.PushString(MT_MINION_SECTION2);
@@ -229,7 +345,11 @@ void vMinionAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Ar
 	list4.PushString(MT_MINION_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esMinionCache[tank].g_iHumanAbility != 2)
 	{
@@ -271,7 +391,11 @@ void vMinionCombineAbilities(int tank, int type, const float random, const char[
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -323,7 +447,11 @@ void vMinionConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -378,7 +506,11 @@ void vMinionConfigsLoaded(const char[] subsection, const char[] key, const char[
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esMinionCache[tank].g_flMinionChance = flGetSettingValue(apply, bHuman, g_esMinionPlayer[tank].g_flMinionChance, g_esMinionAbility[type].g_flMinionChance);
@@ -398,7 +530,11 @@ void vMinionSettingsCached(int tank, bool apply, int type)
 	g_esMinionPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vMinionCopyStats2(oldTank, newTank);
 
@@ -408,7 +544,11 @@ void vMinionCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionPluginEnd()
+#else
+public void MT_OnPluginEnd()
+#endif
 {
 	for (int iMinion = 1; iMinion <= MaxClients; iMinion++)
 	{
@@ -419,7 +559,11 @@ void vMinionPluginEnd()
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -486,7 +630,11 @@ void vMinionEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esMinionAbility[g_esMinionPlayer[tank].g_iTankType].g_iAccessFlags, g_esMinionPlayer[tank].g_iAccessFlags)) || g_esMinionCache[tank].g_iHumanAbility == 0))
 	{
@@ -499,7 +647,11 @@ void vMinionAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -525,7 +677,11 @@ void vMinionButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vMinionChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveMinions(tank);
 	vRemoveMinion(tank);

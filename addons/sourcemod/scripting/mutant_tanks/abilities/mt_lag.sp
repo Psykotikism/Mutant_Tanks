@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_LAG_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_LAG_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Lag Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank makes survivors lag.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Lag Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_LAG_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_LAG_SECTION "lagability"
@@ -100,26 +136,93 @@ enum struct esLagCache
 
 esLagCache g_esLagCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_lag", cmdLagInfo, "View information about the Lag ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vLagMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vLagReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnLagTakeDamage);
 	vLagReset3(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vLagReset3(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vLagReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdLagInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vLagMenu(client, MT_LAG_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vLagMenu(int client, const char[] name, int item)
 {
@@ -195,12 +298,20 @@ public int iLagMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_LAG, MT_MENU_LAG);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_LAG, false))
 	{
@@ -208,7 +319,11 @@ void vLagMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_LAG, false))
 	{
@@ -251,12 +366,20 @@ public Action OnLagTakeDamage(int victim, int &attacker, int &inflictor, float &
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_LAG);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_LAG_SECTION);
 	list2.PushString(MT_LAG_SECTION2);
@@ -264,7 +387,11 @@ void vLagAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Array
 	list4.PushString(MT_LAG_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLagCache[tank].g_iHumanAbility != 2)
 	{
@@ -347,7 +474,11 @@ void vLagCombineAbilities(int tank, int type, const float random, const char[] c
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -403,7 +534,11 @@ void vLagConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -468,7 +603,11 @@ void vLagConfigsLoaded(const char[] subsection, const char[] key, const char[] v
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esLagCache[tank].g_flLagChance = flGetSettingValue(apply, bHuman, g_esLagPlayer[tank].g_flLagChance, g_esLagAbility[type].g_flLagChance);
@@ -489,7 +628,11 @@ void vLagSettingsCached(int tank, bool apply, int type)
 	g_esLagPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vLagCopyStats2(oldTank, newTank);
 
@@ -499,7 +642,11 @@ void vLagCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -535,7 +682,11 @@ void vLagEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLagAbility[g_esLagPlayer[tank].g_iTankType].g_iAccessFlags, g_esLagPlayer[tank].g_iAccessFlags)) || g_esLagCache[tank].g_iHumanAbility == 0))
 	{
@@ -548,7 +699,11 @@ void vLagAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -574,7 +729,11 @@ void vLagButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLagChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveLag(tank);
 }

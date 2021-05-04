@@ -17,7 +17,11 @@
 public SharedPlugin __pl_mutanttankscloneability =
 {
 	name = "mt_clone",
+#if defined MT_ABILITIES_MAIN
 	file = "mt_abilities.smx",
+#else
+	file = "mt_clone.smx",
+#endif
 #if defined REQUIRE_PLUGIN
 	required = 1,
 #else

@@ -9,8 +9,48 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_SHIELD_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_SHIELD_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Shield Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank protects itself with a shield and throws propane tanks or gas cans.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad, g_bSecondGame;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Shield Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_SHIELD_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MODEL_GASCAN "models/props_junk/gascan001a.mdl"
@@ -131,11 +171,48 @@ esShieldCache g_esShieldCache[MAXPLAYERS + 1];
 
 ConVar g_cvMTShieldTankThrowForce;
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldPluginStart()
+#else
+public void OnPluginStart()
+#endif
 {
 	g_cvMTShieldTankThrowForce = FindConVar("z_tank_throw_force");
+#if !defined MT_ABILITIES_MAIN2
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_shield", cmdShieldInfo, "View information about the Shield ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		int iInfected = -1;
+		while ((iInfected = FindEntityByClassname(iInfected, "infected")) != INVALID_ENT_REFERENCE)
+		{
+			SDKHook(iInfected, SDKHook_OnTakeDamage, OnShieldTakeDamage);
+		}
+
+		iInfected = -1;
+		while ((iInfected = FindEntityByClassname(iInfected, "witch")) != INVALID_ENT_REFERENCE)
+		{
+			SDKHook(iInfected, SDKHook_OnTakeDamage, OnShieldTakeDamage);
+		}
+
+		g_bLateLoad = false;
+	}
+#endif
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldLateLoad()
 {
 	int iInfected = -1;
@@ -152,27 +229,69 @@ void vShieldLateLoad()
 }
 
 void vShieldMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	PrecacheModel(MODEL_SHIELD, true);
 
 	vShieldReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnShieldTakeDamage);
 	vShieldReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vShieldReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vShieldReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdShieldInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vShieldMenu(client, MT_SHIELD_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vShieldMenu(int client, const char[] name, int item)
 {
@@ -251,12 +370,20 @@ public int iShieldMenuHandler(Menu menu, MenuAction action, int param1, int para
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_SHIELD, MT_MENU_SHIELD);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_SHIELD, false))
 	{
@@ -264,7 +391,11 @@ void vShieldMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_SHIELD, false))
 	{
@@ -272,7 +403,11 @@ void vShieldMenuItemDisplayed(int client, const char[] info, char[] buffer, int 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldEntityCreated(int entity, const char[] classname)
+#else
+public void OnEntityCreated(int entity, const char[] classname)
+#endif
 {
 	if (bIsValidEntity(entity) && (StrEqual(classname, "infected") || StrEqual(classname, "witch")))
 	{
@@ -359,11 +494,19 @@ public void OnGameFrame()
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldPlayerRunCmd(int client)
+#else
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+#endif
 {
 	if (!MT_IsTankSupported(client) || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esShieldCache[client].g_iHumanMode == 1) || (g_esShieldPlayer[client].g_iDuration == -1 && g_esShieldPlayer[client].g_iCooldown2 == -1))
 	{
+#if defined MT_ABILITIES_MAIN2
 		return;
+#else
+		return Plugin_Continue;
+#endif
 	}
 
 	static int iTime;
@@ -381,6 +524,9 @@ void vShieldPlayerRunCmd(int client)
 	{
 		vShieldAbility(client, true);
 	}
+#if !defined MT_ABILITIES_MAIN2
+	return Plugin_Continue;
+#endif
 }
 
 public void OnInfectedSpawnPost(int entity)
@@ -451,12 +597,20 @@ public Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, floa
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_SHIELD);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_SHIELD_SECTION);
 	list2.PushString(MT_SHIELD_SECTION2);
@@ -464,7 +618,11 @@ void vShieldAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Ar
 	list4.PushString(MT_SHIELD_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility != 2)
 	{
@@ -506,7 +664,11 @@ void vShieldCombineAbilities(int tank, int type, const float random, const char[
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -580,7 +742,11 @@ void vShieldConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -691,7 +857,11 @@ void vShieldConfigsLoaded(const char[] subsection, const char[] key, const char[
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldHealthChars, sizeof(esShieldCache::g_sShieldHealthChars), g_esShieldPlayer[tank].g_sShieldHealthChars, g_esShieldAbility[type].g_sShieldHealthChars);
@@ -721,7 +891,11 @@ void vShieldSettingsCached(int tank, bool apply, int type)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vShieldCopyStats2(oldTank, newTank);
 
@@ -731,7 +905,11 @@ void vShieldCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldPluginEnd()
+#else
+public void MT_OnPluginEnd()
+#endif
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
@@ -742,7 +920,11 @@ void vShieldPluginEnd()
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -779,7 +961,11 @@ void vShieldEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 Action aShieldPlayerHitByVomitJar(int player, int thrower)
+#else
+public Action MT_OnPlayerHitByVomitJar(int player, int thrower)
+#endif
 {
 	if (MT_IsTankSupported(player) && g_esShieldPlayer[player].g_bActivated && bIsSurvivor(thrower, MT_CHECK_INDEX|MT_CHECK_INGAME) && !MT_DoesSurvivorHaveRewardType(thrower, MT_REWARD_DAMAGEBOOST))
 	{
@@ -789,7 +975,11 @@ Action aShieldPlayerHitByVomitJar(int player, int thrower)
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN2
 Action aShieldPlayerShovedBySurvivor(int player, int survivor)
+#else
+public Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float direction[3])
+#endif
 {
 	if (MT_IsTankSupported(player) && g_esShieldPlayer[player].g_bActivated && !(g_esShieldCache[player].g_iShieldType & MT_SHIELD_MELEE) && bIsSurvivor(survivor, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
@@ -799,7 +989,11 @@ Action aShieldPlayerShovedBySurvivor(int player, int survivor)
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if ((MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShieldAbility[g_esShieldPlayer[tank].g_iTankType].g_iAccessFlags, g_esShieldPlayer[tank].g_iAccessFlags)) || g_esShieldCache[tank].g_iHumanAbility == 0)) || bIsPlayerIncapacitated(tank))
 	{
@@ -812,7 +1006,11 @@ void vShieldAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -884,7 +1082,11 @@ void vShieldButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldButtonReleased(int tank, int button)
+#else
+public void MT_OnButtonReleased(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esShieldCache[tank].g_iHumanAbility == 1)
 	{
@@ -901,7 +1103,11 @@ void vShieldButtonReleased(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
@@ -911,7 +1117,11 @@ void vShieldChangeType(int tank)
 	vShieldReset2(tank);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShieldRockThrow(int tank, int rock)
+#else
+public void MT_OnRockThrow(int tank, int rock)
+#endif
 {
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esShieldCache[tank].g_iShieldAbility == 1 && GetRandomFloat(0.1, 100.0) <= g_esShieldCache[tank].g_flShieldThrowChance && ((g_esShieldCache[tank].g_iShieldType & MT_SHIELD_EXPLOSIVE) || (g_esShieldCache[tank].g_iShieldType & MT_SHIELD_FIRE)))
 	{

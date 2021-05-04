@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_SLOW_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_SLOW_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Slow Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank slows survivors down.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Slow Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_SLOW_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define SOUND_DRIP "ambient/water/distant_drip2.wav"
@@ -105,7 +141,35 @@ enum struct esSlowCache
 
 esSlowCache g_esSlowCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_slow", cmdSlowInfo, "View information about the Slow ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vSlowMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	PrecacheSound(SOUND_DRIP, true);
 	PrecacheSound(SOUND_RAGE, true);
@@ -113,20 +177,57 @@ void vSlowMapStart()
 	vSlowReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnSlowTakeDamage);
 	vSlowReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vSlowReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vSlowReset();
+}
+
+public Action cmdSlowInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vSlowMenu(client, MT_SLOW_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
 }
 
 void vSlowMenu(int client, const char[] name, int item)
@@ -203,12 +304,20 @@ public int iSlowMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_SLOW, MT_MENU_SLOW);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_SLOW, false))
 	{
@@ -216,7 +325,11 @@ void vSlowMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_SLOW, false))
 	{
@@ -259,12 +372,20 @@ public Action OnSlowTakeDamage(int victim, int &attacker, int &inflictor, float 
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_SLOW);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_SLOW_SECTION);
 	list2.PushString(MT_SLOW_SECTION2);
@@ -272,7 +393,11 @@ void vSlowAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arra
 	list4.PushString(MT_SLOW_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSlowCache[tank].g_iHumanAbility != 2)
 	{
@@ -355,7 +480,11 @@ void vSlowCombineAbilities(int tank, int type, const float random, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -413,7 +542,11 @@ void vSlowConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -480,7 +613,11 @@ void vSlowConfigsLoaded(const char[] subsection, const char[] key, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esSlowCache[tank].g_flSlowChance = flGetSettingValue(apply, bHuman, g_esSlowPlayer[tank].g_flSlowChance, g_esSlowAbility[type].g_flSlowChance);
@@ -502,7 +639,11 @@ void vSlowSettingsCached(int tank, bool apply, int type)
 	g_esSlowPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vSlowCopyStats2(oldTank, newTank);
 
@@ -512,7 +653,11 @@ void vSlowCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowPluginEnd()
+#else
+public void MT_OnPluginEnd()
+#endif
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
@@ -523,7 +668,11 @@ void vSlowPluginEnd()
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -559,7 +708,11 @@ void vSlowEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowRewardSurvivor(int survivor, int &type, bool apply)
+#else
+public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
+#endif
 {
 	if (bIsSurvivor(survivor) && apply && (type & MT_REWARD_SPEEDBOOST) && g_esSlowPlayer[survivor].g_bAffected)
 	{
@@ -567,7 +720,11 @@ void vSlowRewardSurvivor(int survivor, int &type, bool apply)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSlowAbility[g_esSlowPlayer[tank].g_iTankType].g_iAccessFlags, g_esSlowPlayer[tank].g_iAccessFlags)) || g_esSlowCache[tank].g_iHumanAbility == 0))
 	{
@@ -580,7 +737,11 @@ void vSlowAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -606,7 +767,11 @@ void vSlowButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSlowChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveSlow(tank);
 }

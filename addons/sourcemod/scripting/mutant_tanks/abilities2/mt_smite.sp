@@ -9,8 +9,50 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_SMITE_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_SMITE_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Smite Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank smites survivors.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad, g_bSecondGame;
+
+int g_iDeathModelOwner = 0;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Smite Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_SMITE_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
@@ -101,7 +143,35 @@ esSmiteCache g_esSmiteCache[MAXPLAYERS + 1];
 
 int g_iSmiteSprite = -1;
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_smite", cmdSmiteInfo, "View information about the Smite ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vSmiteMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	g_iSmiteSprite = PrecacheModel("sprites/glow.vmt", true);
 
@@ -110,21 +180,60 @@ void vSmiteMapStart()
 	vSmiteReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnSmiteTakeDamage);
 	vRemoveSmite(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveSmite(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vSmiteReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdSmiteInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vSmiteMenu(client, MT_SMITE_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vSmiteMenu(int client, const char[] name, int item)
 {
@@ -197,12 +306,20 @@ public int iSmiteMenuHandler(Menu menu, MenuAction action, int param1, int param
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_SMITE, MT_MENU_SMITE);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_SMITE, false))
 	{
@@ -210,7 +327,11 @@ void vSmiteMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_SMITE, false))
 	{
@@ -218,7 +339,11 @@ void vSmiteMenuItemDisplayed(int client, const char[] info, char[] buffer, int s
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteEntityCreated(int entity, const char[] classname)
+#else
+public void OnEntityCreated(int entity, const char[] classname)
+#endif
 {
 	if (bIsValidEntity(entity) && StrEqual(classname, "survivor_death_model"))
 	{
@@ -281,12 +406,20 @@ public Action OnSmiteTakeDamage(int victim, int &attacker, int &inflictor, float
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmitePluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_SMITE);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_SMITE_SECTION);
 	list2.PushString(MT_SMITE_SECTION2);
@@ -294,7 +427,11 @@ void vSmiteAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arr
 	list4.PushString(MT_SMITE_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSmiteCache[tank].g_iHumanAbility != 2)
 	{
@@ -376,7 +513,11 @@ void vSmiteCombineAbilities(int tank, int type, const float random, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -432,7 +573,11 @@ void vSmiteConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -497,7 +642,11 @@ void vSmiteConfigsLoaded(const char[] subsection, const char[] key, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esSmiteCache[tank].g_flSmiteChance = flGetSettingValue(apply, bHuman, g_esSmitePlayer[tank].g_flSmiteChance, g_esSmiteAbility[type].g_flSmiteChance);
@@ -518,7 +667,11 @@ void vSmiteSettingsCached(int tank, bool apply, int type)
 	g_esSmitePlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vSmiteCopyStats2(oldTank, newTank);
 
@@ -528,7 +681,11 @@ void vSmiteCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -564,7 +721,11 @@ void vSmiteEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSmiteAbility[g_esSmitePlayer[tank].g_iTankType].g_iAccessFlags, g_esSmitePlayer[tank].g_iAccessFlags)) || g_esSmiteCache[tank].g_iHumanAbility == 0))
 	{
@@ -577,7 +738,11 @@ void vSmiteAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -603,7 +768,11 @@ void vSmiteButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSmiteChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveSmite(tank);
 }

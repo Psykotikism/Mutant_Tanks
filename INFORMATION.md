@@ -148,6 +148,16 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Plugin Enabled"			"1"
 
+			// The plugin will automatically disable any Mutant Tank whose abilities are not installed.
+			// Note: The abilities cache is only updated when configs are loaded/refreshed.
+			// Note: This setting does not disable Mutant Tanks that do not have any abilities.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Check Abilities"			"1"
+
 			// Mutant Tanks revert back to default Tanks upon death.
 			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
 			// Note: This feature is simply for cosmetic purposes. You do not need to worry about this setting.
@@ -155,16 +165,6 @@
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Death Revert"				"1"
-
-			// The plugin will automatically disable any Mutant Tank whose abilities are not installed.
-			// Note: The ability plugins cache is only updated when configs are loaded/refreshed.
-			// Note: This setting does not disable Mutant Tanks that do not have any abilities.
-			// Note: Do not change this setting if you are unsure of how it works.
-			// Note: This setting can be overridden for each Mutant Tank under the "General" section of their settings.
-			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Detect Plugins"			"1"
 
 			// Spawn Mutant Tanks during finales only.
 			// Note: This setting can be used for standard Tanks.
@@ -2099,6 +2099,17 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Menu Enabled"				"1"
 
+			// The plugin will automatically disable the Mutant Tank if none of its abilities are installed.
+			// Note: The abilities cache is only updated when configs are loaded/refreshed.
+			// Note: This setting does not disable the Mutant Tank if it does not have any abilities.
+			// Note: Do not change this setting if you are unsure of how it works.
+			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
+			// Note: This setting can be overridden for specific players.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Check Abilities"			"0"
+
 			// The Mutant Tank reverts back to default a Tank upon death.
 			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
 			// Note: This feature is simply for cosmetic purposes.
@@ -2108,17 +2119,6 @@
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Death Revert"				"0"
-
-			// The plugin will automatically disable the Mutant Tank if none of its abilities are installed.
-			// Note: The ability plugins cache is only updated when configs are loaded/refreshed.
-			// Note: This setting does not disable the Mutant Tank if it does not have any abilities.
-			// Note: Do not change this setting if you are unsure of how it works.
-			// Note: This setting overrides the same setting under the "Plugin Settings/General" section.
-			// Note: This setting can be overridden for specific players.
-			// --
-			// 0/"disabled"/"false"/"off"/"no": OFF
-			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Detect Plugins"			"0"
 
 			// These are the RGBA values of the Mutant Tank's skin color.
 			// Note: Any value less than "0" will output a random color.

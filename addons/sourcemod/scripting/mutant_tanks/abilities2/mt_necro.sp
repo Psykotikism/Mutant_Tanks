@@ -9,8 +9,46 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_NECRO_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_NECRO_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Necro Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank resurrects nearby special infected that die.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bSecondGame;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Necro Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	return APLRes_Success;
+}
+#else
+	#if MT_NECRO_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_NECRO_SECTION "necroability"
@@ -87,25 +125,79 @@ enum struct esNecroCache
 
 esNecroCache g_esNecroCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_necro", cmdNecroInfo, "View information about the Necro ability.");
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vNecroMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vNecroReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	vRemoveNecro(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveNecro(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vNecroReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdNecroInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vNecroMenu(client, MT_NECRO_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vNecroMenu(int client, const char[] name, int item)
 {
@@ -184,12 +276,20 @@ public int iNecroMenuHandler(Menu menu, MenuAction action, int param1, int param
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_NECRO, MT_MENU_NECRO);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_NECRO, false))
 	{
@@ -197,7 +297,11 @@ void vNecroMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_NECRO, false))
 	{
@@ -205,11 +309,19 @@ void vNecroMenuItemDisplayed(int client, const char[] info, char[] buffer, int s
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroPlayerRunCmd(int client)
+#else
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+#endif
 {
 	if (!MT_IsTankSupported(client) || !g_esNecroPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esNecroCache[client].g_iHumanMode == 1) || g_esNecroPlayer[client].g_iDuration == -1)
 	{
+#if defined MT_ABILITIES_MAIN2
 		return;
+#else
+		return Plugin_Continue;
+#endif
 	}
 
 	static int iTime;
@@ -224,14 +336,25 @@ void vNecroPlayerRunCmd(int client)
 		g_esNecroPlayer[client].g_bActivated = false;
 		g_esNecroPlayer[client].g_iDuration = -1;
 	}
+#if !defined MT_ABILITIES_MAIN2
+	return Plugin_Continue;
+#endif
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_NECRO);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_NECRO_SECTION);
 	list2.PushString(MT_NECRO_SECTION2);
@@ -239,7 +362,11 @@ void vNecroAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arr
 	list4.PushString(MT_NECRO_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility != 2)
 	{
@@ -286,7 +413,11 @@ void vNecroCombineAbilities(int tank, int type, const float random, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -335,7 +466,11 @@ void vNecroConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -386,7 +521,11 @@ void vNecroConfigsLoaded(const char[] subsection, const char[] key, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esNecroCache[tank].g_flNecroChance = flGetSettingValue(apply, bHuman, g_esNecroPlayer[tank].g_flNecroChance, g_esNecroAbility[type].g_flNecroChance);
@@ -404,7 +543,11 @@ void vNecroSettingsCached(int tank, bool apply, int type)
 	g_esNecroPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vNecroCopyStats2(oldTank, newTank);
 
@@ -414,7 +557,11 @@ void vNecroCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -499,7 +646,11 @@ void vNecroEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esNecroAbility[g_esNecroPlayer[tank].g_iTankType].g_iAccessFlags, g_esNecroPlayer[tank].g_iAccessFlags)) || g_esNecroCache[tank].g_iHumanAbility == 0))
 	{
@@ -512,7 +663,11 @@ void vNecroAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -578,7 +733,11 @@ void vNecroButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroButtonReleased(int tank, int button)
+#else
+public void MT_OnButtonReleased(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esNecroCache[tank].g_iHumanAbility == 1)
 	{
@@ -594,7 +753,11 @@ void vNecroButtonReleased(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vNecroChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveNecro(tank);
 }

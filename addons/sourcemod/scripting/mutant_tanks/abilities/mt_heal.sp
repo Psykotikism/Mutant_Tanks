@@ -9,8 +9,48 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_HEAL_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_HEAL_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Heal Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank gains health from other nearby infected and sets survivors to temporary health who will die when they reach 0 HP.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad, g_bSecondGame;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Heal Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_HEAL_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define SOUND_HEARTBEAT	 "player/heartbeatloop.wav"
@@ -126,35 +166,79 @@ esHealCache g_esHealCache[MAXPLAYERS + 1];
 
 ConVar g_cvMTMaxIncapCount;
 
+#if defined MT_ABILITIES_MAIN
 void vHealPluginStart()
+#else
+public void OnPluginStart()
+#endif
 {
 	g_cvMTMaxIncapCount = FindConVar("survivor_max_incapacitated_count");
+#if !defined MT_ABILITIES_MAIN
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_heal", cmdHealInfo, "View information about the Heal ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+#endif
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	PrecacheSound(SOUND_HEARTBEAT, true);
 
 	vHealReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnHealTakeDamage);
 	vRemoveHeal(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveHeal(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vHealReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealPluginEnd()
+#else
+public void MT_OnPluginEnd()
+#endif
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
@@ -164,6 +248,33 @@ void vHealPluginEnd()
 		}
 	}
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdHealInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vHealMenu(client, MT_HEAL_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vHealMenu(int client, const char[] name, int item)
 {
@@ -250,12 +361,20 @@ public int iHealMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_HEAL, MT_MENU_HEAL);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_HEAL, false))
 	{
@@ -263,7 +382,11 @@ void vHealMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_HEAL, false))
 	{
@@ -306,12 +429,20 @@ public Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float 
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_HEAL);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_HEAL_SECTION);
 	list2.PushString(MT_HEAL_SECTION2);
@@ -319,7 +450,11 @@ void vHealAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arra
 	list4.PushString(MT_HEAL_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHealCache[tank].g_iHumanAbility != 2)
 	{
@@ -415,7 +550,11 @@ void vHealCombineAbilities(int tank, int type, const float random, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -485,7 +624,11 @@ void vHealConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -564,7 +707,11 @@ void vHealConfigsLoaded(const char[] subsection, const char[] key, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esHealCache[tank].g_flHealAbsorbRange = flGetSettingValue(apply, bHuman, g_esHealPlayer[tank].g_flHealAbsorbRange, g_esHealAbility[type].g_flHealAbsorbRange);
@@ -592,7 +739,11 @@ void vHealSettingsCached(int tank, bool apply, int type)
 	g_esHealPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vHealCopyStats2(oldTank, newTank);
 
@@ -602,7 +753,11 @@ void vHealCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -663,7 +818,11 @@ void vHealEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHealAbility[g_esHealPlayer[tank].g_iTankType].g_iAccessFlags, g_esHealPlayer[tank].g_iAccessFlags)) || g_esHealCache[tank].g_iHumanAbility == 0))
 	{
@@ -677,7 +836,11 @@ void vHealAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -757,7 +920,11 @@ void vHealButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealButtonReleased(int tank, int button)
+#else
+public void MT_OnButtonReleased(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esHealCache[tank].g_iHumanAbility == 1)
 	{
@@ -772,7 +939,11 @@ void vHealButtonReleased(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHealChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveHeal(tank);
 }

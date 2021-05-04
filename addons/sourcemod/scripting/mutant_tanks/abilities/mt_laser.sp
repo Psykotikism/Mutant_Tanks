@@ -9,8 +9,46 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_LASER_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_LASER_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Laser Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank shoots lasers at survivors.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bSecondGame;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Laser Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	return APLRes_Success;
+}
+#else
+	#if MT_LASER_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define PARTICLE_LASER "electrical_arc_01_parent"
@@ -100,7 +138,22 @@ esLaserCache g_esLaserCache[MAXPLAYERS + 1];
 
 int g_iLaserSprite = -1;
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_laser", cmdLaserInfo, "View information about the Laser ability.");
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vLaserMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	switch (g_bSecondGame)
 	{
@@ -114,20 +167,59 @@ void vLaserMapStart()
 	vLaserReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	vRemoveLaser(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveLaser(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vLaserReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdLaserInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vLaserMenu(client, MT_LASER_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vLaserMenu(int client, const char[] name, int item)
 {
@@ -206,12 +298,20 @@ public int iLaserMenuHandler(Menu menu, MenuAction action, int param1, int param
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_LASER, MT_MENU_LASER);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_LASER, false))
 	{
@@ -219,7 +319,11 @@ void vLaserMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_LASER, false))
 	{
@@ -227,12 +331,20 @@ void vLaserMenuItemDisplayed(int client, const char[] info, char[] buffer, int s
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_LASER);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_LASER_SECTION);
 	list2.PushString(MT_LASER_SECTION2);
@@ -240,7 +352,11 @@ void vLaserAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arr
 	list4.PushString(MT_LASER_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esLaserCache[tank].g_iHumanAbility != 2)
 	{
@@ -288,7 +404,11 @@ void vLaserCombineAbilities(int tank, int type, const float random, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -342,7 +462,11 @@ void vLaserConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -405,7 +529,11 @@ void vLaserConfigsLoaded(const char[] subsection, const char[] key, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esLaserCache[tank].g_flLaserChance = flGetSettingValue(apply, bHuman, g_esLaserPlayer[tank].g_flLaserChance, g_esLaserAbility[type].g_flLaserChance);
@@ -425,7 +553,11 @@ void vLaserSettingsCached(int tank, bool apply, int type)
 	g_esLaserPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vLaserCopyStats2(oldTank, newTank);
 
@@ -435,7 +567,11 @@ void vLaserCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -471,7 +607,11 @@ void vLaserEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esLaserAbility[g_esLaserPlayer[tank].g_iTankType].g_iAccessFlags, g_esLaserPlayer[tank].g_iAccessFlags)) || g_esLaserCache[tank].g_iHumanAbility == 0))
 	{
@@ -484,7 +624,11 @@ void vLaserAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -552,7 +696,11 @@ void vLaserButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserButtonReleased(int tank, int button)
+#else
+public void MT_OnButtonReleased(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esLaserCache[tank].g_iHumanAbility == 1)
 	{
@@ -567,7 +715,11 @@ void vLaserButtonReleased(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vLaserChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveLaser(tank);
 }

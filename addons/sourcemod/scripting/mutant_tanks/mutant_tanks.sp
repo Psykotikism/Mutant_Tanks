@@ -10,7 +10,6 @@
  **/
 
 #include <sourcemod>
-#include <sdkhooks>
 #include <dhooks>
 #include <mutant_tanks>
 
@@ -503,6 +502,7 @@ enum struct esGeneral
 	int g_iBaseHealth;
 	int g_iBehaviorOffset;
 	int g_iBulletImmunity;
+	int g_iCheckAbilities;
 	int g_iChildActionOffset;
 	int g_iChosenType;
 	int g_iCleanKillsReward[3];
@@ -518,7 +518,6 @@ enum struct esGeneral
 	int g_iDeathSound;
 	int g_iDefaultMeleeRange;
 	int g_iDefaultSurvivorReviveHealth;
-	int g_iDetectPlugins;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
 	int g_iEventKilledAttackerOffset;
@@ -790,6 +789,7 @@ enum struct esPlayer
 	int g_iBossStages;
 	int g_iBossType[4];
 	int g_iBulletImmunity;
+	int g_iCheckAbilities;
 	int g_iCleanKills;
 	int g_iCleanKillsReward[3];
 	int g_iCooldown;
@@ -798,7 +798,6 @@ enum struct esPlayer
 	int g_iDeathMessage;
 	int g_iDeathRevert;
 	int g_iDeathSound;
-	int g_iDetectPlugins;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
 	int g_iEffect[2];
@@ -978,13 +977,13 @@ enum struct esTank
 	int g_iBossStages;
 	int g_iBossType[4];
 	int g_iBulletImmunity;
+	int g_iCheckAbilities;
 	int g_iCleanKillsReward[3];
 	int g_iCrownColor[4];
 	int g_iDeathDetails;
 	int g_iDeathMessage;
 	int g_iDeathRevert;
 	int g_iDeathSound;
-	int g_iDetectPlugins;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
 	int g_iExplosiveImmunity;
@@ -1132,13 +1131,13 @@ enum struct esCache
 	int g_iBossStages;
 	int g_iBossType[4];
 	int g_iBulletImmunity;
+	int g_iCheckAbilities;
 	int g_iCleanKillsReward[3];
 	int g_iCrownColor[4];
 	int g_iDeathDetails;
 	int g_iDeathMessage;
 	int g_iDeathRevert;
 	int g_iDeathSound;
-	int g_iDetectPlugins;
 	int g_iDisplayHealth;
 	int g_iDisplayHealthType;
 	int g_iExplosiveImmunity;
@@ -6060,6 +6059,8 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iBossStages = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iBossStages, g_esTank[iType].g_iBossStages);
 	g_esCache[tank].g_iBulletImmunity = iGetSettingValue(bAccess, true, g_esTank[iType].g_iBulletImmunity, g_esGeneral.g_iBulletImmunity);
 	g_esCache[tank].g_iBulletImmunity = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iBulletImmunity, g_esCache[tank].g_iBulletImmunity);
+	g_esCache[tank].g_iCheckAbilities = iGetSettingValue(bAccess, true, g_esTank[iType].g_iCheckAbilities, g_esGeneral.g_iCheckAbilities);
+	g_esCache[tank].g_iCheckAbilities = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iCheckAbilities, g_esCache[tank].g_iCheckAbilities);
 	g_esCache[tank].g_iDeathDetails = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDeathDetails, g_esGeneral.g_iDeathDetails);
 	g_esCache[tank].g_iDeathDetails = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDeathDetails, g_esCache[tank].g_iDeathDetails);
 	g_esCache[tank].g_iDeathMessage = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDeathMessage, g_esGeneral.g_iDeathMessage);
@@ -6068,8 +6069,6 @@ static void vCacheSettings(int tank)
 	g_esCache[tank].g_iDeathRevert = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDeathRevert, g_esCache[tank].g_iDeathRevert);
 	g_esCache[tank].g_iDeathSound = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDeathSound, g_esGeneral.g_iDeathSound);
 	g_esCache[tank].g_iDeathSound = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDeathSound, g_esCache[tank].g_iDeathSound);
-	g_esCache[tank].g_iDetectPlugins = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDetectPlugins, g_esGeneral.g_iDetectPlugins);
-	g_esCache[tank].g_iDetectPlugins = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDetectPlugins, g_esCache[tank].g_iDetectPlugins);
 	g_esCache[tank].g_iDisplayHealth = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDisplayHealth, g_esGeneral.g_iDisplayHealth);
 	g_esCache[tank].g_iDisplayHealth = iGetSettingValue(bAccess, bHuman, g_esPlayer[tank].g_iDisplayHealth, g_esCache[tank].g_iDisplayHealth);
 	g_esCache[tank].g_iDisplayHealthType = iGetSettingValue(bAccess, true, g_esTank[iType].g_iDisplayHealthType, g_esGeneral.g_iDisplayHealthType);
@@ -6478,8 +6477,8 @@ public void SMCParseStart(SMCParser smc)
 	if (g_esGeneral.g_iConfigMode == 1)
 	{
 		g_esGeneral.g_iPluginEnabled = 0;
+		g_esGeneral.g_iCheckAbilities = 1;
 		g_esGeneral.g_iDeathRevert = 1;
-		g_esGeneral.g_iDetectPlugins = 1;
 		g_esGeneral.g_iFinalesOnly = 0;
 		g_esGeneral.g_flIdleCheck = 10.0;
 		g_esGeneral.g_iIdleCheckMode = 2;
@@ -6639,8 +6638,8 @@ public void SMCParseStart(SMCParser smc)
 			g_esTank[iIndex].g_flBurntSkin = -1.0;
 			g_esTank[iIndex].g_iSpawnEnabled = 1;
 			g_esTank[iIndex].g_iMenuEnabled = 1;
+			g_esTank[iIndex].g_iCheckAbilities = 0;
 			g_esTank[iIndex].g_iDeathRevert = 0;
-			g_esTank[iIndex].g_iDetectPlugins = 0;
 			g_esTank[iIndex].g_iAnnounceArrival = 0;
 			g_esTank[iIndex].g_iAnnounceDeath = 0;
 			g_esTank[iIndex].g_iAnnounceKill = 0;
@@ -6820,8 +6819,8 @@ public void SMCParseStart(SMCParser smc)
 				g_esPlayer[iPlayer].g_flBurnDuration = 0.0;
 				g_esPlayer[iPlayer].g_flBurntSkin = -1.0;
 				g_esPlayer[iPlayer].g_iTankNote = 0;
+				g_esPlayer[iPlayer].g_iCheckAbilities = 0;
 				g_esPlayer[iPlayer].g_iDeathRevert = 0;
-				g_esPlayer[iPlayer].g_iDetectPlugins = 0;
 				g_esPlayer[iPlayer].g_iAnnounceArrival = 0;
 				g_esPlayer[iPlayer].g_iAnnounceDeath = 0;
 				g_esPlayer[iPlayer].g_iAnnounceKill = 0;
@@ -7068,8 +7067,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			if (StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS, false) || StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS2, false) || StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS3, false) || StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS4, false))
 			{
 				g_esGeneral.g_iPluginEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "PluginEnabled", "Plugin Enabled", "Plugin_Enabled", "penabled", g_esGeneral.g_iPluginEnabled, value, 0, 1);
+				g_esGeneral.g_iCheckAbilities = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "CheckAbilities", "Check Abilities", "Check_Abilities", "check", g_esGeneral.g_iCheckAbilities, value, 0, 1);
 				g_esGeneral.g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esGeneral.g_iDeathRevert, value, 0, 1);
-				g_esGeneral.g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esGeneral.g_iDetectPlugins, value, 0, 1);
 				g_esGeneral.g_iFinalesOnly = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esGeneral.g_iFinalesOnly, value, 0, 4);
 				g_esGeneral.g_flIdleCheck = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "IdleCheck", "Idle Check", "Idle_Check", "idle", g_esGeneral.g_flIdleCheck, value, 0.0, 999999.0);
 				g_esGeneral.g_iIdleCheckMode = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "IdleCheckMode", "Idle Check Mode", "Idle_Check_Mode", "idlemode", g_esGeneral.g_iIdleCheckMode, value, 0, 2);
@@ -7532,8 +7531,8 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 						g_esPlayer[iPlayer].g_flBurnDuration = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "BurnDuration", "Burn Duration", "Burn_Duration", "burndur", g_esPlayer[iPlayer].g_flBurnDuration, value, 0.0, 999999.0);
 						g_esPlayer[iPlayer].g_flBurntSkin = flGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "BurntSkin", "Burnt Skin", "Burnt_Skin", "burnt", g_esPlayer[iPlayer].g_flBurntSkin, value, -1.0, 1.0);
 						g_esPlayer[iPlayer].g_iTankNote = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "TankNote", "Tank Note", "Tank_Note", "note", g_esPlayer[iPlayer].g_iTankNote, value, 0, 1);
+						g_esPlayer[iPlayer].g_iCheckAbilities = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "CheckAbilities", "Check Abilities", "Check_Abilities", "check", g_esPlayer[iPlayer].g_iCheckAbilities, value, 0, 1);
 						g_esPlayer[iPlayer].g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esPlayer[iPlayer].g_iDeathRevert, value, 0, 1);
-						g_esPlayer[iPlayer].g_iDetectPlugins = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esPlayer[iPlayer].g_iDetectPlugins, value, 0, 1);
 						g_esPlayer[iPlayer].g_iAnnounceArrival = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esPlayer[iPlayer].g_iAnnounceArrival, value, 0, 31);
 						g_esPlayer[iPlayer].g_iAnnounceDeath = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esPlayer[iPlayer].g_iAnnounceDeath, value, 0, 2);
 						g_esPlayer[iPlayer].g_iAnnounceKill = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceKill", "Announce Kill", "Announce_Kill", "kill", g_esPlayer[iPlayer].g_iAnnounceKill, value, 0, 1);
@@ -8535,8 +8534,8 @@ static void vReadTankSettings(int type, const char[] sub, const char[] key, cons
 		g_esTank[type].g_iTankNote = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "TankNote", "Tank Note", "Tank_Note", "note", g_esTank[type].g_iTankNote, value, 0, 1);
 		g_esTank[type].g_iSpawnEnabled = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "SpawnEnabled", "Spawn Enabled", "Spawn_Enabled", "spawn", g_esTank[type].g_iSpawnEnabled, value, -1, 1);
 		g_esTank[type].g_iMenuEnabled = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "MenuEnabled", "Menu Enabled", "Menu_Enabled", "menu", g_esTank[type].g_iMenuEnabled, value, 0, 1);
+		g_esTank[type].g_iCheckAbilities = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "CheckAbilities", "Check Abilities", "Check_Abilities", "check", g_esTank[type].g_iCheckAbilities, value, 0, 1);
 		g_esTank[type].g_iDeathRevert = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esTank[type].g_iDeathRevert, value, 0, 1);
-		g_esTank[type].g_iDetectPlugins = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "DetectPlugins", "Detect Plugins", "Detect_Plugins", "detect", g_esTank[type].g_iDetectPlugins, value, 0, 1);
 		g_esTank[type].g_iRequiresHumans = iGetKeyValue(sub, MT_CONFIG_SECTIONS_GENERAL, key, "RequiresHumans", "Requires Humans", "Requires_Humans", "hrequire", g_esTank[type].g_iRequiresHumans, value, 0, 32);
 		g_esTank[type].g_iAnnounceArrival = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceArrival", "Announce Arrival", "Announce_Arrival", "arrival", g_esTank[type].g_iAnnounceArrival, value, 0, 31);
 		g_esTank[type].g_iAnnounceDeath = iGetKeyValue(sub, MT_CONFIG_SECTIONS_ANNOUNCE, key, "AnnounceDeath", "Announce Death", "Announce_Death", "death", g_esTank[type].g_iAnnounceDeath, value, 0, 2);
@@ -13856,7 +13855,7 @@ static bool bIsTankInThirdPerson(int tank)
 
 static bool bIsTypeAvailable(int type, int tank = 0)
 {
-	if ((tank > 0 && g_esCache[tank].g_iDetectPlugins == 0) && g_esGeneral.g_iDetectPlugins == 0 && g_esTank[type].g_iDetectPlugins == 0)
+	if ((tank > 0 && g_esCache[tank].g_iCheckAbilities == 0) && g_esGeneral.g_iCheckAbilities == 0 && g_esTank[type].g_iCheckAbilities == 0)
 	{
 		return true;
 	}

@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_XIPHOS_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_XIPHOS_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Xiphos Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank can steal health from survivors and vice-versa.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Xiphos Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_XIPHOS_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_XIPHOS_SECTION "xiphosability"
@@ -74,10 +110,65 @@ enum struct esXiphosCache
 
 esXiphosCache g_esXiphosCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_xiphos", cmdXiphosInfo, "View information about the Xiphos ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vXiphosClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnXiphosTakeDamage);
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdXiphosInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vXiphosMenu(client, MT_XIPHOS_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vXiphosMenu(int client, const char[] name, int item)
 {
@@ -141,12 +232,20 @@ public int iXiphosMenuHandler(Menu menu, MenuAction action, int param1, int para
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vXiphosDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_XIPHOS, MT_MENU_XIPHOS);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vXiphosMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_XIPHOS, false))
 	{
@@ -154,7 +253,11 @@ void vXiphosMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vXiphosMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_XIPHOS, false))
 	{
@@ -219,12 +322,20 @@ public Action OnXiphosTakeDamage(int victim, int &attacker, int &inflictor, floa
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vXiphosPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_XIPHOS);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vXiphosAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_XIPHOS_SECTION);
 	list2.PushString(MT_XIPHOS_SECTION2);
@@ -232,7 +343,11 @@ void vXiphosAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Ar
 	list4.PushString(MT_XIPHOS_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vXiphosConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -274,7 +389,11 @@ void vXiphosConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vXiphosConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -325,7 +444,11 @@ void vXiphosConfigsLoaded(const char[] subsection, const char[] key, const char[
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vXiphosSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esXiphosCache[tank].g_flXiphosChance = flGetSettingValue(apply, bHuman, g_esXiphosPlayer[tank].g_flXiphosChance, g_esXiphosAbility[type].g_flXiphosChance);

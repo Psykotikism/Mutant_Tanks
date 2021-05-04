@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_ICE_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_ICE_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Ice Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank freezes survivors.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Ice Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_ICE_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define SOUND_BULLET "physics/glass/glass_impact_bullet4.wav"
@@ -101,28 +137,95 @@ enum struct esIceCache
 
 esIceCache g_esIceCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_ice", cmdIceInfo, "View information about the Ice ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vIceMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	PrecacheSound(SOUND_BULLET, true);
 
 	vIceReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnIceTakeDamage);
 	vIceReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vIceReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vIceReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdIceInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vIceMenu(client, MT_ICE_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vIceMenu(int client, const char[] name, int item)
 {
@@ -198,12 +301,20 @@ public int iIceMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_ICE, MT_MENU_ICE);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_ICE, false))
 	{
@@ -211,7 +322,11 @@ void vIceMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_ICE, false))
 	{
@@ -254,12 +369,20 @@ public Action OnIceTakeDamage(int victim, int &attacker, int &inflictor, float &
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIcePluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_ICE);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_ICE_SECTION);
 	list2.PushString(MT_ICE_SECTION2);
@@ -267,7 +390,11 @@ void vIceAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Array
 	list4.PushString(MT_ICE_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esIceCache[tank].g_iHumanAbility != 2)
 	{
@@ -350,7 +477,11 @@ void vIceCombineAbilities(int tank, int type, const float random, const char[] c
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -406,7 +537,11 @@ void vIceConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -471,7 +606,11 @@ void vIceConfigsLoaded(const char[] subsection, const char[] key, const char[] v
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esIceCache[tank].g_flIceChance = flGetSettingValue(apply, bHuman, g_esIcePlayer[tank].g_flIceChance, g_esIceAbility[type].g_flIceChance);
@@ -492,7 +631,11 @@ void vIceSettingsCached(int tank, bool apply, int type)
 	g_esIcePlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vIceCopyStats2(oldTank, newTank);
 
@@ -502,7 +645,11 @@ void vIceCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIcePluginEnd()
+#else
+public void MT_OnPluginEnd()
+#endif
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
@@ -513,7 +660,11 @@ void vIcePluginEnd()
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -549,7 +700,11 @@ void vIceEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esIceAbility[g_esIcePlayer[tank].g_iTankType].g_iAccessFlags, g_esIcePlayer[tank].g_iAccessFlags)) || g_esIceCache[tank].g_iHumanAbility == 0))
 	{
@@ -562,7 +717,11 @@ void vIceAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -588,7 +747,11 @@ void vIceButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vIceChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveIce(tank);
 }

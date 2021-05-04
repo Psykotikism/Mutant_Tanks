@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_HYPNO_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_HYPNO_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Hypno Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank hypnotizes survivors to damage themselves or their teammates.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Hypno Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_HYPNO_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
@@ -119,26 +155,93 @@ enum struct esHypnoCache
 
 esHypnoCache g_esHypnoCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_hypno", cmdHypnoInfo, "View information about the Hypno ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vHypnoMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vHypnoReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnHypnoTakeDamage);
 	vHypnoReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vHypnoReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vHypnoReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdHypnoInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vHypnoMenu(client, MT_HYPNO_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vHypnoMenu(int client, const char[] name, int item)
 {
@@ -214,12 +317,20 @@ public int iHypnoMenuHandler(Menu menu, MenuAction action, int param1, int param
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_HYPNO, MT_MENU_HYPNO);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_HYPNO, false))
 	{
@@ -227,7 +338,11 @@ void vHypnoMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_HYPNO, false))
 	{
@@ -334,12 +449,20 @@ public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_HYPNO);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_HYPNO_SECTION);
 	list2.PushString(MT_HYPNO_SECTION2);
@@ -347,7 +470,11 @@ void vHypnoAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arr
 	list4.PushString(MT_HYPNO_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esHypnoCache[tank].g_iHumanAbility != 2)
 	{
@@ -430,7 +557,11 @@ void vHypnoCombineAbilities(int tank, int type, const float random, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -498,7 +629,11 @@ void vHypnoConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -575,7 +710,11 @@ void vHypnoConfigsLoaded(const char[] subsection, const char[] key, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esHypnoCache[tank].g_flHypnoBulletDivisor = flGetSettingValue(apply, bHuman, g_esHypnoPlayer[tank].g_flHypnoBulletDivisor, g_esHypnoAbility[type].g_flHypnoBulletDivisor);
@@ -602,7 +741,11 @@ void vHypnoSettingsCached(int tank, bool apply, int type)
 	g_esHypnoPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vHypnoCopyStats2(oldTank, newTank);
 
@@ -612,7 +755,11 @@ void vHypnoCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -648,7 +795,11 @@ void vHypnoEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esHypnoAbility[g_esHypnoPlayer[tank].g_iTankType].g_iAccessFlags, g_esHypnoPlayer[tank].g_iAccessFlags)) || g_esHypnoCache[tank].g_iHumanAbility == 0))
 	{
@@ -661,7 +812,11 @@ void vHypnoAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -687,7 +842,11 @@ void vHypnoButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vHypnoChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveHypno(tank);
 }

@@ -9,8 +9,46 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_SPLATTER_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_SPLATTER_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Splatter Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank covers everyone's screens with splatters.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bSecondGame;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Splatter Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	return APLRes_Success;
+}
+#else
+	#if MT_SPLATTER_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_SPLATTER_SECTION "splatterability"
@@ -111,7 +149,22 @@ enum struct esSplatterCache
 
 esSplatterCache g_esSplatterCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_splatter", cmdSplatterInfo, "View information about the Splatter ability.");
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vSplatterMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	if (g_bSecondGame)
 	{
@@ -124,20 +177,59 @@ void vSplatterMapStart()
 	vSplatterReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	vRemoveSplatter(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveSplatter(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vSplatterReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdSplatterInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vSplatterMenu(client, MT_SPLATTER_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vSplatterMenu(int client, const char[] name, int item)
 {
@@ -216,12 +308,20 @@ public int iSplatterMenuHandler(Menu menu, MenuAction action, int param1, int pa
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_SPLATTER, MT_MENU_SPLATTER);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_SPLATTER, false))
 	{
@@ -229,7 +329,11 @@ void vSplatterMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_SPLATTER, false))
 	{
@@ -237,12 +341,20 @@ void vSplatterMenuItemDisplayed(int client, const char[] info, char[] buffer, in
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_SPLATTER);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_SPLATTER_SECTION);
 	list2.PushString(MT_SPLATTER_SECTION2);
@@ -250,7 +362,11 @@ void vSplatterAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, 
 	list4.PushString(MT_SPLATTER_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (!g_bSecondGame || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esSplatterCache[tank].g_iHumanAbility != 2))
 	{
@@ -298,7 +414,11 @@ void vSplatterCombineAbilities(int tank, int type, const float random, const cha
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -348,7 +468,11 @@ void vSplatterConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -401,7 +525,11 @@ void vSplatterConfigsLoaded(const char[] subsection, const char[] key, const cha
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esSplatterCache[tank].g_flSplatterChance = flGetSettingValue(apply, bHuman, g_esSplatterPlayer[tank].g_flSplatterChance, g_esSplatterAbility[type].g_flSplatterChance);
@@ -420,7 +548,11 @@ void vSplatterSettingsCached(int tank, bool apply, int type)
 	g_esSplatterPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vSplatterCopyStats2(oldTank, newTank);
 
@@ -430,7 +562,11 @@ void vSplatterCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -467,7 +603,11 @@ void vSplatterEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (!g_bSecondGame || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esSplatterAbility[g_esSplatterPlayer[tank].g_iTankType].g_iAccessFlags, g_esSplatterPlayer[tank].g_iAccessFlags)) || g_esSplatterCache[tank].g_iHumanAbility == 0)))
 	{
@@ -480,7 +620,11 @@ void vSplatterAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -548,7 +692,11 @@ void vSplatterButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterButtonReleased(int tank, int button)
+#else
+public void MT_OnButtonReleased(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esSplatterCache[tank].g_iHumanAbility == 1)
 	{
@@ -562,12 +710,20 @@ void vSplatterButtonReleased(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveSplatter(tank);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vSplatterPostTankSpawn(int tank)
+#else
+public void MT_OnPostTankSpawn(int tank)
+#endif
 {
 	vSplatterRange(tank, true);
 }

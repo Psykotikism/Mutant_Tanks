@@ -9,8 +9,40 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_OMNI_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_OMNI_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Omni Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank has omni-level access to other nearby Mutant Tanks' abilities.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Omni Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	return APLRes_Success;
+}
+#else
+	#if MT_OMNI_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_OMNI_SECTION "omniability"
@@ -110,25 +142,79 @@ enum struct esOmni
 
 esOmni g_esOmni[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_omni", cmdOmniInfo, "View information about the Omni ability.");
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vOmniMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vOmniReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	vRemoveOmni(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveOmni(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vOmniReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdOmniInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vOmniMenu(client, MT_OMNI_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vOmniMenu(int client, const char[] name, int item)
 {
@@ -207,12 +293,20 @@ public int iOmniMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_OMNI, MT_MENU_OMNI);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_OMNI, false))
 	{
@@ -220,7 +314,11 @@ void vOmniMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_OMNI, false))
 	{
@@ -228,11 +326,19 @@ void vOmniMenuItemDisplayed(int client, const char[] info, char[] buffer, int si
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniPlayerRunCmd(int client)
+#else
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+#endif
 {
 	if (!MT_IsTankSupported(client) || !g_esOmniPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esOmni[client].g_iHumanMode == 1) || g_esOmniPlayer[client].g_iDuration == -1)
 	{
+#if defined MT_ABILITIES_MAIN2
 		return;
+#else
+		return Plugin_Continue;
+#endif
 	}
 
 	static int iTime;
@@ -246,14 +352,25 @@ void vOmniPlayerRunCmd(int client)
 
 		vOmniReset2(client);
 	}
+#if !defined MT_ABILITIES_MAIN2
+	return Plugin_Continue;
+#endif
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_OMNI);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_OMNI_SECTION);
 	list2.PushString(MT_OMNI_SECTION2);
@@ -261,7 +378,11 @@ void vOmniAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arra
 	list4.PushString(MT_OMNI_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility != 2)
 	{
@@ -309,7 +430,11 @@ void vOmniCombineAbilities(int tank, int type, const float random, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -359,7 +484,11 @@ void vOmniConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -412,7 +541,11 @@ void vOmniConfigsLoaded(const char[] subsection, const char[] key, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esOmniCache[tank].g_flOmniChance = flGetSettingValue(apply, bHuman, g_esOmniPlayer[tank].g_flOmniChance, g_esOmniAbility[type].g_flOmniChance);
@@ -468,7 +601,11 @@ void vOmniCopyStats2(int oldTank, int newTank)
 	g_esOmni[newTank].g_iRequiresHumans = g_esOmni[oldTank].g_iRequiresHumans;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vOmniCopyStats2(oldTank, newTank);
 
@@ -478,7 +615,11 @@ void vOmniCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -514,7 +655,11 @@ void vOmniEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esOmni[tank].g_iAccessFlags, g_esOmniPlayer[tank].g_iAccessFlags)) || g_esOmni[tank].g_iHumanAbility == 0))
 	{
@@ -527,7 +672,11 @@ void vOmniAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -595,7 +744,11 @@ void vOmniButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniButtonReleased(int tank, int button)
+#else
+public void MT_OnButtonReleased(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esOmniCache[tank].g_iHumanAbility == 1)
 	{
@@ -610,7 +763,11 @@ void vOmniButtonReleased(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vOmniPostTankSpawn(int tank)
+#else
+public void MT_OnPostTankSpawn(int tank)
+#endif
 {
 	vCacheOriginalSettings(tank);
 }

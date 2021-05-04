@@ -9,8 +9,40 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_REGEN_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_REGEN_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Regen Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank regenerates health.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Regen Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	return APLRes_Success;
+}
+#else
+	#if MT_REGEN_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_REGEN_SECTION "regenability"
@@ -91,25 +123,79 @@ enum struct esRegenCache
 
 esRegenCache g_esRegenCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_regen", cmdRegenInfo, "View information about the Regen ability.");
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vRegenMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vRegenReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	vRemoveRegen(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveRegen(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vRegenReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdRegenInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vRegenMenu(client, MT_REGEN_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vRegenMenu(int client, const char[] name, int item)
 {
@@ -188,12 +274,20 @@ public int iRegenMenuHandler(Menu menu, MenuAction action, int param1, int param
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_REGEN, MT_MENU_REGEN);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_REGEN, false))
 	{
@@ -201,7 +295,11 @@ void vRegenMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_REGEN, false))
 	{
@@ -209,12 +307,20 @@ void vRegenMenuItemDisplayed(int client, const char[] info, char[] buffer, int s
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_REGEN);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_REGEN_SECTION);
 	list2.PushString(MT_REGEN_SECTION2);
@@ -222,7 +328,11 @@ void vRegenAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arr
 	list4.PushString(MT_REGEN_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility != 2)
 	{
@@ -270,7 +380,11 @@ void vRegenCombineAbilities(int tank, int type, const float random, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -322,7 +436,11 @@ void vRegenConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -377,7 +495,11 @@ void vRegenConfigsLoaded(const char[] subsection, const char[] key, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esRegenCache[tank].g_flRegenChance = flGetSettingValue(apply, bHuman, g_esRegenPlayer[tank].g_flRegenChance, g_esRegenAbility[type].g_flRegenChance);
@@ -397,7 +519,11 @@ void vRegenSettingsCached(int tank, bool apply, int type)
 	g_esRegenPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vRegenCopyStats2(oldTank, newTank);
 
@@ -407,7 +533,11 @@ void vRegenCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -443,7 +573,11 @@ void vRegenEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esRegenAbility[g_esRegenPlayer[tank].g_iTankType].g_iAccessFlags, g_esRegenPlayer[tank].g_iAccessFlags)) || g_esRegenCache[tank].g_iHumanAbility == 0))
 	{
@@ -456,7 +590,11 @@ void vRegenAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -524,7 +662,11 @@ void vRegenButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenButtonReleased(int tank, int button)
+#else
+public void MT_OnButtonReleased(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esRegenCache[tank].g_iHumanAbility == 1)
 	{
@@ -539,7 +681,11 @@ void vRegenButtonReleased(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vRegenChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveRegen(tank);
 }

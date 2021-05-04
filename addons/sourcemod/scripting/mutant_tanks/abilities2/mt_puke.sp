@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_PUKE_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_PUKE_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Puke Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank pukes on survivors.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Puke Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_PUKE_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define PARTICLE_BLOOD "boomer_explode_D"
@@ -106,7 +142,35 @@ enum struct esPukeCache
 
 esPukeCache g_esPukeCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_puke", cmdPukeInfo, "View information about the Puke ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vPukeMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	iPrecacheParticle(PARTICLE_BLOOD);
 	iPrecacheParticle(PARTICLE_FOUNTAIN);
@@ -114,21 +178,60 @@ void vPukeMapStart()
 	vPukeReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnPukeTakeDamage);
 	vRemovePuke(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemovePuke(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vPukeReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdPukeInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vPukeMenu(client, MT_PUKE_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vPukeMenu(int client, const char[] name, int item)
 {
@@ -201,12 +304,20 @@ public int iPukeMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_PUKE, MT_MENU_PUKE);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_PUKE, false))
 	{
@@ -214,7 +325,11 @@ void vPukeMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_PUKE, false))
 	{
@@ -257,12 +372,20 @@ public Action OnPukeTakeDamage(int victim, int &attacker, int &inflictor, float 
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukePluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_PUKE);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_PUKE_SECTION);
 	list2.PushString(MT_PUKE_SECTION2);
@@ -270,7 +393,11 @@ void vPukeAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arra
 	list4.PushString(MT_PUKE_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPukeCache[tank].g_iHumanAbility != 2)
 	{
@@ -354,7 +481,11 @@ void vPukeCombineAbilities(int tank, int type, const float random, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -414,7 +545,11 @@ void vPukeConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -483,7 +618,11 @@ void vPukeConfigsLoaded(const char[] subsection, const char[] key, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esPukeCache[tank].g_flPukeChance = flGetSettingValue(apply, bHuman, g_esPukePlayer[tank].g_flPukeChance, g_esPukeAbility[type].g_flPukeChance);
@@ -506,7 +645,11 @@ void vPukeSettingsCached(int tank, bool apply, int type)
 	g_esPukePlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vPukeCopyStats2(oldTank, newTank);
 
@@ -516,7 +659,11 @@ void vPukeCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -553,7 +700,11 @@ void vPukeEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPukeAbility[g_esPukePlayer[tank].g_iTankType].g_iAccessFlags, g_esPukePlayer[tank].g_iAccessFlags)) || g_esPukeCache[tank].g_iHumanAbility == 0))
 	{
@@ -566,7 +717,11 @@ void vPukeAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -592,12 +747,20 @@ void vPukeButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukeChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemovePuke(tank);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPukePostTankSpawn(int tank)
+#else
+public void MT_OnPostTankSpawn(int tank)
+#endif
 {
 	vPukeRange(tank, 1, GetRandomFloat(0.1, 100.0));
 }

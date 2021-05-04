@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_AIMLESS_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_AIMLESS_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Aimless Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank prevents survivors from aiming.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Aimless Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_AIMLESS_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_AIMLESS_SECTION "aimlessability"
@@ -100,26 +136,93 @@ enum struct esAimlessCache
 
 esAimlessCache g_esAimlessCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_aimless", cmdAimlessInfo, "View information about the Aimless ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vAimlessMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vAimlessReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnAimlessTakeDamage);
 	vAimlessReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vAimlessReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vAimlessReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdAimlessInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vAimlessMenu(client, MT_AIMLESS_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vAimlessMenu(int client, const char[] name, int item)
 {
@@ -195,12 +298,20 @@ public int iAimlessMenuHandler(Menu menu, MenuAction action, int param1, int par
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_AIMLESS, MT_MENU_AIMLESS);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_AIMLESS, false))
 	{
@@ -208,7 +319,11 @@ void vAimlessMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_AIMLESS, false))
 	{
@@ -216,7 +331,11 @@ void vAimlessMenuItemDisplayed(int client, const char[] info, char[] buffer, int
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessPlayerRunCmd(int client)
+#else
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+#endif
 {
 	if (g_esAimlessPlayer[client].g_bAffected && !MT_DoesSurvivorHaveRewardType(client, MT_REWARD_GODMODE))
 	{
@@ -259,12 +378,20 @@ public Action OnAimlessTakeDamage(int victim, int &attacker, int &inflictor, flo
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_AIMLESS);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_AIMLESS_SECTION);
 	list2.PushString(MT_AIMLESS_SECTION2);
@@ -272,7 +399,11 @@ void vAimlessAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, A
 	list4.PushString(MT_AIMLESS_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esAimlessCache[tank].g_iHumanAbility != 2)
 	{
@@ -355,7 +486,11 @@ void vAimlessCombineAbilities(int tank, int type, const float random, const char
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -411,7 +546,11 @@ void vAimlessConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -476,7 +615,11 @@ void vAimlessConfigsLoaded(const char[] subsection, const char[] key, const char
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esAimlessCache[tank].g_flAimlessChance = flGetSettingValue(apply, bHuman, g_esAimlessPlayer[tank].g_flAimlessChance, g_esAimlessAbility[type].g_flAimlessChance);
@@ -497,7 +640,11 @@ void vAimlessSettingsCached(int tank, bool apply, int type)
 	g_esAimlessPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vAimlessCopyStats2(oldTank, newTank);
 
@@ -507,7 +654,11 @@ void vAimlessCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -543,7 +694,11 @@ void vAimlessEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAimlessAbility[g_esAimlessPlayer[tank].g_iTankType].g_iAccessFlags, g_esAimlessPlayer[tank].g_iAccessFlags)) || g_esAimlessCache[tank].g_iHumanAbility == 0))
 	{
@@ -556,7 +711,11 @@ void vAimlessAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -582,7 +741,11 @@ void vAimlessButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAimlessChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveAimless(tank);
 }

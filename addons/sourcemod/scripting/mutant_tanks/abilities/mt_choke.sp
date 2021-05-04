@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_CHOKE_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_CHOKE_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Choke Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank chokes survivors in midair.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Choke Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_CHOKE_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_CHOKE_SECTION "chokeability"
@@ -106,26 +142,93 @@ enum struct esChokeCache
 
 esChokeCache g_esChokeCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_choke", cmdChokeInfo, "View information about the Choke ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vChokeMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vChokeReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnChokeTakeDamage);
 	vChokeReset3(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vChokeReset3(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vChokeReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdChokeInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vChokeMenu(client, MT_CHOKE_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vChokeMenu(int client, const char[] name, int item)
 {
@@ -201,12 +304,20 @@ public int iChokeMenuHandler(Menu menu, MenuAction action, int param1, int param
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_CHOKE, MT_MENU_CHOKE);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_CHOKE, false))
 	{
@@ -214,7 +325,11 @@ void vChokeMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_CHOKE, false))
 	{
@@ -222,11 +337,19 @@ void vChokeMenuItemDisplayed(int client, const char[] info, char[] buffer, int s
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokePlayerRunCmd(int client, int &buttons)
+#else
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+#endif
 {
 	if (!MT_IsCorePluginEnabled())
 	{
+#if defined MT_ABILITIES_MAIN
 		return;
+#else
+		return Plugin_Continue;
+#endif
 	}
 
 	if (g_esChokePlayer[client].g_bAffected && ((buttons & IN_ATTACK) || (buttons & IN_ATTACK2) || (buttons & IN_USE)))
@@ -235,6 +358,9 @@ void vChokePlayerRunCmd(int client, int &buttons)
 		buttons &= IN_ATTACK2;
 		buttons &= IN_USE;
 	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
 }
 
 public Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -281,12 +407,20 @@ public Action OnChokeTakeDamage(int victim, int &attacker, int &inflictor, float
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokePluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_CHOKE);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_CHOKE_SECTION);
 	list2.PushString(MT_CHOKE_SECTION2);
@@ -294,7 +428,11 @@ void vChokeAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arr
 	list4.PushString(MT_CHOKE_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esChokeCache[tank].g_iHumanAbility != 2)
 	{
@@ -377,7 +515,11 @@ void vChokeCombineAbilities(int tank, int type, const float random, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -437,7 +579,11 @@ void vChokeConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -506,7 +652,11 @@ void vChokeConfigsLoaded(const char[] subsection, const char[] key, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esChokeCache[tank].g_flChokeChance = flGetSettingValue(apply, bHuman, g_esChokePlayer[tank].g_flChokeChance, g_esChokeAbility[type].g_flChokeChance);
@@ -529,7 +679,11 @@ void vChokeSettingsCached(int tank, bool apply, int type)
 	g_esChokePlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vChokeCopyStats2(oldTank, newTank);
 
@@ -539,7 +693,11 @@ void vChokeCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokePluginEnd()
+#else
+public void MT_OnPluginEnd()
+#endif
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -551,7 +709,11 @@ void vChokePluginEnd()
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -587,7 +749,11 @@ void vChokeEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeFatalFalling(int survivor)
+#else
+public Action MT_OnFatalFalling(int survivor)
+#endif
 {
 	if (bIsSurvivor(survivor) && g_esChokePlayer[survivor].g_bBlockFall)
 	{
@@ -595,7 +761,11 @@ void vChokeFatalFalling(int survivor)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esChokeAbility[g_esChokePlayer[tank].g_iTankType].g_iAccessFlags, g_esChokePlayer[tank].g_iAccessFlags)) || g_esChokeCache[tank].g_iHumanAbility == 0))
 	{
@@ -608,7 +778,11 @@ void vChokeAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -634,7 +808,11 @@ void vChokeButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vChokeChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveChoke(tank);
 }

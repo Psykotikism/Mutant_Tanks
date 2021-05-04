@@ -14,6 +14,7 @@
 #endif
 #define _mutanttanks_included
 
+#include <sdkhooks>
 #include <sdktools>
 
 public SharedPlugin __pl_mutanttanks =

@@ -9,8 +9,46 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_CLONE_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_CLONE_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#include <mt_clone>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Clone Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank creates clones of itself.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Clone Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	CreateNative("MT_IsCloneSupported", aNative_IsCloneSupported);
+	CreateNative("MT_IsTankClone", aNative_IsTankClone);
+
+	RegPluginLibrary("mt_clone");
+
+	return APLRes_Success;
+}
+#else
+	#if MT_CLONE_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_CLONE_SECTION "cloneability"
@@ -120,6 +158,7 @@ public any aNative_IsTankClone(Handle plugin, int numParams)
 	return MT_IsTankSupported(iTank, MT_CHECK_INDEX|MT_CHECK_INGAME) && g_esClonePlayer[iTank].g_bCloned;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneRegisterNatives()
 {
 	CreateNative("MT_IsCloneSupported", aNative_IsCloneSupported);
@@ -127,18 +166,40 @@ void vCloneRegisterNatives()
 
 	RegPluginLibrary("mt_clone");
 }
+#else
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
+	RegConsoleCmd("sm_mt_clone", cmdCloneInfo, "View information about the Clone ability.");
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vCloneMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vCloneReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	vRemoveClone(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneClientDisconnect(int client)
+#else
+public void OnClientDisconnect(int client)
+#endif
 {
 	if (bIsTank(client) && !bIsValidClient(client, MT_CHECK_FAKECLIENT) && g_esClonePlayer[client].g_bCloned)
 	{
@@ -149,15 +210,50 @@ void vCloneClientDisconnect(int client)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveClone(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vCloneReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdCloneInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vCloneMenu(client, MT_CLONE_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vCloneMenu(int client, const char[] name, int item)
 {
@@ -230,12 +326,20 @@ public int iCloneMenuHandler(Menu menu, MenuAction action, int param1, int param
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_CLONE, MT_MENU_CLONE);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_CLONE, false))
 	{
@@ -243,7 +347,11 @@ void vCloneMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_CLONE, false))
 	{
@@ -251,12 +359,20 @@ void vCloneMenuItemDisplayed(int client, const char[] info, char[] buffer, int s
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vClonePluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_CLONE);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_CLONE_SECTION);
 	list2.PushString(MT_CLONE_SECTION2);
@@ -264,7 +380,11 @@ void vCloneAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arr
 	list4.PushString(MT_CLONE_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCloneCache[tank].g_iHumanAbility != 2)
 	{
@@ -306,7 +426,11 @@ void vCloneCombineAbilities(int tank, int type, const float random, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -364,7 +488,11 @@ void vCloneConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -445,7 +573,11 @@ void vCloneConfigsLoaded(const char[] subsection, const char[] key, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCloneCache[tank].g_flCloneChance = flGetSettingValue(apply, bHuman, g_esClonePlayer[tank].g_flCloneChance, g_esCloneAbility[type].g_flCloneChance);
@@ -468,7 +600,11 @@ void vCloneSettingsCached(int tank, bool apply, int type)
 	g_esClonePlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vCloneCopyStats2(oldTank, newTank);
 
@@ -478,7 +614,11 @@ void vCloneCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vClonePluginEnd()
+#else
+public void MT_OnPluginEnd()
+#endif
 {
 	for (int iClone = 1; iClone <= MaxClients; iClone++)
 	{
@@ -489,7 +629,11 @@ void vClonePluginEnd()
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -577,7 +721,11 @@ void vCloneEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCloneAbility[g_esClonePlayer[tank].g_iTankType].g_iAccessFlags, g_esClonePlayer[tank].g_iAccessFlags)) || g_esCloneCache[tank].g_iHumanAbility == 0))
 	{
@@ -590,7 +738,11 @@ void vCloneAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT))
 	{
@@ -624,7 +776,11 @@ void vCloneButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCloneChangeType(int tank, bool revert)
+#else
+public void MT_OnChangeType(int tank, int oldType, int newType, bool revert)
+#endif
 {
 	vRemoveClones(tank);
 	vRemoveClone(tank, revert);

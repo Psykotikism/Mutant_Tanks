@@ -9,8 +9,40 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_CAR_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_CAR_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Car Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank creates car showers.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Car Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	return APLRes_Success;
+}
+#else
+	#if MT_CAR_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MODEL_CAR "models/props_vehicles/cara_82hatchback.mdl"
@@ -101,7 +133,22 @@ enum struct esCarCache
 
 esCarCache g_esCarCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_car", cmdCarInfo, "View information about the Car ability.");
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vCarMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	PrecacheModel(MODEL_CAR, true);
 	PrecacheModel(MODEL_CAR2, true);
@@ -110,20 +157,59 @@ void vCarMapStart()
 	vCarReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	vRemoveCar(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveCar(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vCarReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdCarInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vCarMenu(client, MT_CAR_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vCarMenu(int client, const char[] name, int item)
 {
@@ -202,12 +288,20 @@ public int iCarMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_CAR, MT_MENU_CAR);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_CAR, false))
 	{
@@ -215,7 +309,11 @@ void vCarMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_CAR, false))
 	{
@@ -229,12 +327,20 @@ public Action CarStartTouch(int car, int other)
 	SDKUnhook(car, SDKHook_StartTouch, CarStartTouch);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_CAR);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_CAR_SECTION);
 	list2.PushString(MT_CAR_SECTION2);
@@ -242,7 +348,11 @@ void vCarAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Array
 	list4.PushString(MT_CAR_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility != 2)
 	{
@@ -290,7 +400,11 @@ void vCarCombineAbilities(int tank, int type, const float random, const char[] c
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -348,7 +462,11 @@ void vCarConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -425,7 +543,11 @@ void vCarConfigsLoaded(const char[] subsection, const char[] key, const char[] v
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esCarCache[tank].g_flCarChance = flGetSettingValue(apply, bHuman, g_esCarPlayer[tank].g_flCarChance, g_esCarAbility[type].g_flCarChance);
@@ -448,7 +570,11 @@ void vCarSettingsCached(int tank, bool apply, int type)
 	g_esCarPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vCarCopyStats2(oldTank, newTank);
 
@@ -458,7 +584,11 @@ void vCarCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -494,7 +624,11 @@ void vCarEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esCarAbility[g_esCarPlayer[tank].g_iTankType].g_iAccessFlags, g_esCarPlayer[tank].g_iAccessFlags)) || g_esCarCache[tank].g_iHumanAbility == 0))
 	{
@@ -507,7 +641,11 @@ void vCarAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -575,7 +713,11 @@ void vCarButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarButtonReleased(int tank, int button)
+#else
+public void MT_OnButtonReleased(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esCarCache[tank].g_iHumanAbility == 1)
 	{
@@ -590,7 +732,11 @@ void vCarButtonReleased(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vCarChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveCar(tank);
 }

@@ -9,8 +9,46 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_TRACK_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_TRACK_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Track Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank throws heat-seeking rocks that will track down the nearest survivors.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bSecondGame;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Track Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	return APLRes_Success;
+}
+#else
+	#if MT_TRACK_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_TRACK_SECTION "trackability"
@@ -87,25 +125,79 @@ enum struct esTrackCache
 
 esTrackCache g_esTrackCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_track", cmdTrackInfo, "View information about the Track ability.");
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vTrackMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vTrackReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	vRemoveTrack(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveTrack(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vTrackReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdTrackInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vTrackMenu(client, MT_TRACK_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vTrackMenu(int client, const char[] name, int item)
 {
@@ -178,12 +270,20 @@ public int iTrackMenuHandler(Menu menu, MenuAction action, int param1, int param
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_TRACK, MT_MENU_TRACK);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_TRACK, false))
 	{
@@ -191,7 +291,11 @@ void vTrackMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_TRACK, false))
 	{
@@ -208,12 +312,20 @@ public void Think(int rock)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_TRACK);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_TRACK_SECTION);
 	list2.PushString(MT_TRACK_SECTION2);
@@ -221,7 +333,11 @@ void vTrackAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arr
 	list4.PushString(MT_TRACK_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackCombineAbilities(int tank, int type, const float random, const char[] combo, int weapon)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esTrackCache[tank].g_iHumanAbility != 2)
 	{
@@ -256,7 +372,11 @@ void vTrackCombineAbilities(int tank, int type, const float random, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -306,7 +426,11 @@ void vTrackConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -365,7 +489,11 @@ void vTrackConfigsLoaded(const char[] subsection, const char[] key, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esTrackCache[tank].g_flTrackChance = flGetSettingValue(apply, bHuman, g_esTrackPlayer[tank].g_flTrackChance, g_esTrackAbility[type].g_flTrackChance);
@@ -383,7 +511,11 @@ void vTrackSettingsCached(int tank, bool apply, int type)
 	g_esTrackPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vTrackCopyStats2(oldTank, newTank);
 
@@ -393,7 +525,11 @@ void vTrackCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -429,7 +565,11 @@ void vTrackEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -473,17 +613,29 @@ void vTrackButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveTrack(tank);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackRockBreak(int rock)
+#else
+public void MT_OnRockBreak(int tank, int rock)
+#endif
 {
 	vSetTrackGlow(rock, 0, 0, 0, 0, 0);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vTrackRockThrow(int tank, int rock)
+#else
+public void MT_OnRockThrow(int tank, int rock)
+#endif
 {
 	if (MT_IsTankSupported(tank) && MT_IsCustomTankSupported(tank) && g_esTrackCache[tank].g_iTrackAbility == 1 && g_esTrackCache[tank].g_iComboAbility == 0 && GetRandomFloat(0.1, 100.0) <= g_esTrackCache[tank].g_flTrackChance)
 	{

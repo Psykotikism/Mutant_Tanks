@@ -9,8 +9,68 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_BURY_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_BURY_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#undef REQUIRE_PLUGIN
+	#tryinclude <left4dhooks>
+	#define REQUIRE_PLUGIN
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Bury Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank buries survivors.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad, g_bLeft4DHooksInstalled;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Bury Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
+#else
+	#if MT_BURY_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_BURY_SECTION "buryability"
@@ -108,7 +168,11 @@ esBuryCache g_esBuryCache[MAXPLAYERS + 1];
 
 Handle g_hSDKRevive;
 
+#if defined MT_ABILITIES_MAIN
 void vBuryPluginStart()
+#else
+public void OnPluginStart()
+#endif
 {
 	GameData gdMutantTanks = new GameData("mutant_tanks");
 	if (gdMutantTanks == null)
@@ -131,28 +195,91 @@ void vBuryPluginStart()
 	}
 
 	delete gdMutantTanks;
+#if !defined MT_ABILITIES_MAIN
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_bury", cmdBuryInfo, "View information about the Bury ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+#endif
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vBuryReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnBuryTakeDamage);
 	vBuryReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vBuryReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vBuryReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdBuryInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vBuryMenu(client, MT_BURY_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vBuryMenu(int client, const char[] name, int item)
 {
@@ -228,12 +355,20 @@ public int iBuryMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_BURY, MT_MENU_BURY);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_BURY, false))
 	{
@@ -241,7 +376,11 @@ void vBuryMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_BURY, false))
 	{
@@ -249,11 +388,19 @@ void vBuryMenuItemDisplayed(int client, const char[] info, char[] buffer, int si
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryPlayerRunCmd(int client, int &buttons)
+#else
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+#endif
 {
 	if (!MT_IsCorePluginEnabled())
 	{
+#if defined MT_ABILITIES_MAIN
 		return;
+#else
+		return Plugin_Continue;
+#endif
 	}
 
 	if (g_esBuryPlayer[client].g_bAffected && ((buttons & IN_ATTACK) || (buttons & IN_ATTACK2) || (buttons & IN_USE)))
@@ -262,6 +409,9 @@ void vBuryPlayerRunCmd(int client, int &buttons)
 		buttons &= IN_ATTACK2;
 		buttons &= IN_USE;
 	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
 }
 
 public Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -299,12 +449,20 @@ public Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float 
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_BURY);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_BURY_SECTION);
 	list2.PushString(MT_BURY_SECTION2);
@@ -312,7 +470,11 @@ void vBuryAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arra
 	list4.PushString(MT_BURY_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esBuryCache[tank].g_iHumanAbility != 2)
 	{
@@ -395,7 +557,11 @@ void vBuryCombineAbilities(int tank, int type, const float random, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -455,7 +621,11 @@ void vBuryConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -524,7 +694,11 @@ void vBuryConfigsLoaded(const char[] subsection, const char[] key, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBurySettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esBuryCache[tank].g_flBuryBuffer = flGetSettingValue(apply, bHuman, g_esBuryPlayer[tank].g_flBuryBuffer, g_esBuryAbility[type].g_flBuryBuffer);
@@ -547,7 +721,11 @@ void vBurySettingsCached(int tank, bool apply, int type)
 	g_esBuryPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vBuryCopyStats2(oldTank, newTank);
 
@@ -557,7 +735,11 @@ void vBuryCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryPluginEnd()
+#else
+public void MT_OnPluginEnd()
+#endif
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
@@ -568,7 +750,11 @@ void vBuryPluginEnd()
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -604,7 +790,11 @@ void vBuryEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryRewardSurvivor(int survivor, int type, bool apply)
+#else
+public Action MT_OnRewardSurvivor(int survivor, int tank, int &type, int priority, float &duration, bool apply)
+#endif
 {
 	if (bIsSurvivor(survivor) && apply & ((type & MT_REWARD_HEALTH) || (type & MT_REWARD_REFILL) || (type & MT_REWARD_GODMODE)) && g_esBuryPlayer[survivor].g_bAffected)
 	{
@@ -612,7 +802,11 @@ void vBuryRewardSurvivor(int survivor, int type, bool apply)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBuryAbility[g_esBuryPlayer[tank].g_iTankType].g_iAccessFlags, g_esBuryPlayer[tank].g_iAccessFlags)) || g_esBuryCache[tank].g_iHumanAbility == 0))
 	{
@@ -625,7 +819,11 @@ void vBuryAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -651,7 +849,11 @@ void vBuryButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBuryChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank))
 	{

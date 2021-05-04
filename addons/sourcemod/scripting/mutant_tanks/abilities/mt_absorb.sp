@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_ABSORB_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_ABSORB_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Absorb Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank absorbs most of the damage it receives.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Absorb Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_ABSORB_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define SOUND_METAL "physics/metal/metal_solid_impact_hard5.wav"
@@ -102,26 +138,93 @@ enum struct esAbsorbCache
 
 esAbsorbCache g_esAbsorbCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_absorb", cmdAbsorbInfo, "View information about the Absorb ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vAbsorbMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vAbsorbReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnAbsorbTakeDamage);
 	vRemoveAbsorb(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveAbsorb(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vAbsorbReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdAbsorbInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vAbsorbMenu(client, MT_ABSORB_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vAbsorbMenu(int client, const char[] name, int item)
 {
@@ -200,12 +303,20 @@ public int iAbsorbMenuHandler(Menu menu, MenuAction action, int param1, int para
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_ABSORB, MT_MENU_ABSORB);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_ABSORB, false))
 	{
@@ -213,7 +324,11 @@ void vAbsorbMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_ABSORB, false))
 	{
@@ -221,11 +336,19 @@ void vAbsorbMenuItemDisplayed(int client, const char[] info, char[] buffer, int 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbPlayerRunCmd(int client)
+#else
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+#endif
 {
 	if (!MT_IsTankSupported(client) || !g_esAbsorbPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esAbsorbCache[client].g_iHumanMode == 1) || g_esAbsorbPlayer[client].g_iDuration == -1)
 	{
+#if defined MT_ABILITIES_MAIN
 		return;
+#else
+		return Plugin_Continue;
+#endif
 	}
 
 	static int iTime;
@@ -239,6 +362,9 @@ void vAbsorbPlayerRunCmd(int client)
 
 		vAbsorbReset2(client);
 	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
 }
 
 public Action OnAbsorbTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -296,12 +422,20 @@ public Action OnAbsorbTakeDamage(int victim, int &attacker, int &inflictor, floa
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_ABSORB);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_ABSORB_SECTION);
 	list2.PushString(MT_ABSORB_SECTION2);
@@ -309,7 +443,11 @@ void vAbsorbAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Ar
 	list4.PushString(MT_ABSORB_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esAbsorbCache[tank].g_iHumanAbility != 2)
 	{
@@ -357,7 +495,11 @@ void vAbsorbCombineAbilities(int tank, int type, const float random, const char[
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -415,7 +557,11 @@ void vAbsorbConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -482,7 +628,11 @@ void vAbsorbConfigsLoaded(const char[] subsection, const char[] key, const char[
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esAbsorbCache[tank].g_flAbsorbBulletDivisor = flGetSettingValue(apply, bHuman, g_esAbsorbPlayer[tank].g_flAbsorbBulletDivisor, g_esAbsorbAbility[type].g_flAbsorbBulletDivisor);
@@ -504,7 +654,11 @@ void vAbsorbSettingsCached(int tank, bool apply, int type)
 	g_esAbsorbPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vAbsorbCopyStats2(oldTank, newTank);
 
@@ -514,7 +668,11 @@ void vAbsorbCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -550,7 +708,11 @@ void vAbsorbEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esAbsorbAbility[g_esAbsorbPlayer[tank].g_iTankType].g_iAccessFlags, g_esAbsorbPlayer[tank].g_iAccessFlags)) || g_esAbsorbCache[tank].g_iHumanAbility == 0))
 	{
@@ -563,7 +725,11 @@ void vAbsorbAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -629,7 +795,11 @@ void vAbsorbButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbButtonReleased(int tank, int button)
+#else
+public void MT_OnButtonReleased(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esAbsorbCache[tank].g_iHumanAbility == 1)
 	{
@@ -644,7 +814,11 @@ void vAbsorbButtonReleased(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vAbsorbChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveAbsorb(tank);
 }

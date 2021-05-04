@@ -9,8 +9,48 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_BOMB_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_BOMB_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Bomb Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank creates explosions.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad, g_bSecondGame;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Bomb Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_BOMB_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MODEL_PROPANETANK "models/props_junk/propanecanister001a.mdl"
@@ -112,7 +152,35 @@ enum struct esBombCache
 
 esBombCache g_esBombCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_bomb", cmdBombInfo, "View information about the Bomb ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vBombMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	PrecacheSound(SOUND_HIT, true);
 
@@ -125,21 +193,60 @@ void vBombMapStart()
 	vBombReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnBombTakeDamage);
 	vRemoveBomb(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveBomb(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vBombReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdBombInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vBombMenu(client, MT_BOMB_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vBombMenu(int client, const char[] name, int item)
 {
@@ -212,12 +319,20 @@ public int iBombMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_BOMB, MT_MENU_BOMB);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_BOMB, false))
 	{
@@ -225,7 +340,11 @@ void vBombMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_BOMB, false))
 	{
@@ -268,12 +387,20 @@ public Action OnBombTakeDamage(int victim, int &attacker, int &inflictor, float 
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_BOMB);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_BOMB_SECTION);
 	list2.PushString(MT_BOMB_SECTION2);
@@ -281,7 +408,11 @@ void vBombAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arra
 	list4.PushString(MT_BOMB_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esBombCache[tank].g_iHumanAbility != 2)
 	{
@@ -372,7 +503,11 @@ void vBombCombineAbilities(int tank, int type, const float random, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -434,7 +569,11 @@ void vBombConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -505,7 +644,11 @@ void vBombConfigsLoaded(const char[] subsection, const char[] key, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esBombCache[tank].g_flBombChance = flGetSettingValue(apply, bHuman, g_esBombPlayer[tank].g_flBombChance, g_esBombAbility[type].g_flBombChance);
@@ -529,7 +672,11 @@ void vBombSettingsCached(int tank, bool apply, int type)
 	g_esBombPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vBombCopyStats2(oldTank, newTank);
 
@@ -539,7 +686,11 @@ void vBombCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -576,7 +727,11 @@ void vBombEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)) || g_esBombCache[tank].g_iHumanAbility == 0))
 	{
@@ -589,7 +744,11 @@ void vBombAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -615,7 +774,11 @@ void vBombButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveBomb(tank);
 
@@ -638,12 +801,20 @@ void vBombChangeType(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombPostTankSpawn(int tank)
+#else
+public void MT_OnPostTankSpawn(int tank)
+#endif
 {
 	vBombRange(tank, 1, GetRandomFloat(0.1, 100.0));
 }
 
+#if defined MT_ABILITIES_MAIN
 void vBombRockBreak(int tank, int rock)
+#else
+public void MT_OnRockBreak(int tank, int rock)
+#endif
 {
 	if (bIsAreaNarrow(tank, g_esBombCache[tank].g_flOpenAreasOnly) || MT_DoesTypeRequireHumans(g_esBombPlayer[tank].g_iTankType) || (g_esBombCache[tank].g_iRequiresHumans > 0 && iGetHumanCount() < g_esBombCache[tank].g_iRequiresHumans) || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esBombAbility[g_esBombPlayer[tank].g_iTankType].g_iAccessFlags, g_esBombPlayer[tank].g_iAccessFlags)) || g_esBombCache[tank].g_iHumanAbility == 0)))
 	{

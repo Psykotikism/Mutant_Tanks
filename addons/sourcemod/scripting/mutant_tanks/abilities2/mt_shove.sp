@@ -9,8 +9,68 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_SHOVE_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_SHOVE_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#undef REQUIRE_PLUGIN
+	#tryinclude <left4dhooks>
+	#define REQUIRE_PLUGIN
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Shove Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank repeatedly shoves survivors.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad, g_bLeft4DHooksInstalled;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Shove Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
+#else
+	#if MT_SHOVE_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_SHOVE_SECTION "shoveability"
@@ -113,7 +173,11 @@ esShoveCache g_esShoveCache[MAXPLAYERS + 1];
 
 Handle g_hSDKStagger;
 
+#if defined MT_ABILITIES_MAIN2
 void vShovePluginStart()
+#else
+public void OnPluginStart()
+#endif
 {
 	GameData gdMutantTanks = new GameData("mutant_tanks");
 	if (gdMutantTanks == null)
@@ -138,28 +202,91 @@ void vShovePluginStart()
 	}
 
 	delete gdMutantTanks;
+#if !defined MT_ABILITIES_MAIN2
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_shove", cmdShoveInfo, "View information about the Shove ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+#endif
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vShoveReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnShoveTakeDamage);
 	vShoveReset3(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vShoveReset3(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vShoveReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdShoveInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vShoveMenu(client, MT_SHOVE_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vShoveMenu(int client, const char[] name, int item)
 {
@@ -235,12 +362,20 @@ public int iShoveMenuHandler(Menu menu, MenuAction action, int param1, int param
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_SHOVE, MT_MENU_SHOVE);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_SHOVE, false))
 	{
@@ -248,7 +383,11 @@ void vShoveMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_SHOVE, false))
 	{
@@ -291,12 +430,20 @@ public Action OnShoveTakeDamage(int victim, int &attacker, int &inflictor, float
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShovePluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_SHOVE);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_SHOVE_SECTION);
 	list2.PushString(MT_SHOVE_SECTION2);
@@ -304,7 +451,11 @@ void vShoveAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arr
 	list4.PushString(MT_SHOVE_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esShoveCache[tank].g_iHumanAbility != 2)
 	{
@@ -389,7 +540,11 @@ void vShoveCombineAbilities(int tank, int type, const float random, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -453,7 +608,11 @@ void vShoveConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -526,7 +685,11 @@ void vShoveConfigsLoaded(const char[] subsection, const char[] key, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esShoveCache[tank].g_flShoveChance = flGetSettingValue(apply, bHuman, g_esShovePlayer[tank].g_flShoveChance, g_esShoveAbility[type].g_flShoveChance);
@@ -551,7 +714,11 @@ void vShoveSettingsCached(int tank, bool apply, int type)
 	g_esShovePlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vShoveCopyStats2(oldTank, newTank);
 
@@ -561,7 +728,11 @@ void vShoveCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -598,7 +769,11 @@ void vShoveEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esShoveAbility[g_esShovePlayer[tank].g_iTankType].g_iAccessFlags, g_esShovePlayer[tank].g_iAccessFlags)) || g_esShoveCache[tank].g_iHumanAbility == 0))
 	{
@@ -611,7 +786,11 @@ void vShoveAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -637,12 +816,20 @@ void vShoveButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShoveChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveShove(tank);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vShovePostTankSpawn(int tank)
+#else
+public void MT_OnPostTankSpawn(int tank)
+#endif
 {
 	vShoveRange(tank, 1, GetRandomFloat(0.1, 100.0));
 }

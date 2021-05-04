@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_FLY_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_FLY_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Fly Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank can fly.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Fly Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_FLY_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_FLY_SECTION "flyability"
@@ -99,26 +135,93 @@ enum struct esFlyCache
 
 esFlyCache g_esFlyCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_fly", cmdFlyInfo, "View information about the Fly ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vFlyMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vFlyReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnFlyTakeDamage);
 	vRemoveFly(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveFly(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vFlyReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdFlyInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vFlyMenu(client, MT_FLY_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vFlyMenu(int client, const char[] name, int item)
 {
@@ -197,12 +300,20 @@ public int iFlyMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_FLY, MT_MENU_FLY);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_FLY, false))
 	{
@@ -210,7 +321,11 @@ void vFlyMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_FLY, false))
 	{
@@ -218,11 +333,19 @@ void vFlyMenuItemDisplayed(int client, const char[] info, char[] buffer, int siz
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyPlayerRunCmd(int client)
+#else
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+#endif
 {
 	if (!MT_IsTankSupported(client) || !g_esFlyPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esFlyCache[client].g_iHumanMode == 1) || g_esFlyPlayer[client].g_iDuration == -1)
 	{
+#if defined MT_ABILITIES_MAIN
 		return;
+#else
+		return Plugin_Continue;
+#endif
 	}
 
 	static int iTime;
@@ -231,6 +354,9 @@ void vFlyPlayerRunCmd(int client)
 	{
 		vStopFly(client);
 	}
+#if !defined MT_ABILITIES_MAIN
+	return Plugin_Continue;
+#endif
 }
 
 public Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -297,12 +423,20 @@ public Action StartTouch(int tank, int other)
 	vStopFly(tank);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_FLY);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_FLY_SECTION);
 	list2.PushString(MT_FLY_SECTION2);
@@ -310,7 +444,11 @@ void vFlyAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Array
 	list4.PushString(MT_FLY_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility != 2)
 	{
@@ -363,7 +501,11 @@ void vFlyCombineAbilities(int tank, int type, const float random, const char[] c
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -416,7 +558,11 @@ void vFlyConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -477,7 +623,11 @@ void vFlyConfigsLoaded(const char[] subsection, const char[] key, const char[] v
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlySettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esFlyCache[tank].g_flFlyChance = flGetSettingValue(apply, bHuman, g_esFlyPlayer[tank].g_flFlyChance, g_esFlyAbility[type].g_flFlyChance);
@@ -495,7 +645,11 @@ void vFlySettingsCached(int tank, bool apply, int type)
 	g_esFlyPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vFlyCopyStats2(oldTank, newTank);
 
@@ -505,7 +659,11 @@ void vFlyCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -552,7 +710,11 @@ void vFlyEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlyAbility[g_esFlyPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlyPlayer[tank].g_iAccessFlags)) || g_esFlyCache[tank].g_iHumanAbility == 0))
 	{
@@ -565,7 +727,11 @@ void vFlyAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -628,7 +794,11 @@ void vFlyButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyButtonReleased(int tank, int button)
+#else
+public void MT_OnButtonReleased(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esFlyCache[tank].g_iHumanAbility == 1)
 	{
@@ -642,12 +812,20 @@ void vFlyButtonReleased(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveFly(tank);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlyRockThrow(int tank)
+#else
+public void MT_OnRockThrow(int tank, int rock)
+#endif
 {
 	if (MT_IsTankSupported(tank) && (!bIsTank(tank, MT_CHECK_FAKECLIENT) || g_esFlyCache[tank].g_iHumanAbility == 2) && MT_IsCustomTankSupported(tank) && g_esFlyCache[tank].g_iFlyAbility == 1 && (g_esFlyCache[tank].g_iFlyType == 0 || (g_esFlyCache[tank].g_iFlyType & MT_FLY_THROW)) && !g_esFlyPlayer[tank].g_bActivated)
 	{

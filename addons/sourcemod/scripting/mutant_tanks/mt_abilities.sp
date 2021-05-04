@@ -12,7 +12,6 @@
 #define MT_ABILITIES_MAIN
 
 #include <sourcemod>
-#include <sdkhooks>
 #include <mutant_tanks>
 #include <mt_clone>
 

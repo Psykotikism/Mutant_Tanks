@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_VISION_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_VISION_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Vision Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank changes the survivors' field of view.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Vision Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_VISION_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_VISION_SECTION "visionability"
@@ -102,26 +138,93 @@ enum struct esVisionCache
 
 esVisionCache g_esVisionCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_vision", cmdVisionInfo, "View information about the Vision ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vVisionMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vVisionReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnVisionTakeDamage);
 	vVisionReset3(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vVisionReset3(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vVisionReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdVisionInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vVisionMenu(client, MT_VISION_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vVisionMenu(int client, const char[] name, int item)
 {
@@ -197,12 +300,20 @@ public int iVisionMenuHandler(Menu menu, MenuAction action, int param1, int para
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_VISION, MT_MENU_VISION);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_VISION, false))
 	{
@@ -210,7 +321,11 @@ void vVisionMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_VISION, false))
 	{
@@ -253,12 +368,20 @@ public Action OnVisionTakeDamage(int victim, int &attacker, int &inflictor, floa
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_VISION);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_VISION_SECTION);
 	list2.PushString(MT_VISION_SECTION2);
@@ -266,7 +389,11 @@ void vVisionAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Ar
 	list4.PushString(MT_VISION_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esVisionCache[tank].g_iHumanAbility != 2)
 	{
@@ -349,7 +476,11 @@ void vVisionCombineAbilities(int tank, int type, const float random, const char[
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -407,7 +538,11 @@ void vVisionConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -474,7 +609,11 @@ void vVisionConfigsLoaded(const char[] subsection, const char[] key, const char[
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esVisionCache[tank].g_flVisionChance = flGetSettingValue(apply, bHuman, g_esVisionPlayer[tank].g_flVisionChance, g_esVisionAbility[type].g_flVisionChance);
@@ -496,7 +635,11 @@ void vVisionSettingsCached(int tank, bool apply, int type)
 	g_esVisionPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vVisionCopyStats2(oldTank, newTank);
 
@@ -506,7 +649,11 @@ void vVisionCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionPluginEnd()
+#else
+public void MT_OnPluginEnd()
+#endif
 {
 	for (int iSurvivor = 1; iSurvivor <= MaxClients; iSurvivor++)
 	{
@@ -518,7 +665,11 @@ void vVisionPluginEnd()
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -554,7 +705,11 @@ void vVisionEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esVisionAbility[g_esVisionPlayer[tank].g_iTankType].g_iAccessFlags, g_esVisionPlayer[tank].g_iAccessFlags)) || g_esVisionCache[tank].g_iHumanAbility == 0))
 	{
@@ -567,7 +722,11 @@ void vVisionAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -593,7 +752,11 @@ void vVisionButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vVisionChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveVision(tank);
 }

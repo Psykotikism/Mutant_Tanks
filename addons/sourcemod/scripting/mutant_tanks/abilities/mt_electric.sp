@@ -9,8 +9,48 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_ELECTRIC_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_ELECTRIC_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Electric Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank electrocutes survivors.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad, g_bSecondGame;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Electric Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_ELECTRIC_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define PARTICLE_ELECTRICITY "electrical_arc_01"
@@ -28,6 +68,8 @@
 #define MT_ELECTRIC_SECTIONS MT_ELECTRIC_SECTION, MT_ELECTRIC_SECTION2, MT_ELECTRIC_SECTION3, MT_ELECTRIC_SECTION4
 
 #define MT_MENU_ELECTRIC "Electric Ability"
+
+char g_sElectricSounds[8][26] = {"ambient/energy/zap1.wav", "ambient/energy/zap2.wav", "ambient/energy/zap3.wav", "ambient/energy/zap5.wav", "ambient/energy/zap6.wav", "ambient/energy/zap7.wav", "ambient/energy/zap8.wav", "ambient/energy/zap9.wav"};
 
 enum struct esElectricPlayer
 {
@@ -113,9 +155,35 @@ enum struct esElectricCache
 
 esElectricCache g_esElectricCache[MAXPLAYERS + 1];
 
-char g_sElectricSounds[8][26] = {"ambient/energy/zap1.wav", "ambient/energy/zap2.wav", "ambient/energy/zap3.wav", "ambient/energy/zap5.wav", "ambient/energy/zap6.wav", "ambient/energy/zap7.wav", "ambient/energy/zap8.wav", "ambient/energy/zap9.wav"};
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
 
+	RegConsoleCmd("sm_mt_electric", cmdElectricInfo, "View information about the Electric ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vElectricMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	iPrecacheParticle(PARTICLE_ELECTRICITY2);
 	iPrecacheParticle(PARTICLE_ELECTRICITY3);
@@ -142,21 +210,60 @@ void vElectricMapStart()
 	vElectricReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnElectricTakeDamage);
 	vElectricReset3(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vElectricReset3(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vElectricReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdElectricInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vElectricMenu(client, MT_ELECTRIC_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vElectricMenu(int client, const char[] name, int item)
 {
@@ -232,12 +339,20 @@ public int iElectricMenuHandler(Menu menu, MenuAction action, int param1, int pa
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_ELECTRIC, MT_MENU_ELECTRIC);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_ELECTRIC, false))
 	{
@@ -245,7 +360,11 @@ void vElectricMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_ELECTRIC, false))
 	{
@@ -288,12 +407,20 @@ public Action OnElectricTakeDamage(int victim, int &attacker, int &inflictor, fl
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_ELECTRIC);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_ELECTRIC_SECTION);
 	list2.PushString(MT_ELECTRIC_SECTION2);
@@ -301,7 +428,11 @@ void vElectricAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, 
 	list4.PushString(MT_ELECTRIC_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esElectricCache[tank].g_iHumanAbility != 2)
 	{
@@ -384,7 +515,11 @@ void vElectricCombineAbilities(int tank, int type, const float random, const cha
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -444,7 +579,11 @@ void vElectricConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -513,7 +652,11 @@ void vElectricConfigsLoaded(const char[] subsection, const char[] key, const cha
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esElectricCache[tank].g_flElectricChance = flGetSettingValue(apply, bHuman, g_esElectricPlayer[tank].g_flElectricChance, g_esElectricAbility[type].g_flElectricChance);
@@ -536,7 +679,11 @@ void vElectricSettingsCached(int tank, bool apply, int type)
 	g_esElectricPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vElectricCopyStats2(oldTank, newTank);
 
@@ -546,7 +693,11 @@ void vElectricCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -583,7 +734,11 @@ void vElectricEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esElectricAbility[g_esElectricPlayer[tank].g_iTankType].g_iAccessFlags, g_esElectricPlayer[tank].g_iAccessFlags)) || g_esElectricCache[tank].g_iHumanAbility == 0))
 	{
@@ -596,7 +751,11 @@ void vElectricAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -622,12 +781,20 @@ void vElectricButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveElectric(tank);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vElectricPostTankSpawn(int tank)
+#else
+public void MT_OnPostTankSpawn(int tank)
+#endif
 {
 	vElectricRange(tank);
 }

@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_PYRO_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN2
-#error This plugin must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#if MT_PYRO_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities2" while compiling "mt_abilities2.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Pyro Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank ignites itself and gains a speed boost when on fire.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Pyro Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_PYRO_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_PYRO_SECTION "pyroability"
@@ -97,26 +133,93 @@ enum struct esPyroCache
 
 esPyroCache g_esPyroCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN2
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_pyro", cmdPyroInfo, "View information about the Pyro ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN2
 void vPyroMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vPyroReset();
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnPyroTakeDamage);
 	vRemovePyro(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemovePyro(client);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vPyroReset();
 }
+
+#if !defined MT_ABILITIES_MAIN2
+public Action cmdPyroInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vPyroMenu(client, MT_PYRO_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vPyroMenu(int client, const char[] name, int item)
 {
@@ -195,12 +298,20 @@ public int iPyroMenuHandler(Menu menu, MenuAction action, int param1, int param2
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_PYRO, MT_MENU_PYRO);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_PYRO, false))
 	{
@@ -208,7 +319,11 @@ void vPyroMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_PYRO, false))
 	{
@@ -216,11 +331,19 @@ void vPyroMenuItemDisplayed(int client, const char[] info, char[] buffer, int si
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroPlayerRunCmd(int client)
+#else
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+#endif
 {
 	if (!MT_IsTankSupported(client) || !g_esPyroPlayer[client].g_bActivated || (bIsTank(client, MT_CHECK_FAKECLIENT) && g_esPyroCache[client].g_iHumanMode == 1) || g_esPyroPlayer[client].g_iDuration == -1)
 	{
+#if defined MT_ABILITIES_MAIN2
 		return;
+#else
+		return Plugin_Continue;
+#endif
 	}
 
 	if (!bIsPlayerBurning(client))
@@ -241,6 +364,9 @@ void vPyroPlayerRunCmd(int client)
 	{
 		vRemovePyro2(client);
 	}
+#if !defined MT_ABILITIES_MAIN2
+	return Plugin_Continue;
+#endif
 }
 
 public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -313,12 +439,20 @@ public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float 
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_PYRO);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_PYRO_SECTION);
 	list2.PushString(MT_PYRO_SECTION2);
@@ -326,7 +460,11 @@ void vPyroAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arra
 	list4.PushString(MT_PYRO_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroCombineAbilities(int tank, int type, const float random, const char[] combo)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esPyroCache[tank].g_iHumanAbility != 2)
 	{
@@ -379,7 +517,11 @@ void vPyroCombineAbilities(int tank, int type, const float random, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -434,7 +576,11 @@ void vPyroConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -491,7 +637,11 @@ void vPyroConfigsLoaded(const char[] subsection, const char[] key, const char[] 
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esPyroCache[tank].g_flPyroChance = flGetSettingValue(apply, bHuman, g_esPyroPlayer[tank].g_flPyroChance, g_esPyroAbility[type].g_flPyroChance);
@@ -512,7 +662,11 @@ void vPyroSettingsCached(int tank, bool apply, int type)
 	g_esPyroPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vPyroCopyStats2(oldTank, newTank);
 
@@ -522,7 +676,11 @@ void vPyroCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroPluginEnd()
+#else
+public void MT_OnPluginEnd()
+#endif
 {
 	for (int iTank = 1; iTank <= MaxClients; iTank++)
 	{
@@ -533,7 +691,11 @@ void vPyroPluginEnd()
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -569,7 +731,11 @@ void vPyroEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esPyroAbility[g_esPyroPlayer[tank].g_iTankType].g_iAccessFlags, g_esPyroPlayer[tank].g_iAccessFlags)) || g_esPyroCache[tank].g_iHumanAbility == 0))
 	{
@@ -582,7 +748,11 @@ void vPyroAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -650,7 +820,11 @@ void vPyroButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroButtonReleased(int tank, int button)
+#else
+public void MT_OnButtonReleased(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && g_esPyroCache[tank].g_iHumanAbility == 1)
 	{
@@ -665,7 +839,11 @@ void vPyroButtonReleased(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN2
 void vPyroChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemovePyro(tank);
 }

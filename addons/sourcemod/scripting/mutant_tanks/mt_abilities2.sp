@@ -12,7 +12,6 @@
 #define MT_ABILITIES_MAIN2
 
 #include <sourcemod>
-#include <sdkhooks>
 #include <mutant_tanks>
 
 #undef REQUIRE_PLUGIN

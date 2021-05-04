@@ -9,8 +9,72 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_FLING_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_FLING_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#undef REQUIRE_PLUGIN
+	#tryinclude <left4dhooks>
+	#define REQUIRE_PLUGIN
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Fling Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank flings survivors high into the air.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_bSecondGame = false;
+		case Engine_Left4Dead2: g_bSecondGame = true;
+		default:
+		{
+			strcopy(error, err_max, "\"[MT] Fling Ability\" only supports Left 4 Dead 1 & 2.");
+
+			return APLRes_SilentFailure;
+		}
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_bLeft4DHooksInstalled = true;
+	}
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		g_bLeft4DHooksInstalled = false;
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bLeft4DHooksInstalled = LibraryExists("left4dhooks");
+}
+#else
+	#if MT_FLING_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define PARTICLE_BLOOD "boomer_explode_D"
@@ -110,7 +174,11 @@ esFlingCache g_esFlingCache[MAXPLAYERS + 1];
 
 Handle g_hSDKFling;
 
+#if defined MT_ABILITIES_MAIN
 void vFlingPluginStart()
+#else
+public void OnPluginStart()
+#endif
 {
 	if (g_bSecondGame)
 	{
@@ -141,30 +209,93 @@ void vFlingPluginStart()
 
 		delete gdMutantTanks;
 	}
+#if !defined MT_ABILITIES_MAIN
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_fling", cmdFlingInfo, "View information about the Fling ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+#endif
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	iPrecacheParticle(PARTICLE_BLOOD);
 
 	vFlingReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnFlingTakeDamage);
 	vRemoveFling(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vRemoveFling(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vFlingReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdFlingInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vFlingMenu(client, MT_FLING_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vFlingMenu(int client, const char[] name, int item)
 {
@@ -237,12 +368,20 @@ public int iFlingMenuHandler(Menu menu, MenuAction action, int param1, int param
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_FLING, MT_MENU_FLING);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_FLING, false))
 	{
@@ -250,7 +389,11 @@ void vFlingMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_FLING, false))
 	{
@@ -293,12 +436,20 @@ public Action OnFlingTakeDamage(int victim, int &attacker, int &inflictor, float
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingPluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_FLING);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_FLING_SECTION);
 	list2.PushString(MT_FLING_SECTION2);
@@ -306,7 +457,11 @@ void vFlingAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, Arr
 	list4.PushString(MT_FLING_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (!g_bSecondGame || (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esFlingCache[tank].g_iHumanAbility != 2))
 	{
@@ -390,7 +545,11 @@ void vFlingCombineAbilities(int tank, int type, const float random, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -452,7 +611,11 @@ void vFlingConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -523,7 +686,11 @@ void vFlingConfigsLoaded(const char[] subsection, const char[] key, const char[]
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esFlingCache[tank].g_flFlingChance = flGetSettingValue(apply, bHuman, g_esFlingPlayer[tank].g_flFlingChance, g_esFlingAbility[type].g_flFlingChance);
@@ -547,7 +714,11 @@ void vFlingSettingsCached(int tank, bool apply, int type)
 	g_esFlingPlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vFlingCopyStats2(oldTank, newTank);
 
@@ -557,7 +728,11 @@ void vFlingCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -594,7 +769,11 @@ void vFlingEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (!g_bSecondGame || (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esFlingAbility[g_esFlingPlayer[tank].g_iTankType].g_iAccessFlags, g_esFlingPlayer[tank].g_iAccessFlags)) || g_esFlingCache[tank].g_iHumanAbility == 0)))
 	{
@@ -607,7 +786,11 @@ void vFlingAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -633,12 +816,20 @@ void vFlingButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveFling(tank);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vFlingPostTankSpawn(int tank)
+#else
+public void MT_OnPostTankSpawn(int tank)
+#endif
 {
 	vFlingRange(tank, 1, GetRandomFloat(0.1, 100.0));
 }

@@ -9,8 +9,44 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#define MT_ENFORCE_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 #if !defined MT_ABILITIES_MAIN
-#error This plugin must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#if MT_ENFORCE_COMPILE_METHOD == 1
+	#include <sourcemod>
+	#include <mutant_tanks>
+	#else
+	#error This file must be inside "scripting/mutant_tanks/abilities" while compiling "mt_abilities.sp" to include its content.
+	#endif
+public Plugin myinfo =
+{
+	name = "[MT] Enforce Ability",
+	author = MT_AUTHOR,
+	description = "The Mutant Tank forces survivors to only use a certain weapon slot.",
+	version = MT_VERSION,
+	url = MT_URL
+};
+
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion evEngine = GetEngineVersion();
+	if (evEngine != Engine_Left4Dead && evEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "\"[MT] Enforce Ability\" only supports Left 4 Dead 1 & 2.");
+
+		return APLRes_SilentFailure;
+	}
+
+	g_bLateLoad = late;
+
+	return APLRes_Success;
+}
+#else
+	#if MT_ENFORCE_COMPILE_METHOD == 1
+	#error This file must be compiled as a standalone plugin.
+	#endif
 #endif
 
 #define MT_ENFORCE_SECTION "enforceability"
@@ -103,26 +139,93 @@ enum struct esEnforceCache
 
 esEnforceCache g_esEnforceCache[MAXPLAYERS + 1];
 
+#if !defined MT_ABILITIES_MAIN
+public void OnPluginStart()
+{
+	LoadTranslations("common.phrases");
+	LoadTranslations("mutant_tanks.phrases");
+	LoadTranslations("mutant_tanks_names.phrases");
+
+	RegConsoleCmd("sm_mt_enforce", cmdEnforceInfo, "View information about the Enforce ability.");
+
+	if (g_bLateLoad)
+	{
+		for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
+		{
+			if (bIsValidClient(iPlayer, MT_CHECK_INGAME))
+			{
+				OnClientPutInServer(iPlayer);
+			}
+		}
+
+		g_bLateLoad = false;
+	}
+}
+#endif
+
+#if defined MT_ABILITIES_MAIN
 void vEnforceMapStart()
+#else
+public void OnMapStart()
+#endif
 {
 	vEnforceReset();
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceClientPutInServer(int client)
+#else
+public void OnClientPutInServer(int client)
+#endif
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnEnforceTakeDamage);
 	vEnforceReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceClientDisconnect_Post(int client)
+#else
+public void OnClientDisconnect_Post(int client)
+#endif
 {
 	vEnforceReset2(client);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceMapEnd()
+#else
+public void OnMapEnd()
+#endif
 {
 	vEnforceReset();
 }
+
+#if !defined MT_ABILITIES_MAIN
+public Action cmdEnforceInfo(int client, int args)
+{
+	if (!MT_IsCorePluginEnabled())
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
+
+		return Plugin_Handled;
+	}
+
+	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
+	{
+		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
+
+		return Plugin_Handled;
+	}
+
+	switch (IsVoteInProgress())
+	{
+		case true: MT_ReplyToCommand(client, "%s %t", MT_TAG2, "Vote in Progress");
+		case false: vEnforceMenu(client, MT_ENFORCE_SECTION4, 0);
+	}
+
+	return Plugin_Handled;
+}
+#endif
 
 void vEnforceMenu(int client, const char[] name, int item)
 {
@@ -198,12 +301,20 @@ public int iEnforceMenuHandler(Menu menu, MenuAction action, int param1, int par
 	return 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceDisplayMenu(Menu menu)
+#else
+public void MT_OnDisplayMenu(Menu menu)
+#endif
 {
 	menu.AddItem(MT_MENU_ENFORCE, MT_MENU_ENFORCE);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceMenuItemSelected(int client, const char[] info)
+#else
+public void MT_OnMenuItemSelected(int client, const char[] info)
+#endif
 {
 	if (StrEqual(info, MT_MENU_ENFORCE, false))
 	{
@@ -211,7 +322,11 @@ void vEnforceMenuItemSelected(int client, const char[] info)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#else
+public void MT_OnMenuItemDisplayed(int client, const char[] info, char[] buffer, int size)
+#endif
 {
 	if (StrEqual(info, MT_MENU_ENFORCE, false))
 	{
@@ -219,7 +334,11 @@ void vEnforceMenuItemDisplayed(int client, const char[] info, char[] buffer, int
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforcePlayerRunCmd(int client, int &weapon)
+#else
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+#endif
 {
 	if (bIsSurvivor(client) && g_esEnforcePlayer[client].g_bAffected)
 	{
@@ -271,12 +390,20 @@ public Action OnEnforceTakeDamage(int victim, int &attacker, int &inflictor, flo
 	return Plugin_Continue;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforcePluginCheck(ArrayList &list)
+#else
+public void MT_OnPluginCheck(ArrayList &list)
+#endif
 {
 	list.PushString(MT_MENU_ENFORCE);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#else
+public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+#endif
 {
 	list.PushString(MT_ENFORCE_SECTION);
 	list2.PushString(MT_ENFORCE_SECTION2);
@@ -284,7 +411,11 @@ void vEnforceAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, A
 	list4.PushString(MT_ENFORCE_SECTION4);
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, const char[] classname)
+#else
+public void MT_OnCombineAbilities(int tank, int type, const float random, const char[] combo, int survivor, int weapon, const char[] classname)
+#endif
 {
 	if (bIsTank(tank, MT_CHECK_FAKECLIENT) && g_esEnforceCache[tank].g_iHumanAbility != 2)
 	{
@@ -367,7 +498,11 @@ void vEnforceCombineAbilities(int tank, int type, const float random, const char
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceConfigsLoad(int mode)
+#else
+public void MT_OnConfigsLoad(int mode)
+#endif
 {
 	switch (mode)
 	{
@@ -425,7 +560,11 @@ void vEnforceConfigsLoad(int mode)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#else
+public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const char[] value, int type, int admin, int mode)
+#endif
 {
 	if (mode == 3 && bIsValidClient(admin))
 	{
@@ -492,7 +631,11 @@ void vEnforceConfigsLoaded(const char[] subsection, const char[] key, const char
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceSettingsCached(int tank, bool apply, int type)
+#else
+public void MT_OnSettingsCached(int tank, bool apply, int type)
+#endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
 	g_esEnforceCache[tank].g_flEnforceChance = flGetSettingValue(apply, bHuman, g_esEnforcePlayer[tank].g_flEnforceChance, g_esEnforceAbility[type].g_flEnforceChance);
@@ -514,7 +657,11 @@ void vEnforceSettingsCached(int tank, bool apply, int type)
 	g_esEnforcePlayer[tank].g_iTankType = apply ? type : 0;
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceCopyStats(int oldTank, int newTank)
+#else
+public void MT_OnCopyStats(int oldTank, int newTank)
+#endif
 {
 	vEnforceCopyStats2(oldTank, newTank);
 
@@ -524,7 +671,11 @@ void vEnforceCopyStats(int oldTank, int newTank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceEventFired(Event event, const char[] name)
+#else
+public void MT_OnEventFired(Event event, const char[] name, bool dontBroadcast)
+#endif
 {
 	if (StrEqual(name, "bot_player_replace"))
 	{
@@ -560,7 +711,11 @@ void vEnforceEventFired(Event event, const char[] name)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceAbilityActivated(int tank)
+#else
+public void MT_OnAbilityActivated(int tank)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) && ((!MT_HasAdminAccess(tank) && !bHasAdminAccess(tank, g_esEnforceAbility[g_esEnforcePlayer[tank].g_iTankType].g_iAccessFlags, g_esEnforcePlayer[tank].g_iAccessFlags)) || g_esEnforceCache[tank].g_iHumanAbility == 0))
 	{
@@ -573,7 +728,11 @@ void vEnforceAbilityActivated(int tank)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceButtonPressed(int tank, int button)
+#else
+public void MT_OnButtonPressed(int tank, int button)
+#endif
 {
 	if (MT_IsTankSupported(tank, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_ALIVE|MT_CHECK_FAKECLIENT) && MT_IsCustomTankSupported(tank))
 	{
@@ -599,7 +758,11 @@ void vEnforceButtonPressed(int tank, int button)
 	}
 }
 
+#if defined MT_ABILITIES_MAIN
 void vEnforceChangeType(int tank)
+#else
+public void MT_OnChangeType(int tank)
+#endif
 {
 	vRemoveEnforce(tank);
 }

@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.84 (June 1, 2021)
+## Version 8.84 (July 1, 2021)
 
 ### Bug Fixes
 
@@ -20,6 +20,8 @@
 - Fixed the `MT_LogMessage` native logging messages even when the feature is disabled.
 
 #### Abilities
+- Idle: Fixed the ability requiring `DHooks`.
+
 - Kamikaze: Fixed survivor death models being removed on player spawn. (Thanks to AlexAlcala for reporting!) [Thanks to Lux for the help!]
 
 - Respawn: Fixed the ability requiring `DHooks`.
@@ -35,6 +37,7 @@
 #### General
 - Mutant Tanks and its sub-plugins can be used in `SM 1.10`. `SourceMod 1.11.0.6511` or higher is only required when compiling the plugins. (Thanks to Shadowart for pointing this out!)
 - Each ability's plugin is now a component that must be compiled through a main plugin.
+- Optionally, each ability's plugin can still be compiled as a standalone plugin.
 
 #### Core Plugin
 - Added strict checking for hooking/unhooking events. (Thanks to Shadowart for reporting!)
@@ -56,6 +59,7 @@
 	- `Screen Color Visual` (Requested by 3aljiyavslgazana.)
 - Added the `Death Details` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections. (Requested by Shadowart.)
 - Added the `Sweep Fist` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to HarryPotter for the idea!)
+- Renamed the `Detect Plugins` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections to `Check Abilities`.
 
 #### Translations
 - Updated English translations with new phrases.
@@ -73,7 +77,7 @@
 - Each ability's plugin must now be placed in the `scripting/abilities` (A-L) and `scripting/abilities2` (M-Z) folders.
 
 #### Requirements
-- The `mt_clone` include file is now only used by the core plugin and registered by the new `mt_abilities` file.
+- The `mt_clone.inc` file is now only used by the core plugin and registered by either the new `mt_abilities` source file or the pre-existing `mt_clone` source file.
 
 #### Updates
 - Updated config files.
