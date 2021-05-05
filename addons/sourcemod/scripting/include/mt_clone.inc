@@ -9,17 +9,17 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#if defined _mutanttankscloneability_included
+#if defined _mtclone_included
 	#endinput
 #endif
-#define _mutanttankscloneability_included
+#define _mtclone_included
 
 #if defined MT_CLONE_COMPILE_METHOD
 	#endinput
 #endif
 #define MT_CLONE_COMPILE_METHOD 0 // 0: packaged, 1: standalone
 
-public SharedPlugin __pl_mutanttankscloneability =
+public SharedPlugin __pl_mtclone =
 {
 	name = "mt_clone",
 #if MT_CLONE_COMPILE_METHOD == 0
@@ -35,7 +35,7 @@ public SharedPlugin __pl_mutanttankscloneability =
 };
 
 #if !defined REQUIRE_PLUGIN
-public void __pl_mutanttankscloneability_SetNTVOptional()
+public void __pl_mtclone_SetNTVOptional()
 {
 	MarkNativeAsOptional("MT_IsCloneSupported");
 	MarkNativeAsOptional("MT_IsTankClone");
@@ -61,6 +61,21 @@ native bool MT_IsCloneSupported(int tank);
  * @error			Invalid client index.
  **/
 native bool MT_IsTankClone(int tank);
+
+/**
+ * Returns whether the clone can use abilities.
+ *
+ * @param tank			Client index of the Tank.
+ * @param clone			Checks whether "mt_clone.smx" is installed.
+ *
+ * @return			True if clone can use abilities, false otherwise.
+ * @error			Invalid client index.
+ **/
+#pragma deprecated Use MT_IsCloneSupported() instead.
+stock bool MT_CloneAllowed(int client, bool clone)
+{
+	return MT_IsCloneSupported(tank) && clone;
+}
 
 /**
  * Returns whether the clone can use abilities.
