@@ -14,10 +14,15 @@
 #endif
 #define _mutanttankscloneability_included
 
+#if defined MT_CLONE_COMPILE_METHOD
+	#endinput
+#endif
+#define MT_CLONE_COMPILE_METHOD 0 // 0: packaged, 1: standalone
+
 public SharedPlugin __pl_mutanttankscloneability =
 {
 	name = "mt_clone",
-#if defined MT_ABILITIES_MAIN
+#if MT_CLONE_COMPILE_METHOD == 0
 	file = "mt_abilities.smx",
 #else
 	file = "mt_clone.smx",
