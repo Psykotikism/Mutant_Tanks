@@ -7430,7 +7430,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 					ReplaceString(sKey, sizeof(sKey), " ", "");
 					if (StrContains(sKey, "mt_disabledgamemodes", false) == -1 && StrContains(sKey, "mt_enabledgamemodes", false) == -1 && StrContains(sKey, "mt_gamemodetypes", false) == -1 && StrContains(sKey, "mt_pluginenabled", false) == -1 && StrContains(sKey, "mt_pluginversion", false) == -1)
 					{
-						static char sValue[128];
+						static char sValue[PLATFORM_MAX_PATH];
 						strcopy(sValue, sizeof(sValue), value);
 						ReplaceString(sValue, sizeof(sValue), " ", "");
 						g_esGeneral.g_cvMTTempSetting = FindConVar(sKey);
