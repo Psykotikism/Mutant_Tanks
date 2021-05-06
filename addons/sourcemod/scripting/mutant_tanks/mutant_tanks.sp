@@ -1863,79 +1863,22 @@ public void OnPluginStart()
 					LogError("%s Your \"CBaseEntity::IsInStasis\" offsets are outdated.", MT_TAG);
 				}
 
-				g_esGeneral.g_iMeleeOffset = gdMutantTanks.GetOffset("CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon");
-				if (g_esGeneral.g_iMeleeOffset == -1)
-				{
-					LogError("%s Failed to load offset: CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon", MT_TAG);
-				}
+				g_esGeneral.g_iMeleeOffset = iGetGameDataOffset(gdMutantTanks, "CTerrorPlayer::OnIncapacitatedAsSurvivor::HiddenMeleeWeapon");
 
-				g_esGeneral.g_ddActionCompleteDetour = DynamicDetour.FromConf(gdMutantTanks, "CFirstAidKit::OnActionComplete");
-				if (g_esGeneral.g_ddActionCompleteDetour == null)
-				{
-					LogError("%s Failed to find signature: CFirstAidKit::OnActionComplete", MT_TAG);
-				}
-
-				g_esGeneral.g_ddDoAnimationEventDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::DoAnimationEvent");
-				if (g_esGeneral.g_ddDoAnimationEventDetour == null)
-				{
-					LogError("%s Failed to find signature: CTerrorPlayer::DoAnimationEvent", MT_TAG);
-				}
-
-				g_esGeneral.g_ddFireBulletDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorGun::FireBullet");
-				if (g_esGeneral.g_ddFireBulletDetour == null)
-				{
-					LogError("%s Failed to find signature: CTerrorGun::FireBullet", MT_TAG);
-				}
-
-				g_esGeneral.g_ddFlingDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::Fling");
-				if (g_esGeneral.g_ddFlingDetour == null)
-				{
-					LogError("%s Failed to find signature: CTerrorPlayer::Fling", MT_TAG);
-				}
-
-				g_esGeneral.g_ddHitByVomitJarDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnHitByVomitJar");
-				if (g_esGeneral.g_ddHitByVomitJarDetour == null)
-				{
-					LogError("%s Failed to find signature: CTerrorPlayer::OnHitByVomitJar", MT_TAG);
-				}
-
-				g_esGeneral.g_ddSecondaryAttackDetour2 = DynamicDetour.FromConf(gdMutantTanks, "CTerrorMeleeWeapon::SecondaryAttack");
-				if (g_esGeneral.g_ddSecondaryAttackDetour2 == null)
-				{
-					LogError("%s Failed to find signature: CTerrorMeleeWeapon::SecondaryAttack", MT_TAG);
-				}
-
-				g_esGeneral.g_ddStartActionDetour = DynamicDetour.FromConf(gdMutantTanks, "CBaseBackpackItem::StartAction");
-				if (g_esGeneral.g_ddStartActionDetour == null)
-				{
-					LogError("%s Failed to find signature: CBaseBackpackItem::StartAction", MT_TAG);
-				}
-
-				g_esGeneral.g_ddTestMeleeSwingCollisionDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorMeleeWeapon::TestMeleeSwingCollision");
-				if (g_esGeneral.g_ddTestMeleeSwingCollisionDetour == null)
-				{
-					LogError("%s Failed to find signature: CTerrorMeleeWeapon::TestMeleeSwingCollision", MT_TAG);
-				}
+				vSetupDetour(g_esGeneral.g_ddActionCompleteDetour, gdMutantTanks, "CFirstAidKit::OnActionComplete");
+				vSetupDetour(g_esGeneral.g_ddDoAnimationEventDetour, gdMutantTanks, "CTerrorPlayer::DoAnimationEvent");
+				vSetupDetour(g_esGeneral.g_ddFireBulletDetour, gdMutantTanks, "CTerrorGun::FireBullet");
+				vSetupDetour(g_esGeneral.g_ddFlingDetour, gdMutantTanks, "CTerrorPlayer::Fling");
+				vSetupDetour(g_esGeneral.g_ddHitByVomitJarDetour, gdMutantTanks, "CTerrorPlayer::OnHitByVomitJar");
+				vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour2, gdMutantTanks, "CTerrorMeleeWeapon::SecondaryAttack");
+				vSetupDetour(g_esGeneral.g_ddStartActionDetour, gdMutantTanks, "CBaseBackpackItem::StartAction");
+				vSetupDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, gdMutantTanks, "CTerrorMeleeWeapon::TestMeleeSwingCollision");
 			}
 			else
 			{
-				g_esGeneral.g_ddFinishHealingDetour = DynamicDetour.FromConf(gdMutantTanks, "CFirstAidKit::FinishHealing");
-				if (g_esGeneral.g_ddFinishHealingDetour == null)
-				{
-					LogError("%s Failed to find signature: CFirstAidKit::FinishHealing", MT_TAG);
-				}
-
-				g_esGeneral.g_ddSetMainActivityDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::SetMainActivity");
-				if (g_esGeneral.g_ddSetMainActivityDetour == null)
-				{
-					LogError("%s Failed to find signature: CTerrorPlayer::SetMainActivity", MT_TAG);
-				}
-
-				g_esGeneral.g_ddStartHealingDetour = DynamicDetour.FromConf(gdMutantTanks, "CFirstAidKit::StartHealing");
-				if (g_esGeneral.g_ddStartHealingDetour == null)
-				{
-					LogError("%s Failed to find signature: CFirstAidKit::StartHealing", MT_TAG);
-				}
+				vSetupDetour(g_esGeneral.g_ddFinishHealingDetour, gdMutantTanks, "CFirstAidKit::FinishHealing");
+				vSetupDetour(g_esGeneral.g_ddSetMainActivityDetour, gdMutantTanks, "CTerrorPlayer::SetMainActivity");
+				vSetupDetour(g_esGeneral.g_ddStartHealingDetour, gdMutantTanks, "CFirstAidKit::StartHealing");
 			}
 
 			g_esGeneral.g_adDirector = gdMutantTanks.GetAddress("CDirector");
@@ -2096,42 +2039,13 @@ public void OnPluginStart()
 				LogError("%s Your \"Tank::LeaveStasis\" signature is outdated.", MT_TAG);
 			}
 
-			g_esGeneral.g_iEventKilledAttackerOffset = gdMutantTanks.GetOffset("CTerrorPlayer::Event_Killed::Attacker");
-			if (g_esGeneral.g_iEventKilledAttackerOffset == -1)
-			{
-				LogError("%s Failed to load offset: CTerrorPlayer::Event_Killed::Attacker", MT_TAG);
-			}
+			g_esGeneral.g_iEventKilledAttackerOffset = iGetGameDataOffset(gdMutantTanks, "CTerrorPlayer::Event_Killed::Attacker");
+			g_esGeneral.g_iIntentionOffset = iGetGameDataOffset(gdMutantTanks, "Tank::GetIntentionInterface");
+			g_esGeneral.g_iBehaviorOffset = iGetGameDataOffset(gdMutantTanks, "TankIntention::FirstContainedResponder");
+			g_esGeneral.g_iActionOffset = iGetGameDataOffset(gdMutantTanks, "Behavior<Tank>::FirstContainedResponder");
+			g_esGeneral.g_iChildActionOffset = iGetGameDataOffset(gdMutantTanks, "Action<Tank>::FirstContainedResponder");
 
-			g_esGeneral.g_iIntentionOffset = gdMutantTanks.GetOffset("Tank::GetIntentionInterface");
-			if (g_esGeneral.g_iIntentionOffset == -1)
-			{
-				LogError("%s Failed to load offset: Tank::GetIntentionInterface", MT_TAG);
-			}
-
-			g_esGeneral.g_iBehaviorOffset = gdMutantTanks.GetOffset("TankIntention::FirstContainedResponder");
-			if (g_esGeneral.g_iBehaviorOffset == -1)
-			{
-				LogError("%s Failed to load offset: TankIntention::FirstContainedResponder", MT_TAG);
-			}
-
-			g_esGeneral.g_iActionOffset = gdMutantTanks.GetOffset("Behavior<Tank>::FirstContainedResponder");
-			if (g_esGeneral.g_iActionOffset == -1)
-			{
-				LogError("%s Failed to load offset: Behavior<Tank>::FirstContainedResponder", MT_TAG);
-			}
-
-			g_esGeneral.g_iChildActionOffset = gdMutantTanks.GetOffset("Action<Tank>::FirstContainedResponder");
-			if (g_esGeneral.g_iChildActionOffset == -1)
-			{
-				LogError("%s Failed to load offset: Action<Tank>::FirstContainedResponder", MT_TAG);
-			}
-
-			int iOffset = gdMutantTanks.GetOffset("CBaseCombatWeapon::GetMaxClip1");
-			if (iOffset == -1)
-			{
-				LogError("%s Failed to load offset: CBaseCombatWeapon::GetMaxClip1", MT_TAG);
-			}
-
+			int iOffset = iGetGameDataOffset(gdMutantTanks, "CBaseCombatWeapon::GetMaxClip1");
 			StartPrepSDKCall(SDKCall_Entity);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_ByValue);
@@ -2141,12 +2055,7 @@ public void OnPluginStart()
 				LogError("%s Your \"CBaseCombatWeapon::GetMaxClip1\" offsets are outdated.", MT_TAG);
 			}
 
-			iOffset = gdMutantTanks.GetOffset("TankIdle::GetName");
-			if (iOffset == -1)
-			{
-				LogError("%s Failed to load offset: TankIdle::GetName", MT_TAG);
-			}
-
+			iOffset = iGetGameDataOffset(gdMutantTanks, "TankIdle::GetName");
 			StartPrepSDKCall(SDKCall_Raw);
 			PrepSDKCall_SetVirtual(iOffset);
 			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Plain);
@@ -2159,143 +2068,29 @@ public void OnPluginStart()
 			vRegisterPatches(gdMutantTanks);
 			vInstallPermanentPatches();
 
-			g_esGeneral.g_ddDeathFallCameraEnableDetour = DynamicDetour.FromConf(gdMutantTanks, "CDeathFallCamera::Enable");
-			if (g_esGeneral.g_ddDeathFallCameraEnableDetour == null)
-			{
-				LogError("%s Failed to find signature: CDeathFallCamera::Enable", MT_TAG);
-			}
-
-			g_esGeneral.g_ddDoJumpDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorGameMovement::DoJump");
-			if (g_esGeneral.g_ddDoJumpDetour == null)
-			{
-				LogError("%s Failed to find signature: CTerrorGameMovement::DoJump", MT_TAG);
-			}
-
-			g_esGeneral.g_ddEnterGhostStateDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnEnterGhostState");
-			if (g_esGeneral.g_ddEnterGhostStateDetour == null)
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::OnEnterGhostState", MT_TAG);
-			}
-
-			g_esGeneral.g_ddEnterStasisDetour = DynamicDetour.FromConf(gdMutantTanks, "Tank::EnterStasis");
-			if (g_esGeneral.g_ddEnterStasisDetour == null)
-			{
-				LogError("%s Failed to find signature: Tank::EnterStasis", MT_TAG);
-			}
-
-			g_esGeneral.g_ddEventKilledDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::Event_Killed");
-			if (g_esGeneral.g_ddEventKilledDetour == null)
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::Event_Killed", MT_TAG);
-			}
-
-			g_esGeneral.g_ddFallingDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnFalling");
-			if (g_esGeneral.g_ddFallingDetour == null)
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::OnFalling", MT_TAG);
-			}
-
-			g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour = DynamicDetour.FromConf(gdMutantTanks, "CDirector::OnFirstSurvivorLeftSafeArea");
-			if (g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour == null)
-			{
-				LogError("%s Failed to find signature: CDirector::OnFirstSurvivorLeftSafeArea", MT_TAG);
-			}
-
-			g_esGeneral.g_ddGetMaxClip1Detour = DynamicDetour.FromConf(gdMutantTanks, "CBaseCombatWeapon::GetMaxClip1");
-			if (g_esGeneral.g_ddGetMaxClip1Detour == null)
-			{
-				LogError("%s Failed to find signature: CBaseCombatWeapon::GetMaxClip1", MT_TAG);
-			}
-
-			g_esGeneral.g_ddLauncherDirectionDetour = DynamicDetour.FromConf(gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
-			if (g_esGeneral.g_ddLauncherDirectionDetour == null)
-			{
-				LogError("%s Failed to find signature: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
-			}
-
-			g_esGeneral.g_ddLeaveStasisDetour = DynamicDetour.FromConf(gdMutantTanks, "Tank::LeaveStasis");
-			if (g_esGeneral.g_ddLeaveStasisDetour == null)
-			{
-				LogError("%s Failed to find signature: Tank::LeaveStasis", MT_TAG);
-			}
-
-			g_esGeneral.g_ddMaxCarryDetour = DynamicDetour.FromConf(gdMutantTanks, "CAmmoDef::MaxCarry");
-			if (g_esGeneral.g_ddMaxCarryDetour == null)
-			{
-				LogError("%s Failed to find signature: CAmmoDef::MaxCarry", MT_TAG);
-			}
-
-			g_esGeneral.g_ddReplaceTankDetour = DynamicDetour.FromConf(gdMutantTanks, "ZombieManager::ReplaceTank");
-			if (g_esGeneral.g_ddReplaceTankDetour == null)
-			{
-				LogError("%s Failed to find signature: ZombieManager::ReplaceTank", MT_TAG);
-			}
-
-			g_esGeneral.g_ddRevivedDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnRevived");
-			if (g_esGeneral.g_ddRevivedDetour == null)
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::OnRevived", MT_TAG);
-			}
-
-			g_esGeneral.g_ddSecondaryAttackDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorWeapon::SecondaryAttack");
-			if (g_esGeneral.g_ddSecondaryAttackDetour == null)
-			{
-				LogError("%s Failed to find signature: CTerrorWeapon::SecondaryAttack", MT_TAG);
-			}
-
-			g_esGeneral.g_ddShovedByPounceLandingDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnShovedByPounceLanding");
-			if (g_esGeneral.g_ddShovedByPounceLandingDetour == null)
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::OnShovedByPounceLanding", MT_TAG);
-			}
-
-			g_esGeneral.g_ddShovedBySurvivorDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnShovedBySurvivor");
-			if (g_esGeneral.g_ddShovedBySurvivorDetour == null)
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
-			}
-
-			g_esGeneral.g_ddSpawnTankDetour = DynamicDetour.FromConf(gdMutantTanks, "ZombieManager::SpawnTank");
-			if (g_esGeneral.g_ddSpawnTankDetour == null)
-			{
-				LogError("%s Failed to find signature: ZombieManager::SpawnTank", MT_TAG);
-			}
-
-			g_esGeneral.g_ddStaggerDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnStaggered");
-			if (g_esGeneral.g_ddStaggerDetour == null)
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::OnStaggered", MT_TAG);
-			}
-
-			g_esGeneral.g_ddStartRevivingDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::StartReviving");
-			if (g_esGeneral.g_ddStartRevivingDetour == null)
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::StartReviving", MT_TAG);
-			}
-
-			g_esGeneral.g_ddTankClawDoSwingDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankClaw::DoSwing");
-			if (g_esGeneral.g_ddTankClawDoSwingDetour == null)
-			{
-				LogError("%s Failed to find signature: CTankClaw::DoSwing", MT_TAG);
-			}
-
-			g_esGeneral.g_ddTankClawPlayerHitDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankClaw::OnPlayerHit");
-			if (g_esGeneral.g_ddTankClawPlayerHitDetour == null)
-			{
-				LogError("%s Failed to find signature: CTankClaw::OnPlayerHit", MT_TAG);
-			}
-
-			g_esGeneral.g_ddTankRockCreateDetour = DynamicDetour.FromConf(gdMutantTanks, "CTankRock::Create");
-			if (g_esGeneral.g_ddTankRockCreateDetour == null)
-			{
-				LogError("%s Failed to find signature: CTankRock::Create", MT_TAG);
-			}
-
-			g_esGeneral.g_ddVomitedUponDetour = DynamicDetour.FromConf(gdMutantTanks, "CTerrorPlayer::OnVomitedUpon");
-			if (g_esGeneral.g_ddVomitedUponDetour == null)
-			{
-				LogError("%s Failed to find signature: CTerrorPlayer::OnVomitedUpon", MT_TAG);
-			}
+			vSetupDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, gdMutantTanks, "CDeathFallCamera::Enable");
+			vSetupDetour(g_esGeneral.g_ddDoJumpDetour, gdMutantTanks, "CTerrorGameMovement::DoJump");
+			vSetupDetour(g_esGeneral.g_ddEnterGhostStateDetour, gdMutantTanks, "CTerrorPlayer::OnEnterGhostState");
+			vSetupDetour(g_esGeneral.g_ddEnterStasisDetour, gdMutantTanks, "Tank::EnterStasis");
+			vSetupDetour(g_esGeneral.g_ddEventKilledDetour, gdMutantTanks, "CTerrorPlayer::Event_Killed");
+			vSetupDetour(g_esGeneral.g_ddFallingDetour, gdMutantTanks, "CTerrorPlayer::OnFalling");
+			vSetupDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, gdMutantTanks, "CDirector::OnFirstSurvivorLeftSafeArea");
+			vSetupDetour(g_esGeneral.g_ddGetMaxClip1Detour, gdMutantTanks, "CBaseCombatWeapon::GetMaxClip1");
+			vSetupDetour(g_esGeneral.g_ddLauncherDirectionDetour, gdMutantTanks, "CEnvRockLauncher::LaunchCurrentDir");
+			vSetupDetour(g_esGeneral.g_ddLeaveStasisDetour, gdMutantTanks, "Tank::LeaveStasis");
+			vSetupDetour(g_esGeneral.g_ddMaxCarryDetour, gdMutantTanks, "CAmmoDef::MaxCarry");
+			vSetupDetour(g_esGeneral.g_ddReplaceTankDetour, gdMutantTanks, "ZombieManager::ReplaceTank");
+			vSetupDetour(g_esGeneral.g_ddRevivedDetour, gdMutantTanks, "CTerrorPlayer::OnRevived");
+			vSetupDetour(g_esGeneral.g_ddSecondaryAttackDetour, gdMutantTanks, "CTerrorWeapon::SecondaryAttack");
+			vSetupDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, gdMutantTanks, "CTerrorPlayer::OnShovedByPounceLanding");
+			vSetupDetour(g_esGeneral.g_ddShovedBySurvivorDetour, gdMutantTanks, "CTerrorPlayer::OnShovedBySurvivor");
+			vSetupDetour(g_esGeneral.g_ddSpawnTankDetour, gdMutantTanks, "ZombieManager::SpawnTank");
+			vSetupDetour(g_esGeneral.g_ddStaggerDetour, gdMutantTanks, "CTerrorPlayer::OnStaggered");
+			vSetupDetour(g_esGeneral.g_ddStartRevivingDetour, gdMutantTanks, "CTerrorPlayer::StartReviving");
+			vSetupDetour(g_esGeneral.g_ddTankClawDoSwingDetour, gdMutantTanks, "CTankClaw::DoSwing");
+			vSetupDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, gdMutantTanks, "CTankClaw::OnPlayerHit");
+			vSetupDetour(g_esGeneral.g_ddTankRockCreateDetour, gdMutantTanks, "CTankRock::Create");
+			vSetupDetour(g_esGeneral.g_ddVomitedUponDetour, gdMutantTanks, "CTerrorPlayer::OnVomitedUpon");
 
 			delete gdMutantTanks;
 		}
@@ -2987,16 +2782,16 @@ public Action cmdMTConfig(int client, int args)
 		{
 			char sFilename[PLATFORM_MAX_PATH];
 			GetCmdArg(2, sFilename, sizeof(sFilename));
-			if (StrContains(sFilename, "mutant_tanks_patches", false) != -1)
+			switch (StrContains(sFilename, "mutant_tanks_patches", false) != -1)
 			{
-				BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
-			}
-			else
-			{
-				BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
-				if (!FileExists(g_esGeneral.g_sChosenPath, true))
+				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+				case false:
 				{
-					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
+					if (!FileExists(g_esGeneral.g_sChosenPath, true))
+					{
+						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+					}
 				}
 			}
 		}
@@ -3066,16 +2861,16 @@ public Action cmdMTConfig2(int client, int args)
 		{
 			char sFilename[PLATFORM_MAX_PATH];
 			GetCmdArg(2, sFilename, sizeof(sFilename));
-			if (StrContains(sFilename, "mutant_tanks_patches", false) != -1)
+			switch (StrContains(sFilename, "mutant_tanks_patches", false) != -1)
 			{
-				BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
-			}
-			else
-			{
-				BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
-				if (!FileExists(g_esGeneral.g_sChosenPath, true))
+				case true: BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+				case false:
 				{
-					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+					BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/%s.cfg", sFilename);
+					if (!FileExists(g_esGeneral.g_sChosenPath, true))
+					{
+						BuildPath(Path_SM, g_esGeneral.g_sChosenPath, sizeof(esGeneral::g_sChosenPath), "data/mutant_tanks/mutant_tanks.cfg");
+					}
 				}
 			}
 		}
@@ -9099,252 +8894,58 @@ static void vPluginStatus()
 
 		vHookEvents(true);
 
-		if (!g_esGeneral.g_ddDeathFallCameraEnableDetour.Enable(Hook_Pre, mreDeathFallCameraEnablePre))
-		{
-			LogError("%s Failed to enable detour pre: CDeathFallCamera::Enable", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddDoJumpDetour.Enable(Hook_Pre, mreDoJumpPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorGameMovement::DoJump", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddDoJumpDetour.Enable(Hook_Post, mreDoJumpPost))
-		{
-			LogError("%s Failed to enable detour post: CTerrorGameMovement::DoJump", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddEnterStasisDetour.Enable(Hook_Post, mreEnterStasisPost))
-		{
-			LogError("%s Failed to enable detour post: Tank::EnterStasis", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddEventKilledDetour.Enable(Hook_Pre, mreEventKilledPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorPlayer::Event_Killed", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddEventKilledDetour.Enable(Hook_Post, mreEventKilledPost))
-		{
-			LogError("%s Failed to enable detour post: CTerrorPlayer::Event_Killed", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddFallingDetour.Enable(Hook_Pre, mreFallingPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnFalling", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddFallingDetour.Enable(Hook_Post, mreFallingPost))
-		{
-			LogError("%s Failed to enable detour post: CTerrorPlayer::OnFalling", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddGetMaxClip1Detour.Enable(Hook_Pre, mreGetMaxClip1Pre))
-		{
-			LogError("%s Failed to enable detour pre: CBaseCombatWeapon::GetMaxClip1", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddLauncherDirectionDetour.Enable(Hook_Pre, mreLaunchDirectionPre))
-		{
-			LogError("%s Failed to enable detour pre: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddLeaveStasisDetour.Enable(Hook_Post, mreLeaveStasisPost))
-		{
-			LogError("%s Failed to enable detour post: Tank::LeaveStasis", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddMaxCarryDetour.Enable(Hook_Pre, mreMaxCarryPre))
-		{
-			LogError("%s Failed to enable detour pre: CAmmoDef::MaxCarry", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddRevivedDetour.Enable(Hook_Pre, mreRevivedPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnRevived", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddRevivedDetour.Enable(Hook_Post, mreRevivedPost))
-		{
-			LogError("%s Failed to enable detour post: CTerrorPlayer::OnRevived", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddSecondaryAttackDetour.Enable(Hook_Pre, mreSecondaryAttackPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorWeapon::SecondaryAttack", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddSecondaryAttackDetour.Enable(Hook_Post, mreSecondaryAttackPost))
-		{
-			LogError("%s Failed to enable detour post: CTerrorWeapon::SecondaryAttack", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddStartRevivingDetour.Enable(Hook_Pre, mreStartRevivingPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorPlayer::StartReviving", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddStartRevivingDetour.Enable(Hook_Post, mreStartRevivingPost))
-		{
-			LogError("%s Failed to enable detour post: CTerrorPlayer::StartReviving", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawDoSwingDetour.Enable(Hook_Pre, mreTankClawDoSwingPre))
-		{
-			LogError("%s Failed to enable detour pre: CTankClaw::DoSwing", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawDoSwingDetour.Enable(Hook_Post, mreTankClawDoSwingPost))
-		{
-			LogError("%s Failed to enable detour post: CTankClaw::DoSwing", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Enable(Hook_Pre, mreTankClawPlayerHitPre))
-		{
-			LogError("%s Failed to enable detour pre: CTankClaw::OnPlayerHit", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Enable(Hook_Post, mreTankClawPlayerHitPost))
-		{
-			LogError("%s Failed to enable detour post: CTankClaw::OnPlayerHit", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankRockCreateDetour.Enable(Hook_Post, mreTankRockCreatePost))
-		{
-			LogError("%s Failed to enable detour post: CTankRock::Create", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddVomitedUponDetour.Enable(Hook_Pre, mreVomitedUponPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnVomitedUpon", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddActionCompleteDetour.Enable(Hook_Pre, mreActionCompletePre))
-		{
-			LogError("%s Failed to enable detour pre: CFirstAidKit::OnActionComplete", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddActionCompleteDetour.Enable(Hook_Post, mreActionCompletePost))
-		{
-			LogError("%s Failed to enable detour post: CFirstAidKit::OnActionComplete", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddDoAnimationEventDetour.Enable(Hook_Pre, mreDoAnimationEventPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorPlayer::DoAnimationEvent", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddFireBulletDetour.Enable(Hook_Pre, mreFireBulletPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorGun::FireBullet", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddFireBulletDetour.Enable(Hook_Post, mreFireBulletPost))
-		{
-			LogError("%s Failed to enable detour post: CTerrorGun::FireBullet", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddFlingDetour.Enable(Hook_Pre, mreFlingPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorPlayer::Fling", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddHitByVomitJarDetour.Enable(Hook_Pre, mreHitByVomitJarPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorPlayer::OnHitByVomitJar", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Enable(Hook_Pre, mreSecondaryAttackPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorMeleeWeapon::SecondaryAttack", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Enable(Hook_Post, mreSecondaryAttackPost))
-		{
-			LogError("%s Failed to enable detour post: CTerrorMeleeWeapon::SecondaryAttack", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Enable(Hook_Pre, mreStartActionPre))
-		{
-			LogError("%s Failed to enable detour pre: CBaseBackpackItem::StartAction", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Enable(Hook_Post, mreStartActionPost))
-		{
-			LogError("%s Failed to enable detour post: CBaseBackpackItem::StartAction", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddTestMeleeSwingCollisionDetour.Enable(Hook_Pre, mreTestMeleeSwingCollisionPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorMeleeWeapon::TestMeleeSwingCollision", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddTestMeleeSwingCollisionDetour.Enable(Hook_Post, mreTestMeleeSwingCollisionPost))
-		{
-			LogError("%s Failed to enable detour post: CTerrorMeleeWeapon::TestMeleeSwingCollision", MT_TAG);
-		}
-
-		if (!g_bSecondGame && !g_esGeneral.g_ddFinishHealingDetour.Enable(Hook_Pre, mreFinishHealingPre))
-		{
-			LogError("%s Failed to enable detour pre: CFirstAidKit::FinishHealing", MT_TAG);
-		}
-
-		if (!g_bSecondGame && !g_esGeneral.g_ddFinishHealingDetour.Enable(Hook_Post, mreFinishHealingPost))
-		{
-			LogError("%s Failed to enable detour post: CFirstAidKit::FinishHealing", MT_TAG);
-		}
-
-		if (!g_bSecondGame && !g_esGeneral.g_ddSetMainActivityDetour.Enable(Hook_Pre, mreSetMainActivityPre))
-		{
-			LogError("%s Failed to enable detour pre: CTerrorPlayer::SetMainActivity", MT_TAG);
-		}
-
-		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Enable(Hook_Pre, mreStartHealingPre))
-		{
-			LogError("%s Failed to enable detour pre: CFirstAidKit::StartHealing", MT_TAG);
-		}
-
-		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Enable(Hook_Post, mreStartHealingPost))
-		{
-			LogError("%s Failed to enable detour post: CFirstAidKit::StartHealing", MT_TAG);
-		}
+		vToggleDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, "CDeathFallCamera::Enable", Hook_Pre, mreDeathFallCameraEnablePre, true);
+		vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "CTerrorGameMovement::DoJump", Hook_Pre, mreDoJumpPre, true);
+		vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "CTerrorGameMovement::DoJump", Hook_Post, mreDoJumpPost, true);
+		vToggleDetour(g_esGeneral.g_ddEnterStasisDetour, "Tank::EnterStasis", Hook_Post, mreEnterStasisPost, true);
+		vToggleDetour(g_esGeneral.g_ddEventKilledDetour, "CTerrorPlayer::Event_Killed", Hook_Pre, mreEventKilledPre, true);
+		vToggleDetour(g_esGeneral.g_ddEventKilledDetour, "CTerrorPlayer::Event_Killed", Hook_Post, mreEventKilledPost, true);
+		vToggleDetour(g_esGeneral.g_ddFallingDetour, "CTerrorPlayer::OnFalling", Hook_Pre, mreFallingPre, true);
+		vToggleDetour(g_esGeneral.g_ddFallingDetour, "CTerrorPlayer::OnFalling", Hook_Post, mreFallingPost, true);
+		vToggleDetour(g_esGeneral.g_ddGetMaxClip1Detour, "CBaseCombatWeapon::GetMaxClip1", Hook_Pre, mreGetMaxClip1Pre, true);
+		vToggleDetour(g_esGeneral.g_ddLauncherDirectionDetour, "CEnvRockLauncher::LaunchCurrentDir", Hook_Pre, mreLaunchDirectionPre, true);
+		vToggleDetour(g_esGeneral.g_ddLeaveStasisDetour, "Tank::LeaveStasis", Hook_Post, mreLeaveStasisPost, true);
+		vToggleDetour(g_esGeneral.g_ddMaxCarryDetour, "CAmmoDef::MaxCarry", Hook_Pre, mreMaxCarryPre, true);
+		vToggleDetour(g_esGeneral.g_ddRevivedDetour, "CTerrorPlayer::OnRevived", Hook_Pre, mreRevivedPre, true);
+		vToggleDetour(g_esGeneral.g_ddRevivedDetour, "CTerrorPlayer::OnRevived", Hook_Post, mreRevivedPost, true);
+		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "CTerrorWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, true);
+		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "CTerrorWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, true);
+		vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "CTerrorPlayer::StartReviving", Hook_Pre, mreStartRevivingPre, true);
+		vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "CTerrorPlayer::StartReviving", Hook_Post, mreStartRevivingPost, true);
+		vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Pre, mreTankClawDoSwingPre, true);
+		vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Post, mreTankClawDoSwingPost, true);
+		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, true);
+		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, true);
+		vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "CTankRock::Create", Hook_Post, mreTankRockCreatePost, true);
+		vToggleDetour(g_esGeneral.g_ddVomitedUponDetour, "CTerrorPlayer::OnVomitedUpon", Hook_Pre, mreVomitedUponPre, true);
+		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Pre, mreActionCompletePre, true, 2);
+		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Post, mreActionCompletePost, true, 2);
+		vToggleDetour(g_esGeneral.g_ddDoAnimationEventDetour, "CTerrorPlayer::DoAnimationEvent", Hook_Pre, mreDoAnimationEventPre, true, 2);
+		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Pre, mreFireBulletPre, true, 2);
+		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, true, 2);
+		vToggleDetour(g_esGeneral.g_ddFlingDetour, "CTerrorPlayer::Fling", Hook_Pre, mreFlingPre, true, 2);
+		vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, true, 2);
+		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, true, 2);
+		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, true, 2);
+		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, true, 2);
+		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, true, 2);
+		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, true, 2);
+		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Post, mreTestMeleeSwingCollisionPost, true, 2);
+		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Pre, mreFinishHealingPre, true, 1);
+		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Post, mreFinishHealingPost, true, 1);
+		vToggleDetour(g_esGeneral.g_ddSetMainActivityDetour, "CTerrorPlayer::SetMainActivity", Hook_Pre, mreSetMainActivityPre, true, 1);
+		vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "CFirstAidKit::StartHealing", Hook_Pre, mreStartHealingPre, true, 1);
+		vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "CFirstAidKit::StartHealing", Hook_Post, mreStartHealingPost, true, 1);
 
 		if (!g_esGeneral.g_bLeft4DHooksInstalled)
 		{
-			if (!g_esGeneral.g_ddEnterGhostStateDetour.Enable(Hook_Post, mreEnterGhostStatePost))
-			{
-				LogError("%s Failed to enable detour post: CTerrorPlayer::OnEnterGhostState", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Enable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
-			{
-				LogError("%s Failed to enable detour post: CDirector::OnFirstSurvivorLeftSafeArea", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddReplaceTankDetour.Enable(Hook_Post, mreReplaceTankPost))
-			{
-				LogError("%s Failed to enable detour post: ZombieManager::ReplaceTank", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddShovedByPounceLandingDetour.Enable(Hook_Pre, mreShovedByPounceLandingPre))
-			{
-				LogError("%s Failed to enable detour pre: CTerrorPlayer::OnShovedByPounceLanding", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddShovedBySurvivorDetour.Enable(Hook_Pre, mreShovedBySurvivorPre))
-			{
-				LogError("%s Failed to enable detour pre: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddSpawnTankDetour.Enable(Hook_Pre, mreSpawnTankPre))
-			{
-				LogError("%s Failed to enable detour pre: ZombieManager::SpawnTank", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddStaggerDetour.Enable(Hook_Pre, mreStaggerPre))
-			{
-				LogError("%s Failed to enable detour pre: CTerrorPlayer::OnStaggered", MT_TAG);
-			}
+			vToggleDetour(g_esGeneral.g_ddEnterGhostStateDetour, "CTerrorPlayer::OnEnterGhostState", Hook_Post, mreEnterGhostStatePost, true);
+			vToggleDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "CDirector::OnFirstSurvivorLeftSafeArea", Hook_Post, mreFirstSurvivorLeftSafeAreaPost, true);
+			vToggleDetour(g_esGeneral.g_ddReplaceTankDetour, "ZombieManager::ReplaceTank", Hook_Post, mreReplaceTankPost, true);
+			vToggleDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, "CTerrorPlayer::OnShovedByPounceLanding", Hook_Pre, mreShovedByPounceLandingPre, true);
+			vToggleDetour(g_esGeneral.g_ddShovedBySurvivorDetour, "CTerrorPlayer::OnShovedBySurvivor", Hook_Pre, mreShovedBySurvivorPre, true);
+			vToggleDetour(g_esGeneral.g_ddSpawnTankDetour, "ZombieManager::SpawnTank", Hook_Pre, mreSpawnTankPre, true);
+			vToggleDetour(g_esGeneral.g_ddStaggerDetour, "CTerrorPlayer::OnStaggered", Hook_Pre, mreStaggerPre, true);
 		}
 	}
 	else if (g_esGeneral.g_bPluginEnabled && !bPluginAllowed)
@@ -9353,252 +8954,58 @@ static void vPluginStatus()
 
 		vHookEvents(false);
 
-		if (!g_esGeneral.g_ddDeathFallCameraEnableDetour.Disable(Hook_Pre, mreDeathFallCameraEnablePre))
-		{
-			LogError("%s Failed to disable detour pre: CDeathFallCamera::Enable", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddDoJumpDetour.Disable(Hook_Pre, mreDoJumpPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorGameMovement::DoJump", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddDoJumpDetour.Disable(Hook_Post, mreDoJumpPost))
-		{
-			LogError("%s Failed to disable detour post: CTerrorGameMovement::DoJump", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddEnterStasisDetour.Disable(Hook_Post, mreEnterStasisPost))
-		{
-			LogError("%s Failed to disable detour post: Tank::EnterStasis", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddEventKilledDetour.Disable(Hook_Pre, mreEventKilledPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorPlayer::Event_Killed", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddEventKilledDetour.Disable(Hook_Post, mreEventKilledPost))
-		{
-			LogError("%s Failed to disable detour post: CTerrorPlayer::Event_Killed", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddFallingDetour.Disable(Hook_Pre, mreFallingPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnFalling", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddFallingDetour.Disable(Hook_Post, mreFallingPost))
-		{
-			LogError("%s Failed to disable detour post: CTerrorPlayer::OnFalling", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddGetMaxClip1Detour.Disable(Hook_Pre, mreGetMaxClip1Pre))
-		{
-			LogError("%s Failed to disable detour pre: CBaseCombatWeapon::GetMaxClip1", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddLauncherDirectionDetour.Disable(Hook_Pre, mreLaunchDirectionPre))
-		{
-			LogError("%s Failed to disable detour pre: CEnvRockLauncher::LaunchCurrentDir", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddLeaveStasisDetour.Disable(Hook_Post, mreLeaveStasisPost))
-		{
-			LogError("%s Failed to disable detour post: Tank::LeaveStasis", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddMaxCarryDetour.Disable(Hook_Pre, mreMaxCarryPre))
-		{
-			LogError("%s Failed to disable detour pre: CAmmoDef::MaxCarry", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddRevivedDetour.Disable(Hook_Pre, mreRevivedPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnRevived", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddRevivedDetour.Disable(Hook_Post, mreRevivedPost))
-		{
-			LogError("%s Failed to disable detour post: CTerrorPlayer::OnRevived", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddSecondaryAttackDetour.Disable(Hook_Pre, mreSecondaryAttackPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorWeapon::SecondaryAttack", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddSecondaryAttackDetour.Disable(Hook_Post, mreSecondaryAttackPost))
-		{
-			LogError("%s Failed to disable detour post: CTerrorWeapon::SecondaryAttack", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddStartRevivingDetour.Disable(Hook_Pre, mreStartRevivingPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorPlayer::StartReviving", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddStartRevivingDetour.Disable(Hook_Post, mreStartRevivingPost))
-		{
-			LogError("%s Failed to disable detour post: CTerrorPlayer::StartReviving", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawDoSwingDetour.Disable(Hook_Pre, mreTankClawDoSwingPre))
-		{
-			LogError("%s Failed to disable detour pre: CTankClaw::DoSwing", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawDoSwingDetour.Disable(Hook_Post, mreTankClawDoSwingPost))
-		{
-			LogError("%s Failed to disable detour post: CTankClaw::DoSwing", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Disable(Hook_Pre, mreTankClawPlayerHitPre))
-		{
-			LogError("%s Failed to disable detour pre: CTankClaw::OnPlayerHit", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankClawPlayerHitDetour.Disable(Hook_Post, mreTankClawPlayerHitPost))
-		{
-			LogError("%s Failed to disable detour post: CTankClaw::OnPlayerHit", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddTankRockCreateDetour.Disable(Hook_Post, mreTankRockCreatePost))
-		{
-			LogError("%s Failed to disable detour post: CTankRock::Create", MT_TAG);
-		}
-
-		if (!g_esGeneral.g_ddVomitedUponDetour.Disable(Hook_Pre, mreVomitedUponPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnVomitedUpon", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddActionCompleteDetour.Disable(Hook_Pre, mreActionCompletePre))
-		{
-			LogError("%s Failed to disable detour pre: CFirstAidKit::OnActionComplete", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddActionCompleteDetour.Disable(Hook_Post, mreActionCompletePost))
-		{
-			LogError("%s Failed to disable detour post: CFirstAidKit::OnActionComplete", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddDoAnimationEventDetour.Disable(Hook_Pre, mreDoAnimationEventPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorPlayer::DoAnimationEvent", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddFireBulletDetour.Disable(Hook_Pre, mreFireBulletPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorGun::FireBullet", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddFireBulletDetour.Disable(Hook_Post, mreFireBulletPost))
-		{
-			LogError("%s Failed to disable detour post: CTerrorGun::FireBullet", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddFlingDetour.Disable(Hook_Pre, mreFlingPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorPlayer::Fling", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddHitByVomitJarDetour.Disable(Hook_Pre, mreHitByVomitJarPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorPlayer::OnHitByVomitJar", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Disable(Hook_Pre, mreSecondaryAttackPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorMeleeWeapon::SecondaryAttack", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddSecondaryAttackDetour2.Disable(Hook_Post, mreSecondaryAttackPost))
-		{
-			LogError("%s Failed to disable detour post: CTerrorMeleeWeapon::SecondaryAttack", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Disable(Hook_Pre, mreStartActionPre))
-		{
-			LogError("%s Failed to disable detour pre: CBaseBackpackItem::StartAction", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddStartActionDetour.Disable(Hook_Post, mreStartActionPost))
-		{
-			LogError("%s Failed to disable detour post: CBaseBackpackItem::StartAction", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddTestMeleeSwingCollisionDetour.Disable(Hook_Pre, mreTestMeleeSwingCollisionPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorMeleeWeapon::TestMeleeSwingCollision", MT_TAG);
-		}
-
-		if (g_bSecondGame && !g_esGeneral.g_ddTestMeleeSwingCollisionDetour.Disable(Hook_Post, mreTestMeleeSwingCollisionPost))
-		{
-			LogError("%s Failed to disable detour post: CTerrorMeleeWeapon::TestMeleeSwingCollision", MT_TAG);
-		}
-
-		if (!g_bSecondGame && !g_esGeneral.g_ddFinishHealingDetour.Disable(Hook_Pre, mreFinishHealingPre))
-		{
-			LogError("%s Failed to disable detour pre: CFirstAidKit::FinishHealing", MT_TAG);
-		}
-
-		if (!g_bSecondGame && !g_esGeneral.g_ddFinishHealingDetour.Disable(Hook_Post, mreFinishHealingPost))
-		{
-			LogError("%s Failed to disable detour post: CFirstAidKit::FinishHealing", MT_TAG);
-		}
-
-		if (!g_bSecondGame && !g_esGeneral.g_ddSetMainActivityDetour.Disable(Hook_Pre, mreSetMainActivityPre))
-		{
-			LogError("%s Failed to disable detour pre: CTerrorPlayer::SetMainActivity", MT_TAG);
-		}
-
-		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Disable(Hook_Pre, mreStartHealingPre))
-		{
-			LogError("%s Failed to disable detour pre: CFirstAidKit::StartHealing", MT_TAG);
-		}
-
-		if (!g_bSecondGame && !g_esGeneral.g_ddStartHealingDetour.Disable(Hook_Post, mreStartHealingPost))
-		{
-			LogError("%s Failed to disable detour post: CFirstAidKit::StartHealing", MT_TAG);
-		}
+		vToggleDetour(g_esGeneral.g_ddDeathFallCameraEnableDetour, "CDeathFallCamera::Enable", Hook_Pre, mreDeathFallCameraEnablePre, false);
+		vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "CTerrorGameMovement::DoJump", Hook_Pre, mreDoJumpPre, false);
+		vToggleDetour(g_esGeneral.g_ddDoJumpDetour, "CTerrorGameMovement::DoJump", Hook_Post, mreDoJumpPost, false);
+		vToggleDetour(g_esGeneral.g_ddEnterStasisDetour, "Tank::EnterStasis", Hook_Post, mreEnterStasisPost, false);
+		vToggleDetour(g_esGeneral.g_ddEventKilledDetour, "CTerrorPlayer::Event_Killed", Hook_Pre, mreEventKilledPre, false);
+		vToggleDetour(g_esGeneral.g_ddEventKilledDetour, "CTerrorPlayer::Event_Killed", Hook_Post, mreEventKilledPost, false);
+		vToggleDetour(g_esGeneral.g_ddFallingDetour, "CTerrorPlayer::OnFalling", Hook_Pre, mreFallingPre, false);
+		vToggleDetour(g_esGeneral.g_ddFallingDetour, "CTerrorPlayer::OnFalling", Hook_Post, mreFallingPost, false);
+		vToggleDetour(g_esGeneral.g_ddGetMaxClip1Detour, "CBaseCombatWeapon::GetMaxClip1", Hook_Pre, mreGetMaxClip1Pre, false);
+		vToggleDetour(g_esGeneral.g_ddLauncherDirectionDetour, "CEnvRockLauncher::LaunchCurrentDir", Hook_Pre, mreLaunchDirectionPre, false);
+		vToggleDetour(g_esGeneral.g_ddLeaveStasisDetour, "Tank::LeaveStasis", Hook_Post, mreLeaveStasisPost, false);
+		vToggleDetour(g_esGeneral.g_ddMaxCarryDetour, "CAmmoDef::MaxCarry", Hook_Pre, mreMaxCarryPre, false);
+		vToggleDetour(g_esGeneral.g_ddRevivedDetour, "CTerrorPlayer::OnRevived", Hook_Pre, mreRevivedPre, false);
+		vToggleDetour(g_esGeneral.g_ddRevivedDetour, "CTerrorPlayer::OnRevived", Hook_Post, mreRevivedPost, false);
+		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "CTerrorWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, false);
+		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour, "CTerrorWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, false);
+		vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "CTerrorPlayer::StartReviving", Hook_Pre, mreStartRevivingPre, false);
+		vToggleDetour(g_esGeneral.g_ddStartRevivingDetour, "CTerrorPlayer::StartReviving", Hook_Post, mreStartRevivingPost, false);
+		vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Pre, mreTankClawDoSwingPre, false);
+		vToggleDetour(g_esGeneral.g_ddTankClawDoSwingDetour, "CTankClaw::DoSwing", Hook_Post, mreTankClawDoSwingPost, false);
+		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Pre, mreTankClawPlayerHitPre, false);
+		vToggleDetour(g_esGeneral.g_ddTankClawPlayerHitDetour, "CTankClaw::OnPlayerHit", Hook_Post, mreTankClawPlayerHitPost, false);
+		vToggleDetour(g_esGeneral.g_ddTankRockCreateDetour, "CTankRock::Create", Hook_Post, mreTankRockCreatePost, false);
+		vToggleDetour(g_esGeneral.g_ddVomitedUponDetour, "CTerrorPlayer::OnVomitedUpon", Hook_Pre, mreVomitedUponPre, false);
+		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Pre, mreActionCompletePre, false, 2);
+		vToggleDetour(g_esGeneral.g_ddActionCompleteDetour, "CFirstAidKit::OnActionComplete", Hook_Post, mreActionCompletePost, false, 2);
+		vToggleDetour(g_esGeneral.g_ddDoAnimationEventDetour, "CTerrorPlayer::DoAnimationEvent", Hook_Pre, mreDoAnimationEventPre, false, 2);
+		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Pre, mreFireBulletPre, false, 2);
+		vToggleDetour(g_esGeneral.g_ddFireBulletDetour, "CTerrorGun::FireBullet", Hook_Post, mreFireBulletPost, false, 2);
+		vToggleDetour(g_esGeneral.g_ddFlingDetour, "CTerrorPlayer::Fling", Hook_Pre, mreFlingPre, false, 2);
+		vToggleDetour(g_esGeneral.g_ddHitByVomitJarDetour, "CTerrorPlayer::OnHitByVomitJar", Hook_Pre, mreHitByVomitJarPre, false, 2);
+		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Pre, mreSecondaryAttackPre, false, 2);
+		vToggleDetour(g_esGeneral.g_ddSecondaryAttackDetour2, "CTerrorMeleeWeapon::SecondaryAttack", Hook_Post, mreSecondaryAttackPost, false, 2);
+		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Pre, mreStartActionPre, false, 2);
+		vToggleDetour(g_esGeneral.g_ddStartActionDetour, "CBaseBackpackItem::StartAction", Hook_Post, mreStartActionPost, false, 2);
+		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Pre, mreTestMeleeSwingCollisionPre, false, 2);
+		vToggleDetour(g_esGeneral.g_ddTestMeleeSwingCollisionDetour, "CTerrorMeleeWeapon::TestMeleeSwingCollision", Hook_Post, mreTestMeleeSwingCollisionPost, false, 2);
+		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Pre, mreFinishHealingPre, false, 1);
+		vToggleDetour(g_esGeneral.g_ddFinishHealingDetour, "CFirstAidKit::FinishHealing", Hook_Post, mreFinishHealingPost, false, 1);
+		vToggleDetour(g_esGeneral.g_ddSetMainActivityDetour, "CTerrorPlayer::SetMainActivity", Hook_Pre, mreSetMainActivityPre, false, 1);
+		vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "CFirstAidKit::StartHealing", Hook_Pre, mreStartHealingPre, false, 1);
+		vToggleDetour(g_esGeneral.g_ddStartHealingDetour, "CFirstAidKit::StartHealing", Hook_Post, mreStartHealingPost, false, 1);
 
 		if (!g_esGeneral.g_bLeft4DHooksInstalled)
 		{
-			if (!g_esGeneral.g_ddEnterGhostStateDetour.Disable(Hook_Post, mreEnterGhostStatePost))
-			{
-				LogError("%s Failed to disable detour post: CTerrorPlayer::OnEnterGhostState", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour.Disable(Hook_Post, mreFirstSurvivorLeftSafeAreaPost))
-			{
-				LogError("%s Failed to disable detour post: CDirector::OnFirstSurvivorLeftSafeArea", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddReplaceTankDetour.Disable(Hook_Post, mreReplaceTankPost))
-			{
-				LogError("%s Failed to disable detour post: ZombieManager::ReplaceTank", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddShovedByPounceLandingDetour.Disable(Hook_Pre, mreShovedByPounceLandingPre))
-			{
-				LogError("%s Failed to disable detour pre: CTerrorPlayer::OnShovedByPounceLanding", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddShovedBySurvivorDetour.Disable(Hook_Pre, mreShovedBySurvivorPre))
-			{
-				LogError("%s Failed to disable detour pre: CTerrorPlayer::OnShovedBySurvivor", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddSpawnTankDetour.Disable(Hook_Pre, mreSpawnTankPre))
-			{
-				LogError("%s Failed to disable detour pre: ZombieManager::SpawnTank", MT_TAG);
-			}
-
-			if (!g_esGeneral.g_ddStaggerDetour.Disable(Hook_Pre, mreStaggerPre))
-			{
-				LogError("%s Failed to disable detour pre: CTerrorPlayer::OnStaggered", MT_TAG);
-			}
+			vToggleDetour(g_esGeneral.g_ddEnterGhostStateDetour, "CTerrorPlayer::OnEnterGhostState", Hook_Post, mreEnterGhostStatePost, false);
+			vToggleDetour(g_esGeneral.g_ddFirstSurvivorLeftSafeAreaDetour, "CDirector::OnFirstSurvivorLeftSafeArea", Hook_Post, mreFirstSurvivorLeftSafeAreaPost, false);
+			vToggleDetour(g_esGeneral.g_ddReplaceTankDetour, "ZombieManager::ReplaceTank", Hook_Post, mreReplaceTankPost, false);
+			vToggleDetour(g_esGeneral.g_ddShovedByPounceLandingDetour, "CTerrorPlayer::OnShovedByPounceLanding", Hook_Pre, mreShovedByPounceLandingPre, false);
+			vToggleDetour(g_esGeneral.g_ddShovedBySurvivorDetour, "CTerrorPlayer::OnShovedBySurvivor", Hook_Pre, mreShovedBySurvivorPre, false);
+			vToggleDetour(g_esGeneral.g_ddSpawnTankDetour, "ZombieManager::SpawnTank", Hook_Pre, mreSpawnTankPre, false);
+			vToggleDetour(g_esGeneral.g_ddStaggerDetour, "CTerrorPlayer::OnStaggered", Hook_Pre, mreStaggerPre, false);
 		}
 	}
 }
@@ -9789,6 +9196,28 @@ static void vLogMessage(int type, bool timestamp = true, const char[] message, a
 				PrintToServer(sBuffer);
 			}
 		}
+	}
+}
+
+static void vSetupDetour(DynamicDetour &detourHandle, GameData dataHandle, const char[] name)
+{
+	detourHandle = DynamicDetour.FromConf(dataHandle, name);
+	if (detourHandle == null)
+	{
+		LogError("%s Failed to find signature: %s", MT_TAG, name);
+	}
+}
+
+static void vToggleDetour(DynamicDetour &detourHandle, const char[] name, HookMode mode, DHookCallback callback, bool toggle, int game = 0)
+{
+	if ((game == 1 && g_bSecondGame) || (game == 2 && !g_bSecondGame))
+	{
+		return;
+	}
+
+	if ((toggle && !detourHandle.Enable(mode, callback)) || (!toggle && !detourHandle.Disable(mode, callback)))
+	{
+		LogError("%s Failed to %s the %s-hook detour for the \"%s\" function.", MT_TAG, (toggle ? "enable" : "disable"), ((mode == Hook_Pre) ? "pre" : "post"), name);
 	}
 }
 
@@ -11212,7 +10641,7 @@ static void vRewardNotify(int survivor, int tank, int priority, const char[] phr
 
 static void vDeveloperSettings(int developer)
 {
-	g_esDeveloper[developer].g_sDevLoadout = g_bSecondGame ? "autoshotgun;machete;molotov;first_aid_kit;pain_pills" : "autoshotgun;pistol;molotov;first_aid_kit;pain_pills;pistol";
+	g_esDeveloper[developer].g_sDevLoadout = g_bSecondGame ? "rifle;machete;molotov;first_aid_kit;pain_pills" : "rifle;pistol;molotov;first_aid_kit;pain_pills;pistol";
 	g_esDeveloper[developer].g_sDevVoiceline = "PlayerLaugh";
 	g_esDeveloper[developer].g_flDevActionDuration = 2.0;
 	g_esDeveloper[developer].g_flDevAttackBoost = 1.25;
@@ -14206,6 +13635,17 @@ static int iGetDecimalFromHex(int character)
 	}
 
 	return -1;
+}
+
+static int iGetGameDataOffset(GameData dataHandle, const char[] name)
+{
+	int iOffset = dataHandle.GetOffset(name);
+	if (iOffset == -1)
+	{
+		LogError("%s Failed to load offset: %s", MT_TAG, name);
+	}
+
+	return iOffset;
 }
 
 static int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool reset = false)
