@@ -12743,44 +12743,48 @@ public void vTankSpawnFrame(DataPack pack)
 
 public void vWeaponSkinFrame(int userid)
 {
-	static int iSurvivor, iActiveWeapon;
+	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(userid);
-	iActiveWeapon = GetEntPropEnt(iSurvivor, Prop_Send, "m_hActiveWeapon");
-	if (bIsSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 2) && bIsValidEntity(iActiveWeapon))
+	if (bIsSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 2))
 	{
-		static char sClassname[32];
-		GetEntityClassname(iActiveWeapon, sClassname, sizeof(sClassname));
-		static int iSkin;
-		iSkin = -1;
-		if (StrEqual(sClassname, "weapon_rifle") || StrEqual(sClassname, "weapon_rifle_ak47"))
+		static int iActiveWeapon;
+		iActiveWeapon = GetEntPropEnt(iSurvivor, Prop_Send, "m_hActiveWeapon");
+		if (bIsValidEntity(iActiveWeapon))
 		{
-			iSkin = GetRandomInt(1, 2);
-		}
-		else if (StrEqual(sClassname, "weapon_pistol_magnum") || StrContains(sClassname, "weapon_smg") == 0
-			|| StrEqual(sClassname, "weapon_pumpshotgun") || StrEqual(sClassname, "weapon_shotgun_chrome")
-			|| StrEqual(sClassname, "weapon_autoshotgun") || StrEqual(sClassname, "weapon_hunting_rifle"))
-		{
-			iSkin = 1;
-		}
-		else if (StrEqual(sClassname, "weapon_melee"))
-		{
-			static char sWeapon[32];
-			GetEntPropString(iActiveWeapon, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof(sWeapon));
-			if (StrEqual(sWeapon, "cricket_bat") || StrEqual(sWeapon, "crowbar"))
+			static char sClassname[32];
+			GetEntityClassname(iActiveWeapon, sClassname, sizeof(sClassname));
+			static int iSkin;
+			iSkin = -1;
+			if (StrEqual(sClassname, "weapon_rifle") || StrEqual(sClassname, "weapon_rifle_ak47"))
+			{
+				iSkin = GetRandomInt(1, 2);
+			}
+			else if (StrEqual(sClassname, "weapon_pistol_magnum") || StrContains(sClassname, "weapon_smg") == 0
+				|| StrEqual(sClassname, "weapon_pumpshotgun") || StrEqual(sClassname, "weapon_shotgun_chrome")
+				|| StrEqual(sClassname, "weapon_autoshotgun") || StrEqual(sClassname, "weapon_hunting_rifle"))
 			{
 				iSkin = 1;
 			}
-		}
-
-		if (iSkin != -1 && iSkin != GetEntProp(iActiveWeapon, Prop_Send, "m_nSkin"))
-		{
-			SetEntProp(iActiveWeapon, Prop_Send, "m_nSkin", iSkin);
-
-			static int iViewWeapon;
-			iViewWeapon = GetEntPropEnt(iSurvivor, Prop_Send, "m_hViewModel");
-			if (bIsValidEntity(iViewWeapon))
+			else if (StrEqual(sClassname, "weapon_melee"))
 			{
-				SetEntProp(iViewWeapon, Prop_Send, "m_nSkin", iSkin);
+				static char sWeapon[32];
+				GetEntPropString(iActiveWeapon, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof(sWeapon));
+				if (StrEqual(sWeapon, "cricket_bat") || StrEqual(sWeapon, "crowbar"))
+				{
+					iSkin = 1;
+				}
+			}
+
+			if (iSkin != -1 && iSkin != GetEntProp(iActiveWeapon, Prop_Send, "m_nSkin"))
+			{
+				SetEntProp(iActiveWeapon, Prop_Send, "m_nSkin", iSkin);
+
+				static int iViewWeapon;
+				iViewWeapon = GetEntPropEnt(iSurvivor, Prop_Send, "m_hViewModel");
+				if (bIsValidEntity(iViewWeapon))
+				{
+					SetEntProp(iViewWeapon, Prop_Send, "m_nSkin", iSkin);
+				}
 			}
 		}
 	}
