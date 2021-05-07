@@ -1824,6 +1824,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -2203,6 +2204,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakePlayerDamage);
 	SDKHook(client, SDKHook_OnTakeDamagePost, OnTakePlayerDamagePost);
 	SDKHook(client, SDKHook_WeaponEquipPost, OnWeaponEquipPost);
+	SDKHook(client, SDKHook_WeaponSwitchPost, OnWeaponSwitchPost);
 
 	vReset3(client);
 	vCacheSettings(client);
@@ -5655,6 +5657,14 @@ public void OnWeaponEquipPost(int client, int weapon)
 		{
 			strcopy(g_esPlayer[client].g_sStoredPills, sizeof(esPlayer::g_sStoredPills), sWeapon);
 		}
+	}
+}
+
+public void OnWeaponSwitchPost(int client, int weapon)
+{
+	if (g_bSecondGame && bIsSurvivor(client) && bIsDeveloper(client, 2) && weapon > MaxClients)
+	{
+		RequestFrame(vWeaponSkinFrame, GetClientUserId(client));
 	}
 }
 
@@ -12726,6 +12736,51 @@ public void vTankSpawnFrame(DataPack pack)
 				}
 
 				g_esPlayer[iTank].g_iTankHealth = GetEntProp(iTank, Prop_Data, "m_iMaxHealth");
+			}
+		}
+	}
+}
+
+public void vWeaponSkinFrame(int userid)
+{
+	static int iSurvivor, iActiveWeapon;
+	iSurvivor = GetClientOfUserId(userid);
+	iActiveWeapon = GetEntPropEnt(iSurvivor, Prop_Send, "m_hActiveWeapon");
+	if (bIsSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 2) && bIsValidEntity(iActiveWeapon))
+	{
+		static char sClassname[32];
+		GetEntityClassname(iActiveWeapon, sClassname, sizeof(sClassname));
+		static int iSkin;
+		iSkin = -1;
+		if (StrEqual(sClassname, "weapon_rifle") || StrEqual(sClassname, "weapon_rifle_ak47"))
+		{
+			iSkin = GetRandomInt(1, 2);
+		}
+		else if (StrEqual(sClassname, "weapon_pistol_magnum") || StrContains(sClassname, "weapon_smg") == 0
+			|| StrEqual(sClassname, "weapon_pumpshotgun") || StrEqual(sClassname, "weapon_shotgun_chrome")
+			|| StrEqual(sClassname, "weapon_autoshotgun") || StrEqual(sClassname, "weapon_hunting_rifle"))
+		{
+			iSkin = 1;
+		}
+		else if (StrEqual(sClassname, "weapon_melee"))
+		{
+			static char sWeapon[32];
+			GetEntPropString(iActiveWeapon, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof(sWeapon));
+			if (StrEqual(sWeapon, "cricket_bat") || StrEqual(sWeapon, "crowbar"))
+			{
+				iSkin = 1;
+			}
+		}
+
+		if (iSkin != -1 && iSkin != GetEntProp(iActiveWeapon, Prop_Send, "m_nSkin"))
+		{
+			SetEntProp(iActiveWeapon, Prop_Send, "m_nSkin", iSkin);
+
+			static int iViewWeapon;
+			iViewWeapon = GetEntPropEnt(iSurvivor, Prop_Send, "m_hViewModel");
+			if (bIsValidEntity(iViewWeapon))
+			{
+				SetEntProp(iViewWeapon, Prop_Send, "m_nSkin", iSkin);
 			}
 		}
 	}
