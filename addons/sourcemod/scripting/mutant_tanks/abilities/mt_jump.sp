@@ -220,6 +220,8 @@ public void OnMapEnd()
 #if !defined MT_ABILITIES_MAIN
 public Action cmdJumpInfo(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!MT_IsCorePluginEnabled())
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");

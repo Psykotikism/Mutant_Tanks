@@ -219,6 +219,8 @@ public void OnMapEnd()
 
 public Action cmdRocketInfo(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!MT_IsCorePluginEnabled())
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");

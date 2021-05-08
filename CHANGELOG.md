@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 8.84 (July 1, 2021)
+## Version 8.84 (June 1, 2021)
 
 ### Bug Fixes
 
@@ -15,6 +15,8 @@
 - Fixed survivors with the ammo reward getting the incorrect ammo count in some cases.
 - Fixed the health reward's life leech option not setting the correct amount of temporary health.
 - Fixed the Tank spawner calling unnecessary functions when spawning non-Mutant Tanks.
+- Fixed the developer tool panel not being deleted right away.
+- Fixed thirdperson checks not working reliably.
 
 #### Natives & Forwards
 - Fixed the `MT_LogMessage` native logging messages even when the feature is disabled.
@@ -38,6 +40,8 @@
 - Mutant Tanks and its sub-plugins can be used in `SM 1.10`. `SourceMod 1.11.0.6511` or higher is only required when compiling the plugins. (Thanks to Shadowart for pointing this out!)
 - Each ability's plugin is now a component that must be compiled through a main plugin.
 - Optionally, each ability's plugin can still be compiled as a standalone plugin.
+- Added listen server support for all commands provided by Mutant Tanks. (Thanks to Marttt for the code!)
+- Reduced the number of electric particles attached to players to avoid lag.
 
 #### Core Plugin
 - Added strict checking for hooking/unhooking events. (Thanks to Shadowart for reporting!)
@@ -60,12 +64,16 @@
 - Added the `Death Details` setting under the `Plugin Settings/Announcements`, `Tank #/Announcements`, and `STEAM_ID/Announcements` sections. (Requested by Shadowart.)
 - Added the `Sweep Fist` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to HarryPotter for the idea!)
 - Renamed the `Detect Plugins` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections to `Check Abilities`.
+- Increased the size of buffers for convar changes under the `Plugin Settings/ConVars` section.
 
 #### Translations
 - Updated English translations with new phrases.
 - Updated Simplified Chinese translations with new phrases. (Thanks to yuzumi!)
 - Updated Hungarian translations with new phrases. (Thanks to KasperH/Ladis!)
 - Updated Russian translations with new phrases. (Thanks to Blueberry/Kleiner!)
+
+#### Natives & Forwards
+- Added backwards compatibility for the old `MT_CloneAllowed` native.
 
 ### Files
 
@@ -210,7 +218,7 @@
 
 #### General
 - Changed the method for checking idle Tanks. (Thanks to BHaType for the code and epzminion for the help!)
-- The hidden `z_burn_max` convar will no longer be automatically set to `1.0` while Mutant Tanks is running. (Use the new `ConVars` section to modify the convar setting instead.)
+- The hidden `z_burn_max` convar will no longer be automatically set to `1.0` while Mutant Tanks is running. (Use the new `Plugin Settings/ConVars` section to modify the convar setting instead.)
 - Added extra failsafe checks to make sure offsets are retrieved properly before executing relevant code. (Thanks to yuzumi for the idea!)
 - Added a command listener to intercept the `vocalize` and `go_away_from_keyboard` commands and block them when the player is no longer on the server.
 - `Left 4 DHooks` is now optional again.

@@ -182,6 +182,8 @@ public void OnEntityCreated(int entity, const char[] classname)
 
 public Action cmdAbilityInfo(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!MT_IsCorePluginEnabled())
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");

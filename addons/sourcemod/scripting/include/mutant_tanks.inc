@@ -1785,6 +1785,7 @@ stock bool bIsAreaNarrow(int tank, float range = 150.0)
 			if (TR_DidHit(hTrace))
 			{
 				TR_GetEndPosition(flPos, hTrace);
+
 				if (GetVectorDistance(flPos, flOrigin) <= range)
 				{
 					delete hTrace;
@@ -2796,6 +2797,32 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 	}
 
 	return iClamp(StringToInt(value), min, max);
+}
+
+stock int iGetListenServerHost(int client)
+{
+	if (client == 0 && !IsDedicatedServer())
+	{
+		int iManager = FindEntityByClassname(-1, "terror_player_manager");
+		if (bIsValidEntity(iManager))
+		{
+			int iHostOffset = FindSendPropInfo("CTerrorPlayerResource", "m_listenServerHost");
+			if (iHostOffset != -1)
+			{
+				bool bHost[MAXPLAYERS + 1];
+				GetEntDataArray(iManager, iHostOffset, bHost, MAXPLAYERS + 1, 1);
+				for (int iPlayer = 1; iPlayer < sizeof(bHost); iPlayer++)
+				{
+					if (bHost[iPlayer])
+					{
+						return iPlayer;
+					}
+				}
+			}
+		}
+	}
+
+	return client;
 }
 
 stock int iGetPlayerCount()

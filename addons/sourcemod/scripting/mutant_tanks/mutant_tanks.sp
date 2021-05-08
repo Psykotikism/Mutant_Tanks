@@ -2748,6 +2748,8 @@ public Action cmdMTCommandListener2(int client, const char[] command, int argc)
 
 public Action cmdMTConfig(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (args < 1)
 	{
 		if (bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
@@ -2816,6 +2818,8 @@ public Action cmdMTConfig(int client, int args)
 
 public Action cmdMTConfig2(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, _, true))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
@@ -3444,6 +3448,8 @@ public void SMCParseEnd3(SMCParser smc, bool halted, bool failed)
 
 public Action cmdMTDev(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
@@ -3913,6 +3919,8 @@ public int iDeveloperMenuHandler(Menu menu, MenuAction action, int param1, int p
 
 public Action cmdMTInfo(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
@@ -4030,6 +4038,8 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 public Action cmdMTList(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG4, "PluginDisabled");
@@ -4046,6 +4056,8 @@ public Action cmdMTList(int client, int args)
 
 public Action cmdMTList2(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, _, true))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
@@ -4124,6 +4136,8 @@ static void vListAbilities(int admin)
 
 public Action cmdMTReload(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	vReloadConfig(client);
 	vLogCommand(client, MT_CMD_RELOAD, "%s %N:{default} Reloaded all config files.", MT_TAG4, client);
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Reloaded all config files.", MT_TAG, client);
@@ -4318,6 +4332,8 @@ static void vReloadConfig(int admin)
 
 public Action cmdMTVersion(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_CONFIG_SECTION_MAIN, MT_VERSION, MT_AUTHOR);
 	vLogCommand(client, MT_CMD_VERSION, "%s %N:{default} Checked the current version of{mint} %s{default}.", MT_TAG4, client, MT_CONFIG_SECTION_MAIN);
 	vLogMessage(MT_LOG_SERVER, _, "%s %N: Checked the current version of %s.", MT_TAG, client, MT_CONFIG_SECTION_MAIN);
@@ -4327,6 +4343,8 @@ public Action cmdMTVersion(int client, int args)
 
 public Action cmdMTVersion2(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, _, true))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
@@ -4357,6 +4375,8 @@ public Action cmdMTVersion2(int client, int args)
 
 public Action cmdTank(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
@@ -4414,6 +4434,8 @@ public Action cmdTank(int client, int args)
 
 public Action cmdTank2(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, _, true))
 	{
 		MT_ReplyToCommand(client, "%s This command is only for the developer.", MT_TAG2);
@@ -4468,6 +4490,8 @@ public Action cmdTank2(int client, int args)
 
 public Action cmdMutantTank(int client, int args)
 {
+	client = iGetListenServerHost(client);
+
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
 		MT_ReplyToCommand(client, "%s %t", MT_TAG, "Command is in-game only");
