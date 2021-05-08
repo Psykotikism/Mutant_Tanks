@@ -53,13 +53,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	#endif
 #endif
 
-#define PARTICLE_ELECTRICITY "electrical_arc_01"
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 #define PARTICLE_ELECTRICITY2 "electrical_arc_01_parent"
-#define PARTICLE_ELECTRICITY3 "st_elmos_fire"
-#define PARTICLE_ELECTRICITY4 "storm_lightning_02"
-#define PARTICLE_ELECTRICITY5 "storm_lightning_01"
-#define PARTICLE_ELECTRICITY6 "impact_ricochet_sparks"
-#define PARTICLE_ELECTRICITY7 "railroad_wheel_sparks"
 
 #define MT_ELECTRIC_SECTION "electricability"
 #define MT_ELECTRIC_SECTION2 "electric ability"
@@ -185,22 +180,8 @@ void vElectricMapStart()
 public void OnMapStart()
 #endif
 {
+	iPrecacheParticle(PARTICLE_ELECTRICITY);
 	iPrecacheParticle(PARTICLE_ELECTRICITY2);
-	iPrecacheParticle(PARTICLE_ELECTRICITY3);
-
-	switch (g_bSecondGame)
-	{
-		case true:
-		{
-			iPrecacheParticle(PARTICLE_ELECTRICITY4);
-			iPrecacheParticle(PARTICLE_ELECTRICITY5);
-		}
-		case false:
-		{
-			iPrecacheParticle(PARTICLE_ELECTRICITY6);
-			iPrecacheParticle(PARTICLE_ELECTRICITY7);
-		}
-	}
 
 	for (int iPos = 0; iPos < sizeof(g_sElectricSounds); iPos++)
 	{
@@ -894,9 +875,7 @@ void vElectricHit(int survivor, int tank, float random, float chance, int enable
 				dpElectric.WriteCell(pos);
 				dpElectric.WriteCell(iTime);
 
-				static char sEffect[32];
-				vGetRandomParticle(sEffect, sizeof(sEffect));
-				vAttachParticle(survivor, sEffect, 2.0, 30.0);
+				vAttachParticle(survivor, PARTICLE_ELECTRICITY2, 2.0, 30.0);
 				vEffect(survivor, tank, g_esElectricCache[tank].g_iElectricEffect, flags);
 
 				if (g_esElectricCache[tank].g_iElectricMessage & messages)
@@ -935,21 +914,7 @@ void vElectricRange(int tank)
 			return;
 		}
 
-		static char sEffect[32];
-		vGetRandomParticle(sEffect, sizeof(sEffect));
-		vAttachParticle(tank, sEffect, 2.0, 30.0);
-	}
-}
-
-void vGetRandomParticle(char[] buffer, int size)
-{
-	switch (GetRandomInt(1, 7))
-	{
-		case 1: strcopy(buffer, size, PARTICLE_ELECTRICITY);
-		case 2: strcopy(buffer, size, PARTICLE_ELECTRICITY2);
-		case 3: strcopy(buffer, size, PARTICLE_ELECTRICITY3);
-		case 4, 6: strcopy(buffer, size, (g_bSecondGame ? PARTICLE_ELECTRICITY4 : PARTICLE_ELECTRICITY6));
-		case 5, 7: strcopy(buffer, size, (g_bSecondGame ? PARTICLE_ELECTRICITY5 : PARTICLE_ELECTRICITY7));
+		vAttachParticle(tank, PARTICLE_ELECTRICITY2, 2.0, 30.0);
 	}
 }
 
@@ -1090,11 +1055,7 @@ public Action tTimerElectric(Handle timer, DataPack pack)
 	static float flDamage;
 	flDamage = (iPos != -1) ? MT_GetCombinationSetting(iTank, 2, iPos) : g_esElectricCache[iTank].g_flElectricDamage;
 	vDamagePlayer(iSurvivor, iTank, MT_GetScaledDamage(flDamage), "1024");
-
-	static char sEffect[32];
-	vGetRandomParticle(sEffect, sizeof(sEffect));
-	vAttachParticle(iSurvivor, sEffect, 2.0, 30.0);
-
+	vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 2.0, 30.0);
 	EmitSoundToAll(g_sElectricSounds[GetRandomInt(0, sizeof(g_sElectricSounds) - 1)], iSurvivor);
 
 	return Plugin_Continue;

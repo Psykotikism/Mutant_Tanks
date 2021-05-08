@@ -53,7 +53,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	#endif
 #endif
 
-#define PARTICLE_ELECTRICITY "electrical_arc_01_parent"
+#define PARTICLE_ULTIMATE "electrical_arc_01_system"
 
 #define SOUND_EXPLOSION "ambient/explosions/explode_2.wav"
 #define SOUND_GROWL1 "player/tank/voice/growl/hulk_growl_1.wav" //Only exists on L4D1
@@ -180,7 +180,7 @@ void vUltimateMapStart()
 public void OnMapStart()
 #endif
 {
-	iPrecacheParticle(PARTICLE_ELECTRICITY);
+	iPrecacheParticle(PARTICLE_ULTIMATE);
 
 	PrecacheSound(SOUND_ULTIMATE, true);
 	PrecacheSound(SOUND_EXPLOSION, true);
@@ -892,7 +892,7 @@ void vUltimate(int tank, int pos = -1)
 		g_esUltimatePlayer[tank].g_iDuration = GetTime() + iDuration;
 
 		ExtinguishEntity(tank);
-		vAttachParticle(tank, PARTICLE_ELECTRICITY, 2.0, 30.0);
+		vAttachParticle(tank, PARTICLE_ULTIMATE, 2.0, 30.0);
 		EmitSoundToAll(SOUND_ULTIMATE, tank);
 		EmitSoundToAll(SOUND_EXPLOSION, tank);
 

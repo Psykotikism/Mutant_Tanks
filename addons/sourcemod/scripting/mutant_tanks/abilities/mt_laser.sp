@@ -51,7 +51,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	#endif
 #endif
 
-#define PARTICLE_LASER "electrical_arc_01_parent"
+#define PARTICLE_LASER "electrical_arc_01_system"
 
 #define SOUND_ELECTRICITY "ambient/energy/zap5.wav"
 #define SOUND_ELECTRICITY2 "ambient/energy/zap7.wav"

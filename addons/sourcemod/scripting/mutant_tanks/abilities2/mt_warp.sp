@@ -73,7 +73,7 @@ public void OnAllPluginsLoaded()
 	#endif
 #endif
 
-#define PARTICLE_ELECTRICITY "electrical_arc_01_parent"
+#define PARTICLE_WARP "electrical_arc_01_system"
 
 #define SOUND_WARP "ambient/energy/zap5.wav"
 #define SOUND_WARP2 "ambient/energy/zap7.wav"
@@ -1018,13 +1018,13 @@ void vWarp2(int tank, int other)
 	flOtherOrigin[1] += 50.0 * (Sine(DegToRad(flOtherAngles[1])));
 	flOtherOrigin[2] += 5.0;
 
-	vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
+	vAttachParticle(tank, PARTICLE_WARP, 1.0);
 	EmitSoundToAll(SOUND_WARP, tank);
 	TeleportEntity(tank, flOtherOrigin, flOtherAngles, view_as<float>({0.0, 0.0, 0.0}));
 
 	if (g_esWarpCache[tank].g_iWarpMode == 1 || g_esWarpCache[tank].g_iWarpMode == 3)
 	{
-		vAttachParticle(other, PARTICLE_ELECTRICITY, 1.0);
+		vAttachParticle(other, PARTICLE_WARP, 1.0);
 		EmitSoundToAll(SOUND_WARP2, other);
 		TeleportEntity(other, flTankOrigin, flTankAngles, view_as<float>({0.0, 0.0, 0.0}));
 	}
@@ -1203,7 +1203,7 @@ void vWarpRange(int tank)
 			return;
 		}
 
-		vAttachParticle(tank, PARTICLE_ELECTRICITY, 1.0);
+		vAttachParticle(tank, PARTICLE_WARP, 1.0);
 		EmitSoundToAll(SOUND_WARP, tank);
 	}
 }

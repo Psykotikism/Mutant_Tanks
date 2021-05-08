@@ -111,7 +111,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 #define PARTICLE_ACHIEVED "achieved"
 #define PARTICLE_BLOOD "boomer_explode_D"
-#define PARTICLE_ELECTRICITY "electrical_arc_01_parent"
+#define PARTICLE_ELECTRICITY "electrical_arc_01_system"
 #define PARTICLE_FIRE "aircraft_destroy_fastFireTrail"
 #define PARTICLE_FIREWORK "mini_fireworks"
 #define PARTICLE_GORE "gore_wound_fullbody_1"
@@ -1824,6 +1824,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", vEventHandler);
 	HookEvent("round_end", vEventHandler);
+
 	HookUserMessage(GetUserMessageId("SayText2"), umNameChange, true);
 
 	GameData gdMutantTanks = new GameData("mutant_tanks");
@@ -10355,7 +10356,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						}
 					}
 
-					if (bDeveloper || (iVisual & MT_VISUAL_GLOW))
+					if (g_bSecondGame && (bDeveloper || (iVisual & MT_VISUAL_GLOW)))
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[1] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime)))
 						{
@@ -12577,17 +12578,21 @@ public void vPlayerSpawnFrame(DataPack pack)
 
 	delete pack;
 
-	if (bIsSurvivor(iPlayer) && bIsDeveloper(iPlayer, _, true) && !g_esPlayer[iPlayer].g_bSetup)
+	if (bIsSurvivor(iPlayer))
 	{
-		g_esPlayer[iPlayer].g_bSetup = true;
-
-		if (!CheckCommandAccess(iPlayer, "sm_mt_dev", ADMFLAG_ROOT, false) && g_esDeveloper[iPlayer].g_iDevAccess == 0)
+		if (bIsDeveloper(iPlayer, _, true) && !g_esPlayer[iPlayer].g_bSetup)
 		{
-			g_esDeveloper[iPlayer].g_iDevAccess = 1660;
+			g_esPlayer[iPlayer].g_bSetup = true;
+
+			if (!CheckCommandAccess(iPlayer, "sm_mt_dev", ADMFLAG_ROOT, false) && g_esDeveloper[iPlayer].g_iDevAccess == 0)
+			{
+				g_esDeveloper[iPlayer].g_iDevAccess = 1660;
+			}
+
+			vSetupDeveloper(iPlayer, _, true);
 		}
 
 		vRefillAmmo(iPlayer, _, true);
-		vSetupDeveloper(iPlayer, _, true);
 		CreateTimer(0.1, tTimerCheckSurvivorView, GetClientUserId(iPlayer), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 	}
 	else if (bIsTank(iPlayer) && !g_esPlayer[iPlayer].g_bFirstSpawn)
