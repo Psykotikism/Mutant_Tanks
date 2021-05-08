@@ -15243,11 +15243,16 @@ public Action tTimerElectricEffect(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	static int iAmount;
-	iAmount = bIsValidClient(iTank, MT_CHECK_FAKECLIENT) ? 3 : 5;
-	for (int iCount = 0; iCount < iAmount; iCount++)
+	switch (bIsValidClient(iTank, MT_CHECK_FAKECLIENT))
 	{
-		vAttachParticle(iTank, PARTICLE_ELECTRICITY, 0.75, (1.0 * float(iCount * 15)));
+		case true: vAttachParticle(iTank, PARTICLE_ELECTRICITY, 0.75, 30.0);
+		case false:
+		{
+			for (int iCount = 1; iCount < 4; iCount++)
+			{
+				vAttachParticle(iTank, PARTICLE_ELECTRICITY, 0.75, (1.0 * float(iCount * 15)));
+			}
+		}
 	}
 
 	return Plugin_Continue;
@@ -15432,11 +15437,16 @@ public Action tTimerParticleVisual(Handle timer, int userid)
 
 		if (iEffect & MT_ROCK_ELECTRICITY)
 		{
-			static int iAmount;
-			iAmount = bIsValidClient(iSurvivor, MT_CHECK_FAKECLIENT) ? 3 : 5;
-			for (int iCount = 0; iCount < iAmount; iCount++)
+			switch (bIsValidClient(iSurvivor, MT_CHECK_FAKECLIENT))
 			{
-				vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 0.75, (1.0 * float(iCount * 15)));
+				case true: vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 0.75, 30.0);
+				case false:
+				{
+					for (int iCount = 1; iCount < 4; iCount++)
+					{
+						vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 0.75, (1.0 * float(iCount * 15)));
+					}
+				}
 			}
 		}
 
