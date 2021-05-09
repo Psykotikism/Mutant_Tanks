@@ -442,18 +442,18 @@ public Action OnPyroTakeDamage(int victim, int &attacker, int &inflictor, float 
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vPyroPluginCheck(ArrayList &list)
+void vPyroPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_PYRO);
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vPyroAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vPyroAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_PYRO_SECTION);

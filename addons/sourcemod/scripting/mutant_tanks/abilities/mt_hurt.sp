@@ -390,18 +390,18 @@ public Action OnHurtTakeDamage(int victim, int &attacker, int &inflictor, float 
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHurtPluginCheck(ArrayList &list)
+void vHurtPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_HURT);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHurtAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vHurtAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_HURT_SECTION);

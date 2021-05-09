@@ -50,6 +50,7 @@
 
 #### Commands
 - Replaced all the `sm_mt_<ability name>` commands with `sm_mt_ability <name>`/`sm_mt_ability2 <name>`.
+- The old commands are still available when compiling the abilities using the alternative method.
 
 #### Settings
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
@@ -74,6 +75,9 @@
 
 #### Natives & Forwards
 - Added backwards compatibility for the old `MT_CloneAllowed` native.
+- Changed how parameters are passed to the following forwards:
+	- `MT_OnAbilityCheck`
+	- `MT_OnPluginCheck`
 
 ### Files
 

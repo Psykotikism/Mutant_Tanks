@@ -32,8 +32,6 @@ public Plugin myinfo =
 
 bool g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
 
-int g_iDeathModelOwner = 0;
-
 #undef REQUIRE_PLUGIN
 #tryinclude "mutant_tanks/abilities2/mt_medic.sp"
 #tryinclude "mutant_tanks/abilities2/mt_meteor.sp"
@@ -616,7 +614,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 {
 #if defined MT_MENU_MEDIC
 	vMedicPluginCheck(list);
@@ -734,7 +732,7 @@ public void MT_OnPluginCheck(ArrayList &list)
 #endif
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 {
 #if defined MT_MENU_MEDIC
 	vMedicAbilityCheck(list, list2, list3, list4);

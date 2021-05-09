@@ -402,18 +402,18 @@ public Action OnEnforceTakeDamage(int victim, int &attacker, int &inflictor, flo
 }
 
 #if defined MT_ABILITIES_MAIN
-void vEnforcePluginCheck(ArrayList &list)
+void vEnforcePluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_ENFORCE);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vEnforceAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vEnforceAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_ENFORCE_SECTION);

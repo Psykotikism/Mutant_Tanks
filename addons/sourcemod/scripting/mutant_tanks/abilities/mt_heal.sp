@@ -432,18 +432,18 @@ public Action OnHealTakeDamage(int victim, int &attacker, int &inflictor, float 
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHealPluginCheck(ArrayList &list)
+void vHealPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_HEAL);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHealAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vHealAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_HEAL_SECTION);

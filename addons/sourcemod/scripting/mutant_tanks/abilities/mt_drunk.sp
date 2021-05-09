@@ -374,18 +374,18 @@ public Action OnDrunkTakeDamage(int victim, int &attacker, int &inflictor, float
 }
 
 #if defined MT_ABILITIES_MAIN
-void vDrunkPluginCheck(ArrayList &list)
+void vDrunkPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_DRUNK);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vDrunkAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vDrunkAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_DRUNK_SECTION);

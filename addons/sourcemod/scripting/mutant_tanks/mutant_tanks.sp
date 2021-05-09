@@ -1703,7 +1703,7 @@ public void OnAllPluginsLoaded()
 public void OnPluginStart()
 {
 	g_esGeneral.g_gfAbilityActivatedForward = new GlobalForward("MT_OnAbilityActivated", ET_Ignore, Param_Cell);
-	g_esGeneral.g_gfAbilityCheckForward = new GlobalForward("MT_OnAbilityCheck", ET_Ignore, Param_Array, Param_Array, Param_Array, Param_Array);
+	g_esGeneral.g_gfAbilityCheckForward = new GlobalForward("MT_OnAbilityCheck", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfButtonPressedForward = new GlobalForward("MT_OnButtonPressed", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfButtonReleasedForward = new GlobalForward("MT_OnButtonReleased", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfChangeTypeForward = new GlobalForward("MT_OnChangeType", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
@@ -1721,7 +1721,7 @@ public void OnPluginStart()
 	g_esGeneral.g_gfPlayerEventKilledForward = new GlobalForward("MT_OnPlayerEventKilled", ET_Ignore, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfPlayerHitByVomitJarForward = new GlobalForward("MT_OnPlayerHitByVomitJar", ET_Event, Param_Cell, Param_Cell);
 	g_esGeneral.g_gfPlayerShovedBySurvivorForward = new GlobalForward("MT_OnPlayerShovedBySurvivor", ET_Event, Param_Cell, Param_Cell, Param_Array);
-	g_esGeneral.g_gfPluginCheckForward = new GlobalForward("MT_OnPluginCheck", ET_Ignore, Param_Array);
+	g_esGeneral.g_gfPluginCheckForward = new GlobalForward("MT_OnPluginCheck", ET_Ignore, Param_Cell);
 	g_esGeneral.g_gfPluginEndForward = new GlobalForward("MT_OnPluginEnd", ET_Ignore);
 	g_esGeneral.g_gfPostTankSpawnForward = new GlobalForward("MT_OnPostTankSpawn", ET_Ignore, Param_Cell);
 	g_esGeneral.g_gfResetTimersForward = new GlobalForward("MT_OnResetTimers", ET_Ignore, Param_Cell, Param_Cell);
@@ -2736,7 +2736,7 @@ public Action cmdMTCommandListener(int client, const char[] command, int argc)
 
 public Action cmdMTCommandListener2(int client, const char[] command, int argc)
 {
-	if (!bIsSurvivor(client))
+	if (g_esGeneral.g_bPluginEnabled && !bIsSurvivor(client))
 	{
 		vLogMessage(MT_LOG_SERVER, _, "%s The \"%s\" command was intercepted to prevent errors.", MT_TAG, command);
 
@@ -5686,7 +5686,7 @@ public void OnWeaponEquipPost(int client, int weapon)
 
 public void OnWeaponSwitchPost(int client, int weapon)
 {
-	if (g_bSecondGame && bIsSurvivor(client) && bIsDeveloper(client, 2) && weapon > MaxClients)
+	if (g_esGeneral.g_bPluginEnabled && g_bSecondGame && bIsSurvivor(client) && bIsDeveloper(client, 2) && weapon > MaxClients)
 	{
 		RequestFrame(vWeaponSkinFrame, GetClientUserId(client));
 	}
@@ -6193,7 +6193,7 @@ static void vLoadConfigs(const char[] savepath, int mode)
 	if (g_esGeneral.g_alPlugins != null)
 	{
 		Call_StartForward(g_esGeneral.g_gfPluginCheckForward);
-		Call_PushArrayEx(g_esGeneral.g_alPlugins, MT_MAXABILITIES + 1, SM_PARAM_COPYBACK);
+		Call_PushCell(g_esGeneral.g_alPlugins);
 		Call_Finish();
 	}
 
@@ -6207,7 +6207,7 @@ static void vLoadConfigs(const char[] savepath, int mode)
 
 		switch (g_esGeneral.g_alAbilitySections[iPos] != null)
 		{
-			case true: Call_PushArrayEx(g_esGeneral.g_alAbilitySections[iPos], MT_MAXABILITIES + 1, SM_PARAM_COPYBACK);
+			case true: Call_PushCell(g_esGeneral.g_alAbilitySections[iPos]);
 			case false:
 			{
 				bFinish = false;

@@ -188,7 +188,7 @@
 
 			// The type of idle mode to check for.
 			// Note: It is recommended to set this to "2" on non-finale maps and "0" on finale maps.
-			// Note: There is a rare bug where a Tank spawns with no behavior even though they look "idle" to survivors. Set this to "0" or "2" to detect this bug.
+			// Note: There is a rare bug where a Tank spawns with no behavior even though they look "idle" to survivors. Set this setting to "0" or "2" to detect this bug.
 			// Note: Do not change this setting if you are unsure of how it works.
 			// Note: This setting can be used for standard Tanks.
 			// --

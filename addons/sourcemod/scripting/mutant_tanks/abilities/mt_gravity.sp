@@ -428,18 +428,18 @@ public Action OnGravityTakeDamage(int victim, int &attacker, int &inflictor, flo
 }
 
 #if defined MT_ABILITIES_MAIN
-void vGravityPluginCheck(ArrayList &list)
+void vGravityPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_GRAVITY);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vGravityAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vGravityAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_GRAVITY_SECTION);

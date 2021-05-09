@@ -33,8 +33,6 @@ public Plugin myinfo =
 
 bool g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
 
-int g_iDeathModelOwner = 0;
-
 #undef REQUIRE_PLUGIN
 #tryinclude "mutant_tanks/abilities/mt_absorb.sp"
 #tryinclude "mutant_tanks/abilities/mt_acid.sp"
@@ -585,7 +583,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		return Plugin_Continue;
 	}
 
-	Action aReturn = Plugin_Continue, aResult = Plugin_Continue;
+	Action aReturn = Plugin_Continue;
 #if defined MT_MENU_ABSORB
 	vAbsorbPlayerRunCmd(client);
 #endif
@@ -593,24 +591,24 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	vAimlessPlayerRunCmd(client);
 #endif
 #if defined MT_MENU_BURY
-	aResult = aBuryPlayerRunCmd(client, buttons);
+	Action aResult = aBuryPlayerRunCmd(client, buttons);
 	if (aResult != Plugin_Continue)
 	{
 		aReturn = aResult;
 	}
 #endif
 #if defined MT_MENU_CHOKE
-	aResult = aChokePlayerRunCmd(client, buttons);
-	if (aResult != Plugin_Continue)
+	Action aResult2 = aChokePlayerRunCmd(client, buttons);
+	if (aResult2 != Plugin_Continue)
 	{
-		aReturn = aResult;
+		aReturn = aResult2;
 	}
 #endif
 #if defined MT_MENU_ENFORCE
-	aResult = aEnforcePlayerRunCmd(client, weapon);
-	if (aResult != Plugin_Continue)
+	Action aResult3 = aEnforcePlayerRunCmd(client, weapon);
+	if (aResult3 != Plugin_Continue)
 	{
-		aReturn = aResult;
+		aReturn = aResult3;
 	}
 #endif
 #if defined MT_MENU_FAST
@@ -632,16 +630,16 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	vGravityPlayerRunCmd(client);
 #endif
 #if defined MT_MENU_INVERT
-	aResult = aInvertPlayerRunCmd(client, buttons, vel);
-	if (aResult != Plugin_Continue)
+	Action aResult4 = aInvertPlayerRunCmd(client, buttons, vel);
+	if (aResult4 != Plugin_Continue)
 	{
-		aReturn = aResult;
+		aReturn = aResult4;
 	}
 #endif
 	return aReturn;
 }
 
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 {
 #if defined MT_MENU_ABSORB
 	vAbsorbPluginCheck(list);
@@ -759,7 +757,7 @@ public void MT_OnPluginCheck(ArrayList &list)
 #endif
 }
 
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 {
 #if defined MT_MENU_ABSORB
 	vAbsorbAbilityCheck(list, list2, list3, list4);

@@ -464,18 +464,18 @@ public Action OnFragileTakeDamage(int victim, int &attacker, int &inflictor, flo
 }
 
 #if defined MT_ABILITIES_MAIN
-void vFragilePluginCheck(ArrayList &list)
+void vFragilePluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_FRAGILE);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vFragileAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vFragileAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_FRAGILE_SECTION);

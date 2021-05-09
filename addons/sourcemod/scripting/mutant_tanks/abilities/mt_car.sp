@@ -330,18 +330,18 @@ public Action CarStartTouch(int car, int other)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vCarPluginCheck(ArrayList &list)
+void vCarPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_CAR);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vCarAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vCarAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_CAR_SECTION);

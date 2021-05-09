@@ -445,18 +445,18 @@ public Action OnAcidTakeDamage(int victim, int &attacker, int &inflictor, float 
 }
 
 #if defined MT_ABILITIES_MAIN
-void vAcidPluginCheck(ArrayList &list)
+void vAcidPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_ACID);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vAcidAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vAcidAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_ACID_SECTION);

@@ -452,18 +452,18 @@ public Action OnHypnoTakeDamage(int victim, int &attacker, int &inflictor, float
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHypnoPluginCheck(ArrayList &list)
+void vHypnoPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_HYPNO);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHypnoAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vHypnoAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_HYPNO_SECTION);

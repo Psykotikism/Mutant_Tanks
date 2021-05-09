@@ -29,8 +29,6 @@ public Plugin myinfo =
 
 bool g_bLateLoad, g_bSecondGame;
 
-int g_iDeathModelOwner = 0;
-
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	switch (GetEngineVersion())
@@ -148,7 +146,7 @@ enum struct esRocketCache
 
 esRocketCache g_esRocketCache[MAXPLAYERS + 1];
 
-int g_iRocketSprite = -1;
+int g_iRocketDeathModelOwner = 0, g_iRocketSprite = -1;
 
 #if !defined MT_ABILITIES_MAIN2
 public void OnPluginStart()
@@ -356,19 +354,19 @@ public void OnEntityCreated(int entity, const char[] classname)
 {
 	if (bIsValidEntity(entity) && StrEqual(classname, "survivor_death_model"))
 	{
-		int iOwner = GetClientOfUserId(g_iDeathModelOwner);
+		int iOwner = GetClientOfUserId(g_iRocketDeathModelOwner);
 		if (bIsValidClient(iOwner))
 		{
 			SDKHook(entity, SDKHook_SpawnPost, OnRocketModelSpawnPost);
 		}
 
-		g_iDeathModelOwner = 0;
+		g_iRocketDeathModelOwner = 0;
 	}
 }
 
 public void OnRocketModelSpawnPost(int model)
 {
-	g_iDeathModelOwner = 0;
+	g_iRocketDeathModelOwner = 0;
 
 	SDKUnhook(model, SDKHook_SpawnPost, OnRocketModelSpawnPost);
 
@@ -416,18 +414,18 @@ public Action OnRocketTakeDamage(int victim, int &attacker, int &inflictor, floa
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRocketPluginCheck(ArrayList &list)
+void vRocketPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_ROCKET);
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRocketAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vRocketAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_ROCKET_SECTION);
@@ -1118,7 +1116,7 @@ public Action tTimerRocketDetonate(Handle timer, DataPack pack)
 
 	if (g_esRocketCache[iTank].g_iRocketBody == 1)
 	{
-		g_iDeathModelOwner = GetClientUserId(iSurvivor);
+		g_iRocketDeathModelOwner = GetClientUserId(iSurvivor);
 	}
 
 	static float flPosition[3];

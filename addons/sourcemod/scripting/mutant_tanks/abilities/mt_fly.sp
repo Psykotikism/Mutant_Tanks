@@ -426,18 +426,18 @@ public Action StartTouch(int tank, int other)
 }
 
 #if defined MT_ABILITIES_MAIN
-void vFlyPluginCheck(ArrayList &list)
+void vFlyPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_FLY);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vFlyAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vFlyAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_FLY_SECTION);

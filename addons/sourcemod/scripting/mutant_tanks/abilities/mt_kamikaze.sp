@@ -29,8 +29,6 @@ public Plugin myinfo =
 
 bool g_bLateLoad, g_bSecondGame;
 
-int g_iDeathModelOwner = 0;
-
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	switch (GetEngineVersion())
@@ -136,6 +134,8 @@ enum struct esKamikazeCache
 }
 
 esKamikazeCache g_esKamikazeCache[MAXPLAYERS + 1];
+
+int g_iKamikazeDeathModelOwner = 0;
 
 #if !defined MT_ABILITIES_MAIN
 public void OnPluginStart()
@@ -347,19 +347,19 @@ public void OnEntityCreated(int entity, const char[] classname)
 {
 	if (bIsValidEntity(entity) && StrEqual(classname, "survivor_death_model"))
 	{
-		int iOwner = GetClientOfUserId(g_iDeathModelOwner);
+		int iOwner = GetClientOfUserId(g_iKamikazeDeathModelOwner);
 		if (bIsValidClient(iOwner))
 		{
 			SDKHook(entity, SDKHook_SpawnPost, OnKamikazeModelSpawnPost);
 		}
 
-		g_iDeathModelOwner = 0;
+		g_iKamikazeDeathModelOwner = 0;
 	}
 }
 
 public void OnKamikazeModelSpawnPost(int model)
 {
-	g_iDeathModelOwner = 0;
+	g_iKamikazeDeathModelOwner = 0;
 
 	SDKUnhook(model, SDKHook_SpawnPost, OnKamikazeModelSpawnPost);
 
@@ -407,18 +407,18 @@ public Action OnKamikazeTakeDamage(int victim, int &attacker, int &inflictor, fl
 }
 
 #if defined MT_ABILITIES_MAIN
-void vKamikazePluginCheck(ArrayList &list)
+void vKamikazePluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_KAMIKAZE);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vKamikazeAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vKamikazeAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_KAMIKAZE_SECTION);
@@ -812,7 +812,7 @@ void vKamikazeHit(int survivor, int tank, float random, float chance, int enable
 
 			if (g_esKamikazeCache[tank].g_iKamikazeBody == 1)
 			{
-				g_iDeathModelOwner = GetClientUserId(survivor);
+				g_iKamikazeDeathModelOwner = GetClientUserId(survivor);
 			}
 
 			vAttachParticle(survivor, PARTICLE_BLOOD, 0.1);

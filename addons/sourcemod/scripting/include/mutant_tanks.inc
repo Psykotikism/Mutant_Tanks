@@ -175,7 +175,7 @@ forward void MT_OnAbilityActivated(int tank);
  * @param list3			List to store the third format.
  * @param list4			List to store the fourth format.
  **/
-forward void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4);
+forward void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4);
 
 /**
  * Called when a human-controlled Mutant Tank presses a button.
@@ -357,7 +357,7 @@ forward Action MT_OnPlayerShovedBySurvivor(int player, int survivor, const float
  *
  * @param list			List to store plugin's name in.
  **/
-forward void MT_OnPluginCheck(ArrayList &list);
+forward void MT_OnPluginCheck(ArrayList list);
 
 /**
  * Called when the core plugin is unloaded/reloaded.

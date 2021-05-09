@@ -284,18 +284,18 @@ public Action HitTraceAttack(int victim, int &attacker, int &inflictor, float &d
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHitPluginCheck(ArrayList &list)
+void vHitPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_HIT);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vHitAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vHitAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_HIT_SECTION);

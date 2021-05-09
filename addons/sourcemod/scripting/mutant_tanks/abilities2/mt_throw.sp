@@ -414,18 +414,18 @@ public Action StartTouch(int thrown, int other)
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vThrowPluginCheck(ArrayList &list)
+void vThrowPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_THROW);
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vThrowAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vThrowAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_THROW_SECTION);

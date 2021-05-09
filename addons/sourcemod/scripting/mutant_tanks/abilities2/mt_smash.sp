@@ -29,8 +29,6 @@ public Plugin myinfo =
 
 bool g_bLateLoad, g_bSecondGame;
 
-int g_iDeathModelOwner = 0;
-
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	switch (GetEngineVersion())
@@ -145,6 +143,8 @@ enum struct esSmashCache
 }
 
 esSmashCache g_esSmashCache[MAXPLAYERS + 1];
+
+int g_iSmashDeathModelOwner = 0;
 
 #if !defined MT_ABILITIES_MAIN2
 public void OnPluginStart()
@@ -361,19 +361,19 @@ public void OnEntityCreated(int entity, const char[] classname)
 {
 	if (bIsValidEntity(entity) && StrEqual(classname, "survivor_death_model"))
 	{
-		int iOwner = GetClientOfUserId(g_iDeathModelOwner);
+		int iOwner = GetClientOfUserId(g_iSmashDeathModelOwner);
 		if (bIsValidClient(iOwner))
 		{
 			SDKHook(entity, SDKHook_SpawnPost, OnSmashModelSpawnPost);
 		}
 
-		g_iDeathModelOwner = 0;
+		g_iSmashDeathModelOwner = 0;
 	}
 }
 
 public void OnSmashModelSpawnPost(int model)
 {
-	g_iDeathModelOwner = 0;
+	g_iSmashDeathModelOwner = 0;
 
 	SDKUnhook(model, SDKHook_SpawnPost, OnSmashModelSpawnPost);
 
@@ -421,18 +421,18 @@ public Action OnSmashTakeDamage(int victim, int &attacker, int &inflictor, float
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vSmashPluginCheck(ArrayList &list)
+void vSmashPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_SMASH);
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vSmashAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vSmashAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_SMASH_SECTION);
@@ -916,7 +916,7 @@ void vSmashHit(int survivor, int tank, float random, float chance, int enabled, 
 
 				if (g_esSmashCache[tank].g_iSmashBody == 1)
 				{
-					g_iDeathModelOwner = GetClientUserId(survivor);
+					g_iSmashDeathModelOwner = GetClientUserId(survivor);
 				}
 
 				vSmash(survivor, tank);

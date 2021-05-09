@@ -368,18 +368,18 @@ public Action OnRecoilTakeDamage(int victim, int &attacker, int &inflictor, floa
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRecoilPluginCheck(ArrayList &list)
+void vRecoilPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_RECOIL);
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vRecoilAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vRecoilAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_RECOIL_SECTION);

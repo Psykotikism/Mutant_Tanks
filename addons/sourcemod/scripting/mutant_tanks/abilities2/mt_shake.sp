@@ -389,18 +389,18 @@ public Action OnShakeTakeDamage(int victim, int &attacker, int &inflictor, float
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vShakePluginCheck(ArrayList &list)
+void vShakePluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_SHAKE);
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vShakeAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vShakeAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_SHAKE_SECTION);

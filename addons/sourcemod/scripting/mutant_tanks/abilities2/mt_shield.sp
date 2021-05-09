@@ -600,18 +600,18 @@ public Action OnShieldTakeDamage(int victim, int &attacker, int &inflictor, floa
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vShieldPluginCheck(ArrayList &list)
+void vShieldPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_SHIELD);
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vShieldAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vShieldAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_SHIELD_SECTION);

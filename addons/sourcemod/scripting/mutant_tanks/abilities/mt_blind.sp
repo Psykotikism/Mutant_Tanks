@@ -389,18 +389,18 @@ public Action OnBlindTakeDamage(int victim, int &attacker, int &inflictor, float
 }
 
 #if defined MT_ABILITIES_MAIN
-void vBlindPluginCheck(ArrayList &list)
+void vBlindPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_BLIND);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vBlindAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vBlindAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_BLIND_SECTION);

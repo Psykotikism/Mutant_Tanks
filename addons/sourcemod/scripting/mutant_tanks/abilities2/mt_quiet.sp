@@ -395,18 +395,18 @@ public Action QuietSoundHook(int clients[MAXPLAYERS], int &numClients, char samp
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vQuietPluginCheck(ArrayList &list)
+void vQuietPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_QUIET);
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vQuietAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vQuietAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_QUIET_SECTION);

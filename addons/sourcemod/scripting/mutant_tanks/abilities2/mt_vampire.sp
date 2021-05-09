@@ -306,18 +306,18 @@ public Action OnVampireTakeDamage(int victim, int &attacker, int &inflictor, flo
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vVampirePluginCheck(ArrayList &list)
+void vVampirePluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_VAMPIRE);
 }
 
 #if defined MT_ABILITIES_MAIN2
-void vVampireAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vVampireAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_VAMPIRE_SECTION);

@@ -449,18 +449,18 @@ public Action OnBuryTakeDamage(int victim, int &attacker, int &inflictor, float 
 }
 
 #if defined MT_ABILITIES_MAIN
-void vBuryPluginCheck(ArrayList &list)
+void vBuryPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_BURY);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vBuryAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vBuryAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_BURY_SECTION);

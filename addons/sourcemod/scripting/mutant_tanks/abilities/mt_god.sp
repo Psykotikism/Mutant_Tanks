@@ -394,18 +394,18 @@ public Action OnGodTakeDamage(int victim, int &attacker, int &inflictor, float &
 }
 
 #if defined MT_ABILITIES_MAIN
-void vGodPluginCheck(ArrayList &list)
+void vGodPluginCheck(ArrayList list)
 #else
-public void MT_OnPluginCheck(ArrayList &list)
+public void MT_OnPluginCheck(ArrayList list)
 #endif
 {
 	list.PushString(MT_MENU_GOD);
 }
 
 #if defined MT_ABILITIES_MAIN
-void vGodAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+void vGodAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #else
-public void MT_OnAbilityCheck(ArrayList &list, ArrayList &list2, ArrayList &list3, ArrayList &list4)
+public void MT_OnAbilityCheck(ArrayList list, ArrayList list2, ArrayList list3, ArrayList list4)
 #endif
 {
 	list.PushString(MT_GOD_SECTION);
