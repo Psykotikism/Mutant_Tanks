@@ -28,6 +28,8 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
+bool g_bDedicated;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
@@ -42,6 +44,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MT_IsTankClone", aNative_IsTankClone);
 
 	RegPluginLibrary("mt_clone");
+
+	g_bDedicated = IsDedicatedServer();
 
 	return APLRes_Success;
 }
@@ -231,7 +235,7 @@ public void OnMapEnd()
 #if !defined MT_ABILITIES_MAIN
 public Action cmdCloneInfo(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{

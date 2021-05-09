@@ -2799,9 +2799,9 @@ stock int iGetKeywordValue(const char[] key, int curVal, const char[] value, int
 	return iClamp(StringToInt(value), min, max);
 }
 
-stock int iGetListenServerHost(int client)
+stock int iGetListenServerHost(int client, bool dedicated)
 {
-	if (client == 0 && !IsDedicatedServer())
+	if (client == 0 && !dedicated)
 	{
 		int iManager = FindEntityByClassname(-1, "terror_player_manager");
 		if (bIsValidEntity(iManager))

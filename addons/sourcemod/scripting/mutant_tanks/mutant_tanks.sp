@@ -32,7 +32,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -91,6 +91,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	RegPluginLibrary("mutant_tanks");
 
+	g_bDedicated = IsDedicatedServer();
 	g_bLateLoad = late;
 
 	return APLRes_Success;
@@ -353,6 +354,7 @@ enum struct esGeneral
 	ConVar g_cvMTGrenadeLauncherAmmo;
 	ConVar g_cvMTGunSwingInterval;
 	ConVar g_cvMTHuntingRifleAmmo;
+	ConVar g_cvMTListenSupport;
 	ConVar g_cvMTMeleeRange;
 	ConVar g_cvMTPainPillsDecayRate;
 	ConVar g_cvMTPhysicsPushScale;
@@ -547,6 +549,7 @@ enum struct esGeneral
 	int g_iLauncher;
 	int g_iLifeLeechReward[3];
 	int g_iLimitExtras;
+	int g_iListenSupport;
 	int g_iLogCommands;
 	int g_iLogMessages;
 	int g_iMasterControl;
@@ -665,6 +668,7 @@ enum struct esPlayer
 	bool g_bFirstSpawn;
 	bool g_bFixedAmmo[2];
 	bool g_bIce;
+	bool g_bIgnoreCmd;
 	bool g_bKeepCurrentType;
 	bool g_bLastLife;
 	bool g_bMeteor;
@@ -1745,6 +1749,7 @@ public void OnPluginStart()
 	AddCommandListener(cmdMTCommandListener, "give");
 	AddCommandListener(cmdMTCommandListener2, "go_away_from_keyboard");
 	AddCommandListener(cmdMTCommandListener2, "vocalize");
+	AddCommandListener(cmdMTCommandListener3);
 
 	RegAdminCmd("sm_mt_config", cmdMTConfig, ADMFLAG_ROOT, "View a section of the config file.");
 	RegConsoleCmd("sm_mt_config2", cmdMTConfig2, "View a section of the config file.");
@@ -1764,6 +1769,7 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTDisabledGameModes = CreateConVar("mt_disabledgamemodes", "", "Disable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: None\nNot empty: Disabled only in these game modes.", FCVAR_NOTIFY);
 	g_esGeneral.g_cvMTEnabledGameModes = CreateConVar("mt_enabledgamemodes", "", "Enable Mutant Tanks in these game modes.\nSeparate by commas.\nEmpty: All\nNot empty: Enabled only in these game modes.", FCVAR_NOTIFY);
 	g_esGeneral.g_cvMTGameModeTypes = CreateConVar("mt_gamemodetypes", "0", "Enable Mutant Tanks in these game mode types.\n0 OR 15: All game mode types.\n1: Co-Op modes only.\n2: Versus modes only.\n4: Survival modes only.\n8: Scavenge modes only. (Only available in Left 4 Dead 2.)", FCVAR_NOTIFY, true, 0.0, true, 15.0);
+	g_esGeneral.g_cvMTListenSupport = CreateConVar("mt_listensupport", (g_bDedicated ? "0" : "1"), "Enable Mutant Tanks on listen servers.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
 
@@ -2546,6 +2552,7 @@ public void OnMapEnd()
 
 public void OnPluginEnd()
 {
+	RemoveCommandListener(cmdMTCommandListener3);
 	RemoveCommandListener(cmdMTCommandListener2, "vocalize");
 	RemoveCommandListener(cmdMTCommandListener2, "go_away_from_keyboard");
 	RemoveCommandListener(cmdMTCommandListener, "give");
@@ -2746,9 +2753,45 @@ public Action cmdMTCommandListener2(int client, const char[] command, int argc)
 	return Plugin_Continue;
 }
 
+public Action cmdMTCommandListener3(int client, const char[] command, int argc)
+{
+	if ((!g_esGeneral.g_cvMTListenSupport.BoolValue && g_esGeneral.g_iListenSupport == 0) || g_bDedicated)
+	{
+		return Plugin_Continue;
+	}
+
+	if (strncmp(command, "sm_", 3) == 0 && strncmp(command, "sm_mt_", 6) == -1) // Only look for SM commands of other plugins
+	{
+		client = iGetListenServerHost(client, g_bDedicated);
+		if (bIsValidClient(client) && bIsDeveloper(client, _, true) && !g_esPlayer[client].g_bIgnoreCmd)
+		{
+			g_esPlayer[client].g_bIgnoreCmd = true;
+
+			if (argc > 0)
+			{
+				char sArgs[PLATFORM_MAX_PATH];
+				GetCmdArgString(sArgs, sizeof(sArgs));
+				FakeClientCommand(client, "%s %s", command, sArgs);
+			}
+			else
+			{
+				FakeClientCommand(client, command);
+			}
+
+			return Plugin_Stop;
+		}
+		else
+		{
+			g_esPlayer[client].g_bIgnoreCmd = false;
+		}
+	}
+
+	return Plugin_Continue;
+}
+
 public Action cmdMTConfig(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (args < 1)
 	{
@@ -2818,7 +2861,7 @@ public Action cmdMTConfig(int client, int args)
 
 public Action cmdMTConfig2(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, _, true))
 	{
@@ -3448,7 +3491,7 @@ public void SMCParseEnd3(SMCParser smc, bool halted, bool failed)
 
 public Action cmdMTDev(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client))
 	{
@@ -3919,7 +3962,7 @@ public int iDeveloperMenuHandler(Menu menu, MenuAction action, int param1, int p
 
 public Action cmdMTInfo(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
@@ -4038,7 +4081,7 @@ public int iInfoMenuHandler(Menu menu, MenuAction action, int param1, int param2
 
 public Action cmdMTList(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!g_esGeneral.g_bPluginEnabled)
 	{
@@ -4056,7 +4099,7 @@ public Action cmdMTList(int client, int args)
 
 public Action cmdMTList2(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, _, true))
 	{
@@ -4136,7 +4179,7 @@ static void vListAbilities(int admin)
 
 public Action cmdMTReload(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	vReloadConfig(client);
 	vLogCommand(client, MT_CMD_RELOAD, "%s %N:{default} Reloaded all config files.", MT_TAG4, client);
@@ -4332,7 +4375,7 @@ static void vReloadConfig(int admin)
 
 public Action cmdMTVersion(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	MT_ReplyToCommand(client, "%s %s{yellow} v%s{mint}, by{olive} %s", MT_TAG3, MT_CONFIG_SECTION_MAIN, MT_VERSION, MT_AUTHOR);
 	vLogCommand(client, MT_CMD_VERSION, "%s %N:{default} Checked the current version of{mint} %s{default}.", MT_TAG4, client, MT_CONFIG_SECTION_MAIN);
@@ -4343,7 +4386,7 @@ public Action cmdMTVersion(int client, int args)
 
 public Action cmdMTVersion2(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, _, true))
 	{
@@ -4375,7 +4418,7 @@ public Action cmdMTVersion2(int client, int args)
 
 public Action cmdTank(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
@@ -4434,7 +4477,7 @@ public Action cmdTank(int client, int args)
 
 public Action cmdTank2(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT) || !bIsDeveloper(client, _, true))
 	{
@@ -4490,7 +4533,7 @@ public Action cmdTank2(int client, int args)
 
 public Action cmdMutantTank(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!bIsValidClient(client, MT_CHECK_INDEX|MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
 	{
@@ -6309,6 +6352,7 @@ public void SMCParseStart(SMCParser smc)
 	if (g_esGeneral.g_iConfigMode == 1)
 	{
 		g_esGeneral.g_iPluginEnabled = 0;
+		g_esGeneral.g_iListenSupport = g_bDedicated ? 0 : 1;
 		g_esGeneral.g_iCheckAbilities = 1;
 		g_esGeneral.g_iDeathRevert = 1;
 		g_esGeneral.g_iFinalesOnly = 0;
@@ -6899,6 +6943,7 @@ public SMCResult SMCKeyValues(SMCParser smc, const char[] key, const char[] valu
 			if (StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS, false) || StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS2, false) || StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS3, false) || StrEqual(g_esGeneral.g_sCurrentSection, MT_CONFIG_SECTION_SETTINGS4, false))
 			{
 				g_esGeneral.g_iPluginEnabled = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "PluginEnabled", "Plugin Enabled", "Plugin_Enabled", "penabled", g_esGeneral.g_iPluginEnabled, value, 0, 1);
+				g_esGeneral.g_iListenSupport = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "ListenSupport", "Listen Support", "Listen_Support", "listen", g_esGeneral.g_iListenSupport, value, 0, 1);
 				g_esGeneral.g_iCheckAbilities = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "CheckAbilities", "Check Abilities", "Check_Abilities", "check", g_esGeneral.g_iCheckAbilities, value, 0, 1);
 				g_esGeneral.g_iDeathRevert = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "DeathRevert", "Death Revert", "Death_Revert", "revert", g_esGeneral.g_iDeathRevert, value, 0, 1);
 				g_esGeneral.g_iFinalesOnly = iGetKeyValue(g_esGeneral.g_sCurrentSubSection, MT_CONFIG_SECTIONS_GENERAL, key, "FinalesOnly", "Finales Only", "Finales_Only", "finale", g_esGeneral.g_iFinalesOnly, value, 0, 4);
@@ -9658,6 +9703,7 @@ static void vResetCore(int client)
 	g_esPlayer[client].g_bAdminMenu = false;
 	g_esPlayer[client].g_bAttacked = false;
 	g_esPlayer[client].g_bDied = false;
+	g_esPlayer[client].g_bIgnoreCmd = false;
 	g_esPlayer[client].g_bLastLife = false;
 	g_esPlayer[client].g_bStasis = false;
 	g_esPlayer[client].g_bThirdPerson = false;
@@ -13183,7 +13229,7 @@ static bool bIsNonFinaleMap()
 
 static bool bIsPluginEnabled()
 {
-	if (!g_esGeneral.g_cvMTPluginEnabled.BoolValue || g_esGeneral.g_iPluginEnabled == 0 || g_esGeneral.g_cvMTGameMode == null)
+	if (!g_esGeneral.g_cvMTPluginEnabled.BoolValue || g_esGeneral.g_iPluginEnabled == 0 || (!g_bDedicated && !g_esGeneral.g_cvMTListenSupport.BoolValue && g_esGeneral.g_iListenSupport == 0) || g_esGeneral.g_cvMTGameMode == null)
 	{
 		return false;
 	}

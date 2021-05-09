@@ -5,7 +5,6 @@
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/us.svg" alt = "English" width = "32">
 </a>
-
 <a href = "https://github.com/Psykotikism/Mutant_Tanks/blob/master/README_RU.md">
 <img src = "https://cdn.staticaly.com/gh/hjnilsson/country-flags/master/svg/ru.svg" alt = "Russian" width = "32">
 </a>
@@ -113,6 +112,15 @@ mt_enabledgamemodes ""
 // Minimum: "0.000000"
 // Maximum: "15.000000"
 mt_gamemodetypes "0"
+
+// Enable Mutant Tanks on listen servers.
+// 0: OFF
+// 1: ON
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+mt_listensupport "0"
 
 // Enable Mutant Tanks.
 // 0: OFF

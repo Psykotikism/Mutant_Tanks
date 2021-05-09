@@ -30,7 +30,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad, g_bLeft4DHooksInstalled;
+bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -42,6 +42,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		return APLRes_SilentFailure;
 	}
 
+	g_bDedicated = IsDedicatedServer();
 	g_bLateLoad = late;
 
 	return APLRes_Success;
@@ -282,7 +283,7 @@ public void OnMapEnd()
 #if !defined MT_ABILITIES_MAIN2
 public Action cmdWarpInfo(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{

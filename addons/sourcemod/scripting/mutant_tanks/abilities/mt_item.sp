@@ -27,6 +27,8 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
+bool g_bDedicated;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion evEngine = GetEngineVersion();
@@ -36,6 +38,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 		return APLRes_SilentFailure;
 	}
+
+	g_bDedicated = IsDedicatedServer();
 
 	return APLRes_Success;
 }
@@ -161,7 +165,7 @@ public void OnMapEnd()
 #if !defined MT_ABILITIES_MAIN
 public Action cmdItemInfo(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{

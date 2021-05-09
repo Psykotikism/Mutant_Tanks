@@ -27,7 +27,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bSecondGame;
+bool g_bDedicated, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -42,6 +42,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 			return APLRes_SilentFailure;
 		}
 	}
+
+	g_bDedicated = IsDedicatedServer();
 
 	return APLRes_Success;
 }
@@ -193,7 +195,7 @@ public void OnMapEnd()
 #if !defined MT_ABILITIES_MAIN2
 public Action cmdMedicInfo(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{

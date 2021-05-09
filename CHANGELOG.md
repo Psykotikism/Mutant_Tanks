@@ -52,6 +52,9 @@
 - Replaced all the `sm_mt_<ability name>` commands with `sm_mt_ability <name>`/`sm_mt_ability2 <name>`.
 - The old commands are still available when compiling the abilities using the alternative method.
 
+#### ConVars
+- Added the `mt_listensupport` convar.
+
 #### Settings
 - Added the following settings under the `Plugin Settings/Rewards`, `Tank #/Rewards`, and `STEAM_ID/Rewards` sections:
 	- `Reward Notify`
@@ -66,6 +69,7 @@
 - Added the `Sweep Fist` setting under the `Plugin Settings/Enhancements`, `Tank #/Enhancements`, and `STEAM_ID/Enhancements` sections. (Thanks to HarryPotter for the idea!)
 - Renamed the `Detect Plugins` setting under the `Plugin Settings/General`, `Tank #/General`, and `STEAM_ID/General` sections to `Check Abilities`.
 - Increased the size of buffers for convar changes under the `Plugin Settings/ConVars` section.
+- Added the `Listen Support` setting under the `Plugin Settings/General` section.
 
 #### Translations
 - Updated English translations with new phrases.

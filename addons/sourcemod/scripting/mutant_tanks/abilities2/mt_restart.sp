@@ -30,7 +30,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -46,6 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		}
 	}
 
+	g_bDedicated = IsDedicatedServer();
 	g_bLateLoad = late;
 
 	return APLRes_Success;
@@ -274,7 +275,7 @@ public void OnMapEnd()
 
 public Action cmdRestartInfo(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{

@@ -148,6 +148,16 @@
 			// 1/"enabled"/"true"/"on"/"yes": ON
 			"Plugin Enabled"			"1"
 
+			// Enable Mutant Tanks on listen servers.
+			// Note: This setting has a convar equivalent (mt_listensupport).
+			// Note: Supporting listen servers only extends to SourceMod's own limits.
+			// Note: There is no guarantee that Mutant Tanks will work on listen servers.
+			// Note: There is no guarantee that SourceMod will work on listen servers.
+			// --
+			// 0/"disabled"/"false"/"off"/"no": OFF
+			// 1/"enabled"/"true"/"on"/"yes": ON
+			"Listen Support"			"0"
+
 			// The plugin will automatically disable any Mutant Tank whose abilities are not installed.
 			// Note: The abilities cache is only updated when configs are loaded/refreshed.
 			// Note: This setting does not disable Mutant Tanks that do not have any abilities.

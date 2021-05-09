@@ -30,7 +30,7 @@ public Plugin myinfo =
 	url = MT_URL
 };
 
-bool g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
+bool g_bDedicated, g_bLateLoad, g_bLeft4DHooksInstalled, g_bSecondGame;
 
 #undef REQUIRE_PLUGIN
 #tryinclude "mutant_tanks/abilities2/mt_medic.sp"
@@ -87,6 +87,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		}
 	}
 
+	g_bDedicated = IsDedicatedServer();
 	g_bLateLoad = late;
 
 	return APLRes_Success;
@@ -191,7 +192,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 
 public Action cmdAbilityInfo(int client, int args)
 {
-	client = iGetListenServerHost(client);
+	client = iGetListenServerHost(client, g_bDedicated);
 
 	if (!MT_IsCorePluginEnabled())
 	{
