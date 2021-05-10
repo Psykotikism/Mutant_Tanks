@@ -484,18 +484,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esLightningPlayer[admin].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTIONS, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningPlayer[admin].g_flLightningDamage, value, 1.0, 999999.0);
 		g_esLightningPlayer[admin].g_iLightningDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTIONS, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esLightningPlayer[admin].g_iLightningDuration, value, 1, 999999);
 		g_esLightningPlayer[admin].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTIONS, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningPlayer[admin].g_flLightningInterval, value, 0.1, 999999.0);
-
-		if (StrEqual(subsection, MT_LIGHTNING_SECTION, false) || StrEqual(subsection, MT_LIGHTNING_SECTION2, false) || StrEqual(subsection, MT_LIGHTNING_SECTION3, false) || StrEqual(subsection, MT_LIGHTNING_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esLightningPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esLightningPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esLightningPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LIGHTNING_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esLightningPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LIGHTNING_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -513,18 +503,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esLightningAbility[type].g_flLightningDamage = flGetKeyValue(subsection, MT_LIGHTNING_SECTIONS, key, "LightningDamage", "Lightning Damage", "Lightning_Damage", "damage", g_esLightningAbility[type].g_flLightningDamage, value, 1.0, 999999.0);
 		g_esLightningAbility[type].g_iLightningDuration = iGetKeyValue(subsection, MT_LIGHTNING_SECTIONS, key, "LightningDuration", "Lightning Duration", "Lightning_Duration", "duration", g_esLightningAbility[type].g_iLightningDuration, value, 1, 999999);
 		g_esLightningAbility[type].g_flLightningInterval = flGetKeyValue(subsection, MT_LIGHTNING_SECTIONS, key, "LightningInterval", "Lightning Interval", "Lightning_Interval", "interval", g_esLightningAbility[type].g_flLightningInterval, value, 0.1, 999999.0);
-
-		if (StrEqual(subsection, MT_LIGHTNING_SECTION, false) || StrEqual(subsection, MT_LIGHTNING_SECTION2, false) || StrEqual(subsection, MT_LIGHTNING_SECTION3, false) || StrEqual(subsection, MT_LIGHTNING_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esLightningAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esLightningAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esLightningAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LIGHTNING_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esLightningAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LIGHTNING_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

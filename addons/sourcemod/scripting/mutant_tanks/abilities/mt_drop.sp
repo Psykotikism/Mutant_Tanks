@@ -558,18 +558,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esDropPlayer[admin].g_iDropHandPosition = iGetKeyValue(subsection, MT_DROP_SECTIONS, key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esDropPlayer[admin].g_iDropHandPosition, value, 0, 3);
 		g_esDropPlayer[admin].g_iDropMode = iGetKeyValue(subsection, MT_DROP_SECTIONS, key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esDropPlayer[admin].g_iDropMode, value, 0, 2);
 		g_esDropPlayer[admin].g_flDropWeaponScale = flGetKeyValue(subsection, MT_DROP_SECTIONS, key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esDropPlayer[admin].g_flDropWeaponScale, value, 0.1, 2.0);
+		g_esDropPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DROP_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 
-		if (StrEqual(subsection, MT_DROP_SECTION, false) || StrEqual(subsection, MT_DROP_SECTION2, false) || StrEqual(subsection, MT_DROP_SECTION3, false) || StrEqual(subsection, MT_DROP_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esDropPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "DropWeaponName", false) || StrEqual(key, "Drop Weapon Name", false) || StrEqual(key, "Drop_Weapon_Name", false) || StrEqual(key, "weaponname", false))
-			{
-				strcopy(g_esDropPlayer[admin].g_sDropWeaponName, sizeof(esDropPlayer::g_sDropWeaponName), value);
-			}
-		}
+		vGetKeyValue(subsection, MT_DROP_SECTIONS, key, "DropWeaponName", "Drop Weapon Name", "Drop_Weapon_Name", "weaponname", g_esDropPlayer[admin].g_sDropWeaponName, sizeof(esDropPlayer::g_sDropWeaponName), value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -585,18 +576,9 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esDropAbility[type].g_iDropHandPosition = iGetKeyValue(subsection, MT_DROP_SECTIONS, key, "DropHandPosition", "Drop Hand Position", "Drop_Hand_Position", "handpos", g_esDropAbility[type].g_iDropHandPosition, value, 0, 3);
 		g_esDropAbility[type].g_iDropMode = iGetKeyValue(subsection, MT_DROP_SECTIONS, key, "DropMode", "Drop Mode", "Drop_Mode", "mode", g_esDropAbility[type].g_iDropMode, value, 0, 2);
 		g_esDropAbility[type].g_flDropWeaponScale = flGetKeyValue(subsection, MT_DROP_SECTIONS, key, "DropWeaponScale", "Drop Weapon Scale", "Drop_Weapon_Scale", "weaponscale", g_esDropAbility[type].g_flDropWeaponScale, value, 0.1, 2.0);
+		g_esDropAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DROP_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 
-		if (StrEqual(subsection, MT_DROP_SECTION, false) || StrEqual(subsection, MT_DROP_SECTION2, false) || StrEqual(subsection, MT_DROP_SECTION3, false) || StrEqual(subsection, MT_DROP_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esDropAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "DropWeaponName", false) || StrEqual(key, "Drop Weapon Name", false) || StrEqual(key, "Drop_Weapon_Name", false) || StrEqual(key, "weaponname", false))
-			{
-				strcopy(g_esDropAbility[type].g_sDropWeaponName, sizeof(esDropAbility::g_sDropWeaponName), value);
-			}
-		}
+		vGetKeyValue(subsection, MT_DROP_SECTIONS, key, "DropWeaponName", "Drop Weapon Name", "Drop_Weapon_Name", "weaponname", g_esDropAbility[type].g_sDropWeaponName, sizeof(esDropAbility::g_sDropWeaponName), value);
 	}
 }
 
@@ -607,7 +589,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	vGetSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropWeaponName, sizeof(esDropCache::g_sDropWeaponName), g_esDropPlayer[tank].g_sDropWeaponName, g_esDropAbility[type].g_sDropWeaponName);
 	g_esDropCache[tank].g_flDropChance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropChance, g_esDropAbility[type].g_flDropChance);
 	g_esDropCache[tank].g_flDropClipChance = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropClipChance, g_esDropAbility[type].g_flDropClipChance);
 	g_esDropCache[tank].g_flDropWeaponScale = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flDropWeaponScale, g_esDropAbility[type].g_flDropWeaponScale);
@@ -620,6 +601,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esDropCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_flOpenAreasOnly, g_esDropAbility[type].g_flOpenAreasOnly);
 	g_esDropCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esDropPlayer[tank].g_iRequiresHumans, g_esDropAbility[type].g_iRequiresHumans);
 	g_esDropPlayer[tank].g_iTankType = apply ? type : 0;
+
+	vGetSettingValue(apply, bHuman, g_esDropCache[tank].g_sDropWeaponName, sizeof(esDropCache::g_sDropWeaponName), g_esDropPlayer[tank].g_sDropWeaponName, g_esDropAbility[type].g_sDropWeaponName);
 }
 
 #if defined MT_ABILITIES_MAIN

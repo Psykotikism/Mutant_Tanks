@@ -640,18 +640,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFlingPlayer[admin].g_iFlingHitMode = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingHitMode", "Fling Hit Mode", "Fling_Hit_Mode", "hitmode", g_esFlingPlayer[admin].g_iFlingHitMode, value, 0, 2);
 		g_esFlingPlayer[admin].g_flFlingRange = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingRange", "Fling Range", "Fling_Range", "range", g_esFlingPlayer[admin].g_flFlingRange, value, 1.0, 999999.0);
 		g_esFlingPlayer[admin].g_flFlingRangeChance = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", g_esFlingPlayer[admin].g_flFlingRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_FLING_SECTION, false) || StrEqual(subsection, MT_FLING_SECTION2, false) || StrEqual(subsection, MT_FLING_SECTION3, false) || StrEqual(subsection, MT_FLING_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esFlingPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esFlingPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esFlingPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esFlingPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -674,18 +664,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFlingAbility[type].g_iFlingHitMode = iGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingHitMode", "Fling Hit Mode", "Fling_Hit_Mode", "hitmode", g_esFlingAbility[type].g_iFlingHitMode, value, 0, 2);
 		g_esFlingAbility[type].g_flFlingRange = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingRange", "Fling Range", "Fling_Range", "range", g_esFlingAbility[type].g_flFlingRange, value, 1.0, 999999.0);
 		g_esFlingAbility[type].g_flFlingRangeChance = flGetKeyValue(subsection, MT_FLING_SECTIONS, key, "FlingRangeChance", "Fling Range Chance", "Fling_Range_Chance", "rangechance", g_esFlingAbility[type].g_flFlingRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_FLING_SECTION, false) || StrEqual(subsection, MT_FLING_SECTION2, false) || StrEqual(subsection, MT_FLING_SECTION3, false) || StrEqual(subsection, MT_FLING_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esFlingAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esFlingAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esFlingAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esFlingAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLING_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

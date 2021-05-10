@@ -587,18 +587,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHurtPlayer[admin].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtPlayer[admin].g_flHurtInterval, value, 0.1, 999999.0);
 		g_esHurtPlayer[admin].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtPlayer[admin].g_flHurtRange, value, 1.0, 999999.0);
 		g_esHurtPlayer[admin].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtPlayer[admin].g_flHurtRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_HURT_SECTION, false) || StrEqual(subsection, MT_HURT_SECTION2, false) || StrEqual(subsection, MT_HURT_SECTION3, false) || StrEqual(subsection, MT_HURT_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esHurtPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esHurtPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esHurtPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esHurtPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -620,18 +610,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHurtAbility[type].g_flHurtInterval = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtInterval", "Hurt Interval", "Hurt_Interval", "interval", g_esHurtAbility[type].g_flHurtInterval, value, 0.1, 999999.0);
 		g_esHurtAbility[type].g_flHurtRange = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtRange", "Hurt Range", "Hurt_Range", "range", g_esHurtAbility[type].g_flHurtRange, value, 1.0, 999999.0);
 		g_esHurtAbility[type].g_flHurtRangeChance = flGetKeyValue(subsection, MT_HURT_SECTIONS, key, "HurtRangeChance", "Hurt Range Chance", "Hurt_Range_Chance", "rangechance", g_esHurtAbility[type].g_flHurtRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_HURT_SECTION, false) || StrEqual(subsection, MT_HURT_SECTION2, false) || StrEqual(subsection, MT_HURT_SECTION3, false) || StrEqual(subsection, MT_HURT_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esHurtAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esHurtAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esHurtAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esHurtAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HURT_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

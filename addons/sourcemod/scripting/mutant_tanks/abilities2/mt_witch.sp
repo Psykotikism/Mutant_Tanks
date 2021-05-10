@@ -506,18 +506,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esWitchPlayer[admin].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTIONS, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchPlayer[admin].g_flWitchLifetime, value, 0.0, 999999.0);
 		g_esWitchPlayer[admin].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTIONS, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchPlayer[admin].g_flWitchRange, value, 1.0, 999999.0);
 		g_esWitchPlayer[admin].g_iWitchRemove = iGetKeyValue(subsection, MT_WITCH_SECTIONS, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esWitchPlayer[admin].g_iWitchRemove, value, 0, 1);
-
-		if (StrEqual(subsection, MT_WITCH_SECTION, false) || StrEqual(subsection, MT_WITCH_SECTION2, false) || StrEqual(subsection, MT_WITCH_SECTION3, false) || StrEqual(subsection, MT_WITCH_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esWitchPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esWitchPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esWitchPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esWitchPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -536,18 +526,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esWitchAbility[type].g_flWitchLifetime = flGetKeyValue(subsection, MT_WITCH_SECTIONS, key, "WitchLifetime", "Witch Lifetime", "Witch_Lifetime", "lifetime", g_esWitchAbility[type].g_flWitchLifetime, value, 0.0, 999999.0);
 		g_esWitchAbility[type].g_flWitchRange = flGetKeyValue(subsection, MT_WITCH_SECTIONS, key, "WitchRange", "Witch Range", "Witch_Range", "range", g_esWitchAbility[type].g_flWitchRange, value, 1.0, 999999.0);
 		g_esWitchAbility[type].g_iWitchRemove = iGetKeyValue(subsection, MT_WITCH_SECTIONS, key, "WitchRemove", "Witch Remove", "Witch_Remove", "remove", g_esWitchAbility[type].g_iWitchRemove, value, 0, 1);
-
-		if (StrEqual(subsection, MT_WITCH_SECTION, false) || StrEqual(subsection, MT_WITCH_SECTION2, false) || StrEqual(subsection, MT_WITCH_SECTION3, false) || StrEqual(subsection, MT_WITCH_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esWitchAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esWitchAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esWitchAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esWitchAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_WITCH_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

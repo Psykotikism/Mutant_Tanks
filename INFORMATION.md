@@ -156,7 +156,7 @@
 			// --
 			// 0/"disabled"/"false"/"off"/"no": OFF
 			// 1/"enabled"/"true"/"on"/"yes": ON
-			"Listen Support"			"0"
+			"Listen Support"			"1"
 
 			// The plugin will automatically disable any Mutant Tank whose abilities are not installed.
 			// Note: The abilities cache is only updated when configs are loaded/refreshed.

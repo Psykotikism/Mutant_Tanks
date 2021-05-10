@@ -771,18 +771,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esShieldPlayer[admin].g_flShieldHealth = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldHealth", "Shield Health", "Shield_Health", "health", g_esShieldPlayer[admin].g_flShieldHealth, value, 0.0, 999999.0);
 		g_esShieldPlayer[admin].g_flShieldThrowChance = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldThrowChance", "Shield Throw Chance", "Shield_Throw_Chance", "throwchance", g_esShieldPlayer[admin].g_flShieldThrowChance, value, 0.0, 100.0);
 		g_esShieldPlayer[admin].g_iShieldType = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldType", "Shield Type", "Shield_Type", "type", g_esShieldPlayer[admin].g_iShieldType, value, 0, 15);
+		g_esShieldPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SHIELD_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esShieldPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SHIELD_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+
+		vGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldHealthCharacters", "Shield Health Characters", "Shield_Characters", "hpchars", g_esShieldPlayer[admin].g_sShieldHealthChars, sizeof(esShieldPlayer::g_sShieldHealthChars), value);
 
 		if (StrEqual(subsection, MT_SHIELD_SECTION, false) || StrEqual(subsection, MT_SHIELD_SECTION2, false) || StrEqual(subsection, MT_SHIELD_SECTION3, false) || StrEqual(subsection, MT_SHIELD_SECTION4, false))
 		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esShieldPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esShieldPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
+			if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
 			{
 				static char sSet[4][4], sValue[16];
 				strcopy(sValue, sizeof(sValue), value);
@@ -790,17 +786,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 				{
-					if (sSet[iPos][0] == '\0')
-					{
-						continue;
-					}
-
-					g_esShieldPlayer[admin].g_iShieldColor[iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
+					g_esShieldPlayer[admin].g_iShieldColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
-			}
-			else if (StrEqual(key, "ShieldHealthCharacters", false) || StrEqual(key, "Shield Health Characters", false) || StrEqual(key, "Shield_Characters", false) || StrEqual(key, "hpchars", false))
-			{
-				strcopy(g_esShieldPlayer[admin].g_sShieldHealthChars, sizeof(esShieldPlayer::g_sShieldHealthChars), value);
 			}
 		}
 	}
@@ -825,18 +812,14 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esShieldAbility[type].g_flShieldHealth = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldHealth", "Shield Health", "Shield_Health", "health", g_esShieldAbility[type].g_flShieldHealth, value, 0.0, 999999.0);
 		g_esShieldAbility[type].g_flShieldThrowChance = flGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldThrowChance", "Shield Throw Chance", "Shield_Throw_Chance", "throwchance", g_esShieldAbility[type].g_flShieldThrowChance, value, 0.0, 100.0);
 		g_esShieldAbility[type].g_iShieldType = iGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldType", "Shield Type", "Shield_Type", "type", g_esShieldAbility[type].g_iShieldType, value, 0, 15);
+		g_esShieldAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SHIELD_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esShieldAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SHIELD_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
+
+		vGetKeyValue(subsection, MT_SHIELD_SECTIONS, key, "ShieldHealthCharacters", "Shield Health Characters", "Shield_Characters", "hpchars", g_esShieldAbility[type].g_sShieldHealthChars, sizeof(esShieldAbility::g_sShieldHealthChars), value);
 
 		if (StrEqual(subsection, MT_SHIELD_SECTION, false) || StrEqual(subsection, MT_SHIELD_SECTION2, false) || StrEqual(subsection, MT_SHIELD_SECTION3, false) || StrEqual(subsection, MT_SHIELD_SECTION4, false))
 		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esShieldAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esShieldAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
+			if (StrEqual(key, "ShieldColor", false) || StrEqual(key, "Shield Color", false) || StrEqual(key, "Shield_Color", false) || StrEqual(key, "color", false))
 			{
 				static char sSet[4][4], sValue[16];
 				strcopy(sValue, sizeof(sValue), value);
@@ -844,17 +827,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 				ExplodeString(sValue, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 				for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 				{
-					if (sSet[iPos][0] == '\0')
-					{
-						continue;
-					}
-
-					g_esShieldAbility[type].g_iShieldColor[iPos] = (StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
+					g_esShieldAbility[type].g_iShieldColor[iPos] = (sSet[iPos][0] != '\0' && StringToInt(sSet[iPos]) >= 0) ? iClamp(StringToInt(sSet[iPos]), 0, 255) : -1;
 				}
-			}
-			else if (StrEqual(key, "ShieldHealthCharacters", false) || StrEqual(key, "Shield Health Characters", false) || StrEqual(key, "Shield_Characters", false) || StrEqual(key, "hpchars", false))
-			{
-				strcopy(g_esShieldAbility[type].g_sShieldHealthChars, sizeof(esShieldAbility::g_sShieldHealthChars), value);
 			}
 		}
 	}
@@ -867,7 +841,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldHealthChars, sizeof(esShieldCache::g_sShieldHealthChars), g_esShieldPlayer[tank].g_sShieldHealthChars, g_esShieldAbility[type].g_sShieldHealthChars);
 	g_esShieldCache[tank].g_flShieldChance = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldChance, g_esShieldAbility[type].g_flShieldChance);
 	g_esShieldCache[tank].g_flShieldHealth = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldHealth, g_esShieldAbility[type].g_flShieldHealth);
 	g_esShieldCache[tank].g_flShieldThrowChance = flGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_flShieldThrowChance, g_esShieldAbility[type].g_flShieldThrowChance);
@@ -887,6 +860,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esShieldCache[tank].g_iShieldMessage = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldMessage, g_esShieldAbility[type].g_iShieldMessage);
 	g_esShieldCache[tank].g_iShieldType = iGetSettingValue(apply, bHuman, g_esShieldPlayer[tank].g_iShieldType, g_esShieldAbility[type].g_iShieldType);
 	g_esShieldPlayer[tank].g_iTankType = apply ? type : 0;
+
+	vGetSettingValue(apply, bHuman, g_esShieldCache[tank].g_sShieldHealthChars, sizeof(esShieldCache::g_sShieldHealthChars), g_esShieldPlayer[tank].g_sShieldHealthChars, g_esShieldAbility[type].g_sShieldHealthChars);
 
 	for (int iPos = 0; iPos < sizeof(esShieldCache::g_iShieldColor); iPos++)
 	{

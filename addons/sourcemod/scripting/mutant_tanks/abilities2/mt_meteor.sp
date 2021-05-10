@@ -544,18 +544,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMeteorPlayer[admin].g_flMeteorInterval = flGetKeyValue(subsection, MT_METEOR_SECTIONS, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esMeteorPlayer[admin].g_flMeteorInterval, value, 0.1, 1.0);
 		g_esMeteorPlayer[admin].g_flMeteorLifetime = flGetKeyValue(subsection, MT_METEOR_SECTIONS, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esMeteorPlayer[admin].g_flMeteorLifetime, value, 0.1, 999999.0);
 		g_esMeteorPlayer[admin].g_iMeteorMode = iGetKeyValue(subsection, MT_METEOR_SECTIONS, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esMeteorPlayer[admin].g_iMeteorMode, value, 0, 1);
+		g_esMeteorPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_METEOR_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esMeteorPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_METEOR_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
 		if (StrEqual(subsection, MT_METEOR_SECTION, false) || StrEqual(subsection, MT_METEOR_SECTION2, false) || StrEqual(subsection, MT_METEOR_SECTION3, false) || StrEqual(subsection, MT_METEOR_SECTION4, false))
 		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esMeteorPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esMeteorPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "MeteorRadius", false) || StrEqual(key, "Meteor Radius", false) || StrEqual(key, "Meteor_Radius", false) || StrEqual(key, "radius", false))
+			if (StrEqual(key, "MeteorRadius", false) || StrEqual(key, "Meteor Radius", false) || StrEqual(key, "Meteor_Radius", false) || StrEqual(key, "radius", false))
 			{
 				static char sSet[2][7], sValue[14];
 				strcopy(sValue, sizeof(sValue), value);
@@ -585,18 +579,12 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esMeteorAbility[type].g_flMeteorInterval = flGetKeyValue(subsection, MT_METEOR_SECTIONS, key, "MeteorInterval", "Meteor Interval", "Meteor_Interval", "interval", g_esMeteorAbility[type].g_flMeteorInterval, value, 0.1, 1.0);
 		g_esMeteorAbility[type].g_flMeteorLifetime = flGetKeyValue(subsection, MT_METEOR_SECTIONS, key, "MeteorLifetime", "Meteor Lifetime", "Meteor_Lifetime", "lifetime", g_esMeteorAbility[type].g_flMeteorLifetime, value, 0.1, 999999.0);
 		g_esMeteorAbility[type].g_iMeteorMode = iGetKeyValue(subsection, MT_METEOR_SECTIONS, key, "MeteorMode", "Meteor Mode", "Meteor_Mode", "mode", g_esMeteorAbility[type].g_iMeteorMode, value, 0, 1);
+		g_esMeteorAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_METEOR_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esMeteorAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_METEOR_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
 		if (StrEqual(subsection, MT_METEOR_SECTION, false) || StrEqual(subsection, MT_METEOR_SECTION2, false) || StrEqual(subsection, MT_METEOR_SECTION3, false) || StrEqual(subsection, MT_METEOR_SECTION4, false))
 		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esMeteorAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esMeteorAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "MeteorRadius", false) || StrEqual(key, "Meteor Radius", false) || StrEqual(key, "Meteor_Radius", false) || StrEqual(key, "radius", false))
+			if (StrEqual(key, "MeteorRadius", false) || StrEqual(key, "Meteor Radius", false) || StrEqual(key, "Meteor_Radius", false) || StrEqual(key, "radius", false))
 			{
 				static char sSet[2][7], sValue[14];
 				strcopy(sValue, sizeof(sValue), value);

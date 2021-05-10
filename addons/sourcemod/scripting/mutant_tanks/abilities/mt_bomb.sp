@@ -598,18 +598,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esBombPlayer[admin].g_flBombRangeChance = flGetKeyValue(subsection, MT_BOMB_SECTIONS, key, "BombRangeChance", "Bomb Range Chance", "Bomb_Range_Chance", "rangechance", g_esBombPlayer[admin].g_flBombRangeChance, value, 0.0, 100.0);
 		g_esBombPlayer[admin].g_iBombRockBreak = iGetKeyValue(subsection, MT_BOMB_SECTIONS, key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esBombPlayer[admin].g_iBombRockBreak, value, 0, 1);
 		g_esBombPlayer[admin].g_flBombRockChance = flGetKeyValue(subsection, MT_BOMB_SECTIONS, key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esBombPlayer[admin].g_flBombRockChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_BOMB_SECTION, false) || StrEqual(subsection, MT_BOMB_SECTION2, false) || StrEqual(subsection, MT_BOMB_SECTION3, false) || StrEqual(subsection, MT_BOMB_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esBombPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esBombPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esBombPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esBombPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -632,18 +622,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esBombAbility[type].g_flBombRangeChance = flGetKeyValue(subsection, MT_BOMB_SECTIONS, key, "BombRangeChance", "Bomb Range Chance", "Bomb_Range_Chance", "rangechance", g_esBombAbility[type].g_flBombRangeChance, value, 0.0, 100.0);
 		g_esBombAbility[type].g_iBombRockBreak = iGetKeyValue(subsection, MT_BOMB_SECTIONS, key, "BombRockBreak", "Bomb Rock Break", "Bomb_Rock_Break", "rock", g_esBombAbility[type].g_iBombRockBreak, value, 0, 1);
 		g_esBombAbility[type].g_flBombRockChance = flGetKeyValue(subsection, MT_BOMB_SECTIONS, key, "BombRockChance", "Bomb Rock Chance", "Bomb_Rock_Chance", "rockchance", g_esBombAbility[type].g_flBombRockChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_BOMB_SECTION, false) || StrEqual(subsection, MT_BOMB_SECTION2, false) || StrEqual(subsection, MT_BOMB_SECTION3, false) || StrEqual(subsection, MT_BOMB_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esBombAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esBombAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esBombAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esBombAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_BOMB_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

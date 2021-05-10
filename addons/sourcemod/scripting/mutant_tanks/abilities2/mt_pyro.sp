@@ -602,14 +602,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPyroPlayer[admin].g_iPyroMode = iGetKeyValue(subsection, MT_PYRO_SECTIONS, key, "PyroMode", "Pyro Mode", "Pyro_Mode", "mode", g_esPyroPlayer[admin].g_iPyroMode, value, 0, 1);
 		g_esPyroPlayer[admin].g_iPyroReignite = iGetKeyValue(subsection, MT_PYRO_SECTIONS, key, "PyroReignite", "Pyro Reignite", "Pyro_Reignite", "reignite", g_esPyroPlayer[admin].g_iPyroReignite, value, 0, 1);
 		g_esPyroPlayer[admin].g_flPyroSpeedBoost = flGetKeyValue(subsection, MT_PYRO_SECTIONS, key, "PyroSpeedBoost", "Pyro Speed Boost", "Pyro_Speed_Boost", "speedboost", g_esPyroPlayer[admin].g_flPyroSpeedBoost, value, 0.1, 3.0);
-
-		if (StrEqual(subsection, MT_PYRO_SECTION, false) || StrEqual(subsection, MT_PYRO_SECTION2, false) || StrEqual(subsection, MT_PYRO_SECTION3, false) || StrEqual(subsection, MT_PYRO_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esPyroPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esPyroPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_PYRO_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -629,14 +622,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esPyroAbility[type].g_iPyroMode = iGetKeyValue(subsection, MT_PYRO_SECTIONS, key, "PyroMode", "Pyro Mode", "Pyro_Mode", "mode", g_esPyroAbility[type].g_iPyroMode, value, 0, 1);
 		g_esPyroAbility[type].g_iPyroReignite = iGetKeyValue(subsection, MT_PYRO_SECTIONS, key, "PyroReignite", "Pyro Reignite", "Pyro_Reignite", "reignite", g_esPyroAbility[type].g_iPyroReignite, value, 0, 1);
 		g_esPyroAbility[type].g_flPyroSpeedBoost = flGetKeyValue(subsection, MT_PYRO_SECTIONS, key, "PyroSpeedBoost", "Pyro Speed Boost", "Pyro_Speed_Boost", "speedboost", g_esPyroAbility[type].g_flPyroSpeedBoost, value, 0.1, 3.0);
-
-		if (StrEqual(subsection, MT_PYRO_SECTION, false) || StrEqual(subsection, MT_PYRO_SECTION2, false) || StrEqual(subsection, MT_PYRO_SECTION3, false) || StrEqual(subsection, MT_PYRO_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esPyroAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esPyroAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_PYRO_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 }
 

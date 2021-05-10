@@ -492,14 +492,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esUndeadPlayer[admin].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadPlayer[admin].g_iUndeadMessage, value, 0, 1);
 		g_esUndeadPlayer[admin].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadPlayer[admin].g_iUndeadAmount, value, 1, 999999);
 		g_esUndeadPlayer[admin].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadPlayer[admin].g_flUndeadChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_UNDEAD_SECTION, false) || StrEqual(subsection, MT_UNDEAD_SECTION2, false) || StrEqual(subsection, MT_UNDEAD_SECTION3, false) || StrEqual(subsection, MT_UNDEAD_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esUndeadPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esUndeadPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_UNDEAD_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -514,14 +507,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esUndeadAbility[type].g_iUndeadMessage = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esUndeadAbility[type].g_iUndeadMessage, value, 0, 1);
 		g_esUndeadAbility[type].g_iUndeadAmount = iGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "UndeadAmount", "Undead Amount", "Undead_Amount", "amount", g_esUndeadAbility[type].g_iUndeadAmount, value, 1, 999999);
 		g_esUndeadAbility[type].g_flUndeadChance = flGetKeyValue(subsection, MT_UNDEAD_SECTIONS, key, "UndeadChance", "Undead Chance", "Undead_Chance", "chance", g_esUndeadAbility[type].g_flUndeadChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_UNDEAD_SECTION, false) || StrEqual(subsection, MT_UNDEAD_SECTION2, false) || StrEqual(subsection, MT_UNDEAD_SECTION3, false) || StrEqual(subsection, MT_UNDEAD_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esUndeadAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esUndeadAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_UNDEAD_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 }
 

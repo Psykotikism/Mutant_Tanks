@@ -490,14 +490,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esZombiePlayer[admin].g_flZombieInterval = flGetKeyValue(subsection, MT_ZOMBIE_SECTIONS, key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esZombiePlayer[admin].g_flZombieInterval, value, 0.1, 999999.0);
 		g_esZombiePlayer[admin].g_iZombieMode = iGetKeyValue(subsection, MT_ZOMBIE_SECTIONS, key, "ZombieMode", "Zombie Mode", "Zombie_Mode", "mode", g_esZombiePlayer[admin].g_iZombieMode, value, 0, 2);
 		g_esZombiePlayer[admin].g_iZombieType = iGetKeyValue(subsection, MT_ZOMBIE_SECTIONS, key, "ZombieType", "Zombie Type", "Zombie_Type", "type", g_esZombiePlayer[admin].g_iZombieType, value, 0, 127);
-
-		if (StrEqual(subsection, MT_ZOMBIE_SECTION, false) || StrEqual(subsection, MT_ZOMBIE_SECTION2, false) || StrEqual(subsection, MT_ZOMBIE_SECTION3, false) || StrEqual(subsection, MT_ZOMBIE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esZombiePlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esZombiePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ZOMBIE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -517,14 +510,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esZombieAbility[type].g_flZombieInterval = flGetKeyValue(subsection, MT_ZOMBIE_SECTIONS, key, "ZombieInterval", "Zombie Interval", "Zombie_Interval", "interval", g_esZombieAbility[type].g_flZombieInterval, value, 0.1, 999999.0);
 		g_esZombieAbility[type].g_iZombieMode = iGetKeyValue(subsection, MT_ZOMBIE_SECTIONS, key, "ZombieMode", "Zombie Mode", "Zombie_Mode", "mode", g_esZombieAbility[type].g_iZombieMode, value, 0, 2);
 		g_esZombieAbility[type].g_iZombieType = iGetKeyValue(subsection, MT_ZOMBIE_SECTIONS, key, "ZombieType", "Zombie Type", "Zombie_Type", "type", g_esZombieAbility[type].g_iZombieType, value, 0, 127);
-
-		if (StrEqual(subsection, MT_ZOMBIE_SECTION, false) || StrEqual(subsection, MT_ZOMBIE_SECTION2, false) || StrEqual(subsection, MT_ZOMBIE_SECTION3, false) || StrEqual(subsection, MT_ZOMBIE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esZombieAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esZombieAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ZOMBIE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 }
 

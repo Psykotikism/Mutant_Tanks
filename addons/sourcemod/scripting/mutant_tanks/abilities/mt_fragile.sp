@@ -632,18 +632,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFragilePlayer[admin].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTIONS, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esFragilePlayer[admin].g_flFragileMeleeMultiplier, value, 1.0, 999999.0);
 		g_esFragilePlayer[admin].g_iFragileMode = iGetKeyValue(subsection, MT_FRAGILE_SECTIONS, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esFragilePlayer[admin].g_iFragileMode, value, 0, 1);
 		g_esFragilePlayer[admin].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTIONS, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esFragilePlayer[admin].g_flFragileSpeedBoost, value, 0.1, 3.0);
-
-		if (StrEqual(subsection, MT_FRAGILE_SECTION, false) || StrEqual(subsection, MT_FRAGILE_SECTION2, false) || StrEqual(subsection, MT_FRAGILE_SECTION3, false) || StrEqual(subsection, MT_FRAGILE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esFragilePlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esFragilePlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esFragilePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esFragilePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -667,18 +657,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFragileAbility[type].g_flFragileMeleeMultiplier = flGetKeyValue(subsection, MT_FRAGILE_SECTIONS, key, "FragileMeleeMultiplier", "Fragile Melee Multiplier", "Fragile_Melee_Multiplier", "melee", g_esFragileAbility[type].g_flFragileMeleeMultiplier, value, 1.0, 999999.0);
 		g_esFragileAbility[type].g_iFragileMode = iGetKeyValue(subsection, MT_FRAGILE_SECTIONS, key, "FragileMode", "Fragile Mode", "Fragile_Mode", "mode", g_esFragileAbility[type].g_iFragileMode, value, 0, 1);
 		g_esFragileAbility[type].g_flFragileSpeedBoost = flGetKeyValue(subsection, MT_FRAGILE_SECTIONS, key, "FragileSpeedBoost", "Fragile Speed Boost", "Fragile_Speed_Boost", "speedboost", g_esFragileAbility[type].g_flFragileSpeedBoost, value, 0.1, 3.0);
-
-		if (StrEqual(subsection, MT_FRAGILE_SECTION, false) || StrEqual(subsection, MT_FRAGILE_SECTION2, false) || StrEqual(subsection, MT_FRAGILE_SECTION3, false) || StrEqual(subsection, MT_FRAGILE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esFragileAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esFragileAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esFragileAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esFragileAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FRAGILE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

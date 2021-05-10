@@ -638,18 +638,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esShovePlayer[admin].g_flShoveInterval = flGetKeyValue(subsection, MT_SHOVE_SECTIONS, key, "ShoveInterval", "Shove Interval", "Shove_Interval", "interval", g_esShovePlayer[admin].g_flShoveInterval, value, 0.1, 999999.0);
 		g_esShovePlayer[admin].g_flShoveRange = flGetKeyValue(subsection, MT_SHOVE_SECTIONS, key, "ShoveRange", "Shove Range", "Shove_Range", "range", g_esShovePlayer[admin].g_flShoveRange, value, 1.0, 999999.0);
 		g_esShovePlayer[admin].g_flShoveRangeChance = flGetKeyValue(subsection, MT_SHOVE_SECTIONS, key, "ShoveRangeChance", "Shove Range Chance", "Shove_Range_Chance", "rangechance", g_esShovePlayer[admin].g_flShoveRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_SHOVE_SECTION, false) || StrEqual(subsection, MT_SHOVE_SECTION2, false) || StrEqual(subsection, MT_SHOVE_SECTION3, false) || StrEqual(subsection, MT_SHOVE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esShovePlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esShovePlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esShovePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SHOVE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esShovePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SHOVE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -673,18 +663,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esShoveAbility[type].g_flShoveInterval = flGetKeyValue(subsection, MT_SHOVE_SECTIONS, key, "ShoveInterval", "Shove Interval", "Shove_Interval", "interval", g_esShoveAbility[type].g_flShoveInterval, value, 0.1, 999999.0);
 		g_esShoveAbility[type].g_flShoveRange = flGetKeyValue(subsection, MT_SHOVE_SECTIONS, key, "ShoveRange", "Shove Range", "Shove_Range", "range", g_esShoveAbility[type].g_flShoveRange, value, 1.0, 999999.0);
 		g_esShoveAbility[type].g_flShoveRangeChance = flGetKeyValue(subsection, MT_SHOVE_SECTIONS, key, "ShoveRangeChance", "Shove Range Chance", "Shove_Range_Chance", "rangechance", g_esShoveAbility[type].g_flShoveRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_SHOVE_SECTION, false) || StrEqual(subsection, MT_SHOVE_SECTION2, false) || StrEqual(subsection, MT_SHOVE_SECTION3, false) || StrEqual(subsection, MT_SHOVE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esShoveAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esShoveAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esShoveAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SHOVE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esShoveAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SHOVE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

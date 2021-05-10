@@ -559,18 +559,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esRecoilPlayer[admin].g_iRecoilHitMode = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esRecoilPlayer[admin].g_iRecoilHitMode, value, 0, 2);
 		g_esRecoilPlayer[admin].g_flRecoilRange = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esRecoilPlayer[admin].g_flRecoilRange, value, 1.0, 999999.0);
 		g_esRecoilPlayer[admin].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esRecoilPlayer[admin].g_flRecoilRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_RECOIL_SECTION, false) || StrEqual(subsection, MT_RECOIL_SECTION2, false) || StrEqual(subsection, MT_RECOIL_SECTION3, false) || StrEqual(subsection, MT_RECOIL_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esRecoilPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esRecoilPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esRecoilPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRecoilPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -590,18 +580,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esRecoilAbility[type].g_iRecoilHitMode = iGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilHitMode", "Recoil Hit Mode", "Recoil_Hit_Mode", "hitmode", g_esRecoilAbility[type].g_iRecoilHitMode, value, 0, 2);
 		g_esRecoilAbility[type].g_flRecoilRange = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilRange", "Recoil Range", "Recoil_Range", "range", g_esRecoilAbility[type].g_flRecoilRange, value, 1.0, 999999.0);
 		g_esRecoilAbility[type].g_flRecoilRangeChance = flGetKeyValue(subsection, MT_RECOIL_SECTIONS, key, "RecoilRangeChance", "Recoil Range Chance", "Recoil_Range_Chance", "rangechance", g_esRecoilAbility[type].g_flRecoilRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_RECOIL_SECTION, false) || StrEqual(subsection, MT_RECOIL_SECTION2, false) || StrEqual(subsection, MT_RECOIL_SECTION3, false) || StrEqual(subsection, MT_RECOIL_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esRecoilAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esRecoilAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esRecoilAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esRecoilAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_RECOIL_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

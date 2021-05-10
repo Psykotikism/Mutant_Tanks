@@ -506,18 +506,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSpamPlayer[admin].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamPlayer[admin].g_iSpamDamage, value, 1, 999999);
 		g_esSpamPlayer[admin].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamPlayer[admin].g_iSpamDuration, value, 1, 999999);
 		g_esSpamPlayer[admin].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamPlayer[admin].g_flSpamInterval, value, 0.1, 1.0);
-
-		if (StrEqual(subsection, MT_SPAM_SECTION, false) || StrEqual(subsection, MT_SPAM_SECTION2, false) || StrEqual(subsection, MT_SPAM_SECTION3, false) || StrEqual(subsection, MT_SPAM_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esSpamPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esSpamPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esSpamPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esSpamPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -535,18 +525,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSpamAbility[type].g_iSpamDamage = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamDamage", "Spam Damage", "Spam_Damage", "damage", g_esSpamAbility[type].g_iSpamDamage, value, 1, 999999);
 		g_esSpamAbility[type].g_iSpamDuration = iGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamDuration", "Spam Duration", "Spam_Duration", "duration", g_esSpamAbility[type].g_iSpamDuration, value, 1, 999999);
 		g_esSpamAbility[type].g_flSpamInterval = flGetKeyValue(subsection, MT_SPAM_SECTIONS, key, "SpamInterval", "Spam Interval", "Spam_Interval", "interval", g_esSpamAbility[type].g_flSpamInterval, value, 0.1, 1.0);
-
-		if (StrEqual(subsection, MT_SPAM_SECTION, false) || StrEqual(subsection, MT_SPAM_SECTION2, false) || StrEqual(subsection, MT_SPAM_SECTION3, false) || StrEqual(subsection, MT_SPAM_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esSpamAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esSpamAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esSpamAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esSpamAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPAM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

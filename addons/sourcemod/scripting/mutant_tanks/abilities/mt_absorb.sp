@@ -584,18 +584,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbsorbPlayer[admin].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTIONS, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esAbsorbPlayer[admin].g_flAbsorbFireDivisor, value, 1.0, 999999.0);
 		g_esAbsorbPlayer[admin].g_flAbsorbHittableDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTIONS, key, "AbsorbHittableDivisor", "Absorb Hittable Divisor", "Absorb_Hittable_Divisor", "hittable", g_esAbsorbPlayer[admin].g_flAbsorbHittableDivisor, value, 1.0, 999999.0);
 		g_esAbsorbPlayer[admin].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTIONS, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbsorbPlayer[admin].g_flAbsorbMeleeDivisor, value, 1.0, 999999.0);
-
-		if (StrEqual(subsection, MT_ABSORB_SECTION, false) || StrEqual(subsection, MT_ABSORB_SECTION2, false) || StrEqual(subsection, MT_ABSORB_SECTION3, false) || StrEqual(subsection, MT_ABSORB_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esAbsorbPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esAbsorbPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esAbsorbPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ABSORB_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esAbsorbPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ABSORB_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -616,18 +606,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esAbsorbAbility[type].g_flAbsorbFireDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTIONS, key, "AbsorbFireDivisor", "Absorb Fire Divisor", "Absorb_Fire_Divisor", "fire", g_esAbsorbAbility[type].g_flAbsorbFireDivisor, value, 1.0, 999999.0);
 		g_esAbsorbAbility[type].g_flAbsorbHittableDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTIONS, key, "AbsorbHittableDivisor", "Absorb Hittable Divisor", "Absorb_Hittable_Divisor", "hittable", g_esAbsorbAbility[type].g_flAbsorbHittableDivisor, value, 1.0, 999999.0);
 		g_esAbsorbAbility[type].g_flAbsorbMeleeDivisor = flGetKeyValue(subsection, MT_ABSORB_SECTIONS, key, "AbsorbMeleeDivisor", "Absorb Melee Divisor", "Absorb_Melee_Divisor", "melee", g_esAbsorbAbility[type].g_flAbsorbMeleeDivisor, value, 1.0, 999999.0);
-
-		if (StrEqual(subsection, MT_ABSORB_SECTION, false) || StrEqual(subsection, MT_ABSORB_SECTION2, false) || StrEqual(subsection, MT_ABSORB_SECTION3, false) || StrEqual(subsection, MT_ABSORB_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esAbsorbAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esAbsorbAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esAbsorbAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ABSORB_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esAbsorbAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ABSORB_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

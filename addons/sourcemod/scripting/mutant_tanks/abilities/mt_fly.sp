@@ -582,18 +582,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFlyPlayer[admin].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTIONS, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlyPlayer[admin].g_iFlyDuration, value, 1, 999999);
 		g_esFlyPlayer[admin].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTIONS, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlyPlayer[admin].g_flFlySpeed, value, 0.1, 999999.0);
 		g_esFlyPlayer[admin].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTIONS, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlyPlayer[admin].g_iFlyType, value, 0, 15);
-
-		if (StrEqual(subsection, MT_FLY_SECTION, false) || StrEqual(subsection, MT_FLY_SECTION2, false) || StrEqual(subsection, MT_FLY_SECTION3, false) || StrEqual(subsection, MT_FLY_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esFlyPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esFlyPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esFlyPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esFlyPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -611,18 +601,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFlyAbility[type].g_iFlyDuration = iGetKeyValue(subsection, MT_FLY_SECTIONS, key, "FlyDuration", "Fly Duration", "Fly_Duration", "duration", g_esFlyAbility[type].g_iFlyDuration, value, 1, 999999);
 		g_esFlyAbility[type].g_flFlySpeed = flGetKeyValue(subsection, MT_FLY_SECTIONS, key, "FlySpeed", "Fly Speed", "Fly_Speed", "speed", g_esFlyAbility[type].g_flFlySpeed, value, 0.1, 999999.0);
 		g_esFlyAbility[type].g_iFlyType = iGetKeyValue(subsection, MT_FLY_SECTIONS, key, "FlyType", "Fly Type", "Fly_Type", "type", g_esFlyAbility[type].g_iFlyType, value, 0, 15);
-
-		if (StrEqual(subsection, MT_FLY_SECTION, false) || StrEqual(subsection, MT_FLY_SECTION2, false) || StrEqual(subsection, MT_FLY_SECTION3, false) || StrEqual(subsection, MT_FLY_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esFlyAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esFlyAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esFlyAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esFlyAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_FLY_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

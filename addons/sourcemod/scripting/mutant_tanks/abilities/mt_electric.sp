@@ -588,18 +588,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esElectricPlayer[admin].g_flElectricInterval = flGetKeyValue(subsection, MT_ELECTRIC_SECTIONS, key, "ElectricInterval", "Electric Interval", "Electric_Interval", "interval", g_esElectricPlayer[admin].g_flElectricInterval, value, 0.1, 999999.0);
 		g_esElectricPlayer[admin].g_flElectricRange = flGetKeyValue(subsection, MT_ELECTRIC_SECTIONS, key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esElectricPlayer[admin].g_flElectricRange, value, 1.0, 999999.0);
 		g_esElectricPlayer[admin].g_flElectricRangeChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTIONS, key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esElectricPlayer[admin].g_flElectricRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_ELECTRIC_SECTION, false) || StrEqual(subsection, MT_ELECTRIC_SECTION2, false) || StrEqual(subsection, MT_ELECTRIC_SECTION3, false) || StrEqual(subsection, MT_ELECTRIC_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esElectricPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esElectricPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esElectricPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esElectricPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -621,18 +611,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esElectricAbility[type].g_flElectricInterval = flGetKeyValue(subsection, MT_ELECTRIC_SECTIONS, key, "ElectricInterval", "Electric Interval", "Electric_Interval", "interval", g_esElectricAbility[type].g_flElectricInterval, value, 0.1, 999999.0);
 		g_esElectricAbility[type].g_flElectricRange = flGetKeyValue(subsection, MT_ELECTRIC_SECTIONS, key, "ElectricRange", "Electric Range", "Electric_Range", "range", g_esElectricAbility[type].g_flElectricRange, value, 1.0, 999999.0);
 		g_esElectricAbility[type].g_flElectricRangeChance = flGetKeyValue(subsection, MT_ELECTRIC_SECTIONS, key, "ElectricRangeChance", "Electric Range Chance", "Electric_Range_Chance", "rangechance", g_esElectricAbility[type].g_flElectricRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_ELECTRIC_SECTION, false) || StrEqual(subsection, MT_ELECTRIC_SECTION2, false) || StrEqual(subsection, MT_ELECTRIC_SECTION3, false) || StrEqual(subsection, MT_ELECTRIC_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esElectricAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esElectricAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esElectricAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esElectricAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ELECTRIC_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

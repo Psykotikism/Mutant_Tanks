@@ -484,14 +484,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFastPlayer[admin].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastPlayer[admin].g_flFastChance, value, 0.0, 100.0);
 		g_esFastPlayer[admin].g_iFastDuration = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", g_esFastPlayer[admin].g_iFastDuration, value, 1, 999999);
 		g_esFastPlayer[admin].g_flFastSpeed = flGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", g_esFastPlayer[admin].g_flFastSpeed, value, 3.0, 10.0);
-
-		if (StrEqual(subsection, MT_FAST_SECTION, false) || StrEqual(subsection, MT_FAST_SECTION2, false) || StrEqual(subsection, MT_FAST_SECTION3, false) || StrEqual(subsection, MT_FAST_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esFastPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esFastPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FAST_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -508,14 +501,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esFastAbility[type].g_flFastChance = flGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastChance", "Fast Chance", "Fast_Chance", "chance", g_esFastAbility[type].g_flFastChance, value, 0.0, 100.0);
 		g_esFastAbility[type].g_iFastDuration = iGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastDuration", "Fast Duration", "Fast_Duration", "duration", g_esFastAbility[type].g_iFastDuration, value, 1, 999999);
 		g_esFastAbility[type].g_flFastSpeed = flGetKeyValue(subsection, MT_FAST_SECTIONS, key, "FastSpeed", "Fast Speed", "Fast_Speed", "speed", g_esFastAbility[type].g_flFastSpeed, value, 3.0, 10.0);
-
-		if (StrEqual(subsection, MT_FAST_SECTION, false) || StrEqual(subsection, MT_FAST_SECTION2, false) || StrEqual(subsection, MT_FAST_SECTION3, false) || StrEqual(subsection, MT_FAST_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esFastAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esFastAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_FAST_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 }
 

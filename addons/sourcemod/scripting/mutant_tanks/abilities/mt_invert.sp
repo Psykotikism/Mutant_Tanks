@@ -602,18 +602,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esInvertPlayer[admin].g_iInvertHitMode = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertHitMode", "Invert Hit Mode", "Invert_Hit_Mode", "hitmde", g_esInvertPlayer[admin].g_iInvertHitMode, value, 0, 2);
 		g_esInvertPlayer[admin].g_flInvertRange = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertRange", "Invert Range", "Invert_Range", "range", g_esInvertPlayer[admin].g_flInvertRange, value, 1.0, 999999.0);
 		g_esInvertPlayer[admin].g_flInvertRangeChance = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_esInvertPlayer[admin].g_flInvertRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_INVERT_SECTION, false) || StrEqual(subsection, MT_INVERT_SECTION2, false) || StrEqual(subsection, MT_INVERT_SECTION3, false) || StrEqual(subsection, MT_INVERT_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esInvertPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esInvertPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esInvertPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esInvertPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -633,18 +623,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esInvertAbility[type].g_iInvertHitMode = iGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertHitMode", "Invert Hit Mode", "Invert_Hit_Mode", "hitmde", g_esInvertAbility[type].g_iInvertHitMode, value, 0, 2);
 		g_esInvertAbility[type].g_flInvertRange = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertRange", "Invert Range", "Invert_Range", "range", g_esInvertAbility[type].g_flInvertRange, value, 1.0, 999999.0);
 		g_esInvertAbility[type].g_flInvertRangeChance = flGetKeyValue(subsection, MT_INVERT_SECTIONS, key, "InvertRangeChance", "Invert Range Chance", "Invert_Range_Chance", "rangechance", g_esInvertAbility[type].g_flInvertRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_INVERT_SECTION, false) || StrEqual(subsection, MT_INVERT_SECTION2, false) || StrEqual(subsection, MT_INVERT_SECTION3, false) || StrEqual(subsection, MT_INVERT_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esInvertAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esInvertAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esInvertAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esInvertAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_INVERT_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

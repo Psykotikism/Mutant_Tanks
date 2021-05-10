@@ -538,18 +538,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGodPlayer[admin].g_iGodMessage = iGetKeyValue(subsection, MT_GOD_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGodPlayer[admin].g_iGodMessage, value, 0, 1);
 		g_esGodPlayer[admin].g_flGodChance = flGetKeyValue(subsection, MT_GOD_SECTIONS, key, "GodChance", "God Chance", "God_Chance", "chance", g_esGodPlayer[admin].g_flGodChance, value, 0.0, 100.0);
 		g_esGodPlayer[admin].g_iGodDuration = iGetKeyValue(subsection, MT_GOD_SECTIONS, key, "GodDuration", "God Duration", "God_Duration", "duration", g_esGodPlayer[admin].g_iGodDuration, value, 1, 999999);
-
-		if (StrEqual(subsection, MT_GOD_SECTION, false) || StrEqual(subsection, MT_GOD_SECTION2, false) || StrEqual(subsection, MT_GOD_SECTION3, false) || StrEqual(subsection, MT_GOD_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esGodPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esGodPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esGodPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GOD_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esGodPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GOD_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -565,18 +555,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGodAbility[type].g_iGodMessage = iGetKeyValue(subsection, MT_GOD_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esGodAbility[type].g_iGodMessage, value, 0, 1);
 		g_esGodAbility[type].g_flGodChance = flGetKeyValue(subsection, MT_GOD_SECTIONS, key, "GodChance", "God Chance", "God_Chance", "chance", g_esGodAbility[type].g_flGodChance, value, 0.0, 100.0);
 		g_esGodAbility[type].g_iGodDuration = iGetKeyValue(subsection, MT_GOD_SECTIONS, key, "GodDuration", "God Duration", "God_Duration", "duration", g_esGodAbility[type].g_iGodDuration, value, 1, 999999);
-
-		if (StrEqual(subsection, MT_GOD_SECTION, false) || StrEqual(subsection, MT_GOD_SECTION2, false) || StrEqual(subsection, MT_GOD_SECTION3, false) || StrEqual(subsection, MT_GOD_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esGodAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esGodAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esGodAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GOD_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esGodAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GOD_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

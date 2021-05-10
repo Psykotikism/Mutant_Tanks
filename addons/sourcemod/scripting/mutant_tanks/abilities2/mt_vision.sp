@@ -565,18 +565,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esVisionPlayer[admin].g_iVisionHitMode = iGetKeyValue(subsection, MT_VISION_SECTIONS, key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esVisionPlayer[admin].g_iVisionHitMode, value, 0, 2);
 		g_esVisionPlayer[admin].g_flVisionRange = flGetKeyValue(subsection, MT_VISION_SECTIONS, key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esVisionPlayer[admin].g_flVisionRange, value, 1.0, 999999.0);
 		g_esVisionPlayer[admin].g_flVisionRangeChance = flGetKeyValue(subsection, MT_VISION_SECTIONS, key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esVisionPlayer[admin].g_flVisionRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_VISION_SECTION, false) || StrEqual(subsection, MT_VISION_SECTION2, false) || StrEqual(subsection, MT_VISION_SECTION3, false) || StrEqual(subsection, MT_VISION_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esVisionPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esVisionPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esVisionPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_VISION_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esVisionPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_VISION_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -597,18 +587,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esVisionAbility[type].g_iVisionHitMode = iGetKeyValue(subsection, MT_VISION_SECTIONS, key, "VisionHitMode", "Vision Hit Mode", "Vision_Hit_Mode", "hitmode", g_esVisionAbility[type].g_iVisionHitMode, value, 0, 2);
 		g_esVisionAbility[type].g_flVisionRange = flGetKeyValue(subsection, MT_VISION_SECTIONS, key, "VisionRange", "Vision Range", "Vision_Range", "range", g_esVisionAbility[type].g_flVisionRange, value, 1.0, 999999.0);
 		g_esVisionAbility[type].g_flVisionRangeChance = flGetKeyValue(subsection, MT_VISION_SECTIONS, key, "VisionRangeChance", "Vision Range Chance", "Vision_Range_Chance", "rangechance", g_esVisionAbility[type].g_flVisionRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_VISION_SECTION, false) || StrEqual(subsection, MT_VISION_SECTION2, false) || StrEqual(subsection, MT_VISION_SECTION3, false) || StrEqual(subsection, MT_VISION_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esVisionAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esVisionAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esVisionAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_VISION_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esVisionAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_VISION_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

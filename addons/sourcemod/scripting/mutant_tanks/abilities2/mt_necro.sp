@@ -490,14 +490,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esNecroPlayer[admin].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroPlayer[admin].g_iNecroMessage, value, 0, 1);
 		g_esNecroPlayer[admin].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTIONS, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroPlayer[admin].g_flNecroChance, value, 0.0, 100.0);
 		g_esNecroPlayer[admin].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTIONS, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroPlayer[admin].g_flNecroRange, value, 1.0, 999999.0);
-
-		if (StrEqual(subsection, MT_NECRO_SECTION, false) || StrEqual(subsection, MT_NECRO_SECTION2, false) || StrEqual(subsection, MT_NECRO_SECTION3, false) || StrEqual(subsection, MT_NECRO_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esNecroPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esNecroPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NECRO_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -514,14 +507,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esNecroAbility[type].g_iNecroMessage = iGetKeyValue(subsection, MT_NECRO_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esNecroAbility[type].g_iNecroMessage, value, 0, 1);
 		g_esNecroAbility[type].g_flNecroChance = flGetKeyValue(subsection, MT_NECRO_SECTIONS, key, "NecroChance", "Necro Chance", "Necro_Chance", "chance", g_esNecroAbility[type].g_flNecroChance, value, 0.0, 100.0);
 		g_esNecroAbility[type].g_flNecroRange = flGetKeyValue(subsection, MT_NECRO_SECTIONS, key, "NecroRange", "Necro Range", "Necro_Range", "range", g_esNecroAbility[type].g_flNecroRange, value, 1.0, 999999.0);
-
-		if (StrEqual(subsection, MT_NECRO_SECTION, false) || StrEqual(subsection, MT_NECRO_SECTION2, false) || StrEqual(subsection, MT_NECRO_SECTION3, false) || StrEqual(subsection, MT_NECRO_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esNecroAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esNecroAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NECRO_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 }
 

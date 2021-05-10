@@ -468,18 +468,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplashPlayer[admin].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashPlayer[admin].g_flSplashDamage, value, 1.0, 999999.0);
 		g_esSplashPlayer[admin].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashPlayer[admin].g_flSplashInterval, value, 0.1, 999999.0);
 		g_esSplashPlayer[admin].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashPlayer[admin].g_flSplashRange, value, 1.0, 999999.0);
-
-		if (StrEqual(subsection, MT_SPLASH_SECTION, false) || StrEqual(subsection, MT_SPLASH_SECTION2, false) || StrEqual(subsection, MT_SPLASH_SECTION3, false) || StrEqual(subsection, MT_SPLASH_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esSplashPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esSplashPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esSplashPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esSplashPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -498,18 +488,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esSplashAbility[type].g_flSplashDamage = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashDamage", "Splash Damage", "Splash_Damage", "damage", g_esSplashAbility[type].g_flSplashDamage, value, 1.0, 999999.0);
 		g_esSplashAbility[type].g_flSplashInterval = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashInterval", "Splash Interval", "Splash_Interval", "interval", g_esSplashAbility[type].g_flSplashInterval, value, 0.1, 999999.0);
 		g_esSplashAbility[type].g_flSplashRange = flGetKeyValue(subsection, MT_SPLASH_SECTIONS, key, "SplashRange", "Splash Range", "Splash_Range", "range", g_esSplashAbility[type].g_flSplashRange, value, 1.0, 999999.0);
-
-		if (StrEqual(subsection, MT_SPLASH_SECTION, false) || StrEqual(subsection, MT_SPLASH_SECTION2, false) || StrEqual(subsection, MT_SPLASH_SECTION3, false) || StrEqual(subsection, MT_SPLASH_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esSplashAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esSplashAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esSplashAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esSplashAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_SPLASH_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

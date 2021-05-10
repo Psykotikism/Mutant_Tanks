@@ -1426,7 +1426,7 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 		ThrowError("Client %i is not in game", client);
 	}
 
-	static char sBuffer[255], sMessage[255];
+	static char sBuffer[1024], sMessage[1024];
 	SetGlobalTransTarget(client);
 	FormatEx(sMessage, sizeof(sMessage), "\x01%s", message);
 	VFormat(sBuffer, sizeof(sBuffer), sMessage, 3);
@@ -1436,7 +1436,7 @@ stock void MT_PrintToChat(int client, const char[] message, any ...)
 
 stock void MT_PrintToChatAll(const char[] message, any ...)
 {
-	static char sBuffer[255];
+	static char sBuffer[1024];
 	for (int iPlayer = 1; iPlayer <= MaxClients; iPlayer++)
 	{
 		if (bIsValidClient(iPlayer, MT_CHECK_INGAME|MT_CHECK_FAKECLIENT))
@@ -1450,7 +1450,7 @@ stock void MT_PrintToChatAll(const char[] message, any ...)
 
 stock void MT_PrintToServer(const char[] message, any ...)
 {
-	static char sBuffer[255];
+	static char sBuffer[1024];
 	SetGlobalTransTarget(LANG_SERVER);
 	VFormat(sBuffer, sizeof(sBuffer), message, 2);
 	MT_ReplaceChatPlaceholders(sBuffer, sizeof(sBuffer), true);
@@ -1476,7 +1476,7 @@ stock void MT_ReplaceChatPlaceholders(char[] buffer, int size, bool empty)
 
 stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 {
-	static char sBuffer[255];
+	static char sBuffer[1024];
 	SetGlobalTransTarget(client);
 	VFormat(sBuffer, sizeof(sBuffer), message, 3);
 
@@ -1486,7 +1486,7 @@ stock void MT_ReplyToCommand(int client, const char[] message, any ...)
 
 		switch (client == 0)
 		{
-			case true: MT_PrintToServer(sBuffer);
+			case true: PrintToServer(sBuffer);
 			case false: PrintToConsole(client, sBuffer);
 		}
 	}

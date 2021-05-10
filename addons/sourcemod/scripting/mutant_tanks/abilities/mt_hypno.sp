@@ -661,18 +661,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHypnoPlayer[admin].g_iHypnoMode = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esHypnoPlayer[admin].g_iHypnoMode, value, 0, 1);
 		g_esHypnoPlayer[admin].g_flHypnoRange = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esHypnoPlayer[admin].g_flHypnoRange, value, 1.0, 999999.0);
 		g_esHypnoPlayer[admin].g_flHypnoRangeChance = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esHypnoPlayer[admin].g_flHypnoRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_HYPNO_SECTION, false) || StrEqual(subsection, MT_HYPNO_SECTION2, false) || StrEqual(subsection, MT_HYPNO_SECTION3, false) || StrEqual(subsection, MT_HYPNO_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esHypnoPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esHypnoPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esHypnoPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HYPNO_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esHypnoPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HYPNO_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -698,18 +688,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esHypnoAbility[type].g_iHypnoMode = iGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoMode", "Hypno Mode", "Hypno_Mode", "mode", g_esHypnoAbility[type].g_iHypnoMode, value, 0, 1);
 		g_esHypnoAbility[type].g_flHypnoRange = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoRange", "Hypno Range", "Hypno_Range", "range", g_esHypnoAbility[type].g_flHypnoRange, value, 1.0, 999999.0);
 		g_esHypnoAbility[type].g_flHypnoRangeChance = flGetKeyValue(subsection, MT_HYPNO_SECTIONS, key, "HypnoRangeChance", "Hypno Range Chance", "Hypno_Range_Chance", "rangechance", g_esHypnoAbility[type].g_flHypnoRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_HYPNO_SECTION, false) || StrEqual(subsection, MT_HYPNO_SECTION2, false) || StrEqual(subsection, MT_HYPNO_SECTION3, false) || StrEqual(subsection, MT_HYPNO_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esHypnoAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esHypnoAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esHypnoAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_HYPNO_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esHypnoAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_HYPNO_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

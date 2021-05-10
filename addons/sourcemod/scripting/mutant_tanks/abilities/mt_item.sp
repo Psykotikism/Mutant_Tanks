@@ -420,22 +420,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esItemPlayer[admin].g_iItemMessage = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esItemPlayer[admin].g_iItemMessage, value, 0, 1);
 		g_esItemPlayer[admin].g_flItemChance = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esItemPlayer[admin].g_flItemChance, value, 0.0, 100.0);
 		g_esItemPlayer[admin].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemPlayer[admin].g_iItemMode, value, 0, 1);
+		g_esItemPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esItemPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		if (StrEqual(subsection, MT_ITEM_SECTION, false) || StrEqual(subsection, MT_ITEM_SECTION2, false) || StrEqual(subsection, MT_ITEM_SECTION3, false) || StrEqual(subsection, MT_ITEM_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esItemPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esItemPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ItemLoadout", false) || StrEqual(key, "Item Loadout", false) || StrEqual(key, "Item_Loadout", false) || StrEqual(key, "loadout", false))
-			{
-				strcopy(g_esItemPlayer[admin].g_sItemLoadout, sizeof(esItemPlayer::g_sItemLoadout), value);
-			}
-		}
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemPlayer[admin].g_sItemLoadout, sizeof(esItemPlayer::g_sItemLoadout), value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -448,22 +436,10 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esItemAbility[type].g_iItemMessage = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esItemAbility[type].g_iItemMessage, value, 0, 1);
 		g_esItemAbility[type].g_flItemChance = flGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemChance", "Item Chance", "Item_Chance", "chance", g_esItemAbility[type].g_flItemChance, value, 0.0, 100.0);
 		g_esItemAbility[type].g_iItemMode = iGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemMode", "Item Mode", "Item_Mode", "mode", g_esItemAbility[type].g_iItemMode, value, 0, 1);
+		g_esItemAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esItemAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ITEM_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 
-		if (StrEqual(subsection, MT_ITEM_SECTION, false) || StrEqual(subsection, MT_ITEM_SECTION2, false) || StrEqual(subsection, MT_ITEM_SECTION3, false) || StrEqual(subsection, MT_ITEM_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esItemAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esItemAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ItemLoadout", false) || StrEqual(key, "Item Loadout", false) || StrEqual(key, "Item_Loadout", false) || StrEqual(key, "loadout", false))
-			{
-				strcopy(g_esItemAbility[type].g_sItemLoadout, sizeof(esItemAbility::g_sItemLoadout), value);
-			}
-		}
+		vGetKeyValue(subsection, MT_ITEM_SECTIONS, key, "ItemLoadout", "Item Loadout", "Item_Loadout", "loadout", g_esItemAbility[type].g_sItemLoadout, sizeof(esItemAbility::g_sItemLoadout), value);
 	}
 }
 
@@ -474,7 +450,6 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 #endif
 {
 	bool bHuman = bIsTank(tank, MT_CHECK_FAKECLIENT);
-	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemLoadout, sizeof(esItemCache::g_sItemLoadout), g_esItemPlayer[tank].g_sItemLoadout, g_esItemAbility[type].g_sItemLoadout);
 	g_esItemCache[tank].g_flItemChance = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flItemChance, g_esItemAbility[type].g_flItemChance);
 	g_esItemCache[tank].g_iComboAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iComboAbility, g_esItemAbility[type].g_iComboAbility);
 	g_esItemCache[tank].g_iHumanAbility = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iHumanAbility, g_esItemAbility[type].g_iHumanAbility);
@@ -484,6 +459,8 @@ public void MT_OnSettingsCached(int tank, bool apply, int type)
 	g_esItemCache[tank].g_flOpenAreasOnly = flGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_flOpenAreasOnly, g_esItemAbility[type].g_flOpenAreasOnly);
 	g_esItemCache[tank].g_iRequiresHumans = iGetSettingValue(apply, bHuman, g_esItemPlayer[tank].g_iRequiresHumans, g_esItemAbility[type].g_iRequiresHumans);
 	g_esItemPlayer[tank].g_iTankType = apply ? type : 0;
+
+	vGetSettingValue(apply, bHuman, g_esItemCache[tank].g_sItemLoadout, sizeof(esItemCache::g_sItemLoadout), g_esItemPlayer[tank].g_sItemLoadout, g_esItemAbility[type].g_sItemLoadout);
 }
 
 #if defined MT_ABILITIES_MAIN

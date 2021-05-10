@@ -450,18 +450,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esTrackPlayer[admin].g_iTrackGlow = iGetKeyValue(subsection, MT_TRACK_SECTIONS, key, "TrackGlow", "Track Glow", "Track_Glow", "glow", g_esTrackPlayer[admin].g_iTrackGlow, value, 0, 1);
 		g_esTrackPlayer[admin].g_iTrackMode = iGetKeyValue(subsection, MT_TRACK_SECTIONS, key, "TrackMode", "Track Mode", "Track_Mode", "mode", g_esTrackPlayer[admin].g_iTrackMode, value, 0, 1);
 		g_esTrackPlayer[admin].g_flTrackSpeed = flGetKeyValue(subsection, MT_TRACK_SECTIONS, key, "TrackSpeed", "Track Speed", "Track_Speed", "speed", g_esTrackPlayer[admin].g_flTrackSpeed, value, 0.1, 999999.0);
-
-		if (StrEqual(subsection, MT_TRACK_SECTION, false) || StrEqual(subsection, MT_TRACK_SECTION2, false) || StrEqual(subsection, MT_TRACK_SECTION3, false) || StrEqual(subsection, MT_TRACK_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esTrackPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esTrackPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esTrackPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_TRACK_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esTrackPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_TRACK_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -478,18 +468,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esTrackAbility[type].g_iTrackGlow = iGetKeyValue(subsection, MT_TRACK_SECTIONS, key, "TrackGlow", "Track Glow", "Track_Glow", "glow", g_esTrackAbility[type].g_iTrackGlow, value, 0, 1);
 		g_esTrackAbility[type].g_iTrackMode = iGetKeyValue(subsection, MT_TRACK_SECTIONS, key, "TrackMode", "Track Mode", "Track_Mode", "mode", g_esTrackAbility[type].g_iTrackMode, value, 0, 1);
 		g_esTrackAbility[type].g_flTrackSpeed = flGetKeyValue(subsection, MT_TRACK_SECTIONS, key, "TrackSpeed", "Track Speed", "Track_Speed", "speed", g_esTrackAbility[type].g_flTrackSpeed, value, 0.1, 999999.0);
-
-		if (StrEqual(subsection, MT_TRACK_SECTION, false) || StrEqual(subsection, MT_TRACK_SECTION2, false) || StrEqual(subsection, MT_TRACK_SECTION3, false) || StrEqual(subsection, MT_TRACK_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esTrackAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esTrackAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esTrackAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_TRACK_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esTrackAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_TRACK_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

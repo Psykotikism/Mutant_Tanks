@@ -511,14 +511,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esOmniPlayer[admin].g_iOmniDuration = iGetKeyValue(subsection, MT_OMNI_SECTIONS, key, "OmniDuration", "Omni Duration", "Omni_Duration", "duration", g_esOmniPlayer[admin].g_iOmniDuration, value, 1, 999999);
 		g_esOmniPlayer[admin].g_iOmniMode = iGetKeyValue(subsection, MT_OMNI_SECTIONS, key, "OmniMode", "Omni Mode", "Omni_Mode", "mode", g_esOmniPlayer[admin].g_iOmniMode, value, 0, 1);
 		g_esOmniPlayer[admin].g_flOmniRange = flGetKeyValue(subsection, MT_OMNI_SECTIONS, key, "OmniRange", "Omni Range", "Omni_Range", "range", g_esOmniPlayer[admin].g_flOmniRange, value, 1.0, 999999.0);
-
-		if (StrEqual(subsection, MT_OMNI_SECTION, false) || StrEqual(subsection, MT_OMNI_SECTION2, false) || StrEqual(subsection, MT_OMNI_SECTION3, false) || StrEqual(subsection, MT_OMNI_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esOmniPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esOmniPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_OMNI_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -536,14 +529,7 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esOmniAbility[type].g_iOmniDuration = iGetKeyValue(subsection, MT_OMNI_SECTIONS, key, "OmniDuration", "Omni Duration", "Omni_Duration", "duration", g_esOmniAbility[type].g_iOmniDuration, value, 1, 999999);
 		g_esOmniAbility[type].g_iOmniMode = iGetKeyValue(subsection, MT_OMNI_SECTIONS, key, "OmniMode", "Omni Mode", "Omni_Mode", "mode", g_esOmniAbility[type].g_iOmniMode, value, 0, 1);
 		g_esOmniAbility[type].g_flOmniRange = flGetKeyValue(subsection, MT_OMNI_SECTIONS, key, "OmniRange", "Omni Range", "Omni_Range", "range", g_esOmniAbility[type].g_flOmniRange, value, 1.0, 999999.0);
-
-		if (StrEqual(subsection, MT_OMNI_SECTION, false) || StrEqual(subsection, MT_OMNI_SECTION2, false) || StrEqual(subsection, MT_OMNI_SECTION3, false) || StrEqual(subsection, MT_OMNI_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esOmniAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-		}
+		g_esOmniAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_OMNI_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
 	}
 }
 

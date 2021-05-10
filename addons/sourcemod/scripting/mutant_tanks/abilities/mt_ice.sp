@@ -563,18 +563,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esIcePlayer[admin].g_iIceHitMode = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", g_esIcePlayer[admin].g_iIceHitMode, value, 0, 2);
 		g_esIcePlayer[admin].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIcePlayer[admin].g_flIceRange, value, 1.0, 999999.0);
 		g_esIcePlayer[admin].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIcePlayer[admin].g_flIceRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_ICE_SECTION, false) || StrEqual(subsection, MT_ICE_SECTION2, false) || StrEqual(subsection, MT_ICE_SECTION3, false) || StrEqual(subsection, MT_ICE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esIcePlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esIcePlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esIcePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esIcePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -594,18 +584,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esIceAbility[type].g_iIceHitMode = iGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceHitMode", "Ice Hit Mode", "Ice_Hit_Mode", "hitmode", g_esIceAbility[type].g_iIceHitMode, value, 0, 2);
 		g_esIceAbility[type].g_flIceRange = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceRange", "Ice Range", "Ice_Range", "range", g_esIceAbility[type].g_flIceRange, value, 1.0, 999999.0);
 		g_esIceAbility[type].g_flIceRangeChance = flGetKeyValue(subsection, MT_ICE_SECTIONS, key, "IceRangeChance", "Ice Range Chance", "Ice_Range_Chance", "rangechance", g_esIceAbility[type].g_flIceRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_ICE_SECTION, false) || StrEqual(subsection, MT_ICE_SECTION2, false) || StrEqual(subsection, MT_ICE_SECTION3, false) || StrEqual(subsection, MT_ICE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esIceAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esIceAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esIceAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esIceAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ICE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

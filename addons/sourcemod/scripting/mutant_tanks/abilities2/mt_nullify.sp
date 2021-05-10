@@ -584,18 +584,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esNullifyPlayer[admin].g_iNullifyHitMode = iGetKeyValue(subsection, MT_NULLIFY_SECTIONS, key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esNullifyPlayer[admin].g_iNullifyHitMode, value, 0, 2);
 		g_esNullifyPlayer[admin].g_flNullifyRange = flGetKeyValue(subsection, MT_NULLIFY_SECTIONS, key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esNullifyPlayer[admin].g_flNullifyRange, value, 1.0, 999999.0);
 		g_esNullifyPlayer[admin].g_flNullifyRangeChance = flGetKeyValue(subsection, MT_NULLIFY_SECTIONS, key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esNullifyPlayer[admin].g_flNullifyRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_NULLIFY_SECTION, false) || StrEqual(subsection, MT_NULLIFY_SECTION2, false) || StrEqual(subsection, MT_NULLIFY_SECTION3, false) || StrEqual(subsection, MT_NULLIFY_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esNullifyPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esNullifyPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esNullifyPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NULLIFY_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esNullifyPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_NULLIFY_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -615,18 +605,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esNullifyAbility[type].g_iNullifyHitMode = iGetKeyValue(subsection, MT_NULLIFY_SECTIONS, key, "NullifyHitMode", "Nullify Hit Mode", "Nullify_Hit_Mode", "hitmode", g_esNullifyAbility[type].g_iNullifyHitMode, value, 0, 2);
 		g_esNullifyAbility[type].g_flNullifyRange = flGetKeyValue(subsection, MT_NULLIFY_SECTIONS, key, "NullifyRange", "Nullify Range", "Nullify_Range", "range", g_esNullifyAbility[type].g_flNullifyRange, value, 1.0, 999999.0);
 		g_esNullifyAbility[type].g_flNullifyRangeChance = flGetKeyValue(subsection, MT_NULLIFY_SECTIONS, key, "NullifyRangeChance", "Nullify Range Chance", "Nullify_Range_Chance", "rangechance", g_esNullifyAbility[type].g_flNullifyRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_NULLIFY_SECTION, false) || StrEqual(subsection, MT_NULLIFY_SECTION2, false) || StrEqual(subsection, MT_NULLIFY_SECTION3, false) || StrEqual(subsection, MT_NULLIFY_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esNullifyAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esNullifyAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esNullifyAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_NULLIFY_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esNullifyAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_NULLIFY_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

@@ -574,18 +574,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esDrugPlayer[admin].g_flDrugInterval = flGetKeyValue(subsection, MT_DRUG_SECTIONS, key, "DrugInterval", "Drug Interval", "Drug_Interval", "interval", g_esDrugPlayer[admin].g_flDrugInterval, value, 0.1, 999999.0);
 		g_esDrugPlayer[admin].g_flDrugRange = flGetKeyValue(subsection, MT_DRUG_SECTIONS, key, "DrugRange", "Drug Range", "Drug_Range", "range", g_esDrugPlayer[admin].g_flDrugRange, value, 1.0, 999999.0);
 		g_esDrugPlayer[admin].g_flDrugRangeChance = flGetKeyValue(subsection, MT_DRUG_SECTIONS, key, "DrugRangeChance", "Drug Range Chance", "Drug_Range_Chance", "rangechance", g_esDrugPlayer[admin].g_flDrugRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_DRUG_SECTION, false) || StrEqual(subsection, MT_DRUG_SECTION2, false) || StrEqual(subsection, MT_DRUG_SECTION3, false) || StrEqual(subsection, MT_DRUG_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esDrugPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esDrugPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esDrugPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DRUG_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esDrugPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_DRUG_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -606,18 +596,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esDrugAbility[type].g_flDrugInterval = flGetKeyValue(subsection, MT_DRUG_SECTIONS, key, "DrugInterval", "Drug Interval", "Drug_Interval", "interval", g_esDrugAbility[type].g_flDrugInterval, value, 0.1, 999999.0);
 		g_esDrugAbility[type].g_flDrugRange = flGetKeyValue(subsection, MT_DRUG_SECTIONS, key, "DrugRange", "Drug Range", "Drug_Range", "range", g_esDrugAbility[type].g_flDrugRange, value, 1.0, 999999.0);
 		g_esDrugAbility[type].g_flDrugRangeChance = flGetKeyValue(subsection, MT_DRUG_SECTIONS, key, "DrugRangeChance", "Drug Range Chance", "Drug_Range_Chance", "rangechance", g_esDrugAbility[type].g_flDrugRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_DRUG_SECTION, false) || StrEqual(subsection, MT_DRUG_SECTION2, false) || StrEqual(subsection, MT_DRUG_SECTION3, false) || StrEqual(subsection, MT_DRUG_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esDrugAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esDrugAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esDrugAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_DRUG_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esDrugAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_DRUG_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

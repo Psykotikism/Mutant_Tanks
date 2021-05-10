@@ -596,18 +596,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esEnforcePlayer[admin].g_flEnforceRange = flGetKeyValue(subsection, MT_ENFORCE_SECTIONS, key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esEnforcePlayer[admin].g_flEnforceRange, value, 1.0, 999999.0);
 		g_esEnforcePlayer[admin].g_flEnforceRangeChance = flGetKeyValue(subsection, MT_ENFORCE_SECTIONS, key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esEnforcePlayer[admin].g_flEnforceRangeChance, value, 0.0, 100.0);
 		g_esEnforcePlayer[admin].g_iEnforceWeaponSlots = iGetKeyValue(subsection, MT_ENFORCE_SECTIONS, key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esEnforcePlayer[admin].g_iEnforceWeaponSlots, value, 0, 31);
-
-		if (StrEqual(subsection, MT_ENFORCE_SECTION, false) || StrEqual(subsection, MT_ENFORCE_SECTION2, false) || StrEqual(subsection, MT_ENFORCE_SECTION3, false) || StrEqual(subsection, MT_ENFORCE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esEnforcePlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esEnforcePlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esEnforcePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ENFORCE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esEnforcePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ENFORCE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -628,18 +618,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esEnforceAbility[type].g_flEnforceRange = flGetKeyValue(subsection, MT_ENFORCE_SECTIONS, key, "EnforceRange", "Enforce Range", "Enforce_Range", "range", g_esEnforceAbility[type].g_flEnforceRange, value, 1.0, 999999.0);
 		g_esEnforceAbility[type].g_flEnforceRangeChance = flGetKeyValue(subsection, MT_ENFORCE_SECTIONS, key, "EnforceRangeChance", "Enforce Range Chance", "Enforce_Range_Chance", "rangechance", g_esEnforceAbility[type].g_flEnforceRangeChance, value, 0.0, 100.0);
 		g_esEnforceAbility[type].g_iEnforceWeaponSlots = iGetKeyValue(subsection, MT_ENFORCE_SECTIONS, key, "EnforceWeaponSlots", "Enforce Weapon Slots", "Enforce_Weapon_Slots", "slots", g_esEnforceAbility[type].g_iEnforceWeaponSlots, value, 0, 31);
-
-		if (StrEqual(subsection, MT_ENFORCE_SECTION, false) || StrEqual(subsection, MT_ENFORCE_SECTION2, false) || StrEqual(subsection, MT_ENFORCE_SECTION3, false) || StrEqual(subsection, MT_ENFORCE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esEnforceAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esEnforceAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esEnforceAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_ENFORCE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esEnforceAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_ENFORCE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

@@ -1268,8 +1268,7 @@ stock void vCheatCommand(int player, const char[] command, const char[] argument
 	if (bIsValidClient(player, MT_CHECK_INDEX|MT_CHECK_INGAME))
 	{
 		static int iCmdFlags, iFlagBits;
-		iFlagBits = GetUserFlagBits(player);
-		iCmdFlags = GetCommandFlags(command);
+		iFlagBits = GetUserFlagBits(player), iCmdFlags = GetCommandFlags(command);
 		SetUserFlagBits(player, ADMFLAG_ROOT);
 		SetCommandFlags(command, iCmdFlags & ~FCVAR_CHEAT);
 		FakeClientCommand(player, "%s %s", command, arguments);
@@ -1433,12 +1432,36 @@ stock void vExternalView(int player, float time)
 	}
 }
 
+stock void vGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, char[] buffer, int size, const char[] value)
+{
+	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
+	{
+		if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+		{
+			strcopy(buffer, size, value);
+		}
+	}
+}
+
 stock void vGetSettingValue(bool apply, bool human, char[] buffer, int size = 0, const char[] playerVal = "", const char[] typeVal = "")
 {
 	switch (apply)
 	{
 		case true: FormatEx(buffer, size, "%s", ((human && playerVal[0] != '\0') ? playerVal : typeVal));
 		case false: buffer[0] = '\0';
+	}
+}
+
+stock void vGetStringValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int pos, char[] buffer1, int size1, char[] buffer2, int size2, char[] buffer3, int size3, const char[] value)
+{
+	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+	{
+		switch (pos)
+		{
+			case 0: strcopy(buffer1, size1, value);
+			case 1: strcopy(buffer2, size2, value);
+			case 2: strcopy(buffer3, size3, value);
+		}
 	}
 }
 
@@ -1718,11 +1741,9 @@ stock bool bHasAdminAccess(int admin, int flags, int flags2)
 	}
 
 	static int iTypePlayerFlags, iPlayerFlags, iAdminFlags, iTypeFlags, iGlobalFlags;
-	iTypePlayerFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin);
-	iPlayerFlags = MT_GetAccessFlags(3, 0, admin);
-	iAdminFlags = GetUserFlagBits(admin);
-	iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin));
-	iGlobalFlags = MT_GetAccessFlags(1);
+	iTypePlayerFlags = MT_GetAccessFlags(4, MT_GetTankType(admin), admin), iPlayerFlags = MT_GetAccessFlags(3, 0, admin),
+	iAdminFlags = GetUserFlagBits(admin), iTypeFlags = MT_GetAccessFlags(2, MT_GetTankType(admin)), iGlobalFlags = MT_GetAccessFlags(1);
+
 	if ((flags != 0 && ((!(flags & flags2) && !(flags2 & flags)) || (!(flags & iTypePlayerFlags) && !(iTypePlayerFlags & flags)) || (!(flags & iPlayerFlags) && !(iPlayerFlags & flags)) || (!(flags & iAdminFlags) && !(iAdminFlags & flags))))
 		|| (iTypeFlags != 0 && !(iTypeFlags & flags2) && !(flags2 & iTypeFlags)) || (iGlobalFlags != 0 && !(iGlobalFlags & flags2) && !(flags2 & iGlobalFlags)))
 	{
@@ -1759,11 +1780,8 @@ stock bool bIsAdminImmune(int admin, int type, int flags, int flags2)
 	}
 
 	static int iTypePlayerFlags, iPlayerFlags, iAdminFlags, iTypeFlags, iGlobalFlags;
-	iTypePlayerFlags = MT_GetImmunityFlags(4, type, admin);
-	iPlayerFlags = MT_GetImmunityFlags(3, 0, admin);
-	iAdminFlags = GetUserFlagBits(admin);
-	iTypeFlags = MT_GetImmunityFlags(2, type);
-	iGlobalFlags = MT_GetImmunityFlags(1);
+	iTypePlayerFlags = MT_GetImmunityFlags(4, type, admin), iPlayerFlags = MT_GetImmunityFlags(3, 0, admin),
+	iAdminFlags = GetUserFlagBits(admin), iTypeFlags = MT_GetImmunityFlags(2, type), iGlobalFlags = MT_GetImmunityFlags(1);
 
 	return (flags != 0 && ((flags2 != 0 && ((flags & flags2) || (flags2 & flags))) || (iTypePlayerFlags != 0 && ((flags & iTypePlayerFlags) || (iTypePlayerFlags & flags)))
 		|| (iPlayerFlags != 0 && ((flags & iPlayerFlags) || (iPlayerFlags & flags))) || (iAdminFlags != 0 && ((flags & iAdminFlags) || (iAdminFlags & flags)))))
@@ -1850,8 +1868,7 @@ stock bool bIsGunWeapon(int survivor)
 	if (iWeapon > MaxClients)
 	{
 		static int iSlot, iSlot2;
-		iSlot = GetPlayerWeaponSlot(survivor, 0);
-		iSlot2 = GetPlayerWeaponSlot(survivor, 1);
+		iSlot = GetPlayerWeaponSlot(survivor, 0), iSlot2 = GetPlayerWeaponSlot(survivor, 1);
 		if (iSlot > MaxClients && iSlot == iWeapon)
 		{
 			return true;
@@ -2319,8 +2336,7 @@ stock float flGetAdrenalineTime(int survivor)
 	}
 
 	static float flTime, flDuration;
-	flTime = GetGameTime();
-	flDuration = GetEntDataFloat(survivor, iTimerAddress + 8);
+	flTime = GetGameTime(), flDuration = GetEntDataFloat(survivor, iTimerAddress + 8);
 	if (flDuration <= flTime)
 	{
 		return -1.0;
@@ -2332,6 +2348,18 @@ stock float flGetAdrenalineTime(int survivor)
 stock float flGetAngle(float angle1[3], float angle2[3])
 {
 	return ArcCosine(GetVectorDotProduct(angle1, angle2) / (GetVectorLength(angle1) * GetVectorLength(angle2)));
+}
+
+stock float flGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max, float check = -1.0)
+{
+	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+	{
+		static float flDefault;
+		flDefault = (check == -1.0) ? curVal : -1.0;
+		return (value[0] != '\0' && (check == -1.0 || StringToFloat(value) >= check)) ? flClamp(StringToFloat(value), min, max) : flDefault;
+	}
+
+	return curVal;
 }
 
 stock float flGetDistance(float pos[3], float angle[3], float offset1, float offset2, float force[3], int entity, int type)
@@ -2375,7 +2403,7 @@ stock float flGetGroundUnits(int entity)
 	return 0.0;
 }
 
-stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max)
+stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, float curVal, const char[] value, float min, float max)
 {
 	if (StrContains(subsection, ",") != -1)
 	{
@@ -2383,15 +2411,15 @@ stock float flGetKeyValue(const char[] subsection, const char[] sub1, const char
 		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 		{
-			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false) || StrEqual(sSet[iPos], sub4, false))
-				&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false)
+				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 			{
 				return flGetKeywordValue(key, curVal, value, min, max);
 			}
 		}
 	}
-	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
-		&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false)
+		|| StrEqual(subsection, sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		return flGetKeywordValue(key, curVal, value, min, max);
 	}
@@ -2439,9 +2467,7 @@ stock float flGetKeywordValue(const char[] key, float curVal, const char[] value
 	else if ((min == -1.0 || min == 1.0) && max == 999999.0)
 	{
 		static bool bDamageSetting, bForceSetting, bRangeSetting;
-		bDamageSetting = StrContains(key, "damage", false) != -1;
-		bForceSetting = StrContains(key, "force", false) != -1;
-		bRangeSetting = StrContains(key, "range", false) != -1;
+		bDamageSetting = StrContains(key, "damage", false) != -1, bForceSetting = StrContains(key, "force", false) != -1, bRangeSetting = StrContains(key, "range", false) != -1;
 		if (min == -1.0 && (bDamageSetting || bForceSetting) && (StrEqual(value, "nodmg", false) || StrEqual(value, "friendly", false) || StrEqual(value, "harmless", false)))
 		{
 			return 0.0;
@@ -2548,6 +2574,19 @@ stock int iClamp(int value, int min, int max)
 	return value;
 }
 
+stock int iGetAdminFlagsValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, const char[] value)
+{
+	if (StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
+	{
+		if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+		{
+			return ReadFlagString(value);
+		}
+	}
+
+	return 0;
+}
+
 stock int iGetBotSurvivor()
 {
 	for (int iBot = MaxClients; iBot > 0; iBot--)
@@ -2559,6 +2598,18 @@ stock int iGetBotSurvivor()
 	}
 
 	return -1;
+}
+
+stock int iGetClampedValue(const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max, int check = -1)
+{
+	if (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false))
+	{
+		static int iDefault;
+		iDefault = (check == -1) ? curVal : -1;
+		return (value[0] != '\0' && (check == -1 || StringToInt(value) >= check)) ? iClamp(StringToInt(value), min, max) : iDefault;
+	}
+
+	return curVal;
 }
 
 stock int iGetEntityIndex(any refHandle)
@@ -2624,7 +2675,7 @@ stock int iGetIdlePlayer(int bot)
 	return 0;
 }
 
-stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
+stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] sub2, const char[] sub3, const char[] sub4, const char[] key, const char[] setting1, const char[] setting2, const char[] setting3, const char[] setting4, int curVal, const char[] value, int min, int max)
 {
 	if (StrContains(subsection, ",") != -1)
 	{
@@ -2632,15 +2683,15 @@ stock int iGetKeyValue(const char[] subsection, const char[] sub1, const char[] 
 		ExplodeString(subsection, ",", sSet, sizeof(sSet), sizeof(sSet[]));
 		for (int iPos = 0; iPos < sizeof(sSet); iPos++)
 		{
-			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false) || StrEqual(sSet[iPos], sub4, false))
-				&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+			if (sSet[iPos][0] != '\0' && value[0] != '\0' && (StrEqual(sSet[iPos], "all", false) || StrEqual(sSet[iPos], sub1, false) || StrEqual(sSet[iPos], sub2, false) || StrEqual(sSet[iPos], sub3, false)
+				|| StrEqual(sSet[iPos], sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 			{
 				return iGetKeywordValue(key, curVal, value, min, max);
 			}
 		}
 	}
-	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false) || StrEqual(subsection, sub4, false))
-		&& (StrEqual(key, setting, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
+	else if (value[0] != '\0' && (StrEqual(subsection, "all", false) || StrEqual(subsection, sub1, false) || StrEqual(subsection, sub2, false) || StrEqual(subsection, sub3, false)
+		|| StrEqual(subsection, sub4, false)) && (StrEqual(key, setting1, false) || StrEqual(key, setting2, false) || StrEqual(key, setting3, false) || StrEqual(key, setting4, false)))
 	{
 		return iGetKeywordValue(key, curVal, value, min, max);
 	}
@@ -2981,8 +3032,7 @@ stock int iGetWeaponOffset(int weapon)
 stock int iGetWitchCount()
 {
 	static int iWitchCount, iWitch;
-	iWitchCount = 0;
-	iWitch = -1;
+	iWitchCount = 0, iWitch = -1;
 	while ((iWitch = FindEntityByClassname(iWitch, "witch")) != INVALID_ENT_REFERENCE)
 	{
 		iWitchCount++;

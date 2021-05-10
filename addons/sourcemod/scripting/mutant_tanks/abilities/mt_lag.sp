@@ -560,18 +560,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esLagPlayer[admin].g_iLagHitMode = iGetKeyValue(subsection, MT_LAG_SECTIONS, key, "LagHitMode", "Lag Hit Mode", "Lag_Hit_Mode", "hitmode", g_esLagPlayer[admin].g_iLagHitMode, value, 0, 2);
 		g_esLagPlayer[admin].g_flLagRange = flGetKeyValue(subsection, MT_LAG_SECTIONS, key, "LagRange", "Lag Range", "Lag_Range", "range", g_esLagPlayer[admin].g_flLagRange, value, 1.0, 999999.0);
 		g_esLagPlayer[admin].g_flLagRangeChance = flGetKeyValue(subsection, MT_LAG_SECTIONS, key, "LagRangeChance", "Lag Range Chance", "Lag_Range_Chance", "rangechance", g_esLagPlayer[admin].g_flLagRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_LAG_SECTION, false) || StrEqual(subsection, MT_LAG_SECTION2, false) || StrEqual(subsection, MT_LAG_SECTION3, false) || StrEqual(subsection, MT_LAG_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esLagPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esLagPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esLagPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LAG_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esLagPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LAG_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -591,18 +581,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esLagAbility[type].g_iLagHitMode = iGetKeyValue(subsection, MT_LAG_SECTIONS, key, "LagHitMode", "Lag Hit Mode", "Lag_Hit_Mode", "hitmode", g_esLagAbility[type].g_iLagHitMode, value, 0, 2);
 		g_esLagAbility[type].g_flLagRange = flGetKeyValue(subsection, MT_LAG_SECTIONS, key, "LagRange", "Lag Range", "Lag_Range", "range", g_esLagAbility[type].g_flLagRange, value, 1.0, 999999.0);
 		g_esLagAbility[type].g_flLagRangeChance = flGetKeyValue(subsection, MT_LAG_SECTIONS, key, "LagRangeChance", "Lag Range Chance", "Lag_Range_Chance", "rangechance", g_esLagAbility[type].g_flLagRangeChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_LAG_SECTION, false) || StrEqual(subsection, MT_LAG_SECTION2, false) || StrEqual(subsection, MT_LAG_SECTION3, false) || StrEqual(subsection, MT_LAG_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esLagAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esLagAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esLagAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_LAG_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esLagAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_LAG_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

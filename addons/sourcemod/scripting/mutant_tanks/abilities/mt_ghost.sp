@@ -695,18 +695,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGhostPlayer[admin].g_flGhostSpecialsChance = flGetKeyValue(subsection, MT_GHOST_SECTIONS, key, "GhostSpecialsChance", "Ghost Specials Chance", "Ghost_Specials_Chance", "specialschance", g_esGhostPlayer[admin].g_flGhostSpecialsChance, value, 0.0, 100.0);
 		g_esGhostPlayer[admin].g_flGhostSpecialsRange = flGetKeyValue(subsection, MT_GHOST_SECTIONS, key, "GhostSpecialsRange", "Ghost Specials Range", "Ghost_Specials_Range", "specialsrange", g_esGhostPlayer[admin].g_flGhostSpecialsRange, value, 1.0, 999999.0);
 		g_esGhostPlayer[admin].g_iGhostWeaponSlots = iGetKeyValue(subsection, MT_GHOST_SECTIONS, key, "GhostWeaponSlots", "Ghost Weapon Slots", "Ghost_Weapon_Slots", "slots", g_esGhostPlayer[admin].g_iGhostWeaponSlots, value, 0, 31);
-
-		if (StrEqual(subsection, MT_GHOST_SECTION, false) || StrEqual(subsection, MT_GHOST_SECTION2, false) || StrEqual(subsection, MT_GHOST_SECTION3, false) || StrEqual(subsection, MT_GHOST_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esGhostPlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esGhostPlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esGhostPlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GHOST_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esGhostPlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GHOST_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -735,18 +725,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esGhostAbility[type].g_flGhostSpecialsChance = flGetKeyValue(subsection, MT_GHOST_SECTIONS, key, "GhostSpecialsChance", "Ghost Specials Chance", "Ghost_Specials_Chance", "specialschance", g_esGhostAbility[type].g_flGhostSpecialsChance, value, 0.0, 100.0);
 		g_esGhostAbility[type].g_flGhostSpecialsRange = flGetKeyValue(subsection, MT_GHOST_SECTIONS, key, "GhostSpecialsRange", "Ghost Specials Range", "Ghost_Specials_Range", "specialsrange", g_esGhostAbility[type].g_flGhostSpecialsRange, value, 1.0, 999999.0);
 		g_esGhostAbility[type].g_iGhostWeaponSlots = iGetKeyValue(subsection, MT_GHOST_SECTIONS, key, "GhostWeaponSlots", "Ghost Weapon Slots", "Ghost_Weapon_Slots", "slots", g_esGhostAbility[type].g_iGhostWeaponSlots, value, 0, 31);
-
-		if (StrEqual(subsection, MT_GHOST_SECTION, false) || StrEqual(subsection, MT_GHOST_SECTION2, false) || StrEqual(subsection, MT_GHOST_SECTION3, false) || StrEqual(subsection, MT_GHOST_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esGhostAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esGhostAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esGhostAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_GHOST_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esGhostAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_GHOST_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 

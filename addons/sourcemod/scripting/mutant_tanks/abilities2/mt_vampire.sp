@@ -386,18 +386,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esVampirePlayer[admin].g_iVampireEffect = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVampirePlayer[admin].g_iVampireEffect, value, 0, 1);
 		g_esVampirePlayer[admin].g_iVampireMessage = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVampirePlayer[admin].g_iVampireMessage, value, 0, 1);
 		g_esVampirePlayer[admin].g_flVampireChance = flGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esVampirePlayer[admin].g_flVampireChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_VAMPIRE_SECTION, false) || StrEqual(subsection, MT_VAMPIRE_SECTION2, false) || StrEqual(subsection, MT_VAMPIRE_SECTION3, false) || StrEqual(subsection, MT_VAMPIRE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esVampirePlayer[admin].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esVampirePlayer[admin].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esVampirePlayer[admin].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_VAMPIRE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esVampirePlayer[admin].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_VAMPIRE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 
 	if (mode < 3 && type > 0)
@@ -409,18 +399,8 @@ public void MT_OnConfigsLoaded(const char[] subsection, const char[] key, const 
 		g_esVampireAbility[type].g_iVampireEffect = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "AbilityEffect", "Ability Effect", "Ability_Effect", "effect", g_esVampireAbility[type].g_iVampireEffect, value, 0, 1);
 		g_esVampireAbility[type].g_iVampireMessage = iGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "AbilityMessage", "Ability Message", "Ability_Message", "message", g_esVampireAbility[type].g_iVampireMessage, value, 0, 1);
 		g_esVampireAbility[type].g_flVampireChance = flGetKeyValue(subsection, MT_VAMPIRE_SECTIONS, key, "VampireChance", "Vampire Chance", "Vampire_Chance", "chance", g_esVampireAbility[type].g_flVampireChance, value, 0.0, 100.0);
-
-		if (StrEqual(subsection, MT_VAMPIRE_SECTION, false) || StrEqual(subsection, MT_VAMPIRE_SECTION2, false) || StrEqual(subsection, MT_VAMPIRE_SECTION3, false) || StrEqual(subsection, MT_VAMPIRE_SECTION4, false))
-		{
-			if (StrEqual(key, "AccessFlags", false) || StrEqual(key, "Access Flags", false) || StrEqual(key, "Access_Flags", false) || StrEqual(key, "access", false))
-			{
-				g_esVampireAbility[type].g_iAccessFlags = ReadFlagString(value);
-			}
-			else if (StrEqual(key, "ImmunityFlags", false) || StrEqual(key, "Immunity Flags", false) || StrEqual(key, "Immunity_Flags", false) || StrEqual(key, "immunity", false))
-			{
-				g_esVampireAbility[type].g_iImmunityFlags = ReadFlagString(value);
-			}
-		}
+		g_esVampireAbility[type].g_iAccessFlags = iGetAdminFlagsValue(subsection, MT_VAMPIRE_SECTIONS, key, "AccessFlags", "Access Flags", "Access_Flags", "access", value);
+		g_esVampireAbility[type].g_iImmunityFlags = iGetAdminFlagsValue(subsection, MT_VAMPIRE_SECTIONS, key, "ImmunityFlags", "Immunity Flags", "Immunity_Flags", "immunity", value);
 	}
 }
 
