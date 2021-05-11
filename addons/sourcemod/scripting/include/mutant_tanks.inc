@@ -1401,9 +1401,9 @@ stock void vEffect(int survivor, int tank, int mode, int flags = MT_ATTACK_MELEE
 	{
 		static int iColor[4];
 		MT_GetTankColors(tank, GetRandomInt(1, 2), iColor[0], iColor[1], iColor[2], iColor[3]);
-		if (0 <= red <= 255) iColor[0] = red;
-		if (0 <= green <= 255) iColor[1] = green;
-		if (0 <= blue <= 255) iColor[2] = blue;
+		iColor[0] = (0 <= red <= 255) ? red : iColor[0];
+		iColor[1] = (0 <= green <= 255) ? green : iColor[1];
+		iColor[2] = (0 <= blue <= 255) ? blue : iColor[2];
 		iColor[3] = (0 <= alpha <= 255) ? alpha : 150;
 
 		static Handle hFadeTarget;

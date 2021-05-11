@@ -619,8 +619,12 @@ esAdmin g_esAdmin[MT_MAXTYPES + 1];
 
 enum struct esDeveloper
 {
+	bool g_bDevVisual;
+
+	char g_sDevFallVoiceline[64];
+	char g_sDevGlowOutline[12];
 	char g_sDevLoadout[384];
-	char g_sDevVoiceline[64];
+	char g_sDevSkinColor[16];
 
 	float g_flDevActionDuration;
 	float g_flDevAttackBoost;
@@ -640,6 +644,7 @@ enum struct esDeveloper
 	int g_iDevLifeLeech;
 	int g_iDevMeleeRange;
 	int g_iDevPanelLevel;
+	int g_iDevParticle;
 	int g_iDevReviveHealth;
 	int g_iDevRewardTypes;
 	int g_iDevSpecialAmmo;
@@ -1773,7 +1778,6 @@ public void OnPluginStart()
 	g_esGeneral.g_cvMTListenSupport = CreateConVar("mt_listensupport", (g_bDedicated ? "0" : "1"), "Enable Mutant Tanks on listen servers.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_esGeneral.g_cvMTPluginEnabled = CreateConVar("mt_pluginenabled", "1", "Enable Mutant Tanks.\n0: OFF\n1: ON", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("mt_pluginversion", MT_VERSION, "Mutant Tanks Version", FCVAR_DONTRECORD|FCVAR_NOTIFY|FCVAR_REPLICATED|FCVAR_SPONLY);
-
 	AutoExecConfig(true, "mutant_tanks");
 
 	g_esGeneral.g_cvMTAssaultRifleAmmo = FindConVar("ammo_assaultrifle_max");
@@ -3579,6 +3583,30 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 		if (bIsHumanSurvivor(developer))
 		{
 			vSetupLoadout(developer, usual);
+			vGiveSpecialAmmo(developer);
+
+			if (bIsDeveloper(developer, 0) && !g_esDeveloper[developer].g_bDevVisual)
+			{
+				g_esDeveloper[developer].g_bDevVisual = true;
+
+				if (g_esPlayer[developer].g_flVisualTime[1] != -1.0)
+				{
+					g_esPlayer[developer].g_flVisualTime[1] = -1.0;
+
+					vRemoveGlow(developer);
+				}
+
+				if (g_esPlayer[developer].g_flVisualTime[2] != -1.0)
+				{
+					g_esPlayer[developer].g_flVisualTime[2] = -1.0;
+
+					SetEntityRenderColor(developer, 255, 255, 255, 255);
+				}
+
+				vSetSurvivorColor(developer, g_esDeveloper[developer].g_sDevSkinColor, ",");
+				vSetSurvivorOutline(developer, g_esDeveloper[developer].g_sDevGlowOutline, ",", false);
+				CreateTimer(0.75, tTimerDevParticle, GetClientUserId(developer), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+			}
 
 			if (bIsDeveloper(developer, 5) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 			{
@@ -3589,11 +3617,6 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 			if (bIsDeveloper(developer, 6) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_ATTACKBOOST))
 			{
 				SDKHook(developer, SDKHook_PostThinkPost, OnPlayerPostThinkPost);
-			}
-
-			if (bIsDeveloper(developer, 7) || bIsDeveloper(developer, 11))
-			{
-				vGiveSpecialAmmo(developer);
 			}
 
 			switch (bIsDeveloper(developer, 11) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_GODMODE))
@@ -3626,6 +3649,12 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 
 		if (bIsValidClient(developer, MT_CHECK_ALIVE))
 		{
+			if (g_esDeveloper[developer].g_bDevVisual)
+			{
+				vRemoveGlow(developer);
+				SetEntityRenderColor(developer, 255, 255, 255, 255);
+			}
+
 			if (!(g_esPlayer[developer].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 			{
 				vSetAdrenalineTime(developer, 0.0);
@@ -3642,6 +3671,8 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 				SetEntProp(developer, Prop_Data, "m_takedamage", 2, 1);
 			}
 		}
+
+		g_esDeveloper[developer].g_bDevVisual = false;
 	}
 }
 
@@ -3673,9 +3704,17 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	{
 		g_esDeveloper[guest].g_flDevDamageResistance = flClamp(flValue, 0.0, 0.99);
 	}
+	else if (StrContains(keyword, "effect", false) != -1 || StrContains(keyword, "particle", false) != -1)
+	{
+		g_esDeveloper[guest].g_iDevParticle = iClamp(RoundToNearest(flValue), 0, 15);
+	}
 	else if (StrContains(keyword, "fall", false) != -1 || StrContains(keyword, "scream", false) != -1 || StrContains(keyword, "voice", false) != -1 || StrContains(keyword, "line", false) != -1)
 	{
-		strcopy(g_esDeveloper[guest].g_sDevVoiceline, sizeof(esDeveloper::g_sDevVoiceline), value);
+		strcopy(g_esDeveloper[guest].g_sDevFallVoiceline, sizeof(esDeveloper::g_sDevFallVoiceline), value);
+	}
+	else if (StrContains(keyword, "glow", false) != -1 || StrContains(keyword, "outline", false) != -1)
+	{
+		strcopy(g_esDeveloper[guest].g_sDevGlowOutline, sizeof(esDeveloper::g_sDevGlowOutline), value);
 	}
 	else if (StrContains(keyword, "heal", false) != -1 || StrContains(keyword, "hppercent", false) != -1)
 	{
@@ -3725,6 +3764,10 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	else if (StrContains(keyword, "srate", false) != -1 || StrContains(keyword, "shoverate", false) != -1)
 	{
 		g_esDeveloper[guest].g_flDevShoveRate = flClamp(flValue, 0.0, 999999.0);
+	}
+	else if (StrContains(keyword, "skin", false) != -1 || StrContains(keyword, "color", false) != -1)
+	{
+		strcopy(g_esDeveloper[guest].g_sDevSkinColor, sizeof(esDeveloper::g_sDevSkinColor), value);
 	}
 	else if (StrContains(keyword, "specammo", false) != -1 || StrContains(keyword, "special", false) != -1)
 	{
@@ -3878,8 +3921,14 @@ static void vDeveloperPanel(int developer, int level = 0)
 			FormatEx(sDisplay, sizeof(sDisplay), "Damage Resistance: %.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
 
-			FormatEx(sDisplay, sizeof(sDisplay), "Fall Voiceline: %s", g_esDeveloper[developer].g_sDevVoiceline);
+			FormatEx(sDisplay, sizeof(sDisplay), "Fall Voiceline: %s", g_esDeveloper[developer].g_sDevFallVoiceline);
 			pDevPanel.DrawText(sDisplay);
+
+			if (g_bSecondGame)
+			{
+				FormatEx(sDisplay, sizeof(sDisplay), "Glow Outline: %s", g_esDeveloper[developer].g_sDevGlowOutline);
+				pDevPanel.DrawText(sDisplay);
+			}
 
 			flValue = g_esDeveloper[developer].g_flDevHealPercent;
 			FormatEx(sDisplay, sizeof(sDisplay), "Heal Percent: %.2f%% (%.2f)", flValue, (flValue / 100.0));
@@ -3888,9 +3937,12 @@ static void vDeveloperPanel(int developer, int level = 0)
 			FormatEx(sDisplay, sizeof(sDisplay), "Health Regen: %i HP/s", g_esDeveloper[developer].g_iDevHealthRegen);
 			pDevPanel.DrawText(sDisplay);
 
+			FormatEx(sDisplay, sizeof(sDisplay), "Jump Height: %.2f HMU", g_esDeveloper[developer].g_flDevJumpHeight);
+			pDevPanel.DrawText(sDisplay);
+
 			if (g_bSecondGame)
 			{
-				FormatEx(sDisplay, sizeof(sDisplay), "Jump Height: %.2f HMU", g_esDeveloper[developer].g_flDevJumpHeight);
+				FormatEx(sDisplay, sizeof(sDisplay), "Life Leech: %i HP/Hit", g_esDeveloper[developer].g_iDevLifeLeech);
 				pDevPanel.DrawText(sDisplay);
 			}
 		}
@@ -3898,12 +3950,9 @@ static void vDeveloperPanel(int developer, int level = 0)
 		{
 			if (!g_bSecondGame)
 			{
-				FormatEx(sDisplay, sizeof(sDisplay), "Jump Height: %.2f HMU", g_esDeveloper[developer].g_flDevJumpHeight);
+				FormatEx(sDisplay, sizeof(sDisplay), "Life Leech: %i HP/Hit", g_esDeveloper[developer].g_iDevLifeLeech);
 				pDevPanel.DrawText(sDisplay);
 			}
-
-			FormatEx(sDisplay, sizeof(sDisplay), "Life Leech: %i HP/Hit", g_esDeveloper[developer].g_iDevLifeLeech);
-			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof(sDisplay), "Loadout: %s", g_esDeveloper[developer].g_sDevLoadout);
 			pDevPanel.DrawText(sDisplay);
@@ -3913,6 +3962,9 @@ static void vDeveloperPanel(int developer, int level = 0)
 				FormatEx(sDisplay, sizeof(sDisplay), "Melee Range: %i HMU, Punch Resistance: %.2f", g_esDeveloper[developer].g_iDevMeleeRange, g_esDeveloper[developer].g_flDevPunchResistance);
 				pDevPanel.DrawText(sDisplay);
 			}
+
+			FormatEx(sDisplay, sizeof(sDisplay), "Particle Effect(s): %i", g_esDeveloper[developer].g_iDevParticle);
+			pDevPanel.DrawText(sDisplay);
 
 			FormatEx(sDisplay, sizeof(sDisplay), "Revive Health: %i HP", g_esDeveloper[developer].g_iDevReviveHealth);
 			pDevPanel.DrawText(sDisplay);
@@ -3929,6 +3981,9 @@ static void vDeveloperPanel(int developer, int level = 0)
 
 			flValue = g_esDeveloper[developer].g_flDevShoveRate;
 			FormatEx(sDisplay, sizeof(sDisplay), "Shove Rate: %.2f%% (%.2f)", (flValue * 100.0), flValue);
+			pDevPanel.DrawText(sDisplay);
+
+			FormatEx(sDisplay, sizeof(sDisplay), "Skin Color: %s", g_esDeveloper[developer].g_sDevSkinColor);
 			pDevPanel.DrawText(sDisplay);
 
 			if (g_bSecondGame)
@@ -9761,7 +9816,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 				}
 
 				int iVisual = g_esCache[tank].g_iRewardVisual[priority];
-				if (iVisual > 0)
+				if (!bIsDeveloper(survivor, 0) && iVisual > 0)
 				{
 					if (bDeveloper || (iVisual & MT_VISUAL_SCREEN))
 					{
@@ -9808,7 +9863,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[1] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime)))
 						{
-							char sColor[36], sSet[3][12], sValue[3][4];
+							char sColor[36];
 
 							switch (priority)
 							{
@@ -9817,23 +9872,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 								case 2: strcopy(sColor, sizeof(sColor), g_esCache[tank].g_sGlowColorVisual3);
 							}
 
-							ExplodeString(sColor, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-							for (int iPos = 0; iPos < sizeof(sSet); iPos++)
-							{
-								if (sSet[iPos][0] != '\0')
-								{
-									ExplodeString(sSet[iPos], ";", sValue, sizeof(sValue), sizeof(sValue[]));
-									for (int iPos2 = 0; iPos2 < sizeof(sValue); iPos2++)
-									{
-										if (sValue[iPos2][0] != '\0')
-										{
-											g_esPlayer[survivor].g_iGlowColorVisual[iPos2] = iGetRandomColor(StringToInt(sValue[iPos2]));
-										}
-									}
-								}
-							}
-
-							vSetSurvivorGlow(survivor);
+							vSetSurvivorOutline(survivor, sColor);
 
 							if (flTime > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime))
 							{
@@ -9846,8 +9885,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[2] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[2] - flCurrentTime)))
 						{
-							char sColor[48], sSet[3][16], sValue[4][4];
-							int iColor[4];
+							char sColor[48];
 
 							switch (priority)
 							{
@@ -9856,23 +9894,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 								case 2: strcopy(sColor, sizeof(sColor), g_esCache[tank].g_sBodyColorVisual3);
 							}
 
-							ExplodeString(sColor, ",", sSet, sizeof(sSet), sizeof(sSet[]));
-							for (int iPos = 0; iPos < sizeof(sSet); iPos++)
-							{
-								if (sSet[iPos][0] != '\0')
-								{
-									ExplodeString(sSet[iPos], ";", sValue, sizeof(sValue), sizeof(sValue[]));
-									for (int iPos2 = 0; iPos2 < sizeof(sValue); iPos2++)
-									{
-										if (sValue[iPos2][0] != '\0')
-										{
-											iColor[iPos2] = iGetRandomColor(StringToInt(sValue[iPos2]));
-										}
-									}
-								}
-							}
-
-							SetEntityRenderColor(survivor, iColor[0], iColor[1], iColor[2], iColor[3]);
+							vSetSurvivorColor(survivor, sColor);
 
 							if (flTime > (g_esPlayer[survivor].g_flVisualTime[2] - flCurrentTime))
 							{
@@ -10104,8 +10126,11 @@ static void vRewardNotify(int survivor, int tank, int priority, const char[] phr
 
 static void vDeveloperSettings(int developer)
 {
+	g_esDeveloper[developer].g_bDevVisual = false;
+	g_esDeveloper[developer].g_sDevFallVoiceline = "PlayerLaugh";
+	g_esDeveloper[developer].g_sDevGlowOutline = "100,165,255";
 	g_esDeveloper[developer].g_sDevLoadout = g_bSecondGame ? "rifle;machete;molotov;first_aid_kit;pain_pills" : "rifle;pistol;molotov;first_aid_kit;pain_pills;pistol";
-	g_esDeveloper[developer].g_sDevVoiceline = "PlayerLaugh";
+	g_esDeveloper[developer].g_sDevSkinColor = "100,165,255,150";
 	g_esDeveloper[developer].g_flDevActionDuration = 2.0;
 	g_esDeveloper[developer].g_flDevAttackBoost = 1.25;
 	g_esDeveloper[developer].g_flDevDamageBoost = 1.75;
@@ -10123,6 +10148,7 @@ static void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_iDevLifeLeech = 5;
 	g_esDeveloper[developer].g_iDevMeleeRange = 150;
 	g_esDeveloper[developer].g_iDevPanelLevel = 0;
+	g_esDeveloper[developer].g_iDevParticle = MT_ROCK_ELECTRICITY;
 	g_esDeveloper[developer].g_iDevReviveHealth = 100;
 	g_esDeveloper[developer].g_iDevRewardTypes = MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ATTACKBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_INFAMMO;
 	g_esDeveloper[developer].g_iDevSpecialAmmo = 0;
@@ -11328,18 +11354,103 @@ static void vSetRockModel(int tank, int rock)
 	}
 }
 
-static void vSetSurvivorGlow(int survivor)
+static void vSetSurvivorColor(int survivor, const char[] colors, const char[] delimiter = ";")
+{
+	char sColor[48], sValue[4][4];
+	strcopy(sColor, sizeof(sColor), colors);
+	ExplodeString(sColor, delimiter, sValue, sizeof(sValue), sizeof(sValue[]));
+
+	int iColor[4];
+	for (int iPos = 0; iPos < sizeof(sValue); iPos++)
+	{
+		if (sValue[iPos][0] != '\0')
+		{
+			iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
+		}
+	}
+
+	SetEntityRenderColor(survivor, iColor[0], iColor[1], iColor[2], iColor[3]);
+}
+
+static void vSetSurvivorEffects(int survivor, int types)
+{
+	if (types & MT_ROCK_BLOOD)
+	{
+		vAttachParticle(survivor, PARTICLE_BLOOD, 0.75, 30.0);
+	}
+
+	if (types & MT_ROCK_ELECTRICITY)
+	{
+		switch (bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
+		{
+			case true: vAttachParticle(survivor, PARTICLE_ELECTRICITY, 0.75, 30.0);
+			case false:
+			{
+				for (int iCount = 1; iCount < 4; iCount++)
+				{
+					vAttachParticle(survivor, PARTICLE_ELECTRICITY, 0.75, (1.0 * float(iCount * 15)));
+				}
+			}
+		}
+	}
+
+	if (types & MT_ROCK_FIRE)
+	{
+		vAttachParticle(survivor, PARTICLE_FIRE, 0.75);
+	}
+
+	if (types & MT_ROCK_SPIT)
+	{
+		switch (g_bSecondGame)
+		{
+			case true: vAttachParticle(survivor, PARTICLE_SPIT, 0.75, 30.0);
+			case false: vAttachParticle(survivor, PARTICLE_BLOOD, 0.75, 30.0);
+		}
+	}
+}
+
+static void vSetSurvivorGlow(int survivor, int red = -1, int green = -1, int blue = -1)
 {
 	if (!g_bSecondGame)
 	{
 		return;
 	}
 
-	SetEntProp(survivor, Prop_Send, "m_glowColorOverride", iGetRGBColor(g_esPlayer[survivor].g_iGlowColorVisual[0], g_esPlayer[survivor].g_iGlowColorVisual[1], g_esPlayer[survivor].g_iGlowColorVisual[2]));
+	static int iColor[3];
+	iColor[0] = (0 <= red <= 255) ? red : g_esPlayer[survivor].g_iGlowColorVisual[0];
+	iColor[1] = (0 <= green <= 255) ? green : g_esPlayer[survivor].g_iGlowColorVisual[1];
+	iColor[2] = (0 <= blue <= 255) ? blue : g_esPlayer[survivor].g_iGlowColorVisual[2];
+	SetEntProp(survivor, Prop_Send, "m_glowColorOverride", iGetRGBColor(iColor[0], iColor[1], iColor[2]));
 	SetEntProp(survivor, Prop_Send, "m_bFlashing", 0);
 	SetEntProp(survivor, Prop_Send, "m_nGlowRangeMin", 0);
 	SetEntProp(survivor, Prop_Send, "m_nGlowRange", 999999);
 	SetEntProp(survivor, Prop_Send, "m_iGlowType", 3);
+}
+
+static void vSetSurvivorOutline(int survivor, const char[] colors, const char[] delimiter = ";", bool save = true)
+{
+	char sColor[36], sValue[3][4];
+	strcopy(sColor, sizeof(sColor), colors);
+	ExplodeString(sColor, delimiter, sValue, sizeof(sValue), sizeof(sValue[]));
+
+	int iColor[3];
+	for (int iPos = 0; iPos < sizeof(sValue); iPos++)
+	{
+		if (sValue[iPos][0] != '\0')
+		{
+			switch (save)
+			{
+				case true:
+				{
+					iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
+					g_esPlayer[survivor].g_iGlowColorVisual[iPos] = iColor[iPos];
+				}
+				case false: iColor[iPos] = iGetRandomColor(StringToInt(sValue[iPos]));
+			}
+		}
+	}
+
+	vSetSurvivorGlow(survivor, iColor[0], iColor[1], iColor[2]);
 }
 
 static void vSetTankGlow(int tank)
@@ -12564,7 +12675,7 @@ static bool bIsCustomTankSupported(int tank)
 
 /**
  * Developer tools for testing
- * 1 - 0 - no versus cooldown (off by default)
+ * 1 - 0 - no versus cooldown, visual effects (off by default)
  * 2 - 1 - immune to abilities, access to all tanks (off by default)
  * 4 - 2 - loadout on initial spawn
  * 8 - 3 - all rewards/effects
@@ -12944,6 +13055,7 @@ static bool bRespawnSurvivor(int survivor, bool restore)
 				vRemoveWeapons(survivor);
 				vGiveWeapons(survivor);
 				vSetupLoadout(survivor);
+				vGiveSpecialAmmo(survivor);
 			}
 
 			return true;
@@ -13715,7 +13827,7 @@ public MRESReturn mreFallingPre(int pThis)
 			}
 
 			char sVoiceLine[64];
-			sVoiceLine = (bIsDeveloper(pThis) && g_esDeveloper[pThis].g_sDevVoiceline[0] != '\0') ? g_esDeveloper[pThis].g_sDevVoiceline : g_esPlayer[pThis].g_sFallVoiceline;
+			sVoiceLine = (bIsDeveloper(pThis) && g_esDeveloper[pThis].g_sDevFallVoiceline[0] != '\0') ? g_esDeveloper[pThis].g_sDevFallVoiceline : g_esPlayer[pThis].g_sFallVoiceline;
 			vVocalize(pThis, sVoiceLine);
 		}
 	}
@@ -14680,6 +14792,23 @@ public Action tTimerDelaySurvival(Handle timer)
 	g_esGeneral.g_iSurvivalBlock = 2;
 }
 
+public Action tTimerDevParticle(Handle timer, int userid)
+{
+	static int iSurvivor;
+	iSurvivor = GetClientOfUserId(userid);
+	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || !g_esDeveloper[iSurvivor].g_bDevVisual || g_esDeveloper[iSurvivor].g_iDevParticle == 0 || g_esGeneral.g_bFinaleEnded)
+	{
+		g_esDeveloper[iSurvivor].g_bDevVisual = false;
+		g_esDeveloper[iSurvivor].g_iDevParticle = 0;
+
+		return Plugin_Stop;
+	}
+
+	vSetSurvivorEffects(iSurvivor, g_esDeveloper[iSurvivor].g_iDevParticle);
+
+	return Plugin_Continue;
+}
+
 public Action tTimerElectricEffect(Handle timer, int userid)
 {
 	static int iTank;
@@ -14860,7 +14989,7 @@ public Action tTimerParticleVisual(Handle timer, int userid)
 {
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_flVisualTime[3] == -1.0 || g_esPlayer[iSurvivor].g_flVisualTime[3] < GetGameTime() || g_esGeneral.g_bFinaleEnded)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || g_esPlayer[iSurvivor].g_flVisualTime[3] == -1.0 || g_esPlayer[iSurvivor].g_flVisualTime[3] < GetGameTime() || g_esPlayer[iSurvivor].g_iParticleEffect == 0 || g_esGeneral.g_bFinaleEnded)
 	{
 		g_esPlayer[iSurvivor].g_flVisualTime[3] = -1.0;
 		g_esPlayer[iSurvivor].g_iParticleEffect = 0;
@@ -14868,50 +14997,7 @@ public Action tTimerParticleVisual(Handle timer, int userid)
 		return Plugin_Stop;
 	}
 
-	static int iEffect;
-	iEffect = g_esPlayer[iSurvivor].g_iParticleEffect;
-	if (iEffect == 0)
-	{
-		g_esPlayer[iSurvivor].g_flVisualTime[3] = -1.0;
-
-		return Plugin_Stop;
-	}
-	else
-	{
-		if (iEffect & MT_ROCK_BLOOD)
-		{
-			vAttachParticle(iSurvivor, PARTICLE_BLOOD, 0.75, 30.0);
-		}
-
-		if (iEffect & MT_ROCK_ELECTRICITY)
-		{
-			switch (bIsValidClient(iSurvivor, MT_CHECK_FAKECLIENT))
-			{
-				case true: vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 0.75, 30.0);
-				case false:
-				{
-					for (int iCount = 1; iCount < 4; iCount++)
-					{
-						vAttachParticle(iSurvivor, PARTICLE_ELECTRICITY, 0.75, (1.0 * float(iCount * 15)));
-					}
-				}
-			}
-		}
-
-		if (iEffect & MT_ROCK_FIRE)
-		{
-			vAttachParticle(iSurvivor, PARTICLE_FIRE, 0.75);
-		}
-
-		if (iEffect & MT_ROCK_SPIT)
-		{
-			switch (g_bSecondGame)
-			{
-				case true: vAttachParticle(iSurvivor, PARTICLE_SPIT, 0.75, 30.0);
-				case false: vAttachParticle(iSurvivor, PARTICLE_BLOOD, 0.75, 30.0);
-			}
-		}
-	}
+	vSetSurvivorEffects(iSurvivor, g_esPlayer[iSurvivor].g_iParticleEffect);
 
 	return Plugin_Continue;
 }
