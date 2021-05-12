@@ -648,6 +648,7 @@ enum struct esDeveloper
 	int g_iDevReviveHealth;
 	int g_iDevRewardTypes;
 	int g_iDevSpecialAmmo;
+	int g_iDevWeaponSkin;
 }
 
 esDeveloper g_esDeveloper[MAXPLAYERS + 1];
@@ -3506,6 +3507,19 @@ public Action cmdMTDev(int client, int args)
 
 	switch (args)
 	{
+		case 2:
+		{
+			char sKeyword[32], sValue[320];
+			GetCmdArg(1, sKeyword, sizeof(sKeyword));
+			GetCmdArg(2, sValue, sizeof(sValue));
+			vSetupGuest(client, sKeyword, sValue);
+
+			switch (StrContains(sKeyword, "access", false) != -1)
+			{
+				case true: MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, client, g_esDeveloper[client].g_iDevAccess);
+				case false: MT_ReplyToCommand(client, "%s Set perk{yellow} %s{mint} to{olive} %s{mint}.", MT_TAG3, sKeyword, sValue);
+			}
+		}
 		case 3:
 		{
 			if (!bIsDeveloper(client, _, true))
@@ -3550,19 +3564,6 @@ public Action cmdMTDev(int client, int args)
 				}
 			}
 		}
-		case 2:
-		{
-			char sKeyword[32], sValue[320];
-			GetCmdArg(1, sKeyword, sizeof(sKeyword));
-			GetCmdArg(2, sValue, sizeof(sValue));
-			vSetupGuest(client, sKeyword, sValue);
-
-			switch (StrContains(sKeyword, "access", false) != -1)
-			{
-				case true: MT_ReplyToCommand(client, "%s %N{mint}, your current access level for testing has been set to{yellow} %i{mint}.", MT_TAG4, client, g_esDeveloper[client].g_iDevAccess);
-				case false: MT_ReplyToCommand(client, "%s Set perk{yellow} %s{mint} to{olive} %s{mint}.", MT_TAG3, sKeyword, sValue);
-			}
-		}
 		default:
 		{
 			switch (IsVoteInProgress())
@@ -3601,6 +3602,12 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 					g_esPlayer[developer].g_flVisualTime[2] = -1.0;
 
 					SetEntityRenderColor(developer, 255, 255, 255, 255);
+				}
+
+				if (g_esPlayer[developer].g_flVisualTime[3] != -1.0)
+				{
+					g_esPlayer[developer].g_flVisualTime[3] = -1.0;
+					g_esPlayer[developer].g_iParticleEffect = 0;
 				}
 
 				vSetSurvivorColor(developer, g_esDeveloper[developer].g_sDevSkinColor, ",");
@@ -3678,35 +3685,34 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 
 static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 {
-	float flValue = StringToFloat(value);
 	if (StrContains(keyword, "access", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevAccess = iClamp(RoundToNearest(flValue), 0, 4095);
+		g_esDeveloper[guest].g_iDevAccess = iClamp(StringToInt(value), 0, 4095);
 		vSetupDeveloper(guest, ((g_esDeveloper[guest].g_iDevAccess == 0) ? false : true), true);
 	}
 	else if (StrContains(keyword, "action", false) != -1 || StrContains(keyword, "actdur", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevActionDuration = flClamp(flValue, 0.0, 999999.0);
+		g_esDeveloper[guest].g_flDevActionDuration = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "regenammo", false) != -1 || StrContains(keyword, "ammoregen", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevAmmoRegen = iClamp(RoundToNearest(flValue), 0, 999999);
+		g_esDeveloper[guest].g_iDevAmmoRegen = iClamp(StringToInt(value), 0, 999999);
 	}
 	else if (StrContains(keyword, "attack", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevAttackBoost = flClamp(flValue, 0.0, 999999.0);
+		g_esDeveloper[guest].g_flDevAttackBoost = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "dmgboost", false) != -1 || StrContains(keyword, "damageboost", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevDamageBoost = flClamp(flValue, 0.0, 999999.0);
+		g_esDeveloper[guest].g_flDevDamageBoost = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "dmgres", false) != -1 || StrContains(keyword, "damageres", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevDamageResistance = flClamp(flValue, 0.0, 0.99);
+		g_esDeveloper[guest].g_flDevDamageResistance = flClamp(StringToFloat(value), 0.0, 0.99);
 	}
 	else if (StrContains(keyword, "effect", false) != -1 || StrContains(keyword, "particle", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevParticle = iClamp(RoundToNearest(flValue), 0, 15);
+		g_esDeveloper[guest].g_iDevParticle = iClamp(StringToInt(value), 0, 15);
 	}
 	else if (StrContains(keyword, "fall", false) != -1 || StrContains(keyword, "scream", false) != -1 || StrContains(keyword, "voice", false) != -1 || StrContains(keyword, "line", false) != -1)
 	{
@@ -3718,19 +3724,19 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	}
 	else if (StrContains(keyword, "heal", false) != -1 || StrContains(keyword, "hppercent", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevHealPercent = flClamp(flValue, 0.0, 100.0);
+		g_esDeveloper[guest].g_flDevHealPercent = flClamp(StringToFloat(value), 0.0, 100.0);
 	}
 	else if (StrContains(keyword, "regenhp", false) != -1 || StrContains(keyword, "hpregen", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevHealthRegen = iClamp(RoundToNearest(flValue), 0, MT_MAXHEALTH);
+		g_esDeveloper[guest].g_iDevHealthRegen = iClamp(StringToInt(value), 0, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "jump", false) != -1 || StrContains(keyword, "height", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevJumpHeight = flClamp(flValue, 0.0, 999999.0);
+		g_esDeveloper[guest].g_flDevJumpHeight = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "leechhp", false) != -1 || StrContains(keyword, "hpleech", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevLifeLeech = iClamp(RoundToNearest(flValue), 0, MT_MAXHEALTH);
+		g_esDeveloper[guest].g_iDevLifeLeech = iClamp(StringToInt(value), 0, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "loadout", false) != -1 || StrContains(keyword, "weapons", false) != -1)
 	{
@@ -3739,45 +3745,50 @@ static void vSetupGuest(int guest, const char[] keyword, const char[] value)
 	}
 	else if (StrContains(keyword, "melee", false) != -1 || StrContains(keyword, "range", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevMeleeRange = iClamp(RoundToNearest(flValue), 0, 999999);
+		g_esDeveloper[guest].g_iDevMeleeRange = iClamp(StringToInt(value), 0, 999999);
 	}
 	else if (StrContains(keyword, "punch", false) != -1 || StrContains(keyword, "force", false) != -1 || StrContains(keyword, "punchres", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevPunchResistance = flClamp(flValue, 0.0, 999999.0);
+		g_esDeveloper[guest].g_flDevPunchResistance = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "revivehp", false) != -1 || StrContains(keyword, "hprevive", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevReviveHealth = iClamp(RoundToNearest(flValue), 0, MT_MAXHEALTH);
+		g_esDeveloper[guest].g_iDevReviveHealth = iClamp(StringToInt(value), 0, MT_MAXHEALTH);
 	}
 	else if (StrContains(keyword, "rdur", false) != -1 || StrContains(keyword, "rewarddur", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevRewardDuration = flClamp(flValue, 0.0, 999999.0);
+		g_esDeveloper[guest].g_flDevRewardDuration = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "rtypes", false) != -1 || StrContains(keyword, "rewardtypes", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevRewardTypes = iClamp(RoundToNearest(flValue), -1, 2147483647);
+		g_esDeveloper[guest].g_iDevRewardTypes = iClamp(StringToInt(value), -1, 2147483647);
 	}
 	else if (StrContains(keyword, "sdmg", false) != -1 || StrContains(keyword, "shovedmg", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevShoveDamage = flClamp(flValue, 0.0, 999999.0);
+		g_esDeveloper[guest].g_flDevShoveDamage = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
 	else if (StrContains(keyword, "srate", false) != -1 || StrContains(keyword, "shoverate", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevShoveRate = flClamp(flValue, 0.0, 999999.0);
+		g_esDeveloper[guest].g_flDevShoveRate = flClamp(StringToFloat(value), 0.0, 999999.0);
 	}
-	else if (StrContains(keyword, "skin", false) != -1 || StrContains(keyword, "color", false) != -1)
+	else if (StrContains(keyword, "survskin", false) != -1 || StrContains(keyword, "color", false) != -1)
 	{
 		strcopy(g_esDeveloper[guest].g_sDevSkinColor, sizeof(esDeveloper::g_sDevSkinColor), value);
 	}
 	else if (StrContains(keyword, "specammo", false) != -1 || StrContains(keyword, "special", false) != -1)
 	{
-		g_esDeveloper[guest].g_iDevSpecialAmmo = iClamp(RoundToNearest(flValue), 0, 3);
+		g_esDeveloper[guest].g_iDevSpecialAmmo = iClamp(StringToInt(value), 0, 3);
 		vGiveSpecialAmmo(guest);
 	}
 	else if (StrContains(keyword, "speed", false) != -1)
 	{
-		g_esDeveloper[guest].g_flDevSpeedBoost = flClamp(flValue, 0.0, 999999.0);
+		g_esDeveloper[guest].g_flDevSpeedBoost = flClamp(StringToFloat(value), 0.0, 999999.0);
 		vSetAdrenalineTime(guest, 999999.0);
+	}
+	else if (StrContains(keyword, "wepskin", false) != -1 || StrContains(keyword, "skin", false) != -1)
+	{
+		g_esDeveloper[guest].g_iDevWeaponSkin = iClamp(StringToInt(value), -1, iGetMaxWeaponSkins(guest));
+		vSetSurvivorWeaponSkin(guest);
 	}
 
 	vDeveloperPanel(guest);
@@ -3995,6 +4006,12 @@ static void vDeveloperPanel(int developer, int level = 0)
 			flValue = g_esDeveloper[developer].g_flDevSpeedBoost;
 			FormatEx(sDisplay, sizeof(sDisplay), "Speed Boost: +%.2f%% (%.2f)", ((flValue * 100.0) - 100.0), flValue);
 			pDevPanel.DrawText(sDisplay);
+
+			if (g_bSecondGame)
+			{
+				FormatEx(sDisplay, sizeof(sDisplay), "Weapon Skin: %i (Max: %i)", g_esDeveloper[developer].g_iDevWeaponSkin, iGetMaxWeaponSkins(developer));
+				pDevPanel.DrawText(sDisplay);
+			}
 		}
 	}
 
@@ -9206,7 +9223,7 @@ static void vResetSpeed(int tank, bool mode = true)
 
 static void vResetSurvivorStats(int survivor)
 {
-	g_esPlayer[survivor].g_sLoopingVoiceline[0] = '\0';
+	g_esDeveloper[survivor].g_bDevVisual = false;
 	g_esPlayer[survivor].g_bFallDamage = false;
 	g_esPlayer[survivor].g_bFalling = false;
 	g_esPlayer[survivor].g_bFallTracked = false;
@@ -9215,6 +9232,7 @@ static void vResetSurvivorStats(int survivor)
 	g_esPlayer[survivor].g_bFixedAmmo[1] = false;
 	g_esPlayer[survivor].g_bSetup = false;
 	g_esPlayer[survivor].g_bVomited = false;
+	g_esPlayer[survivor].g_sLoopingVoiceline[0] = '\0';
 	g_esPlayer[survivor].g_flActionDuration = 0.0;
 	g_esPlayer[survivor].g_flAttackBoost = 0.0;
 	g_esPlayer[survivor].g_flDamageBoost = 0.0;
@@ -9816,8 +9834,9 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 				}
 
 				int iVisual = g_esCache[tank].g_iRewardVisual[priority];
-				if (!bIsDeveloper(survivor, 0) && iVisual > 0)
+				if (iVisual > 0)
 				{
+					bool bIgnore = bIsDeveloper(survivor, 0);
 					if (bDeveloper || (iVisual & MT_VISUAL_SCREEN))
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[0] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[0] - flCurrentTime)))
@@ -9859,7 +9878,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						}
 					}
 
-					if (g_bSecondGame && (bDeveloper || (iVisual & MT_VISUAL_GLOW)))
+					if (g_bSecondGame && !bIgnore && (bDeveloper || (iVisual & MT_VISUAL_GLOW)))
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[1] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[1] - flCurrentTime)))
 						{
@@ -9881,7 +9900,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						}
 					}
 
-					if (bDeveloper || (iVisual & MT_VISUAL_BODY))
+					if (!bIgnore && (bDeveloper || (iVisual & MT_VISUAL_BODY)))
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[2] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[2] - flCurrentTime)))
 						{
@@ -9903,7 +9922,7 @@ static void vRewardSurvivor(int survivor, int type, int tank = 0, bool apply = f
 						}
 					}
 
-					if (bDeveloper || (iVisual & MT_VISUAL_PARTICLE))
+					if (!bIgnore && (bDeveloper || (iVisual & MT_VISUAL_PARTICLE)))
 					{
 						if (g_esPlayer[survivor].g_flVisualTime[3] == -1.0 || (flTime > (g_esPlayer[survivor].g_flVisualTime[3] - flCurrentTime)))
 						{
@@ -10152,6 +10171,7 @@ static void vDeveloperSettings(int developer)
 	g_esDeveloper[developer].g_iDevReviveHealth = 100;
 	g_esDeveloper[developer].g_iDevRewardTypes = MT_REWARD_HEALTH|MT_REWARD_AMMO|MT_REWARD_REFILL|MT_REWARD_ATTACKBOOST|MT_REWARD_DAMAGEBOOST|MT_REWARD_SPEEDBOOST|MT_REWARD_GODMODE|MT_REWARD_ITEM|MT_REWARD_RESPAWN|MT_REWARD_INFAMMO;
 	g_esDeveloper[developer].g_iDevSpecialAmmo = 0;
+	g_esDeveloper[developer].g_iDevWeaponSkin = 1;
 }
 
 static void vFixAmmo(int survivor)
@@ -11372,14 +11392,14 @@ static void vSetSurvivorColor(int survivor, const char[] colors, const char[] de
 	SetEntityRenderColor(survivor, iColor[0], iColor[1], iColor[2], iColor[3]);
 }
 
-static void vSetSurvivorEffects(int survivor, int types)
+static void vSetSurvivorEffects(int survivor, int effects)
 {
-	if (types & MT_ROCK_BLOOD)
+	if (effects & MT_ROCK_BLOOD)
 	{
 		vAttachParticle(survivor, PARTICLE_BLOOD, 0.75, 30.0);
 	}
 
-	if (types & MT_ROCK_ELECTRICITY)
+	if (effects & MT_ROCK_ELECTRICITY)
 	{
 		switch (bIsValidClient(survivor, MT_CHECK_FAKECLIENT))
 		{
@@ -11394,12 +11414,12 @@ static void vSetSurvivorEffects(int survivor, int types)
 		}
 	}
 
-	if (types & MT_ROCK_FIRE)
+	if (effects & MT_ROCK_FIRE)
 	{
 		vAttachParticle(survivor, PARTICLE_FIRE, 0.75);
 	}
 
-	if (types & MT_ROCK_SPIT)
+	if (effects & MT_ROCK_SPIT)
 	{
 		switch (g_bSecondGame)
 		{
@@ -11451,6 +11471,25 @@ static void vSetSurvivorOutline(int survivor, const char[] colors, const char[] 
 	}
 
 	vSetSurvivorGlow(survivor, iColor[0], iColor[1], iColor[2]);
+}
+
+static void vSetSurvivorWeaponSkin(int developer)
+{
+	int iActiveWeapon = GetEntPropEnt(developer, Prop_Send, "m_hActiveWeapon");
+	if (bIsValidEntity(iActiveWeapon))
+	{
+		int iSkin = iClamp(g_esDeveloper[developer].g_iDevWeaponSkin, -1, iGetMaxWeaponSkins(developer));
+		if (iSkin != -1 && iSkin != GetEntProp(iActiveWeapon, Prop_Send, "m_nSkin"))
+		{
+			SetEntProp(iActiveWeapon, Prop_Send, "m_nSkin", iSkin);
+
+			int iViewWeapon = GetEntPropEnt(developer, Prop_Send, "m_hViewModel");
+			if (bIsValidEntity(iViewWeapon))
+			{
+				SetEntProp(iViewWeapon, Prop_Send, "m_nSkin", iSkin);
+			}
+		}
+	}
 }
 
 static void vSetTankGlow(int tank)
@@ -12316,46 +12355,7 @@ public void vWeaponSkinFrame(int userid)
 	iSurvivor = GetClientOfUserId(userid);
 	if (bIsSurvivor(iSurvivor) && bIsDeveloper(iSurvivor, 2))
 	{
-		static int iActiveWeapon;
-		iActiveWeapon = GetEntPropEnt(iSurvivor, Prop_Send, "m_hActiveWeapon");
-		if (bIsValidEntity(iActiveWeapon))
-		{
-			static char sClassname[32];
-			GetEntityClassname(iActiveWeapon, sClassname, sizeof(sClassname));
-			static int iSkin;
-			iSkin = -1;
-			if (StrEqual(sClassname, "weapon_pistol_magnum") || StrEqual(sClassname, "weapon_rifle") || StrEqual(sClassname, "weapon_rifle_ak47"))
-			{
-				iSkin = GetRandomInt(1, 2);
-			}
-			else if (StrEqual(sClassname, "weapon_smg") || StrEqual(sClassname, "weapon_smg_silenced")
-				|| StrEqual(sClassname, "weapon_pumpshotgun") || StrEqual(sClassname, "weapon_shotgun_chrome")
-				|| StrEqual(sClassname, "weapon_autoshotgun") || StrEqual(sClassname, "weapon_hunting_rifle"))
-			{
-				iSkin = 1;
-			}
-			else if (StrEqual(sClassname, "weapon_melee"))
-			{
-				static char sWeapon[32];
-				GetEntPropString(iActiveWeapon, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof(sWeapon));
-				if (StrEqual(sWeapon, "cricket_bat") || StrEqual(sWeapon, "crowbar"))
-				{
-					iSkin = 1;
-				}
-			}
-
-			if (iSkin != -1 && iSkin != GetEntProp(iActiveWeapon, Prop_Send, "m_nSkin"))
-			{
-				SetEntProp(iActiveWeapon, Prop_Send, "m_nSkin", iSkin);
-
-				static int iViewWeapon;
-				iViewWeapon = GetEntPropEnt(iSurvivor, Prop_Send, "m_hViewModel");
-				if (bIsValidEntity(iViewWeapon))
-				{
-					SetEntProp(iViewWeapon, Prop_Send, "m_nSkin", iSkin);
-				}
-			}
-		}
+		vSetSurvivorWeaponSkin(iSurvivor);
 	}
 }
 
@@ -13344,6 +13344,38 @@ static int iGetMaxAmmo(int survivor, int type, int weapon, bool reserve, bool re
 	}
 
 	return 0;
+}
+
+static int iGetMaxWeaponSkins(int developer)
+{
+	static int iActiveWeapon;
+	iActiveWeapon = GetEntPropEnt(developer, Prop_Send, "m_hActiveWeapon");
+	if (bIsValidEntity(iActiveWeapon))
+	{
+		static char sClassname[32];
+		GetEntityClassname(iActiveWeapon, sClassname, sizeof(sClassname));
+		if (StrEqual(sClassname, "weapon_pistol_magnum") || StrEqual(sClassname, "weapon_rifle") || StrEqual(sClassname, "weapon_rifle_ak47"))
+		{
+			return 2;
+		}
+		else if (StrEqual(sClassname, "weapon_smg") || StrEqual(sClassname, "weapon_smg_silenced")
+			|| StrEqual(sClassname, "weapon_pumpshotgun") || StrEqual(sClassname, "weapon_shotgun_chrome")
+			|| StrEqual(sClassname, "weapon_autoshotgun") || StrEqual(sClassname, "weapon_hunting_rifle"))
+		{
+			return 1;
+		}
+		else if (StrEqual(sClassname, "weapon_melee"))
+		{
+			static char sWeapon[32];
+			GetEntPropString(iActiveWeapon, Prop_Data, "m_strMapSetScriptName", sWeapon, sizeof(sWeapon));
+			if (StrEqual(sWeapon, "cricket_bat") || StrEqual(sWeapon, "crowbar"))
+			{
+				return 1;
+			}
+		}
+	}
+
+	return -1;
 }
 
 static int iGetMessageType(int setting)
@@ -14799,7 +14831,6 @@ public Action tTimerDevParticle(Handle timer, int userid)
 	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || !g_esDeveloper[iSurvivor].g_bDevVisual || g_esDeveloper[iSurvivor].g_iDevParticle == 0 || g_esGeneral.g_bFinaleEnded)
 	{
 		g_esDeveloper[iSurvivor].g_bDevVisual = false;
-		g_esDeveloper[iSurvivor].g_iDevParticle = 0;
 
 		return Plugin_Stop;
 	}
