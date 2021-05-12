@@ -3586,44 +3586,59 @@ static void vSetupDeveloper(int developer, bool setup = true, bool usual = false
 			vSetupLoadout(developer, usual);
 			vGiveSpecialAmmo(developer);
 
-			if (bIsDeveloper(developer, 0) && !g_esDeveloper[developer].g_bDevVisual)
+			if (bIsDeveloper(developer, 0))
 			{
-				g_esDeveloper[developer].g_bDevVisual = true;
-
-				if (g_esPlayer[developer].g_flVisualTime[1] != -1.0)
+				if (!g_esDeveloper[developer].g_bDevVisual)
 				{
-					g_esPlayer[developer].g_flVisualTime[1] = -1.0;
+					g_esDeveloper[developer].g_bDevVisual = true;
 
-					vRemoveGlow(developer);
+					if (g_esPlayer[developer].g_flVisualTime[1] != -1.0)
+					{
+						g_esPlayer[developer].g_flVisualTime[1] = -1.0;
+
+						vRemoveGlow(developer);
+					}
+
+					if (g_esPlayer[developer].g_flVisualTime[2] != -1.0)
+					{
+						g_esPlayer[developer].g_flVisualTime[2] = -1.0;
+
+						SetEntityRenderColor(developer, 255, 255, 255, 255);
+					}
+
+					if (g_esPlayer[developer].g_flVisualTime[3] != -1.0)
+					{
+						g_esPlayer[developer].g_flVisualTime[3] = -1.0;
+						g_esPlayer[developer].g_iParticleEffect = 0;
+					}
+
+					vSetSurvivorColor(developer, g_esDeveloper[developer].g_sDevSkinColor, ",");
+					vSetSurvivorOutline(developer, g_esDeveloper[developer].g_sDevGlowOutline, ",", false);
+					CreateTimer(0.75, tTimerDevParticle, GetClientUserId(developer), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
 				}
+			}
+			else if (g_esDeveloper[developer].g_bDevVisual)
+			{
+				g_esDeveloper[developer].g_bDevVisual = false;
 
-				if (g_esPlayer[developer].g_flVisualTime[2] != -1.0)
-				{
-					g_esPlayer[developer].g_flVisualTime[2] = -1.0;
-
-					SetEntityRenderColor(developer, 255, 255, 255, 255);
-				}
-
-				if (g_esPlayer[developer].g_flVisualTime[3] != -1.0)
-				{
-					g_esPlayer[developer].g_flVisualTime[3] = -1.0;
-					g_esPlayer[developer].g_iParticleEffect = 0;
-				}
-
-				vSetSurvivorColor(developer, g_esDeveloper[developer].g_sDevSkinColor, ",");
-				vSetSurvivorOutline(developer, g_esDeveloper[developer].g_sDevGlowOutline, ",", false);
-				CreateTimer(0.75, tTimerDevParticle, GetClientUserId(developer), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+				vRemoveGlow(developer);
+				SetEntityRenderColor(developer, 255, 255, 255, 255);
 			}
 
-			if (bIsDeveloper(developer, 5) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
+			switch (bIsDeveloper(developer, 5) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_SPEEDBOOST))
 			{
-				SDKHook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
-				vSetAdrenalineTime(developer, 999999.0);
+				case true:
+				{
+					SDKHook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
+					vSetAdrenalineTime(developer, 999999.0);
+				}
+				case false: SDKUnhook(developer, SDKHook_PreThinkPost, OnSpeedPreThinkPost);
 			}
 
-			if (bIsDeveloper(developer, 6) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_ATTACKBOOST))
+			switch (bIsDeveloper(developer, 6) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_ATTACKBOOST))
 			{
-				SDKHook(developer, SDKHook_PostThinkPost, OnPlayerPostThinkPost);
+				case true: SDKHook(developer, SDKHook_PostThinkPost, OnPlayerPostThinkPost);
+				case false: SDKUnhook(developer, SDKHook_PostThinkPost, OnPlayerPostThinkPost);
 			}
 
 			switch (bIsDeveloper(developer, 11) || (g_esPlayer[developer].g_iRewardTypes & MT_REWARD_GODMODE))
@@ -14828,7 +14843,7 @@ public Action tTimerDevParticle(Handle timer, int userid)
 {
 	static int iSurvivor;
 	iSurvivor = GetClientOfUserId(userid);
-	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || !g_esDeveloper[iSurvivor].g_bDevVisual || g_esDeveloper[iSurvivor].g_iDevParticle == 0 || g_esGeneral.g_bFinaleEnded)
+	if (!g_esGeneral.g_bPluginEnabled || !bIsSurvivor(iSurvivor) || !bIsDeveloper(iSurvivor, 0) || !g_esDeveloper[iSurvivor].g_bDevVisual || g_esDeveloper[iSurvivor].g_iDevParticle == 0 || g_esGeneral.g_bFinaleEnded)
 	{
 		g_esDeveloper[iSurvivor].g_bDevVisual = false;
 
