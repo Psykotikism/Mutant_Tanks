@@ -406,7 +406,7 @@ public Action OnFlyTakeDamage(int victim, int &attacker, int &inflictor, float &
 
 public Action OnFlyPreThink(int tank)
 {
-	switch (MT_IsTankSupported(tank) && !MT_IsTankIdle(tank) && g_esFlyPlayer[tank].g_bActivated)
+	switch (MT_IsTankSupported(tank) && g_esFlyPlayer[tank].g_bActivated)
 	{
 		case true:
 		{

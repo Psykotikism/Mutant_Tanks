@@ -12349,6 +12349,8 @@ static void vMutateTank(int tank, int type)
 			vResetSpeed(tank, false);
 			vThrowInterval(tank);
 
+			SDKHook(tank, SDKHook_PostThinkPost, OnTankPostThinkPost);
+
 			switch (bIsTankIdle(tank))
 			{
 				case true: CreateTimer(0.1, tTimerAnnounce2, GetClientUserId(tank), TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
@@ -12470,8 +12472,6 @@ public void vPlayerSpawnFrame(DataPack pack)
 		if (g_bSecondGame)
 		{
 			g_esPlayer[iPlayer].g_bStasis = bIsTankInStasis(iPlayer) || (g_esGeneral.g_hSDKIsInStasis != null && SDKCall(g_esGeneral.g_hSDKIsInStasis, iPlayer));
-
-			SDKHook(iPlayer, SDKHook_PostThinkPost, OnTankPostThinkPost);
 		}
 
 		if (g_esPlayer[iPlayer].g_bStasis && g_esGeneral.g_iStasisMode == 1 && g_esGeneral.g_hSDKLeaveStasis != null)
@@ -12591,6 +12591,8 @@ public void vTankSpawnFrame(DataPack pack)
 			vResetSpeed(iTank, false);
 			vSetProps(iTank);
 			vThrowInterval(iTank);
+
+			SDKHook(iTank, SDKHook_PostThinkPost, OnTankPostThinkPost);
 
 			Call_StartForward(g_esGeneral.g_gfPostTankSpawnForward);
 			Call_PushCell(iTank);
