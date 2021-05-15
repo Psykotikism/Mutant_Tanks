@@ -167,7 +167,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -188,7 +188,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -209,7 +209,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -230,7 +230,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -253,7 +253,7 @@ mt_pluginenabled "1"
 ```
 "Mutant Tanks"
 {
-	"Tank #69"
+	"Tank #420"
 	{
 		"General"
 		{
@@ -1561,7 +1561,7 @@ sm_mt_version2 - Узнать текущую версию плагина.
 // Доступны всем игрокам.
 sm_mutanttank - Выберать танка-мутанта. (Эта команда работает только в том случае, если параметр "Spawn Mode" в разделе "Plugin Settings/Human Support" установлен на 0.)
 sm_mt_info - Просмотр информации о танках-мутантах.
-sm_mt_prefs - Установите свои предпочтения танках-мутантах.
+sm_mt_prefs - Установить свои настройки плагина танков-мутантов.
 
 // Комбинированный
 sm_mt_ability - Просмотр информации каждой способности (A-L).
